@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ecommerce-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:migrate
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production

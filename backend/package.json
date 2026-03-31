@@ -10,6 +10,7 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsx watch src/bootstrap/server.ts",
     "start": "node dist/src/bootstrap/server.js",
+    "start:migrate": "npx prisma migrate deploy && node dist/src/bootstrap/server.js",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "NODE_ENV=test node --import tsx --test --test-concurrency=1 src/test/*.test.ts",
     "test:integration": "npm run test:integration:core && npm run test:integration:ops",

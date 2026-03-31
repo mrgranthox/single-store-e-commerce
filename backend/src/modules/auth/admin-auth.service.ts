@@ -13,6 +13,7 @@ import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { env } from "../../config/env";
 import { clerkClient } from "../../config/clerk";
 import { prisma } from "../../config/prisma";
+import { logger } from "../../config/logger";
 import { enqueueNotification } from "../notifications/notifications.service";
 import { loadAdminAuthorization } from "../roles-permissions/rbac.service";
 import {
@@ -560,15 +561,22 @@ export const forgotAdminPassword = async (input: { email: string }) => {
     ttlMinutes: PASSWORD_RESET_TTL_MINUTES
   });
 
-  await enqueueNotification({
-    type: "PASSWORD_RESET",
-    recipientEmail: adminUser.email,
-    recipientType: "ADMIN",
-    payload: {
-      resetUrl: `${env.ADMIN_APP_URL}/admin/reset-password?token=${encodeURIComponent(challenge.token)}`,
-      expiryMinutes: challenge.expiresInMinutes
-    }
-  });
+  try {
+    await enqueueNotification({
+      type: "PASSWORD_RESET",
+      recipientEmail: adminUser.email,
+      recipientType: "ADMIN",
+      payload: {
+        resetUrl: `${env.ADMIN_APP_URL}/admin/reset-password?token=${encodeURIComponent(challenge.token)}`,
+        expiryMinutes: challenge.expiresInMinutes
+      }
+    });
+  } catch (err) {
+    logger.error(
+      { err, adminUserId: adminUser.id },
+      "admin.forgotPassword: notification enqueue failed — challenge created, email not sent"
+    );
+  }
 
   return {
     submitted: true
