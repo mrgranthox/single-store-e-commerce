@@ -398,7 +398,11 @@ if (parsedEnv.NODE_ENV === "production") {
     }
 
     if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
-      throw new Error(`${key} must not use localhost or loopback in production.`);
+      throw new Error(
+        `${key} is localhost or loopback (${raw}). ` +
+          `Set ${key} in your host's environment (Render/Fly/etc.); local backend/.env is not loaded in the cloud. ` +
+          `If unset, the schema default is a dev URL and will fail this check.`
+      );
     }
   };
 
