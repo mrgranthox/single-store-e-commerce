@@ -156,15 +156,11 @@ export const normalizeCorsOrigin = (raw: string): string => {
 const envSchema = z.object({
   NODE_ENV: z.preprocess(normalizeNodeEnv, z.enum(["development", "test", "production"]).default("development")),
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
-  APP_BASE_URL: z.string().url().default("http://localhost:4000"),
-  ADMIN_APP_URL: z.string().url().default("http://localhost:5174"),
-  CUSTOMER_APP_URL: z.string().url().default("http://localhost:3001"),
-  MOBILE_APP_URL: z.string().url().default("http://localhost:3002"),
-  CORS_ALLOWED_ORIGINS: z
-    .string()
-    .default(
-      "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:5174,http://127.0.0.1:5174"
-    ),
+  APP_BASE_URL: z.string().url(),
+  ADMIN_APP_URL: z.string().url(),
+  CUSTOMER_APP_URL: z.string().url(),
+  MOBILE_APP_URL: z.string().url(),
+  CORS_ALLOWED_ORIGINS: z.string().min(1),
   DATABASE_URL: z.string().min(1),
   REDIS_URL: z.preprocess(
     (value) => (value === "" || value === undefined || value === null ? undefined : value),
@@ -375,19 +371,23 @@ if (parsedEnv.NODE_ENV === "production") {
     }
   }
 
-  const defaultDevCors =
-    "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:5174,http://127.0.0.1:5174";
-  const normalizeCorsKey = (raw: string) =>
-    csvToArray(raw)
-      .map((entry) => entry.replace(/\/$/, "").toLowerCase())
-      .sort()
-      .join("|");
+  const assertProductionCorsOrigins = (raw: string) => {
+    for (const entry of csvToArray(raw)) {
+      let hostname: string;
+      try {
+        hostname = new URL(entry).hostname.toLowerCase();
+      } catch {
+        throw new Error(`CORS_ALLOWED_ORIGINS contains an invalid origin: ${entry}`);
+      }
+      if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
+        throw new Error(
+          "CORS_ALLOWED_ORIGINS must not use localhost or loopback in production. Set real browser origins in the environment."
+        );
+      }
+    }
+  };
 
-  if (normalizeCorsKey(parsedEnv.CORS_ALLOWED_ORIGINS) === normalizeCorsKey(defaultDevCors)) {
-    throw new Error(
-      "CORS_ALLOWED_ORIGINS must be set to your real browser origins in production (local development defaults are rejected)."
-    );
-  }
+  assertProductionCorsOrigins(parsedEnv.CORS_ALLOWED_ORIGINS);
 
   const assertProductionPublicUrl = (key: string, raw: string) => {
     let hostname: string;
@@ -398,11 +398,7 @@ if (parsedEnv.NODE_ENV === "production") {
     }
 
     if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") {
-      throw new Error(
-        `${key} is localhost or loopback (${raw}). ` +
-          `Set ${key} in your host's environment (Render/Fly/etc.); local backend/.env is not loaded in the cloud. ` +
-          `If unset, the schema default is a dev URL and will fail this check.`
-      );
+      throw new Error(`${key} must not use localhost or loopback in production (${raw}).`);
     }
   };
 
