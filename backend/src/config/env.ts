@@ -115,6 +115,30 @@ const csvToArray = (value: string | undefined, fallback: string[] = []) =>
     .map((entry) => entry.trim())
     .filter(Boolean);
 
+/** PaaS dashboards often set NODE_ENV=staging, prod, or odd casing — map to the three modes we support. */
+const normalizeNodeEnv = (value: unknown): unknown => {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  if (typeof value !== "string") {
+    return value;
+  }
+  const t = value.trim().toLowerCase();
+  if (t === "" || t === "none") {
+    return undefined;
+  }
+  if (t === "prod" || t === "staging" || t === "stage" || t === "live") {
+    return "production";
+  }
+  if (t === "dev") {
+    return "development";
+  }
+  if (t === "development" || t === "test" || t === "production") {
+    return t;
+  }
+  return t;
+};
+
 /** Normalize allow-list entries and browser `Origin` headers (scheme + host + port, no trailing slash). */
 export const normalizeCorsOrigin = (raw: string): string => {
   const trimmed = raw.trim();
@@ -130,7 +154,7 @@ export const normalizeCorsOrigin = (raw: string): string => {
 };
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  NODE_ENV: z.preprocess(normalizeNodeEnv, z.enum(["development", "test", "production"]).default("development")),
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
   APP_BASE_URL: z.string().url().default("http://localhost:4000"),
   ADMIN_APP_URL: z.string().url().default("http://localhost:5174"),
