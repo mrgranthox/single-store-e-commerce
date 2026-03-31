@@ -15,8 +15,7 @@
     "noUnusedLocals": true,
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
-    "types": ["node"],
-    "ignoreDeprecations": "6.0"
+    "types": ["node"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "prisma/**/*.ts"],
   "exclude": ["dist", "node_modules"]
