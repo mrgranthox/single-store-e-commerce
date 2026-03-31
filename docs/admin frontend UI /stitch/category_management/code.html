@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Category Management - Command Deck</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed": "#6bff8f",
+                        "surface-container": "#ecedfb",
+                        "secondary-container": "#dedfeb",
+                        "outline": "#737685",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-surface-variant": "#434654",
+                        "on-secondary-fixed-variant": "#444650",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#d8d9e7",
+                        "surface-container-high": "#e6e7f6",
+                        "primary-container": "#3b6de6",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e0e2f0",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "inverse-surface": "#2d303b",
+                        "surface-bright": "#faf8ff",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-on-surface": "#eff0fe",
+                        "on-primary-container": "#fefcff",
+                        "on-secondary-fixed": "#181b24",
+                        "on-tertiary-container": "#f7fff3",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#00873b",
+                        "outline-variant": "#c3c6d6",
+                        "background": "#faf8ff",
+                        "on-background": "#181b25",
+                        "primary": "#1653cc",
+                        "surface-tint": "#1b55ce",
+                        "on-secondary-container": "#60626c",
+                        "surface-container-low": "#f2f3ff",
+                        "tertiary": "#006b2d",
+                        "secondary": "#5b5e68",
+                        "surface": "#faf8ff",
+                        "on-surface": "#181b25",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#e0e2ed",
+                        "on-primary-fixed": "#00174a",
+                        "on-tertiary-fixed": "#002109",
+                        "on-error-container": "#93000a"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans", "Plus Jakarta Sans"],
+                        "body": ["IBM Plex Sans", "Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { background-color: #f0f2f7; }
+        .sidebar-bg { background-color: #13161e; }
+        .shell-bg { background-color: #0f1117; }
+        .surface-lowest { background-color: #ffffff; }
+        .glass-drawer { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); }
+        .ghost-border { border-color: rgba(195, 198, 214, 0.15); }
+        .primary-gradient { background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%); }
+    </style>
+</head>
+<body class="font-body text-on-surface">
+<!-- Sidebar (Shared Component: SideNavBar) -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto sidebar-bg flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Command Deck</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-semibold mt-1">Operational Architect</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active Tab: Categories -->
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-6 py-3 flex items-center gap-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[#4f7ef8]" data-icon="category">category</span>
+<span class="font-headline text-xs uppercase tracking-widest font-semibold">Categories</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-6 py-3 flex items-center gap-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="font-headline text-xs uppercase tracking-widest font-semibold">Brands</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-6 py-3 flex items-center gap-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
+<span class="font-headline text-xs uppercase tracking-widest font-semibold">Reviews</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-6 py-3 flex items-center gap-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-headline text-xs uppercase tracking-widest font-semibold">Overview</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-6 py-3 flex items-center gap-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-headline text-xs uppercase tracking-widest font-semibold">Low Stock</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-800 pt-4 px-2 space-y-1">
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors text-xs uppercase font-semibold" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors text-xs uppercase font-semibold" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+                Support
+            </a>
+<div class="flex items-center gap-3 px-4 py-4 mt-2">
+<img alt="Admin User Avatar" class="w-8 h-8 rounded-full bg-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9RFnkp84zpLzKSBR_2vQBcNlUcjQtDdMrna_4o9Dcl9sGwVdhLc9fRqNTu1gZApQzsqRxl7RA-ghHsaKnfxadmPkYlyFNls8KeN7vu7nrVMz1AQhSY_VPCD042AWOSowXqW0WTIYfL60ZzfiMK3n8xaMqwS0ZPs3LHvjpQEo3IJKk5wdI36aZF2ypA0kC-JMpUj-0KLYkJb2cuM9dJZz9zn3hLNf5ZHvN3aq-g9AkhbY2i6DH6EhHlUcAoh32Uw9dWdAGN75ja98"/>
+<div class="overflow-hidden">
+<p class="text-white text-xs font-bold truncate">Admin User</p>
+<p class="text-slate-500 text-[10px] truncate">admin@system.io</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation (Shared Component: TopNavBar) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white flex justify-between items-center px-8 z-40 border-b border-slate-100">
+<div class="flex items-center gap-8">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-lg text-sm w-80 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" placeholder="Search operational data..." type="text"/>
+</div>
+<nav class="flex items-center gap-6">
+<a class="text-slate-500 hover:text-primary font-medium text-sm transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-primary font-medium text-sm transition-colors" href="#">Analytics</a>
+<a class="text-slate-500 hover:text-primary font-medium text-sm transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<button class="flex items-center gap-2 hover:bg-slate-50 px-2 py-1 rounded-lg transition-colors">
+<img alt="User Profile" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEiBj80KKxamyvbMK_wYJPTuJK7zenBfqWPA1smLEhXF1kAJpC0U4Gkw4ILfYfd8EtvfNMTSnV2zYQpCJwEvO0CxmLkKv9COgOs1_rOhwxepZvx7ELMCeqm_xvFxEZo-FQcBOViemytnb0zydfZ3suWlm6Hg3QaJCXvAcydZ3NB1jUiUgJBbFIGqd8Mky8-aP3oeWkIK1hoBZwiatuzfhZrH_1o-4ngSwYp8lVMv5sLTRmLv9MQpi-Cz5YrejFSPOxovGDqgGbrK4"/>
+<span class="material-symbols-outlined text-slate-400" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen p-8">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<nav class="flex gap-2 text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">
+<span class="hover:text-primary cursor-pointer">Catalog</span>
+<span>/</span>
+<span class="text-slate-600">Categories</span>
+</nav>
+<h2 class="text-3xl font-bold text-on-surface font-headline tracking-tight">Categories</h2>
+</div>
+<div class="flex items-center gap-3">
+<!-- View Toggle -->
+<div class="flex bg-surface-container rounded-lg p-1 mr-4">
+<button class="px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 bg-white text-primary shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="list">list</span>
+                        List View
+                    </button>
+<button class="px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 text-slate-500 hover:text-on-surface">
+<span class="material-symbols-outlined text-sm" data-icon="account_tree">account_tree</span>
+                        Tree View
+                    </button>
+</div>
+<button class="primary-gradient text-white px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    Create Category
+                </button>
+</div>
+</div>
+<!-- High-Density Content Area -->
+<div class="grid grid-cols-1 gap-6">
+<!-- Main Data Table Container -->
+<div class="surface-lowest rounded-xl shadow-sm overflow-hidden border border-slate-100">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/50 border-b border-slate-100">
+<th class="px-6 py-4 text-[10px] uppercase tracking-[0.1em] font-bold text-slate-500">Name</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-[0.1em] font-bold text-slate-500">Slug</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-[0.1em] font-bold text-slate-500">Parent Category</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-[0.1em] font-bold text-slate-500">Products</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-[0.1em] font-bold text-slate-500 text-center">Status</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-[0.1em] font-bold text-slate-500 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100/50">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="devices">devices</span>
+</div>
+<span class="font-semibold text-sm text-on-surface">Electronics</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">electronics</td>
+<td class="px-6 py-4">
+<span class="text-xs text-slate-400 italic">None (Root)</span>
+</td>
+<td class="px-6 py-4">
+<span class="font-mono text-xs font-semibold px-2 py-1 bg-slate-100 rounded text-slate-600">1,248</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border border-success/30 text-success">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        ACTIVE
+                                    </span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-white rounded-lg text-primary transition-all border border-transparent hover:border-slate-100">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-white rounded-lg text-error transition-all border border-transparent hover:border-slate-100">
+<span class="material-symbols-outlined text-lg" data-icon="archive">archive</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 (Sub-category) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="smartphone">smartphone</span>
+</div>
+<span class="font-semibold text-sm text-on-surface">Mobile Phones</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">mobile-phones</td>
+<td class="px-6 py-4">
+<span class="text-xs font-medium text-slate-600 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="subdirectory_arrow_right">subdirectory_arrow_right</span>
+                                    Electronics
+                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="font-mono text-xs font-semibold px-2 py-1 bg-slate-100 rounded text-slate-600">412</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border border-success/30 text-success">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        ACTIVE
+                                    </span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-white rounded-lg text-primary transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-white rounded-lg text-error transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="archive">archive</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="chair">chair</span>
+</div>
+<span class="font-semibold text-sm text-on-surface">Home Furniture</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">furniture-home</td>
+<td class="px-6 py-4">
+<span class="text-xs text-slate-400 italic">None (Root)</span>
+</td>
+<td class="px-6 py-4">
+<span class="font-mono text-xs font-semibold px-2 py-1 bg-slate-100 rounded text-slate-600">89</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border border-slate-200 text-slate-400">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                        DRAFT
+                                    </span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-white rounded-lg text-primary transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-white rounded-lg text-error transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="archive">archive</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Table Footer/Pagination -->
+<div class="px-6 py-4 border-t border-slate-100 flex justify-between items-center bg-slate-50/30">
+<p class="text-xs text-slate-500 font-medium">Showing 1 to 3 of 42 categories</p>
+<div class="flex gap-2">
+<button class="p-1.5 rounded border border-slate-200 text-slate-400 hover:text-on-surface hover:bg-white transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-1.5 rounded border border-slate-200 text-slate-400 hover:text-on-surface hover:bg-white transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right-Side Detail Drawer (Create/Edit Category) -->
+<div class="fixed inset-y-0 right-0 w-[420px] glass-drawer shadow-2xl z-[60] border-l border-slate-100 translate-x-0 transition-transform flex flex-col">
+<div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white/50">
+<div>
+<h3 class="text-lg font-bold font-headline text-on-surface">Edit Category</h3>
+<p class="text-xs text-slate-500 font-medium">Configure global category settings</p>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 space-y-6">
+<!-- Form Sections -->
+<div class="space-y-4">
+<label class="block">
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500 block mb-2">Category Name</span>
+<input class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" type="text" value="Electronics"/>
+</label>
+<label class="block">
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500 block mb-2">Parent Category</span>
+<select class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
+<option value="">None (Root)</option>
+<option value="1">Home Appliances</option>
+<option value="2">Fashion</option>
+</select>
+</label>
+<label class="block">
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500 block mb-2">Description</span>
+<textarea class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all resize-none" rows="4">Comprehensive collection of consumer electronics, high-end gadgets, and peripheral devices.</textarea>
+</label>
+<label class="block">
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500 block mb-2">SEO Slug</span>
+<div class="flex items-center bg-slate-50 rounded-lg overflow-hidden border-none">
+<span class="px-4 py-3 text-slate-400 text-xs border-r border-slate-200/50">store.com/c/</span>
+<input class="flex-1 bg-transparent border-none px-4 py-3 text-sm focus:ring-0" type="text" value="electronics"/>
+</div>
+</label>
+<div>
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-500 block mb-3">Status</span>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-primary bg-primary/5 text-primary text-xs font-bold transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            ACTIVE
+                        </button>
+<button class="flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-transparent bg-slate-50 text-slate-400 text-xs font-bold hover:bg-slate-100 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="pause_circle">pause_circle</span>
+                            DRAFT
+                        </button>
+</div>
+</div>
+</div>
+<!-- Meta Data Visual -->
+<div class="p-4 bg-primary-container/5 rounded-xl border border-primary-container/10">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+<span class="text-xs font-bold text-primary-container uppercase tracking-tight">System Metadata</span>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between">
+<span class="text-[10px] text-slate-500 font-medium">Created On</span>
+<span class="text-[10px] font-mono font-semibold">2023-08-14 10:22:15</span>
+</div>
+<div class="flex justify-between">
+<span class="text-[10px] text-slate-500 font-medium">Last Modified</span>
+<span class="text-[10px] font-mono font-semibold">2024-05-02 09:44:32</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-slate-100 bg-white/50 flex gap-4">
+<button class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 py-3 rounded-lg text-sm font-bold transition-all">
+                Cancel
+            </button>
+<button class="flex-[2] primary-gradient text-white py-3 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 transition-all">
+                Save Changes
+            </button>
+</div>
+</div>
+<!-- Archive Confirmation Dialog (Overlay) -->
+<div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
+<div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100">
+<div class="p-8 text-center">
+<div class="w-20 h-20 bg-error-container rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-error text-4xl" data-icon="warning">warning</span>
+</div>
+<h4 class="text-2xl font-bold font-headline text-on-surface mb-2">Archive Category?</h4>
+<p class="text-slate-500 text-sm leading-relaxed mb-6">
+                    This category currently contains <strong class="text-error">1,248 products</strong>. Archiving will hide these products from the storefront and potentially affect your SEO rankings.
+                </p>
+<div class="flex flex-col gap-3">
+<button class="w-full py-4 bg-error text-white rounded-xl text-sm font-bold shadow-lg shadow-error/20 hover:opacity-90 transition-all">
+                        Yes, Archive Category
+                    </button>
+<button class="w-full py-4 bg-slate-50 text-slate-500 rounded-xl text-sm font-bold hover:bg-slate-100 transition-all">
+                        Cancel &amp; Return
+                    </button>
+</div>
+</div>
+<div class="bg-slate-50 p-4 text-center">
+<p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Action is reversible via Trash folder</p>
+</div>
+</div>
+</div>
+<!-- Background Pattern -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-[0.03]" style="background-image: radial-gradient(#13161e 0.5px, transparent 0.5px); background-size: 24px 24px;"></div>
+</body></html>

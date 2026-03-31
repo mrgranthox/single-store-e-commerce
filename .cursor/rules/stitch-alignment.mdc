@@ -1,0 +1,36 @@
+---
+alwaysApply: true
+---
+
+# Admin UI — Stitch 1:1 alignment (mandatory)
+
+Every admin **screen** in `admin-frontend/src/lib/contracts/admin-screen-catalog.ts` MUST mirror the corresponding **Stitch export** pixel- and structure-for-pixel where the export exists.
+
+## Source of truth
+
+- HTML structure, section order, copy hierarchy: `docs/admin frontend UI /stitch/<slug>/code.html`
+- Visual target: `docs/admin frontend UI /stitch/<slug>/screen.png`
+- Screen id → slug: `admin-frontend/src/lib/stitch/stitch-screen-map.ts` (`stitchExportSlugByScreenId`, `getStitchReference(screenId)`)
+
+The catalog is validated at load time: each `adminScreenCatalog` entry must have a `stitchExportSlugByScreenId` mapping (see `admin-screen-catalog.ts`).
+
+## Implementation contract
+
+1. **Layout & rhythm:** Use `StitchPageBody` for main vertical spacing (`gap-8`). Shell already applies `stitch-canvas` + `stitch-admin-scope` in `AdminShell`.
+2. **Filters / toolbar rows:** `StitchFilterPanel`, `StitchFieldLabel`, `stitchInputClass` / `stitchSelectClass` from `@/components/stitch` — not ad-hoc filter chrome unless matching `code.html` exactly.
+3. **Data tables:** `DataTableShell` with `variant="stitchOperational"` for list/queue screens that Stitch shows as tables.
+4. **Surfaces:** Prefer `SurfaceCard` / patterns aligned with `.stitch-surface-card` and `index.css` Stitch tokens (e.g. `#181b25`, `#737685`, `#1653cc`, `#f2f3ff`).
+5. **KPI / metric strips:** Use `StitchKpiMicro` or existing `KpiCard` only in layouts that match the Stitch screen’s KPI row (spacing, bar accent, typography).
+6. **Hub / workspace rails:** Reuse `CustomerWorkspaceNav`, `PaymentsWorkspaceNav`, or the same nav pattern as the Stitch HTML when the export shows a sub-nav.
+7. **Breadcrumbs / detail heroes:** `StitchBreadcrumbs` where the export defines a breadcrumb row.
+
+## Workflow (before considering a screen “done”)
+
+1. Open `getStitchReference("<screen-id>")` paths (or map lookup) for that route.
+2. Compare section structure and component hierarchy to `code.html`.
+3. Compare spacing, type scale, and states to `screen.png`.
+4. Do not ship arbitrary Tailwind one-offs that diverge from the export without updating Stitch reference and map.
+
+## New screens
+
+When adding a catalog screen: add `stitchExportSlugByScreenId` entry, add (or re-use) the Stitch export under `docs/admin frontend UI /stitch/`, then implement the page against that export.

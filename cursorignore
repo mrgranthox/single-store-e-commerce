@@ -1,0 +1,156 @@
+# =========================================================
+# Cursor ignore rules for the e-commerce platform monorepo
+# Purpose:
+# - keep Cursor focused on implementation-critical source files
+# - exclude heavy, generated, binary, secret, and low-signal files
+# - preserve architecture/docs/specs, source, Prisma schema, migrations,
+#   tests, and configuration needed for implementation
+# =========================================================
+
+# =========================
+# Dependencies
+# =========================
+**/node_modules/
+**/.pnp/
+**/.yarn/cache/
+**/.yarn/unplugged/
+**/.pnpm-store/
+
+# =========================
+# Build output / generated apps
+# =========================
+**/dist/
+**/build/
+**/.next/
+**/out/
+**/.nuxt/
+**/.svelte-kit/
+**/.vercel/
+**/.netlify/
+**/.cache/
+**/.turbo/
+**/.parcel-cache/
+**/.vite/
+**/storybook-static/
+
+# =========================
+# React Native / Expo generated output
+# =========================
+**/.expo/
+**/.expo-shared/
+**/android/.gradle/
+**/android/build/
+**/android/app/build/
+**/ios/build/
+**/ios/Pods/
+**/DerivedData/
+
+# =========================
+# Test and coverage output
+# =========================
+**/coverage/
+**/.nyc_output/
+**/playwright-report/
+**/test-results/
+**/.jest/
+
+# =========================
+# Logs / temp / caches
+# =========================
+**/*.log
+**/logs/
+**/tmp/
+**/temp/
+**/.tmp/
+**/.temp/
+**/.sass-cache/
+**/.eslintcache
+**/.swc/
+
+# =========================
+# Media / uploads / binaries
+# =========================
+**/uploads/
+**/storage/tmp/
+**/storage/cache/
+**/*.mp4
+**/*.mov
+**/*.avi
+**/*.mkv
+**/*.webm
+**/*.mp3
+**/*.wav
+**/*.flac
+**/*.zip
+**/*.tar
+**/*.gz
+**/*.7z
+**/*.rar
+**/*.iso
+**/*.dmg
+**/*.exe
+**/*.dll
+**/*.so
+**/*.bin
+**/*.psd
+**/*.ai
+
+# =========================
+# Images that are not part of product/app source assets
+# Keep source assets inside app/public/src assets if needed,
+# but ignore exported render dumps and scratch media.
+# =========================
+**/_renders*/
+**/rendered/
+**/screenshots/
+**/exports/
+
+# =========================
+# Secrets / environment
+# =========================
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.template
+!**/.env.sample
+
+# =========================
+# Prisma generated client artifacts (keep schema and migrations)
+# =========================
+**/generated/
+**/prisma/generated/
+**/.prisma/
+
+# =========================
+# Package manager debug files
+# =========================
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# =========================
+# OS / editor junk
+# =========================
+**/.DS_Store
+**/Thumbs.db
+**/.idea/
+**/*.iml
+
+# =========================
+# Keep these important areas IN SCOPE
+# Do NOT ignore these in the repo:
+# - src/
+# - app/
+# - components/
+# - features/
+# - prisma/schema.prisma
+# - prisma/migrations/
+# - docs/
+# - tests/
+# - scripts/
+# - package.json files
+# - tsconfig files
+# - Docker / deployment configs
+# - CI configs
+# =========================

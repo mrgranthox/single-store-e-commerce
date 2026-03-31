@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Support &amp; SLA Settings - Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#5b5e68",
+              "on-tertiary": "#ffffff",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-error": "#ffffff",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#b4c5ff",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e0e2f0",
+              "on-surface": "#181b25",
+              "secondary-fixed-dim": "#c4c6d1",
+              "surface-container-low": "#f2f3ff",
+              "on-tertiary-container": "#f7fff3",
+              "surface-bright": "#faf8ff",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#002109",
+              "on-secondary-fixed-variant": "#444650",
+              "surface-tint": "#1b55ce",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary-fixed": "#6bff8f",
+              "on-background": "#181b25",
+              "on-secondary-container": "#60626c",
+              "on-primary-fixed": "#00174a",
+              "on-primary-container": "#fefcff",
+              "secondary-container": "#dedfeb",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-highest": "#e0e2f0",
+              "surface": "#faf8ff",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "outline-variant": "#c3c6d6",
+              "surface-container": "#ecedfb",
+              "inverse-on-surface": "#eff0fe",
+              "outline": "#737685",
+              "primary-container": "#3b6de6",
+              "on-secondary": "#ffffff",
+              "primary": "#1653cc",
+              "secondary-fixed": "#e0e2ed",
+              "tertiary": "#006b2d",
+              "inverse-surface": "#2d303b",
+              "primary-fixed": "#dbe1ff",
+              "surface-container-high": "#e6e7f6",
+              "on-surface-variant": "#434654",
+              "background": "#faf8ff"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "sans-serif"],
+              "body": ["IBM Plex Sans", "sans-serif"],
+              "label": ["IBM Plex Sans", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"],
+              "brand": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f0f2f7; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .sidebar-active { background-color: #1a1d27; color: white; font-weight: 600; }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #1653cc; box-shadow: none; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Sidebar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#13161e] flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold text-white tracking-tight font-brand">Command Deck</h1>
+<div class="mt-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional portrait of a system administrator in a high-tech control room environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvQ8FncS9AabJAfQ-8G_uagOF1xq6oSPEF2k8MIyisXk-iQsUBrtAwhhBkgUix6_7sw-pUQBi5oqppQToa8P77OgFvn8mRt-DInBFYN4WmkIrfj2uOqYjwvqdJoi55E2bQnHG8CYudX4QJJa3YGAaKOaA50ZcppHMbCC5vw0g31n5x5ein2E2oarvBSzEwAvQk_yjOaQMS8BYPAVhF3PRV5znvqb-mOIqTO9Ta6ddwgv1XLVLyAMzWvSZLka0VRbTlE9XnwfW2V4Q"/>
+</div>
+<div>
+<p class="text-sm font-bold text-white leading-none font-headline">Operational Architect</p>
+<p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">System Admin</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3 overflow-y-auto no-scrollbar">
+<a class="sidebar-active flex items-center gap-3 px-3 py-2.5 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl">support_agent</span>
+<span class="text-sm">Support Settings</span>
+</a>
+<a class="text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 flex items-center gap-3 px-3 py-2.5 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl">webhook</span>
+<span class="text-sm">Webhooks</span>
+</a>
+<a class="text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 flex items-center gap-3 px-3 py-2.5 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl">settings_backup_restore</span>
+<span class="text-sm">Background Jobs</span>
+</a>
+<a class="text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 flex items-center gap-3 px-3 py-2.5 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl">health_and_safety</span>
+<span class="text-sm">Integration Health</span>
+</a>
+<a class="text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 flex items-center gap-3 px-3 py-2.5 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl">terminal</span>
+<span class="text-sm">System Audit</span>
+</a>
+</nav>
+<div class="mt-auto px-3 pt-6 space-y-1">
+<a class="text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 flex items-center gap-3 px-3 py-2 rounded transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="text-sm">Documentation</span>
+</a>
+<a class="text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 flex items-center gap-3 px-3 py-2 rounded transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">help</span>
+<span class="text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="w-full h-16 sticky top-0 z-40 bg-[#f0f2f7] flex items-center justify-between px-8">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-highest px-3 py-1.5 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-lg text-secondary">search</span>
+<input class="bg-transparent border-none text-xs focus:ring-0 w-64 placeholder:text-slate-400 font-label" placeholder="Quick search commands..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-500">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined">settings</span></button>
+</div>
+<div class="h-8 w-px bg-slate-200"></div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-semibold text-secondary uppercase tracking-[0.1em] font-label">Production Shell v2.4</span>
+<div class="w-8 h-8 rounded-full bg-slate-300 overflow-hidden ring-2 ring-white">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="minimalist user avatar profile picture with soft gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBduAzrWLr38R-06RaXCyk44px2Og-XGTu73lSkGIyX9J-GSLXs4QqtGVHv9wWyGs3vbL3Dr4gIH-FR1G3a0NTWDZcK1K3HDiBGc5aH8SOzig32OmAauzOoRvy6LILUbexU45ki6P1I98KmM1-CDMJWJ1nqFbZBJ4EeyaDP2fNNUpxgJs6wDKciYK0l_Tp9SiFZjeesi8INmWmOszHg14hmqpa-vIqShws0RgL2OVFKtjaDVGVjVARFJBmkJCh1vFVmJ8q4otu1EbE"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 max-w-7xl mx-auto w-full grid grid-cols-12 gap-8">
+<!-- Header Section -->
+<div class="col-span-12 mb-4">
+<h2 class="text-3xl font-bold font-headline text-on-surface tracking-tight">Support &amp; SLA Settings</h2>
+<p class="text-secondary mt-1 text-sm">Architect system-wide response thresholds and routing protocols.</p>
+</div>
+<!-- Left Column: Form Sections -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- Ticket Categories Bento Section -->
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-semibold font-headline">Ticket Categories</h3>
+<button class="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-wider hover:bg-primary-fixed-dim/20 px-3 py-1.5 rounded transition-all">
+<span class="material-symbols-outlined text-base">add</span>
+                            Add Category
+                        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Category Cards -->
+<div class="p-4 bg-surface-container-low border-l-4 border-primary rounded flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">bug_report</span>
+<span class="text-sm font-medium">Critical Bug</span>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low border-l-4 border-secondary rounded flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">payments</span>
+<span class="text-sm font-medium">Billing &amp; Invoice</span>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low border-l-4 border-tertiary rounded flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary">person_add</span>
+<span class="text-sm font-medium">Account Access</span>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low border-l-4 border-secondary/40 rounded flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">help</span>
+<span class="text-sm font-medium">General Inquiry</span>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1 hover:text-error"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Priority & SLA Settings -->
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<h3 class="text-lg font-semibold font-headline mb-6">Priority Levels &amp; SLA Hours</h3>
+<div class="space-y-4">
+<div class="grid grid-cols-12 gap-4 items-center p-3 hover:bg-surface-container/30 rounded-lg transition-colors">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-sm font-bold uppercase tracking-wide">Urgent</span>
+</div>
+<div class="col-span-5">
+<input class="w-24 bg-surface-container-low border-none rounded px-3 py-1.5 text-sm font-mono text-center focus:ring-1 focus:ring-primary" type="number" value="2"/>
+<span class="ml-2 text-xs text-secondary font-label uppercase">Hours</span>
+</div>
+<div class="col-span-3 text-right">
+<span class="text-[10px] bg-error-container text-on-error-container px-2 py-1 rounded font-bold uppercase">Critical Path</span>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-4 items-center p-3 hover:bg-surface-container/30 rounded-lg transition-colors">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-sm font-bold uppercase tracking-wide">High</span>
+</div>
+<div class="col-span-5">
+<input class="w-24 bg-surface-container-low border-none rounded px-3 py-1.5 text-sm font-mono text-center focus:ring-1 focus:ring-primary" type="number" value="8"/>
+<span class="ml-2 text-xs text-secondary font-label uppercase">Hours</span>
+</div>
+<div class="col-span-3 text-right">
+<span class="text-[10px] bg-primary-fixed-dim text-on-primary-fixed-variant px-2 py-1 rounded font-bold uppercase">Business Day</span>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-4 items-center p-3 hover:bg-surface-container/30 rounded-lg transition-colors">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-sm font-bold uppercase tracking-wide">Medium</span>
+</div>
+<div class="col-span-5">
+<input class="w-24 bg-surface-container-low border-none rounded px-3 py-1.5 text-sm font-mono text-center focus:ring-1 focus:ring-primary" type="number" value="24"/>
+<span class="ml-2 text-xs text-secondary font-label uppercase">Hours</span>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-4 items-center p-3 hover:bg-surface-container/30 rounded-lg transition-colors">
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-slate-300"></div>
+<span class="text-sm font-bold uppercase tracking-wide">Low</span>
+</div>
+<div class="col-span-5">
+<input class="w-24 bg-surface-container-low border-none rounded px-3 py-1.5 text-sm font-mono text-center focus:ring-1 focus:ring-primary" type="number" value="72"/>
+<span class="ml-2 text-xs text-secondary font-label uppercase">Hours</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Operational Controls -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold font-headline uppercase tracking-widest text-secondary">Routing</h3>
+<div class="relative inline-block w-10 h-6">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-full h-full bg-slate-200 rounded-full peer-checked:bg-primary transition-colors"></div>
+<div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+</div>
+</div>
+<p class="text-sm font-medium mb-1">Auto-assignment Engine</p>
+<p class="text-xs text-secondary leading-relaxed">Load balance incoming tickets across available technicians based on expertise tags.</p>
+</section>
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<h3 class="text-sm font-bold font-headline uppercase tracking-widest text-secondary mb-4">Lifecycle</h3>
+<div class="flex items-center gap-4">
+<input class="w-16 bg-surface-container-low border-none rounded px-2 py-1.5 text-sm font-mono text-center" type="number" value="5"/>
+<div>
+<p class="text-sm font-medium">Auto-close Resolution</p>
+<p class="text-[10px] text-secondary uppercase tracking-tight font-label">Days after resolved status</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Attachment Settings -->
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<h3 class="text-lg font-semibold font-headline mb-6">Attachment Protocols</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-2 font-label">Max File Size (MB)</label>
+<input class="w-full h-2 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" max="100" min="1" type="range" value="25"/>
+<div class="flex justify-between mt-2 text-xs font-mono text-secondary">
+<span>1MB</span>
+<span class="text-primary font-bold">25MB</span>
+<span>100MB</span>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-2 font-label">Allowed Extensions</label>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-[10px] font-mono rounded flex items-center gap-1">.PDF <button class="hover:text-error">×</button></span>
+<span class="px-2 py-1 bg-surface-container text-[10px] font-mono rounded flex items-center gap-1">.JPG <button class="hover:text-error">×</button></span>
+<span class="px-2 py-1 bg-surface-container text-[10px] font-mono rounded flex items-center gap-1">.PNG <button class="hover:text-error">×</button></span>
+<span class="px-2 py-1 bg-surface-container text-[10px] font-mono rounded flex items-center gap-1">.LOG <button class="hover:text-error">×</button></span>
+<button class="px-2 py-1 border border-dashed border-outline-variant text-[10px] font-mono rounded hover:bg-surface-container transition-colors">+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Final Save Action -->
+<div class="bg-surface-container p-6 rounded-xl flex flex-col md:flex-row items-center gap-6 border border-primary/10">
+<div class="flex-1 w-full">
+<label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-2 font-label">Modification Reason</label>
+<input class="w-full bg-surface-container-lowest border-none rounded px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Explain why these parameters are being updated..." type="text"/>
+</div>
+<button class="w-full md:w-auto px-8 py-3 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-xl">save</span>
+                        COMMIT CHANGES
+                    </button>
+</div>
+</div>
+<!-- Right Column: Audit Log -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm h-fit">
+<h3 class="text-sm font-bold font-headline uppercase tracking-widest text-secondary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">history</span>
+                        Configuration Log
+                    </h3>
+<div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-slate-200">
+<!-- Log Item 1 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] bg-white border-2 border-primary rounded-full z-10"></div>
+<p class="text-xs font-bold text-on-surface">Updated SLA Thresholds</p>
+<p class="text-[11px] text-secondary mt-1 leading-relaxed italic">"Adjusted Urgent priority to match new 2-hour response guarantee."</p>
+<div class="flex items-center justify-between mt-2">
+<span class="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-secondary">ADMIN_X72</span>
+<span class="text-[10px] text-slate-400 font-label uppercase">14 OCT 09:42</span>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] bg-white border-2 border-slate-300 rounded-full z-10"></div>
+<p class="text-xs font-bold text-on-surface">Auto-assign Toggle</p>
+<p class="text-[11px] text-secondary mt-1 leading-relaxed">System-wide auto-routing enabled for Tier 1 support.</p>
+<div class="flex items-center justify-between mt-2">
+<span class="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-secondary">SYS_BOT</span>
+<span class="text-[10px] text-slate-400 font-label uppercase">12 OCT 22:15</span>
+</div>
+</div>
+<!-- Log Item 3 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] bg-white border-2 border-slate-300 rounded-full z-10"></div>
+<p class="text-xs font-bold text-on-surface">Category Modification</p>
+<p class="text-[11px] text-secondary mt-1 leading-relaxed">Added "Critical Bug" category with priority routing.</p>
+<div class="flex items-center justify-between mt-2">
+<span class="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-secondary">ADMIN_M04</span>
+<span class="text-[10px] text-slate-400 font-label uppercase">10 OCT 14:20</span>
+</div>
+</div>
+<!-- Log Item 4 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] bg-white border-2 border-slate-300 rounded-full z-10"></div>
+<p class="text-xs font-bold text-on-surface">Attachment Policy Update</p>
+<p class="text-[11px] text-secondary mt-1 leading-relaxed">Increased max size to 25MB for high-res log files.</p>
+<div class="flex items-center justify-between mt-2">
+<span class="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-secondary">ADMIN_X72</span>
+<span class="text-[10px] text-slate-400 font-label uppercase">08 OCT 11:30</span>
+</div>
+</div>
+<!-- Log Item 5 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[22px] h-[22px] bg-white border-2 border-slate-300 rounded-full z-10"></div>
+<p class="text-xs font-bold text-on-surface">Initial Deck Setup</p>
+<p class="text-[11px] text-secondary mt-1 leading-relaxed">Primary Support &amp; SLA protocols instantiated.</p>
+<div class="flex items-center justify-between mt-2">
+<span class="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-secondary">SYSTEM</span>
+<span class="text-[10px] text-slate-400 font-label uppercase">01 OCT 08:00</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-2 border border-outline-variant text-[10px] font-bold uppercase tracking-widest text-secondary hover:bg-slate-50 transition-colors rounded">
+                        View Full History
+                    </button>
+</section>
+<div class="bg-primary/5 p-6 rounded-xl border border-primary/10">
+<span class="material-symbols-outlined text-primary mb-3">lightbulb</span>
+<h4 class="text-sm font-bold mb-2">Architect's Tip</h4>
+<p class="text-xs text-secondary leading-relaxed">Urgent SLAs typically trigger automated paging systems. Ensure these thresholds align with your on-call engineering rotations.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Success Feedback Overlay (Hidden by Default) -->
+<div class="hidden fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-[100] flex items-center justify-center">
+<div class="bg-surface-container-lowest p-8 rounded-2xl max-w-sm w-full shadow-2xl flex flex-col items-center text-center">
+<div class="w-16 h-16 bg-tertiary-container text-on-tertiary-container rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-4xl">check_circle</span>
+</div>
+<h3 class="text-xl font-bold font-headline mb-2">Protocol Updated</h3>
+<p class="text-sm text-secondary mb-8">All support parameters have been successfully committed to the primary registry.</p>
+<button class="w-full py-3 bg-on-surface text-white font-bold rounded uppercase tracking-widest text-xs">Acknowledge</button>
+</div>
+</div>
+</body></html>

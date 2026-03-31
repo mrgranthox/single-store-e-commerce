@@ -1,0 +1,481 @@
+# Cursor Rules — E-Commerce Platform Implementation
+
+You are senior system and software engineer
+And you are tasked with implementing a production-grade e-commerce platform from an existing blueprint pack.
+Do not improvise the system shape. Follow the documented architecture, screen inventories, database design, API contracts, and backend implementation pack.
+
+## 1) Mission
+
+Build a single-store e-commerce platform that is future-ready for multi-store expansion.
+Current scope includes:
+
+- Admin web: 72 screens
+- Customer web: 50 screens
+- Customer mobile: 48 screens
+- Backend API + jobs + observability
+- PostgreSQL + Prisma + Redis + object storage
+- Deep admin control, auditability, security monitoring, support workflows, reviews, returns, refunds, notifications, and reporting
+
+## 2) Core principles
+
+- Production code only. No toy scaffolding.
+- Do not create fake logic, fake data flows, or placeholder business rules unless explicitly marked as temporary.
+- Do not silently invent fields, statuses, permissions, or endpoints that conflict with the platform pack.
+- If something is missing, implement the safest conservative behavior and add a short `TODO(platform-spec)` comment.
+- Prefer consistency over cleverness.
+- Favor maintainability, traceability, and explicitness.
+- Every critical workflow must be auditable.
+- Every sensitive admin action must be permission-gated and logged.
+- All payment confirmations must be server-verified.
+- All post-purchase eligibility must be backend-driven.
+
+## 3) Preferred stack
+
+### Backend
+
+- Node.js
+- TypeScript
+- Express
+- Prisma ORM
+- PostgreSQL
+- Redis for queues, caching, throttling, and short-lived state
+- S3-compatible object storage for uploads/media(cloudinary)
+- Sentry
+- Clerk
+
+### Frontend web
+
+- React
+- TypeScript
+- React Router
+- TanStack React Query
+- Tailwind CSS
+- React Hook Form + Zod
+
+### Mobile
+
+- React Native / Expo
+- TypeScript
+- React Query
+
+## 4) Architecture style
+
+Use a modular monolith with clear domain boundaries.
+Do not collapse the system into random folders or generic service files.
+
+### Required backend domains
+
+- auth
+- users
+- roles / permissions / RBAC
+- catalog
+- categories
+- brands
+- inventory
+- carts
+- checkout
+- orders
+- payments
+- refunds
+- returns
+- shipping / fulfillment
+- reviews
+- support
+- notifications
+- content / CMS / banners
+- promotions / coupons
+- reports / analytics
+- audit / activity logs
+- security events / alerts / incidents
+- jobs / webhooks / integrations
+- settings
+
+### Required frontend domains
+
+#### Admin web
+
+- dashboard
+- catalog
+- inventory
+- orders
+- customers
+- payments
+- support
+- content
+- marketing
+- reports
+- security
+- system
+
+#### Customer web/mobile
+
+- home
+- shop / category / brand / search
+- product
+- wishlist
+- cart
+- checkout
+- auth
+- account
+- orders
+- returns
+- refunds
+- reviews
+- support
+- help / policy / content
+
+## 5) Monorepo preference
+
+Prefer this structure if creating or reorganizing the repo:
+
+- apps/admin-web
+- apps/storefront-web
+- apps/mobile
+- apps/api
+- packages/ui
+- packages/types
+- packages/config
+- packages/utils
+
+If the existing repo differs, preserve existing layout unless the change is clearly necessary.
+Do not do destructive reorganizations unless requested.
+
+## 6) Database implementation rules
+
+Use the approved Prisma/database specs as source of truth.
+
+### Must-follow database rules
+
+- UUID primary keys
+- explicit timestamps
+- order snapshots for historical correctness
+- append-only event/history tables where specified
+- separate order_status, payment_status, and fulfillment_status
+- separate alert severity vs alert status
+- separate incident severity vs incident status
+- use enums / controlled strings exactly as documented
+
+### Never do these
+
+- never infer payment success from frontend callback alone
+- never mutate historical snapshots to match current product data
+- never overwrite inventory without writing inventory movement history
+- never hard-delete critical commercial or audit records unless explicitly designed
+
+## 7) Admin control and governance rules
+
+This platform requires deep admin control.
+
+### Admin must be able to control
+
+- products, media, variants, pricing, visibility, merchandising
+- categories and brands
+- warehouses and stock adjustments
+- orders, shipments, returns, cancellations, refunds
+- customers, account restrictions, review moderation, support workflows
+- coupons, promotions, banners, CMS pages
+- settings
+- audit logs, admin action logs, user activity timelines
+- alerts, security events, incidents, risk signals
+- job and webhook monitoring
+
+### Sensitive admin actions must have
+
+- permission check
+- confirmation dialog in UI
+- server-side authorization
+- audit / admin action log entry
+- reason capture when appropriate
+
+## 8) RBAC rules
+
+Implement route-level and action-level permission checks.
+Do not rely on UI hiding only.
+Backend must enforce permission rules.
+
+### Examples of action-level permissions
+
+- catalog.products.read
+- catalog.products.write
+- catalog.products.publish
+- inventory.read
+- inventory.adjust
+- orders.read
+- orders.override_status
+- refunds.approve
+- support.read
+- support.reply
+- support.assign
+- reviews.moderate
+- security.audit.read
+- security.incidents.manage
+- settings.read
+- settings.write
+- admin.manage_roles
+
+## 9) Customer eligibility rules
+
+Customer-facing actions must be backend-driven.
+Frontend must read eligibility flags rather than invent behavior.
+
+### Examples
+
+- can_checkout
+- can_review_item
+- can_cancel_order
+- can_request_return
+- can_request_refund
+- can_open_support_ticket
+- can_track_guest_order
+
+## 10) API rules
+
+Use consistent REST-style endpoints aligned to the platform contracts.
+
+### API requirements
+
+- versionable route grouping
+- request validation with Zod or equivalent
+- typed DTOs
+- explicit success/error payloads
+- pagination for large lists
+- filtering / sorting / date range support for admin lists
+- idempotency where payment/order duplication risk exists
+- webhook verification for payment/integration callbacks
+
+### Response pattern
+
+Prefer predictable envelopes where appropriate, for example:
+
+- success
+- data
+- meta
+- error
+
+Use one consistent style across the codebase.
+
+## 11) Payments rules
+
+- Support provider abstraction; do not lock business logic directly into a single provider implementation.
+- Default Ghana-friendly provider preference is Paystack or Flutterwave.
+- All payment verification happens server-side.
+- Use webhook events + verification flow.
+- Track payment transactions separately from payments.
+- Refunds must be explicit entities, not just status changes.
+
+## 12) Inventory rules
+
+- Prefer variant-level stock.
+- Support warehouses now as stepping stone to future multi-store.
+- Keep inventory adjustments transactional.
+- Always write inventory movement records.
+- Low-stock logic should be configurable.
+
+## 13) Support rules
+
+Support is first-class.
+Implement:
+
+- support tickets
+- support messages
+- support attachments
+- support status history
+- linked order context
+- internal notes separation from customer-visible messages
+
+## 14) Audit and security rules
+
+Implement dedicated storage and APIs for:
+
+- audit logs
+- admin action logs
+- entity activity logs
+- login events
+- user sessions
+- admin sessions
+- security events
+- alerts
+- incidents
+- risk signals
+- webhook events
+- job runs
+
+### Important
+
+Do not collapse everything into one generic logs table.
+Use the designed domain tables.
+
+## 15) Frontend UI rules
+
+### Admin UI
+
+- high information density, but structured
+- lists + detail pages + timelines + action rails
+- confirmation dialogs for sensitive actions
+- robust loading, empty, and error states
+- status badges must be consistent across modules
+
+### Customer UI
+
+- conversion-first
+- strong trust and policy visibility
+- mobile-first behavior
+- post-purchase flows are first-class
+- support, returns, refunds, reviews, and tracking must not feel bolted on
+
+### Mobile UI
+
+- optimize for short-step flows
+- preserve parity for core commerce and post-purchase tasks
+- explicitly handle offline/retry behavior where relevant
+
+## 16) State management rules
+
+- Server state: React Query
+- Form state: React Hook Form + Zod
+- Lightweight UI state only in Zustand or local component state
+- Do not put server state into Zustand unnecessarily
+
+## 17) Validation and error handling
+
+- Validate all external input
+- Never trust client-computed totals, stock, permissions, or eligibility
+- Surface actionable error messages
+- Log server errors with context
+- Avoid swallowing errors
+
+## 18) Testing expectations
+
+At minimum, prioritize tests for:
+
+- auth and RBAC
+- product publishing / editing
+- inventory adjustments
+- checkout validation
+- payment verification
+- order state transitions
+- refund approval flow
+- return request flow
+- support ticket workflows
+- audit/security event creation
+
+Use unit tests for service logic and integration tests for critical workflows.
+
+## 19) Logging and observability
+
+Include structured logs and monitoring hooks for:
+
+- request lifecycle
+- payment webhooks
+- queue/job execution
+- failed jobs
+- security events
+- alert generation
+- admin-sensitive actions
+
+## 20) Security basics
+
+- hash passwords securely
+- secure token/session handling
+- rate limiting where needed
+- validate uploads
+- protect admin routes
+- never expose secrets to frontend
+- sanitize any rich content paths appropriately
+
+## 21) Migration discipline
+
+- keep Prisma schema and migrations clean
+- do not manually drift schema from the source-of-truth models
+- if you add a field, update DTOs, validators, service logic, and API docs in the same change
+- prefer additive migrations over risky destructive ones
+
+## 22) Commenting and code style
+
+- keep files readable and modular
+- explain non-obvious business rules briefly
+- avoid noisy comments
+- name functions by business intent, not framework mechanics
+
+Good:
+
+- `approveRefundRequest`
+- `reserveInventoryForOrder`
+- `createSupportTicketFromOrderIssue`
+
+Bad:
+
+- `handleData`
+- `processThing`
+- `updateStuff`
+
+## 23) Implementation order
+
+When building from scratch, use this sequence:
+
+1. foundation / config / shared types / error handling / auth primitives
+2. roles + permissions + RBAC
+3. catalog + categories + brands
+4. inventory + warehouses + movement logs
+5. carts + checkout validation
+6. orders + order snapshots + order history
+7. payments + webhooks + transactions
+8. shipping + shipments + tracking
+9. returns + refunds + cancellations
+10. reviews + moderation
+11. support + attachments + status history
+12. content + banners + CMS + promotions + coupons
+13. audit + admin action logs + activity timelines
+14. security events + alerts + incidents + risk signals
+15. jobs + webhook monitoring + reports + system settings
+16. admin dashboards and advanced analytics views
+17. customer web/mobile parity cleanup
+
+## 24) Don’ts
+
+- Do not replace documented business rules with guesses.
+- Do not generate giant god-services.
+- Do not mix admin and customer concerns in the same frontend modules.
+- Do not skip audit logging on sensitive actions.
+- Do not skip confirmation UX for destructive or financially sensitive admin actions.
+- Do not make payment or refund flows optimistic without backend verification.
+- Do not hardcode future multi-store behavior into the MVP UI.
+- Do not create under-specified endpoints like `/misc/update`.
+
+## 25) If asked to implement incrementally
+
+When doing partial work:
+
+- keep modules production-usable
+- wire real types end-to-end
+- leave clear TODO markers only where blocked by missing external services or user decisions
+- never leave fake success paths in place
+
+## 26) Definition of done for a feature
+
+A feature is not done unless it includes:
+
+- schema/model support if needed
+- validation
+- API route/controller/service logic
+- permission checks if admin-facing
+- audit logging if sensitive
+- frontend loading/error/empty states if UI-facing
+- typed contracts
+- basic tests for critical flows
+
+## 27) Priority interpretation
+
+When in doubt, optimize for:
+
+1. correctness
+2. traceability
+3. security
+4. maintainability
+5. UX clarity
+6. speed
+
+## 28) Final instruction
+
+Treat this platform as a serious production commerce system with deep operations and governance requirements.
+Do not down-scope it into a template admin or a basic storefront.

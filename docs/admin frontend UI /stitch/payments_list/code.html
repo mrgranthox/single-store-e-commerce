@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payments - Financial Control Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#4ae176",
+              "on-tertiary-fixed": "#002109",
+              "on-error-container": "#93000a",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e0e2f0",
+              "surface-dim": "#d8d9e7",
+              "surface": "#faf8ff",
+              "surface-container": "#ecedfb",
+              "on-secondary-fixed-variant": "#444650",
+              "tertiary": "#006b2d",
+              "surface-bright": "#faf8ff",
+              "on-primary-fixed": "#00174a",
+              "tertiary-fixed": "#6bff8f",
+              "on-primary-fixed-variant": "#003ea7",
+              "inverse-surface": "#2d303b",
+              "secondary-fixed-dim": "#c4c6d1",
+              "inverse-primary": "#b4c5ff",
+              "error": "#ba1a1a",
+              "primary": "#1653cc",
+              "background": "#faf8ff",
+              "surface-tint": "#1b55ce",
+              "outline": "#737685",
+              "on-secondary-container": "#60626c",
+              "inverse-on-surface": "#eff0fe",
+              "surface-container-highest": "#e0e2f0",
+              "tertiary-container": "#00873b",
+              "on-tertiary-container": "#f7fff3",
+              "on-surface": "#181b25",
+              "surface-container-high": "#e6e7f6",
+              "secondary-fixed": "#e0e2ed",
+              "outline-variant": "#c3c6d6",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#fefcff",
+              "primary-container": "#3b6de6",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-surface-variant": "#434654",
+              "surface-container-lowest": "#ffffff",
+              "secondary": "#5b5e68",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "primary-fixed": "#dbe1ff",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-container-low": "#f2f3ff",
+              "on-secondary-fixed": "#181b24",
+              "secondary-container": "#dedfeb",
+              "on-background": "#181b25"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "sans-serif"],
+              "body": ["IBM Plex Sans", "sans-serif"],
+              "label": ["Inter", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f0f2f7; }
+        .sidebar-active { background-color: rgba(37, 99, 235, 0.1); color: white; font-weight: 600; border-right: 4px solid #3b82f6; }
+    </style>
+</head>
+<body class="text-on-surface antialiased overflow-hidden">
+<!-- Admin Ops SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#13161e] flex flex-col p-4 overflow-y-auto z-50">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-white font-bold text-xl">
+<span class="material-symbols-outlined">account_tree</span>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tight text-white leading-tight">Admin Ops</h1>
+<p class="text-[0.7rem] text-slate-500 font-medium">Operational Architect</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white" href="#">
+<span class="material-symbols-outlined" data-icon="cancel">cancel</span>
+<span class="text-sm">Cancellations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded transition-colors bg-blue-600/10 text-white font-semibold border-r-4 border-blue-500" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-sm">Payments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="text-sm">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white" href="#">
+<span class="material-symbols-outlined" data-icon="settings_backup_restore">settings_backup_restore</span>
+<span class="text-sm">Refunds</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-800 px-2 flex items-center gap-3">
+<img alt="User profile avatar" class="w-10 h-10 rounded-full object-cover" data-alt="Professional portrait of a male operational architect in a minimalist workspace, neutral lighting, cinematic focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTNPWGmChc25XCfkmCACQSPu1PIkBo0jzyEu6b7Y0ts2lylaHfrfzuejjp5BT7X0IPDaLp0spvCou3WNNBKmDDFUxotPVEJUmDePxei1iaNPaO_2vxKd5va8npWt_uyXIfAMOKJJRTfU7XYb8og0bn8b8NGBDaTm4qS8BDE4n_b0PgY0rEGv5UnyB7dCMd1mjtPyuCCyhaDFsCn1yIJY67B_oB1AfvUyITxMPTFad9dvRueRpM1fuAEU-Xy1oCD8A0SQoGZQnOgtM"/>
+<div class="overflow-hidden">
+<p class="text-sm font-semibold text-white truncate">Marcus Vane</p>
+<p class="text-[0.65rem] text-slate-500 truncate uppercase tracking-wider">System Root</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="fixed top-0 right-0 w-[calc(100%-16rem)] h-screen overflow-y-auto flex flex-col">
+<!-- TopNavBar Shell -->
+<header class="h-16 bg-white dark:bg-[#0f1117] flex items-center justify-between px-6 z-40 border-b border-slate-100 dark:border-slate-800 shrink-0">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-500/20 text-on-surface" placeholder="Global system search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white font-headline">Financial Control Center</h2>
+<div class="flex items-center gap-4 text-slate-500">
+<button class="hover:text-blue-600 transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="hover:text-blue-600 transition-colors"><span class="material-symbols-outlined" data-icon="help_outline">help_outline</span></button>
+<button class="hover:text-blue-600 transition-colors"><span class="material-symbols-outlined" data-icon="account_circle">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- View Content -->
+<div class="p-8 space-y-8">
+<!-- Header & KPIs -->
+<div class="flex flex-col gap-6">
+<div class="flex justify-between items-end">
+<div>
+<h1 class="text-3xl font-bold text-slate-900 font-headline tracking-tight">Payments</h1>
+<p class="text-sm text-slate-500 mt-1">Monitor and manage all inbound financial transactions</p>
+</div>
+<button class="bg-primary text-white px-4 py-2 rounded-md font-semibold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Export Report
+                    </button>
+</div>
+<!-- KPI Strip -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary">
+<div class="flex justify-between items-start">
+<p class="text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Total Processed</p>
+<span class="text-primary-container text-xs font-bold">+12.5%</span>
+</div>
+<h3 class="text-2xl font-bold font-headline mt-2">$2,481,204.00</h3>
+<p class="text-[0.65rem] text-slate-400 mt-1 font-label">Last 30 days</p>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary">
+<div class="flex justify-between items-start">
+<p class="text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Success Rate</p>
+<span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+</div>
+<h3 class="text-2xl font-bold font-headline mt-2">99.2%</h3>
+<p class="text-[0.65rem] text-slate-400 mt-1 font-label">Real-time throughput</p>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-error">
+<div class="flex justify-between items-start">
+<p class="text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Failed Count</p>
+<span class="material-symbols-outlined text-error text-sm">error</span>
+</div>
+<h3 class="text-2xl font-bold font-headline mt-2">12</h3>
+<p class="text-[0.65rem] text-slate-400 mt-1 font-label">Action required: 4</p>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-orange-400">
+<div class="flex justify-between items-start">
+<p class="text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Pending Count</p>
+<span class="material-symbols-outlined text-orange-400 text-sm">pending</span>
+</div>
+<h3 class="text-2xl font-bold font-headline mt-2">48</h3>
+<p class="text-[0.65rem] text-slate-400 mt-1 font-label">Awaiting verification</p>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-lowest p-6 rounded-xl space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<div class="col-span-1 md:col-span-2 relative">
+<label class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Search Reference</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-50 border-slate-200 rounded-md text-xs py-2 pl-10 focus:ring-1 focus:ring-primary/20" placeholder="Order # or Payment Ref..." type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Provider</label>
+<select class="w-full bg-slate-50 border-slate-200 rounded-md text-xs py-2 focus:ring-1 focus:ring-primary/20">
+<option>All Providers</option>
+<option>Stripe</option>
+<option>Paystack</option>
+<option>MTN Mobile Money</option>
+<option>PayPal</option>
+</select>
+</div>
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status</label>
+<select class="w-full bg-slate-50 border-slate-200 rounded-md text-xs py-2 focus:ring-1 focus:ring-primary/20">
+<option>All Statuses</option>
+<option>Completed</option>
+<option>Pending</option>
+<option>Failed</option>
+<option>Refunded</option>
+</select>
+</div>
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Amount Range</label>
+<div class="flex gap-2">
+<input class="w-1/2 bg-slate-50 border-slate-200 rounded-md text-xs py-2 focus:ring-1 focus:ring-primary/20" placeholder="Min" type="text"/>
+<input class="w-1/2 bg-slate-50 border-slate-200 rounded-md text-xs py-2 focus:ring-1 focus:ring-primary/20" placeholder="Max" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Date Range</label>
+<input class="w-full bg-slate-50 border-slate-200 rounded-md text-xs py-2 focus:ring-1 focus:ring-primary/20" type="date"/>
+</div>
+</div>
+<div class="flex justify-end pt-2">
+<button class="text-[0.6875rem] font-bold text-primary uppercase tracking-widest flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">filter_alt_off</span>
+                        Clear Filters
+                    </button>
+</div>
+</div>
+<!-- Payments Table -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-100">
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Payment #</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Order #</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Customer</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest text-right">Amount</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Provider</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Created</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">PAY-829104-X9</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-primary hover:underline cursor-pointer">ORD-4402</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[0.65rem] font-bold">JD</div>
+<span class="text-xs font-semibold text-slate-700">James Dunsford</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-xs font-semibold text-slate-900">$1,240.00</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-4 h-4 rounded bg-blue-600"></span>
+<span class="text-xs text-slate-600">Stripe</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-slate-200 text-[0.65rem] font-bold uppercase tracking-tight text-slate-700">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    Completed
+                                </span>
+</td>
+<td class="px-6 py-4 text-[0.7rem] text-slate-500">Oct 24, 2023 14:22</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors" title="Go to Order"><span class="material-symbols-outlined text-lg">shopping_bag</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">PAY-829105-Z1</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-primary hover:underline cursor-pointer">ORD-4403</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[0.65rem] font-bold text-indigo-700">AW</div>
+<span class="text-xs font-semibold text-slate-700">Avery Watson</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-xs font-semibold text-slate-900">$45.50</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-4 h-4 rounded bg-yellow-500"></span>
+<span class="text-xs text-slate-600">MTN MoMo</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-slate-200 text-[0.65rem] font-bold uppercase tracking-tight text-slate-700">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-6 py-4 text-[0.7rem] text-slate-500">Oct 24, 2023 14:45</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors" title="Go to Order"><span class="material-symbols-outlined text-lg">shopping_bag</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">PAY-829106-Y3</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-primary hover:underline cursor-pointer">ORD-4404</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[0.65rem] font-bold">MK</div>
+<span class="text-xs font-semibold text-slate-700">Mila Kunis</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-xs font-semibold text-slate-900">$892.12</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-4 h-4 rounded bg-cyan-600"></span>
+<span class="text-xs text-slate-600">Paystack</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-slate-200 text-[0.65rem] font-bold uppercase tracking-tight text-slate-700">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Failed
+                                </span>
+</td>
+<td class="px-6 py-4 text-[0.7rem] text-slate-500">Oct 24, 2023 15:02</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors" title="Go to Order"><span class="material-symbols-outlined text-lg">shopping_bag</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">PAY-829107-A4</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-primary hover:underline cursor-pointer">ORD-4405</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-[0.65rem] font-bold text-emerald-700">RP</div>
+<span class="text-xs font-semibold text-slate-700">Riley Parker</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-xs font-semibold text-slate-900">$210.00</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-4 h-4 rounded bg-blue-600"></span>
+<span class="text-xs text-slate-600">Stripe</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-slate-200 text-[0.65rem] font-bold uppercase tracking-tight text-slate-700">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                    Refunded
+                                </span>
+</td>
+<td class="px-6 py-4 text-[0.7rem] text-slate-500">Oct 24, 2023 15:30</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors" title="Go to Order"><span class="material-symbols-outlined text-lg">shopping_bag</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">PAY-829108-L2</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-primary hover:underline cursor-pointer">ORD-4406</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[0.65rem] font-bold">TC</div>
+<span class="text-xs font-semibold text-slate-700">Tom Cruise</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-xs font-semibold text-slate-900">$5,000.00</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-4 h-4 rounded bg-blue-600"></span>
+<span class="text-xs text-slate-600">Stripe</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full border border-slate-200 text-[0.65rem] font-bold uppercase tracking-tight text-slate-700">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    Completed
+                                </span>
+</td>
+<td class="px-6 py-4 text-[0.7rem] text-slate-500">Oct 24, 2023 16:12</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-3">
+<button class="text-slate-400 hover:text-primary transition-colors" title="View Details"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="text-slate-400 hover:text-primary transition-colors" title="Go to Order"><span class="material-symbols-outlined text-lg">shopping_bag</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between border-t border-slate-100">
+<p class="text-xs text-slate-500 font-label">Showing 1 to 5 of 4,209 results</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-slate-200 rounded text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-50">Previous</button>
+<button class="px-3 py-1 bg-primary text-white rounded text-xs font-bold">1</button>
+<button class="px-3 py-1 border border-slate-200 rounded text-xs text-slate-600 hover:bg-slate-50">2</button>
+<button class="px-3 py-1 border border-slate-200 rounded text-xs text-slate-600 hover:bg-slate-50">3</button>
+<button class="px-3 py-1 border border-slate-200 rounded text-xs text-slate-600 hover:bg-slate-50">Next</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="mt-auto p-6 flex justify-between items-center text-[0.65rem] text-slate-400 uppercase tracking-widest font-bold">
+<div class="flex gap-4">
+<span>System Status: Operational</span>
+<span>Latency: 24ms</span>
+</div>
+<div>
+                © 2024 Admin Ops Framework v4.2.1
+            </div>
+</footer>
+</main>
+</body></html>

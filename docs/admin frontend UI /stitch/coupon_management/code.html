@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coupons | Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-bright": "#faf8ff",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-background": "#181b25",
+              "surface-container-highest": "#e0e2f0",
+              "inverse-surface": "#2d303b",
+              "inverse-on-surface": "#eff0fe",
+              "secondary-container": "#dedfeb",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#00873b",
+              "surface-variant": "#e0e2f0",
+              "tertiary-fixed": "#6bff8f",
+              "surface-dim": "#d8d9e7",
+              "on-primary-fixed": "#00174a",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f2f3ff",
+              "outline": "#737685",
+              "primary-fixed": "#dbe1ff",
+              "tertiary-fixed-dim": "#4ae176",
+              "on-primary-fixed-variant": "#003ea7",
+              "surface-container": "#ecedfb",
+              "on-secondary-container": "#60626c",
+              "surface": "#faf8ff",
+              "on-secondary-fixed-variant": "#444650",
+              "background": "#faf8ff",
+              "surface-tint": "#1b55ce",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-high": "#e6e7f6",
+              "secondary": "#5b5e68",
+              "primary-container": "#3b6de6",
+              "on-tertiary-fixed": "#002109",
+              "error": "#ba1a1a",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-secondary": "#ffffff",
+              "tertiary": "#006b2d",
+              "on-tertiary-container": "#f7fff3",
+              "on-surface-variant": "#434654",
+              "outline-variant": "#c3c6d6",
+              "secondary-fixed": "#e0e2ed",
+              "on-error-container": "#93000a",
+              "primary": "#1653cc",
+              "on-primary-container": "#fefcff",
+              "on-surface": "#181b25",
+              "inverse-primary": "#b4c5ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans"],
+              "label": ["IBM Plex Sans"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .tonal-depth-shift {
+        background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+      }
+      .glass-drawer {
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.85);
+      }
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #434654; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] font-body text-on-background">
+<!-- SIDEBAR SHELL -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#13161e] flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Command Deck</h1>
+<p class="text-[0.6875rem] uppercase tracking-wider font-semibold text-slate-400">Operational Architect</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:bg-[#1a1d27] hover:text-white transition-colors duration-200 font-label text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">support_agent</span>
+                Complaints
+            </a>
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:bg-[#1a1d27] hover:text-white transition-colors duration-200 font-label text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">leaderboard</span>
+                Analytics
+            </a>
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:bg-[#1a1d27] hover:text-white transition-colors duration-200 font-label text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">branding_watermark</span>
+                Banners
+            </a>
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:bg-[#1a1d27] hover:text-white transition-colors duration-200 font-label text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">description</span>
+                CMS Pages
+            </a>
+<a class="flex items-center px-3 py-2.5 bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] font-label text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">confirmation_number</span>
+                Coupons
+            </a>
+</nav>
+<div class="px-6 mt-auto pt-6 border-t border-slate-800/50">
+<div class="flex items-center mb-6">
+<img alt="Admin User Profile" class="w-10 h-10 rounded-full border border-slate-700" data-alt="portrait of a professional executive in a dark suit with a neutral confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzZcBK2Ni9hHpg-IO8Ssk3lkRJ0nBAMnlaEJ0PIdsiYGs-y6xXPRF1N0bwto3u6NIRyIkvcrBWz-9JSKVVNmDQGLmQFAWz7Grur6_xkBHzmqxUJCGEvawr2g5cd7cUsGArNvhsG83XcUGHfuuaUt6bFWh7OHKIUTk_SSTucghDy_qz8HF0fl5-sSEomF5jv7BUBe8z0PHCl3M0fHFBINKMEdTK4sUlmvI9KznKK5X428Ypa3wZggQj-89bqHXm5CpxzJ4T1GuvBtg"/>
+<div class="ml-3 overflow-hidden">
+<p class="text-white text-xs font-semibold truncate">Admin User</p>
+<p class="text-slate-500 text-[10px] truncate">admin@command.deck</p>
+</div>
+</div>
+<div class="space-y-1">
+<a class="flex items-center py-2 text-slate-400 hover:text-white text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">settings</span> Settings
+                </a>
+<a class="flex items-center py-2 text-slate-400 hover:text-white text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">logout</span> Logout
+                </a>
+</div>
+</div>
+</aside>
+<!-- TOP NAV SHELL -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white border-b border-slate-100 flex justify-between items-center px-8">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-[#f8f9fb] border-none text-sm rounded-lg pl-10 focus:ring-1 focus:ring-primary" placeholder="Search operational indices..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-6">
+<div class="flex items-center space-x-4 text-slate-500 font-label text-sm font-medium">
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="hover:text-primary transition-colors" href="#">Logs</a>
+<a class="hover:text-primary transition-colors" href="#">Reports</a>
+</div>
+<div class="h-4 w-px bg-slate-200"></div>
+<div class="flex items-center space-x-3 text-slate-400">
+<button class="hover:text-primary"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-primary"><span class="material-symbols-outlined">help_outline</span></button>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="ml-64 pt-24 pb-12 px-8 min-h-screen">
+<!-- HEADER SECTION -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<nav class="flex text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">
+<span class="hover:text-primary cursor-pointer">ADMIN</span>
+<span class="mx-2">/</span>
+<span class="text-slate-600">COUPON MANAGEMENT</span>
+</nav>
+<h2 class="text-3xl font-bold font-headline tracking-tight text-[#181b25]">Coupons</h2>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-5 py-2.5 rounded-lg flex items-center font-semibold text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined mr-2">add</span>
+                + Create Coupon
+            </button>
+</div>
+<!-- KPI MINI-GRID -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-400 mb-1">Active Coupons</p>
+<div class="flex justify-between items-end">
+<span class="text-2xl font-bold font-headline">128</span>
+<span class="text-[10px] text-tertiary font-bold flex items-center bg-tertiary-container/10 px-1.5 py-0.5 rounded">+4.2%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-400 mb-1">Total Revenue Saved</p>
+<div class="flex justify-between items-end">
+<span class="text-2xl font-bold font-headline font-mono">$12,402.50</span>
+<span class="text-[10px] text-slate-400 font-bold">LIFETIME</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-error">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-400 mb-1">Expired Soon</p>
+<div class="flex justify-between items-end">
+<span class="text-2xl font-bold font-headline text-error">12</span>
+<span class="text-[10px] text-error font-bold bg-error-container/20 px-1.5 py-0.5 rounded">URGENT</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-outline">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-400 mb-1">Avg. Usage Rate</p>
+<div class="flex justify-between items-end">
+<span class="text-2xl font-bold font-headline">64.2%</span>
+<span class="text-[10px] text-slate-400 font-bold">SYSTEM-WIDE</span>
+</div>
+</div>
+</div>
+<!-- FILTER BAR -->
+<div class="bg-surface-container-lowest rounded-xl p-4 mb-6 grid grid-cols-5 gap-4 items-end">
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Status</label>
+<select class="w-full bg-[#f8f9fb] border-none rounded-lg text-xs font-medium focus:ring-1 focus:ring-primary">
+<option>All Statuses</option>
+<option>Active</option>
+<option>Disabled</option>
+<option>Expired</option>
+</select>
+</div>
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Type</label>
+<select class="w-full bg-[#f8f9fb] border-none rounded-lg text-xs font-medium focus:ring-1 focus:ring-primary">
+<option>All Types</option>
+<option>Percentage</option>
+<option>Fixed Amount</option>
+<option>Free Shipping</option>
+</select>
+</div>
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Date Range</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">calendar_today</span>
+<input class="w-full bg-[#f8f9fb] border-none rounded-lg text-xs font-medium pl-9 focus:ring-1 focus:ring-primary" type="text" value="Oct 12 - Nov 12"/>
+</div>
+</div>
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-500 mb-1 block">Usage Range</label>
+<input class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary mt-4" type="range"/>
+</div>
+<div class="flex justify-end">
+<button class="bg-slate-100 text-slate-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition-colors">Clear Filters</button>
+</div>
+</div>
+<!-- DATA TABLE -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#f8f9fb] border-b border-slate-100">
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Code</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Type</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Discount</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Min Order</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Usage/Limit</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Status</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Expires</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<!-- ROW 1 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-3.5">
+<div class="flex items-center space-x-2">
+<span class="font-mono text-sm font-medium text-primary">FALL-SALE-24</span>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<span class="text-[10px] font-bold text-slate-600 border border-slate-200 px-2 py-0.5 rounded-full bg-white">PERCENTAGE</span>
+</td>
+<td class="px-6 py-3.5 font-bold text-sm">20% OFF</td>
+<td class="px-6 py-3.5 font-mono text-xs text-slate-500">$50.00</td>
+<td class="px-6 py-3.5">
+<div class="w-full max-w-[100px]">
+<div class="flex justify-between text-[10px] font-bold mb-1">
+<span>842</span>
+<span class="text-slate-400">/ 1,000</span>
+</div>
+<div class="h-1 w-full bg-slate-100 rounded-full">
+<div class="h-1 bg-primary rounded-full" style="width: 84%;"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<div class="flex items-center text-[10px] font-bold text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span>
+                                ACTIVE
+                            </div>
+</td>
+<td class="px-6 py-3.5 text-xs text-slate-500">Dec 31, 2024</td>
+<td class="px-6 py-3.5 text-right">
+<div class="flex justify-end space-x-2">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="View Analytics"><span class="material-symbols-outlined text-lg">analytics</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error hover:bg-error/5 rounded-md transition-all" title="Disable"><span class="material-symbols-outlined text-lg">block</span></button>
+</div>
+</td>
+</tr>
+<!-- ROW 2 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-3.5">
+<div class="flex items-center space-x-2">
+<span class="font-mono text-sm font-medium text-primary">WINTER25-FIX</span>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<span class="text-[10px] font-bold text-slate-600 border border-slate-200 px-2 py-0.5 rounded-full bg-white">FIXED AMOUNT</span>
+</td>
+<td class="px-6 py-3.5 font-bold text-sm">$15.00 OFF</td>
+<td class="px-6 py-3.5 font-mono text-xs text-slate-500">$100.00</td>
+<td class="px-6 py-3.5">
+<div class="w-full max-w-[100px]">
+<div class="flex justify-between text-[10px] font-bold mb-1">
+<span>210</span>
+<span class="text-slate-400">/ 500</span>
+</div>
+<div class="h-1 w-full bg-slate-100 rounded-full">
+<div class="h-1 bg-primary rounded-full" style="width: 42%;"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<div class="flex items-center text-[10px] font-bold text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span>
+                                ACTIVE
+                            </div>
+</td>
+<td class="px-6 py-3.5 text-xs text-slate-500">Jan 15, 2025</td>
+<td class="px-6 py-3.5 text-right">
+<div class="flex justify-end space-x-2">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="View Analytics"><span class="material-symbols-outlined text-lg">analytics</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error hover:bg-error/5 rounded-md transition-all" title="Disable"><span class="material-symbols-outlined text-lg">block</span></button>
+</div>
+</td>
+</tr>
+<!-- ROW 3 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-3.5">
+<div class="flex items-center space-x-2">
+<span class="font-mono text-sm font-medium text-slate-400">SUMMER-EXPIRED</span>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<span class="text-[10px] font-bold text-slate-600 border border-slate-200 px-2 py-0.5 rounded-full bg-white">FREE SHIPPING</span>
+</td>
+<td class="px-6 py-3.5 font-bold text-sm text-slate-400">$0.00</td>
+<td class="px-6 py-3.5 font-mono text-xs text-slate-400">$25.00</td>
+<td class="px-6 py-3.5">
+<div class="w-full max-w-[100px]">
+<div class="flex justify-between text-[10px] font-bold mb-1 text-slate-400">
+<span>300</span>
+<span>/ 300</span>
+</div>
+<div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+<div class="h-1 bg-slate-300 rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<div class="flex items-center text-[10px] font-bold text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-2"></span>
+                                EXPIRED
+                            </div>
+</td>
+<td class="px-6 py-3.5 text-xs text-slate-400">Aug 30, 2024</td>
+<td class="px-6 py-3.5 text-right">
+<div class="flex justify-end space-x-2">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="View Analytics"><span class="material-symbols-outlined text-lg">analytics</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary hover:bg-tertiary/5 rounded-md transition-all" title="Enable"><span class="material-symbols-outlined text-lg">restore</span></button>
+</div>
+</td>
+</tr>
+<!-- ROW 4 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-3.5">
+<div class="flex items-center space-x-2">
+<span class="font-mono text-sm font-medium text-slate-400 line-through">INTERNAL-TEST</span>
+<button class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<span class="text-[10px] font-bold text-slate-600 border border-slate-200 px-2 py-0.5 rounded-full bg-white">PERCENTAGE</span>
+</td>
+<td class="px-6 py-3.5 font-bold text-sm text-slate-400">90% OFF</td>
+<td class="px-6 py-3.5 font-mono text-xs text-slate-400">$0.00</td>
+<td class="px-6 py-3.5">
+<div class="w-full max-w-[100px]">
+<div class="flex justify-between text-[10px] font-bold mb-1 text-slate-400">
+<span>5</span>
+<span>/ ∞</span>
+</div>
+<div class="h-1 w-full bg-slate-100 rounded-full">
+<div class="h-1 bg-slate-400 rounded-full" style="width: 5%;"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-3.5">
+<div class="flex items-center text-[10px] font-bold text-orange-500">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2"></span>
+                                DISABLED
+                            </div>
+</td>
+<td class="px-6 py-3.5 text-xs text-slate-400">Never</td>
+<td class="px-6 py-3.5 text-right">
+<div class="flex justify-end space-x-2">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="Edit"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-all" title="View Analytics"><span class="material-symbols-outlined text-lg">analytics</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary hover:bg-tertiary/5 rounded-md transition-all" title="Enable"><span class="material-symbols-outlined text-lg">check_circle</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- PAGINATION -->
+<div class="px-6 py-4 bg-[#f8f9fb] flex justify-between items-center">
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Showing 1 to 4 of 128 entries</p>
+<div class="flex space-x-1">
+<button class="w-8 h-8 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-white transition-all"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-8 h-8 rounded bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded border border-slate-200 text-xs font-bold text-slate-600 hover:bg-white transition-all">2</button>
+<button class="w-8 h-8 rounded border border-slate-200 text-xs font-bold text-slate-600 hover:bg-white transition-all">3</button>
+<span class="px-2 self-center text-slate-400">...</span>
+<button class="w-8 h-8 rounded border border-slate-200 text-xs font-bold text-slate-600 hover:bg-white transition-all">32</button>
+<button class="w-8 h-8 rounded border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-white transition-all"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+<!-- RIGHT SIDE WORKSPACE DRAWER (SIMULATED FOCUS MODE) -->
+<!-- Hidden by default, normally toggled via JS -->
+<div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-end invisible opacity-0 pointer-events-none transition-all">
+<div class="w-full max-w-lg glass-drawer h-full shadow-2xl flex flex-col">
+<div class="p-6 flex justify-between items-center border-b border-slate-200">
+<h3 class="text-xl font-bold font-headline">New Coupon Workspace</h3>
+<button class="p-2 hover:bg-slate-100 rounded-full transition-colors"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 space-y-6">
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-500 mb-2 block tracking-widest">Coupon Identity</label>
+<div class="space-y-4">
+<input class="w-full bg-[#f8f9fb] border-none rounded-lg text-sm font-mono focus:ring-1 focus:ring-primary uppercase" placeholder="Coupon Code (e.g. FLASH50)" type="text"/>
+<textarea class="w-full bg-[#f8f9fb] border-none rounded-lg text-sm focus:ring-1 focus:ring-primary" placeholder="Description" rows="3"></textarea>
+</div>
+</div>
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-500 mb-2 block tracking-widest">Logic &amp; Thresholds</label>
+<div class="grid grid-cols-2 gap-4">
+<select class="w-full bg-[#f8f9fb] border-none rounded-lg text-sm focus:ring-1 focus:ring-primary">
+<option>Percentage</option>
+<option>Fixed Amount</option>
+</select>
+<input class="w-full bg-[#f8f9fb] border-none rounded-lg text-sm focus:ring-1 focus:ring-primary" placeholder="Value" type="number"/>
+</div>
+</div>
+<div class="bg-primary/5 p-4 rounded-lg border border-primary/10">
+<h4 class="text-xs font-bold text-primary mb-2 flex items-center">
+<span class="material-symbols-outlined text-sm mr-2">info</span>
+                        AI Recommended Limits
+                    </h4>
+<p class="text-[11px] text-primary/80">Based on your recent sales patterns, a usage limit of 2,500 redemptions is recommended for this coupon to maximize ROI.</p>
+</div>
+</div>
+<div class="p-6 border-t border-slate-200 bg-white/50">
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold text-sm hover:bg-primary-container transition-all shadow-lg shadow-primary/10">Deploy Coupon</button>
+</div>
+</div>
+</div>
+</body></html>

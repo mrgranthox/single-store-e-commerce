@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Background Jobs | Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#5b5e68",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d8d9e7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e2f0",
+                        "on-surface": "#181b25",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "surface-container-low": "#f2f3ff",
+                        "on-tertiary-container": "#f7fff3",
+                        "surface-bright": "#faf8ff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#002109",
+                        "on-secondary-fixed-variant": "#444650",
+                        "surface-tint": "#1b55ce",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "tertiary-fixed": "#6bff8f",
+                        "on-background": "#181b25",
+                        "on-secondary-container": "#60626c",
+                        "on-primary-fixed": "#00174a",
+                        "on-primary-container": "#fefcff",
+                        "secondary-container": "#dedfeb",
+                        "on-secondary-fixed": "#181b24",
+                        "surface-container-highest": "#e0e2f0",
+                        "surface": "#faf8ff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "tertiary-container": "#00873b",
+                        "outline-variant": "#c3c6d6",
+                        "surface-container": "#ecedfb",
+                        "inverse-on-surface": "#eff0fe",
+                        "outline": "#737685",
+                        "primary-container": "#3b6de6",
+                        "on-secondary": "#ffffff",
+                        "primary": "#1653cc",
+                        "secondary-fixed": "#e0e2ed",
+                        "tertiary": "#006b2d",
+                        "inverse-surface": "#2d303b",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-high": "#e6e7f6",
+                        "on-surface-variant": "#434654",
+                        "background": "#faf8ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["IBM Plex Sans"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+            font-size: 1.25rem;
+        }
+        .mono-id { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased">
+<!-- SideNavBar (Shell) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#13161e] flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Operational Architect</h1>
+<p class="text-slate-500 text-xs font-label uppercase tracking-widest mt-1">System Admin</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded" href="#">
+<span class="material-symbols-outlined mr-3">support_agent</span>
+<span class="text-sm font-medium">Support Settings</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded" href="#">
+<span class="material-symbols-outlined mr-3">webhook</span>
+<span class="text-sm font-medium">Webhooks</span>
+</a>
+<!-- Active Navigation: Background Jobs -->
+<a class="flex items-center px-3 py-2 bg-[#1a1d27] text-white font-semibold rounded" href="#">
+<span class="material-symbols-outlined mr-3 text-[#4f7ef8]">settings_backup_restore</span>
+<span class="text-sm font-medium">Background Jobs</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded" href="#">
+<span class="material-symbols-outlined mr-3">health_and_safety</span>
+<span class="text-sm font-medium">Integration Health</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded" href="#">
+<span class="material-symbols-outlined mr-3">terminal</span>
+<span class="text-sm font-medium">System Audit</span>
+</a>
+</nav>
+<div class="px-3 pt-6 mt-auto border-t border-slate-800/50">
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded mb-1" href="#">
+<span class="material-symbols-outlined mr-3">description</span>
+<span class="text-sm font-medium">Documentation</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded" href="#">
+<span class="material-symbols-outlined mr-3">help</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+<div class="mt-6 px-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-white text-xs font-bold">OA</div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-white truncate">Admin User</p>
+<p class="text-[10px] text-slate-500 truncate">admin@system.io</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="w-full h-16 sticky top-0 z-40 bg-[#f0f2f7] dark:bg-[#0f1117] flex items-center justify-between px-8">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-1.5 bg-surface-container-lowest border-none text-[0.75rem] font-label tracking-wide focus:ring-1 focus:ring-primary rounded-lg shadow-sm" placeholder="SEARCH JOBS, WORKERS, OR LOGS..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<span class="font-headline font-semibold text-[#0f1117] dark:text-white uppercase tracking-tighter">Command Deck</span>
+</div>
+</header>
+<!-- Operational Canvas -->
+<div class="p-8">
+<!-- Header Section -->
+<div class="mb-8">
+<h2 class="text-2xl font-bold font-headline text-on-background tracking-tight">Background Jobs</h2>
+<p class="text-secondary text-sm">Real-time async job health and worker execution monitor.</p>
+</div>
+<!-- Summary Strip (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-container-lowest p-5 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary"></div>
+<span class="text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Successful (24h)</span>
+<div class="flex items-end justify-between mt-2">
+<span class="text-3xl font-bold font-headline tracking-tighter text-tertiary">14,282</span>
+<span class="text-[0.6875rem] font-label text-tertiary flex items-center"><span class="material-symbols-outlined text-sm mr-1">trending_up</span> +12%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl flex flex-col justify-between relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<span class="text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Failed (24h)</span>
+<div class="flex items-end justify-between mt-2">
+<span class="text-3xl font-bold font-headline tracking-tighter text-error">42</span>
+<span class="text-[0.6875rem] font-label text-error flex items-center"><span class="material-symbols-outlined text-sm mr-1">trending_down</span> -2%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl flex flex-col justify-between relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<span class="text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Running Now</span>
+<div class="flex items-end justify-between mt-2">
+<span class="text-3xl font-bold font-headline tracking-tighter text-primary">128</span>
+<div class="flex space-x-0.5">
+<div class="w-1.5 h-4 bg-primary animate-pulse"></div>
+<div class="w-1.5 h-6 bg-primary animate-pulse delay-75"></div>
+<div class="w-1.5 h-3 bg-primary animate-pulse delay-150"></div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl flex flex-col justify-between relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
+<span class="text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Scheduled Next Hour</span>
+<div class="flex items-end justify-between mt-2">
+<span class="text-3xl font-bold font-headline tracking-tighter text-on-surface">854</span>
+<span class="material-symbols-outlined text-slate-400">schedule</span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-wrap items-center gap-4 mb-6">
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[10px] font-label font-bold uppercase text-secondary mb-1">Filter by Job Name</label>
+<input class="w-full bg-surface-container-low border-none rounded text-sm px-3 py-2" placeholder="e.g. SyncOrderWorker" type="text"/>
+</div>
+<div class="w-48">
+<label class="block text-[10px] font-label font-bold uppercase text-secondary mb-1">Status</label>
+<select class="w-full bg-surface-container-low border-none rounded text-sm px-3 py-2">
+<option>All Statuses</option>
+<option>Completed</option>
+<option>Failed</option>
+<option>Running</option>
+<option>Scheduled</option>
+<option>Retrying</option>
+</select>
+</div>
+<div class="w-48">
+<label class="block text-[10px] font-label font-bold uppercase text-secondary mb-1">Date Range</label>
+<input class="w-full bg-surface-container-low border-none rounded text-sm px-3 py-2" type="date"/>
+</div>
+<div class="flex items-end h-full">
+<button class="bg-primary hover:bg-primary-container text-white px-6 py-2 rounded font-medium text-sm transition-all duration-200">
+                        Apply Filters
+                    </button>
+</div>
+</div>
+<!-- Jobs Table -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container text-left">
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Job ID</th>
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Job Name</th>
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Status</th>
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Started</th>
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Duration</th>
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary">Queue</th>
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary text-center">Retry #</th>
+<th class="px-6 py-4 text-[0.6875rem] font-label font-bold uppercase tracking-widest text-secondary text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/15">
+<!-- Failed Job Row -->
+<tr class="hover:bg-surface-container-high border-l-4 border-l-error transition-colors">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-error">JID-882194</td>
+<td class="px-6 py-4 text-sm font-semibold">ProcessStripeWebhooks</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-error text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span> Failed
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-secondary">2023-10-24 14:22:11</td>
+<td class="px-6 py-4 text-sm text-on-surface">4.2s</td>
+<td class="px-6 py-4 text-[10px] font-bold uppercase text-secondary tracking-wider">payments</td>
+<td class="px-6 py-4 text-center font-mono text-sm">3</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1 hover:text-primary transition-colors" title="View Logs">
+<span class="material-symbols-outlined text-lg">data_object</span>
+</button>
+<button class="p-1 hover:text-error transition-colors" title="Retry">
+<span class="material-symbols-outlined text-lg">replay</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Long Running Job Row -->
+<tr class="hover:bg-surface-container-high border-l-4 border-l-[#f59e0b] transition-colors">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-on-surface-variant">JID-100234</td>
+<td class="px-6 py-4 text-sm font-semibold">GenerateMonthlyReports</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-primary text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5 animate-pulse"></span> Running
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-secondary">2023-10-24 14:18:05</td>
+<td class="px-6 py-4 text-sm font-bold text-[#f59e0b]">4m 06s</td>
+<td class="px-6 py-4 text-[10px] font-bold uppercase text-secondary tracking-wider">reporting</td>
+<td class="px-6 py-4 text-center font-mono text-sm">0</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 text-slate-400">
+<button class="p-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Normal Job Row -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-on-surface-variant">JID-992120</td>
+<td class="px-6 py-4 text-sm font-semibold">SendWelcomeEmail</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-tertiary text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span> Completed
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-secondary">2023-10-24 14:25:01</td>
+<td class="px-6 py-4 text-sm text-on-surface">120ms</td>
+<td class="px-6 py-4 text-[10px] font-bold uppercase text-secondary tracking-wider">default</td>
+<td class="px-6 py-4 text-center font-mono text-sm">0</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 text-slate-400">
+<button class="p-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">content_copy</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Retrying Job Row -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4 font-mono text-[0.75rem] text-on-surface-variant">JID-882552</td>
+<td class="px-6 py-4 text-sm font-semibold">ClearCacheWorker</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-secondary text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span> Retrying
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-secondary">2023-10-24 14:24:55</td>
+<td class="px-6 py-4 text-sm text-on-surface">--</td>
+<td class="px-6 py-4 text-[10px] font-bold uppercase text-secondary tracking-wider">system</td>
+<td class="px-6 py-4 text-center font-mono text-sm">1</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 text-slate-400">
+<button class="p-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">data_object</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 flex items-center justify-between border-t border-outline-variant/15">
+<span class="text-xs text-secondary font-label">SHOWING 1-25 OF 12,402 JOBS</span>
+<div class="flex gap-1">
+<button class="px-3 py-1 text-xs border border-outline-variant rounded hover:bg-surface-container-low">PREVIOUS</button>
+<button class="px-3 py-1 text-xs bg-primary text-white rounded">1</button>
+<button class="px-3 py-1 text-xs border border-outline-variant rounded hover:bg-surface-container-low">2</button>
+<button class="px-3 py-1 text-xs border border-outline-variant rounded hover:bg-surface-container-low">3</button>
+<button class="px-3 py-1 text-xs border border-outline-variant rounded hover:bg-surface-container-low">NEXT</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Side Detail Drawer (Hidden by default, shown for context) -->
+<aside class="fixed inset-y-0 right-0 w-[500px] glass-panel shadow-2xl z-50 transform translate-x-full lg:translate-x-0 border-l border-outline-variant/20 flex flex-col">
+<div class="p-6 border-b border-outline-variant/15 flex items-center justify-between">
+<div>
+<span class="text-[10px] font-label font-bold uppercase text-secondary tracking-widest">Job Details</span>
+<h3 class="text-lg font-bold font-headline mt-1">JID-882194</h3>
+</div>
+<button class="text-secondary hover:text-on-background">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Summary section -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container p-3 rounded">
+<span class="block text-[10px] font-label font-bold text-secondary uppercase">Worker</span>
+<span class="text-sm font-semibold">ProcessStripeWebhooks</span>
+</div>
+<div class="bg-surface-container p-3 rounded">
+<span class="block text-[10px] font-label font-bold text-secondary uppercase">Attempts</span>
+<span class="text-sm font-semibold">3 / 25</span>
+</div>
+</div>
+<!-- Error Stack Trace -->
+<div class="bg-error-container/20 border-l-2 border-error p-4">
+<div class="flex items-center gap-2 mb-2 text-error">
+<span class="material-symbols-outlined text-sm">error</span>
+<span class="text-xs font-bold uppercase font-label">Runtime Exception</span>
+</div>
+<p class="text-sm font-mono text-on-error-container leading-tight">Stripe::SignatureVerificationError: Invalid signature for event_id: evt_1O0X... </p>
+<div class="mt-4 bg-[#0f1117] p-3 rounded text-[11px] font-mono text-slate-300 h-48 overflow-y-auto leading-relaxed">
+                    /var/www/app/services/stripe_handler.rb:45:in `verify!'<br/>
+                    /var/www/app/workers/stripe_webhook_worker.rb:12:in `perform'<br/>
+                    /usr/local/bundle/gems/sidekiq-7.0.0/lib/sidekiq/processor.rb:202:in `block in process'<br/>
+                    /usr/local/bundle/gems/sidekiq-7.0.0/lib/sidekiq/middleware/chain.rb:159:in `invoke'<br/>
+                    ... 12 more frames
+                </div>
+</div>
+<!-- Input Payload -->
+<details class="group bg-surface-container rounded overflow-hidden" open="">
+<summary class="p-4 cursor-pointer flex items-center justify-between hover:bg-surface-container-high transition-colors">
+<span class="text-xs font-bold uppercase font-label">Input Payload</span>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-4 pt-0">
+<pre class="bg-[#1a1d27] text-tertiary-fixed-dim p-4 rounded text-xs font-mono overflow-x-auto">{
+  "id": "evt_1O0X...",
+  "type": "invoice.payment_succeeded",
+  "data": {
+    "object": {
+      "id": "in_1O0X...",
+      "customer": "cus_Nl2..."
+    }
+  }
+}</pre>
+</div>
+</details>
+<!-- Execution Logs -->
+<div>
+<h4 class="text-xs font-bold uppercase font-label text-secondary mb-3">Execution Logs</h4>
+<div class="space-y-2">
+<div class="flex gap-3 text-xs">
+<span class="text-secondary font-mono">14:22:09</span>
+<span class="text-primary font-bold">[INFO]</span>
+<span class="text-slate-600">Job started on worker instance-22</span>
+</div>
+<div class="flex gap-3 text-xs">
+<span class="text-secondary font-mono">14:22:10</span>
+<span class="text-primary font-bold">[INFO]</span>
+<span class="text-slate-600">Fetching webhook payload from cache...</span>
+</div>
+<div class="flex gap-3 text-xs">
+<span class="text-secondary font-mono">14:22:11</span>
+<span class="text-error font-bold">[ERROR]</span>
+<span class="text-error">Signature verification failed. Retrying in 300s.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-6 border-t border-outline-variant/15 flex gap-3">
+<button class="flex-1 bg-surface-container-highest hover:bg-outline-variant/30 text-on-surface py-3 rounded font-bold text-xs uppercase tracking-widest transition-all">
+                Dismiss Error
+            </button>
+<button class="flex-1 bg-primary hover:bg-primary-container text-white py-3 rounded font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-primary/20">
+                Retry Now
+            </button>
+</div>
+</aside>
+<!-- FAB for Quick Task (Optional as per system rules, only if primary action) -->
+<!-- Suppressed on detail screen as per instructions -->
+</body></html>

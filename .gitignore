@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Secrets — never commit (examples use .env.example only)
+.env
+.env.*
+!.env.example
+
+# Builds
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Prisma generated client (per-package)
+backend/.prisma/
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE (keep optional shared editor config)
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Tests & reports
+coverage/
+**/test-results/
+**/playwright-report/
+**/.playwright/
+
+# Lighthouse CI
+.lighthouseci/
+
+.cursorrules
+.cursor/
+.cursorignore

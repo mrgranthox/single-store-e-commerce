@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Account Action Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#5b5e68",
+                        "inverse-surface": "#2d303b",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-variant": "#e0e2f0",
+                        "outline-variant": "#c3c6d6",
+                        "on-surface-variant": "#434654",
+                        "tertiary": "#006b2d",
+                        "on-surface": "#181b25",
+                        "on-secondary-container": "#60626c",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-primary-fixed": "#00174a",
+                        "secondary-fixed": "#e0e2ed",
+                        "inverse-on-surface": "#eff0fe",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-secondary-fixed": "#181b24",
+                        "secondary-container": "#dedfeb",
+                        "surface-container-high": "#e6e7f6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#3b6de6",
+                        "on-background": "#181b25",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-primary-container": "#fefcff",
+                        "outline": "#737685",
+                        "on-secondary-fixed-variant": "#444650",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#ecedfb",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#002109",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "primary": "#1653cc",
+                        "surface": "#faf8ff",
+                        "tertiary-container": "#00873b",
+                        "surface-dim": "#d8d9e7",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface-tint": "#1b55ce",
+                        "on-secondary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans"],
+                        "body": ["IBM Plex Sans"],
+                        "label": ["IBM Plex Sans"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f0f2f7;
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#13161e] flex flex-col py-6 px-4 z-50">
+<div class="mb-10 px-2">
+<h1 class="text-xl font-bold text-white tracking-tight">The Architect</h1>
+<p class="text-xs text-slate-500 font-medium">Operational Admin</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="manage_accounts">manage_accounts</span>
+<span class="text-sm font-medium">Account Center</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] font-medium transition-all scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="text-sm">Support Tickets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="hourglass_top">hourglass_top</span>
+<span class="text-sm font-medium">Support Queue</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="text-sm font-medium">Pre-Purchase</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all scale-98 active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 space-y-1 border-t border-white/5">
+<div class="px-3 mb-4">
+<button class="w-full py-2 px-4 bg-primary text-white text-xs font-bold rounded uppercase tracking-wider hover:opacity-90 transition-all">System Status</button>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="settings">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help_center">help_center</span>
+<span class="text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white dark:bg-[#0f1117] flex justify-between items-center px-8 z-40">
+<div class="flex items-center gap-6">
+<span class="text-lg font-semibold text-slate-900 dark:text-white">E-Commerce Command</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 font-medium text-xs tracking-widest uppercase hover:text-[#4f7ef8] transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium text-xs tracking-widest uppercase hover:text-[#4f7ef8] transition-colors" href="#">Logs</a>
+<a class="text-[#4f7ef8] font-bold border-b-2 border-[#4f7ef8] pb-1 text-xs tracking-widest uppercase" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-sm" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-100 dark:bg-slate-800 border-none rounded-md text-sm w-64 focus:ring-1 focus:ring-primary" placeholder="Global search command..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:text-primary transition-all"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="p-2 text-slate-500 hover:text-primary transition-all"><span class="material-symbols-outlined" data-icon="history">history</span></button>
+</div>
+<button class="bg-primary text-white px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all">Create Ticket</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden ml-2">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="Professional headshot of a system administrator with a neutral technical background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0GWqiZo3peUNELT0vaBGWaJnG_Z1iYcFCqxziBCGtWdDmh39hFyurHSfFPvo85scJXZh3IiPhuc3Y377PAZoPBPOXZPxI6CdXcPbF1-9Nsc-PhkCXA7OgB1zIXRVmgUCrmH74xXTkckqk0-1bNouB97ZhmslRB8E9xIcZLqxuGsYUorHm-8FZ877TBikWcY0zODymy6dd4YEDHz4Je_n6xJxmf_C56X5vAX6p2jhf2aB5N9YnEPtHB6K8kBgS56pV8HTMMMSP0ZU"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-8 min-h-screen">
+<div class="max-w-[720px] mx-auto">
+<!-- Breadcrumb & Header -->
+<nav class="flex items-center gap-2 text-xs font-label uppercase tracking-widest text-secondary mb-2">
+<a class="hover:text-primary transition-colors" href="#">Customers</a>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="font-bold text-on-surface">Alex Thompson</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-bold">Actions</span>
+</nav>
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-3xl font-headline font-bold tracking-tight text-on-surface">Alex Thompson → Actions tab</h2>
+<p class="text-secondary text-sm mt-1">Manage administrative controls and account status for Customer ID: <span class="font-mono bg-surface-container px-1 py-0.5 rounded">CUST-99281-TX</span></p>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-tertiary">Active Account</span>
+</div>
+</div>
+<!-- Action Cards Container -->
+<div class="space-y-4">
+<!-- 1. Suspend Account -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-error flex items-start gap-6 group transition-all">
+<div class="p-3 bg-error-container rounded-lg text-error">
+<span class="material-symbols-outlined" data-icon="lock">lock</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-semibold text-on-surface">Suspend Account</h3>
+<button class="bg-error text-white px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm hover:opacity-90 active:scale-95 transition-all">Suspend</button>
+</div>
+<p class="text-secondary text-sm mb-3">Immediately prevents login and purchases. All active sessions revoked.</p>
+<!-- Confirmation Block -->
+<div class="bg-error-container/20 p-4 rounded-lg space-y-3">
+<div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-tighter text-error">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
+                                Requires Reason &amp; Audit Confirmation
+                            </div>
+<textarea class="w-full bg-white border-outline-variant/30 rounded-md text-sm p-3 focus:ring-error focus:border-error h-20" placeholder="Specify reason for suspension (Internal Only)..."></textarea>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="rounded border-outline-variant text-error focus:ring-error" type="checkbox"/>
+<span class="text-xs text-on-surface-variant">I confirm this action generates a high-priority audit log entry.</span>
+</label>
+</div>
+</div>
+</div>
+<!-- 2. Reactivate Account (Hidden by default, shown here for visualization if account was suspended) -->
+<!-- Note: UI Logic states "Only shown if account is suspended" - Included here as requested for the task -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-tertiary flex items-start gap-6 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+<div class="p-3 bg-tertiary-container/10 rounded-lg text-tertiary">
+<span class="material-symbols-outlined" data-icon="lock_open">lock_open</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-semibold text-on-surface">Reactivate Account</h3>
+<button class="bg-tertiary text-white px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm hover:opacity-90 active:scale-95 transition-all cursor-not-allowed" disabled="">Reactivate</button>
+</div>
+<p class="text-secondary text-sm mb-2">Restores full account access.</p>
+<p class="text-[10px] italic text-secondary">Not applicable: Account is currently active.</p>
+</div>
+</div>
+<!-- 3. Open Support Ticket -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-primary flex items-start gap-6">
+<div class="p-3 bg-primary-container/10 rounded-lg text-primary">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-semibold text-on-surface">Open Support Ticket</h3>
+<button class="bg-primary text-white px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm hover:opacity-90 active:scale-95 transition-all">Create Ticket</button>
+</div>
+<p class="text-secondary text-sm">Create a ticket linked to this customer for tracking issues, returns, or general inquiries.</p>
+</div>
+</div>
+<!-- 4. Escalate for Review -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-amber-500 flex items-start gap-6">
+<div class="p-3 bg-amber-100 rounded-lg text-amber-600">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-semibold text-on-surface">Escalate for Review</h3>
+<button class="bg-amber-500 text-white px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm hover:opacity-90 active:scale-95 transition-all">Escalate</button>
+</div>
+<p class="text-secondary text-sm mb-4">Flag this customer account for risk team review. May trigger manual verification steps.</p>
+<div class="space-y-3">
+<select class="w-full bg-surface-container-low border-outline-variant/30 rounded-md text-sm p-2 focus:ring-amber-500 focus:border-amber-500">
+<option>Select Risk Category...</option>
+<option>Suspected Fraud</option>
+<option>Payment Chargeback</option>
+<option>Abusive Behavior</option>
+<option>High-Value Order Verification</option>
+</select>
+<textarea class="w-full bg-surface-container-low border-outline-variant/30 rounded-md text-sm p-3 focus:ring-amber-500 focus:border-amber-500 h-16" placeholder="Observation notes for the risk team..."></textarea>
+</div>
+</div>
+</div>
+<!-- 5. Add Internal Note -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-secondary flex items-start gap-6">
+<div class="p-3 bg-secondary-container/20 rounded-lg text-secondary">
+<span class="material-symbols-outlined" data-icon="note_add">note_add</span>
+</div>
+<div class="flex-1">
+<h3 class="text-lg font-headline font-semibold text-on-surface mb-1">Add Internal Note</h3>
+<p class="text-secondary text-sm mb-4">Add a persistent note visible to all operational staff. No notification will be sent to the customer.</p>
+<div class="flex flex-col gap-3">
+<textarea class="w-full border-outline-variant/50 rounded-md text-sm p-3 focus:ring-primary h-24" placeholder="Type internal note here..."></textarea>
+<div class="flex justify-end">
+<button class="bg-secondary text-white px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-sm hover:bg-on-surface transition-all">Save Note</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Meta -->
+<div class="mt-8 pt-6 border-t border-outline-variant/20 flex justify-between items-center text-[10px] font-label uppercase tracking-widest text-secondary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+                    Last Action: Account View by Admin (2m ago)
+                </div>
+<div>
+                    Ref: <span class="font-mono">#CMD-UX-992-ALPHA</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>

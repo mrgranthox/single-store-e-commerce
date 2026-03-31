@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Products | Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Tonal Depth shifts based on Design System */
+        body { background-color: #f0f2f7; font-family: 'IBM Plex Sans', sans-serif; }
+        .sidebar-bg { background-color: #13161e; }
+        .canvas-bg { background-color: #f0f2f7; }
+        .surface-card { background-color: #ffffff; }
+        .header-font { font-family: 'DM Sans', sans-serif; }
+        .mono-font { font-family: 'JetBrains Mono', monospace; }
+        .label-font { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#e0e2f0",
+              "surface-container-highest": "#e0e2f0",
+              "on-tertiary-fixed-variant": "#005321",
+              "secondary-fixed": "#e0e2ed",
+              "primary-fixed": "#dbe1ff",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-tertiary-fixed": "#002109",
+              "on-surface": "#181b25",
+              "outline-variant": "#c3c6d6",
+              "on-secondary-fixed-variant": "#444650",
+              "on-secondary-fixed": "#181b24",
+              "on-primary-container": "#fefcff",
+              "primary-fixed-dim": "#b4c5ff",
+              "outline": "#737685",
+              "secondary-fixed-dim": "#c4c6d1",
+              "secondary-container": "#dedfeb",
+              "on-background": "#181b25",
+              "inverse-on-surface": "#eff0fe",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#e6e7f6",
+              "inverse-surface": "#2d303b",
+              "on-secondary-container": "#60626c",
+              "surface-tint": "#1b55ce",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#00174a",
+              "tertiary-fixed-dim": "#4ae176",
+              "on-surface-variant": "#434654",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "surface-container-low": "#f2f3ff",
+              "on-secondary": "#ffffff",
+              "tertiary-container": "#00873b",
+              "surface": "#faf8ff",
+              "background": "#faf8ff",
+              "primary-container": "#3b6de6",
+              "inverse-primary": "#b4c5ff",
+              "tertiary": "#006b2d",
+              "primary": "#1653cc",
+              "surface-bright": "#faf8ff",
+              "on-primary-fixed-variant": "#003ea7",
+              "surface-dim": "#d8d9e7",
+              "on-tertiary-container": "#f7fff3",
+              "tertiary-fixed": "#6bff8f",
+              "surface-container": "#ecedfb",
+              "secondary": "#5b5e68",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="flex min-h-screen text-on-surface overflow-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 sidebar-bg flex flex-col py-6">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-gradient-to-br from-[#1653cc] to-[#3b6de6] rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl" style="font-variation-settings: 'FILL' 1;">deployed_code</span>
+</div>
+<div>
+<h1 class="text-white font-bold tracking-tighter text-lg leading-tight">Command Deck</h1>
+<p class="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Enterprise Admin</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="label-font">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-gradient-to-r from-[#1653cc] to-[#3b6de6] text-white rounded-r-lg translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="label-font">Products</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+<span class="label-font">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">package_2</span>
+<span class="label-font">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="label-font">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto pt-6 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">contact_support</span>
+<span class="label-font">Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="label-font">Documentation</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-6 py-3 bg-[#f0f2f7] z-40 relative">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-slate-400 text-on-surface" placeholder="Global system search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-[#f0f2f7]"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-full transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-full transition-colors mr-2">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-300">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface leading-none">Admin User</p>
+<p class="text-[10px] text-slate-500 font-medium">System Manager</p>
+</div>
+<img class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover" data-alt="professional headshot of a business administrator in a dark suit with a clean neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0iPTDlxN7kY5Vtc7ppje22lFOkCsOUEwpTQV_utHnhaT4EzS68BdBP9o3EWIYvbXzB8cWUibMrPcl3h0Me-HPimG_LsGzAV49nQThA-P2Qe3znftMzdiX_4b1iL4IHgi8roi1PYtZ_tGRPeoCPdKvaAe9OpbZjF4iXBus7y8MXag0oUizgAD0d8_cI-1mcYjAQBVfsd2id0BopSU6f0-qzPwwRjjAb8PweQEcoUDM-0hmBeDsyumnQYsqp0dPi76cUR3azg72mkk"/>
+</div>
+</div>
+</header>
+<!-- Page Header & Content -->
+<div class="flex-1 overflow-y-auto px-6 pb-6 canvas-bg no-scrollbar">
+<div class="flex justify-between items-end py-6">
+<div>
+<h2 class="text-3xl font-bold tracking-tight header-font text-[#0f1117]">Products</h2>
+<p class="text-slate-500 text-sm mt-1">Manage your enterprise product catalog and visibility settings.</p>
+</div>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-[#1653cc] to-[#3b6de6] text-white rounded-lg font-semibold text-sm shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform active:scale-95">
+<span class="material-symbols-outlined text-lg">add</span>
+                    Create Product
+                </button>
+</div>
+<!-- Filters Bar -->
+<div class="bg-white rounded-xl shadow-sm mb-6 p-4">
+<div class="grid grid-cols-1 md:grid-cols-6 gap-4 items-center">
+<div class="md:col-span-1">
+<label class="label-font text-slate-400 mb-1.5 block">Search</label>
+<div class="relative">
+<input class="w-full text-sm border-slate-200 rounded-md focus:border-primary focus:ring-0 py-1.5 pl-8" placeholder="Name or SKU" type="text"/>
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-base">search</span>
+</div>
+</div>
+<div>
+<label class="label-font text-slate-400 mb-1.5 block">Status</label>
+<select class="w-full text-sm border-slate-200 rounded-md focus:border-primary focus:ring-0 py-1.5">
+<option>All Statuses</option>
+<option>Active</option>
+<option>Draft</option>
+<option>Archived</option>
+</select>
+</div>
+<div>
+<label class="label-font text-slate-400 mb-1.5 block">Category</label>
+<select class="w-full text-sm border-slate-200 rounded-md focus:border-primary focus:ring-0 py-1.5">
+<option>Electronics</option>
+<option>Apparel</option>
+<option>Office Gear</option>
+<option>Hardware</option>
+</select>
+</div>
+<div>
+<label class="label-font text-slate-400 mb-1.5 block">Brand</label>
+<select class="w-full text-sm border-slate-200 rounded-md focus:border-primary focus:ring-0 py-1.5">
+<option>All Brands</option>
+<option>ApexCorp</option>
+<option>Zenith</option>
+<option>OmniSys</option>
+</select>
+</div>
+<div>
+<label class="label-font text-slate-400 mb-1.5 block">Date Range</label>
+<div class="relative">
+<input class="w-full text-sm border-slate-200 rounded-md focus:border-primary focus:ring-0 py-1.5 pl-8" placeholder="Jan 01 - Dec 31" type="text"/>
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-base">calendar_today</span>
+</div>
+</div>
+<div class="flex items-end h-full">
+<button class="text-primary text-xs font-semibold hover:underline px-2 mb-2">Clear filters</button>
+</div>
+</div>
+</div>
+<!-- Bulk Actions (Visible when checked) -->
+<div class="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg px-4 py-2 mb-4 animate-in fade-in slide-in-from-top-2">
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-primary">3 items selected</span>
+<div class="h-4 w-px bg-primary/20"></div>
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 text-slate-700 rounded text-xs font-semibold hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">publish</span> Publish
+                        </button>
+<button class="flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 text-slate-700 rounded text-xs font-semibold hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">cloud_off</span> Unpublish
+                        </button>
+<button class="flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 text-slate-700 rounded text-xs font-semibold hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">archive</span> Archive
+                        </button>
+<button class="flex items-center gap-1.5 px-3 py-1 bg-error/10 border border-error/20 text-error rounded text-xs font-semibold hover:bg-error hover:text-white transition-colors">
+<span class="material-symbols-outlined text-sm">delete</span> Delete
+                        </button>
+</div>
+</div>
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Table Container -->
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[1000px]">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-200">
+<th class="py-3 px-4 w-10">
+<input checked="" class="rounded border-slate-300 text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</th>
+<th class="py-3 px-4 w-16"></th>
+<th class="py-3 px-4 label-font text-slate-500">Product Name &amp; SKU</th>
+<th class="py-3 px-4 label-font text-slate-500">Category</th>
+<th class="py-3 px-4 label-font text-slate-500">Brand</th>
+<th class="py-3 px-4 label-font text-slate-500">Price</th>
+<th class="py-3 px-4 label-font text-slate-500 text-center">Stock</th>
+<th class="py-3 px-4 label-font text-slate-500">Status</th>
+<th class="py-3 px-4 label-font text-slate-500">Visibility</th>
+<th class="py-3 px-4 w-12 text-center"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1: Selected -->
+<tr class="h-11 hover:bg-slate-50 transition-colors bg-primary/5 group">
+<td class="px-4"><input checked="" class="rounded border-slate-300 text-primary h-4 w-4" type="checkbox"/></td>
+<td class="px-4">
+<img class="w-10 h-10 rounded-lg object-cover border border-slate-200 shadow-sm" data-alt="sleek professional laptop in space gray on a minimalist desk with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6BmC76Z7lVGc8b7PIvwCSwC1xldI9Qim73UETmIMYb9CR6DME3WUq5RVPun73JYBoNH6Lsl4c22CV_vYudzkwC9DJFZ8vwqziSb70BVsBm0ltsQQl4RKNYXT0pLKh3PtWQ_Zi-WR8s5_obdSn01QHNmNeCxdNcBuxHrl6XHFeDSvvTrzQgJdJAKzZxVYd3RaCXW7O70OlVlEjGOE-L9sC9Fw3i9A9iieYECkFqsCPV4jgYWGpmr-We7qwxWQ2nr3kIpWVEXOH0ng"/>
+</td>
+<td class="px-4">
+<p class="text-xs font-bold text-on-surface truncate max-w-[200px]">Quantum Blade X15 Pro</p>
+<p class="mono-font text-[10px] text-primary">SKU-9928-XB</p>
+</td>
+<td class="px-4 text-xs font-medium text-slate-600">Electronics</td>
+<td class="px-4 text-xs text-slate-500 font-semibold">ApexCorp</td>
+<td class="px-4 text-xs mono-font font-bold text-on-surface">$2,499.00</td>
+<td class="px-4 text-xs mono-font text-center font-medium">124</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-green-500 text-[10px] font-bold uppercase text-green-600 tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
+                                    </span>
+</td>
+<td class="px-4">
+<span class="material-symbols-outlined text-slate-400 text-lg" title="Public">public</span>
+</td>
+<td class="px-4 text-center">
+<button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
+</td>
+</tr>
+<!-- Row 2: Selected & Hover State Action UI -->
+<tr class="h-11 bg-primary/5 hover:bg-slate-50 transition-colors group relative">
+<td class="px-4"><input checked="" class="rounded border-slate-300 text-primary h-4 w-4" type="checkbox"/></td>
+<td class="px-4">
+<img class="w-10 h-10 rounded-lg object-cover border border-slate-200 shadow-sm" data-alt="ergonomic mechanical keyboard with subtle RGB backlighting and premium aluminum frame" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3XJtE_KNuIflQunDMIPns_KTKT1gg-vUONs9IVBbgwBTBob0qiggF1uvEpXRtnKUzj67u_fa6ercgHh0SAZgrbVnp__OTFAUDP1tBBnClZlACPc4mNuYsxfl8LDeV3Kwcp_ATQa9DrRTY7bGFXW9TQqwe7UAQH6UeD3IFUB0b7AhyyJdRkfPEU_4FizYkaP71vpEv1DGrzQl7vQDSXhX83-sGnTpMAS3yAxJpQZSU5xdRdntlTeYdSCw_P192mN32zfKS2w0yuGA"/>
+</td>
+<td class="px-4">
+<p class="text-xs font-bold text-on-surface">Mechanical Alpha-7</p>
+<p class="mono-font text-[10px] text-primary">SKU-7741-KB</p>
+</td>
+<td class="px-4 text-xs font-medium text-slate-600">Accessories</td>
+<td class="px-4 text-xs text-slate-500 font-semibold">Zenith</td>
+<td class="px-4 text-xs mono-font font-bold text-on-surface">$189.50</td>
+<td class="px-4 text-xs mono-font text-center font-medium">850</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-green-500 text-[10px] font-bold uppercase text-green-600 tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
+                                    </span>
+</td>
+<td class="px-4">
+<span class="material-symbols-outlined text-slate-400 text-lg" title="Public">public</span>
+</td>
+<td class="px-4 text-center flex items-center justify-end gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-12 top-0 bottom-0 bg-slate-50/80 backdrop-blur-sm px-2">
+<button class="w-7 h-7 flex items-center justify-center rounded hover:bg-primary/10 text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-sm">edit</span></button>
+<button class="w-7 h-7 flex items-center justify-center rounded hover:bg-slate-200 text-slate-600 transition-colors" title="View"><span class="material-symbols-outlined text-sm">visibility</span></button>
+<button class="w-7 h-7 flex items-center justify-center rounded hover:bg-slate-200 text-slate-600 transition-colors" title="Analytics"><span class="material-symbols-outlined text-sm">bar_chart</span></button>
+</td>
+<td class="px-4 text-center">
+<button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
+</td>
+</tr>
+<!-- Row 3: Selected -->
+<tr class="h-11 hover:bg-slate-50 transition-colors bg-primary/5">
+<td class="px-4"><input checked="" class="rounded border-slate-300 text-primary h-4 w-4" type="checkbox"/></td>
+<td class="px-4">
+<img class="w-10 h-10 rounded-lg object-cover border border-slate-200 shadow-sm" data-alt="smart watch with minimalist face and leather strap on a light gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjsNh2PM9jgDK--MtVsVbAsdhtzZ9L8ngqONAeGnDClkGhfoRS7bRaWPSj3et1EsLUVOVqxH-4U6nDsLS3ql4dXwH7ZMZSThpBJ_S4x2O7lMbqO695wx4P4luyJcGq7KZsv7duA67QzVhdn-5JPmJQ2I_MkjZlyTUZjOACfKoN1cp0XqVPJkzGa7HHbjBdXQBVlcZjTuZ5Oli9ZKumQ7lF9tmrCoJK5QXGJtFDm7jz9t4l87vvJssWeurH5DQIK7QoRevSqPCYHOw"/>
+</td>
+<td class="px-4">
+<p class="text-xs font-bold text-on-surface">Titan S-Watch</p>
+<p class="mono-font text-[10px] text-primary">SKU-4409-WA</p>
+</td>
+<td class="px-4 text-xs font-medium text-slate-600">Wearables</td>
+<td class="px-4 text-xs text-slate-500 font-semibold">OmniSys</td>
+<td class="px-4 text-xs mono-font font-bold text-on-surface">$420.00</td>
+<td class="px-4 text-xs mono-font text-center font-medium">42</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-amber-500 text-[10px] font-bold uppercase text-amber-600 tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Draft
+                                    </span>
+</td>
+<td class="px-4">
+<span class="material-symbols-outlined text-slate-400 text-lg" title="Private">lock</span>
+</td>
+<td class="px-4 text-center">
+<button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
+</td>
+</tr>
+<!-- Dummy Data Rows (Repeated for scrolling simulation) -->
+<script>
+                                const productNames = ["Nexus Hub", "Vortex SSD", "Infinity Display", "Echo Pods", "Solar Panel Kit", "Z-Desk L-Shape", "Aero Office Chair", "Neon Light Strips", "PowerGrid PSU", "Liquid Cooling V2", "Cyber Frame 4K", "Data Stream Router"];
+                                const skus = ["NX-44", "VX-22", "ID-90", "EP-12", "SP-00", "ZD-88", "OC-33", "NL-44", "PG-11", "LC-55", "CF-77", "DS-99"];
+                                
+                                for (let i = 4; i <= 25; i++) {
+                                    const name = productNames[i % productNames.length];
+                                    const sku = skus[i % skus.length] + "-" + Math.floor(Math.random() * 1000);
+                                    const price = (Math.random() * 500 + 50).toFixed(2);
+                                    const stock = Math.floor(Math.random() * 2000);
+                                    const isArchived = Math.random() > 0.8;
+                                    
+                                    document.write(`
+                                    <tr class="h-11 hover:bg-slate-50 transition-colors group">
+                                        <td class="px-4"><input type="checkbox" class="rounded border-slate-300 text-primary h-4 w-4"></td>
+                                        <td class="px-4">
+                                            <div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center border border-slate-200">
+                                                <span class="material-symbols-outlined text-slate-300">image</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-4">
+                                            <p class="text-xs font-bold text-on-surface">${name}</p>
+                                            <p class="mono-font text-[10px] text-slate-400">${sku}</p>
+                                        </td>
+                                        <td class="px-4 text-xs font-medium text-slate-600">General</td>
+                                        <td class="px-4 text-xs text-slate-500 font-semibold">Generic</td>
+                                        <td class="px-4 text-xs mono-font font-bold text-on-surface">$${price}</td>
+                                        <td class="px-4 text-xs mono-font text-center font-medium">${stock}</td>
+                                        <td class="px-4">
+                                            ${isArchived ? `
+                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-slate-400 text-[10px] font-bold uppercase text-slate-400 tracking-wider">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Archived
+                                            </span>` : `
+                                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-green-500 text-[10px] font-bold uppercase text-green-600 tracking-wider">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
+                                            </span>`}
+                                        </td>
+                                        <td class="px-4">
+                                            <span class="material-symbols-outlined text-slate-400 text-lg">public</span>
+                                        </td>
+                                        <td class="px-4 text-center">
+                                            <button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
+                                        </td>
+                                    </tr>`);
+                                }
+                            </script>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
+<p class="text-xs font-semibold text-slate-500">Showing <span class="text-on-surface">1-25</span> of <span class="text-on-surface">1,284</span> products</p>
+<div class="flex items-center gap-4">
+<p class="text-xs font-semibold text-slate-500">Page <span class="text-on-surface">1</span> of <span class="text-on-surface">52</span></p>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center border border-slate-200 bg-white rounded-md text-slate-400 hover:bg-slate-50 disabled:opacity-50">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-md text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center border border-slate-200 bg-white rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center border border-slate-200 bg-white rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">3</button>
+<span class="text-slate-400 px-1">...</span>
+<button class="w-8 h-8 flex items-center justify-center border border-slate-200 bg-white rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors">52</button>
+<button class="w-8 h-8 flex items-center justify-center border border-slate-200 bg-white rounded-md text-slate-600 hover:bg-slate-50">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Details Panel (Design System Right-Side Detail Drawer Hint) -->
+<div class="hidden fixed top-0 right-0 h-screen w-[400px] surface-card shadow-2xl z-[60] border-l border-slate-200 transform translate-x-full transition-transform duration-300" id="detailDrawer">
+<!-- Would be toggled via JS in a real app -->
+</div>
+</body></html>

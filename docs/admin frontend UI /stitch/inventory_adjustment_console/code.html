@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Adjust Stock | OPERATIONAL ARCHITECT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#1b55ce",
+                        "outline": "#737685",
+                        "on-secondary-container": "#60626c",
+                        "inverse-surface": "#2d303b",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "inverse-primary": "#b4c5ff",
+                        "error": "#ba1a1a",
+                        "primary": "#1653cc",
+                        "background": "#faf8ff",
+                        "surface-container": "#ecedfb",
+                        "on-secondary-fixed-variant": "#444650",
+                        "tertiary": "#006b2d",
+                        "surface-bright": "#faf8ff",
+                        "on-primary-fixed": "#00174a",
+                        "tertiary-fixed": "#6bff8f",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-tertiary-fixed": "#002109",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e2f0",
+                        "surface-dim": "#d8d9e7",
+                        "surface": "#faf8ff",
+                        "primary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-fixed": "#181b24",
+                        "secondary-container": "#dedfeb",
+                        "on-background": "#181b25",
+                        "primary-container": "#3b6de6",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-surface-variant": "#434654",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5b5e68",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#00873b",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-surface": "#181b25",
+                        "surface-container-high": "#e6e7f6",
+                        "secondary-fixed": "#e0e2ed",
+                        "outline-variant": "#c3c6d6",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#fefcff",
+                        "inverse-on-surface": "#eff0fe",
+                        "surface-container-highest": "#e0e2f0"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans", "sans-serif"],
+                        "body": ["IBM Plex Sans", "sans-serif"],
+                        "label": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #f0f2f7;
+        }
+    </style>
+</head>
+<body class="text-on-background antialiased overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-[#0f1117] dark:bg-[#0f1117] text-white docked full-width top-0 z-50 flex justify-between items-center px-6 h-14 w-full fixed">
+<div class="flex items-center gap-8">
+<span class="text-lg font-semibold tracking-tighter text-white uppercase font-['IBM_Plex_Sans']">OPERATIONAL ARCHITECT</span>
+<div class="hidden md:flex items-center gap-6">
+<nav class="flex gap-6 text-sm tracking-tight font-['IBM_Plex_Sans']">
+<a class="text-slate-400 hover:text-white transition-all duration-200" href="#">DASHBOARD</a>
+<a class="text-white border-b-2 border-[#4f7ef8] pb-1 transition-all duration-200" href="#">INVENTORY</a>
+<a class="text-slate-400 hover:text-white transition-all duration-200" href="#">LOGISTICS</a>
+<a class="text-slate-400 hover:text-white transition-all duration-200" href="#">ANALYTICS</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-400 hover:text-white transition-all duration-200 scale-98 active:opacity-80">notifications</button>
+<button class="material-symbols-outlined text-slate-400 hover:text-white transition-all duration-200 scale-98 active:opacity-80">settings</button>
+<button class="material-symbols-outlined text-slate-400 hover:text-white transition-all duration-200 scale-98 active:opacity-80">help</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-slate-700">
+<img alt="User profile avatar" data-alt="Professional user avatar in dark environment with sharp focus and cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYB60SiUNsXYkJVPCbuAPymkse5dMJPIGt_4ecFX5OEQa0hEfYb0DrGbpcdyZBGgzaZX_CNtvx18nuJpRCEq7n2vuZktfCz6044REWwBbDYEMgGDCEdX8pkWWb4zajzmKAXj5Ilhq57BREOZNaOP0OOjFcg12L0ZFdzLXuxsq5MEaJreJii2ij8u5lHieQDmaHW6sFdIxwTyvmChXzX1GtEyuLjK1FrZDwJC3on8z3Eqru-rF2Scstoug03jjJMRuser8intSDmaY"/>
+</div>
+</div>
+</header>
+<div class="flex pt-14 h-screen">
+<!-- SideNavBar -->
+<aside class="bg-[#13161e] dark:bg-[#13161e] fixed left-0 top-0 h-full z-40 pt-16 w-64 flex flex-col shadow-[4px_0_24px_rgba(15,17,23,0.5)]">
+<div class="px-6 py-4 flex flex-col">
+<span class="text-white font-headline text-lg font-bold">Inventory Ops</span>
+<span class="text-slate-500 text-[11px] uppercase tracking-widest">Precision Terminal</span>
+</div>
+<nav class="mt-4 flex-grow">
+<a class="text-slate-500 px-4 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors duration-150 font-['IBM_Plex_Sans'] text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span> Command Center
+                </a>
+<a class="text-slate-500 px-4 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors duration-150 font-['IBM_Plex_Sans'] text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Stock Queue
+                </a>
+<a class="text-slate-500 px-4 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors duration-150 font-['IBM_Plex_Sans'] text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined">history_edu</span> Movement Audit
+                </a>
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-4 py-3 flex items-center gap-3 transition-colors duration-150 font-['IBM_Plex_Sans'] text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_note</span> Adjustment Console
+                </a>
+<a class="text-slate-500 px-4 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors duration-150 font-['IBM_Plex_Sans'] text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined">factory</span> Warehouse Suite
+                </a>
+</nav>
+<div class="p-4 border-t border-white/5 space-y-1">
+<a class="text-slate-500 px-4 py-2 flex items-center gap-3 hover:text-slate-200 transition-colors text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined text-sm">terminal</span> System Logs
+                </a>
+<a class="text-slate-500 px-4 py-2 flex items-center gap-3 hover:text-slate-200 transition-colors text-[13px] font-medium" href="#">
+<span class="material-symbols-outlined text-sm">contact_support</span> Support
+                </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 overflow-y-auto bg-[#f0f2f7] p-8">
+<header class="mb-8 flex justify-between items-end">
+<div>
+<h1 class="text-3xl font-headline font-bold text-on-background tracking-tight">Adjust Stock</h1>
+<p class="text-outline mt-1 font-body text-sm">Inventory Management / Console / Manual Adjustment</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="px-3 py-1 bg-surface-container rounded-full flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">System Status: Optimal</span>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+<!-- Left Panel: Adjustment Form -->
+<div class="lg:col-span-6 space-y-6">
+<section class="bg-surface-container-lowest rounded-xl p-8 transition-shadow">
+<div class="space-y-10">
+<!-- Step 1: Select Product -->
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-[#13161e] text-white flex items-center justify-center font-bold text-sm">1</span>
+<h2 class="text-lg font-headline font-bold text-on-background">Select Product</h2>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg font-body text-sm placeholder:text-outline/60" placeholder="Search by SKU, Product Name or Barcode..." type="text" value="APX-990-BLACK"/>
+<div class="absolute top-full left-0 right-0 mt-1 bg-white shadow-xl rounded-lg border border-outline-variant z-10 overflow-hidden">
+<div class="p-3 bg-surface-container-low flex items-center gap-4 border-b border-outline-variant">
+<div class="w-10 h-10 bg-slate-200 rounded overflow-hidden">
+<img alt="Product thumbnail" data-alt="High-end black athletic shoe with sleek silhouette on minimal background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk7WYGLa8Ti-5OBYBTZJGVRJGeDYyvh0PvWRYeSC7Ofnb1wd-0q6IYHiWqAEk0xQGK1_5CBq47HF_WlHu7sS2kOR_6KutmRU-sfTOHzvx2V4OAg40-arFlEEsdGHvccZPhcMCvUYMgur-qS_00yH8ZHA6duP9jK2QN5b_olL8QmCP8qTt2VFURLSwtCVgMHTYG6bmA6KeNKrQ07tIIa8M9CTSE-24B3f7GSy4X200uqo1uV1oqXAoCF3Ipe-B-7kGs7dx-icI9098"/>
+</div>
+<div>
+<p class="font-mono text-sm font-bold text-primary">APX-990-BLACK</p>
+<p class="text-xs text-outline">Apex Performance Runner - Triple Black</p>
+</div>
+<div class="ml-auto">
+<span class="text-xs font-bold px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded">MATCHED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 2: Select Warehouse -->
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-[#13161e] text-white flex items-center justify-center font-bold text-sm">2</span>
+<h2 class="text-lg font-headline font-bold text-on-background">Select Warehouse</h2>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<label class="relative flex flex-col p-4 bg-white border-2 border-primary rounded-xl cursor-pointer">
+<input checked="" class="sr-only" name="warehouse" type="radio"/>
+<div class="flex justify-between items-start mb-2">
+<span class="text-sm font-bold font-headline text-on-background">NORTH CENTRAL HUB</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="mt-auto flex items-end justify-between">
+<span class="text-xs text-outline uppercase tracking-tighter">Current Stock</span>
+<span class="font-mono text-xl font-bold text-on-background">1,240</span>
+</div>
+</label>
+<label class="relative flex flex-col p-4 bg-surface-container-low border-2 border-transparent hover:border-outline-variant rounded-xl cursor-pointer transition-all">
+<input class="sr-only" name="warehouse" type="radio"/>
+<div class="flex justify-between items-start mb-2">
+<span class="text-sm font-bold font-headline text-on-background">EASTERN DEPOT</span>
+</div>
+<div class="mt-auto flex items-end justify-between">
+<span class="text-xs text-outline uppercase tracking-tighter">Current Stock</span>
+<span class="font-mono text-xl font-bold text-on-background text-outline/60">482</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Step 3: Adjustment Details -->
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-[#13161e] text-white flex items-center justify-center font-bold text-sm">3</span>
+<h2 class="text-lg font-headline font-bold text-on-background">Adjustment Execution</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 bg-surface-container-low p-6 rounded-xl">
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-outline mb-2">Operation</label>
+<select class="w-full bg-white border-outline-variant rounded-lg font-body text-sm py-2">
+<option>Add (+) </option>
+<option>Remove (-) </option>
+<option>Set Absolute (=) </option>
+</select>
+</div>
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-outline mb-2">Adjustment Qty</label>
+<input class="w-full bg-white border-outline-variant rounded-lg font-mono text-sm py-2" type="number" value="60"/>
+</div>
+<div class="md:col-span-2 flex items-center justify-center bg-white rounded-lg border border-dashed border-outline-variant p-4">
+<div class="text-center">
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline">Projected Total Stock</p>
+<p class="font-mono text-2xl font-bold text-primary">1,300</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 4: Reason -->
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-[#13161e] text-white flex items-center justify-center font-bold text-sm">4</span>
+<h2 class="text-lg font-headline font-bold text-on-background">Justification</h2>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-outline mb-2">Adjustment Reason</label>
+<select class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg font-body text-sm py-3">
+<option>Inbound Shipment Discrepancy</option>
+<option>Quality Control Rejection</option>
+<option>Cycle Count Correction</option>
+<option>Damaged in Transit</option>
+<option>Promotional Sample Extraction</option>
+</select>
+</div>
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-widest text-outline mb-2">Operational Notes</label>
+<textarea class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg font-body text-sm p-4 placeholder:text-outline/40" placeholder="Provide technical context for this movement..." rows="3">Verified physical count against manifest HUB-8821. Found surplus in bin B-14.</textarea>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant flex justify-end gap-4">
+<button class="px-8 py-4 font-headline font-bold text-sm text-outline hover:text-on-surface transition-colors">Discard</button>
+<button class="px-10 py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg font-headline font-bold text-sm shadow-lg hover:shadow-primary/20 transition-all active:scale-95">Apply Adjustment</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Panel: Recent Movements -->
+<div class="lg:col-span-4 space-y-6">
+<section class="bg-[#13161e] text-white rounded-xl p-6 shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">history</span>
+</div>
+<div class="relative z-10">
+<h3 class="text-sm font-headline font-bold uppercase tracking-widest text-slate-400 mb-6">Recent Movements: APX-990-BLACK</h3>
+<div class="space-y-4">
+<!-- Movement Entry -->
+<div class="flex items-center justify-between p-3 rounded bg-white/5 border-l-2 border-tertiary">
+<div class="flex flex-col">
+<span class="font-mono text-xs font-bold">+120 <span class="text-slate-500 font-normal">PCS</span></span>
+<span class="text-[10px] text-slate-500 uppercase">Inbound Shipment</span>
+</div>
+<div class="text-right">
+<span class="block text-xs font-medium">14 OCT 09:22</span>
+<span class="text-[10px] text-slate-500">OPERATOR: J. CHEN</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded bg-white/5 border-l-2 border-error">
+<div class="flex flex-col">
+<span class="font-mono text-xs font-bold">-14 <span class="text-slate-500 font-normal">PCS</span></span>
+<span class="text-[10px] text-slate-500 uppercase">QC Rejection</span>
+</div>
+<div class="text-right">
+<span class="block text-xs font-medium">12 OCT 16:45</span>
+<span class="text-[10px] text-slate-500">SYSTEM AUTO</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded bg-white/5 border-l-2 border-primary">
+<div class="flex flex-col">
+<span class="font-mono text-xs font-bold">-2 <span class="text-slate-500 font-normal">PCS</span></span>
+<span class="text-[10px] text-slate-500 uppercase">Cycle Count Adj</span>
+</div>
+<div class="text-right">
+<span class="block text-xs font-medium">10 OCT 11:30</span>
+<span class="text-[10px] text-slate-500">OPERATOR: A. ROSS</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded bg-white/5 border-l-2 border-tertiary">
+<div class="flex flex-col">
+<span class="font-mono text-xs font-bold">+45 <span class="text-slate-500 font-normal">PCS</span></span>
+<span class="text-[10px] text-slate-500 uppercase">Return to Stock</span>
+</div>
+<div class="text-right">
+<span class="block text-xs font-medium">08 OCT 14:12</span>
+<span class="text-[10px] text-slate-500">OPERATOR: J. CHEN</span>
+</div>
+</div>
+<!-- More entries simplified for density -->
+<div class="space-y-2 pt-4 border-t border-white/10">
+<div class="flex justify-between items-center text-[11px] text-slate-400 font-mono">
+<span>05 OCT 10:00</span>
+<span>SET ABSOLUTE: 1100</span>
+<span>CORRECTION</span>
+</div>
+<div class="flex justify-between items-center text-[11px] text-slate-400 font-mono">
+<span>01 OCT 08:45</span>
+<span>+200 PCS</span>
+<span>TRANSFER</span>
+</div>
+<div class="flex justify-between items-center text-[11px] text-slate-400 font-mono">
+<span>28 SEP 15:20</span>
+<span>-12 PCS</span>
+<span>DAMAGED</span>
+</div>
+<div class="flex justify-between items-center text-[11px] text-slate-400 font-mono">
+<span>25 SEP 11:10</span>
+<span>+50 PCS</span>
+<span>SHIPMENT</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 border border-slate-700 rounded text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all">View Full Movement Audit</button>
+</div>
+</section>
+<!-- Auxiliary Data Card -->
+<section class="bg-surface-container-lowest rounded-xl p-6">
+<h3 class="text-[10px] font-bold uppercase tracking-widest text-outline mb-4">Stock Integrity metrics</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-end border-b border-outline-variant pb-3">
+<span class="text-sm font-body text-on-surface-variant">Last Cycle Count</span>
+<span class="font-mono text-sm font-bold">14 Days Ago</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-3">
+<span class="text-sm font-body text-on-surface-variant">Avg Monthly Adj.</span>
+<span class="font-mono text-sm font-bold text-error">4.2%</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="text-sm font-body text-on-surface-variant">Stock Accuracy Score</span>
+<span class="font-mono text-sm font-bold text-tertiary">98.8%</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</body></html>

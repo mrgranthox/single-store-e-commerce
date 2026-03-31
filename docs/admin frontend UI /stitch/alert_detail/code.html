@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alert #[ALT-00441] — Security Ops Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-tint": "#1b55ce",
+                "surface-variant": "#e0e2f0",
+                "on-surface-variant": "#434654",
+                "inverse-surface": "#2d303b",
+                "tertiary-fixed": "#6bff8f",
+                "surface-bright": "#faf8ff",
+                "secondary-container": "#dedfeb",
+                "primary-container": "#3b6de6",
+                "surface": "#faf8ff",
+                "on-tertiary-container": "#f7fff3",
+                "on-primary-container": "#fefcff",
+                "error": "#ba1a1a",
+                "surface-container-high": "#e6e7f6",
+                "on-secondary-container": "#60626c",
+                "inverse-on-surface": "#eff0fe",
+                "primary": "#1653cc",
+                "on-secondary-fixed-variant": "#444650",
+                "on-background": "#181b25",
+                "on-secondary-fixed": "#181b24",
+                "on-error-container": "#93000a",
+                "surface-dim": "#d8d9e7",
+                "error-container": "#ffdad6",
+                "on-primary": "#ffffff",
+                "primary-fixed-dim": "#b4c5ff",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-fixed-dim": "#4ae176",
+                "surface-container-highest": "#e0e2f0",
+                "surface-container": "#ecedfb",
+                "secondary-fixed-dim": "#c4c6d1",
+                "outline-variant": "#c3c6d6",
+                "secondary": "#5b5e68",
+                "background": "#faf8ff",
+                "on-tertiary-fixed": "#002109",
+                "tertiary-container": "#00873b",
+                "on-primary-fixed": "#00174a",
+                "on-tertiary-fixed-variant": "#005321",
+                "tertiary": "#006b2d",
+                "on-surface": "#181b25",
+                "on-error": "#ffffff",
+                "inverse-primary": "#b4c5ff",
+                "outline": "#737685",
+                "on-primary-fixed-variant": "#003ea7",
+                "surface-container-low": "#f2f3ff",
+                "on-tertiary": "#ffffff",
+                "primary-fixed": "#dbe1ff",
+                "secondary-fixed": "#e0e2ed",
+                "on-secondary": "#ffffff"
+              },
+              fontFamily: {
+                "headline": ["DM Sans"],
+                "body": ["IBM Plex Sans"],
+                "label": ["IBM Plex Sans"],
+                "mono": ["JetBrains Mono"]
+              },
+              borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+        .sidebar-item-active {
+            color: #ffffff;
+            font-weight: 600;
+            background-color: #1a1d27;
+            border-left: 4px solid #4f7ef8;
+        }
+    </style>
+</head>
+<body class="bg-[#0f1117] font-body text-on-background antialiased overflow-hidden">
+<!-- Sidebar Shell -->
+<aside class="bg-[#13161e] h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight">Command Deck</h1>
+<p class="text-[0.6875rem] text-slate-500 uppercase tracking-[0.05em]">Security Operations</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="text-[0.75rem] uppercase tracking-[0.05em]">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 sidebar-item-active transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">notifications_active</span>
+<span class="text-[0.75rem] uppercase tracking-[0.05em]">Alerts Center</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">policy</span>
+<span class="text-[0.75rem] uppercase tracking-[0.05em]">Security Events</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">emergency_share</span>
+<span class="text-[0.75rem] uppercase tracking-[0.05em]">Incidents</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings_input_component</span>
+<span class="text-[0.75rem] uppercase tracking-[0.05em]">Operations</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-[0.75rem] uppercase tracking-[0.05em]">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 space-y-4">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-2.5 rounded-sm font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Incident
+            </button>
+<div class="pt-4 border-t border-slate-800 space-y-2">
+<a class="flex items-center text-slate-400 hover:text-slate-200 text-xs uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-sm mr-2">help</span> Support
+                </a>
+<a class="flex items-center text-slate-400 hover:text-slate-200 text-xs uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined text-sm mr-2">description</span> Documentation
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 bg-[#f0f2f7] min-h-screen flex flex-col">
+<!-- Top Nav Bar -->
+<header class="h-16 w-full sticky top-0 z-40 bg-[#f8f9fb] flex justify-between items-center px-8 transition-all duration-300 backdrop-blur-md">
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container-low px-3 py-1.5 rounded-sm border border-outline-variant/15">
+<span class="material-symbols-outlined text-slate-400 text-lg mr-2">search</span>
+<input class="bg-transparent border-none text-[0.75rem] w-64 focus:ring-0 placeholder-slate-400" placeholder="Global system search..." type="text"/>
+</div>
+<nav class="flex gap-6">
+<a class="text-slate-500 hover:text-primary text-[0.75rem] font-medium tracking-wide" href="#">Overview</a>
+<a class="text-slate-500 hover:text-primary text-[0.75rem] font-medium tracking-wide" href="#">Logs</a>
+<a class="text-primary border-b-2 border-primary pb-1 text-[0.75rem] font-medium tracking-wide" href="#">Activity</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-white px-4 py-1.5 rounded-sm text-xs font-semibold hover:bg-primary-fixed-dim transition-colors">Deploy Update</button>
+<div class="flex gap-2 border-l border-outline-variant/30 pl-4">
+<span class="material-symbols-outlined text-slate-500 hover:text-primary cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-slate-500 hover:text-primary cursor-pointer">dark_mode</span>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden ml-2 border border-outline-variant">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="close up headshot of a professional security engineer in a dark tech-focused environment with subtle blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6yRN-kbx2yTCgTgzTsHqV6BGR5xTiQHnQfD-TcYu03xDKcw0fedZm_Kl_mPbo0alMRej6MnFAmz5QFOdpUYBG91KRjaeGU7uPrdqc1jG18TJRC1Dh0vnyYNcdTDM5Fk_VqskyaeGkwhSXF41QldnfMDY_TaoPWl2Bqrvw69ik9tZrVeVgLCEr9ruENPM9pWHMKM6-y8Upcmb9bGcFL4-S0bPy3luwJxqUBoa8TogEjQWhz-BIPQDWFeBIjgXo_uuFn3r8kf0sxbo"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Alert Content Wrapper -->
+<div class="flex-1 p-8 overflow-y-auto max-h-[calc(100vh-4rem)]">
+<!-- Page Header -->
+<div class="flex items-start justify-between mb-8">
+<div>
+<nav class="flex items-center text-[0.6875rem] text-slate-500 uppercase tracking-[0.05em] mb-2 font-label">
+<span class="hover:text-primary cursor-pointer">Alerts</span>
+<span class="mx-2">/</span>
+<span class="text-on-background font-semibold">ALT-00441</span>
+</nav>
+<h2 class="text-2xl font-bold font-headline text-on-background flex items-center gap-3">
+                        Alert #[ALT-00441] — Brute Force Login Attempt
+                    </h2>
+<div class="flex items-center gap-3 mt-3">
+<span class="flex items-center px-2.5 py-0.5 rounded-full border border-error/20 text-[0.6875rem] font-semibold text-error uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-2"></span>
+                            High Severity
+                        </span>
+<span class="flex items-center px-2.5 py-0.5 rounded-full border border-primary/20 text-[0.6875rem] font-semibold text-primary uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
+                            Acknowledged
+                        </span>
+<span class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                            Triggered: Oct 24, 2023 · 14:32:11 UTC
+                        </span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-lowest border border-outline-variant/30 text-on-surface px-4 py-2 rounded-sm text-xs font-semibold hover:bg-surface-container-low transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">ios_share</span> Export Data
+                    </button>
+<button class="bg-surface-container-lowest border border-outline-variant/30 text-error px-4 py-2 rounded-sm text-xs font-semibold hover:bg-error/5 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">block</span> Blacklist IP
+                    </button>
+</div>
+</div>
+<!-- Workspace Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Left Column (65%) -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- Alert Description & Context -->
+<div class="bg-surface-container-lowest p-6 border-l-4 border-primary shadow-sm rounded-sm">
+<h3 class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label mb-4">Detailed Summary &amp; Context</h3>
+<p class="text-[0.875rem] leading-relaxed text-on-surface-variant mb-4">
+                            System detected multiple failed authentication attempts originating from a single source IP targeting high-privileged accounts. The pattern aligns with typical brute-force or credential stuffing methodologies. Attempts focused on the administrative portal endpoint <code class="bg-surface-container-low px-1 font-mono text-error">/auth/v2/admin-login</code>.
+                        </p>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-3 rounded-sm">
+<span class="block text-[0.6rem] uppercase tracking-tighter text-slate-500 mb-1">Source IP Address</span>
+<span class="font-mono text-sm font-semibold">185.221.45.104</span>
+</div>
+<div class="bg-surface-container-low p-3 rounded-sm">
+<span class="block text-[0.6rem] uppercase tracking-tighter text-slate-500 mb-1">Attempt Frequency</span>
+<span class="font-mono text-sm font-semibold">142 requests / 60s</span>
+</div>
+</div>
+</div>
+<!-- Source Details -->
+<div class="bg-surface-container-lowest p-6 shadow-sm rounded-sm">
+<h3 class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label mb-4">Detection Logic: Auth-Rule-42</h3>
+<div class="space-y-4">
+<div class="flex items-start gap-4 pb-4 border-b border-outline-variant/10">
+<div class="p-2 bg-primary-container/10 rounded-sm">
+<span class="material-symbols-outlined text-primary">data_object</span>
+</div>
+<div>
+<h4 class="text-sm font-semibold mb-1">Threshold Trigger</h4>
+<p class="text-xs text-on-surface-variant">The rule was activated when the failed login count exceeded the threshold of 5 attempts per unique user/IP within a rolling 5-minute window.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="p-2 bg-primary-container/10 rounded-sm">
+<span class="material-symbols-outlined text-primary">psychology</span>
+</div>
+<div>
+<h4 class="text-sm font-semibold mb-1">Heuristic Pattern</h4>
+<p class="text-xs text-on-surface-variant">Matching entropy-based credential strings detected. User agent strings used across requests show inconsistent headers suggesting automated scripting.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Linked Entities -->
+<div class="bg-surface-container-lowest p-6 shadow-sm rounded-sm">
+<h3 class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label mb-4">Linked Entities</h3>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center bg-surface-container-low border border-outline-variant/30 px-3 py-1.5 rounded-sm hover:border-primary cursor-pointer transition-all group">
+<span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-primary mr-2">shopping_cart</span>
+<span class="text-xs font-mono uppercase">Order #[ORD-99812]</span>
+</div>
+<div class="flex items-center bg-surface-container-low border border-outline-variant/30 px-3 py-1.5 rounded-sm hover:border-primary cursor-pointer transition-all group">
+<span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-primary mr-2">person</span>
+<span class="text-xs font-mono uppercase">Customer #[CUST-4421]</span>
+</div>
+<div class="flex items-center bg-surface-container-low border border-outline-variant/30 px-3 py-1.5 rounded-sm hover:border-primary cursor-pointer transition-all group">
+<span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-primary mr-2">payments</span>
+<span class="text-xs font-mono uppercase">Payment #[TXN-00109]</span>
+</div>
+</div>
+</div>
+<!-- Event Timeline -->
+<div class="bg-surface-container-lowest p-6 shadow-sm rounded-sm">
+<h3 class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label mb-6">Investigation Timeline</h3>
+<div class="relative space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant/30">
+<!-- Timeline Item -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[24px] h-[24px] bg-error rounded-full flex items-center justify-center border-4 border-white">
+<span class="material-symbols-outlined text-[12px] text-white">priority_high</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-semibold">Alert Triggered</p>
+<p class="text-xs text-on-surface-variant">Automated detection by Security Ops Architect Engine.</p>
+</div>
+<span class="font-mono text-[0.65rem] text-slate-400 uppercase">Oct 24, 14:32:11</span>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[24px] h-[24px] bg-primary rounded-full flex items-center justify-center border-4 border-white">
+<span class="material-symbols-outlined text-[12px] text-white">visibility</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-semibold">Acknowledged by <span class="text-primary">agent_01</span></p>
+<p class="text-xs text-on-surface-variant">Initial verification of logs complete. IP confirmed non-residential.</p>
+</div>
+<span class="font-mono text-[0.65rem] text-slate-400 uppercase">Oct 24, 14:35:45</span>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[24px] h-[24px] bg-secondary rounded-full flex items-center justify-center border-4 border-white">
+<span class="material-symbols-outlined text-[12px] text-white">assignment_ind</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-semibold">Assigned to <span class="text-primary">agent_02</span></p>
+<p class="text-xs text-on-surface-variant">Handover for deep forensic analysis of request headers.</p>
+</div>
+<span class="font-mono text-[0.65rem] text-slate-400 uppercase">Oct 24, 14:40:22</span>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1 w-[24px] h-[24px] bg-warning rounded-full bg-amber-500 flex items-center justify-center border-4 border-white">
+<span class="material-symbols-outlined text-[12px] text-white">trending_up</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm font-semibold">Escalated to L2 Ops</p>
+<p class="text-xs text-on-surface-variant">Incident requires infrastructure-level blocking of CIDR block.</p>
+</div>
+<span class="font-mono text-[0.65rem] text-slate-400 uppercase">Oct 24, 15:12:00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (35%) -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Ownership Panel -->
+<div class="bg-surface-container-lowest p-6 shadow-sm rounded-sm">
+<h3 class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label mb-6">Ownership &amp; Actions</h3>
+<div class="mb-6">
+<label class="text-[0.6rem] uppercase tracking-tighter text-slate-500 mb-2 block">Current Assignee</label>
+<div class="flex items-center gap-3 bg-surface-container-low p-2 rounded-sm border border-outline-variant/10">
+<img alt="Agent Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="professional portrait of a man with spectacles in a modern dark office environment wearing a navy sweater" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQafnes73ZC9y3clUTTyaXa-fJzmwi1KlOoJ7t4LOKbEcuZEbsgQjajvWHs1b4eDsAOzU2OCP8pkFWNurUgdY5_t-cA7fKKGgyujvcxUZ3IvhohpHTfFQVuZtRb2PY9zDRzqvdoPe6FVK3a4B63o7ksPy_XLLNibEq3W8H9pnF9NDmXQddwck8lcWromnRuxfz5YzNVXygGhTnFQ1ZXmbhCZLoDLz12ZDYWNWkxGicfVkk8UQaS9NmDzQOxSfVT7wF_6nAJoKoBok"/>
+<div>
+<p class="text-sm font-semibold">agent_02 (Senior Analyst)</p>
+<p class="text-[0.65rem] text-slate-400 uppercase">Level 2 Support</p>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<button class="w-full flex justify-between items-center bg-surface-container-low border border-outline-variant/30 px-4 py-2 text-xs font-semibold rounded-sm hover:border-primary transition-all group">
+                                Reassign Analyst
+                                <span class="material-symbols-outlined text-sm group-hover:text-primary">expand_more</span>
+</button>
+<button class="w-full bg-surface-container-lowest border border-primary text-primary px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-primary hover:text-white transition-all">
+                                Escalate to Tier 3
+                            </button>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/10 flex flex-col gap-3">
+<h4 class="text-[0.6rem] uppercase tracking-tighter text-slate-500 mb-1">Status Rail</h4>
+<div class="flex gap-2">
+<button class="flex-1 bg-surface-container-low text-slate-400 text-[0.7rem] font-bold uppercase py-2 rounded-sm opacity-50 cursor-not-allowed border border-outline-variant/10">Acknowledge</button>
+<button class="flex-1 bg-surface-container-low text-on-surface text-[0.7rem] font-bold uppercase py-2 rounded-sm border border-outline-variant hover:bg-surface-dim transition-colors">Assign</button>
+<button class="flex-1 bg-primary text-white text-[0.7rem] font-bold uppercase py-2 rounded-sm hover:bg-primary-container transition-all">Resolve</button>
+</div>
+</div>
+</div>
+<!-- Internal Notes -->
+<div class="bg-surface-container-lowest p-6 shadow-sm rounded-sm flex flex-col max-h-[500px]">
+<h3 class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label mb-4">Internal Notes</h3>
+<div class="flex-1 overflow-y-auto pr-2 space-y-4 mb-4 no-scrollbar">
+<div class="bg-surface-container-low p-3 rounded-sm relative">
+<div class="flex justify-between mb-2">
+<span class="text-[0.65rem] font-bold text-primary">agent_01</span>
+<span class="text-[0.6rem] text-slate-400 uppercase font-mono tracking-tighter">14:38</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                                    IP is geolocated to a known cloud hosting provider. Unlikely to be a legitimate customer access point.
+                                </p>
+</div>
+<div class="bg-surface-container-low p-3 rounded-sm relative">
+<div class="flex justify-between mb-2">
+<span class="text-[0.65rem] font-bold text-primary">agent_02</span>
+<span class="text-[0.6rem] text-slate-400 uppercase font-mono tracking-tighter">15:05</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                                    Cross-referencing with global threat intel. Similar patterns reported in APAC region recently. Initiating sandbox trace.
+                                </p>
+</div>
+</div>
+<div class="mt-auto border-t border-outline-variant/10 pt-4">
+<textarea class="w-full bg-surface-container-low border border-outline-variant/30 text-xs p-3 rounded-sm h-24 focus:ring-1 focus:ring-primary focus:border-primary resize-none placeholder-slate-400 mb-3" placeholder="Type internal note here..."></textarea>
+<button class="w-full bg-on-background text-white text-[0.65rem] font-bold uppercase py-2 rounded-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[14px]">send</span>
+                                Add Note
+                            </button>
+</div>
+</div>
+<!-- Related Artifacts -->
+<div class="bg-surface-container-lowest p-6 shadow-sm rounded-sm">
+<h3 class="text-[0.6875rem] text-slate-500 uppercase tracking-widest font-label mb-4">Forensic Artifacts</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 bg-surface-container-low rounded-sm hover:bg-surface-dim cursor-pointer">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm text-slate-500 mr-2">description</span>
+<span class="text-xs font-mono">raw_payload_log.json</span>
+</div>
+<span class="material-symbols-outlined text-xs text-slate-400">download</span>
+</div>
+<div class="flex items-center justify-between p-2 bg-surface-container-low rounded-sm hover:bg-surface-dim cursor-pointer">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm text-slate-500 mr-2">image</span>
+<span class="text-xs font-mono">auth_header_fingerprint.png</span>
+</div>
+<span class="material-symbols-outlined text-xs text-slate-400">download</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Toast Notification (Hidden by default, shown for realism) -->
+<div class="fixed bottom-8 right-8 bg-[#1a1d27] text-white px-6 py-4 rounded-sm shadow-2xl border-l-4 border-primary transform translate-y-2 opacity-0 pointer-events-none transition-all duration-500 flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">info</span>
+<div>
+<p class="text-xs font-bold uppercase tracking-wider">System Syncing</p>
+<p class="text-[0.65rem] text-slate-400">Broadcasting investigation state to team members.</p>
+</div>
+</div>
+</body></html>

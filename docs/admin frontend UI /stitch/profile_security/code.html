@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile &amp; Security | Admin Panel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed-dim": "#b4c5ff",
+            "error": "#ba1a1a",
+            "surface-tint": "#1b55ce",
+            "on-tertiary-fixed-variant": "#005321",
+            "on-tertiary-fixed": "#002109",
+            "surface-container-high": "#e6e7f6",
+            "primary-container": "#3b6de6",
+            "secondary": "#5b5e68",
+            "on-secondary-fixed": "#181b24",
+            "on-secondary-fixed-variant": "#444650",
+            "background": "#f0f2f7",
+            "surface-container": "#ecedfb",
+            "on-secondary-container": "#60626c",
+            "on-primary-fixed-variant": "#003ea7",
+            "surface": "#faf8ff",
+            "primary": "#4f7ef8",
+            "on-surface": "#181b25",
+            "inverse-primary": "#b4c5ff",
+            "on-primary-container": "#fefcff",
+            "secondary-fixed": "#e0e2ed",
+            "on-error-container": "#93000a",
+            "outline-variant": "#e5e7eb",
+            "on-tertiary-container": "#f7fff3",
+            "tertiary": "#006b2d",
+            "on-secondary": "#ffffff",
+            "on-surface-variant": "#434654",
+            "secondary-container": "#dedfeb",
+            "surface-container-highest": "#e0e2f0",
+            "inverse-surface": "#2d303b",
+            "secondary-fixed-dim": "#c4c6d1",
+            "on-background": "#181b25",
+            "inverse-on-surface": "#eff0fe",
+            "on-error": "#ffffff",
+            "surface-bright": "#faf8ff",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#4ae176",
+            "primary-fixed": "#dbe1ff",
+            "outline": "#737685",
+            "surface-variant": "#e0e2f0",
+            "tertiary-container": "#00873b",
+            "surface-container-low": "#f2f3ff",
+            "on-primary": "#ffffff",
+            "surface-dim": "#d8d9e7",
+            "on-primary-fixed": "#00174a",
+            "tertiary-fixed": "#6bff8f",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary": "#ffffff"
+          },
+          fontFamily: {
+            "headline": ["DM Sans", "sans-serif"],
+            "body": ["IBM Plex Sans", "sans-serif"],
+            "label": ["IBM Plex Sans", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #f0f2f7;
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .active-nav-item {
+      background-color: #1a1d27;
+      color: #4f7ef8;
+      border-left: 4px solid #4f7ef8;
+      font-weight: 600;
+    }
+    .input-field {
+      height: 44px;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 0 1rem;
+      transition: all 0.2s;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #4f7ef8;
+      box-shadow: 0 0 0 2px rgba(79, 126, 248, 0.2);
+    }
+    .primary-btn {
+      background: linear-gradient(135deg, #4f7ef8 0%, #3b6de6 100%);
+      color: white;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .primary-btn:hover {
+      opacity: 0.9;
+    }
+    .ghost-border {
+      border: 1px solid rgba(195, 198, 214, 0.15);
+    }
+  </style>
+</head>
+<body class="text-on-surface selection:bg-primary-fixed-dim">
+<!-- SideNavBar Shell -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 z-40 w-[240px] bg-[#13161e] overflow-y-auto">
+<div class="p-6">
+<div class="text-xl font-bold text-white tracking-tight font-headline">Admin Panel</div>
+<div class="text-[0.6875rem] uppercase tracking-[0.05em] text-slate-500 mt-1">Enterprise Control</div>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="text-sm font-medium">Catalog</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-sm font-medium">Payments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+<div class="pt-4 pb-2 px-4 text-[0.625rem] uppercase font-bold text-slate-600 tracking-widest">System</div>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+<span class="text-sm font-medium">Security &amp; Audit</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-[#1a1d27] text-[#4f7ef8] border-l-4 border-[#4f7ef8] font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm">System Settings</span>
+</a>
+</nav>
+<div class="p-4 mt-auto border-t border-slate-800/50">
+<div class="flex items-center gap-3">
+<img alt="Admin User Profile" class="w-8 h-8 rounded-full bg-slate-700" data-alt="close-up portrait of a professional male administrator in a modern office environment with soft bokeh lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSLfc6m381bZ-Z-obrKu8vCdjl8HxbX2QxD6XYXQbXC2QVXRCDnv1l187QccAKYmnIrtd3coPy78xWxPu-EdH4f0lEMRmRM8o-fUF-xzMAm5reOtPHaDnL-pwaSOZhJ_8ezbNMVlaLe3lKApSy5A4j3rs-RNhfhU3NCv_5vUDPl_2D7MYxs2k2o646uYvQ0XDNIcCqaBsupeB8fyYV6bVKDuZJp3gVNcvBzRcMrI-mEcd6rN_z8glv5mYCQJdeIa4jmG55ns3vT1Q"/>
+<div class="overflow-hidden">
+<p class="text-xs font-semibold text-white truncate">Alex Sterling</p>
+<p class="text-[0.65rem] text-slate-500 truncate">Super Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="h-[60px] fixed top-0 right-0 left-[240px] z-30 bg-[#f8f9fb] flex justify-between items-center px-6 shadow-[0_24px_24px_-12px_rgba(24,27,37,0.04)]">
+<div class="flex items-center gap-8">
+<div class="text-lg font-bold text-[#0f1117] font-headline tracking-tight">Command Deck</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="h-9 w-64 pl-10 pr-4 bg-slate-100 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search parameters..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 border-r border-slate-200 pr-6">
+<a class="text-[#4f7ef8] font-bold border-b-2 border-[#4f7ef8] h-[60px] flex items-center text-sm" href="#">Profile</a>
+<a class="text-slate-500 font-medium hover:text-[#4f7ef8] transition-all duration-300 text-sm" href="#">Settings</a>
+<a class="text-slate-500 font-medium hover:text-[#4f7ef8] transition-all duration-300 text-sm" href="#">Security</a>
+</div>
+<div class="flex items-center gap-4 text-slate-500">
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="help">help</span></button>
+<button class="hover:text-error transition-colors"><span class="material-symbols-outlined" data-icon="logout">logout</span></button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] pt-[60px] min-h-screen p-8 max-w-[1280px] mx-auto">
+<div class="mb-8">
+<h1 class="text-2xl font-bold font-headline text-[#0f1117]">Profile &amp; Security</h1>
+<p class="text-slate-500 text-sm font-body mt-1">Manage your administrative credentials and monitor account access.</p>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column (65%) -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Profile Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<h2 class="text-base font-semibold font-headline mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="person">person</span>
+            Profile Details
+          </h2>
+<div class="flex flex-col md:flex-row gap-10">
+<div class="flex flex-col items-center space-y-4">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-50 bg-slate-100 flex items-center justify-center">
+<img alt="Admin User Avatar" class="w-full h-full object-cover" data-alt="professional studio headshot of a person with neutral expression and clean composition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjKGb0Tnz4IlmZZLX382KRy1XC2gUciMzzyr3OmvKKkkcnV7aRJ4coIYdH9hv-04FH5pPKvo11bkQ31vv887_HmT5le1FsLO4cruC1vOQ-0x6CSXx_uf_iW5mtgPnwtgpl_B6IiPh-mu9eBxYFfjov3LiJmB4YcrhRkPdPb7ipLA0DZkoafPQlF_mRL7CueFyR7aLeh6IxJ6syIb6-8XDQpDduDzKRJejBrhwcCQDiat5RRtH-fz5N57MPObUmHZOzXFPB--S0790"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="photo_camera">photo_camera</span>
+</button>
+</div>
+<div class="text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-200 text-[0.7rem] font-bold text-slate-600 uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Super Admin
+                </span>
+</div>
+</div>
+<div class="flex-1 space-y-5">
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-[0.6875rem] uppercase font-bold text-slate-500 tracking-wider">Full Name</label>
+<input class="input-field font-body text-sm" type="text" value="Alex Sterling"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[0.6875rem] uppercase font-bold text-slate-500 tracking-wider">Role (Read-Only)</label>
+<input class="input-field bg-slate-50 font-body text-sm text-slate-400 cursor-not-allowed" readonly="" type="text" value="Enterprise Administrator"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[0.6875rem] uppercase font-bold text-slate-500 tracking-wider">Email Address</label>
+<input class="input-field font-body text-sm" type="email" value="alex.sterling@commanddeck.io"/>
+</div>
+<div class="pt-4 flex justify-end">
+<button class="primary-btn flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-lg" data-icon="save">save</span>
+                  Save Changes
+                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Password Change Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<h2 class="text-base font-semibold font-headline mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="lock">lock</span>
+            Security Credentials
+          </h2>
+<div class="max-w-xl space-y-5">
+<div class="flex flex-col gap-1.5">
+<label class="text-[0.6875rem] uppercase font-bold text-slate-500 tracking-wider">Current Password</label>
+<input class="input-field font-body text-sm" placeholder="••••••••••••" type="password"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-[0.6875rem] uppercase font-bold text-slate-500 tracking-wider">New Password</label>
+<input class="input-field font-body text-sm" type="password"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[0.6875rem] uppercase font-bold text-slate-500 tracking-wider">Confirm New Password</label>
+<input class="input-field font-body text-sm" type="password"/>
+</div>
+</div>
+<div class="pt-2 flex items-center gap-4">
+<button class="primary-btn text-sm">Update Password</button>
+<p class="text-xs text-slate-400 italic font-body">Password must be at least 12 characters with symbols.</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (35%) -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Active Sessions Panel -->
+<section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="p-6 border-b border-slate-50">
+<h2 class="text-base font-semibold font-headline flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="devices">devices</span>
+              Active Sessions
+            </h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50/50">
+<th class="px-6 py-3 text-[0.625rem] uppercase font-bold text-slate-500 tracking-widest">Device / Browser</th>
+<th class="px-6 py-3 text-[0.625rem] uppercase font-bold text-slate-500 tracking-widest text-right">Last Active</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-slate-50/50 group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400" data-icon="laptop_mac">laptop_mac</span>
+<div>
+<p class="text-sm font-semibold text-slate-800">MacBook Pro 16"</p>
+<p class="text-xs text-slate-500">Chrome • London, UK</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono text-[0.7rem] text-primary font-medium">ONLINE</p>
+<button class="text-[0.65rem] text-error font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-tighter">Revoke</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400" data-icon="smartphone">smartphone</span>
+<div>
+<p class="text-sm font-semibold text-slate-800">iPhone 15 Pro</p>
+<p class="text-xs text-slate-500">Safari • Paris, FR</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono text-[0.7rem] text-slate-500">2023-11-24 14:22</p>
+<button class="text-[0.65rem] text-error font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-tighter">Revoke</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400" data-icon="desktop_windows">desktop_windows</span>
+<div>
+<p class="text-sm font-semibold text-slate-800">Windows PC</p>
+<p class="text-xs text-slate-500">Edge • Berlin, DE</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono text-[0.7rem] text-slate-500">2023-11-22 09:15</p>
+<button class="text-[0.65rem] text-error font-bold opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-tighter">Revoke</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-slate-50/30">
+<button class="w-full py-2.5 px-4 text-sm font-bold text-error border border-error/20 rounded-lg hover:bg-error/5 transition-colors">
+              Revoke all other sessions
+            </button>
+</div>
+</section>
+<!-- Recent Security Events Panel -->
+<section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+<h2 class="text-base font-semibold font-headline mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="history">history</span>
+            Security Events
+          </h2>
+<div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100">
+<!-- Event 1 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] bg-white border-2 border-primary rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="login">login</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">Successful login</p>
+<p class="text-xs text-slate-500">New session from 192.168.1.45</p>
+<p class="font-mono text-[0.65rem] text-slate-400 mt-1 uppercase">Today, 08:42 AM</p>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] bg-white border-2 border-amber-500 rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-amber-500" data-icon="key">key</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">Password changed</p>
+<p class="text-xs text-slate-500">Security credentials updated</p>
+<p class="font-mono text-[0.65rem] text-slate-400 mt-1 uppercase">Nov 22, 11:30 AM</p>
+</div>
+</div>
+<!-- Event 3 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] bg-white border-2 border-error rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-error" data-icon="no_accounts">no_accounts</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">Session revoked</p>
+<p class="text-xs text-slate-500">Manual termination of mobile session</p>
+<p class="font-mono text-[0.65rem] text-slate-400 mt-1 uppercase">Nov 20, 04:15 PM</p>
+</div>
+</div>
+<!-- Event 4 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] bg-white border-2 border-slate-300 rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-slate-400" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">2FA verification</p>
+<p class="text-xs text-slate-500">Biometric auth successful</p>
+<p class="font-mono text-[0.65rem] text-slate-400 mt-1 uppercase">Nov 18, 09:05 AM</p>
+</div>
+</div>
+<!-- Event 5 -->
+<div class="relative pl-8">
+<div class="absolute left-0 top-1.5 w-[24px] h-[24px] bg-white border-2 border-primary rounded-full flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="login">login</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">Successful login</p>
+<p class="text-xs text-slate-500">Standard dashboard entry</p>
+<p class="font-mono text-[0.65rem] text-slate-400 mt-1 uppercase">Nov 15, 08:33 AM</p>
+</div>
+</div>
+</div>
+<button class="mt-8 w-full text-center text-xs font-bold text-slate-400 hover:text-primary transition-colors uppercase tracking-widest">
+            View full audit log
+          </button>
+</section>
+</div>
+</div>
+</main>
+</body></html>

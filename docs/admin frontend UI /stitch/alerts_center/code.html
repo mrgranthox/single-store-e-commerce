@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alerts Center | Security Ops Architect</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#1b55ce",
+              "surface-variant": "#e0e2f0",
+              "on-surface-variant": "#434654",
+              "inverse-surface": "#2d303b",
+              "tertiary-fixed": "#6bff8f",
+              "surface-bright": "#faf8ff",
+              "secondary-container": "#dedfeb",
+              "primary-container": "#3b6de6",
+              "surface": "#faf8ff",
+              "on-tertiary-container": "#f7fff3",
+              "on-primary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "surface-container-high": "#e6e7f6",
+              "on-secondary-container": "#60626c",
+              "inverse-on-surface": "#eff0fe",
+              "primary": "#1653cc",
+              "on-secondary-fixed-variant": "#444650",
+              "on-background": "#181b25",
+              "on-secondary-fixed": "#181b24",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d8d9e7",
+              "error-container": "#ffdad6",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#4ae176",
+              "surface-container-highest": "#e0e2f0",
+              "surface-container": "#ecedfb",
+              "secondary-fixed-dim": "#c4c6d1",
+              "outline-variant": "#c3c6d6",
+              "secondary": "#5b5e68",
+              "background": "#faf8ff",
+              "on-tertiary-fixed": "#002109",
+              "tertiary-container": "#00873b",
+              "on-primary-fixed": "#00174a",
+              "on-tertiary-fixed-variant": "#005321",
+              "tertiary": "#006b2d",
+              "on-surface": "#181b25",
+              "on-error": "#ffffff",
+              "inverse-primary": "#b4c5ff",
+              "outline": "#737685",
+              "on-primary-fixed-variant": "#003ea7",
+              "surface-container-low": "#f2f3ff",
+              "on-tertiary": "#ffffff",
+              "primary-fixed": "#dbe1ff",
+              "secondary-fixed": "#e0e2ed",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans", "Inter"],
+              "label": ["IBM Plex Sans", "Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .severity-critical { border-left: 4px solid #ba1a1a; }
+        .severity-high { border-left: 4px solid #f59e0b; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #434654; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#0f1117] font-body text-on-background antialiased overflow-hidden flex h-screen">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="bg-[#13161e] h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-gradient-to-br from-primary to-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg" data-weight="fill">shield</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-white tracking-tight leading-none">Command Deck</h1>
+<p class="text-[0.625rem] text-slate-500 uppercase tracking-widest mt-1">Security Operations</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm transition-colors duration-200 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-[0.75rem] font-medium tracking-[0.05em] uppercase">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm transition-colors duration-200 text-white font-semibold bg-[#1a1d27] border-l-4 border-[#4f7ef8]" href="#">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+<span class="text-[0.75rem] font-medium tracking-[0.05em] uppercase">Alerts Center</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm transition-colors duration-200 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">policy</span>
+<span class="text-[0.75rem] font-medium tracking-[0.05em] uppercase">Security Events</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm transition-colors duration-200 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">emergency_share</span>
+<span class="text-[0.75rem] font-medium tracking-[0.05em] uppercase">Incidents</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm transition-colors duration-200 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">settings_input_component</span>
+<span class="text-[0.75rem] font-medium tracking-[0.05em] uppercase">Operations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-sm transition-colors duration-200 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-[0.75rem] font-medium tracking-[0.05em] uppercase">Settings</span>
+</a>
+</nav>
+<div class="px-6 py-4">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-2.5 rounded font-bold text-xs uppercase tracking-wider shadow-lg active:scale-[0.98] transition-all">
+                New Incident
+            </button>
+</div>
+<div class="mt-auto px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-sm text-slate-500 hover:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">help</span>
+<span class="text-[0.6875rem] font-medium tracking-[0.05em] uppercase">Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-sm text-slate-500 hover:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">description</span>
+<span class="text-[0.6875rem] font-medium tracking-[0.05em] uppercase">Documentation</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 flex flex-col min-h-screen bg-[#f0f2f7]">
+<!-- TopNavBar (Authority: JSON) -->
+<header class="h-16 sticky top-0 z-40 bg-[#f8f9fb] flex justify-between items-center px-8 w-full shadow-[0_4px_24px_rgba(24,27,37,0.04)] backdrop-blur-md">
+<div class="flex items-center gap-8 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="bg-[#f0f2f7] border-none rounded-lg py-2 pl-10 pr-4 w-full text-xs focus:ring-1 focus:ring-primary/20 placeholder:text-slate-400" placeholder="Search operational alerts..." type="text"/>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-[0.75rem] font-medium text-slate-500 hover:text-[#1653cc] transition-colors" href="#">Overview</a>
+<a class="text-[0.75rem] font-medium text-[#1653cc] border-b-2 border-[#1653cc] pb-1 transition-colors" href="#">Logs</a>
+<a class="text-[0.75rem] font-medium text-slate-500 hover:text-[#1653cc] transition-colors" href="#">Activity</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 mr-4">
+<button class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">dark_mode</button>
+<button class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+                        notifications
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full ring-2 ring-white"></span>
+</button>
+</div>
+<div class="flex items-center gap-3 border-l pl-6 border-slate-200">
+<button class="text-[0.7rem] font-bold text-slate-500 hover:text-primary uppercase tracking-wider">Export Data</button>
+<button class="bg-primary text-white px-4 py-2 rounded text-[0.7rem] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all active:scale-95 shadow-md">Deploy Update</button>
+<img alt="System Admin Profile" class="w-8 h-8 rounded-full border border-slate-200 object-cover ml-2 cursor-pointer" data-alt="portrait of a professional male security analyst wearing a headset in a modern darkened control room office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6AzdAHCI0h71cmB8-ZMlMGnS6tO7vbt5XLniyS2DquZoKLoa8ilxiTwGuAPp8SmycwB2BnOwPvkZPeBPuQ5axjcAx_1NQW0WepsrCIDtQoFy5aHinKphQ4pIMRFpDb4Kbq8wvFJPoeVNsnE4Ibd8WSnfnUGbHLuRLsW6FkRxuFQaKEvYwq-gQseWqPhqL58lPYuuDh4NHw9A_TcT6ILSMdhIG822YPnjJDpPw_Ji2L_Zm32BClml1pHn-L6l_GA5-1ur80s5tyRE"/>
+</div>
+</div>
+</header>
+<!-- Operational Content -->
+<div class="p-8 space-y-6">
+<!-- Page Heading & Actions -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline text-2xl font-bold text-on-background tracking-tight">Alerts</h2>
+<p class="text-label text-xs text-secondary mt-1 tracking-wide uppercase">Operational and security alerts command center</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded border border-outline-variant/20 text-xs font-semibold hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+                        Acknowledge Selected
+                    </button>
+<button class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded border border-outline-variant/20 text-xs font-semibold hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+                        Assign Selected
+                    </button>
+</div>
+</div>
+<!-- Severity Summary Strip (Bento Pattern) -->
+<div class="grid grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-4 border-l-4 border-error flex justify-between items-center shadow-sm">
+<div>
+<p class="text-[0.625rem] font-bold text-slate-500 uppercase tracking-[0.1em]">Critical</p>
+<h3 class="text-2xl font-bold font-mono text-error">12</h3>
+</div>
+<span class="material-symbols-outlined text-error/30 text-3xl">emergency</span>
+</div>
+<div class="bg-surface-container-lowest p-4 border-l-4 border-amber-500 flex justify-between items-center shadow-sm">
+<div>
+<p class="text-[0.625rem] font-bold text-slate-500 uppercase tracking-[0.1em]">High</p>
+<h3 class="text-2xl font-bold font-mono text-amber-600">08</h3>
+</div>
+<span class="material-symbols-outlined text-amber-500/30 text-3xl">warning</span>
+</div>
+<div class="bg-surface-container-lowest p-4 border-l-4 border-primary flex justify-between items-center shadow-sm">
+<div>
+<p class="text-[0.625rem] font-bold text-slate-500 uppercase tracking-[0.1em]">Medium</p>
+<h3 class="text-2xl font-bold font-mono text-primary">24</h3>
+</div>
+<span class="material-symbols-outlined text-primary/30 text-3xl">report</span>
+</div>
+<div class="bg-surface-container-lowest p-4 border-l-4 border-slate-400 flex justify-between items-center shadow-sm">
+<div>
+<p class="text-[0.625rem] font-bold text-slate-500 uppercase tracking-[0.1em]">Low</p>
+<h3 class="text-2xl font-bold font-mono text-slate-600">05</h3>
+</div>
+<span class="material-symbols-outlined text-slate-400/30 text-3xl">info</span>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-lowest p-4 flex flex-wrap gap-4 items-center shadow-sm">
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.6rem] font-bold text-slate-500 uppercase mb-1 tracking-wider">Type</label>
+<select class="w-full bg-[#f0f2f7] border-none text-[0.75rem] rounded focus:ring-1 focus:ring-primary">
+<option>All Types</option>
+<option>Security</option>
+<option>System</option>
+<option>Application</option>
+</select>
+</div>
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.6rem] font-bold text-slate-500 uppercase mb-1 tracking-wider">Severity</label>
+<select class="w-full bg-[#f0f2f7] border-none text-[0.75rem] rounded focus:ring-1 focus:ring-primary">
+<option>All Severities</option>
+<option>Critical</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+</div>
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.6rem] font-bold text-slate-500 uppercase mb-1 tracking-wider">Status</label>
+<select class="w-full bg-[#f0f2f7] border-none text-[0.75rem] rounded focus:ring-1 focus:ring-primary">
+<option>All Statuses</option>
+<option>Open</option>
+<option>Acknowledged</option>
+<option>Resolved</option>
+</select>
+</div>
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.6rem] font-bold text-slate-500 uppercase mb-1 tracking-wider">Assigned To</label>
+<select class="w-full bg-[#f0f2f7] border-none text-[0.75rem] rounded focus:ring-1 focus:ring-primary">
+<option>Everyone</option>
+<option>Unassigned</option>
+<option>Me</option>
+</select>
+</div>
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.6rem] font-bold text-slate-500 uppercase mb-1 tracking-wider">Date Range</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-sm">calendar_today</span>
+<input class="w-full bg-[#f0f2f7] border-none text-[0.75rem] rounded pl-8 focus:ring-1 focus:ring-primary" type="text" value="Last 24 Hours"/>
+</div>
+</div>
+<div class="flex items-end h-full self-end pb-0.5">
+<button class="bg-slate-800 text-white p-2 rounded hover:bg-slate-900 transition-colors">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-surface-container-lowest shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high/30 border-b border-outline-variant/10">
+<tr>
+<th class="py-3 px-4 w-8"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Alert ID</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Title</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Type</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Severity</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Status</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Assigned</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Triggered</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest">Age</th>
+<th class="py-3 px-4 text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Critical Row -->
+<tr class="hover:bg-slate-50 transition-colors severity-critical group">
+<td class="py-3 px-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-3 px-4 font-mono text-[0.75rem] font-medium text-primary hover:underline cursor-pointer">ALRT-9821</td>
+<td class="py-3 px-4 text-[0.8rem] font-semibold text-slate-900">Unauthorized Database Access Attempt</td>
+<td class="py-3 px-4">
+<span class="text-[0.65rem] border border-slate-200 px-2 py-0.5 rounded text-slate-600 font-medium">SECURITY</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5 text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span class="text-[0.7rem] font-bold uppercase">Critical</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-error-container text-on-error-container text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase">Open</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<img class="w-5 h-5 rounded-full grayscale" data-alt="close-up of a diverse professional male tech support agent with focused expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7EdkYSYQVX3qxgyehV1CPku30iWnQe0Fp-xAdosgMdCtBUxIkbors00m8nyIiiqKqbYb22LnfGgp3z8LZtaZ4pufJlFedyAhElaJYozbqAGOvbW71PMYW8JT8OvNr5lyE71DNWHqp1aoFXsoW1lSEw3N1yfTbp2NvvIhtuVKGMjiRz10qHxWNNYKA2BQiGZspMyhjMOrUIl8tuYnZ8iN0XzCVR-aX_6ADKsdvRQ6vAA6Q702tJoQj4K86LiaG5qyPWh3HpA6pxYo"/>
+<span class="text-[0.75rem] text-slate-600">A. Chen</span>
+</div>
+</td>
+<td class="py-3 px-4 text-[0.75rem] text-slate-500">2023-11-24 14:22:01</td>
+<td class="py-3 px-4 text-[0.75rem] font-mono text-slate-500">02m 45s</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary" title="Acknowledge"><span class="material-symbols-outlined text-[18px]">verified_user</span></button>
+<button class="p-1 hover:text-primary" title="Assign"><span class="material-symbols-outlined text-[18px]">person_add</span></button>
+<button class="p-1 hover:text-error" title="Resolve"><span class="material-symbols-outlined text-[18px]">check_circle</span></button>
+</div>
+</td>
+</tr>
+<!-- High Row -->
+<tr class="hover:bg-slate-50 transition-colors severity-high group">
+<td class="py-3 px-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-3 px-4 font-mono text-[0.75rem] font-medium text-primary hover:underline cursor-pointer">ALRT-9818</td>
+<td class="py-3 px-4 text-[0.8rem] font-semibold text-slate-900">API Latency Spike (Region: US-East-1)</td>
+<td class="py-3 px-4">
+<span class="text-[0.65rem] border border-slate-200 px-2 py-0.5 rounded text-slate-600 font-medium">OPERATIONAL</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5 text-amber-600">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+<span class="text-[0.7rem] font-bold uppercase">High</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-amber-100 text-amber-800 text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase">Acknowledged</span>
+</td>
+<td class="py-3 px-4">
+<span class="text-[0.75rem] text-slate-400 italic">Unassigned</span>
+</td>
+<td class="py-3 px-4 text-[0.75rem] text-slate-500">2023-11-24 14:15:33</td>
+<td class="py-3 px-4 text-[0.75rem] font-mono text-slate-500">09m 12s</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary" title="Acknowledge"><span class="material-symbols-outlined text-[18px]">verified_user</span></button>
+<button class="p-1 hover:text-primary" title="Assign"><span class="material-symbols-outlined text-[18px]">person_add</span></button>
+<button class="p-1 hover:text-error" title="Resolve"><span class="material-symbols-outlined text-[18px]">check_circle</span></button>
+</div>
+</td>
+</tr>
+<!-- Medium Row -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-3 px-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-3 px-4 font-mono text-[0.75rem] font-medium text-primary hover:underline cursor-pointer">ALRT-9799</td>
+<td class="py-3 px-4 text-[0.8rem] font-semibold text-slate-900">Storage Capacity Warning: Disk 0</td>
+<td class="py-3 px-4">
+<span class="text-[0.65rem] border border-slate-200 px-2 py-0.5 rounded text-slate-600 font-medium">SYSTEM</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5 text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="text-[0.7rem] font-bold uppercase">Medium</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-surface-container text-on-secondary-container text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase">Open</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<img class="w-5 h-5 rounded-full grayscale" data-alt="headshot of a confident young professional woman with glasses and short hair in a bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZeRSsvBuQQdnLYEnbk7Qel4m6YdR3_HiPUk4ufmBPlBQkYSORtRiH2IMtSC-kFOROM741uy8bl_LkaneqO8SaQaSnZEuMF8IlvGEEmkDbDr17V5oi2mSxW8fgX40a7YNntpjqCgBK7iPc9tl0i9u6SrA_xq_rQSKlT1PKU-3GYvTeJpGFvefkGoN1R7tMi0YDEUz2pb4uKGwLc1_e7_B7_Dc_RP99n3tP4P5sn47Nj0ccQzmNsAThTxi8wQCFeNqvQ2ab49kCke0"/>
+<span class="text-[0.75rem] text-slate-600">S. Miller</span>
+</div>
+</td>
+<td class="py-3 px-4 text-[0.75rem] text-slate-500">2023-11-24 13:45:00</td>
+<td class="py-3 px-4 text-[0.75rem] font-mono text-slate-500">39m 45s</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary" title="Acknowledge"><span class="material-symbols-outlined text-[18px]">verified_user</span></button>
+<button class="p-1 hover:text-primary" title="Assign"><span class="material-symbols-outlined text-[18px]">person_add</span></button>
+<button class="p-1 hover:text-error" title="Resolve"><span class="material-symbols-outlined text-[18px]">check_circle</span></button>
+</div>
+</td>
+</tr>
+<!-- Resolved Row -->
+<tr class="hover:bg-slate-50 transition-colors opacity-60 group bg-slate-50/50">
+<td class="py-3 px-4"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-3 px-4 font-mono text-[0.75rem] font-medium text-slate-400">ALRT-9782</td>
+<td class="py-3 px-4 text-[0.8rem] font-medium text-slate-500 line-through">SSL Certificate Expiration (Test Domain)</td>
+<td class="py-3 px-4">
+<span class="text-[0.65rem] border border-slate-200 px-2 py-0.5 rounded text-slate-400 font-medium">SECURITY</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5 text-slate-400">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+<span class="text-[0.7rem] font-bold uppercase">Low</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="bg-emerald-100 text-emerald-800 text-[0.65rem] font-bold px-2 py-0.5 rounded uppercase">Resolved</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="text-[0.75rem] text-slate-400">Auto-Resolver</span>
+</div>
+</td>
+<td class="py-3 px-4 text-[0.75rem] text-slate-400">2023-11-24 12:10:12</td>
+<td class="py-3 px-4 text-[0.75rem] font-mono text-slate-400">Resolved</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:text-primary" title="View Details"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="bg-surface-container-high/10 p-4 border-t border-outline-variant/10 flex justify-between items-center">
+<span class="text-[0.7rem] text-slate-500 font-medium uppercase tracking-wider">Showing 1-15 of 49 alerts</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant/20 hover:bg-white text-slate-400 disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center bg-primary text-white text-[0.75rem] font-bold">1</button>
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant/20 hover:bg-white text-[0.75rem] text-slate-600 font-bold">2</button>
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant/20 hover:bg-white text-[0.75rem] text-slate-600 font-bold">3</button>
+<button class="w-8 h-8 rounded flex items-center justify-center border border-outline-variant/20 hover:bg-white text-slate-400">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Overlay: Resolve Confirmation Modal (Hidden/Mockup) -->
+<div class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center">
+<div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-[0_24px_48px_rgba(24,27,37,0.12)] p-6">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-lg font-bold font-headline">Resolve Alert</h3>
+<button class="material-symbols-outlined text-slate-400 hover:text-slate-600">close</button>
+</div>
+<p class="text-[0.8rem] text-slate-600 mb-4">You are about to resolve <span class="font-mono font-bold text-primary">ALRT-9821</span>. This action will archive the alert and notify assigned personnel.</p>
+<div class="mb-4">
+<label class="block text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Resolution Reason</label>
+<textarea class="w-full bg-[#f0f2f7] border-none rounded-lg text-[0.75rem] p-3 focus:ring-1 focus:ring-primary" placeholder="Detail the fix or why this alert is no longer active..." rows="3"></textarea>
+</div>
+<div class="flex gap-3 mt-6">
+<button class="flex-1 py-2 text-[0.75rem] font-bold uppercase tracking-widest text-slate-600 bg-slate-100 hover:bg-slate-200 rounded transition-colors">Cancel</button>
+<button class="flex-1 py-2 text-[0.75rem] font-bold uppercase tracking-widest text-white bg-primary hover:bg-primary-container rounded shadow-md transition-all">Confirm Resolve</button>
+</div>
+</div>
+</div>
+</body></html>

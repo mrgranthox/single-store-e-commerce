@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Reviews History - Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#faf8ff",
+              "tertiary-fixed-dim": "#4ae176",
+              "on-secondary": "#ffffff",
+              "on-secondary-container": "#60626c",
+              "surface-dim": "#d8d9e7",
+              "on-tertiary": "#ffffff",
+              "inverse-surface": "#2d303b",
+              "secondary-fixed": "#e0e2ed",
+              "outline": "#737685",
+              "on-primary-fixed": "#00174a",
+              "on-primary-container": "#fefcff",
+              "surface-container": "#ecedfb",
+              "inverse-on-surface": "#eff0fe",
+              "surface-container-low": "#f2f3ff",
+              "on-secondary-fixed-variant": "#444650",
+              "secondary": "#5b5e68",
+              "tertiary-container": "#00873b",
+              "surface-variant": "#e0e2f0",
+              "surface-container-highest": "#e0e2f0",
+              "secondary-container": "#dedfeb",
+              "surface-tint": "#1b55ce",
+              "on-error": "#ffffff",
+              "on-primary-fixed-variant": "#003ea7",
+              "on-tertiary-fixed-variant": "#005321",
+              "outline-variant": "#c3c6d6",
+              "secondary-fixed-dim": "#c4c6d1",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-surface-variant": "#434654",
+              "on-surface": "#181b25",
+              "primary-fixed": "#dbe1ff",
+              "surface-bright": "#faf8ff",
+              "primary": "#1653cc",
+              "on-tertiary-fixed": "#002109",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#e6e7f6",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#6bff8f",
+              "background": "#faf8ff",
+              "primary-container": "#3b6de6",
+              "error-container": "#ffdad6",
+              "tertiary": "#006b2d",
+              "on-primary": "#ffffff",
+              "on-tertiary-container": "#f7fff3",
+              "on-secondary-fixed": "#181b24",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#b4c5ff",
+              "on-background": "#181b25"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "dm": ["DM Sans"],
+              "ibm": ["IBM Plex Sans"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .tonal-depth-sidebar { background-color: #13161e; }
+        .tonal-depth-shell { background-color: #0f1117; }
+        .tonal-depth-page { background-color: #f0f2f7; }
+        .active-nav-border { border-left: 4px solid #4f7ef8; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="tonal-depth-page font-body text-on-surface">
+<!-- Sidebar Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 tonal-depth-sidebar flex flex-col py-6 z-50 overflow-y-auto no-scrollbar">
+<div class="px-6 mb-8">
+<h1 class="text-lg font-semibold tracking-tight text-white font-dm">The Architect</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-ibm mt-1">Operational Core</p>
+</div>
+<nav class="flex-grow space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-ibm text-sm">Dashboard</span>
+</a>
+<!-- Customers (Active) -->
+<a class="flex items-center px-6 py-3 bg-[#1a1d27] text-[#4f7ef8] active-nav-border transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">group</span>
+<span class="font-ibm text-sm">Customers</span>
+</a>
+<!-- Orders -->
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">shopping_cart</span>
+<span class="font-ibm text-sm">Orders</span>
+</a>
+<!-- Risk Analysis -->
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">security</span>
+<span class="font-ibm text-sm">Risk Analysis</span>
+</a>
+<!-- Logistics -->
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">local_shipping</span>
+<span class="font-ibm text-sm">Logistics</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-ibm text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 pt-6 border-t border-slate-800/50">
+<div class="flex items-center space-x-3 mb-6">
+<img alt="Admin user profile avatar" class="w-8 h-8 rounded-full border border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbEnE5534xXSsS2lJ4vKJUOGU4AVIKRr4wFKVf-ycAzr7uoK46ty1I6Ywefty07w7vwJqKSgqE2N92Rt53BrIqfuhe_26dt_3IBFlGSzrYevJn_P-iQolf4_Ruzsoxu0rEAPuRkJp9DhjW_Zf1EFqNH9lzk-hLyaV1gFj2NJYPv00GSB1DKCBgjfZfw772E2x2X9-8rgqDKf7cHHhXK4sIxZVuDQzymHTVkBEIOimx-wTncgtZSDh5HlzrXnvIp6q4F-sBK-wHb40"/>
+<div>
+<p class="text-xs font-bold text-white font-ibm">Admin 01</p>
+<p class="text-[10px] text-slate-500 font-ibm">Root Access</p>
+</div>
+</div>
+<button class="w-full py-2 bg-gradient-to-br from-[#1653cc] to-[#3b6de6] text-white text-xs font-bold rounded shadow-lg active:scale-95 transition-transform font-ibm">
+                Export Report
+            </button>
+</div>
+</aside>
+<!-- Top Bar Navigation -->
+<header class="w-full h-16 sticky top-0 z-40 tonal-depth-shell flex items-center justify-between px-8 ml-64 bg-[#0f1117]">
+<div class="flex items-center space-x-8">
+<span class="text-xl font-bold text-white font-dm tracking-tight">Command Deck</span>
+<div class="h-8 w-[1px] bg-slate-800"></div>
+<nav class="flex items-center space-x-6">
+<a class="text-slate-400 hover:text-white text-[11px] font-bold uppercase tracking-wider font-ibm transition-opacity" href="#">Overview</a>
+<a class="text-white border-b-2 border-[#4f7ef8] text-[11px] font-bold uppercase tracking-wider font-ibm h-16 flex items-center" href="#">Security Logs</a>
+<a class="text-slate-400 hover:text-white text-[11px] font-bold uppercase tracking-wider font-ibm transition-opacity" href="#">Queue</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-white cursor-pointer p-2">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-[#0f1117]"></span>
+</div>
+<span class="material-symbols-outlined text-slate-400 hover:text-white cursor-pointer p-2">help_outline</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-white cursor-pointer p-2">account_circle</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 p-8">
+<!-- Breadcrumb & Page Title -->
+<div class="mb-8">
+<nav class="flex items-center space-x-2 text-xs text-secondary mb-2 font-ibm">
+<span class="hover:underline cursor-pointer">Customers</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:underline cursor-pointer">Caleb Montgomery</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Reviews History</span>
+</nav>
+<h2 class="text-2xl font-bold text-on-surface font-dm">Caleb Montgomery → <span class="text-primary">Reviews tab</span></h2>
+</div>
+<!-- Risk Warning Banner -->
+<div class="mb-8 bg-error-container border-l-4 border-error p-4 rounded-xl flex items-start space-x-4 shadow-sm">
+<span class="material-symbols-outlined text-error mt-0.5" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div>
+<h4 class="text-sm font-bold text-on-error-container font-dm">Pattern Detection Warning</h4>
+<p class="text-sm text-on-error-container font-ibm opacity-90 mt-1">
+                    ⚠ This customer has submitted 8 reviews in 3 days across unrelated products. High probability of automated scraping or incentivized feedback.
+                </p>
+</div>
+<button class="ml-auto text-xs font-bold uppercase tracking-widest text-error font-ibm hover:underline">Flag Account</button>
+</div>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-primary">
+<p class="text-[10px] uppercase tracking-wider text-secondary font-ibm mb-2">Total Reviews</p>
+<h3 class="text-3xl font-bold text-on-surface font-dm">12</h3>
+<div class="flex justify-end">
+<span class="text-[10px] font-bold text-tertiary-container font-ibm">+8 this week</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-secondary">
+<p class="text-[10px] uppercase tracking-wider text-secondary font-ibm mb-2">Average Rating</p>
+<h3 class="text-3xl font-bold text-on-surface font-dm">4.8</h3>
+<div class="flex justify-end">
+<span class="text-[10px] font-bold text-secondary font-ibm">Global Avg: 4.2</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-error">
+<p class="text-[10px] uppercase tracking-wider text-secondary font-ibm mb-2">Flagged Reviews</p>
+<h3 class="text-3xl font-bold text-error font-dm">8</h3>
+<div class="flex justify-end">
+<span class="text-[10px] font-bold text-error font-ibm">66.6% Frequency</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-tertiary">
+<p class="text-[10px] uppercase tracking-wider text-secondary font-ibm mb-2">Verification Rate</p>
+<h3 class="text-3xl font-bold text-on-surface font-dm">12%</h3>
+<div class="flex justify-end">
+<span class="text-[10px] font-bold text-secondary font-ibm">Low Trust Index</span>
+</div>
+</div>
+</div>
+<!-- Reviews Table Section -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/15 flex items-center justify-between">
+<h3 class="text-base font-bold text-on-surface font-dm">Historical Data Log</h3>
+<div class="flex items-center space-x-2">
+<div class="relative">
+<input class="bg-surface-container-low border-none rounded-lg text-xs px-10 py-2 focus:ring-1 focus:ring-primary w-64 font-ibm" placeholder="Filter reviews..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2 text-secondary text-sm">search</span>
+</div>
+<button class="bg-surface-container-low p-2 rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-secondary text-sm">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container/30">
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary font-ibm">Product</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary font-ibm">Rating</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary font-ibm">Review Excerpt</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary font-ibm">Status</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary font-ibm">Date</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-secondary font-ibm text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/15">
+<!-- Table Row 1 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded bg-surface-container overflow-hidden flex-shrink-0">
+<img alt="red athletic shoe on minimalist white background" class="w-full h-full object-cover" data-alt="close-up of a vibrant red professional running shoe on a minimalist grey studio background with soft overhead lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBQKVditTxnto8Bkt9nM081jY5AIHSvHegbUuhaOiYIS0pqsXGGOje8FPHhD4AqPefxsbKbXjD_oTp998s8V3akwdLuYbJTjs62EoKHUthahaTVQ2gFaZMOd_ibHRfWa2dW7j7OXPhhKxstVi4X5ALCahgfiskuFfgKh86nBqZO4mbzwRtFG_S4lSIVGKqgjuy7sZTEC_mmLjgO988uEiYsCVxlg5orZkc6Q1l9glnSge3oS4w2JREsvCFmGSSdESAYJPEFbZyZPs"/>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface font-ibm">Velocity Pro X</p>
+<p class="text-[10px] font-mono text-secondary">SKU-88219</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-primary-container">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-xs text-on-surface-variant font-ibm max-w-xs truncate">"Incredible build quality. Fits perfectly and improved my split times by 2% immediately."</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-error text-error bg-transparent">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                                    Suspicious
+                                </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] font-mono text-secondary">2023-11-24 14:02</p>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Table Row 2 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded bg-surface-container overflow-hidden flex-shrink-0">
+<img alt="minimalist white wristwatch with silver accents" class="w-full h-full object-cover" data-alt="clean minimalist studio shot of a white modern luxury watch with silver metallic hands and accents on a neutral backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoVQjUpKhRPMRDKMZT4fHn-hGbBIqxP_TiWgbZnMLUmhBYdduw9uF9SKkk5pzMoSAEaj4RBmhIzrDBliNYKojj0UZEjw4giSpuRIqRbXQfl72e_Hbo-dZNXZ4PFy1ymsSKGvA9TDybg24mMsatEWiNmr5dWM__F8-b6fqG2a0hmccOs-DCsSiOY-Jv39tG8BHB__-yWWdUCpxrfHc-d-Uoe4znfdSof4sYF4bYRetCpdS9itWxzeHClfk6K3-5GP7QDD5z5-dm3J8"/>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface font-ibm">Chronos Minimal</p>
+<p class="text-[10px] font-mono text-secondary">SKU-10492</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-primary-container">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-xs text-on-surface-variant font-ibm max-w-xs truncate">"The aesthetic is exactly what I was looking for. Highly recommend for professional use."</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-error text-error bg-transparent">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                                    Suspicious
+                                </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] font-mono text-secondary">2023-11-23 09:15</p>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Table Row 3 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded bg-surface-container overflow-hidden flex-shrink-0">
+<img alt="black over-ear headphones on yellow background" class="w-full h-full object-cover" data-alt="professional high-fidelity over-ear headphones in matte black finish on a bold yellow background with sharp focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtq8X1fpbVTsc9823lEMfzh6tvRgHcxhCKW-OSZxzZBy9eJYUufsAcdckNLtJWdXbDrFsXo1zkd4V6E9dV6dcCMugHDXanfhszKw-hLUdH6QCutKOdfi8WkYuYzVEUXaZwiqrRsoY7jyfbjabRX5_v7sbGPbq_DvJTddiwNsT01D0Uzbs_dtdxXPOPlyb13H-HHBggr5WRIYhH8_0H3xkYyN4sE18a_8_7WYo-RRbWS9NRFmr5HsvbWkjqpoKs0UfUp6O4wNAdrEc"/>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface font-ibm">Sonic Peak Pro</p>
+<p class="text-[10px] font-mono text-secondary">SKU-55201</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-primary-container">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-xs text-on-surface-variant font-ibm max-w-xs truncate">"Decent sound profile but the battery life could be better for long flights."</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-outline-variant text-secondary bg-transparent">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                                    Verified
+                                </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] font-mono text-secondary">2023-11-20 18:44</p>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Table Row 4 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded bg-surface-container overflow-hidden flex-shrink-0">
+<img alt="stylish black sunglasses on warm wooden background" class="w-full h-full object-cover" data-alt="premium aviator-style sunglasses with dark lenses on a polished mahogany surface with warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw6qXsGdFvt8Ob8zaz4z6dR7cZRS2XJFimWWR8i8krr9B79gvDV4N0TlItDy6t0YBhbvWAydi5WFWxzCqXGf-EmInT5AvzN7RWjgz4KLXT0U83iM11H_ESV2fUelgRzpzRdE_8-9NGaU7XC4DGLrtRTWxFXBghPV-6pwS6n_TLgHJ8wRXX7yHLGy6JisEZ47phppo6U-N3cHQ-JVawqFef62C36kpfMKmPQket8QaLaIUUcKqJnuc9XCHikBUFDs8K0R21JxJTmP0"/>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface font-ibm">Eclipse Shade</p>
+<p class="text-[10px] font-mono text-secondary">SKU-31205</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-primary-container">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-xs text-on-surface-variant font-ibm max-w-xs truncate">"Exactly as advertised. The polarized lenses are top-tier quality."</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-error text-error bg-transparent">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                                    Suspicious
+                                </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] font-mono text-secondary">2023-11-23 12:30</p>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer/Pagination -->
+<div class="px-6 py-4 bg-surface-container/10 flex items-center justify-between border-t border-outline-variant/15">
+<p class="text-xs text-secondary font-ibm">Showing 4 of 12 historical entries</p>
+<div class="flex items-center space-x-2">
+<button class="px-3 py-1 bg-surface-container-low text-secondary text-xs rounded border border-outline-variant/30 hover:bg-surface-container-high transition-colors">Previous</button>
+<button class="px-3 py-1 bg-primary text-white text-xs rounded shadow-sm hover:opacity-90 transition-opacity">1</button>
+<button class="px-3 py-1 bg-surface-container-low text-secondary text-xs rounded border border-outline-variant/30 hover:bg-surface-container-high transition-colors">2</button>
+<button class="px-3 py-1 bg-surface-container-low text-secondary text-xs rounded border border-outline-variant/30 hover:bg-surface-container-high transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Detail Drawer (Simulated Glassmorphism Layer) -->
+<div class="fixed top-16 right-0 h-[calc(100vh-64px)] w-96 tonal-depth-sidebar shadow-2xl z-40 transform transition-transform translate-x-0 border-l border-slate-800">
+<div class="p-8">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-lg font-bold text-white font-dm">Pattern Analytics</h3>
+<button class="text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="space-y-6">
+<div class="bg-[#1a1d27] p-5 rounded-xl">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-ibm mb-3">Temporal Clumping</p>
+<div class="flex items-end space-x-1 h-20 mb-3">
+<div class="bg-primary w-full h-[10%] rounded-t"></div>
+<div class="bg-primary w-full h-[15%] rounded-t"></div>
+<div class="bg-primary w-full h-[5%] rounded-t"></div>
+<div class="bg-error w-full h-[90%] rounded-t"></div>
+<div class="bg-error w-full h-[85%] rounded-t"></div>
+<div class="bg-error w-full h-[75%] rounded-t"></div>
+<div class="bg-primary w-full h-[10%] rounded-t"></div>
+</div>
+<p class="text-xs text-slate-300 font-ibm">Burst activity detected between <span class="text-white font-bold">Nov 22 - Nov 24</span>.</p>
+</div>
+<div class="bg-[#1a1d27] p-5 rounded-xl">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-ibm mb-3">Keyword Saturation</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-slate-800 rounded text-[10px] text-slate-300 font-ibm">"perfect fit" (6)</span>
+<span class="px-2 py-1 bg-slate-800 rounded text-[10px] text-slate-300 font-ibm">"highly recommend" (8)</span>
+<span class="px-2 py-1 bg-slate-800 rounded text-[10px] text-slate-300 font-ibm">"quality" (5)</span>
+<span class="px-2 py-1 bg-slate-800 rounded text-[10px] text-slate-300 font-ibm">"incredible" (4)</span>
+</div>
+</div>
+<div class="bg-[#1a1d27] p-5 rounded-xl">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-ibm mb-3">Device Fingerprint</p>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-slate-400">desktop_windows</span>
+<span class="text-xs text-slate-300 font-ibm">Edge 119.0.2151.44 (macOS)</span>
+</div>
+<div class="mt-2 text-[10px] text-error font-mono">ID: 8821-XCA-0091-FF2</div>
+</div>
+<button class="w-full py-3 bg-error text-white text-xs font-bold uppercase tracking-widest rounded shadow-lg hover:bg-opacity-90 transition-all font-ibm mt-4">
+                        Quarantine User Reviews
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

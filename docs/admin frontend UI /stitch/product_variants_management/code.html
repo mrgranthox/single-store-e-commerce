@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Precision Core X9 Pro - Variants Management</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed-variant": "#444650",
+              "outline-variant": "#c3c6d6",
+              "on-primary-container": "#fefcff",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-tertiary-container": "#f7fff3",
+              "surface": "#faf8ff",
+              "outline": "#737685",
+              "secondary": "#5b5e68",
+              "surface-container-high": "#e6e7f6",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-error-container": "#93000a",
+              "surface-bright": "#faf8ff",
+              "error-container": "#ffdad6",
+              "surface-tint": "#1b55ce",
+              "primary-container": "#3b6de6",
+              "on-secondary-container": "#60626c",
+              "surface-container-highest": "#e0e2f0",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-error": "#ffffff",
+              "surface-container-low": "#f2f3ff",
+              "on-surface": "#181b25",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "inverse-primary": "#b4c5ff",
+              "on-surface-variant": "#434654",
+              "primary-fixed": "#dbe1ff",
+              "tertiary-fixed": "#6bff8f",
+              "surface-variant": "#e0e2f0",
+              "on-secondary-fixed": "#181b24",
+              "surface-container": "#ecedfb",
+              "secondary-fixed": "#e0e2ed",
+              "on-primary-fixed": "#00174a",
+              "on-tertiary-fixed": "#002109",
+              "on-background": "#181b25",
+              "on-primary-fixed-variant": "#003ea7",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "tertiary": "#006b2d",
+              "primary": "#1653cc",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#eff0fe",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dedfeb",
+              "background": "#faf8ff",
+              "inverse-surface": "#2d303b"
+            },
+            fontFamily: {
+              "headline": ["DM Sans"],
+              "body": ["IBM Plex Sans"],
+              "label": ["IBM Plex Sans"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        font-size: 20px;
+        vertical-align: middle;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .ghost-border { border-bottom: 1px solid rgba(195, 198, 214, 0.15); }
+      .glass-cta { background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%); }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] font-body text-on-surface">
+<!-- Sidebar Shell -->
+<aside class="bg-[#13161e] h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight">Command Deck</h1>
+<p class="text-[0.6875rem] uppercase tracking-[0.05em] text-slate-500 font-headline">Operational Architect</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-6 py-3 flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Catalog</span>
+</a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">System</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3 p-3 bg-[#1a1d27] rounded-lg">
+<img alt="Admin User Avatar" class="w-8 h-8 rounded-full border border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASsSNq2wzvsfs0fM6V6MRtbpSEONS1k1CiYLmiStWr5AU5jaLu6T6yGI7EkUzpUyjLxmcrTjl9bCWkZLKRegTFHXG86GYfMsGde_I4n8MgNQUR3ZsQncvxlld_G8AY7MvVM7EqJSbiKiaWpillzaAnDSjy9IFhnkMD9WhDdCfGacwcaOGJUZw8xY2PO9DoJbPU9rbqGtHm_w6nk6wv0TTaE4hOgmYIyQKhtiGJrkxcC8fqjAOVQfpYkLI1y7KOLc_hxsopDrec3Jo"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-white truncate">Admin User</p>
+<p class="text-[0.6rem] text-slate-500 truncate uppercase tracking-tighter">Operational Architect</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Header Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-white dark:bg-[#0f1117] z-40 flex justify-between items-center px-8 shadow-[0_24px_24px_-12px_rgba(24,27,37,0.04)]">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-md">
+<span class="material-symbols-outlined text-slate-400">search</span>
+<input class="bg-transparent border-none text-xs focus:ring-0 w-64 text-on-surface" placeholder="Search operational core..." type="text"/>
+</div>
+<nav class="flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#4f7ef8] transition-colors text-xs font-medium uppercase tracking-wider" href="#">Overview</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#4f7ef8] transition-colors text-xs font-medium uppercase tracking-wider" href="#">Analytics</a>
+<a class="text-[#4f7ef8] font-bold border-b-2 border-[#4f7ef8] pb-1 text-xs font-medium uppercase tracking-wider" href="#">Variants</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#4f7ef8] transition-colors text-xs font-medium uppercase tracking-wider" href="#">Media</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#4f7ef8] transition-colors text-xs font-medium uppercase tracking-wider" href="#">Pricing</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#4f7ef8] transition-colors text-xs font-medium uppercase tracking-wider" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
+                JD
+            </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<div class="max-w-7xl mx-auto">
+<!-- Breadcrumbs & Title -->
+<div class="mb-8">
+<div class="flex items-center gap-2 text-[0.6875rem] uppercase tracking-widest text-slate-500 mb-2">
+<span>Catalog</span>
+<span class="material-symbols-outlined !text-[12px]">chevron_right</span>
+<span>Processors</span>
+<span class="material-symbols-outlined !text-[12px]">chevron_right</span>
+<span class="text-primary font-bold">Precision Core X9 Pro</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-headline font-bold text-on-surface tracking-tight">Precision Core X9 Pro</h2>
+<p class="text-sm text-slate-500 mt-1">Manage technical configurations, SKUs, and distribution variants.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-surface-container-highest text-on-surface text-xs font-bold rounded hover:bg-surface-dim transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">export_notes</span>
+                            EXPORT
+                        </button>
+<button class="px-5 py-2 glass-cta text-white text-xs font-bold rounded shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2 active:scale-[0.97]">
+<span class="material-symbols-outlined !text-sm">add</span>
+                            ADD VARIANT
+                        </button>
+</div>
+</div>
+</div>
+<!-- Dashboard Style KPIs -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-5 rounded border-l-4 border-primary shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[0.6875rem] uppercase tracking-[0.05em] text-slate-500 font-bold">Total Variants</span>
+<span class="material-symbols-outlined text-primary opacity-50">layers</span>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold">128</span>
+<span class="text-[0.6rem] font-bold text-tertiary-container bg-tertiary-fixed/20 px-1.5 py-0.5 rounded">+4.2%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded border-l-4 border-error shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[0.6875rem] uppercase tracking-[0.05em] text-slate-500 font-bold">Out of Stock</span>
+<span class="material-symbols-outlined text-error opacity-50">warning</span>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold">12</span>
+<span class="text-[0.6rem] font-bold text-error bg-error-container/20 px-1.5 py-0.5 rounded">CRITICAL</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded border-l-4 border-tertiary shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[0.6875rem] uppercase tracking-[0.05em] text-slate-500 font-bold">Active Listings</span>
+<span class="material-symbols-outlined text-tertiary opacity-50">check_circle</span>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold">114</span>
+<span class="text-[0.6rem] font-bold text-slate-400">89% RATIO</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded border-l-4 border-secondary shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[0.6875rem] uppercase tracking-[0.05em] text-slate-500 font-bold">Avg. Unit Price</span>
+<span class="material-symbols-outlined text-secondary opacity-50">payments</span>
+</div>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-headline font-bold font-mono">$842.00</span>
+<span class="text-[0.6rem] font-bold text-slate-400">USD</span>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+<!-- Bulk Actions Bar -->
+<div class="bg-surface-container-low px-6 py-3 flex items-center justify-between ghost-border">
+<div class="flex items-center gap-4">
+<input class="rounded-sm border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">12 Items Selected</span>
+<div class="h-4 w-[1px] bg-outline-variant/30 mx-2"></div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 bg-white text-[0.6875rem] font-bold border border-outline-variant/30 rounded hover:bg-slate-50 flex items-center gap-2">
+<span class="material-symbols-outlined !text-sm">edit</span>
+                                UPDATE PRICE
+                            </button>
+<button class="px-3 py-1.5 bg-white text-[0.6875rem] font-bold border border-outline-variant/30 rounded hover:bg-slate-50 flex items-center gap-2">
+<span class="material-symbols-outlined !text-sm">sync</span>
+                                UPDATE STATUS
+                            </button>
+<button class="px-3 py-1.5 bg-white text-[0.6875rem] font-bold text-error border border-error/20 rounded hover:bg-error-container/10 flex items-center gap-2">
+<span class="material-symbols-outlined !text-sm">delete</span>
+                                DELETE
+                            </button>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1.5 hover:bg-slate-200 rounded transition-colors">
+<span class="material-symbols-outlined text-slate-500">filter_list</span>
+</button>
+<button class="p-1.5 hover:bg-slate-200 rounded transition-colors">
+<span class="material-symbols-outlined text-slate-500">view_column</span>
+</button>
+</div>
+</div>
+<!-- Dense Variants Table -->
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest ghost-border">
+<th class="pl-6 py-3 w-10"></th>
+<th class="py-3 px-4 text-[0.6875rem] uppercase tracking-widest font-bold text-slate-500">Variant Name</th>
+<th class="py-3 px-4 text-[0.6875rem] uppercase tracking-widest font-bold text-slate-500">SKU</th>
+<th class="py-3 px-4 text-[0.6875rem] uppercase tracking-widest font-bold text-slate-500">Options</th>
+<th class="py-3 px-4 text-[0.6875rem] uppercase tracking-widest font-bold text-slate-500 text-right">Price</th>
+<th class="py-3 px-4 text-[0.6875rem] uppercase tracking-widest font-bold text-slate-500 text-right">Stock</th>
+<th class="py-3 px-4 text-[0.6875rem] uppercase tracking-widest font-bold text-slate-500">Status</th>
+<th class="py-3 pr-6 text-[0.6875rem] uppercase tracking-widest font-bold text-slate-500 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: Active -->
+<tr class="hover:bg-surface-container-high transition-colors group h-11">
+<td class="pl-6"><input checked="" class="rounded-sm border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/></td>
+<td class="px-4 text-xs font-semibold text-on-surface">Precision Core X9 - Midnight Black</td>
+<td class="px-4 font-mono text-xs text-slate-500">PCX9-MB-512-16</td>
+<td class="px-4">
+<div class="flex gap-1.5">
+<span class="px-1.5 py-0.5 bg-slate-100 text-[10px] rounded font-bold uppercase">RAM: 16GB</span>
+<span class="px-1.5 py-0.5 bg-slate-100 text-[10px] rounded font-bold uppercase">SSD: 512GB</span>
+</div>
+</td>
+<td class="px-4 text-right font-mono text-xs font-medium">$899.00</td>
+<td class="px-4 text-right font-mono text-xs">42</td>
+<td class="px-4">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></div>
+<span class="text-[0.6875rem] font-bold uppercase text-tertiary-container">In Stock</span>
+</div>
+</td>
+<td class="pr-6 text-right">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined !text-lg">edit_note</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined !text-lg">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2: Inline Edit Mode -->
+<tr class="bg-surface-container-low h-24 border-y-2 border-primary/20">
+<td class="pl-6"><input class="rounded-sm border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/></td>
+<td class="px-4">
+<span class="text-xs font-bold text-primary block mb-1">Editing Variant</span>
+<input class="w-full bg-white border border-outline-variant rounded p-1.5 text-xs font-medium focus:ring-1 focus:ring-primary" type="text" value="Precision Core X9 - Arctic Frost"/>
+</td>
+<td class="px-4">
+<input class="w-full font-mono bg-white border border-outline-variant rounded p-1.5 text-xs focus:ring-1 focus:ring-primary" type="text" value="PCX9-AF-1TB-32"/>
+</td>
+<td class="px-4">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Options locked</span>
+<span class="text-[10px] font-bold">1TB / 32GB</span>
+</div>
+</td>
+<td class="px-4 text-right">
+<div class="flex flex-col items-end">
+<input class="w-20 font-mono bg-white border border-outline-variant rounded p-1.5 text-xs text-right focus:ring-1 focus:ring-primary" type="text" value="1299.00"/>
+<span class="text-[10px] text-slate-400 font-mono mt-1">Prev: $1349.00</span>
+</div>
+</td>
+<td class="px-4 text-right">
+<input class="w-16 font-mono bg-white border border-outline-variant rounded p-1.5 text-xs text-right focus:ring-1 focus:ring-primary" type="number" value="12"/>
+</td>
+<td class="px-4">
+<select class="bg-white border border-outline-variant rounded p-1.5 text-[0.6875rem] font-bold uppercase focus:ring-1 focus:ring-primary">
+<option>In Stock</option>
+<option selected="">Low Stock</option>
+<option>Out of Stock</option>
+</select>
+</td>
+<td class="pr-6 text-right">
+<div class="flex flex-col gap-1 items-end">
+<button class="px-3 py-1 bg-primary text-white text-[10px] font-bold rounded hover:opacity-90">SAVE</button>
+<button class="px-3 py-1 bg-transparent text-slate-500 text-[10px] font-bold rounded hover:bg-slate-200">CANCEL</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Out of Stock -->
+<tr class="hover:bg-surface-container-high transition-colors group h-11">
+<td class="pl-6"><input class="rounded-sm border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/></td>
+<td class="px-4 text-xs font-semibold text-on-surface">Precision Core X9 - Titanium Grey</td>
+<td class="px-4 font-mono text-xs text-slate-500">PCX9-TG-256-08</td>
+<td class="px-4">
+<div class="flex gap-1.5">
+<span class="px-1.5 py-0.5 bg-slate-100 text-[10px] rounded font-bold uppercase">RAM: 8GB</span>
+<span class="px-1.5 py-0.5 bg-slate-100 text-[10px] rounded font-bold uppercase">SSD: 256GB</span>
+</div>
+</td>
+<td class="px-4 text-right font-mono text-xs font-medium">$749.00</td>
+<td class="px-4 text-right font-mono text-xs text-error font-bold">0</td>
+<td class="px-4">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-error"></div>
+<span class="text-[0.6875rem] font-bold uppercase text-error">Out of Stock</span>
+</div>
+</td>
+<td class="pr-6 text-right">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined !text-lg">edit_note</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined !text-lg">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4: Default -->
+<tr class="hover:bg-surface-container-high transition-colors group h-11">
+<td class="pl-6"><input class="rounded-sm border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/></td>
+<td class="px-4 text-xs font-semibold text-on-surface">Precision Core X9 - Deep Burgundy</td>
+<td class="px-4 font-mono text-xs text-slate-500">PCX9-DB-512-32</td>
+<td class="px-4">
+<div class="flex gap-1.5">
+<span class="px-1.5 py-0.5 bg-slate-100 text-[10px] rounded font-bold uppercase">RAM: 32GB</span>
+<span class="px-1.5 py-0.5 bg-slate-100 text-[10px] rounded font-bold uppercase">SSD: 512GB</span>
+</div>
+</td>
+<td class="px-4 text-right font-mono text-xs font-medium">$1099.00</td>
+<td class="px-4 text-right font-mono text-xs">88</td>
+<td class="px-4">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></div>
+<span class="text-[0.6875rem] font-bold uppercase text-tertiary-container">In Stock</span>
+</div>
+</td>
+<td class="pr-6 text-right">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined !text-lg">edit_note</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined !text-lg">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 flex items-center justify-between bg-surface-container-lowest">
+<span class="text-[0.6875rem] text-slate-500 font-bold uppercase tracking-wider">Showing 1 to 4 of 128 variants</span>
+<div class="flex gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 hover:bg-slate-50">
+<span class="material-symbols-outlined !text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 hover:bg-slate-50 text-xs font-bold">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 hover:bg-slate-50 text-xs font-bold">3</button>
+<span class="px-2 self-end text-slate-400 pb-1">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 hover:bg-slate-50">
+<span class="material-symbols-outlined !text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Side Context Panel (Glass Overlay) -->
+<div class="fixed right-0 top-16 bottom-0 w-80 bg-surface-container-low/85 backdrop-blur-xl border-l border-outline-variant/20 z-30 p-6 hidden xl:block">
+<h3 class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-500 mb-6">Optimization Insights</h3>
+<div class="space-y-6">
+<div class="bg-white/50 p-4 rounded border border-white/80">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<span class="text-xs font-bold uppercase tracking-tight">Demand Forecast</span>
+</div>
+<p class="text-[0.7rem] text-slate-600 leading-relaxed">Arctic Frost (1TB) is trending +14% higher than usual in the EU West region. Consider increasing safety stock by 5 units.</p>
+</div>
+<div class="bg-white/50 p-4 rounded border border-white/80">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-error">notification_important</span>
+<span class="text-xs font-bold uppercase tracking-tight">Stock Warnings</span>
+</div>
+<ul class="space-y-2">
+<li class="flex justify-between text-[0.7rem]">
+<span class="text-slate-500">Titanium Grey</span>
+<span class="font-bold text-error">CRITICAL (0)</span>
+</li>
+<li class="flex justify-between text-[0.7rem]">
+<span class="text-slate-500">Arctic Frost</span>
+<span class="font-bold text-on-secondary-container">LOW (12)</span>
+</li>
+</ul>
+</div>
+<div class="pt-4 border-t border-outline-variant/20">
+<h4 class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-[0.1em] mb-4">Activity Log</h4>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-primary mt-1"></div>
+<div>
+<p class="text-[0.7rem] font-bold">Price updated</p>
+<p class="text-[0.6rem] text-slate-500">Midnight Black - 2 mins ago</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1"></div>
+<div>
+<p class="text-[0.7rem] font-bold">Stock sync completed</p>
+<p class="text-[0.6rem] text-slate-500">Central Warehouse - 1 hour ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

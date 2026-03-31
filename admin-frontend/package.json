@@ -1,0 +1,50 @@
+{
+  "name": "ecommerce-admin-frontend",
+  "version": "0.1.0",
+  "description": "Admin control panel — React + Vite SPA (not Next.js)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "verify:stitch": "node scripts/verify-stitch-exports.mjs",
+    "verify:contracts": "node scripts/verify-admin-contracts.mjs",
+    "verify:admin-quality": "node scripts/verify-admin-quality.mjs",
+    "verify:perf-budget": "node scripts/verify-performance-budget.mjs",
+    "verify": "npm run verify:stitch && npm run verify:contracts",
+    "verify:enterprise": "npm run verify && npm run verify:admin-quality && npm run typecheck",
+    "test:e2e:install": "playwright install --with-deps chromium",
+    "test:e2e": "playwright test",
+    "test:a11y": "playwright test --grep @a11y",
+    "test:perf": "npm run build && npm run verify:perf-budget"
+  },
+  "dependencies": {
+    "@sentry/react": "^10.46.0",
+    "@tanstack/react-query": "^5.68.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "react-router-dom": "^6.30.0",
+    "zod": "^4.1.5",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^22.13.10",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2",
+    "vite": "^5.4.14",
+    "wait-on": "^9.0.4"
+  }
+}

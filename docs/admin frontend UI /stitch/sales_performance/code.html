@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sales Performance Dashboard | Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f2f3ff",
+              "inverse-primary": "#b4c5ff",
+              "surface-bright": "#faf8ff",
+              "surface-container-high": "#e6e7f6",
+              "on-surface": "#181b25",
+              "on-surface-variant": "#434654",
+              "on-tertiary-container": "#f7fff3",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "surface-tint": "#1b55ce",
+              "on-primary-container": "#fefcff",
+              "inverse-surface": "#2d303b",
+              "on-secondary-fixed": "#181b24",
+              "secondary": "#5b5e68",
+              "on-background": "#181b25",
+              "surface": "#faf8ff",
+              "secondary-container": "#dedfeb",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#eff0fe",
+              "tertiary-fixed-dim": "#4ae176",
+              "primary-container": "#3b6de6",
+              "on-primary": "#ffffff",
+              "tertiary": "#006b2d",
+              "primary-fixed": "#dbe1ff",
+              "on-primary-fixed-variant": "#003ea7",
+              "error": "#ba1a1a",
+              "surface-container": "#ecedfb",
+              "on-secondary-container": "#60626c",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed": "#e0e2ed",
+              "primary": "#1653cc",
+              "outline": "#737685",
+              "on-secondary-fixed-variant": "#444650",
+              "surface-dim": "#d8d9e7",
+              "tertiary-fixed": "#6bff8f",
+              "on-tertiary-fixed": "#002109",
+              "outline-variant": "#c3c6d6",
+              "on-primary-fixed": "#00174a",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-tertiary-fixed-variant": "#005321",
+              "primary-fixed-dim": "#b4c5ff",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#e0e2f0",
+              "surface-variant": "#e0e2f0",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#00873b",
+              "background": "#faf8ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans", "sans-serif"],
+              "body": ["IBM Plex Sans", "sans-serif"],
+              "label": ["Inter", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #f0f2f7; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .glass-gradient {
+            background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%);
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#13161e] flex flex-col z-50">
+<div class="p-6">
+<span class="text-lg font-bold text-white tracking-tight font-headline">Operational Architect</span>
+<div class="mt-1 text-[10px] uppercase tracking-[0.2em] text-slate-500 font-label">Enterprise Admin</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<!-- Overview (Active based on prompt) -->
+<a class="bg-blue-600/10 text-blue-400 border-l-4 border-blue-600 px-4 py-3 flex items-center gap-3 transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-sm">dashboard</span>
+<span class="text-[11px] uppercase tracking-wider font-semibold">Overview</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-sm">inventory_2</span>
+<span class="text-[11px] uppercase tracking-wider">Catalog</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-sm">warehouse</span>
+<span class="text-[11px] uppercase tracking-wider">Inventory</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+<span class="text-[11px] uppercase tracking-wider">Orders</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="text-[11px] uppercase tracking-wider">Customers</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-800/50 p-4 space-y-1">
+<a class="text-slate-400 hover:text-white px-4 py-2 flex items-center gap-3 text-[11px] uppercase tracking-wider hover:bg-[#1a1d27] transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span>Settings</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-2 flex items-center gap-3 text-[11px] uppercase tracking-wider hover:bg-[#1a1d27] transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 w-full z-40 bg-white dark:bg-[#0f1117] border-b border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none h-14 px-6 flex justify-between items-center">
+<div class="flex items-center gap-4">
+<h1 class="text-xl font-bold text-slate-900 dark:text-white font-headline">Sales Performance</h1>
+<div class="h-4 w-px bg-slate-200"></div>
+<div class="flex items-center gap-2 text-xs text-slate-500 font-label uppercase tracking-widest">
+<span>Dashboards</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-blue-600 font-semibold">Sales</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex bg-surface-container-low p-1 rounded-lg">
+<button class="px-3 py-1 text-[10px] font-bold uppercase tracking-tighter bg-white shadow-sm rounded-md text-primary">Last 7d</button>
+<button class="px-3 py-1 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant hover:text-primary">30d</button>
+<button class="px-3 py-1 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant hover:text-primary">90d</button>
+<button class="px-3 py-1 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant hover:text-primary flex items-center gap-1">
+                        Custom <span class="material-symbols-outlined text-[12px]">calendar_today</span>
+</button>
+</div>
+<div class="h-6 w-px bg-slate-200"></div>
+<div class="flex items-center gap-3">
+<button class="text-slate-500 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="w-8 h-8 rounded-full overflow-hidden border border-slate-200">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional corporate headshot of a business executive in a dark suit with neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHd7S7eqJA5sHeQfRIj_NoIJ4MwdIr6F1rNY8IpMM0R5E9h3Z3t20XQRsj8RBOEBF-VzFGb4k65-Ama7bBQVngpVevSY0X0kkaKkUi2kUo3gb93hGqY0hNfQywrOrqiSFeterzyhsrUZ3OKY9KkCj28kLfjDNSifpHQ8qDpcdSzKQ_zTnHETL53Sq8cGFFNLprXM--l_RlqzuJ7ToXwDTZZ_qQ-8M1ocVPMLcDgGYPQv9Z4ikoS7uvYAlBHkD6-T5qykPeg86uKGE"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-8 space-y-8 max-w-[1600px] mx-auto w-full">
+<!-- Row 1: KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Gross Revenue -->
+<div class="bg-surface-container-lowest rounded-[12px] p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label font-bold">Gross Revenue</div>
+<div class="text-2xl font-bold font-headline mt-1 font-mono tracking-tight">$842,910.45</div>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-1 text-[10px] font-bold text-tertiary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12.4%</span>
+</div>
+<span class="material-symbols-outlined text-slate-200 group-hover:text-primary transition-colors">payments</span>
+</div>
+</div>
+<!-- Net Revenue -->
+<div class="bg-surface-container-lowest rounded-[12px] p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary"></div>
+<div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label font-bold">Net Revenue</div>
+<div class="text-2xl font-bold font-headline mt-1 font-mono tracking-tight">$614,203.12</div>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-1 text-[10px] font-bold text-tertiary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+8.2%</span>
+</div>
+<span class="material-symbols-outlined text-slate-200 group-hover:text-tertiary transition-colors">account_balance_wallet</span>
+</div>
+</div>
+<!-- Average Order Value -->
+<div class="bg-surface-container-lowest rounded-[12px] p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
+<div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label font-bold">Avg. Order Value</div>
+<div class="text-2xl font-bold font-headline mt-1 font-mono tracking-tight">$142.50</div>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-1 text-[10px] font-bold text-error">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>-1.2%</span>
+</div>
+<span class="material-symbols-outlined text-slate-200 group-hover:text-secondary transition-colors">shopping_basket</span>
+</div>
+</div>
+<!-- Discount Impact -->
+<div class="bg-surface-container-lowest rounded-[12px] p-5 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label font-bold">Discount Impact</div>
+<div class="text-2xl font-bold font-headline mt-1 font-mono tracking-tight">14.2%</div>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-1 text-[10px] font-bold text-on-surface-variant">
+<span>Target: &lt; 15%</span>
+</div>
+<span class="material-symbols-outlined text-slate-200 group-hover:text-error transition-colors">sell</span>
+</div>
+</div>
+</div>
+<!-- Row 2: Revenue Trend Bar Chart -->
+<div class="bg-surface-container-lowest rounded-[12px] p-6">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-sm font-bold font-headline text-on-surface uppercase tracking-tight">Revenue Performance Trend</h3>
+<p class="text-[11px] text-on-surface-variant font-label">Comparison of Gross vs Net revenue trajectories over the last 30 days.</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-sm bg-primary/80"></div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Gross Revenue</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-sm bg-slate-400"></div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Net Revenue</span>
+</div>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between gap-2 px-4 relative">
+<!-- Grid Lines (Y-Axis) -->
+<div class="absolute inset-0 flex flex-col justify-between py-2 border-l border-slate-100 pointer-events-none">
+<div class="w-full border-t border-slate-50"></div>
+<div class="w-full border-t border-slate-50"></div>
+<div class="w-full border-t border-slate-50"></div>
+<div class="w-full border-t border-slate-50"></div>
+</div>
+<!-- Simulated Bars -->
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[40%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[60%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">01 OCT</div>
+<!-- Tooltip -->
+<div class="absolute bottom-full mb-2 bg-slate-900 text-white p-2 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity z-10 w-24 pointer-events-none">
+<div class="font-bold border-b border-white/10 pb-1 mb-1">Oct 01</div>
+<div class="flex justify-between"><span>G:</span> <span>$24k</span></div>
+<div class="flex justify-between"><span>N:</span> <span>$18k</span></div>
+</div>
+</div>
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[45%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[65%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">03 OCT</div>
+</div>
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[38%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[55%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">05 OCT</div>
+</div>
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[50%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[75%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">07 OCT</div>
+</div>
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[55%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[80%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">09 OCT</div>
+</div>
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[42%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[62%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">11 OCT</div>
+</div>
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[48%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[68%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">13 OCT</div>
+</div>
+<div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+<div class="w-4 bg-slate-400 h-[60%] rounded-t-sm mb-0.5"></div>
+<div class="w-4 bg-primary/80 h-[90%] rounded-t-sm"></div>
+<div class="mt-4 text-[9px] font-mono text-slate-400">15 OCT</div>
+</div>
+</div>
+</div>
+<!-- Row 3: Panels -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Top Products Table -->
+<div class="bg-surface-container-lowest rounded-[12px] p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold font-headline text-on-surface uppercase tracking-tight">Top Products by Revenue</h3>
+<button class="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline underline-offset-4">View Full Report</button>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[10px] uppercase tracking-widest text-on-surface-variant font-label border-b border-slate-50">
+<th class="pb-3 font-bold">Rank</th>
+<th class="pb-3 font-bold">Product Name</th>
+<th class="pb-3 font-bold text-right">Units Sold</th>
+<th class="pb-3 font-bold text-right">Revenue</th>
+<th class="pb-3 font-bold text-right">% Total</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50/50">
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-4 text-[11px] font-mono text-slate-400">01</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs">💻</div>
+<span class="text-xs font-semibold text-on-surface">Precision Core X9 Pro</span>
+</div>
+</td>
+<td class="py-4 text-right text-xs font-mono">1,248</td>
+<td class="py-4 text-right text-xs font-mono font-bold">$186,200</td>
+<td class="py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-12 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[22%]"></div>
+</div>
+<span class="text-[10px] font-mono">22%</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-4 text-[11px] font-mono text-slate-400">02</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs">📱</div>
+<span class="text-xs font-semibold text-on-surface">Neural Nexus Display</span>
+</div>
+</td>
+<td class="py-4 text-right text-xs font-mono">854</td>
+<td class="py-4 text-right text-xs font-mono font-bold">$124,105</td>
+<td class="py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-12 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[15%]"></div>
+</div>
+<span class="text-[10px] font-mono">15%</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-4 text-[11px] font-mono text-slate-400">03</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs">⌨️</div>
+<span class="text-xs font-semibold text-on-surface">Optic Flow Keyboard</span>
+</div>
+</td>
+<td class="py-4 text-right text-xs font-mono">2,102</td>
+<td class="py-4 text-right text-xs font-mono font-bold">$98,450</td>
+<td class="py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-12 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[12%]"></div>
+</div>
+<span class="text-[10px] font-mono">12%</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="py-4 text-[11px] font-mono text-slate-400">04</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-xs">🎧</div>
+<span class="text-xs font-semibold text-on-surface">Acoustic Shield G2</span>
+</div>
+</td>
+<td class="py-4 text-right text-xs font-mono">1,420</td>
+<td class="py-4 text-right text-xs font-mono font-bold">$82,100</td>
+<td class="py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-12 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[10%]"></div>
+</div>
+<span class="text-[10px] font-mono">10%</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Payment Success Rate Donut -->
+<div class="bg-surface-container-lowest rounded-[12px] p-6 flex flex-col">
+<div class="flex justify-between items-center mb-10">
+<h3 class="text-sm font-bold font-headline text-on-surface uppercase tracking-tight">Payment Success Rate</h3>
+<span class="material-symbols-outlined text-slate-300">security</span>
+</div>
+<div class="flex-1 flex items-center gap-12 px-4">
+<!-- Donut SVG Visualization -->
+<div class="relative w-48 h-48">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<!-- Background circle -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#f1f5f9" stroke-width="12"></circle>
+<!-- Failed (Red) -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#ba1a1a" stroke-dasharray="251.2" stroke-dashoffset="230" stroke-width="12"></circle>
+<!-- Pending (Yellow) -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#eab308" stroke-dasharray="251.2" stroke-dashoffset="210" stroke-width="12" transform="rotate(25 50 50)"></circle>
+<!-- Success (Blue) -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#1653cc" stroke-dasharray="251.2" stroke-dashoffset="40" stroke-width="12" transform="rotate(75 50 50)"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold font-headline tracking-tighter">94.2%</span>
+<span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Efficiency</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex-1 space-y-6">
+<div class="flex items-center justify-between group cursor-default">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+<span class="text-xs font-semibold text-on-surface">Successful</span>
+</div>
+<span class="text-xs font-mono font-bold">14,204</span>
+</div>
+<div class="flex items-center justify-between group cursor-default">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+<span class="text-xs font-semibold text-on-surface">Pending</span>
+</div>
+<span class="text-xs font-mono font-bold">642</span>
+</div>
+<div class="flex items-center justify-between group cursor-default">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-error"></div>
+<span class="text-xs font-semibold text-on-surface">Failed</span>
+</div>
+<span class="text-xs font-mono font-bold">128</span>
+</div>
+<div class="pt-4 border-t border-slate-50">
+<p class="text-[10px] text-slate-400 italic font-label">Real-time processing latency: <span class="font-mono text-slate-600">~240ms</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB Suppression: FAB only on Home/Overview if needed -->
+<!-- For this dashboard, we follow the suppression rule unless it's a primary core action -->
+<button class="fixed bottom-8 right-8 w-14 h-14 rounded-full glass-gradient text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform z-50">
+<span class="material-symbols-outlined">add</span>
+</button>
+</body></html>

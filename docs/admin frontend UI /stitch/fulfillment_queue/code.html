@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fulfillment Queue - Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#faf8ff",
+              "on-tertiary-fixed-variant": "#005321",
+              "inverse-on-surface": "#eff0fe",
+              "primary-container": "#3b6de6",
+              "error-container": "#ffdad6",
+              "on-surface-variant": "#434654",
+              "tertiary": "#006b2d",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#60626c",
+              "on-primary-fixed-variant": "#003ea7",
+              "on-primary-fixed": "#00174a",
+              "surface-variant": "#e0e2f0",
+              "outline-variant": "#c3c6d6",
+              "tertiary-container": "#00873b",
+              "primary-fixed": "#dbe1ff",
+              "on-tertiary": "#ffffff",
+              "on-primary-container": "#fefcff",
+              "on-secondary-fixed-variant": "#444650",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-container": "#ecedfb",
+              "primary": "#1653cc",
+              "tertiary-fixed": "#6bff8f",
+              "surface": "#faf8ff",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-tertiary-container": "#f7fff3",
+              "inverse-surface": "#2d303b",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#181b25",
+              "tertiary-fixed-dim": "#4ae176",
+              "surface-tint": "#1b55ce",
+              "secondary-fixed": "#e0e2ed",
+              "outline": "#737685",
+              "surface-container-low": "#f2f3ff",
+              "on-surface": "#181b25",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-high": "#e6e7f6",
+              "surface-container-highest": "#e0e2f0",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "inverse-primary": "#b4c5ff",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d8d9e7",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed": "#002109",
+              "surface-bright": "#faf8ff",
+              "secondary": "#5b5e68",
+              "secondary-container": "#dedfeb"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans", "sans-serif"],
+              "body": ["IBM Plex Sans", "Inter", "sans-serif"],
+              "label": ["IBM Plex Sans", "Inter", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'IBM Plex Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill-icon { font-variation-settings: 'FILL' 1; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f0f2f7; }
+        ::-webkit-scrollbar-thumb { background: #c3c6d6; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] text-on-surface flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-[#13161e] flex flex-col py-6">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Operational Architect</h1>
+<p class="text-xs text-gray-500 font-label">Enterprise Admin</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg group active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg group active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="font-medium">Inventory</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg group active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">shopping_cart</span>
+<span class="font-medium">Orders</span>
+</a>
+<!-- Active Navigation -->
+<a class="flex items-center px-3 py-2 bg-[#1a1d27] text-white font-semibold transition-colors duration-200 rounded-lg group active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">conveyor_belt</span>
+<span class="font-medium">Fulfillment</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg group active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">analytics</span>
+<span class="font-medium">Analytics</span>
+</a>
+</nav>
+<div class="px-3 space-y-1 mt-auto">
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">help_outline</span>
+<span class="font-medium">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-white dark:bg-[#0f1117] h-16 px-8 flex justify-between items-center shadow-sm dark:shadow-none border-b border-transparent">
+<div class="flex items-center space-x-4">
+<span class="text-lg font-bold text-slate-900 dark:text-white font-headline">Command Deck</span>
+<div class="relative ml-8">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="bg-[#f0f2f7] dark:bg-[#1a1d27] border-none rounded-full py-1.5 pl-9 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Quick find orders..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-all p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-all p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">history</span>
+</button>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<button class="flex items-center space-x-2 p-1.5 rounded-full hover:bg-surface-container transition-all">
+<img class="h-8 w-8 rounded-full object-cover" data-alt="close-up portrait of professional male logistics manager with a determined and focused expression in corporate environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJJ4g1c2oqq1h89R7-0GLmAQSNXky0guNcwV2cwNugcxvdJ0IkerSjaj3Vc9D5-l9xXm2h7qeL0JBw_BAeJHVuPNcRTHJYiesAiVsNP5Nvb5nPnQbyurTyYa7B2N3ggp2H_QefoGK2D-WNtL2URZ3EdwbbpfWLLiDLMU8F8zvnzEps5zpmPnorZZLytqwhuNBSbY47MC_a_I5r0iqUHoqqYLb398-MAewIaaYfVgtFgZJAy-kPqvX93KLcFGxh97aXFFugVV4a1Zw"/>
+<span class="material-symbols-outlined text-slate-400">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="mt-16 p-8 space-y-6">
+<!-- Page Header & Summary Bar -->
+<div class="flex flex-col space-y-4">
+<div class="flex justify-between items-end">
+<div>
+<nav class="flex items-center space-x-2 text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
+<span>Operations</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-primary">Fulfillment Queue</span>
+</nav>
+<h2 class="text-3xl font-bold font-headline text-on-surface">Fulfillment Queue</h2>
+</div>
+<div class="flex items-center space-x-3">
+<button class="flex items-center px-4 py-2 bg-white text-secondary font-semibold rounded-lg shadow-sm border border-outline-variant/50 hover:bg-surface-container-low transition-all active:scale-95">
+<span class="material-symbols-outlined mr-2 text-lg">filter_list</span>
+                            Filters
+                        </button>
+<button class="flex items-center px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined mr-2 text-lg">warehouse</span>
+                            Assign Warehouse to Selected
+                        </button>
+</div>
+</div>
+<!-- Summary Bar / KPI Area -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col justify-between border-l-4 border-primary">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">Awaiting Fulfillment</span>
+<div class="flex items-baseline space-x-2">
+<span class="text-2xl font-bold font-headline">47</span>
+<span class="text-xs text-on-surface-variant">Orders Total</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col justify-between border-l-4 border-error">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">At Risk (&gt;24h)</span>
+<div class="flex items-baseline space-x-2">
+<span class="text-2xl font-bold font-headline text-error">12</span>
+<span class="text-xs text-error/80">Require Immediate Action</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col justify-between border-l-4 border-[#f59e0b]">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">Unassigned Warehouse</span>
+<div class="flex items-baseline space-x-2">
+<span class="text-2xl font-bold font-headline text-[#f59e0b]">08</span>
+<span class="text-xs text-on-surface-variant">Pending Allocation</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col justify-between border-l-4 border-tertiary">
+<span class="text-[10px] font-bold text-outline uppercase tracking-wider">Completed Today</span>
+<div class="flex items-baseline space-x-2">
+<span class="text-2xl font-bold font-headline text-tertiary">154</span>
+<span class="text-xs text-on-surface-variant">Throughput Stable</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Fulfillment Table Section -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="p-4 border-b border-outline-variant/20 flex justify-between items-center">
+<div class="flex items-center space-x-4">
+<span class="text-sm font-bold text-on-surface">Active Queue</span>
+<span class="px-2 py-0.5 bg-surface-container text-xs font-mono rounded">LIVE UPDATING</span>
+</div>
+<div class="flex items-center space-x-2 text-xs text-outline">
+<span>Showing 1-10 of 47 orders</span>
+<div class="flex space-x-1 ml-4">
+<button class="p-1 hover:bg-surface-container rounded"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="p-1 hover:bg-surface-container rounded"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-3 text-[10px] font-bold text-outline uppercase tracking-wider w-10">
+<input class="rounded-sm border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</th>
+<th class="px-4 py-3 text-[10px] font-bold text-outline uppercase tracking-wider">Priority</th>
+<th class="px-4 py-3 text-[10px] font-bold text-outline uppercase tracking-wider">Order #</th>
+<th class="px-4 py-3 text-[10px] font-bold text-outline uppercase tracking-wider">Placed At</th>
+<th class="px-4 py-3 text-[10px] font-bold text-outline uppercase tracking-wider">Customer</th>
+<th class="px-4 py-3 text-[10px] font-bold text-outline uppercase tracking-wider">Items</th>
+<th class="px-4 py-3 text-[10px] font-bold text-outline uppercase tracking-wider">Warehouse Assignment</th>
+<th class="px-4 py-3 text-[10px] font-bold text-outline uppercase tracking-wider">Status</th>
+<th class="px-6 py-3 text-[10px] font-bold text-outline uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-sm">
+<!-- Row 1: At Risk, No Warehouse -->
+<tr class="hover:bg-surface-container-high/40 transition-colors border-l-4 border-l-[#f59e0b]">
+<td class="px-6 py-3"><input class="rounded-sm border-outline-variant text-primary" type="checkbox"/></td>
+<td class="px-4 py-3">
+<div class="flex items-center text-error font-bold">
+<span class="material-symbols-outlined text-sm mr-1">priority_high</span>
+                                    CRITICAL
+                                </div>
+</td>
+<td class="px-4 py-3 font-mono font-medium text-on-surface-variant">ORD-2023-8842</td>
+<td class="px-4 py-3 text-on-surface-variant">Oct 24, 08:12 AM <span class="text-error font-bold ml-1">(26h ago)</span></td>
+<td class="px-4 py-3 font-medium">Acme Robotics Ltd.</td>
+<td class="px-4 py-3">12x SKU-904</td>
+<td class="px-4 py-3">
+<span class="flex items-center text-[#f59e0b] font-semibold bg-[#fef3c7] px-2 py-0.5 rounded text-[11px]">
+<span class="material-symbols-outlined text-[14px] mr-1">warning</span>
+                                    ⚠ No warehouse
+                                </span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center space-x-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-error"></div>
+<span class="text-[11px] font-bold uppercase tracking-tight text-error">Delayed</span>
+</div>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline font-bold text-xs">Assign</button>
+<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Normal Row -->
+<tr class="hover:bg-surface-container-high/40 transition-colors border-l-4 border-l-transparent">
+<td class="px-6 py-3"><input class="rounded-sm border-outline-variant text-primary" type="checkbox"/></td>
+<td class="px-4 py-3">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1">drag_handle</span>
+                                    Normal
+                                </div>
+</td>
+<td class="px-4 py-3 font-mono font-medium text-on-surface-variant">ORD-2023-8859</td>
+<td class="px-4 py-3 text-on-surface-variant">Oct 25, 10:45 AM <span class="text-outline ml-1">(4h ago)</span></td>
+<td class="px-4 py-3 font-medium">Elena Richardson</td>
+<td class="px-4 py-3">2x SKU-112, 1x SKU-221</td>
+<td class="px-4 py-3">
+<span class="text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">location_on</span>
+                                    Global-NE-02
+                                </span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center space-x-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<span class="text-[11px] font-bold uppercase tracking-tight text-primary">Queued</span>
+</div>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex justify-end space-x-2">
+<button class="bg-primary text-white px-3 py-1 rounded text-[11px] font-bold hover:bg-primary-container transition-colors">Start Fulfillment</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: At Risk, Warehouse Assigned -->
+<tr class="hover:bg-surface-container-high/40 transition-colors border-l-4 border-l-[#f59e0b]">
+<td class="px-6 py-3"><input class="rounded-sm border-outline-variant text-primary" type="checkbox"/></td>
+<td class="px-4 py-3">
+<div class="flex items-center text-[#f59e0b] font-bold">
+<span class="material-symbols-outlined text-sm mr-1">priority</span>
+                                    HIGH
+                                </div>
+</td>
+<td class="px-4 py-3 font-mono font-medium text-on-surface-variant">ORD-2023-8848</td>
+<td class="px-4 py-3 text-on-surface-variant">Oct 24, 02:20 PM <span class="text-error font-bold ml-1">(20h ago)</span></td>
+<td class="px-4 py-3 font-medium">Starlight Logistics</td>
+<td class="px-4 py-3">45x SKU-001</td>
+<td class="px-4 py-3">
+<span class="text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">location_on</span>
+                                    West-Coast-Main
+                                </span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center space-x-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></div>
+<span class="text-[11px] font-bold uppercase tracking-tight text-[#f59e0b]">Pending Start</span>
+</div>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex justify-end space-x-2">
+<button class="bg-primary text-white px-3 py-1 rounded text-[11px] font-bold hover:bg-primary-container transition-colors">Start Fulfillment</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Multiple Items -->
+<tr class="hover:bg-surface-container-high/40 transition-colors border-l-4 border-l-transparent">
+<td class="px-6 py-3"><input class="rounded-sm border-outline-variant text-primary" type="checkbox"/></td>
+<td class="px-4 py-3">
+<div class="flex items-center text-outline">
+<span class="material-symbols-outlined text-sm mr-1">low_priority</span>
+                                    Low
+                                </div>
+</td>
+<td class="px-4 py-3 font-mono font-medium text-on-surface-variant">ORD-2023-8861</td>
+<td class="px-4 py-3 text-on-surface-variant">Oct 25, 01:15 PM <span class="text-outline ml-1">(1h ago)</span></td>
+<td class="px-4 py-3 font-medium">Marcus Vane</td>
+<td class="px-4 py-3">1x Mixed Parcel</td>
+<td class="px-4 py-3">
+<span class="flex items-center text-[#f59e0b] font-semibold bg-[#fef3c7] px-2 py-0.5 rounded text-[11px]">
+<span class="material-symbols-outlined text-[14px] mr-1">warning</span>
+                                    ⚠ No warehouse
+                                </span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center space-x-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+<span class="text-[11px] font-bold uppercase tracking-tight text-slate-500">New Order</span>
+</div>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline font-bold text-xs">Assign</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-high/40 transition-colors border-l-4 border-l-transparent">
+<td class="px-6 py-3"><input class="rounded-sm border-outline-variant text-primary" type="checkbox"/></td>
+<td class="px-4 py-3">
+<div class="flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1">drag_handle</span>
+                                    Normal
+                                </div>
+</td>
+<td class="px-4 py-3 font-mono font-medium text-on-surface-variant">ORD-2023-8860</td>
+<td class="px-4 py-3 text-on-surface-variant">Oct 25, 12:30 PM <span class="text-outline ml-1">(2h ago)</span></td>
+<td class="px-4 py-3 font-medium">Quantum Tech</td>
+<td class="px-4 py-3">5x SKU-441</td>
+<td class="px-4 py-3">
+<span class="text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">location_on</span>
+                                    Euro-Hub-01
+                                </span>
+</td>
+<td class="px-4 py-3">
+<div class="flex items-center space-x-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<span class="text-[11px] font-bold uppercase tracking-tight text-primary">Queued</span>
+</div>
+</td>
+<td class="px-6 py-3 text-right">
+<div class="flex justify-end space-x-2">
+<button class="bg-primary text-white px-3 py-1 rounded text-[11px] font-bold hover:bg-primary-container transition-colors">Start Fulfillment</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Dashboard Footnote / Technical Stats -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 bg-[#1a1d27] text-white p-6 rounded-xl relative overflow-hidden">
+<div class="relative z-10 flex flex-col justify-between h-full">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold font-headline mb-1">Queue Health Overview</h3>
+<p class="text-xs text-gray-400 max-w-md">The system is currently operating at 94% fulfillment accuracy. 12 orders are flagged for priority overrides based on SLA thresholds.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl opacity-50">monitoring</span>
+</div>
+<div class="mt-6 flex space-x-8">
+<div>
+<span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Average Wait Time</span>
+<span class="text-xl font-mono font-bold">14.2<span class="text-xs ml-1">hrs</span></span>
+</div>
+<div>
+<span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Resource Utilization</span>
+<span class="text-xl font-mono font-bold">88.5%</span>
+</div>
+<div>
+<span class="text-[10px] font-bold text-gray-500 uppercase block mb-1">Active Pickers</span>
+<span class="text-xl font-mono font-bold">34</span>
+</div>
+</div>
+</div>
+<!-- Decorative background pattern -->
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-center items-center text-center space-y-3">
+<div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined fill-icon">smart_toy</span>
+</div>
+<h4 class="font-bold text-sm">Auto-Assign Active</h4>
+<p class="text-xs text-on-surface-variant">The Operational Architect is automatically balancing workloads across 4 hubs.</p>
+<button class="text-primary text-[11px] font-bold uppercase tracking-widest border border-primary/20 px-4 py-2 rounded-lg hover:bg-primary/5">Configure Logic</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Details Drawer (Hidden by default, used for interaction simulation) -->
+<div class="fixed right-0 top-0 h-full w-96 bg-white/95 backdrop-blur-xl shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 pointer-events-none" id="drawer">
+<!-- Content for right side drawer would go here -->
+</div>
+</body></html>

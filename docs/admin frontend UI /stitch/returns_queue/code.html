@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Logistics Architect - Returns Queue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "outline-variant": "#c3c6d6",
+                        "on-primary-fixed": "#00174a",
+                        "background": "#faf8ff",
+                        "tertiary-container": "#00873b",
+                        "surface-variant": "#e0e2f0",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e0e2f0",
+                        "surface-dim": "#d8d9e7",
+                        "tertiary-fixed": "#6bff8f",
+                        "on-tertiary-fixed": "#002109",
+                        "on-secondary-container": "#60626c",
+                        "surface-container": "#ecedfb",
+                        "primary": "#1653cc",
+                        "outline": "#737685",
+                        "on-secondary-fixed-variant": "#444650",
+                        "secondary-fixed": "#e0e2ed",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "error": "#ba1a1a",
+                        "primary-container": "#3b6de6",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eff0fe",
+                        "tertiary": "#006b2d",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-surface": "#2d303b",
+                        "on-primary-container": "#fefcff",
+                        "surface": "#faf8ff",
+                        "secondary-container": "#dedfeb",
+                        "on-background": "#181b25",
+                        "secondary": "#5b5e68",
+                        "on-secondary-fixed": "#181b24",
+                        "on-surface-variant": "#434654",
+                        "on-surface": "#181b25",
+                        "surface-tint": "#1b55ce",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f3ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#e6e7f6",
+                        "surface-bright": "#faf8ff"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans", "Plus Jakarta Sans"],
+                        "body": ["IBM Plex Sans", "Inter"],
+                        "label": ["IBM Plex Sans", "Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'IBM Plex Sans', sans-serif; }
+        .glass-gradient {
+            background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%);
+        }
+        .shell-dark { background-color: #0f1117; }
+        .sidebar-dark { background-color: #13161e; }
+        .canvas-bg { background-color: #f0f2f7; }
+        .tab-label { font-size: 11px; letter-spacing: 0.05em; }
+    </style>
+</head>
+<body class="canvas-bg text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 sidebar-dark flex flex-col py-6 px-4 z-50">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg">warehouse</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Logistics Admin</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-label">Enterprise Command</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-sm text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="tab-label uppercase">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-sm text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="tab-label uppercase">Catalog</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-sm text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="tab-label uppercase">Inventory</span>
+</a>
+<!-- Active State: Orders (Returns sub-page) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-sm bg-[#1a1d27] text-[#4f7ef8] border-l-4 border-[#4f7ef8]" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="tab-label uppercase">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-sm text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="tab-label uppercase">System</span>
+</a>
+</nav>
+<div class="mt-auto px-2 pt-6 border-t border-slate-800/50">
+<div class="flex items-center gap-3">
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-slate-700" data-alt="close-up portrait of a professional operations manager in a clean modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-d0ppjmP9sdyDgUrI-zL8w0kqAznAQp0ENlU-HQF-4RiaMndz6xvNDIzC3VWG0qKBmh2iHzWBmL9Y75carGm9aozYsK8P1OTp1H_3ogvtBwP9wAQbaeQ4sK6KWm63Ru3h1qMc6BMJ9AA9Dpwgm4Z99T6I8gaXINeWWk1_B6RbqlS3laZyEaux2kyVaJMLUeUT-00BY_njcc9Am9PJgvOQ-91aCMTb4l_LaTalaZ00HNMYmHeDtANY6qTqYCGDClQRJkhsfamd3Us"/>
+<div class="overflow-hidden">
+<p class="text-sm font-medium text-white truncate">Alex Vance</p>
+<p class="text-[10px] text-slate-500 uppercase">Lead Architect</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white dark:bg-[#0f1117] border-b border-slate-100 dark:border-slate-800/50 flex justify-between items-center px-8 z-40 shadow-sm dark:shadow-none">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full pl-10 pr-4 py-1.5 bg-slate-50 dark:bg-slate-900 border-none rounded text-sm focus:ring-1 focus:ring-primary/30" placeholder="Search returns, orders, or customers..." type="text"/>
+</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-xs font-label uppercase tracking-wider text-slate-500 hover:text-primary transition-colors" href="#">Breadcrumbs</a>
+<a class="text-xs font-label uppercase tracking-wider text-[#4f7ef8] font-semibold border-b-2 border-[#4f7ef8] pb-1" href="#">Returns</a>
+<a class="text-xs font-label uppercase tracking-wider text-slate-500 hover:text-primary transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-primary p-2 transition-all"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-slate-500 hover:text-primary p-2 transition-all"><span class="material-symbols-outlined">help_outline</span></button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-3xl font-headline font-bold text-on-background tracking-tight">Returns</h2>
+<p class="text-sm text-slate-500 mt-1">Manage reverse logistics and customer refund requests.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 text-sm font-semibold text-primary bg-primary-fixed hover:bg-primary-fixed-dim transition-colors rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-base">download</span>
+                        Export CSV
+                    </button>
+<button class="px-6 py-2 text-sm font-semibold text-white glass-gradient rounded-lg shadow-lg shadow-primary/20 active:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Approve Selected
+                    </button>
+</div>
+</div>
+<!-- Operational Filter Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-4 mb-6 shadow-sm border border-outline-variant/10 flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[200px]">
+<label class="text-[10px] font-label uppercase tracking-wider text-slate-400 block mb-1">Status</label>
+<select class="w-full bg-surface-container-low border-none rounded text-xs py-2 focus:ring-1 focus:ring-primary/30">
+<option>All Statuses</option>
+<option>Requested</option>
+<option>Approved</option>
+<option>Received</option>
+<option>Completed</option>
+<option>Rejected</option>
+</select>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="text-[10px] font-label uppercase tracking-wider text-slate-400 block mb-1">Reason</label>
+<select class="w-full bg-surface-container-low border-none rounded text-xs py-2 focus:ring-1 focus:ring-primary/30">
+<option>All Reasons</option>
+<option>Damaged</option>
+<option>Wrong Size</option>
+<option>Defective</option>
+<option>Changed Mind</option>
+</select>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="text-[10px] font-label uppercase tracking-wider text-slate-400 block mb-1">Customer Search</label>
+<input class="w-full bg-surface-container-low border-none rounded text-xs py-2 focus:ring-1 focus:ring-primary/30" placeholder="Email or Name..." type="text"/>
+</div>
+<div class="flex-1 min-w-[200px]">
+<label class="text-[10px] font-label uppercase tracking-wider text-slate-400 block mb-1">Date Range</label>
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded cursor-pointer">
+<span class="material-symbols-outlined text-xs text-slate-400">calendar_today</span>
+<span class="text-xs text-on-surface-variant">Last 30 Days</span>
+</div>
+</div>
+<button class="mt-5 h-9 w-9 flex items-center justify-center bg-surface-container-high rounded-lg text-slate-600 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<!-- High-Density Data Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant/15">
+<tr>
+<th class="py-3 px-4 w-10">
+<input class="rounded-sm border-slate-300 text-primary focus:ring-primary/30" type="checkbox"/>
+</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Return #</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Order #</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Customer</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Items</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Reason</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Status</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Refund</th>
+<th class="py-3 px-4 text-[10px] font-label uppercase tracking-widest text-slate-500">Created</th>
+<th class="py-3 px-4 text-right text-[10px] font-label uppercase tracking-widest text-slate-500">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors h-[44px]">
+<td class="px-4"><input class="rounded-sm border-slate-300 text-primary focus:ring-primary/30" type="checkbox"/></td>
+<td class="px-4"><a class="font-mono text-primary text-xs font-medium hover:underline" href="#">R-88291</a></td>
+<td class="px-4"><a class="font-mono text-slate-600 text-xs hover:underline" href="#">#ORD-0021</a></td>
+<td class="px-4 text-xs font-medium">Eleanor Shellstrop</td>
+<td class="px-4 text-xs text-slate-500">3 units</td>
+<td class="px-4 text-xs italic">Damaged</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    Requested
+                                </span>
+</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                    Pending
+                                </span>
+</td>
+<td class="px-4 text-xs font-mono text-slate-400">2023-11-24 09:12</td>
+<td class="px-4 text-right">
+<div class="flex justify-end items-center gap-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg">check_circle</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">cancel</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors h-[44px]">
+<td class="px-4"><input class="rounded-sm border-slate-300 text-primary focus:ring-primary/30" type="checkbox"/></td>
+<td class="px-4"><a class="font-mono text-primary text-xs font-medium hover:underline" href="#">R-88292</a></td>
+<td class="px-4"><a class="font-mono text-slate-600 text-xs hover:underline" href="#">#ORD-0054</a></td>
+<td class="px-4 text-xs font-medium">Chidi Anagonye</td>
+<td class="px-4 text-xs text-slate-500">1 unit</td>
+<td class="px-4 text-xs italic">Wrong size</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                    Approved
+                                </span>
+</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    In Review
+                                </span>
+</td>
+<td class="px-4 text-xs font-mono text-slate-400">2023-11-24 10:45</td>
+<td class="px-4 text-right">
+<div class="flex justify-end items-center gap-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 text-slate-300 cursor-not-allowed"><span class="material-symbols-outlined text-lg">check_circle</span></button>
+<button class="p-1 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">cancel</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors h-[44px]">
+<td class="px-4"><input class="rounded-sm border-slate-300 text-primary focus:ring-primary/30" type="checkbox"/></td>
+<td class="px-4"><a class="font-mono text-primary text-xs font-medium hover:underline" href="#">R-88295</a></td>
+<td class="px-4"><a class="font-mono text-slate-600 text-xs hover:underline" href="#">#ORD-0099</a></td>
+<td class="px-4 text-xs font-medium">Tahani Al-Jamil</td>
+<td class="px-4 text-xs text-slate-500">5 units</td>
+<td class="px-4 text-xs italic">Defective</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    Completed
+                                </span>
+</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    Refunded
+                                </span>
+</td>
+<td class="px-4 text-xs font-mono text-slate-400">2023-11-23 14:20</td>
+<td class="px-4 text-right">
+<div class="flex justify-end items-center gap-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 text-slate-300 cursor-not-allowed"><span class="material-symbols-outlined text-lg">check_circle</span></button>
+<button class="p-1 text-slate-300 cursor-not-allowed"><span class="material-symbols-outlined text-lg">cancel</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-high/30 transition-colors h-[44px]">
+<td class="px-4"><input class="rounded-sm border-slate-300 text-primary focus:ring-primary/30" type="checkbox"/></td>
+<td class="px-4"><a class="font-mono text-primary text-xs font-medium hover:underline" href="#">R-88301</a></td>
+<td class="px-4"><a class="font-mono text-slate-600 text-xs hover:underline" href="#">#ORD-1022</a></td>
+<td class="px-4 text-xs font-medium">Jason Mendoza</td>
+<td class="px-4 text-xs text-slate-500">2 units</td>
+<td class="px-4 text-xs italic">Changed mind</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Rejected
+                                </span>
+</td>
+<td class="px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold border border-outline-variant/20 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Denied
+                                </span>
+</td>
+<td class="px-4 text-xs font-mono text-slate-400">2023-11-23 16:55</td>
+<td class="px-4 text-right">
+<div class="flex justify-end items-center gap-2">
+<button class="p-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-1 text-slate-300 cursor-not-allowed"><span class="material-symbols-outlined text-lg">check_circle</span></button>
+<button class="p-1 text-slate-300 cursor-not-allowed"><span class="material-symbols-outlined text-lg">cancel</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Table Footer/Pagination -->
+<div class="px-4 py-3 bg-surface-container-low border-t border-outline-variant/15 flex items-center justify-between">
+<p class="text-[10px] font-label uppercase text-slate-500 tracking-wider">Showing 1-4 of 128 returns</p>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white text-[10px] font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-high text-[10px]">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-high text-[10px]">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Contextual Insights (Bento Grid Style) -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary shadow-sm flex flex-col justify-between">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-400">Approval Rate</span>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-mono font-bold text-on-background">84.2%</h3>
+<span class="text-[10px] text-tertiary flex items-center font-bold">
+<span class="material-symbols-outlined text-xs">trending_up</span> +2.1%
+                        </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-amber-500 shadow-sm flex flex-col justify-between">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-400">Avg Processing Time</span>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-mono font-bold text-on-background">1.8d</h3>
+<span class="text-[10px] text-error flex items-center font-bold">
+<span class="material-symbols-outlined text-xs">trending_up</span> +0.4d
+                        </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary shadow-sm flex flex-col justify-between">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-400">Total Refund Volume</span>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-mono font-bold text-on-background">$12.4k</h3>
+<span class="text-[10px] text-tertiary flex items-center font-bold">
+<span class="material-symbols-outlined text-xs">trending_down</span> -5%
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Detailed View Drawer (Hidden by default, shown for UX demonstration) -->
+<div class="fixed top-0 right-0 h-full w-[400px] bg-white shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 ease-in-out border-l border-outline-variant/20 hidden">
+<div class="h-16 flex items-center justify-between px-6 border-b border-outline-variant/10">
+<h4 class="font-headline font-bold text-lg">Return Details</h4>
+<button class="text-slate-400 hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="p-6 space-y-6">
+<div class="space-y-1">
+<span class="text-[10px] font-label uppercase text-slate-400">Return ID</span>
+<p class="font-mono text-sm font-semibold">R-88291</p>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<div class="flex items-center gap-3 mb-3">
+<img class="w-12 h-12 rounded bg-white object-cover" data-alt="high-quality product photo of a designer ergonomic keyboard in matte black with subtle backlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAOAqRg8BmxmU4z5vWpMAVd-Z5rBGaLX_UsSvBKeVTzpRsPB01_f4yqeui3lgAD7Q2KGzlg0eFBqtbfIEi1UKaSyAsNSHF5hwSFzj0bEJKJ4SNaj7k0yI01sM5DjJ7pNhpOVg5XTy6qI7EP-TRA22VzmlmvqGC7FUWKvayGX0Yh7kxX5SuDN3t17sceD9kOnBbKcT39-KH0QE62Pv-YWxt-uifyKEzyUL3Kt-qYrONINCluDbmfKRmXmlyw_yXTC0s1vnh-j9aM_Y"/>
+<div>
+<p class="text-xs font-semibold">Ergo-Pro X Keyboard</p>
+<p class="text-[10px] text-slate-500">SKU: EP-K-2024</p>
+</div>
+</div>
+<div class="flex justify-between text-xs py-2 border-t border-outline-variant/10">
+<span class="text-slate-500">Reason</span>
+<span class="italic">Key 'A' is unresponsive</span>
+</div>
+</div>
+<div class="space-y-3">
+<button class="w-full py-2.5 bg-primary text-white text-sm font-semibold rounded-lg shadow-sm">Approve &amp; Process Refund</button>
+<button class="w-full py-2.5 bg-white text-error border border-error/30 text-sm font-semibold rounded-lg">Reject Request</button>
+</div>
+</div>
+</div>
+</body></html>

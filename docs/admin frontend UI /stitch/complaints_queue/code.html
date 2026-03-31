@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Complaints Queue | Operational Architect</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=DM+Sans:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-bright": "#faf8ff",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-background": "#181b25",
+              "surface-container-highest": "#e0e2f0",
+              "inverse-surface": "#2d303b",
+              "inverse-on-surface": "#eff0fe",
+              "secondary-container": "#dedfeb",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#00873b",
+              "surface-variant": "#e0e2f0",
+              "tertiary-fixed": "#6bff8f",
+              "surface-dim": "#d8d9e7",
+              "on-primary-fixed": "#00174a",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f2f3ff",
+              "outline": "#737685",
+              "primary-fixed": "#dbe1ff",
+              "tertiary-fixed-dim": "#4ae176",
+              "on-primary-fixed-variant": "#003ea7",
+              "surface-container": "#ecedfb",
+              "on-secondary-container": "#60626c",
+              "surface": "#faf8ff",
+              "on-secondary-fixed-variant": "#444650",
+              "background": "#faf8ff",
+              "surface-tint": "#1b55ce",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-high": "#e6e7f6",
+              "secondary": "#5b5e68",
+              "primary-container": "#3b6de6",
+              "on-tertiary-fixed": "#002109",
+              "error": "#ba1a1a",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-secondary": "#ffffff",
+              "tertiary": "#006b2d",
+              "on-tertiary-container": "#f7fff3",
+              "on-surface-variant": "#434654",
+              "outline-variant": "#c3c6d6",
+              "secondary-fixed": "#e0e2ed",
+              "on-error-container": "#93000a",
+              "primary": "#1653cc",
+              "on-primary-container": "#fefcff",
+              "on-surface": "#181b25",
+              "inverse-primary": "#b4c5ff"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "sans-serif"],
+              "body": ["IBM Plex Sans", "sans-serif"],
+              "label": ["IBM Plex Sans", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+            vertical-align: middle;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .tonal-depth-shift { background-color: #13161e; }
+        .glass-panel { backdrop-filter: blur(20px); background-color: rgba(255, 255, 255, 0.85); }
+        .row-at-risk { border-left: 3px solid #ba1a1a !important; }
+    </style>
+</head>
+<body class="bg-surface-dim font-body text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#13161e] flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Command Deck</h1>
+<p class="text-[0.625rem] uppercase tracking-[0.15em] text-slate-500 font-semibold mt-1">Operational Architect</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<!-- Active Tab: Complaints -->
+<a class="flex items-center px-3 py-2.5 rounded bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[#4f7ef8]">support_agent</span>
+<span class="font-plus-jakarta-sans text-[0.6875rem] uppercase tracking-wider font-semibold">Complaints</span>
+</a>
+<a class="flex items-center px-3 py-2.5 rounded text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">leaderboard</span>
+<span class="font-plus-jakarta-sans text-[0.6875rem] uppercase tracking-wider font-semibold">Analytics</span>
+</a>
+<a class="flex items-center px-3 py-2.5 rounded text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">branding_watermark</span>
+<span class="font-plus-jakarta-sans text-[0.6875rem] uppercase tracking-wider font-semibold">Banners</span>
+</a>
+<a class="flex items-center px-3 py-2.5 rounded text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">description</span>
+<span class="font-plus-jakarta-sans text-[0.6875rem] uppercase tracking-wider font-semibold">CMS Pages</span>
+</a>
+<a class="flex items-center px-3 py-2.5 rounded text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">confirmation_number</span>
+<span class="font-plus-jakarta-sans text-[0.6875rem] uppercase tracking-wider font-semibold">Coupons</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-[#1653cc] hover:bg-[#3b6de6] text-white py-2.5 rounded font-semibold text-xs transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-sm mr-2">add</span>
+                New Support Ticket
+            </button>
+<div class="mt-6 pt-6 border-t border-slate-800 space-y-1">
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-plus-jakarta-sans text-[0.6875rem] uppercase tracking-wider font-semibold">Settings</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">logout</span>
+<span class="font-plus-jakarta-sans text-[0.6875rem] uppercase tracking-wider font-semibold">Logout</span>
+</a>
+</div>
+<div class="mt-6 flex items-center px-3">
+<div class="w-8 h-8 rounded-full bg-slate-700 flex-shrink-0">
+<img alt="Admin User Profile" class="w-full h-full rounded-full object-cover" data-alt="professional portrait of a male administrative executive in a dark suit with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsKItziofaJV8emJ7eR4tXJOGKmuZ9GwMySWwtlvVfatHyQ6xlW_p5Lvi-vgz0n-rIOPlFwPbluY8axNs5ZP1rkTJ_IqBT-Bogke_d9qlJ_NGY7N0OV97fKYn2jkKCWt-2-Vi8M9ZOt4186g1KrcyBhbcss3NphhfVm8UdeKvk-HXzrl4MfTa0LGBm7Y9woNcVhuy-wZZzPJ4ztz2lsVjApYUe2Of9qgd7pHzUA9kEG0CSBcrqcbV2bmDQYLXTLFUNaQqwNpHVqxQ"/>
+</div>
+<div class="ml-3 overflow-hidden">
+<p class="text-xs font-bold text-white truncate">Admin User</p>
+<p class="text-[10px] text-slate-500 truncate">Operational Architect</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen bg-[#f0f2f7]">
+<!-- TopNavBar Anchor -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white border-b border-slate-100 flex justify-between items-center px-8 w-full">
+<div class="flex items-center w-1/3">
+<div class="relative w-full max-w-sm">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-50 border-none rounded-lg pl-10 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400" placeholder="Global search..." type="text"/>
+</div>
+</div>
+<nav class="flex items-center space-x-8">
+<a class="text-slate-500 hover:text-[#4f7ef8] transition-all duration-150 font-plus-jakarta-sans text-sm font-medium" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-[#4f7ef8] transition-all duration-150 font-plus-jakarta-sans text-sm font-medium" href="#">Logs</a>
+<a class="text-[#1653cc] border-b-2 border-[#1653cc] pb-1 font-plus-jakarta-sans text-sm font-medium" href="#">Reports</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded bg-slate-100 overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="close-up portrait of a corporate professional looking confidently at the camera, clean studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5qD0eb446ngYv5DboScprsyBuNV8-Gz0OW1A6MPntCqNo3_1puEBh7cEZw6jX-02BzVLG5w24TvNXc689-SqXuABRiPEsyLgjLFohzEzW06YGWU21F5Hcf0K1cU1CkjGXHY6fX72WKeUwzLlHFIUPHQI4YbwJYRWbCS_A31RYNQJ_BO7bdfigsDDmm5ChRJRDJxBt0g24EsCfb2rt8WOCaxg4GxPm-NUucdOCV5s6YozVAMOI_ghCAIO0M3RLbkHz1z4ulgfTunY"/>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="pt-24 px-8 pb-12">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-3xl font-bold font-headline text-on-background tracking-tight">Complaints Queue</h2>
+<p class="text-sm text-outline mt-1 font-body">Manage and resolve high-priority post-purchase customer issues.</p>
+</div>
+<div class="flex items-center space-x-3">
+<button class="bg-surface-container-lowest text-on-background px-4 py-2 rounded border border-outline-variant hover:bg-surface-container transition-colors flex items-center text-sm font-medium">
+<span class="material-symbols-outlined mr-2 text-lg">download</span> Export CSV
+                    </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded shadow-sm hover:opacity-90 transition-opacity flex items-center text-sm font-medium">
+<span class="material-symbols-outlined mr-2 text-lg">filter_alt</span> Apply Filters
+                    </button>
+</div>
+</div>
+<!-- Dashboard KPIs -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Open Tickets</p>
+<div class="flex justify-between items-end mt-2">
+<h3 class="text-2xl font-bold font-headline">128</h3>
+<span class="text-[0.6875rem] font-bold text-error bg-error-container/50 px-2 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span> +12%
+                        </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-error">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-outline">At Risk (SLA)</p>
+<div class="flex justify-between items-end mt-2">
+<h3 class="text-2xl font-bold font-headline">24</h3>
+<span class="text-[0.6875rem] font-bold text-error bg-error-container/50 px-2 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">warning</span> Action Required
+                        </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Resolution Rate</p>
+<div class="flex justify-between items-end mt-2">
+<h3 class="text-2xl font-bold font-headline">94.2%</h3>
+<span class="text-[0.6875rem] font-bold text-tertiary bg-tertiary-container/10 px-2 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">check_circle</span> Stable
+                        </span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-secondary">
+<p class="text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Avg. Response</p>
+<div class="flex justify-between items-end mt-2">
+<h3 class="text-2xl font-bold font-headline">4.2h</h3>
+<span class="text-[0.6875rem] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">timer</span> Target: 6h
+                        </span>
+</div>
+</div>
+</div>
+<!-- Filters Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-4 mb-6 flex flex-wrap gap-4 items-center">
+<div class="flex-1 min-w-[200px]">
+<label class="block text-[0.625rem] uppercase font-bold text-outline mb-1.5 ml-1">Category</label>
+<select class="w-full bg-surface-container border-none text-xs rounded-lg py-2 focus:ring-1 focus:ring-primary">
+<option>All Categories</option>
+<option>Damaged Item</option>
+<option>Late Delivery</option>
+<option>Wrong Item</option>
+<option>Refund Issue</option>
+<option>Other</option>
+</select>
+</div>
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.625rem] uppercase font-bold text-outline mb-1.5 ml-1">Status</label>
+<select class="w-full bg-surface-container border-none text-xs rounded-lg py-2 focus:ring-1 focus:ring-primary">
+<option>All Statuses</option>
+<option>Open</option>
+<option>In Progress</option>
+<option>Escalated</option>
+<option>Resolved</option>
+</select>
+</div>
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.625rem] uppercase font-bold text-outline mb-1.5 ml-1">Priority</label>
+<select class="w-full bg-surface-container border-none text-xs rounded-lg py-2 focus:ring-1 focus:ring-primary">
+<option>Any Priority</option>
+<option>Critical</option>
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+</div>
+<div class="flex-1 min-w-[150px]">
+<label class="block text-[0.625rem] uppercase font-bold text-outline mb-1.5 ml-1">Date Range</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-sm text-outline">calendar_today</span>
+<input class="w-full bg-surface-container border-none text-xs rounded-lg py-2 pl-8 focus:ring-1 focus:ring-primary" type="text" value="Last 30 Days"/>
+</div>
+</div>
+<div class="pt-5">
+<button class="text-primary hover:bg-primary-fixed p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant/10">
+<tr>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Ticket #</th>
+<th class="px-4 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Customer</th>
+<th class="px-4 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Category</th>
+<th class="px-4 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Order #</th>
+<th class="px-4 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline text-center">Priority</th>
+<th class="px-4 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline text-center">Status</th>
+<th class="px-4 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline">Created</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-outline text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: SLA Breach -->
+<tr class="hover:bg-surface-container-high transition-colors row-at-risk h-11">
+<td class="px-6 py-2 font-mono text-[0.75rem] text-primary font-medium tracking-tight">TK-884920</td>
+<td class="px-4 py-2 text-sm font-medium">Helena Hills</td>
+<td class="px-4 py-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold border border-error text-error bg-error-container/20 flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span> Damaged Item
+                                </span>
+</td>
+<td class="px-4 py-2 font-mono text-[0.75rem] text-outline">#ORD-29001</td>
+<td class="px-4 py-2 text-center">
+<span class="text-[10px] font-bold uppercase text-error tracking-tighter">Critical</span>
+</td>
+<td class="px-4 py-2 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-outline-variant text-outline bg-transparent">Open</span>
+</td>
+<td class="px-4 py-2 text-[0.75rem] text-outline">74h ago</td>
+<td class="px-6 py-2 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline text-xs font-semibold">View</button>
+<span class="text-outline-variant">|</span>
+<button class="text-error hover:underline text-xs font-semibold">Escalate</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high transition-colors h-11 border-l-4 border-transparent">
+<td class="px-6 py-2 font-mono text-[0.75rem] text-primary font-medium tracking-tight">TK-884925</td>
+<td class="px-4 py-2 text-sm font-medium">Marcus Chen</td>
+<td class="px-4 py-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold border border-primary text-primary bg-primary-fixed/20 flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-1.5"></span> Wrong Item
+                                </span>
+</td>
+<td class="px-4 py-2 font-mono text-[0.75rem] text-outline">#ORD-29044</td>
+<td class="px-4 py-2 text-center">
+<span class="text-[10px] font-bold uppercase text-on-surface-variant tracking-tighter">Medium</span>
+</td>
+<td class="px-4 py-2 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-primary text-primary bg-transparent">Processing</span>
+</td>
+<td class="px-4 py-2 text-[0.75rem] text-outline">12h ago</td>
+<td class="px-6 py-2 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline text-xs font-semibold">View</button>
+<span class="text-outline-variant">|</span>
+<button class="text-outline hover:underline text-xs font-semibold">Escalate</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-high transition-colors h-11 border-l-4 border-transparent">
+<td class="px-6 py-2 font-mono text-[0.75rem] text-primary font-medium tracking-tight">TK-884931</td>
+<td class="px-4 py-2 text-sm font-medium">Sara Jensen</td>
+<td class="px-4 py-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold border border-tertiary text-tertiary bg-tertiary-container/10 flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span> Refund Issue
+                                </span>
+</td>
+<td class="px-4 py-2 font-mono text-[0.75rem] text-outline">#ORD-28955</td>
+<td class="px-4 py-2 text-center">
+<span class="text-[10px] font-bold uppercase text-primary tracking-tighter">High</span>
+</td>
+<td class="px-4 py-2 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-tertiary text-tertiary bg-transparent">Resolved</span>
+</td>
+<td class="px-4 py-2 text-[0.75rem] text-outline">2d ago</td>
+<td class="px-6 py-2 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline text-xs font-semibold">View</button>
+<span class="text-outline-variant">|</span>
+<button class="text-outline hover:underline text-xs font-semibold">Escalate</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: SLA Breach -->
+<tr class="hover:bg-surface-container-high transition-colors row-at-risk h-11">
+<td class="px-6 py-2 font-mono text-[0.75rem] text-primary font-medium tracking-tight">TK-884940</td>
+<td class="px-4 py-2 text-sm font-medium">David Miller</td>
+<td class="px-4 py-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold border border-secondary text-secondary bg-secondary-container/20 flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span> Late Delivery
+                                </span>
+</td>
+<td class="px-4 py-2 font-mono text-[0.75rem] text-outline">#ORD-28770</td>
+<td class="px-4 py-2 text-center">
+<span class="text-[10px] font-bold uppercase text-primary tracking-tighter">High</span>
+</td>
+<td class="px-4 py-2 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-outline-variant text-outline bg-transparent">Open</span>
+</td>
+<td class="px-4 py-2 text-[0.75rem] text-outline">89h ago</td>
+<td class="px-6 py-2 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline text-xs font-semibold">View</button>
+<span class="text-outline-variant">|</span>
+<button class="text-error hover:underline text-xs font-semibold">Escalate</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-high transition-colors h-11 border-l-4 border-transparent">
+<td class="px-6 py-2 font-mono text-[0.75rem] text-primary font-medium tracking-tight">TK-884951</td>
+<td class="px-4 py-2 text-sm font-medium">Elena Petrova</td>
+<td class="px-4 py-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold border border-outline text-outline bg-surface-container flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-outline mr-1.5"></span> Other
+                                </span>
+</td>
+<td class="px-4 py-2 font-mono text-[0.75rem] text-outline">#ORD-29112</td>
+<td class="px-4 py-2 text-center">
+<span class="text-[10px] font-bold uppercase text-outline tracking-tighter">Low</span>
+</td>
+<td class="px-4 py-2 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-outline-variant text-outline bg-transparent">Open</span>
+</td>
+<td class="px-4 py-2 text-[0.75rem] text-outline">4h ago</td>
+<td class="px-6 py-2 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline text-xs font-semibold">View</button>
+<span class="text-outline-variant">|</span>
+<button class="text-outline hover:underline text-xs font-semibold">Escalate</button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-high transition-colors h-11 border-l-4 border-transparent">
+<td class="px-6 py-2 font-mono text-[0.75rem] text-primary font-medium tracking-tight">TK-884966</td>
+<td class="px-4 py-2 text-sm font-medium">Jameson Raad</td>
+<td class="px-4 py-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold border border-error text-error bg-error-container/20 flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span> Damaged Item
+                                </span>
+</td>
+<td class="px-4 py-2 font-mono text-[0.75rem] text-outline">#ORD-29108</td>
+<td class="px-4 py-2 text-center">
+<span class="text-[10px] font-bold uppercase text-primary tracking-tighter">High</span>
+</td>
+<td class="px-4 py-2 text-center">
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold border border-primary text-primary bg-transparent" style="font-variation-settings: 'FILL' 1">In Progress</span>
+</td>
+<td class="px-4 py-2 text-[0.75rem] text-outline">6h ago</td>
+<td class="px-6 py-2 text-right">
+<div class="flex justify-end space-x-2">
+<button class="text-primary hover:underline text-xs font-semibold">View</button>
+<span class="text-outline-variant">|</span>
+<button class="text-outline hover:underline text-xs font-semibold">Escalate</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-lowest border-t border-outline-variant/10 flex justify-between items-center">
+<span class="text-[0.6875rem] text-outline font-medium uppercase tracking-wider">Showing 1 to 6 of 128 tickets</span>
+<div class="flex space-x-1">
+<button class="w-8 h-8 rounded flex items-center justify-center text-outline hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-on-primary text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded text-on-background hover:bg-surface-container text-xs font-bold transition-colors">2</button>
+<button class="w-8 h-8 rounded text-on-background hover:bg-surface-container text-xs font-bold transition-colors">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-outline text-xs">...</span>
+<button class="w-8 h-8 rounded text-on-background hover:bg-surface-container text-xs font-bold transition-colors">22</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-outline hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual Insight Panel -->
+<div class="mt-8 grid grid-cols-3 gap-6">
+<div class="col-span-2 bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline font-bold text-lg">SLA Trend (Weekly)</h4>
+<div class="flex items-center space-x-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs font-bold text-outline">Avg Response</span>
+<span class="w-3 h-3 rounded-full bg-error ml-4"></span>
+<span class="text-xs font-bold text-outline">Violations</span>
+</div>
+</div>
+<!-- Mock Chart Area -->
+<div class="h-48 flex items-end justify-between space-x-2 pb-2">
+<div class="flex-1 bg-surface-container rounded-t h-1/4"></div>
+<div class="flex-1 bg-surface-container rounded-t h-2/4"></div>
+<div class="flex-1 bg-primary/40 rounded-t h-3/4"></div>
+<div class="flex-1 bg-primary/60 rounded-t h-2/5"></div>
+<div class="flex-1 bg-primary rounded-t h-4/5"></div>
+<div class="flex-1 bg-primary/80 rounded-t h-3/5"></div>
+<div class="flex-1 bg-primary/40 rounded-t h-2/4"></div>
+</div>
+<div class="flex justify-between mt-2 text-[0.625rem] font-bold text-outline uppercase tracking-wider">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl">
+<h4 class="font-headline font-bold text-lg mb-4">Quick Actions</h4>
+<div class="space-y-3">
+<button class="w-full text-left p-3 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors flex items-center group">
+<div class="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-lg">assignment_ind</span>
+</div>
+<div>
+<p class="text-xs font-bold">Assign Unclaimed</p>
+<p class="text-[10px] text-outline">Auto-distribute 12 new tickets</p>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors flex items-center group">
+<div class="w-8 h-8 rounded bg-error-container text-on-error-container flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-lg">bolt</span>
+</div>
+<div>
+<p class="text-xs font-bold">Bulk Resolve Late Delivery</p>
+<p class="text-[10px] text-outline">Issue mass apologies/coupons</p>
+</div>
+</button>
+<button class="w-full text-left p-3 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors flex items-center group">
+<div class="w-8 h-8 rounded bg-tertiary-container text-on-tertiary-container flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-lg">summarize</span>
+</div>
+<div>
+<p class="text-xs font-bold">Generate SLA Report</p>
+<p class="text-[10px] text-outline">Daily operational breakdown</p>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Side Detail Drawer (Hidden by Default/Background Context) -->
+<!-- This represents a "Selected Ticket" view that might be opened -->
+<div class="fixed top-0 right-0 w-[400px] h-full bg-white glass-panel z-50 transform translate-x-full transition-transform duration-300 shadow-2xl border-l border-outline-variant/20 overflow-y-auto">
+<div class="p-8">
+<div class="flex justify-between items-center mb-8">
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">Ticket Details</span>
+<button class="text-outline hover:text-on-background"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="mb-6">
+<h3 class="font-headline font-bold text-2xl tracking-tight mb-1">Damaged Item #884920</h3>
+<p class="text-sm text-outline">Customer: Helena Hills • Order: #ORD-29001</p>
+</div>
+<div class="p-4 rounded-xl bg-error-container/20 border border-error/20 mb-8">
+<div class="flex items-center text-error mb-2">
+<span class="material-symbols-outlined text-lg mr-2">warning</span>
+<span class="text-xs font-bold uppercase tracking-tight">SLA Violation Pending</span>
+</div>
+<p class="text-xs text-on-error-container">Ticket has been inactive for 74 hours. Escalation to Tier 2 recommended.</p>
+</div>
+<div class="space-y-6">
+<div>
+<h5 class="text-[10px] font-bold uppercase text-outline mb-2">Complaint Description</h5>
+<p class="text-sm leading-relaxed text-on-background">"Received the package this morning but the glass carafe was shattered inside. The outer box looks slightly crushed. I need a replacement or refund immediately."</p>
+</div>
+<div>
+<h5 class="text-[10px] font-bold uppercase text-outline mb-2">Attached Images</h5>
+<div class="grid grid-cols-2 gap-2">
+<div class="h-24 rounded-lg overflow-hidden bg-surface-container">
+<img alt="Damaged product photo" class="w-full h-full object-cover" data-alt="close-up photo of a broken clear glass carafe with shards scattered on a shipping cardboard box" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW_ZrgQWnkiFTuU9L157Y9yPN1oi260mkC0EWiPc3Xy2morK7GzcEobV5N7UiApZ1dx_xGkdAnSM6338ysjYoamAqogIoxc-Luhy_nxEhr2DNUGXBjcYqeYmxyuPX43jJjAmP0ocaVrbAA2e89imuZBykVZfPzenfWPZnNG2C5QC3hSdt7ybspyifKkgJxqx_QbK8aTWzdnksSK51q8XG71ovOPn0FE2io53JJGINUCJ4YzBwwUlqzClAB0eHB02Lf0ocH_t1wnkA"/>
+</div>
+<div class="h-24 rounded-lg overflow-hidden bg-surface-container">
+<img alt="Damaged package box" class="w-full h-full object-cover" data-alt="photo of a crushed cardboard shipping box with shipping labels visible and dented corners" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjZDVjKb7DQQBnCmlUJC2mFYNnZo-As3VYVRAuaP3TTfuWzrGuUPiyUoFtSASt6-ARGp95rS1_IkiE4ntSeiZ8brrCJADf8sFblgN8WJQ-cvhIuCSbKctFZvjrolWKKOOyBWhlb4yLPHKz77emfoorkAGMlYTUffyuBMVf4SitWI3NTnPjDy2gfQob2qadD4-6lc1Od8G-BSuyv5ykmQk8ZtZ_nRw907KH5b_PfPpkN_iNZ8hcQZ7lYwAx5YDdYmQzXuRz49jpT9A"/>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/10">
+<label class="block text-[10px] font-bold uppercase text-outline mb-2">Admin Internal Note</label>
+<textarea class="w-full bg-surface-container border-none text-xs rounded-lg p-3 h-24 focus:ring-1 focus:ring-primary placeholder:italic" placeholder="Add a private note..."></textarea>
+</div>
+<div class="flex space-x-3 pt-4">
+<button class="flex-1 bg-primary text-on-primary py-3 rounded-lg font-bold text-xs shadow-md">Respond Now</button>
+<button class="px-3 bg-surface-container text-on-surface py-3 rounded-lg font-bold text-xs">Escalate</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

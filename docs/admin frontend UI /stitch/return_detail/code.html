@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Return Detail - Logistics Architect</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "outline-variant": "#c3c6d6",
+                        "on-primary-fixed": "#00174a",
+                        "background": "#faf8ff",
+                        "tertiary-container": "#00873b",
+                        "surface-variant": "#e0e2f0",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e0e2f0",
+                        "surface-dim": "#d8d9e7",
+                        "tertiary-fixed": "#6bff8f",
+                        "on-tertiary-fixed": "#002109",
+                        "on-secondary-container": "#60626c",
+                        "surface-container": "#ecedfb",
+                        "primary": "#1653cc",
+                        "outline": "#737685",
+                        "on-secondary-fixed-variant": "#444650",
+                        "secondary-fixed": "#e0e2ed",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "error": "#ba1a1a",
+                        "primary-container": "#3b6de6",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eff0fe",
+                        "tertiary": "#006b2d",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-surface": "#2d303b",
+                        "on-primary-container": "#fefcff",
+                        "surface": "#faf8ff",
+                        "secondary-container": "#dedfeb",
+                        "on-background": "#181b25",
+                        "secondary": "#5b5e68",
+                        "on-secondary-fixed": "#181b24",
+                        "on-surface-variant": "#434654",
+                        "on-surface": "#181b25",
+                        "surface-tint": "#1b55ce",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f3ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#e6e7f6",
+                        "surface-bright": "#faf8ff"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans"],
+                        "body": ["IBM Plex Sans"],
+                        "mono": ["JetBrains Mono"],
+                        "label": ["IBM Plex Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #f0f2f7;
+            font-family: 'IBM Plex Sans', sans-serif;
+            color: #181b25;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .dm-sans { font-family: 'DM Sans', sans-serif; }
+        /* Tonal depth layering from system */
+        .shell-bg { background-color: #13161e; }
+        .canvas-bg { background-color: #f0f2f7; }
+        .surface-card { background-color: #ffffff; }
+    </style>
+</head>
+<body class="antialiased">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#13161e] flex flex-col py-6 px-4 z-50">
+<div class="mb-10 px-2">
+<h1 class="text-xl font-bold text-white tracking-tight dm-sans">Logistics Admin</h1>
+<p class="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-1">Enterprise Command</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center space-x-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-sm" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-sm" href="#">
+<span class="material-symbols-outlined text-xl">inventory_2</span>
+<span class="text-sm font-medium">Catalog</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-sm" href="#">
+<span class="material-symbols-outlined text-xl">warehouse</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center space-x-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-sm" href="#">
+<span class="material-symbols-outlined text-xl">shopping_cart</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<!-- Active State for Return Detail under System/Returns logic -->
+<a class="flex items-center space-x-3 px-3 py-2.5 bg-[#1a1d27] text-[#4f7ef8] border-l-4 border-[#4f7ef8] transition-colors duration-200 rounded-sm" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-sm font-medium">System</span>
+</a>
+</nav>
+<div class="mt-auto px-2 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-slate-700">
+<img alt="Organization Logo" data-alt="minimalist geometric vector logo for a logistics company with blue and white accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6yazj8CGka6KozfI1GUOBLGVgp2AifDxTCkwLeORbivYYUhxAYUf5Sdab2mpwkTo37KrM_5cU85w9KaItTVUVfDFvqmXsmYGcfQUCnsyfnHlf-TX8jAIVJazHbtPDBKrgAGelsyqwwEiXBzXSGfAAULMY0xoMAU6fgXK3ti6iROQaM7TZQapc3WmQhryPmTZNlt5G0-VEBfSRPyyxc8PsPfk7fNYzunOd7gV_buUvjp9VdUkoJDXnTGbXNA9EJyZzLm-ptmyiNWc"/>
+</div>
+<div>
+<p class="text-xs font-semibold text-white">Main Depot</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-tighter">Instance #042</p>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white dark:bg-[#0f1117] flex justify-between items-center px-8 border-b border-slate-100 dark:border-slate-800/50 z-40">
+<div class="flex items-center space-x-6">
+<div class="flex items-center space-x-2 text-slate-400 text-sm">
+<span>Returns</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-[#4f7ef8] font-semibold border-b-2 border-[#4f7ef8] pb-1">RET-00088</span>
+</div>
+</div>
+<div class="flex items-center space-x-6">
+<div class="flex items-center space-x-4">
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all duration-150">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-px bg-slate-200"></div>
+<div class="flex items-center space-x-3">
+<span class="text-sm font-medium text-slate-700">Admin User</span>
+<img alt="User Avatar" class="w-8 h-8 rounded-full bg-slate-100" data-alt="professional portrait of a man with short hair and glasses in a clean modern style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXaQb3ufN9MM-RXycMV04T8Erg3hlPqO9J1kOvf9ObCwjAzBSsU-6j1M3uZWxZw8EVuNlOQzN1scrmjUaeZQnSLAghYVu-16z3AMrRMJUrRfL0K52aaIbaAXcsbgmhGsortmmz53-YPjcQilBG4y3rwBQPvKlGTPpYQg1HvmwkpZfolsQmmhw3QqutReA9QufcfKseOO5UxX1w8jHDK4xIi6rz2e0LtNI4nDf-sED9CbSSdDBtE1rUr9SYMGgXTNaOAeQd5GP0ifU"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h2 class="text-3xl font-bold tracking-tight dm-sans text-on-surface">Return <span class="mono text-primary">#[RET-00088]</span></h2>
+<div class="flex items-center mt-2 space-x-4 text-sm text-secondary">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">link</span>
+                            Order <a class="text-primary hover:underline mono font-medium" href="#">#ORD-99201-B</a>
+</div>
+<span class="text-outline-variant">|</span>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">calendar_today</span>
+                            Created Oct 24, 2023 · 14:32 EST
+                        </div>
+<div class="flex items-center px-2 py-0.5 rounded-full border border-outline-variant text-[11px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span>
+                            Requested
+                        </div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-10 gap-8">
+<!-- Left Column (65%) -->
+<div class="xl:col-span-6 space-y-8">
+<!-- Customer Panel -->
+<section class="surface-card rounded-xl p-6 shadow-sm">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary mb-4 dm-sans">Customer Profile</h3>
+<div class="flex items-start space-x-4">
+<img alt="Customer Avatar" class="w-12 h-12 rounded-full bg-surface-container" data-alt="friendly woman's face with professional styling, digital avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAycc-N4blxbi1oOEQ9Z-ELOaafort9KQlibWFztCUOBDluSOSE5nOhY0X9KwciH-WvC85NohKjzFpf9CIgOL82m84VcqQvvLWiyTm-wQDpVtfcnIiq9qfaVmJQm7UTGRNNZpdfavpG5PAHmJG0EMUXYw3iJttpT59xW5SxN_IXYwLTQkjftDGhDkUs2A-_44iYThZFTa4WROQsNH_JUqr9qaRzsuMAzywLdYlnCGbqxP_dkx899Vt_q-sd7JCY_KAgEgU8Xg5nwaM"/>
+<div class="flex-1">
+<p class="text-base font-semibold">Eleanor Vance</p>
+<p class="text-sm text-secondary">eleanor.vance@enterprise-corp.com</p>
+<div class="mt-2 flex items-center space-x-3 text-sm text-secondary">
+<span class="flex items-center"><span class="material-symbols-outlined text-sm mr-1">call</span> +1 (555) 230-0192</span>
+<span class="flex items-center"><span class="material-symbols-outlined text-sm mr-1">location_on</span> Seattle, WA</span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-[10px] font-bold text-outline uppercase">Tier</span>
+<p class="text-sm font-semibold text-tertiary">Enterprise Platinum</p>
+</div>
+</div>
+</section>
+<!-- Items Table -->
+<section class="surface-card rounded-xl overflow-hidden shadow-sm">
+<div class="p-6 pb-2">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary dm-sans">Return Items</h3>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-outline">Product</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-outline">Variant / SKU</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-outline text-center">Qty</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-outline">Reason</th>
+<th class="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-outline">Condition</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-surface-container rounded border border-slate-100 overflow-hidden flex-shrink-0">
+<img alt="Product Thumbnail" data-alt="sleek professional wristwatch on a minimal white background, luxury product shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpoOE1W_yEx40VwF5y1nlVTGJWKpeNEBYHIu7t3X8XPJKpl1Yd6tGIO6QPkzfNXj0kFNUqHZFW43l81EcPMmguuVrzULqPSCvfbNRbjHVDOk40bFAAqq_khOaHgd3QNLUch42Tdla4-mLd0FRf02Ume-KEqutlIeNO6jW5BGBqz5m7tOC3gwNyPIXPHw1sIaNpMqyvFNaSE-5bjrlAdl_5e8kE-kuJTPNo3hGpz7h5mAXrDe4TVz_1nPXsc6r8cHHGqm5H74970pQ"/>
+</div>
+<span class="text-sm font-medium">Precision Chrono-X1</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs mono text-secondary">Slate Grey / <span class="text-on-surface">SKU-992-01</span></td>
+<td class="px-6 py-4 text-sm mono text-center">01</td>
+<td class="px-6 py-4">
+<span class="text-xs bg-surface-container px-2 py-1 rounded text-on-surface">Defective movement</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-xs">
+<span class="w-2 h-2 rounded-full bg-primary mr-2"></span>
+                                            Unopened
+                                        </div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-surface-container rounded border border-slate-100 overflow-hidden flex-shrink-0">
+<img alt="Product Thumbnail" data-alt="modern glass water bottle with minimalist design, bright clean studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6Qxrx69y5a4gWBQxLQg07Vc42DHPLj-EarVN8hH4WHUujXjfX467PX6RAOhA3B51MD4V_pbxzvGufT4Www5I5k1DSn7v1x6JTifzqY22oJNnccoVYBumBEtoPr5TfdblxtG844N_GYyTcGlJ1Q8slDs3xsfpJlOt498GR87K0dyRwdewinHkaC2mPX4RAYjXc3yKmeZoU1NxqQpV3pD7Ppzqs1_UgrA7eWyZbQj0na36CY61B5hDcdO-xpqZWBc02XSeAJEGfPMU"/>
+</div>
+<span class="text-sm font-medium">Hydra-Core Vessel</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs mono text-secondary">Matte White / <span class="text-on-surface">SKU-441-08</span></td>
+<td class="px-6 py-4 text-sm mono text-center">02</td>
+<td class="px-6 py-4">
+<span class="text-xs bg-surface-container px-2 py-1 rounded text-on-surface">Wrong item sent</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-xs">
+<span class="w-2 h-2 rounded-full bg-error mr-2"></span>
+                                            Damaged box
+                                        </div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Refund Linkage Panel -->
+<section class="surface-card rounded-xl p-6 shadow-sm">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary mb-4 dm-sans">Refund Settlement</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-sm text-secondary">Reference ID</span>
+<a class="mono text-primary font-medium text-sm hover:underline" href="#">REF-449-P8</a>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm text-secondary">Total Amount</span>
+<span class="mono font-bold text-lg text-on-surface">$482.50</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm text-secondary">Status</span>
+<span class="flex items-center text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-sm mr-1">hourglass_empty</span>
+                                        Processing
+                                    </span>
+</div>
+</div>
+</section>
+<!-- Timeline Panel -->
+<section class="surface-card rounded-xl p-6 shadow-sm">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary mb-4 dm-sans">Return Timeline</h3>
+<div class="space-y-5">
+<div class="relative pl-6 border-l-2 border-slate-100 pb-2">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-4 border-tertiary"></div>
+<div class="flex justify-between items-start">
+<p class="text-sm font-semibold">Return Requested</p>
+<span class="text-[10px] mono text-outline">10/24 14:32</span>
+</div>
+<p class="text-xs text-secondary mt-1">Initiated by customer via portal.</p>
+</div>
+<div class="relative pl-6 border-l-2 border-slate-100">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-4 border-slate-200"></div>
+<div class="flex justify-between items-start">
+<p class="text-sm font-medium text-slate-400">Awaiting Approval</p>
+<span class="text-[10px] mono text-outline">Pending</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Right Column (35%) -->
+<div class="xl:col-span-4 space-y-8">
+<!-- Action Rail / State Machine -->
+<section class="surface-card rounded-xl p-8 shadow-sm border-l-4 border-primary">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary mb-8 dm-sans">Return Progress</h3>
+<div class="space-y-8 relative">
+<!-- Progress Line Background -->
+<div class="absolute left-[15px] top-2 bottom-2 w-0.5 bg-slate-100"></div>
+<!-- State: Requested (Active) -->
+<div class="relative flex items-center space-x-4">
+<div class="relative z-10 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white ring-4 ring-primary-fixed">
+<span class="material-symbols-outlined text-lg">description</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary">Requested</p>
+<p class="text-[11px] text-secondary">Customer submission complete</p>
+</div>
+</div>
+<!-- State: Approved -->
+<div class="relative flex items-center space-x-4 opacity-50">
+<div class="relative z-10 w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Approved</p>
+<p class="text-[11px] text-secondary">Awaiting warehouse signal</p>
+</div>
+</div>
+<!-- State: Item Received -->
+<div class="relative flex items-center space-x-4 opacity-50">
+<div class="relative z-10 w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-lg">inbox</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Item Received</p>
+<p class="text-[11px] text-secondary">Physical inspection pending</p>
+</div>
+</div>
+<!-- State: Completed -->
+<div class="relative flex items-center space-x-4 opacity-50">
+<div class="relative z-10 w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-lg">done_all</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Completed</p>
+<p class="text-[11px] text-secondary">Refund disbursed</p>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="mt-12 space-y-3">
+<button class="w-full py-3 px-4 bg-tertiary text-white rounded-lg font-bold text-sm flex items-center justify-center space-x-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+<span>Approve Return</span>
+</button>
+<div class="grid grid-cols-2 gap-3">
+<button class="py-2.5 px-4 bg-surface-container text-on-surface rounded-lg font-semibold text-xs flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed">
+<span>Mark as Received</span>
+</button>
+<button class="py-2.5 px-4 bg-surface-container text-on-surface rounded-lg font-semibold text-xs flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed">
+<span>Complete</span>
+</button>
+</div>
+<button class="w-full py-3 px-4 border border-error text-error rounded-lg font-bold text-sm flex items-center justify-center space-x-2 hover:bg-error-container transition-colors mt-6">
+<span class="material-symbols-outlined text-lg">cancel</span>
+<span>Reject Return Request</span>
+</button>
+</div>
+</section>
+<!-- Quick Notes Panel -->
+<section class="surface-card rounded-xl p-6 shadow-sm">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary mb-4 dm-sans">Internal Notes</h3>
+<textarea class="w-full bg-surface-container-low border-none rounded-lg text-sm p-3 focus:ring-1 focus:ring-primary h-32 resize-none placeholder-slate-400" placeholder="Add a private note for the logistics team..."></textarea>
+<button class="mt-2 text-xs font-bold text-primary flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">add</span>
+                            Save Note
+                        </button>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Suppressed as per rules for Detail screens) -->
+</body></html>

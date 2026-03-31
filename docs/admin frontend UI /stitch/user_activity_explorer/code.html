@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Activity Explorer | Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .headline {
+            font-family: 'DM Sans', sans-serif;
+        }
+        /* Custom scrollbar for high-density tables */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f2f7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3c6d6;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#00873b",
+                        "surface-variant": "#e0e2f0",
+                        "tertiary": "#006b2d",
+                        "secondary": "#5b5e68",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "inverse-on-surface": "#eff0fe",
+                        "on-secondary-fixed-variant": "#444650",
+                        "primary-fixed": "#dbe1ff",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-tertiary-container": "#f7fff3",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#181b25",
+                        "primary": "#1653cc",
+                        "on-secondary-container": "#60626c",
+                        "tertiary-fixed": "#6bff8f",
+                        "secondary-container": "#dedfeb",
+                        "on-secondary-fixed": "#181b24",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-tertiary-fixed": "#002109",
+                        "on-primary-fixed": "#00174a",
+                        "background": "#faf8ff",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "outline-variant": "#c3c6d6",
+                        "surface-container-high": "#e6e7f6",
+                        "secondary-fixed": "#e0e2ed",
+                        "surface-dim": "#d8d9e7",
+                        "surface-container": "#ecedfb",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-bright": "#faf8ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-surface": "#2d303b",
+                        "on-surface-variant": "#434654",
+                        "surface-tint": "#1b55ce",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface": "#faf8ff",
+                        "on-surface": "#181b25",
+                        "primary-container": "#3b6de6",
+                        "outline": "#737685",
+                        "on-primary-container": "#fefcff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-[#f0f2f7] text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-[#13161e] flex flex-col py-6 px-4">
+<div class="mb-8 px-2">
+<h1 class="text-[#f8f9fb] font-bold text-lg tracking-tight headline">Command Deck</h1>
+<p class="text-slate-500 text-[10px] uppercase tracking-widest font-medium">Operational Architect</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out bg-[#1a1d27] text-[#4f7ef8] border-l-4 border-[#4f7ef8] font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="analytics">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="assignment_return">assignment_return</span>
+<span>Refunds &amp; Returns</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="campaign">campaign</span>
+<span>Marketing</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="list_alt">list_alt</span>
+<span>Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="shield_person">shield_person</span>
+<span>Security</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-800/50 pt-6 space-y-1">
+<div class="flex items-center gap-3 px-3 py-2 mb-4">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-white overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close up professional portrait of a tech administrator with clean studio lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADtewIhDVSZjH_ZRWq4tr53DyKFuYzHTpfw31NKT3aLvu_jJ1P-5ApVVlZm3D8J0snzgaYao5eKJPllOTgHVaxP1Bm3aQnqxhfrXehTfdHSFi_YYdP-iwgjn5v77VJ7fg6O4tgjO79assNVHR6nED9D82i6g6NZawap7tt_4OQnSzdybS86OHHp0tmgnNCq-pC9R7hAJKPUuiQMQ0bZx267hw1GInaIe4q5UffL8hwnhsVaLvUHtg5w4PcxJ7mYz2CbV6t1kWmFKM"/>
+</div>
+<div>
+<p class="text-white text-xs font-semibold">Admin User</p>
+<p class="text-[10px] text-tertiary-fixed-dim">System Status: Active</p>
+</div>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out text-slate-400/80 hover:text-white font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 transition-all duration-200 ease-in-out text-slate-400/80 hover:text-white font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="contact_support">contact_support</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-30 bg-white dark:bg-[#0f1117] flex justify-between items-center px-8 shadow-sm dark:shadow-none transition-all duration-300">
+<div class="flex items-center gap-8">
+<span class="text-slate-900 dark:text-white font-bold headline text-sm">Command Deck v2.0</span>
+<div class="flex items-center bg-surface-container rounded-lg px-3 py-1.5 w-80">
+<span class="material-symbols-outlined text-outline text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs w-full ml-2 text-on-surface" placeholder="Search directives..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden lg:flex items-center gap-6 font-['DM_Sans'] font-semibold text-sm">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Directives</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Inventory</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Reports</a>
+</nav>
+<div class="h-6 w-px bg-outline-variant/30"></div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 hover:text-primary transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:text-primary transition-colors" data-icon="help_outline">help_outline</button>
+<button class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-primary transition-all">New Export</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12">
+<!-- Page Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-outline font-semibold mb-2">
+<span>Audit Logs</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary">User Activity</span>
+</nav>
+<h2 class="text-3xl font-bold headline text-on-background tracking-tight">User Activity</h2>
+<p class="text-secondary text-sm mt-1">Investigation search for granular customer event streams.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant px-4 py-2 rounded-lg text-xs font-semibold hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="file_download">file_download</span>
+                    Export CSV
+                </button>
+<button class="flex items-center gap-2 bg-primary-container text-white px-4 py-2 rounded-lg text-xs font-semibold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+                    Refresh Logs
+                </button>
+</div>
+</div>
+<!-- Filter Bar: Asymmetric layout -->
+<section class="bg-surface-container-lowest rounded-xl p-5 mb-6 border border-white shadow-sm grid grid-cols-12 gap-6 items-end">
+<div class="col-span-4">
+<label class="block text-[10px] uppercase tracking-wider font-bold text-outline mb-2">Customer Identifier</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="person_search">person_search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-2.5 pl-10 text-sm focus:ring-2 focus:ring-primary/20 text-on-surface" placeholder="Email or Customer ID..." type="text"/>
+</div>
+</div>
+<div class="col-span-3">
+<label class="block text-[10px] uppercase tracking-wider font-bold text-outline mb-2">Date Range</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="calendar_today">calendar_today</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-2.5 pl-10 text-sm focus:ring-2 focus:ring-primary/20 text-on-surface" type="text" value="Oct 12, 2023 - Oct 19, 2023"/>
+</div>
+</div>
+<div class="col-span-3">
+<label class="block text-[10px] uppercase tracking-wider font-bold text-outline mb-2">Activity Type</label>
+<select class="w-full bg-surface-container-low border-none rounded-lg py-2.5 text-sm focus:ring-2 focus:ring-primary/20 text-on-surface">
+<option>All Activities</option>
+<option>Login</option>
+<option>Order</option>
+<option>Review</option>
+<option>Support</option>
+<option>Refund</option>
+</select>
+</div>
+<div class="col-span-2">
+<button class="w-full bg-secondary-container text-on-secondary-fixed font-bold py-2.5 rounded-lg text-xs uppercase tracking-widest hover:bg-outline-variant transition-colors">
+                    Filter Results
+                </button>
+</div>
+</section>
+<!-- Operational Data Table Container -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-white shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/10">
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-outline">Timestamp</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-outline">User</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-outline">Type</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-outline">Description</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-outline">Entity</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-outline">IP Address</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-outline">Device</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 text-xs mono text-secondary">2023-10-19 14:22:01</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">EA</div>
+<div>
+<p class="text-xs font-semibold text-on-surface">Elena Archer</p>
+<p class="text-[10px] text-outline">e.archer@enterprise.io</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-tight">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                    Login
+                                </span>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface leading-relaxed max-w-xs">
+                                Successful authentication via OAuth2. Session initialized for 24h.
+                            </td>
+<td class="px-6 py-4 text-xs mono text-outline">—</td>
+<td class="px-6 py-4 text-xs mono text-secondary">192.168.1.44</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-xs text-secondary">
+<span class="material-symbols-outlined text-base" data-icon="laptop_mac">laptop_mac</span>
+<span>macOS (Chrome)</span>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 text-xs mono text-secondary">2023-10-19 13:45:12</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img class="w-7 h-7 rounded object-cover" data-alt="portrait of a focused business professional in a minimal workspace setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBijPTa3hhwuaHZVyKhKIv-P6bT3dkQh7EZlVgf5kxSx9LHLw06atVMp0H1N47I9b5C075xo64fqqvo325ED85LpLjw2JOcB6MnfxUcw0ZMKIBR2lZk2BH01tlm8-B9Ka0B8IhHS777HklqPRBHoHFY4Ku5t4DTszMHpwXHySsk-66CTyhFdqQyVmd0qe2qmKAS-x93C6KgqSMrEsN_2IpxtTkoaAAc5pwKadWEwW5KVQhYAYjghsn87nPeZa8LcGrd4JCb_JfK-34"/>
+<div>
+<p class="text-xs font-semibold text-on-surface">Marcus Thorne</p>
+<p class="text-[10px] text-outline">m.thorne@vector.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-tertiary/20 text-[10px] font-bold text-tertiary uppercase tracking-tight">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                    Order
+                                </span>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface leading-relaxed max-w-xs">
+                                New order placement confirmed. Credit card validation successful.
+                            </td>
+<td class="px-6 py-4 text-xs mono">
+<a class="text-primary hover:underline" href="#">#ORD-9921-X</a>
+</td>
+<td class="px-6 py-4 text-xs mono text-secondary">45.22.109.12</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-xs text-secondary">
+<span class="material-symbols-outlined text-base" data-icon="smartphone">smartphone</span>
+<span>iOS (Safari)</span>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 text-xs mono text-secondary">2023-10-19 12:10:05</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-tertiary-container/10 flex items-center justify-center text-[10px] font-bold text-tertiary">SL</div>
+<div>
+<p class="text-xs font-semibold text-on-surface">Sarah Lopez</p>
+<p class="text-[10px] text-outline">s.lopez@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-secondary/20 text-[10px] font-bold text-secondary uppercase tracking-tight">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Review
+                                </span>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface leading-relaxed max-w-xs">
+                                Verified purchase review submitted (5/5 Stars). Pending moderation.
+                            </td>
+<td class="px-6 py-4 text-xs mono">
+<a class="text-primary hover:underline" href="#">#REV-4041</a>
+</td>
+<td class="px-6 py-4 text-xs mono text-secondary">88.21.0.198</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-xs text-secondary">
+<span class="material-symbols-outlined text-base" data-icon="desktop_windows">desktop_windows</span>
+<span>Windows (Firefox)</span>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 text-xs mono text-secondary">2023-10-19 11:32:44</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface">JW</div>
+<div>
+<p class="text-xs font-semibold text-on-surface">John Wickham</p>
+<p class="text-[10px] text-outline">j.wick@outlook.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-error/20 text-[10px] font-bold text-error uppercase tracking-tight">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Refund
+                                </span>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface leading-relaxed max-w-xs">
+                                Partial refund request initiated. Reason: Defective unit.
+                            </td>
+<td class="px-6 py-4 text-xs mono">
+<a class="text-primary hover:underline" href="#">#REF-0082-A</a>
+</td>
+<td class="px-6 py-4 text-xs mono text-secondary">12.1.88.210</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-xs text-secondary">
+<span class="material-symbols-outlined text-base" data-icon="laptop_mac">laptop_mac</span>
+<span>macOS (Safari)</span>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 text-xs mono text-secondary">2023-10-19 09:05:19</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img class="w-7 h-7 rounded object-cover" data-alt="clean minimal profile picture of a young professional woman with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfJNCnIVQg9RG7KE6yoiam6bcoUvaaoAhqZ8s8w7721je1NF5Ae0vCf74SRPh6ZZMoimZXOxtnz2wliqfNxYEFqb58h8QfUCjmOoxUfZ0K2AMFNmuJS4uHIwrzKFXnkr2-rWFAFJCmTrYpQthjg0McPDJZvA-j75LFgh0k4mIiZaDvL10Vhq4EATfrRV5Aq2HW3Y9UoE1KtgEOtwb9bbiALE2DzWGw5BLyhlGy0r-YPi61bXZPp3wTw0JUTjjhqTpTOGE_InTpKpk"/>
+<div>
+<p class="text-xs font-semibold text-on-surface">Becca Lynch</p>
+<p class="text-[10px] text-outline">becca.lynch@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-secondary/20 text-[10px] font-bold text-secondary uppercase tracking-tight">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Support
+                                </span>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface leading-relaxed max-w-xs">
+                                Live chat session ended. Ticket closed by operator after resolution.
+                            </td>
+<td class="px-6 py-4 text-xs mono">
+<a class="text-primary hover:underline" href="#">#TCK-88122</a>
+</td>
+<td class="px-6 py-4 text-xs mono text-secondary">201.34.12.8</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-xs text-secondary">
+<span class="material-symbols-outlined text-base" data-icon="tablet_mac">tablet_mac</span>
+<span>iPadOS (App)</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="px-6 py-4 bg-surface-container-low/30 border-t border-outline-variant/10 flex justify-between items-center">
+<p class="text-[10px] text-outline font-medium">Showing 1 to 50 of 4,821 events</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-outline hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="px-3 h-8 flex items-center justify-center rounded bg-primary text-white text-[10px] font-bold">1</button>
+<button class="px-3 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-outline text-[10px] font-bold hover:bg-white">2</button>
+<button class="px-3 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-outline text-[10px] font-bold hover:bg-white">3</button>
+<span class="text-outline text-xs px-2">...</span>
+<button class="px-3 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-outline text-[10px] font-bold hover:bg-white">97</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-outline hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Detail Drawer (Simulated State) -->
+<div class="fixed right-0 top-16 h-[calc(100%-4rem)] w-96 bg-surface-container-lowest shadow-2xl border-l border-outline-variant/20 z-20 translate-x-full transition-transform duration-500 ease-in-out">
+<!-- Content for detail drawer would go here -->
+</div>
+</main>
+</body></html>

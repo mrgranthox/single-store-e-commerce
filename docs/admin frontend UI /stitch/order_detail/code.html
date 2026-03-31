@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order #[ORD-10042] - Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#faf8ff",
+              "on-tertiary-fixed-variant": "#005321",
+              "inverse-on-surface": "#eff0fe",
+              "primary-container": "#3b6de6",
+              "error-container": "#ffdad6",
+              "on-surface-variant": "#434654",
+              "tertiary": "#006b2d",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#60626c",
+              "on-primary-fixed-variant": "#003ea7",
+              "on-primary-fixed": "#00174a",
+              "surface-variant": "#e0e2f0",
+              "outline-variant": "#c3c6d6",
+              "tertiary-container": "#00873b",
+              "primary-fixed": "#dbe1ff",
+              "on-tertiary": "#ffffff",
+              "on-primary-container": "#fefcff",
+              "on-secondary-fixed-variant": "#444650",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-container": "#ecedfb",
+              "primary": "#1653cc",
+              "tertiary-fixed": "#6bff8f",
+              "surface": "#faf8ff",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-tertiary-container": "#f7fff3",
+              "inverse-surface": "#2d303b",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#181b25",
+              "tertiary-fixed-dim": "#4ae176",
+              "surface-tint": "#1b55ce",
+              "secondary-fixed": "#e0e2ed",
+              "outline": "#737685",
+              "surface-container-low": "#f2f3ff",
+              "on-surface": "#181b25",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-high": "#e6e7f6",
+              "surface-container-highest": "#e0e2f0",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "inverse-primary": "#b4c5ff",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d8d9e7",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed": "#002109",
+              "surface-bright": "#faf8ff",
+              "secondary": "#5b5e68",
+              "secondary-container": "#dedfeb"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans", "Inter"],
+              "label": ["IBM Plex Sans", "Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'IBM Plex Sans', sans-serif;
+        background-color: #f0f2f7;
+      }
+      .shell-bg { background-color: #0f1117; }
+      .sidebar-bg { background-color: #13161e; }
+      .sidebar-active { background-color: #1a1d27; }
+      .glass-drawer {
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+      }
+    </style>
+</head>
+<body class="text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- SideNavBar (from JSON) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 sidebar-bg flex flex-col py-6">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold text-white tracking-tight">Operational Architect</h1>
+<p class="text-xs text-gray-400 mt-1 uppercase tracking-widest font-label">Enterprise Admin</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="font-medium">Inventory</span>
+</a>
+<a class="flex items-center px-3 py-2 bg-[#1a1d27] text-white font-semibold transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3">shopping_cart</span>
+<span class="font-medium">Orders</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3">conveyor_belt</span>
+<span class="font-medium">Fulfillment</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3">analytics</span>
+<span class="font-medium">Analytics</span>
+</a>
+</nav>
+<div class="px-3 pt-6 border-t border-white/5 space-y-1">
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3">help_outline</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar (from JSON) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-white shadow-sm flex justify-between items-center h-16 px-8">
+<div class="flex items-center gap-4">
+<span class="text-lg font-bold text-slate-900">Command Deck</span>
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full bg-[#f0f2f7] border-none rounded-lg pl-10 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Global Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all">
+<span class="material-symbols-outlined">history</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+<div class="text-right">
+<p class="text-xs font-bold text-slate-900">A. Architect</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-wider">Admin</p>
+</div>
+<span class="material-symbols-outlined text-3xl text-slate-300">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-12 pl-72 pr-24 min-h-screen">
+<!-- Header Section -->
+<div class="mb-8">
+<nav class="flex text-[10px] font-label uppercase tracking-widest text-slate-500 mb-2">
+<a class="hover:text-primary transition-colors" href="#">Orders</a>
+<span class="mx-2 text-slate-300">/</span>
+<span class="text-slate-900">Detail View</span>
+</nav>
+<div class="flex items-end justify-between">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h2 class="text-2xl font-headline font-bold text-slate-900 tracking-tight">Order #<span class="font-mono text-xl text-primary">[ORD-10042]</span></h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full border border-outline-variant text-[10px] font-bold text-tertiary uppercase tracking-tighter">
+<span class="w-1.5 h-1.5 bg-tertiary rounded-full mr-1.5"></span> Processing
+                        </span>
+</div>
+<p class="text-sm text-slate-500 font-body">Placed on Oct 24, 2023 at 14:32:05 UTC</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-white text-slate-900 border border-slate-200 text-xs font-bold uppercase tracking-wider rounded-md hover:bg-slate-50 transition-colors">Export Manifest</button>
+<button class="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-xs font-bold uppercase tracking-wider rounded-md shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform">Print Invoice</button>
+</div>
+</div>
+</div>
+<!-- Bento Grid: Top Panels -->
+<div class="grid grid-cols-3 gap-6 mb-6">
+<!-- Customer Panel -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-primary">
+<h3 class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-4">Customer Information</h3>
+<div class="flex items-start gap-4">
+<img alt="Customer Profile" class="w-12 h-12 rounded-lg object-cover" data-alt="Close-up portrait of a professional man in a tailored charcoal suit against a clean studio background, sharp focus, professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk1GO8UJq_Kmu4cM4VDYbCRDYICUUUC4btGGVJXbY7zFgqqzjRQ_nctXXlPfglkr8xFdjxrTCE9taaqYHUAVMBRTFp9tFqR11-dWdl1DLUXeOV5S2bmmEem2dDMHEFLwYe4aI-yX8cY_OXeWSfzpDKwVyi50EnWoG4Yj2738DnL2E8wFlVCT1DXX1V5cYMJ68RSgH2kea5pv1Naa7iOFNXvZ2AiJycAy6Cq-vassSMabBmXQ7v9ii238Xe_ez3hObufxnilgIM6JA"/>
+<div class="flex-1">
+<p class="font-bold text-slate-900">Marcus Thorne</p>
+<p class="text-sm text-slate-500 mb-2">m.thorne@enterprise-vanguard.com</p>
+<a class="text-xs font-bold text-primary flex items-center group" href="#">
+                            VIEW ACCOUNT PROFILE 
+                            <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Payment Panel -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-tertiary">
+<h3 class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-4">Payment Summary</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<span class="text-2xl font-mono font-bold text-slate-900">$12,450.00</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full border border-outline-variant text-[10px] font-bold text-tertiary uppercase tracking-tighter">
+<span class="w-1.5 h-1.5 bg-tertiary rounded-full mr-1.5"></span> Captured
+                        </span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Method:</span>
+<span class="font-medium text-slate-900">Corporate Wire (ACH)</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Reference:</span>
+<span class="font-mono text-slate-900">TXN-4920-X82</span>
+</div>
+</div>
+</div>
+<!-- Fulfillment Panel -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-secondary">
+<h3 class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-4">Fulfillment Details</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">warehouse</span>
+<span class="font-medium text-slate-900">Global Hub-1 (EMEA)</span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full border border-outline-variant text-[10px] font-bold text-secondary uppercase tracking-tighter">
+                            Pending Shipment
+                        </span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Shipment ID:</span>
+<span class="font-mono text-slate-900">#SHP-992381</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Carrier Service:</span>
+<span class="font-medium text-slate-900">FedEx Intl. Priority</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Items Table Container -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden mb-6">
+<div class="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="text-sm font-bold text-slate-900">Line Items (4)</h3>
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500">Weight: 42.5 KG</span>
+</div>
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-3 text-[10px] font-label uppercase tracking-widest text-slate-500">Product</th>
+<th class="px-6 py-3 text-[10px] font-label uppercase tracking-widest text-slate-500">Identifier</th>
+<th class="px-6 py-3 text-[10px] font-label uppercase tracking-widest text-slate-500 text-center">Qty</th>
+<th class="px-6 py-3 text-[10px] font-label uppercase tracking-widest text-slate-500 text-right">Unit Price</th>
+<th class="px-6 py-3 text-[10px] font-label uppercase tracking-widest text-slate-500 text-right">Total</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-surface-container p-1">
+<img alt="Product Thumb" class="w-full h-full object-cover rounded" data-alt="High-tech industrial server component with metallic casing and cooling fins, sharp details, macro photography on dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIDwZ9rqpxEm38tcUJjB2-ipnikBktBKUZdBbXSvKpQOVC97aPGEXjpp22UAQmS8KaIFdQyCQ-S6d3I8k49_YpLwFGb54DSj7GEPFdSb8l4kqBRLXRK5E76JzSEOSNG-XcFr2TPkeZBRkhTJEfAm9WNjXUHM77TOmbT1mqGK8sTELvJIeuvYnNlvy3kil2gNy3zWb_zrZybGsOWUee4P5_o3oCnZNlPKTQg6M3PAse1cOVFvnxIficch7Xa_zWYaLl_P4neNyDw5g"/>
+</div>
+<div>
+<p class="font-bold text-slate-900 text-sm">Quantum Edge Server</p>
+<p class="text-xs text-slate-500">Enterprise Rack / 64GB RAM</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-600">SKU-QNT-001</td>
+<td class="px-6 py-4 text-center font-bold text-sm">02</td>
+<td class="px-6 py-4 text-right font-mono text-sm">$4,500.00</td>
+<td class="px-6 py-4 text-right font-mono font-bold text-sm">$9,000.00</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-surface-container p-1">
+<img alt="Product Thumb" class="w-full h-full object-cover rounded" data-alt="Modern blue and white fiber optic cables glowing with data transfer light, close up technological view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD60JREof-Ozn04A-bMCA0Bz0aLVXnE_JFfKCYAfHZWTUQspHmCVL5WOMfOa52A5_AzNFH0PONjfSJ-Klhn7BzPaSrujbJY3DpbC0JY6H6ytgPYDOiKUlO3YRh6LRKWJwyc406mpqT0DIhB60xm2zIMweAnSLzY0_GuBOujW6gn5FGcGBq0-lFaoVAFMI-ukvEyW0G8C51JO1wTJpMZCNI_3Dj6hL5Arbs3C_j7wW_0eF_mTyptfM5fljz6p1UJSAW0GpS0cWxFvc4"/>
+</div>
+<div>
+<p class="font-bold text-slate-900 text-sm">Titan Optic Cable Pack</p>
+<p class="text-xs text-slate-500">25m / Shielded / Cat 7</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-600">SKU-TTN-CB9</td>
+<td class="px-6 py-4 text-center font-bold text-sm">05</td>
+<td class="px-6 py-4 text-right font-mono text-sm">$120.00</td>
+<td class="px-6 py-4 text-right font-mono font-bold text-sm">$600.00</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-surface-container p-1">
+<img alt="Product Thumb" class="w-full h-full object-cover rounded" data-alt="Sleek modern tablet computer lying on a minimalist designer desk with warm afternoon lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKN-W2C6utntBJfoNvLz8V2tnc7l5ZXhfnjaSmdoQf7xrQAuWLLYp1S1V0fSIj4hdY_bWv7e_w_C4c-BdsXNqv7ODjuVN1u0XTL9Y_g3zhKLPSnue23tSXCSYsQ2aH_9hm1fFJXlHs5-tCVOS16_5nkzJhID2Rl_xTJv4CJxht4zriPBf-og1olm0Fa3FAzZ8gqgBQywck1BjL6HnRGhiSaZZ6MK4k53qT0Ywe9vPGTvxHElsDPbuX0GJwQEYSTWYDBdJ_DbUsT7o"/>
+</div>
+<div>
+<p class="font-bold text-slate-900 text-sm">Admin Control Tablet</p>
+<p class="text-xs text-slate-500">12.9" OLED / Graphite</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-600">SKU-TAB-X12</td>
+<td class="px-6 py-4 text-center font-bold text-sm">01</td>
+<td class="px-6 py-4 text-right font-mono text-sm">$1,100.00</td>
+<td class="px-6 py-4 text-right font-mono font-bold text-sm">$1,100.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Lower Section: Notes & Summary -->
+<div class="grid grid-cols-3 gap-6">
+<div class="col-span-2 space-y-6">
+<!-- Internal Notes -->
+<div class="bg-surface-container-lowest p-6 rounded-xl">
+<h3 class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-4">Internal Operational Notes</h3>
+<textarea class="w-full h-32 bg-[#f0f2f7] border-none rounded-lg p-4 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400" placeholder="Add a note for the warehouse team..."></textarea>
+<div class="mt-3 flex justify-between items-center">
+<p class="text-[10px] text-slate-400 italic">Notes are visible only to enterprise staff members.</p>
+<button class="px-4 py-1.5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded hover:bg-black transition-colors">Post Note</button>
+</div>
+</div>
+<!-- Timeline Shortcut -->
+<div class="bg-surface-container-low p-4 rounded-lg flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="text-sm font-bold text-slate-900 uppercase tracking-tighter">View Full Transaction Audit Timeline</span>
+</div>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+<!-- Financial Summary -->
+<div class="bg-slate-900 text-white p-8 rounded-xl flex flex-col justify-between">
+<div>
+<h3 class="text-[10px] font-label uppercase tracking-widest text-slate-400 mb-6">Financial Reconciliation</h3>
+<div class="space-y-4">
+<div class="flex justify-between text-sm">
+<span class="text-slate-400">Subtotal</span>
+<span class="font-mono">$10,700.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-400">Logistics &amp; Shipping</span>
+<span class="font-mono">$850.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-400">Estimated VAT/Tax</span>
+<span class="font-mono">$900.00</span>
+</div>
+<div class="flex justify-between text-sm text-error">
+<span class="text-error/80 italic">Discount (VIP-CORP)</span>
+<span class="font-mono">-$0.00</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-white/10">
+<div class="flex justify-between items-end">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-400">Grand Total</span>
+<span class="text-3xl font-mono font-bold text-primary-fixed">$12,450.00</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Available Actions Rail (Right Side) -->
+<div class="fixed right-0 top-16 h-[calc(100%-4rem)] w-16 sidebar-bg flex flex-col items-center py-6 gap-6 z-40 border-l border-white/5">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all group relative" title="Mark Fulfilled">
+<span class="material-symbols-outlined">done_all</span>
+<span class="absolute right-full mr-2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none">Mark Fulfilled</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all group relative" title="Assign Warehouse">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="absolute right-full mr-2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none">Assign Warehouse</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all group relative" title="Create Shipment">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="absolute right-full mr-2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none">Create Shipment</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-primary transition-all group relative" title="View Timeline">
+<span class="material-symbols-outlined">history</span>
+<span class="absolute right-full mr-2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none">View Timeline</span>
+</button>
+<div class="mt-auto border-t border-white/5 pt-6 flex flex-col items-center gap-6">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-error hover:bg-error/20 transition-all group relative" title="Cancel Order">
+<span class="material-symbols-outlined">cancel</span>
+<span class="absolute right-full mr-2 px-2 py-1 bg-error text-white text-[10px] rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none">Cancel Order</span>
+</button>
+</div>
+</div>
+</body></html>

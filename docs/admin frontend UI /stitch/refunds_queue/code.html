@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Refunds Queue | Financial Control Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-tertiary-fixed": "#002109",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e2f0",
+                        "surface-dim": "#d8d9e7",
+                        "surface": "#faf8ff",
+                        "surface-container": "#ecedfb",
+                        "on-secondary-fixed-variant": "#444650",
+                        "tertiary": "#006b2d",
+                        "surface-bright": "#faf8ff",
+                        "on-primary-fixed": "#00174a",
+                        "tertiary-fixed": "#6bff8f",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "inverse-surface": "#2d303b",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "inverse-primary": "#b4c5ff",
+                        "error": "#ba1a1a",
+                        "primary": "#1653cc",
+                        "background": "#faf8ff",
+                        "surface-tint": "#1b55ce",
+                        "outline": "#737685",
+                        "on-secondary-container": "#60626c",
+                        "inverse-on-surface": "#eff0fe",
+                        "surface-container-highest": "#e0e2f0",
+                        "tertiary-container": "#00873b",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-surface": "#181b25",
+                        "surface-container-high": "#e6e7f6",
+                        "secondary-fixed": "#e0e2ed",
+                        "outline-variant": "#c3c6d6",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#fefcff",
+                        "primary-container": "#3b6de6",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-surface-variant": "#434654",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5b5e68",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-fixed": "#181b24",
+                        "secondary-container": "#dedfeb",
+                        "on-background": "#181b25"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans", "Plus Jakarta Sans"],
+                        "body": ["IBM Plex Sans", "Inter"],
+                        "label": ["IBM Plex Sans", "Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f0f2f7;
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        .shell-dark { background-color: #13161e; }
+        .canvas-bg { background-color: #f0f2f7; }
+        .surface-white { background-color: #ffffff; }
+        .text-obsidian { color: #0f1117; }
+    </style>
+</head>
+<body class="flex min-h-screen text-on-surface">
+<!-- SideNavBar (Execution from JSON) -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#13161e] flex flex-col p-4 overflow-y-auto z-50">
+<div class="mb-8 px-2">
+<h1 class="text-lg font-bold tracking-tight text-white font-headline">Admin Ops</h1>
+<p class="text-[0.6875rem] text-slate-500 font-medium uppercase tracking-wider">Operational Architect</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white group" href="#">
+<span class="material-symbols-outlined text-xl">cancel</span>
+<span class="text-sm">Cancellations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white group" href="#">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="text-sm">Payments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white group" href="#">
+<span class="material-symbols-outlined text-xl">timeline</span>
+<span class="text-sm">Transactions</span>
+</a>
+<!-- Active State Logic: Refunds Page -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600/10 text-white font-semibold border-r-4 border-blue-500 group" href="#">
+<span class="material-symbols-outlined text-xl">settings_backup_restore</span>
+<span class="text-sm">Refunds</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-slate-400 font-medium hover:bg-slate-800 hover:text-white group" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-slate-800/50 flex items-center gap-3 px-2">
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-xs font-bold text-white overflow-hidden">
+<img alt="User profile avatar" class="h-full w-full object-cover" data-alt="Professional portrait of an operations manager in a minimalist modern office setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN1vXRaOFjWq6lO35mUGz7PCCkP4dBFhlMPhRqC0txCHOxO49fDtYfajI2NPwbWlIXrm7kadxWYP6_J8VJfYdznpOwnLQ4bkxpHL5vxC4IzFiESM6nbz8I4QBNypS4V9FlluNRazSDLgmvMjmIaf7iG5q_dp8eQdTlIsVx0mJM0-pCFw8sL-gi3Ii513dpr0Y1flKQVUyaUE66QLKcAfUYYH4N9Dwzr5lodMU7fWCY43wme3H48KiUOS0tMtCZNz29y_cLRlsvqzA"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-white">Alex Rivera</span>
+<span class="text-[10px] text-slate-500">System Admin</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar (Execution from JSON) -->
+<header class="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-40">
+<div class="flex items-center gap-8">
+<h2 class="text-xl font-bold text-slate-900 font-headline">Financial Control Center</h2>
+<div class="relative group">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-lg">search</span>
+</span>
+<input class="block w-64 pl-10 pr-3 py-1.5 bg-slate-50 border-none rounded-md text-xs focus:ring-2 focus:ring-blue-500/20 transition-all font-body" placeholder="Search across operations..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<button class="p-2 text-slate-500 hover:text-blue-600 transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 space-y-6 max-w-7xl mx-auto w-full">
+<!-- Page Header & Bulk Action -->
+<div class="flex items-end justify-between">
+<div>
+<h3 class="text-2xl font-bold text-obsidian font-headline tracking-tight">Refunds</h3>
+<p class="text-sm text-slate-500 font-body">Manage customer return capital and adjustment workflows.</p>
+</div>
+<button class="px-4 py-2 bg-gradient-to-br from-[#1653cc] to-[#3b6de6] text-white text-sm font-semibold rounded-md shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                    Approve Selected
+                </button>
+</div>
+<!-- Urgency Summary Banner -->
+<div class="bg-surface-container-lowest p-4 rounded-xl border-l-4 border-[#1653cc] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<div>
+<p class="text-sm font-bold text-obsidian font-headline">12 refunds pending approval</p>
+<p class="text-xs text-slate-500 font-body">Action required to maintain SLA performance metrics.</p>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-error-container/30 px-3 py-1.5 rounded-lg border border-error-container">
+<span class="material-symbols-outlined text-error text-lg">warning</span>
+<span class="text-xs font-bold text-on-error-container font-headline">4 awaiting &gt;48h</span>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-white p-4 rounded-xl shadow-sm space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Status</label>
+<select class="w-full bg-slate-50 border-none rounded-md text-xs font-body focus:ring-2 focus:ring-blue-500/20 py-2">
+<option>All Statuses</option>
+<option>Pending Approval</option>
+<option>Approved</option>
+<option>Processing</option>
+<option>Completed</option>
+<option>Rejected</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Date Range</label>
+<div class="relative">
+<span class="absolute left-3 inset-y-0 flex items-center text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+</span>
+<input class="w-full bg-slate-50 border-none rounded-md text-xs font-body pl-9 py-2" placeholder="Last 30 Days" type="text"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Amount Range</label>
+<div class="relative">
+<span class="absolute left-3 inset-y-0 flex items-center text-slate-400">
+<span class="material-symbols-outlined text-sm">payments</span>
+</span>
+<input class="w-full bg-slate-50 border-none rounded-md text-xs font-body pl-9 py-2" placeholder="Min - Max" type="text"/>
+</div>
+</div>
+<div class="space-y-1.5 lg:col-span-2">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Customer Search</label>
+<div class="relative">
+<span class="absolute left-3 inset-y-0 flex items-center text-slate-400">
+<span class="material-symbols-outlined text-sm">person_search</span>
+</span>
+<input class="w-full bg-slate-50 border-none rounded-md text-xs font-body pl-9 py-2" placeholder="Search by name, email, or customer ID..." type="text"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Refunds Table Area -->
+<div class="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-100">
+<th class="p-4 w-10">
+<input class="rounded border-slate-300 text-primary focus:ring-primary/20" type="checkbox"/>
+</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Refund #</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Order / Return #</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Customer</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Amount</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Reason</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Status</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Requested</th>
+<th class="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<!-- Row 1: Urgent (Amber Border) -->
+<tr class="hover:bg-slate-50/50 transition-colors border-l-4 border-amber-400 bg-amber-50/30">
+<td class="p-4">
+<input class="rounded border-slate-300 text-primary focus:ring-primary/20" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="font-mono text-xs font-medium text-obsidian">RF-8829-XJ</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-mono text-[11px] text-slate-700">ORD-55214</span>
+<span class="font-mono text-[11px] text-slate-400">RET-9902</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-slate-200"></div>
+<span class="text-xs font-semibold text-obsidian">Marcus Thorne</span>
+</div>
+</td>
+<td class="p-4 font-mono text-xs font-bold text-obsidian">$1,240.00</td>
+<td class="p-4 text-xs text-slate-600 font-body">Defective Hardware</td>
+<td class="p-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-amber-200 bg-amber-50">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+<span class="text-[10px] font-bold text-amber-700 uppercase">Pending Approval</span>
+</div>
+</td>
+<td class="p-4 text-xs text-slate-500 font-body">52h ago</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors" title="Review">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors" title="Approve">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors" title="Reject">
+<span class="material-symbols-outlined text-lg">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Standard -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="p-4">
+<input class="rounded border-slate-300 text-primary focus:ring-primary/20" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="font-mono text-xs font-medium text-obsidian">RF-8830-KM</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-mono text-[11px] text-slate-700">ORD-55219</span>
+<span class="font-mono text-[11px] text-slate-400">RET-9905</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-slate-200"></div>
+<span class="text-xs font-semibold text-obsidian">Sarah Chen</span>
+</div>
+</td>
+<td class="p-4 font-mono text-xs font-bold text-obsidian">$85.50</td>
+<td class="p-4 text-xs text-slate-600 font-body">Size Exchange</td>
+<td class="p-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-blue-200 bg-blue-50">
+<span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+<span class="text-[10px] font-bold text-blue-700 uppercase">Processing</span>
+</div>
+</td>
+<td class="p-4 text-xs text-slate-500 font-body">12h ago</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Urgent (Amber Border) -->
+<tr class="hover:bg-slate-50/50 transition-colors border-l-4 border-amber-400 bg-amber-50/30">
+<td class="p-4">
+<input class="rounded border-slate-300 text-primary focus:ring-primary/20" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="font-mono text-xs font-medium text-obsidian">RF-8831-LQ</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-mono text-[11px] text-slate-700">ORD-55001</span>
+<span class="font-mono text-[11px] text-slate-400">RET-9890</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-slate-200"></div>
+<span class="text-xs font-semibold text-obsidian">Elena Rodriguez</span>
+</div>
+</td>
+<td class="p-4 font-mono text-xs font-bold text-obsidian">$3,420.00</td>
+<td class="p-4 text-xs text-slate-600 font-body">Carrier Damage</td>
+<td class="p-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-amber-200 bg-amber-50">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+<span class="text-[10px] font-bold text-amber-700 uppercase">Pending Approval</span>
+</div>
+</td>
+<td class="p-4 text-xs text-slate-500 font-body">74h ago</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-lg">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Completed -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="p-4">
+<input class="rounded border-slate-300 text-primary focus:ring-primary/20" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="font-mono text-xs font-medium text-obsidian">RF-8832-ZP</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="font-mono text-[11px] text-slate-700">ORD-55225</span>
+<span class="font-mono text-[11px] text-slate-400">RET-9912</span>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-2">
+<div class="h-6 w-6 rounded-full bg-slate-200"></div>
+<span class="text-xs font-semibold text-obsidian">Jonathan Wu</span>
+</div>
+</td>
+<td class="p-4 font-mono text-xs font-bold text-obsidian">$214.99</td>
+<td class="p-4 text-xs text-slate-600 font-body">Accidental Order</td>
+<td class="p-4">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-tertiary/20 bg-tertiary-fixed/10">
+<span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span>
+<span class="text-[10px] font-bold text-tertiary uppercase">Completed</span>
+</div>
+</td>
+<td class="p-4 text-xs text-slate-500 font-body">4d ago</td>
+<td class="p-4 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Placeholder -->
+<div class="p-4 bg-slate-50 flex items-center justify-between border-t border-slate-100">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-label">Showing 1-12 of 84 refunds</span>
+<div class="flex items-center gap-1">
+<button class="h-8 w-8 rounded border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="h-8 px-3 rounded border border-primary bg-primary text-white text-xs font-bold">1</button>
+<button class="h-8 px-3 rounded border border-slate-200 text-slate-500 text-xs font-bold hover:bg-white transition-colors">2</button>
+<button class="h-8 px-3 rounded border border-slate-200 text-slate-500 text-xs font-bold hover:bg-white transition-colors">3</button>
+<button class="h-8 w-8 rounded border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Detail Drawer (Glassmorphism Concept) -->
+<aside class="fixed right-0 top-0 h-full w-[400px] bg-white/90 backdrop-blur-md shadow-2xl translate-x-full transition-transform duration-300 z-[60] border-l border-white/20" id="detail-drawer">
+<div class="p-6 h-full flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<h4 class="text-lg font-bold text-obsidian font-headline">Refund Details</h4>
+<button class="p-1 rounded-full hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- This would contain detailed logs, receipt snapshots, etc -->
+<div class="flex-1 space-y-6 overflow-y-auto pr-2">
+<div class="p-4 rounded-lg bg-primary/5 border border-primary/10">
+<p class="text-[10px] font-bold text-primary uppercase tracking-widest font-label mb-2">Internal Note</p>
+<p class="text-xs text-slate-700 font-body italic">"Customer reports item arrived with shattered glass panel. Photo verification uploaded in return portal."</p>
+</div>
+<div class="space-y-4">
+<h5 class="text-xs font-bold text-slate-400 uppercase tracking-widest font-label">Customer History</h5>
+<div class="flex items-center justify-between p-3 rounded-lg border border-slate-100">
+<span class="text-xs text-slate-600 font-body">Total Refunds (LTM)</span>
+<span class="text-xs font-bold text-obsidian">2 ($145.00)</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg border border-slate-100">
+<span class="text-xs text-slate-600 font-body">Account Age</span>
+<span class="text-xs font-bold text-obsidian">3.4 Years</span>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-slate-100 flex gap-3">
+<button class="flex-1 py-2.5 bg-tertiary text-white text-xs font-bold rounded-lg hover:opacity-90 transition-opacity">Approve Refund</button>
+<button class="flex-1 py-2.5 border border-error text-error text-xs font-bold rounded-lg hover:bg-error/5 transition-colors">Reject Request</button>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

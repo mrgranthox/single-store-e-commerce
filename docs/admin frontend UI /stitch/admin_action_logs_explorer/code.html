@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Action Logs - Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#00873b",
+                        "surface-variant": "#e0e2f0",
+                        "tertiary": "#006b2d",
+                        "secondary": "#5b5e68",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "inverse-on-surface": "#eff0fe",
+                        "on-secondary-fixed-variant": "#444650",
+                        "primary-fixed": "#dbe1ff",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-tertiary-container": "#f7fff3",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#181b25",
+                        "primary": "#1653cc",
+                        "on-secondary-container": "#60626c",
+                        "tertiary-fixed": "#6bff8f",
+                        "secondary-container": "#dedfeb",
+                        "on-secondary-fixed": "#181b24",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-tertiary-fixed": "#002109",
+                        "on-primary-fixed": "#00174a",
+                        "background": "#faf8ff",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "outline-variant": "#c3c6d6",
+                        "surface-container-high": "#e6e7f6",
+                        "secondary-fixed": "#e0e2ed",
+                        "surface-dim": "#d8d9e7",
+                        "surface-container": "#ecedfb",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-bright": "#faf8ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-surface": "#2d303b",
+                        "on-surface-variant": "#434654",
+                        "surface-tint": "#1b55ce",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface": "#faf8ff",
+                        "on-surface": "#181b25",
+                        "primary-container": "#3b6de6",
+                        "outline": "#737685",
+                        "on-primary-container": "#fefcff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["IBM Plex Sans"],
+                        "label": ["IBM Plex Sans"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'IBM Plex Sans', sans-serif; }
+        .mono-text { font-family: 'JetBrains Mono', monospace; }
+        .glass-drawer { backdrop-filter: blur(20px); }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] text-on-surface selection:bg-primary selection:text-white">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-[#13161e] flex flex-col py-6 px-4">
+<div class="mb-10 px-2">
+<span class="text-[#f8f9fb] font-bold text-lg tracking-tight">Command Deck</span>
+<div class="mt-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#4f7ef8] text-sm">shield_person</span>
+</div>
+<div>
+<p class="text-white text-xs font-bold font-headline uppercase tracking-widest">Admin User Avatar</p>
+<p class="text-slate-500 text-[10px] uppercase tracking-tighter">Operational Architect</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Navigation Items Mapping -->
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="analytics">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="assignment_return">assignment_return</span>
+<span>Refunds &amp; Returns</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="campaign">campaign</span>
+<span>Marketing</span>
+</a>
+<!-- Audit Logs: Active State -->
+<a class="flex items-center gap-3 px-3 py-2 bg-[#1a1d27] text-[#4f7ef8] border-l-4 border-[#4f7ef8] font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="list_alt">list_alt</span>
+<span>Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="shield_person">shield_person</span>
+<span>Security</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-800/50 space-y-1">
+<div class="px-3 py-2 mb-2">
+<span class="text-[#4f7ef8] text-[10px] font-bold uppercase tracking-widest">System Status: Active</span>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400/80 hover:text-white hover:bg-[#1a1d27]/50 font-['Plus_Jakarta_Sans'] font-medium text-xs tracking-wider uppercase transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="contact_support">contact_support</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-30 bg-white border-b border-slate-100 flex justify-between items-center px-8 shadow-sm">
+<div class="flex items-center gap-8">
+<span class="text-slate-900 font-bold font-headline text-lg tracking-tight">Command Deck v2.0</span>
+<div class="relative group">
+<span class="absolute inset-y-0 left-3 flex items-center text-slate-400 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">search</span>
+</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-lg text-xs w-64 focus:ring-1 focus:ring-primary focus:bg-white transition-all" placeholder="Search directives..." type="text"/>
+</div>
+</div>
+<nav class="flex items-center gap-6">
+<div class="flex items-center gap-6 mr-6 border-r border-slate-100 pr-6">
+<a class="text-slate-500 font-['DM_Sans'] font-semibold text-sm hover:text-slate-900 transition-colors" href="#">Directives</a>
+<a class="text-slate-500 font-['DM_Sans'] font-semibold text-sm hover:text-slate-900 transition-colors" href="#">Inventory</a>
+<a class="text-slate-500 font-['DM_Sans'] font-semibold text-sm hover:text-slate-900 transition-colors" href="#">Reports</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-gradient-to-br from-[#1653cc] to-[#3b6de6] text-white px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider">New Export</button>
+<span class="material-symbols-outlined text-slate-400 hover:text-slate-900 cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-slate-900 cursor-pointer" data-icon="help_outline">help_outline</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-slate-900 cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</nav>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen p-8 w-[calc(100%-480px)]">
+<div class="max-w-7xl mx-auto">
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h1 class="text-[2rem] font-bold font-headline text-slate-900 tracking-tight mb-1">Admin Action Logs</h1>
+<p class="text-slate-500 text-sm font-medium">Real-time monitoring of sensitive operational mutations.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-lowest rounded border border-outline-variant/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> System Status: Nominal
+                    </span>
+</div>
+</div>
+<!-- Filters Area -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/5 mb-6">
+<div class="grid grid-cols-4 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Actor</label>
+<select class="bg-surface-container-low border-none rounded text-sm py-2 focus:ring-1 focus:ring-primary">
+<option>All Administrators</option>
+<option>Sarah Jenkins (Senior Admin)</option>
+<option>Mark Thorne (Operations)</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Action Type</label>
+<select class="bg-surface-container-low border-none rounded text-sm py-2 focus:ring-1 focus:ring-primary">
+<option>All Actions</option>
+<option>Price Change</option>
+<option>Account Suspend</option>
+<option>Stock Adjust</option>
+<option>Refund Approve</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Date Range</label>
+<input class="bg-surface-container-low border-none rounded text-sm py-2 focus:ring-1 focus:ring-primary" type="date"/>
+</div>
+<div class="flex items-end">
+<button class="w-full bg-surface-container-high hover:bg-surface-variant text-on-surface font-bold text-xs py-2.5 rounded transition-colors uppercase tracking-widest">Apply Intelligence Filter</button>
+</div>
+</div>
+</div>
+<!-- Action Table -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/5 overflow-hidden">
+<table class="w-full border-collapse text-left">
+<thead>
+<tr class="bg-surface-container/30 border-b border-outline-variant/10">
+<th class="px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Timestamp</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Admin Actor</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Action</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Entity</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Before</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">After</th>
+<th class="px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Reason</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Row 1 (Price Change) -->
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="px-6 py-3 mono-text text-[0.75rem] text-slate-600">2023-10-24 14:22:01.042</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">SJ</div>
+<span class="text-xs font-medium">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest border border-primary/20 text-primary">Price Change</span>
+</td>
+<td class="px-6 py-3 text-xs">SKU-8829-QX</td>
+<td class="px-6 py-3 mono-text text-[0.75rem] text-error">$142.00</td>
+<td class="px-6 py-3 mono-text text-[0.75rem] text-tertiary">$129.99</td>
+<td class="px-6 py-3 text-xs text-slate-500">Seasonal Markdown</td>
+<td class="px-6 py-3 text-right">
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer transition-colors" data-icon="open_in_new">open_in_new</span>
+</td>
+</tr>
+<!-- Row 2 (Suspend) -->
+<tr class="hover:bg-surface-container-high/30 transition-colors bg-surface-container/10">
+<td class="px-6 py-3 mono-text text-[0.75rem] text-slate-600">2023-10-24 14:19:44.912</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-error/10 flex items-center justify-center text-[10px] font-bold text-error">MT</div>
+<span class="text-xs font-medium">Mark Thorne</span>
+</div>
+</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest border border-error/20 text-error">Account Suspend</span>
+</td>
+<td class="px-6 py-3 text-xs">USR-91022</td>
+<td class="px-6 py-3 mono-text text-[0.75rem] text-slate-400">ACTIVE</td>
+<td class="px-6 py-3 mono-text text-[0.75rem] text-error font-bold">SUSPENDED</td>
+<td class="px-6 py-3 text-xs text-slate-500">TOS Violation: Fraud</td>
+<td class="px-6 py-3 text-right">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="visibility">visibility</span>
+</td>
+</tr>
+<!-- Row 3 (Stock) -->
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="px-6 py-3 mono-text text-[0.75rem] text-slate-600">2023-10-24 14:15:22.001</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">SJ</div>
+<span class="text-xs font-medium">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest border border-outline-variant/40 text-slate-600">Stock Adjust</span>
+</td>
+<td class="px-6 py-3 text-xs">WH-NORTH-B4</td>
+<td class="px-6 py-3 mono-text text-[0.75rem]">42 units</td>
+<td class="px-6 py-3 mono-text text-[0.75rem] font-bold">110 units</td>
+<td class="px-6 py-3 text-xs text-slate-500">Inventory Audit Corrective</td>
+<td class="px-6 py-3 text-right">
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer transition-colors" data-icon="open_in_new">open_in_new</span>
+</td>
+</tr>
+<!-- Row 4 (Refund) -->
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="px-6 py-3 mono-text text-[0.75rem] text-slate-600">2023-10-24 14:12:08.553</td>
+<td class="px-6 py-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary/10 flex items-center justify-center text-[10px] font-bold text-secondary">AD</div>
+<span class="text-xs font-medium">Auto-Daemon</span>
+</div>
+</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest border border-tertiary/20 text-tertiary">Refund Approve</span>
+</td>
+<td class="px-6 py-3 text-xs">ORD-X5510</td>
+<td class="px-6 py-3 mono-text text-[0.75rem] text-slate-400">$0.00</td>
+<td class="px-6 py-3 mono-text text-[0.75rem] text-tertiary">$894.20</td>
+<td class="px-6 py-3 text-xs text-slate-500">Return Processed (UPS)</td>
+<td class="px-6 py-3 text-right">
+<span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer transition-colors" data-icon="open_in_new">open_in_new</span>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination / Stats -->
+<div class="px-6 py-4 bg-surface-container/10 flex justify-between items-center border-t border-outline-variant/10">
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Showing 24 of 1,842 mutations</p>
+<div class="flex gap-2">
+<button class="p-1 rounded hover:bg-surface-container-high"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="p-1 rounded hover:bg-surface-container-high"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Side Detail Drawer (Opened) -->
+<aside class="fixed top-0 right-0 h-full w-[480px] bg-white shadow-2xl z-50 flex flex-col glass-drawer border-l border-outline-variant/20">
+<!-- Drawer Header -->
+<div class="p-6 border-b border-slate-100 flex justify-between items-start">
+<div>
+<h2 class="text-xl font-bold font-headline text-slate-900 tracking-tight">Log Detail</h2>
+<p class="mono-text text-[0.65rem] text-slate-400 mt-1 uppercase">UUID: 8f2c-49aa-9b1e-02c3d1f88e21</p>
+</div>
+<button class="p-2 text-slate-400 hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Metadata Panel -->
+<div class="p-6 bg-surface-container-low/50 border-b border-slate-100 grid grid-cols-2 gap-4">
+<div>
+<p class="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500 mb-1">Execution Metrics</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">timer</span>
+<span class="text-xs font-semibold">Latency 142ms</span>
+</div>
+</div>
+<div>
+<p class="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500 mb-1">Agent Identity</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">terminal</span>
+<span class="text-xs font-semibold">Mozilla/5.0 (AdminCLI v4.2)</span>
+</div>
+</div>
+</div>
+<!-- Diff Viewer -->
+<div class="flex-1 overflow-y-auto p-6 bg-[#0f1117] mono-text text-[0.75rem] text-slate-300">
+<div class="mb-4 flex items-center justify-between">
+<p class="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Mutation Payload (Diff)</p>
+<span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-400">JSON-SCHEMA-V2</span>
+</div>
+<div class="space-y-0.5">
+<div class="opacity-50">{</div>
+<div class="pl-4">"entity_id": "USR-91022",</div>
+<div class="pl-4">"timestamp": 1698157184,</div>
+<div class="pl-4">"mutation": {</div>
+<div class="pl-8 bg-error/20 text-error-container line-through">- "status": "active",</div>
+<div class="pl-8 bg-error/20 text-error-container line-through">- "permissions": ["BASIC_READ", "WRITE_OWN"],</div>
+<div class="pl-8 bg-tertiary-container/30 text-tertiary-fixed font-bold">+ "status": "suspended",</div>
+<div class="pl-8 bg-tertiary-container/30 text-tertiary-fixed font-bold">+ "permissions": [],</div>
+<div class="pl-8 bg-tertiary-container/30 text-tertiary-fixed font-bold">+ "suspension_code": "FRD-99",</div>
+<div class="pl-4">},</div>
+<div class="pl-4">"actor": {</div>
+<div class="pl-8">"id": "ADM-042",</div>
+<div class="pl-8">"session": "9e-88-11"</div>
+<div class="pl-4">}</div>
+<div class="opacity-50">}</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="p-6 bg-white border-t border-slate-100 grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 py-3 bg-surface-container-high hover:bg-surface-variant text-on-surface text-xs font-bold uppercase tracking-widest rounded transition-all">
+<span class="material-symbols-outlined text-sm">verified</span> Verify Mutation
+            </button>
+<button class="flex items-center justify-center gap-2 py-3 bg-error text-white text-xs font-bold uppercase tracking-widest rounded transition-all hover:bg-error/90 shadow-md shadow-error/10">
+<span class="material-symbols-outlined text-sm">priority_high</span> Escalate
+            </button>
+</div>
+</aside>
+</body></html>

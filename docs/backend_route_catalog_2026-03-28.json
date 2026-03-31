@@ -1,0 +1,4351 @@
+{
+  "generatedAt": "2026-03-28T03:49:39.023Z",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/v1/health",
+      "summary": "Liveness probe for the backend process.",
+      "tags": [
+        "health-observability"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/ready",
+      "summary": "Readiness probe for the backend and its critical dependencies.",
+      "tags": [
+        "health-observability"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "summary": "Register a customer account.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "summary": "Authenticate a customer and issue backend API session tokens.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "summary": "Rotate a customer API access token using a refresh token.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/session",
+      "summary": "Return the current actor and session summary.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "summary": "Revoke the current authenticated session.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/forgot-password",
+      "summary": "Start the customer password reset flow.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/reset-password",
+      "summary": "Complete the customer password reset flow.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-email",
+      "summary": "Confirm a customer email verification token.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/resend-verification",
+      "summary": "Resend a customer verification email.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-email/resend",
+      "summary": "Compatibility alias for resending a customer verification email.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-email/confirm",
+      "summary": "Compatibility alias for confirming a customer email verification token.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/register",
+      "summary": "Register a mobile customer account.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/login",
+      "summary": "Authenticate a mobile customer and issue backend API session tokens.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/refresh",
+      "summary": "Rotate a mobile customer API access token using a refresh token.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/auth/session",
+      "summary": "Return mobile session state for the current actor.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/logout",
+      "summary": "Revoke the current authenticated mobile session.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/forgot-password",
+      "summary": "Start the mobile customer password reset flow.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/reset-password",
+      "summary": "Complete the mobile customer password reset flow.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/verify-email",
+      "summary": "Confirm a mobile customer email verification token.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/auth/resend-verification",
+      "summary": "Resend a mobile customer verification email.",
+      "tags": [
+        "auth",
+        "mobile"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/webhooks/clerk",
+      "summary": "Process Clerk user synchronization webhooks.",
+      "tags": [
+        "auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account",
+      "summary": "Return the authenticated customer's account dashboard payload.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/profile",
+      "summary": "Return the authenticated customer's profile.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/account/profile",
+      "summary": "Update the authenticated customer's profile.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/preferences",
+      "summary": "Return the authenticated customer's communication preferences.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/account/preferences",
+      "summary": "Update the authenticated customer's communication preferences.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/addresses",
+      "summary": "List the authenticated customer's saved addresses.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/addresses",
+      "summary": "Create a saved customer address.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/account/addresses/:addressId",
+      "summary": "Update a saved customer address.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/account/addresses/:addressId",
+      "summary": "Delete a saved customer address.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/addresses/:addressId/default",
+      "summary": "Set a saved customer address as default shipping or billing.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/security",
+      "summary": "Return the authenticated customer's security summary.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/security/sessions",
+      "summary": "List the authenticated customer's sessions.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/account/security/sessions/:sessionId",
+      "summary": "Revoke a customer session.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/security/change-password",
+      "summary": "Change the authenticated customer's password through Clerk.",
+      "tags": [
+        "account"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/products",
+      "summary": "Compatibility alias for the admin product list contract.",
+      "tags": [
+        "admin-compat",
+        "catalog"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/categories",
+      "summary": "Compatibility alias for the admin category list contract.",
+      "tags": [
+        "admin-compat",
+        "catalog"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/brands",
+      "summary": "Compatibility alias for the admin brand list contract.",
+      "tags": [
+        "admin-compat",
+        "catalog"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reviews",
+      "summary": "Compatibility alias for the admin review moderation contract.",
+      "tags": [
+        "admin-compat",
+        "reviews"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/banners",
+      "summary": "Compatibility alias for the admin banner contract.",
+      "tags": [
+        "admin-compat",
+        "content"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/cms/pages",
+      "summary": "Compatibility alias for the admin CMS contract.",
+      "tags": [
+        "admin-compat",
+        "content"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/warehouses",
+      "summary": "Compatibility alias for the admin warehouse contract.",
+      "tags": [
+        "admin-compat",
+        "inventory"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/support/queue",
+      "summary": "Compatibility alias for the admin support queue contract.",
+      "tags": [
+        "admin-compat",
+        "support"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/support",
+      "summary": "Compatibility alias for the admin support dashboard contract.",
+      "tags": [
+        "admin-compat",
+        "dashboard"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/system-health",
+      "summary": "Compatibility alias for the admin system-health dashboard contract.",
+      "tags": [
+        "admin-compat",
+        "dashboard"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/recent-activity",
+      "summary": "Compatibility alias for the admin recent-activity dashboard contract.",
+      "tags": [
+        "admin-compat",
+        "dashboard"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/settings/reviews",
+      "summary": "Compatibility alias for admin review settings.",
+      "tags": [
+        "admin-compat",
+        "settings"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/settings/support",
+      "summary": "Compatibility alias for admin support settings.",
+      "tags": [
+        "admin-compat",
+        "settings"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/login",
+      "summary": "Authenticate an admin and issue backend API session tokens.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/refresh",
+      "summary": "Rotate an admin API access token using a refresh token.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/forgot-password",
+      "summary": "Start the admin password reset flow.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/reset-password",
+      "summary": "Complete the admin password reset flow.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/logout",
+      "summary": "Revoke the current authenticated admin session.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/me",
+      "summary": "Return the current admin shell context, roles, permissions, and session state.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/auth/me",
+      "summary": "Compatibility alias for the current admin shell context endpoint.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/auth/sessions",
+      "summary": "List the current admin's visible sessions.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/sessions/revoke-all",
+      "summary": "Revoke all other active sessions for the current admin.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/auth/sessions/:sessionId/revoke",
+      "summary": "Revoke a single admin session owned by the current admin.",
+      "tags": [
+        "admin-auth"
+      ],
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/alerts",
+      "summary": "List operational alerts.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/alerts/:alertId",
+      "summary": "Fetch alert detail.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/alerts/:alertId/assign",
+      "summary": "Assign an alert.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/alerts/:alertId/acknowledge",
+      "summary": "Acknowledge an alert.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/alerts/:alertId/resolve",
+      "summary": "Resolve an alert.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/incidents",
+      "summary": "List incidents.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/incidents/:incidentId",
+      "summary": "Fetch incident detail.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/incidents",
+      "summary": "Create an incident.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/incidents/:incidentId",
+      "summary": "Update an incident.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/incidents/:incidentId/close",
+      "summary": "Close an incident.",
+      "tags": [
+        "alerts-incidents"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/audit/logs",
+      "summary": "List audit log records.",
+      "tags": [
+        "audit"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.audit.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/audit/admin-actions",
+      "summary": "List admin action log records.",
+      "tags": [
+        "audit"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.audit.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/audit/timeline",
+      "summary": "List timeline events across entities.",
+      "tags": [
+        "audit"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.audit.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/audit/entities/:entityType/:entityId/timeline",
+      "summary": "Fetch an entity timeline.",
+      "tags": [
+        "audit"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.audit.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/audit-logs",
+      "summary": "List audit log records through the plain admin contract.",
+      "tags": [
+        "audit"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.audit.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/admin-action-logs",
+      "summary": "List admin action logs through the plain admin contract.",
+      "tags": [
+        "audit"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.audit.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/user-activity",
+      "summary": "List user-facing timeline activity through the plain admin contract.",
+      "tags": [
+        "audit"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.audit.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/products",
+      "summary": "List published catalog products.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/products/:productSlug",
+      "summary": "Get a published product detail page payload.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/products/:productSlug/reviews",
+      "summary": "List published reviews for a catalog product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/categories",
+      "summary": "List catalog categories.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/categories/:categorySlug",
+      "summary": "Get a category landing payload with products.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/brands/:brandSlug",
+      "summary": "Get a brand landing payload with products.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/search",
+      "summary": "Search published catalog products.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products",
+      "summary": "List products for the admin catalog grid.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products/:productId",
+      "summary": "Get an admin product detail payload.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/products",
+      "summary": "Create a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/catalog/products/:productId",
+      "summary": "Update a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/products/:productId/publish",
+      "summary": "Publish a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.publish"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/products/:productId/unpublish",
+      "summary": "Unpublish a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.publish"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/products/:productId/archive",
+      "summary": "Archive a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.publish"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products/:productId/analytics",
+      "summary": "Get a placeholder analytics payload for a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products/:productId/activity",
+      "summary": "List timeline activity for a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products/:productId/variants",
+      "summary": "List product variants.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/products/:productId/variants",
+      "summary": "Create a product variant.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/catalog/variants/:variantId",
+      "summary": "Update a product variant.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products/:productId/media",
+      "summary": "List product media.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/products/:productId/media/upload-intents",
+      "summary": "Create a signed upload intent for product media.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/products/:productId/media",
+      "summary": "Create product media metadata.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/catalog/products/:productId/media/reorder",
+      "summary": "Reorder product media assets.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/admin/catalog/media/:mediaId",
+      "summary": "Delete product media metadata.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products/:productId/pricing",
+      "summary": "Fetch derived product pricing and per-variant pricing.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/catalog/products/:productId/pricing",
+      "summary": "Update per-variant pricing for a product.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.change_price"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/products/:productId/inventory-summary",
+      "summary": "Fetch product-level and variant-level inventory summaries.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.products.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/categories",
+      "summary": "List admin categories.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.categories.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/categories",
+      "summary": "Create a category.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.categories.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/catalog/categories/:categoryId",
+      "summary": "Update a category.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.categories.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/categories/:categoryId/archive",
+      "summary": "Archive a category.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.categories.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/brands",
+      "summary": "List admin brands.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.brands.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/brands",
+      "summary": "Create a brand.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.brands.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/catalog/brands/:brandId",
+      "summary": "Update a brand.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.brands.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/brands/:brandId/archive",
+      "summary": "Archive a brand.",
+      "tags": [
+        "catalog"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "catalog.brands.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/cart",
+      "summary": "Get the current customer or guest cart.",
+      "tags": [
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cart/items",
+      "summary": "Add an item to the current cart.",
+      "tags": [
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/cart/items/:itemId",
+      "summary": "Update a cart item quantity.",
+      "tags": [
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/cart/items/:itemId",
+      "summary": "Remove a cart item.",
+      "tags": [
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cart/coupon",
+      "summary": "Apply a coupon code to the current cart via the customer contract alias.",
+      "tags": [
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cart/apply-coupon",
+      "summary": "Apply a coupon code to the current cart.",
+      "tags": [
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/cart/coupon",
+      "summary": "Remove the coupon from the current cart.",
+      "tags": [
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/checkout/eligibility",
+      "summary": "Get checkout eligibility for the current cart.",
+      "tags": [
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/checkout/validate",
+      "summary": "Validate checkout for the current cart.",
+      "tags": [
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/checkout/create-order",
+      "summary": "Create an order from the current cart.",
+      "tags": [
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/checkout/initialize-payment",
+      "summary": "Initialize payment for an order pending payment.",
+      "tags": [
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/client-config/customer",
+      "summary": "Fetch runtime configuration for the customer frontend.",
+      "tags": [
+        "client-config"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/client-config/mobile",
+      "summary": "Fetch runtime configuration for the mobile frontend.",
+      "tags": [
+        "client-config"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/client-config/admin",
+      "summary": "Fetch runtime configuration for the admin frontend.",
+      "tags": [
+        "client-config"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/content/pages/:slug",
+      "summary": "Fetch a published CMS page by slug.",
+      "tags": [
+        "content"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/content/banners",
+      "summary": "List published banners.",
+      "tags": [
+        "content"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/content/help",
+      "summary": "Fetch the help page.",
+      "tags": [
+        "content"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/content/contact",
+      "summary": "Fetch the contact page.",
+      "tags": [
+        "content"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/content/pages",
+      "summary": "List admin CMS pages.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/content/pages/:pageId",
+      "summary": "Fetch admin CMS page detail.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/content/pages",
+      "summary": "Create a CMS page.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/content/pages/:pageId",
+      "summary": "Update a CMS page.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/content/pages/:pageId/publish",
+      "summary": "Publish a CMS page.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/content/banners",
+      "summary": "List admin banners.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/content/media/upload-intents",
+      "summary": "Create a signed upload intent for banner or CMS media.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/content/banners",
+      "summary": "Create a banner.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/content/banners/:bannerId",
+      "summary": "Update a banner.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/content/banners/:bannerId/publish",
+      "summary": "Publish a banner.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/content/banners/:bannerId/unpublish",
+      "summary": "Unpublish a banner.",
+      "tags": [
+        "content"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "content.pages.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account",
+      "summary": "Return the mobile account dashboard payload.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/profile",
+      "summary": "Return the authenticated mobile customer's profile.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/mobile/account/profile",
+      "summary": "Update the authenticated mobile customer's profile.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/preferences",
+      "summary": "Return mobile communication preferences.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/mobile/account/preferences",
+      "summary": "Update mobile communication preferences.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/addresses",
+      "summary": "List mobile saved addresses.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/account/addresses",
+      "summary": "Create a mobile saved address.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/mobile/account/addresses/:addressId",
+      "summary": "Update a mobile saved address.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/mobile/account/addresses/:addressId",
+      "summary": "Delete a mobile saved address.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/security",
+      "summary": "Return the mobile account security summary.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/account/security/change-password",
+      "summary": "Change the mobile customer's password through Clerk.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/security/sessions",
+      "summary": "List mobile customer sessions.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/mobile/account/security/sessions/:sessionId",
+      "summary": "Revoke a mobile customer session.",
+      "tags": [
+        "account",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/wishlist",
+      "summary": "List mobile wishlist items.",
+      "tags": [
+        "wishlist",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/wishlist/items",
+      "summary": "Add an item to the mobile wishlist.",
+      "tags": [
+        "wishlist",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/mobile/wishlist/items/:wishlistItemId",
+      "summary": "Remove an item from the mobile wishlist.",
+      "tags": [
+        "wishlist",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/orders",
+      "summary": "List the authenticated customer's orders via the top-level customer order contract.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/orders/:orderId",
+      "summary": "Fetch authenticated customer order detail via the top-level customer order contract.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/orders/:orderId/tracking",
+      "summary": "Fetch authenticated customer shipment tracking via the top-level customer order contract.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/orders/:orderId/cancel-request",
+      "summary": "Submit a customer cancellation request via the top-level customer order contract.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/orders/:orderId/return-request",
+      "summary": "Submit a customer return request via the top-level customer order contract.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/orders",
+      "summary": "List mobile account orders.",
+      "tags": [
+        "orders",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/orders/:orderId",
+      "summary": "Fetch a mobile account order.",
+      "tags": [
+        "orders",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/orders/:orderId/tracking",
+      "summary": "Fetch mobile shipment tracking detail.",
+      "tags": [
+        "orders",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/orders/:orderId/cancellation-eligibility",
+      "summary": "Return mobile order cancellation eligibility.",
+      "tags": [
+        "orders",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/account/orders/:orderId/cancel",
+      "summary": "Submit a mobile order cancellation request.",
+      "tags": [
+        "orders",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/orders/:orderId/cancellation-eligibility",
+      "summary": "Return account-order cancellation eligibility.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/reviews",
+      "summary": "List the authenticated customer's reviews via the account route contract.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/reviews",
+      "summary": "Create a review via the account route contract.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/account/reviews/:reviewId",
+      "summary": "Update a review via the account route contract.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/orders/:orderId/review-eligibility",
+      "summary": "Return review eligibility for a specific account order.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/reviews",
+      "summary": "List mobile account reviews.",
+      "tags": [
+        "reviews",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/account/reviews",
+      "summary": "Create a mobile account review.",
+      "tags": [
+        "reviews",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/mobile/account/reviews/:reviewId",
+      "summary": "Update a mobile account review.",
+      "tags": [
+        "reviews",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/orders/:orderId/review-eligibility",
+      "summary": "Return mobile order review eligibility.",
+      "tags": [
+        "reviews",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/support/tickets",
+      "summary": "List customer support tickets via the account route contract.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/support/tickets",
+      "summary": "Create a customer support ticket via the account route contract.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/support/tickets/:ticketId",
+      "summary": "Fetch customer support ticket detail via the account route contract.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/support/tickets/:ticketId/messages",
+      "summary": "Reply to a customer support ticket via the account route contract.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/support",
+      "summary": "Return the mobile support center payload.",
+      "tags": [
+        "support",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/support/tickets",
+      "summary": "Create a mobile support ticket.",
+      "tags": [
+        "support",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/support/issues",
+      "summary": "List structured mobile support issue categories.",
+      "tags": [
+        "support",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/support",
+      "summary": "List mobile account support tickets.",
+      "tags": [
+        "support",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/support/:ticketId",
+      "summary": "Fetch mobile account support ticket detail.",
+      "tags": [
+        "support",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/account/support/:ticketId/messages",
+      "summary": "Reply to a mobile account support ticket.",
+      "tags": [
+        "support",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/returns",
+      "summary": "List customer returns via the account route contract.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/refunds",
+      "summary": "List customer refunds via the account route contract.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/orders/:orderId/returns/eligibility",
+      "summary": "Return return eligibility for a specific account order.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/orders/:orderId/return-eligibility",
+      "summary": "Return account-order return eligibility.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/orders/:orderId/returns",
+      "summary": "Create a return request via the account route contract.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/orders/:orderId/refund-eligibility",
+      "summary": "Return account-order refund eligibility.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/returns",
+      "summary": "List mobile account returns.",
+      "tags": [
+        "returns",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/refunds",
+      "summary": "List mobile account refunds.",
+      "tags": [
+        "refunds",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/orders/:orderId/return-eligibility",
+      "summary": "Return mobile order return eligibility.",
+      "tags": [
+        "returns",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/account/orders/:orderId/returns",
+      "summary": "Create a mobile order return request.",
+      "tags": [
+        "returns",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/account/orders/:orderId/refund-eligibility",
+      "summary": "Return mobile order refund eligibility.",
+      "tags": [
+        "refunds",
+        "mobile"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/customers",
+      "summary": "List admin-visible customers.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/customers/:customerId",
+      "summary": "Fetch admin customer detail.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/customers/:customerId/activity",
+      "summary": "Fetch customer activity timeline.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/customers/:customerId/orders",
+      "summary": "List orders for one customer.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/customers/:customerId/support",
+      "summary": "List support tickets for one customer.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/customers/:customerId/reviews",
+      "summary": "List reviews for one customer.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/customers/:customerId/risk",
+      "summary": "Fetch customer risk and security signals.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/customers/:customerId/suspend",
+      "summary": "Suspend a customer account.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.update_status"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/customers/:customerId/restore",
+      "summary": "Restore a suspended customer account.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.update_status"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/customers/:customerId/reactivate",
+      "summary": "Reactivate a suspended customer account.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.update_status"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/customers/:customerId/notes",
+      "summary": "Create an internal customer note.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.write_notes"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/customers/:customerId/internal-actions",
+      "summary": "Create an internal customer action note.",
+      "tags": [
+        "customers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "customers.write_notes"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/inventory/overview",
+      "summary": "Get inventory overview totals.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/inventory/low-stock",
+      "summary": "List low-stock inventory rows.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/inventory/out-of-stock",
+      "summary": "List out-of-stock inventory rows.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/inventory/movements",
+      "summary": "List inventory movement history.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/inventory/adjustments",
+      "summary": "Create manual inventory adjustments.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.adjust"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/inventory/warehouses",
+      "summary": "List warehouses.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/inventory/warehouses",
+      "summary": "Create a warehouse.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.manage_warehouses"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/inventory/warehouses/:warehouseId",
+      "summary": "Get warehouse detail.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.read"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/inventory/warehouses/:warehouseId",
+      "summary": "Update a warehouse.",
+      "tags": [
+        "inventory"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "inventory.manage_warehouses"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/integrations/health",
+      "summary": "Fetch provider and delivery integration health.",
+      "tags": [
+        "integrations"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read",
+        "system.jobs.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/integrations/providers",
+      "summary": "Fetch recent provider webhook and notification activity.",
+      "tags": [
+        "integrations"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read",
+        "notifications.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/integrations/exceptions",
+      "summary": "Fetch failed provider, delivery, and finance exceptions.",
+      "tags": [
+        "integrations"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read",
+        "notifications.read",
+        "payments.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/track-order",
+      "summary": "Track a guest order through the top-level compatibility alias.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/orders/track",
+      "summary": "Track a guest order by order number and email address.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/orders",
+      "summary": "List the authenticated customer's orders.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/orders/:orderId",
+      "summary": "Fetch authenticated customer order detail.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/orders/:orderId/tracking",
+      "summary": "Fetch shipment tracking detail for an authenticated customer's order.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/orders/:orderId/cancel",
+      "summary": "Submit a customer cancellation request for an eligible order.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/orders",
+      "summary": "List admin-visible orders with customer and payment context.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/orders/fulfillment-queue",
+      "summary": "List orders waiting in the fulfillment queue.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/orders/dispatch-queue",
+      "summary": "List orders with shipments waiting to dispatch.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/orders/:orderId",
+      "summary": "Fetch admin order detail.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/orders/:orderId/timeline",
+      "summary": "Fetch the combined admin timeline for an order.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/orders/:orderId/status",
+      "summary": "Update an order status through an allowed transition.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.update"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/orders/:orderId/assign-warehouse",
+      "summary": "Assign a preferred fulfillment warehouse before shipment creation.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.override_fulfillment"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/orders/:orderId/cancel",
+      "summary": "Cancel an eligible order as an admin-sensitive action.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.cancel"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/orders/cancellation-requests",
+      "summary": "List pending and resolved order cancellation requests.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/orders/cancellation-requests/:cancellationId/approve",
+      "summary": "Approve a customer cancellation request and cancel the order.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.cancel"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/orders/cancellation-requests/:cancellationId/reject",
+      "summary": "Reject a customer cancellation request.",
+      "tags": [
+        "orders"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.cancel"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/marketing/coupons",
+      "summary": "List coupons.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/marketing/coupons",
+      "summary": "Create a coupon.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/marketing/coupons/:couponId",
+      "summary": "Update a coupon.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/marketing/promotions",
+      "summary": "List promotions.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/marketing/promotions",
+      "summary": "Create a promotion.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/marketing/promotions/:promotionId",
+      "summary": "Update a promotion.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/marketing/campaigns",
+      "summary": "List campaigns.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/marketing/campaigns",
+      "summary": "Create a campaign.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/marketing/campaigns/:campaignId",
+      "summary": "Update a campaign.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/coupons",
+      "summary": "List coupons through the plain admin contract.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/coupons",
+      "summary": "Create a coupon through the plain admin contract.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/coupons/:couponId",
+      "summary": "Update a coupon through the plain admin contract.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/coupons/:couponId/disable",
+      "summary": "Disable a coupon.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/coupons/analytics",
+      "summary": "Fetch coupon analytics.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.coupons.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/promotions",
+      "summary": "List promotions through the plain admin contract.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/promotions",
+      "summary": "Create a promotion through the plain admin contract.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/promotions/:promotionId",
+      "summary": "Fetch promotion detail.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.read"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/promotions/:promotionId",
+      "summary": "Update a promotion through the plain admin contract.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/promotions/:promotionId/rules",
+      "summary": "List promotion rules.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/promotions/:promotionId/rules",
+      "summary": "Create a promotion rule.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/promotions/:promotionId/rules/:ruleId",
+      "summary": "Update a promotion rule.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/campaigns/performance",
+      "summary": "Fetch campaign performance data.",
+      "tags": [
+        "marketing"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "marketing.promotions.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notifications",
+      "summary": "List the authenticated customer's notifications.",
+      "tags": [
+        "notifications"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/notifications",
+      "summary": "List notifications.",
+      "tags": [
+        "notifications"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "notifications.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/notifications/:notificationId",
+      "summary": "Fetch notification detail.",
+      "tags": [
+        "notifications"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "notifications.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/notifications",
+      "summary": "Create and enqueue a notification.",
+      "tags": [
+        "notifications"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "notifications.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/notifications/:notificationId/retry",
+      "summary": "Retry notification delivery.",
+      "tags": [
+        "notifications"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "notifications.write"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/payments/initialize",
+      "summary": "Initialize payment for an order pending payment.",
+      "tags": [
+        "payments"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/payments/webhook",
+      "summary": "Receive and queue verified payment provider webhooks.",
+      "tags": [
+        "payments"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payments",
+      "summary": "List admin-visible payments and payment state.",
+      "tags": [
+        "payments"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payments/failed-investigations",
+      "summary": "List failed payments for finance investigation views.",
+      "tags": [
+        "payments"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payments/:paymentId",
+      "summary": "Fetch admin payment detail.",
+      "tags": [
+        "payments"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/payments/:paymentId/transactions",
+      "summary": "Fetch provider transaction history for a payment.",
+      "tags": [
+        "payments"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/overview",
+      "summary": "Fetch operational overview KPIs.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/dashboard",
+      "summary": "Fetch operational dashboard KPIs.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/sales",
+      "summary": "Fetch sales reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/inventory",
+      "summary": "Fetch inventory reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/products",
+      "summary": "Fetch product performance reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/customers",
+      "summary": "Fetch customer reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/support",
+      "summary": "Fetch support reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/refunds-returns",
+      "summary": "Fetch returns and refunds reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/post-purchase",
+      "summary": "Fetch returns, refunds, and reviews reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/reports/marketing",
+      "summary": "Fetch marketing reporting data.",
+      "tags": [
+        "reports"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reports.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/products/:productSlug/reviews",
+      "summary": "List published reviews for a product.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/reviews/me",
+      "summary": "List the authenticated customer's reviews.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/reviews/eligibility",
+      "summary": "List delivered purchases eligible for review.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/reviews",
+      "summary": "Create a review for an eligible delivered order item.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/reviews/:reviewId",
+      "summary": "Update the authenticated customer's review.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/reviews",
+      "summary": "List reviews for moderation.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reviews.moderate"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/catalog/reviews/:reviewId",
+      "summary": "Fetch admin review detail.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reviews.moderate"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/catalog/reviews/:reviewId/moderate",
+      "summary": "Moderate a customer review.",
+      "tags": [
+        "reviews"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "reviews.moderate"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/returns",
+      "summary": "List the authenticated customer's return requests.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/returns/:returnId",
+      "summary": "Fetch return detail for the authenticated customer.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/orders/:orderId/return-request",
+      "summary": "Submit a return request for an eligible order.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/refunds",
+      "summary": "List refunds visible to the authenticated customer.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/returns",
+      "summary": "List admin-visible return requests.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/returns/:returnId",
+      "summary": "Fetch admin return detail.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/returns/:returnId/approve",
+      "summary": "Approve a return request.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.update"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/returns/:returnId/reject",
+      "summary": "Reject a return request.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.update"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/returns/:returnId/mark-received",
+      "summary": "Mark a return as physically received.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.update"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/returns/:returnId/complete",
+      "summary": "Complete a processed return.",
+      "tags": [
+        "returns"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.update"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/refunds",
+      "summary": "List admin-visible refunds.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/refunds/:refundId",
+      "summary": "Fetch admin refund detail.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/refunds/:refundId/approve",
+      "summary": "Approve a refund for provider processing.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "refunds.approve"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/refunds/:refundId/reject",
+      "summary": "Reject a refund request.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "refunds.approve"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/refunds/:refundId/mark-completed",
+      "summary": "Mark a refund as completed.",
+      "tags": [
+        "refunds"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "refunds.approve"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/finance/exceptions",
+      "summary": "List financial exceptions for finance investigation.",
+      "tags": [
+        "finance"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/finance/exceptions/:exceptionId/resolve",
+      "summary": "Resolve a financial exception.",
+      "tags": [
+        "finance"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "payments.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/security/dashboard",
+      "summary": "Fetch security dashboard metrics.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/security/events",
+      "summary": "List security events.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/security/events/:eventId",
+      "summary": "Fetch security event detail.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/security/events/:eventId/resolve",
+      "summary": "Resolve a security event.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/security/risk-signals",
+      "summary": "List risk signals.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/security/risk-signals/:riskSignalId/review",
+      "summary": "Mark a risk signal reviewed.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/security/login-events",
+      "summary": "List login events.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/security-events",
+      "summary": "List security events through the plain admin contract.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/security-events/:eventId",
+      "summary": "Fetch security event detail through the plain admin contract.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/security-events/:eventId/status",
+      "summary": "Update security event status through the plain admin contract.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.incidents.manage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/risk-signals",
+      "summary": "List risk signals through the plain admin contract.",
+      "tags": [
+        "security"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "security.events.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/shipping",
+      "summary": "List currently available shipping methods.",
+      "tags": [
+        "shipping"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/orders/:orderId/shipments",
+      "summary": "Create a shipment for an eligible order.",
+      "tags": [
+        "shipping"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.override_fulfillment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/shipments/:shipmentId",
+      "summary": "Fetch shipment detail with tracking history.",
+      "tags": [
+        "shipping"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/shipments/:shipmentId",
+      "summary": "Update a shipment's warehouse, carrier, tracking number, or status.",
+      "tags": [
+        "shipping"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.override_fulfillment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/shipments/:shipmentId/tracking",
+      "summary": "Fetch tracking events for a shipment.",
+      "tags": [
+        "shipping"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/shipments/:shipmentId/tracking-events",
+      "summary": "Append a tracking event and optionally advance shipment status.",
+      "tags": [
+        "shipping"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "orders.override_fulfillment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/support/public-config",
+      "summary": "Return public support abuse-challenge and endpoint configuration.",
+      "tags": [
+        "support"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/support",
+      "summary": "List the authenticated customer's support tickets.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/support",
+      "summary": "Create a support ticket for the authenticated customer.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/support/:ticketId",
+      "summary": "Fetch support ticket detail for the authenticated customer.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/support/:ticketId/messages",
+      "summary": "Append a customer message to a support ticket.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/support/:ticketId/attachments",
+      "summary": "Attach a file reference to a support ticket.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/support/:ticketId/attachments/upload-intents",
+      "summary": "Create a signed upload intent for a support attachment.",
+      "tags": [
+        "support"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/support/tickets",
+      "summary": "List admin-visible support tickets.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/support/tickets/:ticketId",
+      "summary": "Fetch admin support ticket detail.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/support/tickets/:ticketId/assign",
+      "summary": "Assign or unassign a support ticket.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.assign"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/support/tickets/:ticketId/status",
+      "summary": "Update support ticket status.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.assign"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/support/tickets/:ticketId/messages",
+      "summary": "Append an admin reply to a support ticket.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.reply"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/support/tickets/:ticketId/internal-notes",
+      "summary": "Append an internal note to a support ticket.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.reply"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/support/queues/sla",
+      "summary": "Fetch SLA-sensitive support queue metrics.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/support/queues/pre-purchase",
+      "summary": "Fetch the pre-purchase support queue.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/support/queues/complaints",
+      "summary": "Fetch the complaints support queue.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/support/reports",
+      "summary": "Fetch support reporting aggregates.",
+      "tags": [
+        "support"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "support.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/system/settings",
+      "summary": "List runtime system settings.",
+      "tags": [
+        "settings"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "settings.read"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/system/settings",
+      "summary": "Update runtime system settings.",
+      "tags": [
+        "settings"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "settings.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/settings",
+      "summary": "List runtime settings through the plain admin contract.",
+      "tags": [
+        "settings"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "settings.read"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/settings",
+      "summary": "Update runtime settings through the plain admin contract.",
+      "tags": [
+        "settings"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "settings.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/settings/checkout",
+      "summary": "List checkout-scoped runtime settings.",
+      "tags": [
+        "settings"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "settings.read"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/admin/settings/checkout",
+      "summary": "Update checkout-scoped runtime settings.",
+      "tags": [
+        "settings"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "settings.write"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/products",
+      "summary": "List published storefront products via the customer web contract.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/products/:slug",
+      "summary": "Fetch a storefront product detail payload.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/products/:slug/reviews",
+      "summary": "List published storefront product reviews.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/products/:slug/questions",
+      "summary": "Return persisted public product questions and inquiry metadata.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/products/:slug/inquiry/attachments/upload-intents",
+      "summary": "Create a signed upload intent for public product inquiry attachments.",
+      "tags": [
+        "storefront",
+        "support"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/products/:slug/inquiry",
+      "summary": "Create a public pre-purchase product inquiry ticket.",
+      "tags": [
+        "storefront",
+        "support"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/support/public-config",
+      "summary": "Return public support abuse-challenge and endpoint configuration for web clients.",
+      "tags": [
+        "storefront",
+        "support"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/categories",
+      "summary": "List storefront categories.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/categories/:slug/products",
+      "summary": "List storefront products for a category.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/brands/:slug/products",
+      "summary": "List storefront products for a brand.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/search",
+      "summary": "Search storefront products.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/banners",
+      "summary": "List storefront banners.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/pages/:slug",
+      "summary": "Fetch a storefront CMS page.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/help",
+      "summary": "Fetch the storefront help page.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/contact",
+      "summary": "Fetch the storefront contact page.",
+      "tags": [
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/support/contact/upload-intents",
+      "summary": "Create a signed upload intent for public support contact attachments.",
+      "tags": [
+        "storefront",
+        "support"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/support/contact",
+      "summary": "Create a public contact support ticket.",
+      "tags": [
+        "storefront",
+        "support"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/catalog/campaigns/:slug",
+      "summary": "Fetch a public campaign landing payload.",
+      "tags": [
+        "storefront",
+        "marketing"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/home",
+      "summary": "Return the mobile home screen composition payload.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/support/config",
+      "summary": "Return support abuse-challenge and endpoint configuration for mobile clients.",
+      "tags": [
+        "mobile",
+        "support"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/pages/:slug",
+      "summary": "Fetch a mobile CMS page payload.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/campaigns/:slug",
+      "summary": "Fetch a mobile campaign landing payload.",
+      "tags": [
+        "mobile",
+        "marketing"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/help",
+      "summary": "Fetch the mobile help page payload.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/contact",
+      "summary": "Fetch the mobile contact page payload.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/products",
+      "summary": "List products via the mobile contract.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/products/:slug",
+      "summary": "Fetch a mobile product detail payload.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/products/:slug/reviews",
+      "summary": "List mobile product reviews.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/products/:slug/questions",
+      "summary": "Return mobile product questions and inquiry metadata for a product.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/categories",
+      "summary": "List mobile categories.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/categories/:slug",
+      "summary": "Fetch a mobile category landing payload.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/brands/:slug",
+      "summary": "Fetch a mobile brand landing payload.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/search",
+      "summary": "Search products via the mobile contract.",
+      "tags": [
+        "mobile",
+        "storefront"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/cart",
+      "summary": "Fetch the current mobile cart.",
+      "tags": [
+        "mobile",
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/cart/items",
+      "summary": "Add an item to the mobile cart.",
+      "tags": [
+        "mobile",
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/mobile/cart/items/:cartItemId",
+      "summary": "Update a mobile cart item.",
+      "tags": [
+        "mobile",
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/mobile/cart/items/:cartItemId",
+      "summary": "Remove a mobile cart item.",
+      "tags": [
+        "mobile",
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/cart/coupon",
+      "summary": "Apply a coupon to the mobile cart.",
+      "tags": [
+        "mobile",
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/mobile/cart/coupon",
+      "summary": "Remove the coupon from the mobile cart.",
+      "tags": [
+        "mobile",
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/cart/validate",
+      "summary": "Validate the mobile cart before checkout.",
+      "tags": [
+        "mobile",
+        "cart"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/checkout",
+      "summary": "Return the mobile checkout bootstrap payload.",
+      "tags": [
+        "mobile",
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/checkout/shipping",
+      "summary": "Validate the mobile checkout shipping step.",
+      "tags": [
+        "mobile",
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/checkout/payment",
+      "summary": "Validate the mobile checkout payment step and chosen payment method.",
+      "tags": [
+        "mobile",
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/checkout/review",
+      "summary": "Build the exact mobile checkout review payload.",
+      "tags": [
+        "mobile",
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/mobile/checkout/orders",
+      "summary": "Create an order and initialize payment via the mobile checkout contract.",
+      "tags": [
+        "mobile",
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/mobile/checkout/success/:orderNumber",
+      "summary": "Fetch the mobile checkout success summary payload.",
+      "tags": [
+        "mobile",
+        "checkout"
+      ],
+      "auth": "public"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/account/wishlist",
+      "summary": "List the authenticated customer's wishlist items.",
+      "tags": [
+        "wishlist"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/account/wishlist/items",
+      "summary": "Add a product or variant to the authenticated customer's wishlist.",
+      "tags": [
+        "wishlist"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/account/wishlist/items/:itemId",
+      "summary": "Remove an item from the authenticated customer's wishlist.",
+      "tags": [
+        "wishlist"
+      ],
+      "auth": "authenticated"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/jobs/queues",
+      "summary": "List configured operational queues.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/system/jobs/diagnostics/ping",
+      "summary": "Enqueue a diagnostic worker ping job.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.run"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/jobs/runs",
+      "summary": "List tracked job runs for the operational jobs monitor.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/jobs",
+      "summary": "List tracked job runs through the admin contract.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/jobs/runs/:jobRunId",
+      "summary": "Fetch a tracked job run by id.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/jobs/:jobRunId",
+      "summary": "Fetch a tracked job run through the admin contract.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/system/jobs/runs/:jobRunId/retry",
+      "summary": "Replay a retryable tracked job run.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.run"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/jobs/:jobRunId/retry",
+      "summary": "Replay a retryable job through the admin contract.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "system.jobs.run"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/webhooks/events",
+      "summary": "List recorded webhook events for operational monitoring.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/webhooks",
+      "summary": "List recorded webhook events through the admin contract.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system/webhooks/events/:webhookEventId",
+      "summary": "Fetch a recorded webhook event with processing attempts.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/admin/webhooks/:webhookEventId",
+      "summary": "Fetch a webhook event through the admin contract.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/system/webhooks/events/:webhookEventId/retry",
+      "summary": "Replay a retryable webhook event.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/webhooks/:webhookEventId/retry",
+      "summary": "Replay a retryable webhook through the admin contract.",
+      "tags": [
+        "jobs-workers"
+      ],
+      "auth": "admin",
+      "permissions": [
+        "integrations.webhooks.read"
+      ]
+    }
+  ]
+}
