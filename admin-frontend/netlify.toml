@@ -1,0 +1,13 @@
+# Vite replaces import.meta.env.VITE_* at build time, so those values always appear in dist/.
+# Netlify must not treat them as leaked secrets (they are public client config, not server secrets).
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "VITE_APP_ENV_LABEL,VITE_APP_RELEASE,VITE_BACKEND_BASE_URL,VITE_DEV_PROXY_TARGET,VITE_SENTRY_DSN,VITE_SENTRY_TRACES_SAMPLE_RATE,VITE_STITCH_PROJECT_ID"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
