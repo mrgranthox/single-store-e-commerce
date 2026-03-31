@@ -281,7 +281,35 @@ const isBrevoEmailConfigured = (e: ParsedEnv) => {
   return hasSmtp || hasApi;
 };
 
-const parsedEnv = envSchema.parse(normalizedProcessEnv);
+const parsedEnv = (() => {
+  const result = envSchema.safeParse(normalizedProcessEnv);
+  if (result.success) {
+    return result.data;
+  }
+
+  const missingRequired = [
+    ...new Set(
+      result.error.issues
+        .filter(
+          (issue): issue is typeof issue & { path: (string | number)[] } =>
+            issue.code === "invalid_type" &&
+            "received" in issue &&
+            (issue as { received?: string }).received === "undefined" &&
+            issue.path.length > 0
+        )
+        .map((issue) => issue.path.map(String).join("."))
+    )
+  ];
+
+  if (missingRequired.length > 0) {
+    throw new Error(
+      `Missing required environment variable(s): ${missingRequired.join(", ")}. ` +
+        "Define them on your host (e.g. Render → Environment). The deployed server does not load backend/.env from your machine."
+    );
+  }
+
+  throw result.error;
+})();
 
 if (
   parsedEnv.ALLOW_DEV_AUTH_BYPASS &&
