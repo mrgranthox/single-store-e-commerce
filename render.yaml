@@ -1,4 +1,5 @@
 services:
+  # Backend API — runs migrations + seed on every deploy, then starts the HTTP server
   - type: web
     name: ecommerce-backend
     runtime: node
@@ -6,6 +7,17 @@ services:
     buildCommand: npm ci && npm run build
     startCommand: npm run start:migrate
     healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # BullMQ background worker — processes notifications, payments, webhooks, reconciliation
+  - type: worker
+    name: ecommerce-worker
+    runtime: node
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run worker
     envVars:
       - key: NODE_ENV
         value: production
