@@ -1,0 +1,54 @@
+# Fly.io app config — one app, two process groups: web (API) + worker (BullMQ)
+# Deploy with: fly deploy --config fly.toml (from backend/)
+# Or via GitHub Actions (see .github/workflows/fly-deploy.yml)
+
+app = "ecommerce-backend"         # change to your Fly app name
+primary_region = "lhr"            # change to the region closest to your DB/Redis
+
+[build]
+  dockerfile = "Dockerfile"
+
+# web → API process
+# worker → BullMQ background worker (no public port)
+[processes]
+  web    = "node dist/src/bootstrap/server.js"
+  worker = "node dist/src/bootstrap/worker.js"
+
+# HTTP service — only the web process group receives public traffic
+[[services]]
+  processes    = ["web"]
+  internal_port = 4000
+  protocol      = "tcp"
+  auto_stop_machines  = false
+  auto_start_machines = true
+
+  [[services.ports]]
+    port     = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port     = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type       = "connections"
+    hard_limit = 100
+    soft_limit = 80
+
+  [[services.http_checks]]
+    interval     = 15000
+    timeout      = 5000
+    grace_period = "30s"
+    method       = "GET"
+    path         = "/ready"
+
+# Machines for each process group (adjust sizes to your plan)
+[vm]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
+
+# Run migrations once before new app version takes live traffic
+[deploy]
+  release_command = "npx prisma migrate deploy"
