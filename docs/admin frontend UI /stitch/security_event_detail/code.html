@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    body { font-family: 'IBM Plex Sans', sans-serif; }
+    h1, h2, h3, .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .label-xs { font-size: 0.6875rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; }
+    /* Hide scrollbar for clean UI */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-tint": "#1b55ce",
+            "surface-variant": "#e0e2f0",
+            "on-surface-variant": "#434654",
+            "inverse-surface": "#2d303b",
+            "tertiary-fixed": "#6bff8f",
+            "surface-bright": "#faf8ff",
+            "secondary-container": "#dedfeb",
+            "primary-container": "#3b6de6",
+            "surface": "#faf8ff",
+            "on-tertiary-container": "#f7fff3",
+            "on-primary-container": "#fefcff",
+            "error": "#ba1a1a",
+            "surface-container-high": "#e6e7f6",
+            "on-secondary-container": "#60626c",
+            "inverse-on-surface": "#eff0fe",
+            "primary": "#1653cc",
+            "on-secondary-fixed-variant": "#444650",
+            "on-background": "#181b25",
+            "on-secondary-fixed": "#181b24",
+            "on-error-container": "#93000a",
+            "surface-dim": "#d8d9e7",
+            "error-container": "#ffdad6",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#b4c5ff",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#4ae176",
+            "surface-container-highest": "#e0e2f0",
+            "surface-container": "#ecedfb",
+            "secondary-fixed-dim": "#c4c6d1",
+            "outline-variant": "#c3c6d6",
+            "secondary": "#5b5e68",
+            "background": "#faf8ff",
+            "on-tertiary-fixed": "#002109",
+            "tertiary-container": "#00873b",
+            "on-primary-fixed": "#00174a",
+            "on-tertiary-fixed-variant": "#005321",
+            "tertiary": "#006b2d",
+            "on-surface": "#181b25",
+            "on-error": "#ffffff",
+            "inverse-primary": "#b4c5ff",
+            "outline": "#737685",
+            "on-primary-fixed-variant": "#003ea7",
+            "surface-container-low": "#f2f3ff",
+            "on-tertiary": "#ffffff",
+            "primary-fixed": "#dbe1ff",
+            "secondary-fixed": "#e0e2ed",
+            "on-secondary": "#ffffff"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["IBM Plex Sans"],
+            "label": ["IBM Plex Sans"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-[#0f1117] text-on-background min-h-screen flex">
+<!-- SideNavBar Anchor -->
+<aside class="bg-[#13161e] h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<div class="text-xl font-bold text-white tracking-tight">Command Deck</div>
+<div class="text-[0.65rem] text-slate-500 uppercase tracking-widest mt-1">Security Operations</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">dashboard</span>
+<span class="label-xs">Dashboard</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">notifications_active</span>
+<span class="label-xs">Alerts Center</span>
+</a>
+<a class="flex items-center px-3 py-2 text-white font-semibold bg-[#1a1d27] border-l-4 border-[#4f7ef8] group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" style="font-variation-settings: 'FILL' 1;">policy</span>
+<span class="label-xs">Security Events</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">emergency_share</span>
+<span class="label-xs">Incidents</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">settings_input_component</span>
+<span class="label-xs">Operations</span>
+</a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27] transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">settings</span>
+<span class="label-xs">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 pt-6 border-t border-slate-800/50">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-2.5 rounded-lg font-bold text-sm tracking-tight active:scale-95 transition-transform">
+        New Incident
+      </button>
+<div class="mt-6 space-y-2">
+<a class="flex items-center text-slate-500 hover:text-slate-300 text-xs uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-2 text-sm">help</span> Support
+        </a>
+<a class="flex items-center text-slate-500 hover:text-slate-300 text-xs uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-2 text-sm">description</span> Documentation
+        </a>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 flex-1 flex flex-col bg-[#f0f2f7]">
+<!-- TopNavBar Anchor -->
+<header class="h-16 sticky top-0 z-40 bg-[#f8f9fb] flex justify-between items-center px-8 w-full backdrop-blur-md">
+<div class="flex items-center space-x-6">
+<div class="flex items-center space-x-2">
+<span class="label-xs text-slate-400">Events</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">chevron_right</span>
+<span class="font-bold text-slate-900 tracking-tight">SEC-00188</span>
+</div>
+<div class="h-4 w-px bg-slate-200"></div>
+<nav class="flex space-x-6">
+<a class="text-slate-500 hover:text-[#1653cc] text-xs font-medium uppercase tracking-wider" href="#">Overview</a>
+<a class="text-[#1653cc] border-b-2 border-[#1653cc] pb-1 text-xs font-medium uppercase tracking-wider" href="#">Logs</a>
+<a class="text-slate-500 hover:text-[#1653cc] text-xs font-medium uppercase tracking-wider" href="#">Activity</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="flex space-x-2">
+<button class="px-4 py-1.5 text-xs font-semibold text-slate-600 hover:text-primary transition-colors">Export Data</button>
+<button class="px-4 py-1.5 bg-primary text-white text-xs font-semibold rounded shadow-sm hover:bg-primary-container transition-colors">Deploy Update</button>
+</div>
+<div class="flex items-center space-x-3 text-slate-400">
+<span class="material-symbols-outlined cursor-pointer hover:text-slate-600">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-slate-600">dark_mode</span>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="User Avatar" data-alt="professional portrait of a security systems administrator in a modern office environment with soft tech lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc7PlQDA9AfGBObnoy-5kC8QJf9b7qGYIyOlJWiSI0MLcSG46uxjXm1aoEQAhc-SgjXi02UpqzbvGOLlFiVUFv_aslz2-0WAA3zPhy4FBOPbD2tXKBEIkn3h8E9j7wb62A7mnOcMfFT2HE6WsUrEqCPT8jBycGVCBCpWQj4KcDKhBDhslCk2L0h2FjmyV_9eJ0e0PKERgyOJmLboWYd_LHJXSyMeqKaYertYdahnjtZ0DhcJ7Fo8nKCCXqiaU-xPiX3GYGsxsV80A"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 grid grid-cols-12 gap-8 max-w-[1600px]">
+<!-- Left Column (65%) -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Event Summary -->
+<section class="bg-surface-container-lowest rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-error"></div>
+<div class="flex justify-between items-start mb-6">
+<div>
+<div class="label-xs text-error mb-1">High Severity Critical Event</div>
+<h1 class="text-2xl font-extrabold text-on-background tracking-tight">Security Event #[SEC-00188]</h1>
+<p class="text-slate-500 text-sm mt-1 max-w-2xl">Unauthorized cross-region API access attempt detected from a known TOR exit node targeting sensitive billing endpoints.</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="label-xs text-slate-400">Detection Source</span>
+<span class="text-sm font-semibold text-primary">AWS CloudWatch / GuardDuty</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-6 pt-6 border-t border-slate-50">
+<div>
+<div class="label-xs text-slate-400 mb-1">Event Type</div>
+<div class="text-sm font-medium">Anomalous API Traffic</div>
+</div>
+<div>
+<div class="label-xs text-slate-400 mb-1">Timestamp</div>
+<div class="text-sm font-medium mono">2023-11-24 14:22:01.442 Z</div>
+</div>
+<div>
+<div class="label-xs text-slate-400 mb-1">Risk Score</div>
+<div class="text-sm font-bold text-error">94 / 100</div>
+</div>
+</div>
+</section>
+<!-- Context Entities -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Customer Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary">
+<div class="flex items-center space-x-3 mb-4">
+<span class="material-symbols-outlined text-primary">person</span>
+<span class="label-xs text-slate-600">Linked Customer</span>
+</div>
+<div class="font-bold text-slate-900">Marcus Thorne</div>
+<div class="text-xs text-slate-500 mono">UID: US-9921-X</div>
+<div class="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
+<span class="text-[10px] text-slate-400 uppercase tracking-tighter">Status: Active</span>
+<span class="material-symbols-outlined text-sm text-slate-300">open_in_new</span>
+</div>
+</div>
+<!-- Payment Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-slate-200">
+<div class="flex items-center space-x-3 mb-4">
+<span class="material-symbols-outlined text-slate-400">credit_card</span>
+<span class="label-xs text-slate-600">Payment Instrument</span>
+</div>
+<div class="font-bold text-slate-900">Visa ending in •••• 4492</div>
+<div class="text-xs text-slate-500">Exp: 11/27</div>
+<div class="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
+<span class="text-[10px] text-slate-400 uppercase tracking-tighter">Risk Level: Low</span>
+<span class="material-symbols-outlined text-sm text-slate-300">shield</span>
+</div>
+</div>
+<!-- Order Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-slate-200">
+<div class="flex items-center space-x-3 mb-4">
+<span class="material-symbols-outlined text-slate-400">shopping_bag</span>
+<span class="label-xs text-slate-600">Active Order</span>
+</div>
+<div class="font-bold text-slate-900">ORD-552-8802</div>
+<div class="text-xs text-slate-500">$1,244.00 USD</div>
+<div class="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
+<span class="text-[10px] text-slate-400 uppercase tracking-tighter">Shipment: Pending</span>
+<span class="material-symbols-outlined text-sm text-slate-300">inventory_2</span>
+</div>
+</div>
+</div>
+<!-- IP Intelligence Panel -->
+<section class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<div class="bg-slate-900 px-6 py-4 flex justify-between items-center">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-white">public</span>
+<span class="label-xs text-slate-300">Network Intelligence: 192.168.1.1</span>
+</div>
+<div class="px-2 py-0.5 bg-error text-[10px] font-bold text-white rounded uppercase tracking-widest">High Risk</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 divide-x divide-slate-100 p-6">
+<div class="pr-6">
+<div class="label-xs text-slate-400 mb-2">Location</div>
+<div class="flex items-center space-x-2">
+<img alt="Flag" class="w-4 h-3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgM_NnexKxWA6DAlSwijP4Q3DQaEaHT1fCkjIX8d7briAwQNzxVse5kbvpb0mIPu6b6A7CJTlxzswxuvGF4amDAAG8PZ9JJOVqLcGljR3Y55dLTK8lMrR4g-A9Bh8jssOu_O8-YSbe7PXrwxSFm5s6HMG6cqoJJ4efFF72jhTngLbkIVZxhMXbY0EhJOgzR5O7XNhfbLcmkOW1acvuuRlk3RwbAMlCkY40fUVQNKNcSvuRDsXj_zy0TRl_PmYB6wRS1F44H2rzqNk"/>
+<span class="text-sm font-semibold">Moscow, Russia</span>
+</div>
+</div>
+<div class="px-6">
+<div class="label-xs text-slate-400 mb-2">ISP</div>
+<div class="text-sm font-semibold">Rostelecom PJSC</div>
+</div>
+<div class="px-6">
+<div class="label-xs text-slate-400 mb-2">Proxy / VPN</div>
+<div class="flex items-center space-x-2 text-error">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-sm font-semibold">TOR Exit Detected</span>
+</div>
+</div>
+<div class="pl-6">
+<div class="label-xs text-slate-400 mb-2">Last Seen</div>
+<div class="text-sm font-semibold">2 mins ago</div>
+</div>
+</div>
+</section>
+<!-- Raw Event Payload -->
+<section class="bg-[#1a1d27] rounded-xl overflow-hidden shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 border-b border-slate-800">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-slate-400 text-sm">code</span>
+<span class="label-xs text-slate-300">Raw JSON Payload</span>
+</div>
+<button class="text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+<div class="p-6 overflow-x-auto no-scrollbar">
+<pre class="mono text-[11px] leading-relaxed text-[#4ae176]">{
+  <span class="text-blue-400">"event_id"</span>: <span class="text-orange-300">"SEC-00188"</span>,
+  <span class="text-blue-400">"source"</span>: <span class="text-orange-300">"guardduty.aws"</span>,
+  <span class="text-blue-400">"details"</span>: {
+    <span class="text-blue-400">"request_parameters"</span>: {
+      <span class="text-blue-400">"method"</span>: <span class="text-orange-300">"POST"</span>,
+      <span class="text-blue-400">"endpoint"</span>: <span class="text-orange-300">"/v1/billing/admin/export"</span>,
+      <span class="text-blue-400">"user_agent"</span>: <span class="text-orange-300">"Mozilla/5.0 (compatible; Security-Scraper/1.0)"</span>
+    },
+    <span class="text-blue-400">"identity"</span>: {
+      <span class="text-blue-400">"access_key"</span>: <span class="text-orange-300">"AKIA....M92"</span>,
+      <span class="text-blue-400">"session_mfa"</span>: <span class="text-error">false</span>
+    }
+  }
+}</pre>
+</div>
+</section>
+<!-- Related Events -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="label-xs text-slate-600">Related Events (Last 7 Days)</h3>
+<span class="text-[10px] text-slate-400 italic">Matching IP: 192.168.1.1</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl divide-y divide-slate-50">
+<div class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer group">
+<div class="flex items-center space-x-4">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<div>
+<div class="text-sm font-bold tracking-tight">Login Attempt Failure</div>
+<div class="text-[10px] text-slate-400 uppercase tracking-widest">Yesterday, 22:45</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors cursor-pointer group">
+<div class="flex items-center space-x-4">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div>
+<div class="text-sm font-bold tracking-tight">Credential Rotation Success</div>
+<div class="text-[10px] text-slate-400 uppercase tracking-widest">Nov 22, 10:12</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (35%) -->
+<aside class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Action Rail -->
+<section class="bg-[#1a1d27] text-white rounded-xl p-6 shadow-xl">
+<h3 class="label-xs text-slate-400 mb-6">Investigation Actions</h3>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all group">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="text-sm font-semibold">Mark Reviewed</span>
+</div>
+<span class="material-symbols-outlined text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all group">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">add_alert</span>
+<span class="text-sm font-semibold">Create Alert</span>
+</div>
+<span class="material-symbols-outlined text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 bg-error/10 border border-error/20 hover:bg-error/20 rounded-lg transition-all group">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-error">priority_high</span>
+<span class="text-sm font-semibold text-error">Escalate to L3</span>
+</div>
+<span class="material-symbols-outlined text-error/50 opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Linked Alert Card -->
+<section class="bg-primary-container/10 border border-primary/20 rounded-xl p-5 relative overflow-hidden">
+<div class="flex items-start space-x-4">
+<div class="p-2 bg-primary rounded-lg">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<div class="label-xs text-primary font-bold mb-1">Active Linked Alert</div>
+<h4 class="text-sm font-bold text-slate-900">ALT-4402: Cross-Border Auth</h4>
+<p class="text-xs text-slate-600 mt-1">Incident investigation already in progress by Security Analyst <span class="font-bold">Sarah K.</span></p>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<button class="text-[10px] font-bold uppercase text-primary tracking-widest hover:underline">View Alert Details</button>
+</div>
+</section>
+<!-- Investigation Notes -->
+<section class="bg-surface-container-lowest rounded-xl p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="label-xs text-slate-600">Investigation Notes</h3>
+<span class="text-[10px] text-slate-400">Autosaved</span>
+</div>
+<textarea class="w-full h-48 bg-slate-50 border-none focus:ring-1 focus:ring-primary rounded-lg text-sm p-4 placeholder-slate-400 resize-none" placeholder="Add your findings here..."></textarea>
+<div class="mt-4 flex items-center space-x-2">
+<button class="flex-1 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition-colors">Post Note</button>
+<button class="p-2 text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+</div>
+<!-- History Thread -->
+<div class="mt-8 space-y-6">
+<div class="flex space-x-3">
+<div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-600 flex-shrink-0">JS</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-xs font-bold">Jason Smith</span>
+<span class="text-[10px] text-slate-400">10m ago</span>
+</div>
+<p class="text-xs text-slate-600 mt-1 leading-relaxed">IP is confirmed to be part of the latest botnet sweep detected in the AP-South-1 region.</p>
+</div>
+</div>
+</div>
+</section>
+</aside>
+</div>
+</main>
+</body></html>

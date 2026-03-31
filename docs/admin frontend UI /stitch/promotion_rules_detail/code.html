@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[Summer Tech Sale] — Rules | Architect OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-background": "#181b25",
+                        "tertiary-fixed": "#6bff8f",
+                        "on-primary-container": "#fefcff",
+                        "surface": "#faf8ff",
+                        "on-tertiary-container": "#f7fff3",
+                        "surface-variant": "#e0e2f0",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-on-surface": "#eff0fe",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#dedfeb",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#2d303b",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-bright": "#faf8ff",
+                        "on-surface-variant": "#434654",
+                        "on-tertiary-fixed": "#002109",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#60626c",
+                        "tertiary": "#006b2d",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d8d9e7",
+                        "on-secondary-fixed": "#181b24",
+                        "surface-container": "#ecedfb",
+                        "background": "#faf8ff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#00174a",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary-container": "#3b6de6",
+                        "primary": "#1653cc",
+                        "surface-container-highest": "#e0e2f0",
+                        "secondary": "#5b5e68",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "surface-container-high": "#e6e7f6",
+                        "tertiary-container": "#00873b",
+                        "outline-variant": "#c3c6d6",
+                        "on-surface": "#181b25",
+                        "outline": "#737685",
+                        "surface-tint": "#1b55ce",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#e0e2ed",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#444650"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"],
+                        "ui": ["IBM Plex Sans"],
+                        "brand": ["DM Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); }
+        .ghost-border { border: 1px solid rgba(115, 118, 133, 0.15); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] font-body text-on-background antialiased min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-[#13161e] flex flex-col py-6 px-4 font-['IBM_Plex_Sans'] text-sm tracking-wide">
+<div class="mb-10 px-2">
+<h1 class="text-xl font-bold text-white tracking-tight font-['DM_Sans']">Architect OS</h1>
+<p class="text-gray-500 text-[10px] uppercase tracking-[0.2em] mt-1">Enterprise E-commerce</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-[#1a1d27] text-white font-semibold transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">sell</span>
+                Promotions
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">monitoring</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+                Reporting
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">campaign</span>
+                Marketing
+            </a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5 space-y-1">
+<button class="w-full flex items-center justify-center gap-2 bg-gradient-to-br from-[#1653cc] to-[#3b6de6] text-white py-2.5 rounded-lg font-semibold mb-6 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Campaign
+            </button>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">help</span>
+                Support
+            </a>
+<div class="flex items-center gap-3 px-3 py-4 mt-2">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-[10px] font-bold text-white overflow-hidden">
+<img alt="Admin User Avatar" class="w-full h-full object-cover" data-alt="Professional headshot of a corporate male administrator in a minimalist workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqssBJJaEJt4x3pPgVd47RwXPHL6zpzQ-hQTEJZbVqJ3fEnGbkJ4y-DooH0S6u4IUit2xyLE2KwwoHHzWOyWle2fSMvK2CY3oxUlSqGsKTK8DuhgrnQs3Ec8Nq7ZyhM9YO9RVr8VO1r3qjYjfljvCjnPbesd8FMihJs75hz8CQM6krPzGFlDCJE7eoCFOcP1cG5dPscejs0gGONwDeudafc9p5wizuBmXho9BpVOSTjGNxaSQ8YP8fhF8SWA7f-0PhnuZO17kk6vI"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-white text-xs font-semibold truncate">Alex Chen</p>
+<p class="text-gray-500 text-[10px] truncate">System Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 w-full z-40 bg-[#f8f9fb] flex items-center justify-between px-8 py-3 font-['DM_Sans'] font-semibold text-sm">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-[#1653cc]">
+<span class="material-symbols-outlined">arrow_back</span>
+<span class="text-gray-400 font-normal">Promotions / </span>
+<span class="text-on-background">[Summer Tech Sale] — Rules</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<nav class="flex items-center gap-6">
+<a class="text-gray-500 hover:text-[#1653cc] transition-all" href="#">Overview</a>
+<a class="text-[#1653cc] border-b-2 border-[#1653cc] pb-1 transition-all" href="#">Schedule</a>
+<a class="text-gray-500 hover:text-[#1653cc] transition-all" href="#">History</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+<input class="bg-surface-container-low border-none rounded-full py-1.5 pl-10 pr-4 text-xs w-48 focus:ring-1 focus:ring-primary/30 transition-all" placeholder="Search rules..." type="text"/>
+</div>
+<button class="p-2 text-gray-500 hover:bg-surface-container transition-colors rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="bg-primary text-white px-4 py-1.5 rounded-lg flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">ios_share</span>
+                    Export Report
+                </button>
+</div>
+</header>
+<div class="p-8 grid grid-cols-12 gap-8">
+<!-- Left Workspace (60%) -->
+<div class="col-span-12 lg:col-span-7 space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-headline font-extrabold tracking-tight text-on-background">Rule Configuration</h2>
+<p class="text-sm text-on-surface-variant font-ui mt-1">Define the logic that triggers this promotion.</p>
+</div>
+<button class="flex items-center gap-2 text-primary font-semibold text-sm hover:underline">
+<span class="material-symbols-outlined text-sm">rule_settings</span>
+                        Manage Global Rules
+                    </button>
+</div>
+<!-- Active Rules List -->
+<div class="space-y-4">
+<!-- Rule Card 1 -->
+<div class="bg-surface-container-lowest ghost-border rounded-xl p-5 flex gap-5 relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex-shrink-0 w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">person_search</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Customer Segment</span>
+<div class="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="text-outline hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-ui font-semibold text-on-background text-base">Loyalty Tier Filter</h3>
+<p class="text-sm text-on-surface-variant mt-1 leading-relaxed">
+                                Customer must be part of the <span class="font-mono bg-surface-container-high px-1.5 py-0.5 rounded text-[12px]">"Platinum_VIP"</span> or <span class="font-mono bg-surface-container-high px-1.5 py-0.5 rounded text-[12px]">"Gold_Members"</span> segment.
+                            </p>
+</div>
+</div>
+<!-- Rule Card 2 -->
+<div class="bg-surface-container-lowest ghost-border rounded-xl p-5 flex gap-5 relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary-container"></div>
+<div class="flex-shrink-0 w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center text-tertiary-container">
+<span class="material-symbols-outlined text-2xl">payments</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Spend Threshold</span>
+<div class="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="text-outline hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-ui font-semibold text-on-background text-base">Minimum Cart Value</h3>
+<p class="text-sm text-on-surface-variant mt-1 leading-relaxed">
+                                Total order value must exceed <span class="font-mono text-primary font-bold">$499.00 USD</span> excluding tax and shipping fees.
+                            </p>
+</div>
+</div>
+<!-- Rule Card 3 -->
+<div class="bg-surface-container-lowest ghost-border rounded-xl p-5 flex gap-5 relative overflow-hidden group border-dashed border-2 border-outline-variant/50">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary-fixed-dim"></div>
+<div class="flex-shrink-0 w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-2xl">category</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Product Filter</span>
+<div class="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="text-outline hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</div>
+<h3 class="font-ui font-semibold text-on-background text-base">Tech Categories Exclusion</h3>
+<p class="text-sm text-on-surface-variant mt-1 leading-relaxed">
+                                Items from <span class="italic">"Refurbished Hardware"</span> and <span class="italic">"Third Party Accessories"</span> are ineligible for discount calculation.
+                            </p>
+</div>
+</div>
+<!-- Add Rule Inline Form -->
+<div class="bg-surface-container-low rounded-xl p-6 border border-primary/20 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+</div>
+<h4 class="font-headline font-bold text-on-background">Define New Logic Rule</h4>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-outline ml-1">Rule Type</label>
+<select class="w-full bg-surface-container-lowest border-outline-variant/30 rounded-lg text-sm font-ui focus:ring-primary h-10 px-3">
+<option>Time Window Trigger</option>
+<option>Inventory Level</option>
+<option>Geographic Constraint</option>
+<option>Usage Frequency</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-outline ml-1">Condition Operator</label>
+<select class="w-full bg-surface-container-lowest border-outline-variant/30 rounded-lg text-sm font-ui focus:ring-primary h-10 px-3">
+<option>Must match all (AND)</option>
+<option>Match at least one (OR)</option>
+<option>Must not match (NOT)</option>
+</select>
+</div>
+</div>
+<div class="space-y-1.5 mb-6">
+<label class="text-[10px] font-bold uppercase tracking-wider text-outline ml-1">Logic Definition</label>
+<textarea class="w-full bg-surface-container-lowest border-outline-variant/30 rounded-lg text-sm font-ui focus:ring-primary p-3 min-h-[80px]" placeholder="e.g. Rule applies only between 12:00 PM and 4:00 PM on Weekends..."></textarea>
+</div>
+<div class="flex items-center justify-end gap-3">
+<button class="px-4 py-2 text-sm font-semibold text-outline hover:text-on-background transition-colors">Discard</button>
+<button class="px-6 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary-container transition-all active:scale-95">Save Rule Instance</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar (40%) -->
+<div class="col-span-12 lg:col-span-5 space-y-6">
+<!-- Promo Summary Card -->
+<section class="bg-[#1a1d27] text-white rounded-2xl overflow-hidden">
+<div class="p-6 relative">
+<div class="absolute top-6 right-6 flex flex-col items-end">
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-tertiary-container rounded-full text-[10px] font-bold">
+<div class="w-1.5 h-1.5 bg-tertiary-fixed rounded-full"></div>
+                                ACTIVE
+                            </div>
+<span class="text-[10px] text-gray-400 mt-2 font-mono">ID: SUM-TECH-24-X</span>
+</div>
+<h2 class="text-xl font-headline font-bold mb-6 max-w-[70%] text-white">Summer Tech Sale 2024</h2>
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-gray-500 mt-0.5">calendar_today</span>
+<div>
+<p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Effective Period</p>
+<p class="text-sm font-ui mt-0.5">Jun 15, 2024 — Aug 31, 2024</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-gray-500 mt-0.5">confirmation_number</span>
+<div>
+<p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Promotion Logic</p>
+<p class="text-sm font-ui mt-0.5">15% Off Cart + Free Expedited Shipping</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white/5 p-4 border-t border-white/5 flex items-center justify-between">
+<div class="flex -space-x-2">
+<img alt="User 1" class="w-7 h-7 rounded-full border-2 border-[#1a1d27]" data-alt="Close-up portrait of a smiling young professional man in a tech office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7Ymu9cKF0CYoyx8M0EMTSvXhiun2rbuQl0lVazcaYnZMTEotnbzXZBIGZMT2pVs56vzQh_xd-r3fMcndUVwBbrvJqCysHcqJdDB3oZ2V6_Zta40Kovrz4f4O_vH-tMQ-JEpMJeAknYOSdaq373s_l6nYuo-7U0CvUL_PElDs-yhMj69j6x59n32b1tRzBfh6ssZlO_xTRcEGEmmvBWRTh1EWDXMgUGq2cZA3e7PKl1LTOYjJspvXoy3Qt4ANRYb2RkzDIS6uI8zc"/>
+<img alt="User 2" class="w-7 h-7 rounded-full border-2 border-[#1a1d27]" data-alt="Portrait of a young business woman with focused expression in a modern creative studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLpArhALI-bojqzJP4uRkobKz5Noy_5PcwE8sCLiFBfqH9Suzc9xWhr0a1S9YvyPrs0H01QY7c7i_EC1aZHorgE_LFXe0LvGSzwCGU3_v_TK-6rxJFptIqujbEzn0bk1s3cbmJsRRx0HZrEqrcyfy01O0oDfMr8_Xz_9fLyqFgbwcmEFgl_Qo8XAFUltNFUKBjrGr-SCPan9xEup4GLEK7R8RaPORY7R8Ne_-ZXVrlvjfSFt5FBjLr6FufMzw3vbDnjQ98nljMXyY"/>
+<div class="w-7 h-7 rounded-full border-2 border-[#1a1d27] bg-gray-700 flex items-center justify-center text-[8px] font-bold">+4</div>
+</div>
+<button class="text-[10px] font-bold uppercase tracking-widest hover:text-primary-fixed transition-colors">Edit Metadata</button>
+</div>
+</section>
+<!-- Simulation Panel -->
+<section class="bg-surface-container-lowest ghost-border rounded-2xl p-6 shadow-sm">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="font-headline font-bold text-on-background">Promotion Simulator</h3>
+</div>
+<div class="space-y-4 mb-6">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-outline ml-1">Mock Order Amount</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-sm">$</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg font-mono text-sm py-2.5 pl-7 pr-3 focus:ring-1 focus:ring-primary/20" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-outline ml-1">Test Customer Segment</label>
+<select class="w-full bg-surface-container-low border-none rounded-lg text-sm font-ui py-2.5 px-3 focus:ring-1 focus:ring-primary/20">
+<option>Platinum_VIP</option>
+<option>Gold_Members</option>
+<option>Standard_User</option>
+<option>Anonymous_Guest</option>
+</select>
+</div>
+</div>
+<button class="w-full bg-surface-container-highest text-on-background py-3 rounded-xl font-bold text-sm hover:bg-surface-dim transition-all flex items-center justify-center gap-2 mb-6">
+<span class="material-symbols-outlined text-lg">play_arrow</span>
+                        Execute Simulation
+                    </button>
+<div class="bg-[#f0f2f7] rounded-xl p-4 border-l-4 border-error">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-error text-lg">cancel</span>
+<span class="text-xs font-bold text-error uppercase tracking-tight">Status: Rejected</span>
+</div>
+<p class="text-xs text-on-surface-variant font-ui leading-relaxed">
+                            Simulation failed on rule <span class="font-bold">"Minimum Cart Value"</span>. Input amount ($249.00) is below the required threshold of $499.00.
+                        </p>
+</div>
+</section>
+<!-- Impact Stats (Bento Fragment) -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest ghost-border rounded-2xl p-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 h-full w-1 bg-primary"></div>
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Projected ROI</p>
+<h4 class="text-2xl font-mono font-bold text-on-background">12.4%</h4>
+</div>
+<div class="bg-surface-container-lowest ghost-border rounded-2xl p-4 relative overflow-hidden">
+<div class="absolute left-0 top-0 h-full w-1 bg-tertiary"></div>
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest mb-1">Target Reach</p>
+<h4 class="text-2xl font-mono font-bold text-on-background">42.5k</h4>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Side Detail Drawer (Hidden/Mock State) -->
+<div class="fixed inset-y-0 right-0 w-96 glass-panel border-l border-outline-variant/10 z-[60] translate-x-full shadow-2xl">
+<div class="p-6 h-full flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-lg font-headline font-bold text-on-background">Rule Parameters</h3>
+<button class="text-outline hover:text-on-background transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Settings logic would go here -->
+</div>
+</div>
+</body></html>

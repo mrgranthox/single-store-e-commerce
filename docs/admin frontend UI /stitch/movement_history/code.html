@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'IBM+Plex+Sans', sans-serif;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .headline {
+            font-family: 'DM Sans', sans-serif;
+        }
+        /* Custom scrollbar for high-density tables */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f2f7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3c6d6;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#1b55ce",
+                        "outline": "#737685",
+                        "on-secondary-container": "#60626c",
+                        "inverse-surface": "#2d303b",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "inverse-primary": "#b4c5ff",
+                        "error": "#ba1a1a",
+                        "primary": "#1653cc",
+                        "background": "#faf8ff",
+                        "surface-container": "#ecedfb",
+                        "on-secondary-fixed-variant": "#444650",
+                        "tertiary": "#006b2d",
+                        "surface-bright": "#faf8ff",
+                        "on-primary-fixed": "#00174a",
+                        "tertiary-fixed": "#6bff8f",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-tertiary-fixed": "#002109",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e2f0",
+                        "surface-dim": "#d8d9e7",
+                        "surface": "#faf8ff",
+                        "primary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-fixed": "#181b24",
+                        "secondary-container": "#dedfeb",
+                        "on-background": "#181b25",
+                        "primary-container": "#3b6de6",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-surface-variant": "#434654",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#5b5e68",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#00873b",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-surface": "#181b25",
+                        "surface-container-high": "#e6e7f6",
+                        "secondary-fixed": "#e0e2ed",
+                        "outline-variant": "#c3c6d6",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#fefcff",
+                        "inverse-on-surface": "#eff0fe",
+                        "surface-container-highest": "#e0e2f0"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-[#f0f2f7] text-on-background antialiased">
+<!-- TopAppBar -->
+<header class="bg-[#0f1117] text-white font-['IBM_Plex_Sans'] text-sm tracking-tight fixed top-0 z-50 flex justify-between items-center px-6 h-14 w-full">
+<div class="flex items-center gap-8">
+<span class="text-lg font-semibold tracking-tighter text-white uppercase">OPERATIONAL ARCHITECT</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-400 hover:text-white transition-all duration-200" href="#">Global Overview</a>
+<a class="text-white border-b-2 border-[#4f7ef8] pb-1 transition-all duration-200" href="#">Movement History</a>
+<a class="text-slate-400 hover:text-white transition-all duration-200" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-white/5 rounded-lg transition-all"><span class="material-symbols-outlined text-[20px]">notifications</span></button>
+<button class="p-2 hover:bg-white/5 rounded-lg transition-all"><span class="material-symbols-outlined text-[20px]">settings</span></button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-white/10">
+<img alt="User profile avatar" class="h-full w-full object-cover" data-alt="professional male headshot in soft studio lighting with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRDCuR-R7RABzPCd3KZurj-XRBjnKpa1acff7EaY20rZzEudugwoe3bUxLfzH_OtAkvBz0_fs44kg51SdWY-8MGW7aTO_oeaqZvgoMjTY8ww1EUcQK067WtGcO-oUWD1zfqQmI86Ap9BLt4Kc4DYE2cOMR9ax_UTbzlXy-5MamDtWZu_wtTsTRXJa069as3SJV9jwMwy2R9qmzk3G-QYWJnAGkkff5kvCG4UFHfQKdZiPJeSGTH4Gjto_2qX5WTiUopEprhLB5V-M"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="bg-[#13161e] fixed left-0 top-0 h-full z-40 pt-16 w-64 flex flex-col shadow-[4px_0_24px_rgba(15,17,23,0.5)]">
+<div class="px-6 py-4 mb-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 bg-[#1a1d27] rounded flex items-center justify-center border border-white/5">
+<span class="material-symbols-outlined text-[#4f7ef8]">inventory_2</span>
+</div>
+<div>
+<h3 class="text-white font-semibold text-sm">Inventory Ops</h3>
+<p class="text-slate-500 text-[11px] uppercase tracking-wider">Precision Terminal</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 font-['IBM_Plex_Sans'] text-[13px] font-medium">
+<a class="text-slate-500 px-6 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span> Command Center
+            </a>
+<a class="text-slate-500 px-6 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Stock Queue
+            </a>
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-6 py-3 flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined">history_edu</span> Movement Audit
+            </a>
+<a class="text-slate-500 px-6 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-all" href="#">
+<span class="material-symbols-outlined">edit_note</span> Adjustment Console
+            </a>
+<a class="text-slate-500 px-6 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-all" href="#">
+<span class="material-symbols-outlined">factory</span> Warehouse Suite
+            </a>
+</nav>
+<div class="mt-auto pb-6 space-y-1 font-['IBM_Plex_Sans'] text-[13px] font-medium">
+<a class="text-slate-500 px-6 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-all" href="#">
+<span class="material-symbols-outlined">terminal</span> System Logs
+            </a>
+<a class="text-slate-500 px-6 py-3 flex items-center gap-3 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-all" href="#">
+<span class="material-symbols-outlined">contact_support</span> Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-14 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<p class="text-[11px] font-bold text-primary uppercase tracking-[0.1em] mb-1">Archive System</p>
+<h1 class="headline text-3xl font-bold text-on-background tracking-tight">Movement History</h1>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-5 py-2.5 rounded-md text-sm font-semibold flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">ios_share</span>
+                    Export CSV
+                </button>
+</div>
+<!-- Audit Filter Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-4 mb-6 shadow-sm border border-outline-variant/10 flex flex-wrap items-center gap-4">
+<div class="flex-1 min-w-[240px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 text-on-surface" placeholder="Search Product or SKU..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<select class="bg-surface-container-low border-none rounded-lg px-4 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 min-w-[160px]">
+<option>All Warehouses</option>
+<option>Central Distribution (WH-01)</option>
+<option>East Coast Node (WH-04)</option>
+<option>Remote Overflow (WH-09)</option>
+</select>
+<select class="bg-surface-container-low border-none rounded-lg px-4 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 min-w-[160px]">
+<option>All Movement Types</option>
+<option>Sale</option>
+<option>Return</option>
+<option>Adjustment</option>
+<option>Transfer</option>
+<option>Restock</option>
+<option>Damage</option>
+</select>
+<select class="bg-surface-container-low border-none rounded-lg px-4 py-2 text-sm text-on-surface focus:ring-2 focus:ring-primary/20 min-w-[140px]">
+<option>All Actors</option>
+<option>Admin User</option>
+<option>System Bot</option>
+</select>
+<div class="flex items-center bg-surface-container-low rounded-lg px-3 py-2 text-sm gap-2 text-on-surface cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span>Oct 01, 2023 - Oct 31, 2023</span>
+</div>
+</div>
+<button class="text-primary font-semibold text-sm px-2 hover:underline">Clear Filters</button>
+</div>
+<!-- Movement Audit Table (Dense) -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant/10">
+<div class="overflow-x-auto">
+<table class="w-full border-collapse text-left">
+<thead>
+<tr class="bg-surface-dim/30 border-b border-outline-variant/15">
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Timestamp</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Product &amp; Variant</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">SKU</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Warehouse</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Type</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider text-right">Change</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider text-right">Before</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider text-right">After</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Actor</th>
+<th class="px-4 py-3 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Reference</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-[13px]">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-4 py-2.5 mono text-on-surface-variant">2023-10-24 14:22:01</td>
+<td class="px-4 py-2.5 font-medium text-on-surface">Ergonomic Mesh Chair <span class="text-slate-400 font-normal">/ Obsidian Black</span></td>
+<td class="px-4 py-2.5 mono text-on-surface-variant">FUR-CH-882-OB</td>
+<td class="px-4 py-2.5">WH-01</td>
+<td class="px-4 py-2.5">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-tertiary/20 text-tertiary text-[11px] font-bold uppercase">
+<span class="h-1.5 w-1.5 rounded-full bg-tertiary"></span> Restock
+                                    </span>
+</td>
+<td class="px-4 py-2.5 text-right font-bold text-tertiary">+45</td>
+<td class="px-4 py-2.5 text-right text-slate-500">12</td>
+<td class="px-4 py-2.5 text-right font-semibold text-on-surface">57</td>
+<td class="px-4 py-2.5 text-on-surface-variant">A. Miller</td>
+<td class="px-4 py-2.5 mono text-primary hover:underline cursor-pointer">PO-44291</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2.5 mono text-on-surface-variant">2023-10-24 13:45:12</td>
+<td class="px-4 py-2.5 font-medium text-on-surface">Ultra-Light Laptop Pro <span class="text-slate-400 font-normal">/ 1TB Silver</span></td>
+<td class="px-4 py-2.5 mono text-on-surface-variant">TEC-LP-104-SL</td>
+<td class="px-4 py-2.5">WH-01</td>
+<td class="px-4 py-2.5">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-primary/20 text-primary text-[11px] font-bold uppercase">
+<span class="h-1.5 w-1.5 rounded-full bg-primary"></span> Sale
+                                    </span>
+</td>
+<td class="px-4 py-2.5 text-right font-bold text-error">-1</td>
+<td class="px-4 py-2.5 text-right text-slate-500">142</td>
+<td class="px-4 py-2.5 text-right font-semibold text-on-surface">141</td>
+<td class="px-4 py-2.5 text-on-surface-variant">System Bot</td>
+<td class="px-4 py-2.5 mono text-primary hover:underline cursor-pointer">ORD-99023</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2.5 mono text-on-surface-variant">2023-10-24 11:10:55</td>
+<td class="px-4 py-2.5 font-medium text-on-surface">Mechanical Keycap Set <span class="text-slate-400 font-normal">/ Vintage Grey</span></td>
+<td class="px-4 py-2.5 mono text-on-surface-variant">ACC-KB-221-VG</td>
+<td class="px-4 py-2.5">WH-04</td>
+<td class="px-4 py-2.5">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-orange-500/20 text-orange-600 text-[11px] font-bold uppercase">
+<span class="h-1.5 w-1.5 rounded-full bg-orange-500"></span> Adjustment
+                                    </span>
+</td>
+<td class="px-4 py-2.5 text-right font-bold text-error">-3</td>
+<td class="px-4 py-2.5 text-right text-slate-500">89</td>
+<td class="px-4 py-2.5 text-right font-semibold text-on-surface">86</td>
+<td class="px-4 py-2.5 text-on-surface-variant">S. Jenkins</td>
+<td class="px-4 py-2.5 mono text-primary hover:underline cursor-pointer">ADJ-1102</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2.5 mono text-on-surface-variant">2023-10-24 10:05:33</td>
+<td class="px-4 py-2.5 font-medium text-on-surface">Noise Cancelling Pods <span class="text-slate-400 font-normal">/ White</span></td>
+<td class="px-4 py-2.5 mono text-on-surface-variant">TEC-AD-550-WH</td>
+<td class="px-4 py-2.5">WH-01</td>
+<td class="px-4 py-2.5">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-purple-500/20 text-purple-600 text-[11px] font-bold uppercase">
+<span class="h-1.5 w-1.5 rounded-full bg-purple-500"></span> Transfer
+                                    </span>
+</td>
+<td class="px-4 py-2.5 text-right font-bold text-slate-600">±10</td>
+<td class="px-4 py-2.5 text-right text-slate-500">204</td>
+<td class="px-4 py-2.5 text-right font-semibold text-on-surface">194</td>
+<td class="px-4 py-2.5 text-on-surface-variant">A. Miller</td>
+<td class="px-4 py-2.5 mono text-primary hover:underline cursor-pointer">TRF-771</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2.5 mono text-on-surface-variant">2023-10-24 09:30:11</td>
+<td class="px-4 py-2.5 font-medium text-on-surface">Curved Monitor 34" <span class="text-slate-400 font-normal">/ Ultra-Wide</span></td>
+<td class="px-4 py-2.5 mono text-on-surface-variant">TEC-MN-900-UW</td>
+<td class="px-4 py-2.5">WH-09</td>
+<td class="px-4 py-2.5">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-red-500/20 text-red-600 text-[11px] font-bold uppercase">
+<span class="h-1.5 w-1.5 rounded-full bg-red-500"></span> Damage
+                                    </span>
+</td>
+<td class="px-4 py-2.5 text-right font-bold text-error">-2</td>
+<td class="px-4 py-2.5 text-right text-slate-500">8</td>
+<td class="px-4 py-2.5 text-right font-semibold text-on-surface">6</td>
+<td class="px-4 py-2.5 text-on-surface-variant">L. Zhang</td>
+<td class="px-4 py-2.5 mono text-primary hover:underline cursor-pointer">DMG-445</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2.5 mono text-on-surface-variant">2023-10-23 17:44:09</td>
+<td class="px-4 py-2.5 font-medium text-on-surface">Standing Desk <span class="text-slate-400 font-normal">/ Walnut Finish</span></td>
+<td class="px-4 py-2.5 mono text-on-surface-variant">FUR-DS-110-WN</td>
+<td class="px-4 py-2.5">WH-01</td>
+<td class="px-4 py-2.5">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-cyan-500/20 text-cyan-600 text-[11px] font-bold uppercase">
+<span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span> Return
+                                    </span>
+</td>
+<td class="px-4 py-2.5 text-right font-bold text-tertiary">+1</td>
+<td class="px-4 py-2.5 text-right text-slate-500">4</td>
+<td class="px-4 py-2.5 text-right font-semibold text-on-surface">5</td>
+<td class="px-4 py-2.5 text-on-surface-variant">System Bot</td>
+<td class="px-4 py-2.5 mono text-primary hover:underline cursor-pointer">ORD-98811</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Stats Footer -->
+<div class="px-6 py-4 bg-surface-container-low/50 flex items-center justify-between border-t border-outline-variant/10">
+<p class="text-xs text-on-surface-variant">Showing <span class="font-bold text-on-surface">1 - 25</span> of 1,482 audit records</p>
+<div class="flex items-center gap-2">
+<button class="h-8 w-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="h-8 px-3 flex items-center justify-center rounded bg-primary text-white text-xs font-bold">1</button>
+<button class="h-8 px-3 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high text-xs">2</button>
+<button class="h-8 px-3 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high text-xs">3</button>
+<span class="px-1 text-slate-400">...</span>
+<button class="h-8 px-3 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high text-xs">60</button>
+<button class="h-8 w-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual KPI Summary (Bento-ish Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/10 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Total Changes (24h)</p>
+<h4 class="headline text-2xl font-bold text-on-surface">1,240 <span class="text-sm font-normal text-slate-400">units</span></h4>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-[11px] text-tertiary font-bold">+12% vs yesterday</span>
+<span class="material-symbols-outlined text-primary/20 text-[24px]">analytics</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/10 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Reported Damages</p>
+<h4 class="headline text-2xl font-bold text-on-surface">14 <span class="text-sm font-normal text-slate-400">cases</span></h4>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-[11px] text-error font-bold">+2 high value items</span>
+<span class="material-symbols-outlined text-error/20 text-[24px]">warning</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant/10 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary"></div>
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Restock Frequency</p>
+<h4 class="headline text-2xl font-bold text-on-surface">8 <span class="text-sm font-normal text-slate-400">deliveries</span></h4>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-[11px] text-slate-500 font-medium">All nodes active</span>
+<span class="material-symbols-outlined text-tertiary/20 text-[24px]">local_shipping</span>
+</div>
+</div>
+<div class="bg-[#13161e] p-5 rounded-xl flex flex-col justify-between shadow-lg shadow-black/10">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">System Integrity</p>
+<h4 class="headline text-2xl font-bold text-white">99.98%</h4>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="text-[11px] text-primary-fixed-dim font-bold">Audit Locked</span>
+<span class="material-symbols-outlined text-white/20 text-[24px]">verified_user</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

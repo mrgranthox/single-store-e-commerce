@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reviews Moderation | Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#6bff8f",
+              "surface-container": "#ecedfb",
+              "secondary-container": "#dedfeb",
+              "outline": "#737685",
+              "inverse-primary": "#b4c5ff",
+              "on-primary": "#ffffff",
+              "surface-container-highest": "#e0e2f0",
+              "on-surface-variant": "#434654",
+              "on-secondary-fixed-variant": "#444650",
+              "on-tertiary-fixed-variant": "#005321",
+              "secondary-fixed-dim": "#c4c6d1",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#434654",
+              "surface-dim": "#d8d9e7",
+              "surface-container-high": "#e6e7f6",
+              "primary-container": "#3b6de6",
+              "on-error": "#ffffff",
+              "surface-variant": "#e0e2f0",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-tertiary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary-fixed-dim": "#4ae176",
+              "inverse-surface": "#2d303b",
+              "surface-bright": "#faf8ff",
+              "primary-fixed": "#dbe1ff",
+              "inverse-on-surface": "#eff0fe",
+              "on-primary-container": "#fefcff",
+              "on-secondary-fixed": "#181b24",
+              "on-tertiary-container": "#f7fff3",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#00873b",
+              "outline-variant": "#c3c6d6",
+              "background": "#faf8ff",
+              "on-background": "#181b25",
+              "primary": "#1653cc",
+              "surface-tint": "#1b55ce",
+              "on-secondary-container": "#60626c",
+              "surface-container-low": "#f2f3ff",
+              "tertiary": "#006b2d",
+              "secondary": "#5b5e68",
+              "surface": "#faf8ff",
+              "on-surface": "#181b25",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#e0e2ed",
+              "on-primary-fixed": "#00174a",
+              "on-tertiary-fixed": "#002109",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans"],
+              "label": ["IBM Plex Sans"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f0f2f7;
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        .shell-dark { background-color: #0f1117; }
+        .sidebar-dark { background-color: #13161e; }
+        .surface-dark { background-color: #1a1d27; }
+        .ghost-border { border: 1px solid rgba(195, 198, 214, 0.15); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="text-on-background">
+<!-- Side Navigation Shell -->
+<aside class="sidebar-dark h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 flex flex-col py-6">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Command Deck</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-slate-500 mt-1">Operational Architect</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors font-headline text-xs uppercase tracking-widest font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+                Categories
+            </a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors font-headline text-xs uppercase tracking-widest font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+                Brands
+            </a>
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-6 py-3 flex items-center gap-3 font-headline text-xs uppercase tracking-widest font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
+                Reviews
+            </a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors font-headline text-xs uppercase tracking-widest font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Overview
+            </a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors font-headline text-xs uppercase tracking-widest font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+                Low Stock
+            </a>
+</nav>
+<div class="mt-auto border-t border-slate-800/50 pt-4 px-2 space-y-1">
+<div class="px-4 py-3 flex items-center gap-3 mb-4">
+<img alt="Admin User Avatar" class="w-8 h-8 rounded-full border border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIVvBd-V-o5dRnkpP7VhJqivfuVYvJ_DTVJDnadAxIJpfQJJMVKdmM18qxLDnWrxbKXmcZrztSUYXhh-YR58L7L0gJFHMcePNT8o7sgbudUapC8Pc4qZthgKqBFTlfwIBzpJ_ki1zctQlmyQTPwt7u8dyzx15LWhQEOmGo7CXWmoSBflKDzOe1n0dNOIB4Hi5Ifo8kX1lGLzqxsD2fMA3hl4w-fNZ8rbKWVQIS7yqvQq-d0EH3Qu2bUFDHRu4xEwzTfUnn6JGfhbw"/>
+<div class="overflow-hidden">
+<p class="text-white text-xs font-semibold truncate">Alex Rivera</p>
+<p class="text-slate-500 text-[10px] truncate">Head Moderator</p>
+</div>
+</div>
+<a class="text-slate-400 hover:text-white px-4 py-2 flex items-center gap-3 transition-colors text-xs font-semibold" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="text-slate-400 hover:text-white px-4 py-2 flex items-center gap-3 transition-colors text-xs font-semibold" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+                Support
+            </a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white border-b border-slate-100 z-40 flex justify-between items-center px-8">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-slate-400 focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-body w-64 placeholder:text-slate-400" placeholder="Global operational search..." type="text"/>
+</div>
+<nav class="flex gap-6">
+<a class="text-slate-500 hover:text-primary transition-colors text-sm font-medium font-body" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-sm font-medium font-body" href="#">Analytics</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-sm font-medium font-body" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-5">
+<button class="text-slate-400 hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-100 mx-2"></div>
+<div class="flex items-center gap-3">
+<span class="text-sm font-semibold text-slate-700 font-body">Admin Panel</span>
+<span class="material-symbols-outlined text-slate-400" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Page Content Area -->
+<section class="mt-16 p-8 flex-1">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<nav class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+<span>Catalog</span>
+<span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary">Reviews Moderation</span>
+</nav>
+<h2 class="text-3xl font-bold font-headline text-on-background tracking-tight">Reviews</h2>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white ghost-border rounded-lg text-sm font-semibold text-slate-700 flex items-center gap-2 hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="file_download">file_download</span>
+                        Export Report
+                    </button>
+<button class="px-6 py-2 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg text-sm font-semibold shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome">auto_awesome</span>
+                        AI Summary
+                    </button>
+</div>
+</div>
+<!-- Filter Bar Section -->
+<div class="bg-white rounded-xl p-4 ghost-border flex flex-wrap gap-4 items-center mb-6">
+<div class="flex-1 min-w-[300px] relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="filter_list">filter_list</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20" placeholder="Filter by product or reviewer..." type="text"/>
+</div>
+<div class="flex gap-2">
+<select class="bg-surface-container-low border-none rounded-lg text-xs font-semibold px-4 py-2 focus:ring-2 focus:ring-primary/20 text-slate-600">
+<option>Status: All</option>
+<option>Pending</option>
+<option>Published</option>
+<option>Hidden</option>
+<option>Rejected</option>
+</select>
+<select class="bg-surface-container-low border-none rounded-lg text-xs font-semibold px-4 py-2 focus:ring-2 focus:ring-primary/20 text-slate-600">
+<option>Rating: All</option>
+<option>5 Stars</option>
+<option>4+ Stars</option>
+<option>3+ Stars</option>
+</select>
+<div class="bg-surface-container-low rounded-lg px-4 py-2 flex items-center gap-3">
+<span class="material-symbols-outlined text-sm text-slate-400" data-icon="calendar_today">calendar_today</span>
+<span class="text-xs font-semibold text-slate-600">Last 30 Days</span>
+</div>
+</div>
+<button class="ml-auto text-primary text-xs font-bold uppercase tracking-wider hover:underline">Reset Filters</button>
+</div>
+<!-- High-Density Data Table -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden ghost-border shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/30 border-b border-slate-100">
+<th class="py-4 px-6 w-10"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></th>
+<th class="py-4 px-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 font-label">Product</th>
+<th class="py-4 px-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 font-label">Reviewer</th>
+<th class="py-4 px-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 font-label">Rating</th>
+<th class="py-4 px-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 font-label">Excerpt</th>
+<th class="py-4 px-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 font-label">Date</th>
+<th class="py-4 px-4 text-[11px] font-bold uppercase tracking-widest text-slate-500 font-label">Status</th>
+<th class="py-4 px-6 text-right text-[11px] font-bold uppercase tracking-widest text-slate-500 font-label">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-high/20 transition-colors group cursor-pointer">
+<td class="py-4 px-6"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-slate-100 overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up of a premium red athletic sneaker with clean white studio lighting and sharp details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiotK9zFeft0RyEzx9cXtHeJma_qIBhUqYdXUTuENDGJW259EEb5vQnPqMJsXC_ELPBqc9wwCpveGn_sJZH3luqWk7Mt2B8Mz-QY2976Me805WEAtb4kOZRPGEe-Cjianq1mQKE7KYQIUNfwB1SFUCTg0USBC-HzGaKY6BNYSYmx4XXdx9_gAhrqcT_No5TQiEFn1PFQ-RWkECK327-DoZE2Z5vxc9_9uSMXC_62nsu4LO7N6NpRl5I3M-ydeIKCjtuA2cU95ddOs"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">Swift-Core Runner Pro</p>
+<p class="text-[10px] font-mono text-slate-400">SKU-99210-RD</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-medium text-slate-700">Sarah Jenkins</p>
+<p class="text-[10px] text-slate-400">Verified Buyer</p>
+</td>
+<td class="py-4 px-4">
+<div class="flex text-amber-400">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="text-xs text-slate-600 line-clamp-2 italic">"Incredibly lightweight and reactive. After 50 miles, the cushioning still feels..."</p>
+</td>
+<td class="py-4 px-4">
+<p class="text-xs font-mono text-slate-500">2023-11-24</p>
+</td>
+<td class="py-4 px-4">
+<span class="flex items-center gap-1.5 px-2 py-1 rounded-full ghost-border w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span class="text-[10px] font-bold uppercase tracking-tight text-amber-700">Pending</span>
+</span>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-tertiary hover:bg-tertiary/10 rounded" title="Publish"><span class="material-symbols-outlined text-lg" data-icon="check_circle">check_circle</span></button>
+<button class="p-1.5 text-slate-400 hover:bg-slate-100 rounded" title="Hide"><span class="material-symbols-outlined text-lg" data-icon="visibility_off">visibility_off</span></button>
+<button class="p-1.5 text-error hover:bg-error/10 rounded" title="Reject"><span class="material-symbols-outlined text-lg" data-icon="cancel">cancel</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high/20 transition-colors group cursor-pointer">
+<td class="py-4 px-6"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-slate-100 overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Minimalist luxury white wristwatch on a grey textured background with soft top-down lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDruAU-7QzB7lkaOsRlreNJIddftX16rTbfB5ThhhdND69q3v5Blf4VhOT2aR_bdQMnJ_LT_kTqwkQwxx3ejUTUt91WDbuk5BvIyRek9_2T67yP-B9xszn5vs2nO72QzyZmSiWWpirLWMOzf3WynbHQ08PhJlJEeWR4Ff7Mr1M4N4iItGTNJnblRY87zH4OGqXE3MuN7VQlE-rxLznKdS57V2vX76XHjwTh_umIpNhk4O0xOAlZuhVAGAfgp4D-0FgE-5ufYFgcNnM"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">Horizon Chronograph</p>
+<p class="text-[10px] font-mono text-slate-400">SKU-11044-WT</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-medium text-slate-700">Michael Chen</p>
+<p class="text-[10px] text-slate-400">Guest Reviewer</p>
+</td>
+<td class="py-4 px-4">
+<div class="flex text-amber-400">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="text-xs text-slate-600 line-clamp-2 italic">"Stunning design. It looks much better in person than in the photos. Quality feels..."</p>
+</td>
+<td class="py-4 px-4">
+<p class="text-xs font-mono text-slate-500">2023-11-23</p>
+</td>
+<td class="py-4 px-4">
+<span class="flex items-center gap-1.5 px-2 py-1 rounded-full ghost-border w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-[10px] font-bold uppercase tracking-tight text-tertiary">Published</span>
+</span>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:bg-slate-100 rounded" title="Hide"><span class="material-symbols-outlined text-lg" data-icon="visibility_off">visibility_off</span></button>
+<button class="p-1.5 text-error hover:bg-error/10 rounded" title="Reject"><span class="material-symbols-outlined text-lg" data-icon="cancel">cancel</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 (Rejected Example) -->
+<tr class="hover:bg-surface-container-high/20 transition-colors group cursor-pointer">
+<td class="py-4 px-6"><input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="py-4 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-slate-100 overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="High-end black wireless headphones on a dark oak table with warm accent lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYE_1dM__AyqUk-nc5b-dQnpSJUfniQ2_l46n0JhoPpCS12P-6l1AlIpJV-eE3fHPkzzw2NfzAJrp5L9AHzjZqA5aNwu_PqwEWdwd672gLmkweCTJR-tNsbiBBN27hw0SgAvDaHurNWFKsgq2VfdQmSNoh23Bvb0MEvzECSPBmZf41zqFXCCwMJ4wPFa4z5ETTeQFrWESOBfNDFfEJeddX49aOD1h_fVAkSHlxo9Fb--a6PyT-p_2ZbfQQYKgKiM4Zq-ETzEtSots"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-800">Zenith ANC Headphones</p>
+<p class="text-[10px] font-mono text-slate-400">SKU-88219-BK</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-4">
+<p class="text-sm font-medium text-slate-700">James Wilson</p>
+<p class="text-[10px] text-slate-400">Verified Buyer</p>
+</td>
+<td class="py-4 px-4">
+<div class="flex text-amber-400">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+</td>
+<td class="py-4 px-4 max-w-xs">
+<p class="text-xs text-slate-600 line-clamp-2 italic">"Total waste of money. The battery died after only 2 hours. I demand a full refund now..."</p>
+</td>
+<td class="py-4 px-4">
+<p class="text-xs font-mono text-slate-500">2023-11-22</p>
+</td>
+<td class="py-4 px-4">
+<span class="flex items-center gap-1.5 px-2 py-1 rounded-full ghost-border w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span class="text-[10px] font-bold uppercase tracking-tight text-error">Rejected</span>
+</span>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-primary hover:bg-primary/10 rounded" title="Restore"><span class="material-symbols-outlined text-lg" data-icon="restore">restore</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 bg-surface-container-high/10 flex justify-between items-center">
+<p class="text-xs text-slate-500 font-body">Showing 1-10 of 2,482 reviews</p>
+<div class="flex gap-2">
+<button class="p-2 rounded ghost-border hover:bg-white text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span></button>
+<button class="px-3 py-1 rounded bg-primary text-white text-xs font-bold">1</button>
+<button class="px-3 py-1 rounded hover:bg-white ghost-border text-slate-600 text-xs font-bold transition-colors">2</button>
+<button class="px-3 py-1 rounded hover:bg-white ghost-border text-slate-600 text-xs font-bold transition-colors">3</button>
+<button class="p-2 rounded ghost-border hover:bg-white text-slate-400 transition-colors"><span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side Detail Drawer (Open State Simulation) -->
+<div class="fixed inset-y-0 right-0 w-[450px] bg-surface-container-lowest shadow-2xl z-[60] border-l border-slate-100 flex flex-col transform translate-x-0 transition-transform duration-300">
+<!-- Drawer Header -->
+<div class="p-6 border-b border-slate-100 flex justify-between items-center">
+<div>
+<h3 class="text-lg font-bold font-headline text-slate-800">Review Details</h3>
+<p class="text-xs text-slate-500 mt-1">Review ID: <span class="font-mono">REV-992-001</span></p>
+</div>
+<button class="p-2 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-400" data-icon="close">close</span>
+</button>
+</div>
+<!-- Drawer Content (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-6 space-y-8 hide-scrollbar">
+<!-- Full Review Text -->
+<section>
+<div class="flex justify-between items-start mb-4">
+<div class="flex text-amber-400">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">24 Nov 2023, 14:32</span>
+</div>
+<h4 class="text-base font-bold text-slate-800 mb-2">"Incredibly lightweight and reactive"</h4>
+<p class="text-sm text-slate-600 leading-relaxed font-body">
+                        I've been using the Swift-Core Runner Pro for about two weeks now. As a marathon trainer, I'm very picky about responsiveness. These shoes deliver exactly what they promise. The transition from heel to toe is seamless. After 50 miles, the cushioning still feels as fresh as day one. Only downside is the laces are a bit short, but that's an easy fix. Highly recommend for serious runners.
+                    </p>
+</section>
+<!-- Reviewer & Product Link -->
+<section class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container-low rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Reviewer</p>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary font-bold text-xs">SJ</div>
+<div>
+<p class="text-xs font-bold text-slate-800">Sarah Jenkins</p>
+<p class="text-[10px] text-tertiary font-semibold uppercase">Verified Buyer</p>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl">
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Product</p>
+<p class="text-xs font-bold text-slate-800 truncate">Swift-Core Runner Pro</p>
+<p class="text-[10px] font-mono text-slate-500">ORD-#88210332</p>
+</div>
+</section>
+<!-- Image Assets (If any) -->
+<section>
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Review Media (2)</p>
+<div class="grid grid-cols-2 gap-3">
+<div class="aspect-square rounded-lg overflow-hidden ghost-border">
+<img class="w-full h-full object-cover" data-alt="A close-up high-angle shot of a white sneaker sitting on a clean wooden floor with natural morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIIqOQP-CNmKxT9ou9ZWqph_xEj7qRoNWbLJrr5CpD-lQQzI71d1j8qdzfgeSuBti15RaURaPxds83K_zsAkwdqPqisNkSSZ1TicO4SYOARWuH6muO1zz-5xiN9pF5aeOx_yuMMObFog2dV8ASU_p78G89OFO30iWVU0iI5MtYp9HdAaupY-zGRpJdztx_U9zPJbP1_OuJUG9i6HKXuqreXzmOBJyzM1PEGxwRAg7Vu7rEWZ8rV5jUrPsaYPf1Tn_tbN707vWpa5U"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden ghost-border relative">
+<img class="w-full h-full object-cover" data-alt="Detailed shot of the tread pattern on a high-performance running shoe with dynamic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtHvFZTvJ2XeN37ffaRMbEdcKxJ3UsV5XoTQhD_XcbrydJk7tEAexux2pYDJ2UnGFMWQ20BFmQbJDm_YzF41WUdZU-fPWQ43z56xd2ai7EZy5EQm_HxRy4FnLqkOqQTAR0AAA8ut_zzMgM392Vmad6XSlAKoiTc2zoV4_rphMhUSBHVuj0ffrI_uhej4RM4t6dar3HdFzQkc55KVT0p9h5FU4AQSGgHjkaMqMh-PxU4LSr7M8gLHrT88StXBhP403O7qw8LV7dWMU"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-bold">
+                                +1 More
+                            </div>
+</div>
+</div>
+</section>
+<!-- Moderation History -->
+<section>
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Moderation History</p>
+<div class="space-y-4 border-l-2 border-slate-100 ml-2 pl-6 relative">
+<div class="relative">
+<div class="absolute -left-[31px] top-1 w-2.5 h-2.5 rounded-full bg-slate-300 border-2 border-white"></div>
+<p class="text-xs font-bold text-slate-700">Flagged for Review</p>
+<p class="text-[10px] text-slate-400">System Auto-Flag • 24 Nov, 14:35</p>
+<p class="text-[10px] text-slate-500 mt-1 italic">Reason: Potential high-sentiment outlier</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[31px] top-1 w-2.5 h-2.5 rounded-full bg-slate-300 border-2 border-white"></div>
+<p class="text-xs font-bold text-slate-700">Assigned to Alex</p>
+<p class="text-[10px] text-slate-400">Queue Management • 24 Nov, 15:10</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Drawer Footer -->
+<div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
+<button class="flex-1 px-4 py-3 bg-white ghost-border rounded-lg text-xs font-bold uppercase tracking-widest text-error hover:bg-error/5 transition-colors">Reject</button>
+<button class="flex-1 px-4 py-3 bg-white ghost-border rounded-lg text-xs font-bold uppercase tracking-widest text-slate-600 hover:bg-slate-100 transition-colors">Hide</button>
+<button class="flex-[2] px-4 py-3 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-lg shadow-primary/25 hover:opacity-90 transition-opacity">Publish Review</button>
+</div>
+</div>
+<!-- Backdrop Overlay for Drawer -->
+<div class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-[55]"></div>
+</main>
+</body></html>

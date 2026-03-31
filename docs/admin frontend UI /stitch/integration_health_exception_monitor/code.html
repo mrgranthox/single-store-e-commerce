@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Integration Health — Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#5b5e68",
+              "on-tertiary": "#ffffff",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-error": "#ffffff",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#b4c5ff",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e0e2f0",
+              "on-surface": "#181b25",
+              "secondary-fixed-dim": "#c4c6d1",
+              "surface-container-low": "#f2f3ff",
+              "on-tertiary-container": "#f7fff3",
+              "surface-bright": "#faf8ff",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#002109",
+              "on-secondary-fixed-variant": "#444650",
+              "surface-tint": "#1b55ce",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary-fixed": "#6bff8f",
+              "on-background": "#181b25",
+              "on-secondary-container": "#60626c",
+              "on-primary-fixed": "#00174a",
+              "on-primary-container": "#fefcff",
+              "secondary-container": "#dedfeb",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-highest": "#e0e2f0",
+              "surface": "#faf8ff",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "outline-variant": "#c3c6d6",
+              "surface-container": "#ecedfb",
+              "inverse-on-surface": "#eff0fe",
+              "outline": "#737685",
+              "primary-container": "#3b6de6",
+              "on-secondary": "#ffffff",
+              "primary": "#1653cc",
+              "secondary-fixed": "#e0e2ed",
+              "tertiary": "#006b2d",
+              "inverse-surface": "#2d303b",
+              "primary-fixed": "#dbe1ff",
+              "surface-container-high": "#e6e7f6",
+              "on-surface-variant": "#434654",
+              "background": "#faf8ff"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans", "Inter"],
+              "label": ["IBM Plex Sans", "Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .glass-drawer { backdrop-filter: blur(20px); background-color: rgba(255, 255, 255, 0.85); }
+      .dot-grid { background-image: radial-gradient(circle, #13161e 1px, transparent 1px); background-size: 24px 24px; opacity: 0.05; }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] font-body text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#13161e] flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<span class="text-xl font-bold text-white tracking-tight font-headline">Operational Architect</span>
+<p class="text-xs text-slate-500 uppercase tracking-widest mt-1">System Admin</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="support_agent">support_agent</span>
+<span class="text-sm">Support Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="webhook">webhook</span>
+<span class="text-sm">Webhooks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings_backup_restore">settings_backup_restore</span>
+<span class="text-sm">Background Jobs</span>
+</a>
+<!-- Active Tab: Integration Health -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded bg-[#1a1d27] text-white font-semibold" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="health_and_safety" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+<span class="text-sm">Integration Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="terminal">terminal</span>
+<span class="text-sm">System Audit</span>
+</a>
+</nav>
+<div class="px-3 mt-auto pt-6 border-t border-slate-800/50">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 transition-colors mb-2" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="description">description</span>
+<span class="text-sm">Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+<span class="text-sm">Support</span>
+</a>
+<div class="mt-6 flex items-center gap-3 px-3">
+<img alt="User Profile" class="w-8 h-8 rounded-full object-cover" data-alt="professional portrait of a system administrator in a dark office environment with soft blue screen lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeJHuYajuXPEq8KwL1LJ0_vnuvRMcYghRCo4-jKJUcqAuY6Mo3aOKo-t0LyRndps4ZJu4oyANFpiZaWzOFwsLfas4tF_hFXbe0p04y0CT3CjqV8Xp2kG_I4zeCvdt7ShQ6S9qr4ui3f51BAHD6W4bDokD9ii7HMA6MVxJMBNJ2C9p_KI6Hwri2EBQsqwzDVt0H7y7hu6u93R1GY3J-XN3Xj68zx3wMjNuvkDifKvA33cSMJykNEzxVazsnpvZSqRvDSz3LhSvKyC0"/>
+<div class="overflow-hidden">
+<p class="text-xs font-semibold text-white truncate">Admin_User_01</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-tighter">Verified Node</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="w-full h-16 sticky top-0 z-40 bg-[#f0f2f7] dark:bg-[#0f1117] flex items-center justify-between px-8 ml-64">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-1.5 text-[0.6875rem] tracking-wide uppercase font-label focus:ring-1 focus:ring-primary" placeholder="SEARCH SERVICES OR TRACE_ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="font-semibold text-[#0f1117] dark:text-white uppercase tracking-tighter text-sm">Command Deck</span>
+<div class="flex items-center gap-4 border-l border-slate-300 dark:border-slate-800 pl-6">
+<button class="relative text-slate-500 hover:text-[#4f7ef8] transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-screen">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h1 class="text-3xl font-bold font-headline text-on-surface tracking-tight">Integration Health</h1>
+<p class="text-secondary text-sm font-label mt-1">REAL-TIME MONITORING OF EXTERNAL API NODES &amp; DATA PIPELINES</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-lowest px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+                    FORCE PING ALL
+                </button>
+<button class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    NEW INTEGRATION
+                </button>
+</div>
+</div>
+<!-- Row 1: Integration Health Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+<!-- Card 1 (Error State) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-error relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline font-bold text-lg">Stripe Payments</h3>
+<p class="font-mono text-[10px] text-secondary">ID: SRV-ST-0922</p>
+</div>
+<div class="flex items-center gap-1.5 bg-error/10 px-2 py-1 rounded text-error font-label text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                        CRITICAL
+                    </div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-6">
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Last Ping</p>
+<p class="text-sm font-mono font-medium">0.4s ago</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Avg Latency</p>
+<p class="text-sm font-mono font-medium text-error">1248ms</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Error Rate</p>
+<p class="text-sm font-mono font-medium text-error">12.4%</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Uptime</p>
+<p class="text-sm font-mono font-medium">98.21%</p>
+</div>
+</div>
+</div>
+<!-- Card 2 (Healthy) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary-container relative overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline font-bold text-lg">AWS S3 Storage</h3>
+<p class="font-mono text-[10px] text-secondary">ID: SRV-AWS-4410</p>
+</div>
+<div class="flex items-center gap-1.5 bg-tertiary/10 px-2 py-1 rounded text-tertiary font-label text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                        OPTIMAL
+                    </div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-6">
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Last Ping</p>
+<p class="text-sm font-mono font-medium">1.2s ago</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Avg Latency</p>
+<p class="text-sm font-mono font-medium text-tertiary">42ms</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Error Rate</p>
+<p class="text-sm font-mono font-medium text-tertiary">0.01%</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Uptime</p>
+<p class="text-sm font-mono font-medium">99.99%</p>
+</div>
+</div>
+</div>
+<!-- Card 3 (Warning) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-[#f59e0b] relative overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline font-bold text-lg">SendGrid SMTP</h3>
+<p class="font-mono text-[10px] text-secondary">ID: SRV-SG-1104</p>
+</div>
+<div class="flex items-center gap-1.5 bg-amber-500/10 px-2 py-1 rounded text-amber-600 font-label text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                        DEGRADED
+                    </div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-6">
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Last Ping</p>
+<p class="text-sm font-mono font-medium">4.5s ago</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Avg Latency</p>
+<p class="text-sm font-mono font-medium text-amber-600">312ms</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Error Rate</p>
+<p class="text-sm font-mono font-medium text-amber-600">2.1%</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-secondary uppercase tracking-wider">Uptime</p>
+<p class="text-sm font-mono font-medium">99.45%</p>
+</div>
+</div>
+</div>
+<!-- Row 1 Continued (3 more cards simplified for layout) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary-container">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline font-bold text-lg">Twilio SMS</h3>
+<span class="bg-tertiary/10 text-tertiary text-[10px] font-bold px-2 py-1 rounded">HEALTHY</span>
+</div>
+<div class="mt-6 flex justify-between items-end">
+<p class="font-mono text-xl font-bold">18ms</p>
+<p class="font-label text-[10px] text-secondary">0.0% ERRORS</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary-container">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline font-bold text-lg">ElasticSearch</h3>
+<span class="bg-tertiary/10 text-tertiary text-[10px] font-bold px-2 py-1 rounded">HEALTHY</span>
+</div>
+<div class="mt-6 flex justify-between items-end">
+<p class="font-mono text-xl font-bold">8ms</p>
+<p class="font-label text-[10px] text-secondary">0.0% ERRORS</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-error">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline font-bold text-lg">Segment Analytics</h3>
+<span class="bg-error/10 text-error text-[10px] font-bold px-2 py-1 rounded">TIMING OUT</span>
+</div>
+<div class="mt-6 flex justify-between items-end">
+<p class="font-mono text-xl font-bold text-error">5000ms+</p>
+<p class="font-label text-[10px] text-secondary">100% ERRORS</p>
+</div>
+</div>
+</div>
+<!-- Row 2: Latency Trend Line Chart -->
+<div class="bg-surface-container-lowest p-8 rounded-xl mb-8 relative">
+<div class="flex items-center justify-between mb-10">
+<h3 class="font-headline font-bold text-xl">Aggregated Latency Trend (24H)</h3>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-[10px] font-label uppercase">Global Median</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-error"></span>
+<span class="text-[10px] font-label uppercase">Anomalies</span>
+</div>
+</div>
+</div>
+<!-- Mock Chart Area -->
+<div class="h-64 w-full flex items-end justify-between gap-1 relative">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between border-b border-outline-variant/20 pointer-events-none">
+<div class="border-t border-outline-variant/10 w-full"></div>
+<div class="border-t border-outline-variant/10 w-full"></div>
+<div class="border-t border-outline-variant/10 w-full"></div>
+<div class="border-t border-outline-variant/10 w-full"></div>
+</div>
+<!-- Simulated Bars/Points -->
+<div class="w-full h-full absolute flex items-end">
+<svg class="w-full h-full preserve-3d" preserveaspectratio="none" viewbox="0 0 1000 100">
+<path class="opacity-80" d="M0,80 L50,75 L100,78 L150,70 L200,85 L250,82 L300,75 L350,20 L400,25 L450,70 L500,75 L550,72 L600,78 L650,80 L700,75 L750,70 L800,72 L850,75 L900,10 L950,20 L1000,75" fill="none" stroke="#1653cc" stroke-width="2"></path>
+<circle cx="350" cy="20" fill="#ba1a1a" r="4"></circle>
+<circle cx="900" cy="10" fill="#ba1a1a" r="4"></circle>
+</svg>
+</div>
+</div>
+<div class="flex justify-between mt-4 font-mono text-[10px] text-secondary">
+<span>00:00</span>
+<span>04:00</span>
+<span>08:00</span>
+<span>12:00</span>
+<span>16:00</span>
+<span>20:00</span>
+<span>23:59</span>
+</div>
+</div>
+<!-- Row 3: Integration Exceptions Table -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<div class="p-6 flex items-center justify-between bg-surface-container-high/20">
+<h3 class="font-headline font-bold text-xl">Active Integration Exceptions</h3>
+<div class="flex items-center gap-2">
+<button class="text-xs font-bold text-secondary px-3 py-1 hover:text-primary transition-colors">ALL TIME</button>
+<button class="text-xs font-bold bg-white text-primary px-3 py-1 rounded shadow-sm">LAST 24H</button>
+</div>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-high/10">
+<th class="px-6 py-4 text-[10px] font-label text-secondary uppercase tracking-widest">EXC_ID</th>
+<th class="px-6 py-4 text-[10px] font-label text-secondary uppercase tracking-widest">Service</th>
+<th class="px-6 py-4 text-[10px] font-label text-secondary uppercase tracking-widest">Error Type</th>
+<th class="px-6 py-4 text-[10px] font-label text-secondary uppercase tracking-widest">Count (24h)</th>
+<th class="px-6 py-4 text-[10px] font-label text-secondary uppercase tracking-widest">Last Seen</th>
+<th class="px-6 py-4 text-[10px] font-label text-secondary uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-[10px] font-label text-secondary uppercase tracking-widest">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-container-high/5 group transition-colors">
+<td class="px-6 py-4 font-mono text-xs font-medium">#E-442019</td>
+<td class="px-6 py-4">
+<span class="text-sm font-semibold">Stripe API</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm text-error font-medium">AuthenticationError</span>
+<span class="text-[11px] text-secondary truncate max-w-[200px]">Invalid API Key provided in header...</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-sm">1,242</td>
+<td class="px-6 py-4 text-[11px] font-label uppercase text-secondary">2 mins ago</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center gap-1.5 border border-error/30 px-2 py-0.5 rounded-full text-error text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                UNRESOLVED
+                            </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-3">
+<button class="text-primary hover:underline text-xs font-bold uppercase tracking-tighter">Acknowledge</button>
+<button class="text-secondary hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/5 group transition-colors">
+<td class="px-6 py-4 font-mono text-xs font-medium">#E-442018</td>
+<td class="px-6 py-4">
+<span class="text-sm font-semibold">Segment</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm text-error font-medium">TimeoutException</span>
+<span class="text-[11px] text-secondary truncate max-w-[200px]">Upstream connection refused at socket...</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-sm">89</td>
+<td class="px-6 py-4 text-[11px] font-label uppercase text-secondary">15 mins ago</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center gap-1.5 border border-amber-500/30 px-2 py-0.5 rounded-full text-amber-600 text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                INVESTIGATING
+                            </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-3">
+<button class="text-primary hover:underline text-xs font-bold uppercase tracking-tighter">Acknowledge</button>
+<button class="text-secondary hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+<!-- Detail Drawer (Focus Mode) -->
+<!-- Positioned to the right as per design system Detail Drawer rule -->
+<div class="fixed top-0 right-0 h-full w-[450px] glass-drawer shadow-2xl z-[60] border-l border-white/20 transform translate-x-0 transition-transform duration-300">
+<div class="p-8 h-full flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div>
+<span class="text-[10px] font-label uppercase tracking-widest text-secondary">Exception Details</span>
+<h2 class="text-2xl font-bold font-headline mt-1">#E-442019</h2>
+</div>
+<button class="bg-surface-container-low p-2 rounded-lg hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="space-y-6 overflow-y-auto no-scrollbar flex-1">
+<section>
+<label class="text-[10px] font-label text-secondary uppercase font-bold tracking-widest block mb-2">Error Summary</label>
+<div class="bg-[#13161e] text-white p-4 rounded-lg font-mono text-xs border-l-4 border-error">
+                        AuthenticationError: The provided API key 'sk_test_****491' has been revoked or is no longer valid for this endpoint.
+                    </div>
+</section>
+<section>
+<label class="text-[10px] font-label text-secondary uppercase font-bold tracking-widest block mb-2">Full Stack Trace</label>
+<div class="bg-[#13161e]/95 text-slate-300 p-4 rounded-lg font-mono text-[10px] leading-relaxed overflow-x-auto">
+                        at Stripe.API.Client.Execute (Request req)<br/>
+                        at App.Middleware.IntegrationGate.Forward (Context ctx)<br/>
+                        at System.Threading.Tasks.Task.Execute ()<br/>
+                        --- End of Inner Exception Stack Trace ---<br/>
+                        at App.Core.Services.PaymentProvider.Auth (Credential cred)<br/>
+                        at App.API.Controllers.CheckoutController.Process (Data d)
+                    </div>
+</section>
+<section>
+<label class="text-[10px] font-label text-secondary uppercase font-bold tracking-widest block mb-2">Request Payload (JSON)</label>
+<div class="bg-[#f0f2f7] p-4 rounded-lg font-mono text-[11px] text-[#0f1117]">
+<pre>{
+  "provider": "stripe",
+  "method": "post_payment",
+  "payload": {
+    "amount": 29900,
+    "currency": "usd",
+    "customer": "cus_Nl293kS02"
+  },
+  "metadata": {
+    "retry_count": 0,
+    "source_ip": "192.168.1.44"
+  }
+}</pre>
+</div>
+</section>
+<section class="mt-8 pt-8 border-t border-slate-200">
+<div class="flex gap-4">
+<button class="flex-1 bg-primary text-white py-3 rounded-lg font-bold text-xs shadow-lg hover:bg-primary-container transition-colors">
+                            RE-RUN INTEGRATION
+                        </button>
+<button class="flex-1 bg-surface-container-highest text-on-surface py-3 rounded-lg font-bold text-xs hover:bg-surface-container-high transition-colors">
+                            ASSIGN TICKET
+                        </button>
+</div>
+</section>
+</div>
+</div>
+</div>
+<!-- Backdrop Overlay for Drawer -->
+<div class="fixed inset-0 bg-on-surface/5 backdrop-blur-sm z-50 pointer-events-none opacity-0"></div>
+</body></html>

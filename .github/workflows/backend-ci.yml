@@ -1,0 +1,140 @@
+name: Backend CI
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - "backend/**"
+      - "deploy/**"
+      - "docs/**"
+      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/backend-nightly.yml"
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "backend/**"
+      - "deploy/**"
+      - "docs/**"
+      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/backend-nightly.yml"
+
+env:
+  CI_NODE_VERSION: "20"
+
+permissions:
+  contents: read
+
+jobs:
+  unit-typecheck-build:
+    name: Unit tests, enterprise verify, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.CI_NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - name: Prisma validate & generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+        run: |
+          npx prisma validate
+          npx prisma generate
+      - name: Enterprise verification (includes typecheck)
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          REDIS_URL: redis://127.0.0.1:6379
+          SESSION_SECRET: ci-session-secret-must-be-at-least-32-chars
+          EMAIL_PROVIDER: none
+          STORAGE_PROVIDER: none
+        run: npm run verify:enterprise
+      - run: npm run test:unit
+      - run: npm run build -- --pretty false
+
+  integration-test:
+    name: Integration tests (Postgres + Redis)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ecommerce_user
+          POSTGRES_PASSWORD: strongpassword
+          POSTGRES_DB: ecommerce_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ecommerce_user -d ecommerce_db"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://ecommerce_user:strongpassword@localhost:5432/ecommerce_db
+      REDIS_URL: redis://127.0.0.1:6379
+      SESSION_SECRET: ci-session-secret-must-be-at-least-32-chars
+      EMAIL_PROVIDER: none
+      STORAGE_PROVIDER: none
+      ALLOW_DEV_AUTH_BYPASS: "true"
+      PAYSTACK_SECRET_KEY: test-secret
+      PAYSTACK_WEBHOOK_SECRET: test-secret
+      PAYSTACK_VERIFY_TRANSACTIONS: "false"
+      PUBLIC_SUPPORT_CAPTCHA_ENABLED: "true"
+      ABUSE_CHALLENGE_PROVIDER: turnstile
+      TURNSTILE_SITE_KEY: test-site-key
+      TURNSTILE_SECRET_KEY: test-secret
+      TURNSTILE_EXPECTED_HOSTNAMES: 127.0.0.1,localhost
+      PAYSTACK_ALLOWED_WEBHOOK_IPS: 127.0.0.1,::1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.CI_NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx prisma validate
+      - name: Apply Prisma migrations
+        run: npx prisma migrate deploy
+      - run: npm run test:integration
+
+  dependency-audit:
+    name: Dependency audit (production)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.CI_NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci --omit=dev
+      - name: npm audit (critical only)
+        run: npm audit --omit=dev --audit-level=critical

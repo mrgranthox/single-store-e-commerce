@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Webhooks Monitoring | Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'IBM+Plex+Sans', sans-serif; }
+        .font-headline { font-family: 'DM Sans', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#5b5e68",
+              "on-tertiary": "#ffffff",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-error": "#ffffff",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#b4c5ff",
+              "error-container": "#ffdad6",
+              "surface-variant": "#e0e2f0",
+              "on-surface": "#181b25",
+              "secondary-fixed-dim": "#c4c6d1",
+              "surface-container-low": "#f2f3ff",
+              "on-tertiary-container": "#f7fff3",
+              "surface-bright": "#faf8ff",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#002109",
+              "on-secondary-fixed-variant": "#444650",
+              "surface-tint": "#1b55ce",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary-fixed": "#6bff8f",
+              "on-background": "#181b25",
+              "on-secondary-container": "#60626c",
+              "on-primary-fixed": "#00174a",
+              "on-primary-container": "#fefcff",
+              "secondary-container": "#dedfeb",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-highest": "#e0e2f0",
+              "surface": "#faf8ff",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "outline-variant": "#c3c6d6",
+              "surface-container": "#ecedfb",
+              "inverse-on-surface": "#eff0fe",
+              "outline": "#737685",
+              "primary-container": "#3b6de6",
+              "on-secondary": "#ffffff",
+              "primary": "#1653cc",
+              "secondary-fixed": "#e0e2ed",
+              "tertiary": "#006b2d",
+              "inverse-surface": "#2d303b",
+              "primary-fixed": "#dbe1ff",
+              "surface-container-high": "#e6e7f6",
+              "on-surface-variant": "#434654",
+              "background": "#faf8ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#13161e] flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<span class="text-xl font-bold text-white tracking-tight">Operational Architect</span>
+<div class="mt-2 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-white text-xs font-bold">OA</div>
+<div>
+<p class="text-xs font-semibold text-white leading-none">System Admin</p>
+<p class="text-[10px] text-slate-400 mt-1">Operational Architect</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-lg">support_agent</span>
+<span class="text-sm">Support Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-[#1a1d27] text-white font-semibold rounded-lg group" href="#">
+<span class="material-symbols-outlined text-lg text-[#4f7ef8]">webhook</span>
+<span class="text-sm">Webhooks</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-lg">settings_backup_restore</span>
+<span class="text-sm">Background Jobs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-lg">health_and_safety</span>
+<span class="text-sm">Integration Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined text-lg">terminal</span>
+<span class="text-sm">System Audit</span>
+</a>
+</nav>
+<div class="px-3 mt-auto pt-6 border-t border-white/5 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<span class="text-sm">Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-[#1a1d27]/50 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">help</span>
+<span class="text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Cluster -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="w-full h-16 sticky top-0 z-40 bg-[#f0f2f7] dark:bg-[#0f1117] flex items-center justify-between px-8">
+<div class="flex items-center gap-4">
+<h1 class="font-semibold text-[#0f1117] dark:text-white text-lg tracking-tight">Command Deck</h1>
+<div class="h-4 w-[1px] bg-outline-variant/30 mx-2"></div>
+<div class="flex items-center bg-surface-container rounded-md px-3 py-1.5 w-64">
+<span class="material-symbols-outlined text-sm text-slate-500 mr-2">search</span>
+<input class="bg-transparent border-none p-0 text-xs focus:ring-0 placeholder-slate-500 w-full" placeholder="Search events..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-[#4f7ef8] transition-all duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<img class="w-8 h-8 rounded-full object-cover" data-alt="close up professional portrait of a tech administrator with clean background and focused expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcWnXJt1MD81ovuB3YasC4fdrqK_pL_ltDdlkJ-_JG9GhSyj-tU4bsczYLJgfzb-LaSKpgmlyizUHZnh5WAEVQuld4DRx5ZbD2DY6pKmwHBGqzZLAVjk-9PJVzEksyuUFjXV9NCas-s-JGBLvlHp2etPkMCRsBoi8mgxwR63luMoweP5o2aua6i2D5okjKd7Cu2Kjtt-8UufxG2N59_v7L7flnmGFyndyq16jJaCziQYKCC7K7zrCdjgvo96UxLSo2i19BK2Som9E"/>
+</div>
+</header>
+<!-- Operational Canvas -->
+<div class="p-8 space-y-6">
+<!-- Summary Strip -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl border-l-4 border-primary shadow-sm flex flex-col">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-secondary mb-1">Received (24h)</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-bold font-headline">12,842</span>
+<span class="text-[10px] text-tertiary font-bold">+4.2%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border-l-4 border-tertiary shadow-sm flex flex-col">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-secondary mb-1">Processed</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-bold font-headline">12,790</span>
+<span class="text-[10px] text-tertiary font-bold">99.6%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border-l-4 border-error shadow-sm flex flex-col">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-secondary mb-1">Failed</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-bold font-headline">48</span>
+<span class="text-[10px] text-error font-bold">-0.8%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border-l-4 border-secondary shadow-sm flex flex-col">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-secondary mb-1">Retry Queue</span>
+<div class="flex items-end justify-between">
+<span class="text-2xl font-bold font-headline">4</span>
+<span class="text-[10px] text-secondary font-bold">Pending</span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-wrap items-center gap-4">
+<div class="flex flex-col gap-1">
+<label class="text-[10px] uppercase font-bold text-slate-500">Provider</label>
+<select class="text-xs bg-surface-container border-none rounded focus:ring-1 focus:ring-primary py-1 px-3">
+<option>All Providers</option>
+<option>Stripe</option>
+<option>Paystack</option>
+<option>MTN MoMo</option>
+<option>DHL Shipping</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] uppercase font-bold text-slate-500">Event Type</label>
+<select class="text-xs bg-surface-container border-none rounded focus:ring-1 focus:ring-primary py-1 px-3">
+<option>All Events</option>
+<option>charge.succeeded</option>
+<option>payment.failed</option>
+<option>order.shipped</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] uppercase font-bold text-slate-500">Status</label>
+<select class="text-xs bg-surface-container border-none rounded focus:ring-1 focus:ring-primary py-1 px-3">
+<option>All Statuses</option>
+<option>Processed</option>
+<option>Processing</option>
+<option>Failed</option>
+<option>Retrying</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] uppercase font-bold text-slate-500">Date Range</label>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1 rounded">
+<span class="material-symbols-outlined text-xs text-slate-400">calendar_today</span>
+<span class="text-xs text-on-surface">Oct 24 - Oct 25, 2023</span>
+</div>
+</div>
+<div class="ml-auto">
+<button class="bg-primary text-white text-xs px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                        Apply Filters
+                    </button>
+</div>
+</div>
+<!-- Webhooks Data Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Webhook ID</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Provider</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Event Type</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Status</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Received (UTC)</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500 text-right">Time (ms)</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500 text-right">Retry</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-sm">
+<!-- Failed Row -->
+<tr class="hover:bg-surface-container-high transition-colors border-l-4 border-error">
+<td class="px-6 py-4 font-mono text-[11px] text-primary">evt_9k2Lp4mZ0x</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-[#635bff]"></div>
+<span class="font-semibold">Stripe</span>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary">payment_intent.succeeded</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border border-error text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Failed
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[11px]">2023-10-25 14:02:11</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">1,204</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">3/5</td>
+<td class="px-6 py-4 text-right space-x-2">
+<button class="text-primary hover:underline text-xs font-bold">View Payload</button>
+<button class="text-error hover:underline text-xs font-bold">Retry</button>
+</td>
+</tr>
+<!-- Processed Row -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4 font-mono text-[11px] text-primary">wh_1a8Bx2vR4c</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-[#09a5db]"></div>
+<span class="font-semibold">Paystack</span>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary">charge.success</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border border-tertiary text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Processed
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[11px]">2023-10-25 14:01:45</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">142</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">0</td>
+<td class="px-6 py-4 text-right space-x-2">
+<button class="text-primary hover:underline text-xs font-bold">View Payload</button>
+</td>
+</tr>
+<!-- Retrying Row -->
+<tr class="hover:bg-surface-container-high transition-colors border-l-4 border-amber-500">
+<td class="px-6 py-4 font-mono text-[11px] text-primary">msg_8f1Yv0qW7p</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-[#ffcc00]"></div>
+<span class="font-semibold">MTN MoMo</span>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary">disbursement.completed</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border border-amber-600 text-amber-600">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Retrying
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[11px]">2023-10-25 13:58:30</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">890</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">1/5</td>
+<td class="px-6 py-4 text-right space-x-2">
+<button class="text-primary hover:underline text-xs font-bold">View Payload</button>
+<button class="text-slate-400 cursor-not-allowed text-xs font-bold">Retrying...</button>
+</td>
+</tr>
+<!-- Processed Row -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-6 py-4 font-mono text-[11px] text-primary">shp_3e5Ns9tU2h</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-slate-800"></div>
+<span class="font-semibold">Shipping Provider</span>
+</div>
+</td>
+<td class="px-6 py-4 text-secondary">tracking.update</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border border-tertiary text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Processed
+                                </span>
+</td>
+<td class="px-6 py-4 font-mono text-[11px]">2023-10-25 13:55:12</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">215</td>
+<td class="px-6 py-4 text-right font-mono text-[11px]">0</td>
+<td class="px-6 py-4 text-right space-x-2">
+<button class="text-primary hover:underline text-xs font-bold">View Payload</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-low flex items-center justify-between">
+<span class="text-xs text-secondary">Showing 1 to 25 of 12,842 results</span>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded border border-outline-variant flex items-center justify-center hover:bg-white"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-8 h-8 rounded bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded border border-outline-variant text-xs font-bold hover:bg-white">2</button>
+<button class="w-8 h-8 rounded border border-outline-variant text-xs font-bold hover:bg-white">3</button>
+<button class="w-8 h-8 rounded border border-outline-variant flex items-center justify-center hover:bg-white"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Side Detail Drawer (Payload Inspector) -->
+<!-- Fixed for layout visibility in this task -->
+<div class="fixed top-0 right-0 w-[450px] h-full glass-panel border-l border-outline-variant/30 shadow-2xl z-50 transform translate-x-0 transition-transform duration-300">
+<div class="h-full flex flex-col">
+<div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
+<div>
+<h2 class="font-headline font-bold text-lg">Event Payload</h2>
+<p class="text-xs text-secondary font-mono mt-1">evt_9k2Lp4mZ0x</p>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Status & Error Info -->
+<div class="bg-error-container/30 p-4 rounded-lg border-l-4 border-error">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-error text-sm">error</span>
+<span class="text-xs font-bold text-on-error-container uppercase">500 Internal Server Error</span>
+</div>
+<p class="text-[11px] text-error leading-relaxed">Failed to process payment_intent.succeeded. Target worker "checkout-v3" timed out after 3000ms. Database connection refused by peer.</p>
+</div>
+<!-- Metadata Grid -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-3 rounded">
+<span class="text-[9px] uppercase font-bold text-slate-500 block">Processing Time</span>
+<span class="font-mono text-sm font-semibold">1,204ms</span>
+</div>
+<div class="bg-surface-container-low p-3 rounded">
+<span class="text-[9px] uppercase font-bold text-slate-500 block">Retry Count</span>
+<span class="font-mono text-sm font-semibold">3 / 5</span>
+</div>
+</div>
+<!-- Raw JSON -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-[10px] uppercase font-bold text-slate-500">Inbound JSON</span>
+<button class="text-primary text-[10px] font-bold hover:underline">Copy Payload</button>
+</div>
+<div class="bg-[#0f1117] p-4 rounded-lg overflow-x-auto">
+<pre class="text-[#89ddff] font-mono text-[10px] leading-relaxed">{
+  "id": "evt_9k2Lp4mZ0x",
+  "object": "event",
+  "api_version": "2022-11-15",
+  "created": 1698242531,
+  "data": {
+    "object": {
+      "id": "pi_3MtwajLkdIwVj2bC1vGedI",
+      "amount": 2000,
+      "currency": "usd",
+      "status": "succeeded",
+      "payment_method": "pm_1MtwajLkdIwVj2bC",
+      "receipt_email": "ops@system.io",
+      "metadata": {
+        "order_id": "ORD-7721-X"
+      }
+    }
+  },
+  "type": "payment_intent.succeeded"
+}
+                        </pre>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low border-t border-outline-variant/20 flex gap-3">
+<button class="flex-1 bg-primary text-white font-bold py-2.5 rounded-lg text-sm hover:bg-primary-container transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">refresh</span>
+                    Force Retry Now
+                </button>
+<button class="px-4 py-2.5 rounded-lg border border-outline text-on-surface font-bold text-sm hover:bg-white transition-all">
+                    Dismiss
+                </button>
+</div>
+</div>
+</div>
+</body></html>

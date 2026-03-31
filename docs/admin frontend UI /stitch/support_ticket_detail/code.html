@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ticket #[TKT-03841] — Order Not Received</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#5b5e68",
+                        "inverse-surface": "#2d303b",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-variant": "#e0e2f0",
+                        "outline-variant": "#c3c6d6",
+                        "on-surface-variant": "#434654",
+                        "tertiary": "#006b2d",
+                        "on-surface": "#181b25",
+                        "on-secondary-container": "#60626c",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-primary-fixed": "#00174a",
+                        "secondary-fixed": "#e0e2ed",
+                        "inverse-on-surface": "#eff0fe",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-secondary-fixed": "#181b24",
+                        "secondary-container": "#dedfeb",
+                        "surface-container-high": "#e6e7f6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#3b6de6",
+                        "on-background": "#181b25",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-primary-container": "#fefcff",
+                        "outline": "#737685",
+                        "on-secondary-fixed-variant": "#444650",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#ecedfb",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#002109",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "primary": "#1653cc",
+                        "surface": "#faf8ff",
+                        "tertiary-container": "#00873b",
+                        "surface-dim": "#d8d9e7",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface-tint": "#1b55ce",
+                        "on-secondary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans"],
+                        "body": ["IBM Plex Sans"],
+                        "label": ["IBM Plex Sans"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f0f2f7; }
+        .sidebar-bg { background-color: #13161e; }
+        .canvas-bg { background-color: #f0f2f7; }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); }
+        .dot-grid { background-image: radial-gradient(#f8f9fb 1px, transparent 1px); background-size: 16px 16px; opacity: 0.05; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Shell: SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 border-r-0 sidebar-bg flex flex-col py-6 px-4 z-50">
+<div class="mb-10 px-2 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">architecture</span>
+</div>
+<h1 class="text-xl font-bold text-white tracking-tight">The Architect</h1>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-colors hover:bg-[#1a1d27] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="manage_accounts">manage_accounts</span>
+<span class="font-medium">Account Center</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] font-medium rounded-r-lg" href="#">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="font-medium">Support Tickets</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-colors hover:bg-[#1a1d27] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="hourglass_top">hourglass_top</span>
+<span class="font-medium">Support Queue</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-colors hover:bg-[#1a1d27] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-medium">Pre-Purchase</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-colors hover:bg-[#1a1d27] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-medium">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-800 space-y-1">
+<div class="px-3 py-2 flex items-center gap-3 mb-4">
+<img alt="User Profile" class="w-8 h-8 rounded-full bg-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGFyJPLU9e8L3vLtSzT2a1g6O8rpMTr2ZzkxQO9qp_mKcTWYJJLFkbu7ZksW1gzTEsPpN9Qycz32K6SuxWpNEmlGDQJbZu_LCQfzeCQ3XR4zL5jx-TQEoM0j8jf_-bT_mquglvPOzmM--lXu-gfCb4frWw1FEab3lrhXjiJPdecxMDwnKOsNKfuS4GlmffRsh5NbLcnSDguW5APGAdDMjhiVlBPaWZkpkmOoIGZXTMsBN_y2600YSJ5hnmSIJERcXSHt_csyWhVSA"/>
+<div class="overflow-hidden">
+<p class="text-xs font-semibold text-white truncate">Operational Admin</p>
+<p class="text-[10px] text-slate-500 truncate">System Status: Active</p>
+</div>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-colors hover:bg-[#1a1d27] rounded-lg" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="settings">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-colors hover:bg-[#1a1d27] rounded-lg" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help_center">help_center</span>
+<span class="text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Shell: TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white shadow-sm flex justify-between items-center px-8 z-40">
+<div class="flex items-center gap-6">
+<div class="text-lg font-semibold text-slate-900">E-Commerce Command</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-500 font-medium hover:text-[#4f7ef8] transition-colors uppercase tracking-[0.05em] text-[11px]" href="#">Dashboard</a>
+<a class="text-slate-500 font-medium hover:text-[#4f7ef8] transition-colors uppercase tracking-[0.05em] text-[11px]" href="#">Logs</a>
+<a class="text-[#4f7ef8] font-bold border-b-2 border-[#4f7ef8] pb-1 uppercase tracking-[0.05em] text-[11px]" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<input class="bg-surface-container-low border-none rounded-full px-4 py-1.5 text-sm w-64 focus:ring-1 focus:ring-primary transition-all" placeholder="Search operational data..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2 text-slate-400 text-sm">search</span>
+</div>
+<button class="material-symbols-outlined text-slate-500 hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:text-primary transition-colors">history</button>
+<button class="bg-primary text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span>Create Ticket</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-8 canvas-bg min-h-[calc(100vh-4rem)]">
+<!-- Page Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<span class="px-2 py-0.5 bg-primary-container text-white text-[10px] font-bold rounded">TICKET</span>
+<span class="font-mono text-sm font-medium text-secondary">#TKT-03841</span>
+</div>
+<h2 class="text-2xl font-bold font-headline text-on-surface">Order Not Received — Delayed Shipment Inquiry</h2>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white text-on-surface-variant text-sm font-semibold rounded-lg border border-outline-variant hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">share</span> Share
+                </button>
+<button class="px-4 py-2 bg-error text-white text-sm font-semibold rounded-lg hover:bg-error/90 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">close</span> Close Ticket
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- Left: Thread Panel (60%) -->
+<div class="col-span-12 lg:col-span-7 flex flex-col gap-6">
+<!-- Thread Header & Internal Switch -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col h-[700px]">
+<div class="p-4 border-b border-surface-variant flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-4">
+<span class="text-sm font-semibold uppercase tracking-wider text-secondary">Conversation Thread</span>
+<div class="flex items-center bg-white rounded-full p-1 border border-outline-variant">
+<button class="px-3 py-1 text-[10px] font-bold rounded-full bg-primary text-white">ALL</button>
+<button class="px-3 py-1 text-[10px] font-bold rounded-full text-secondary hover:bg-surface-variant transition-colors flex items-center gap-1">
+                                    INTERNAL <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+</button>
+</div>
+</div>
+<span class="text-xs text-secondary font-mono">12:45 PM GMT+0</span>
+</div>
+<!-- Message Feed -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Customer Message -->
+<div class="flex justify-end">
+<div class="max-w-[80%] flex flex-col items-end">
+<div class="bg-primary-container text-white px-5 py-3 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                    Hello, I haven't received my order #ORD-8821 yet. It was supposed to be delivered two days ago. Can you check the status?
+                                </div>
+<span class="text-[10px] text-secondary mt-1 font-medium">Eleanor Vance • 10:24 AM</span>
+</div>
+</div>
+<!-- Agent Reply -->
+<div class="flex justify-start">
+<div class="max-w-[80%] flex flex-col items-start">
+<div class="bg-surface-container-highest text-on-surface px-5 py-3 rounded-2xl rounded-tl-none text-sm leading-relaxed border border-surface-variant">
+                                    Hi Eleanor, I'm sorry to hear your order hasn't arrived. Let me check the carrier logs for you right away. It looks like there was a delay at the regional sorting center.
+                                </div>
+<span class="text-[10px] text-secondary mt-1 font-medium">Marcus (Support Agent) • 10:45 AM</span>
+</div>
+</div>
+<!-- Internal Note -->
+<div class="flex justify-start w-full px-4">
+<div class="w-full bg-amber-50/50 border border-amber-200/50 rounded-lg p-3 flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-600 text-lg">lock</span>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[10px] font-bold text-amber-800 uppercase tracking-tighter">Internal Note</span>
+<span class="text-[10px] text-amber-700/60 font-mono">Marcus • 10:46 AM</span>
+</div>
+<p class="text-xs text-amber-900/80 italic">Verified with FedEx tracking. Package is stuck in Memphis. Notifying logistics team for expedited scan.</p>
+</div>
+</div>
+</div>
+<!-- Customer Message with Attachment -->
+<div class="flex justify-end">
+<div class="max-w-[80%] flex flex-col items-end">
+<div class="bg-primary-container text-white px-5 py-3 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                    Thank you. Here is a screenshot of the tracking page showing it hasn't moved.
+                                </div>
+<div class="mt-2 w-48 h-32 rounded-lg border-2 border-primary overflow-hidden relative group cursor-pointer">
+<img alt="Tracking Page Screenshot" class="w-full h-full object-cover" data-alt="A screenshot of a shipping carrier tracking page showing a package stuck in transit with a red delay warning" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1nNmZ455CryxEViA5n_IhmhOKfrIhlPgzvxr7QDSBPfWTAKFsiF3aRDJH__nb7HQk6V-UALfBhSrg533N8KJe-VGZY_GWazeXLH6Crtn8ynHw-eHDOCdD3nrbrtE3uGdj-LoM6YbtZJ_eKoI50HSPGahsRMyz76nGVdzCMDGqZ2IyePp6hlpKmdC93xyAPFdLpaidOUNX7wCBivVhObT5e4oDtE_6ds87Vms5Eib3Nc_Gkq0wBh_eN5OGHt0i-8qXnKzwWuCXzRg"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white">download</span>
+</div>
+</div>
+<span class="text-[10px] text-secondary mt-1 font-medium">Eleanor Vance • 11:15 AM</span>
+</div>
+</div>
+</div>
+<!-- Reply Composer -->
+<div class="p-4 bg-white border-t border-surface-variant">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<button class="p-1.5 hover:bg-surface-container rounded transition-colors text-secondary"><span class="material-symbols-outlined text-lg">format_bold</span></button>
+<button class="p-1.5 hover:bg-surface-container rounded transition-colors text-secondary"><span class="material-symbols-outlined text-lg">format_italic</span></button>
+<button class="p-1.5 hover:bg-surface-container rounded transition-colors text-secondary"><span class="material-symbols-outlined text-lg">link</span></button>
+<button class="p-1.5 hover:bg-surface-container rounded transition-colors text-secondary"><span class="material-symbols-outlined text-lg">attach_file</span></button>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-secondary uppercase">Internal Mode</span>
+<button class="w-8 h-4 bg-slate-200 rounded-full relative transition-colors">
+<span class="absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform translate-x-0"></span>
+</button>
+</div>
+</div>
+<textarea class="w-full border-none focus:ring-0 text-sm resize-none h-24 placeholder-slate-400" placeholder="Type your response to the customer..."></textarea>
+<div class="flex justify-between items-center mt-2">
+<button class="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">auto_fix_high</span> Use AI Suggestion
+                            </button>
+<button class="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-primary/90 active:scale-95 transition-all flex items-center gap-2">
+                                Send Response <span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Middle Rail: Entity Links -->
+<div class="hidden lg:flex lg:col-span-1 flex-col gap-8 pt-4 items-center">
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-white border border-outline-variant flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined">shopping_cart</span>
+</div>
+<span class="text-[9px] font-bold uppercase tracking-tighter text-secondary">Order</span>
+<span class="text-[10px] font-mono font-medium">#8821</span>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-white border border-outline-variant flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="text-[9px] font-bold uppercase tracking-tighter text-secondary">User</span>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="flex flex-col items-center gap-1 group cursor-pointer opacity-30">
+<div class="w-10 h-10 rounded-full bg-white border border-outline-variant flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">assignment_return</span>
+</div>
+<span class="text-[9px] font-bold uppercase tracking-tighter text-secondary">Return</span>
+</div>
+</div>
+<!-- Right: Metadata & Customer Panel (40% - adjustments for 12 col) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<!-- SLA Timer -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-l-4 border-error">
+<div class="flex justify-between items-center mb-2">
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary">SLA Deadline</span>
+<span class="px-2 py-0.5 bg-error-container text-error text-[10px] font-bold rounded">URGENT</span>
+</div>
+<div class="font-mono text-3xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-error">timer</span>
+                        01:42:15
+                    </div>
+<div class="mt-4 w-full bg-surface-variant h-1 rounded-full overflow-hidden">
+<div class="bg-error h-full w-[85%]"></div>
+</div>
+</div>
+<!-- Ticket Metadata -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-4 border-b border-surface-variant flex justify-between items-center">
+<h3 class="text-sm font-bold uppercase tracking-wider text-secondary">Ticket Metadata</h3>
+<button class="material-symbols-outlined text-slate-400 hover:text-primary">more_horiz</button>
+</div>
+<div class="p-5 space-y-5">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-secondary">Status</span>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1.5 px-3 py-1 bg-white border border-primary text-primary text-[10px] font-bold rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> OPEN
+                                </span>
+<button class="material-symbols-outlined text-slate-400 text-sm">edit</button>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-secondary">Priority</span>
+<div class="flex items-center gap-2">
+<span class="px-3 py-1 bg-white border border-error text-error text-[10px] font-bold rounded-full">HIGH</span>
+<button class="material-symbols-outlined text-slate-400 text-sm">edit</button>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-secondary">Category</span>
+<span class="text-xs font-semibold">Logistics / Delivery</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-secondary">Assigned To</span>
+<div class="flex items-center gap-2">
+<img alt="Agent Avatar" class="w-5 h-5 rounded-full bg-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-Hh1MvNIDCl0cnbmyXr4j2GK0EiMhIVlBAGhLgYZJnKxa8ecomB0vVAID2lm7BB2bu47XVLhaapSgJqb8aHZPtlbY8a3TzIoCE8XNxgYePKV4c2wWO1AuVsuITyK0HAWlq4PACERS45Bb2aRf5Mcp02p5bEZBFNwpDj49-bHGZeNDKj2Hh2CtMd9dC2XogMib9v45TdKmgNPmkYI4MF9atRXA2Rd_iez2lrd7IQz-RwRF8yn6m7EcNxWbdBSrawykcTqdt0DbgH8"/>
+<span class="text-xs font-semibold">Marcus J.</span>
+<button class="material-symbols-outlined text-slate-400 text-sm">swap_horiz</button>
+</div>
+</div>
+</div>
+<div class="px-5 py-4 bg-surface-container-low grid grid-cols-2 gap-4">
+<div>
+<p class="text-[9px] font-bold text-secondary uppercase">Created</p>
+<p class="text-xs font-medium">Oct 12, 09:22 AM</p>
+</div>
+<div>
+<p class="text-[9px] font-bold text-secondary uppercase">Last Updated</p>
+<p class="text-xs font-medium">14 mins ago</p>
+</div>
+</div>
+</div>
+<!-- Customer Mini-Card -->
+<div class="bg-white rounded-xl shadow-sm p-6 flex items-center gap-5 border border-transparent hover:border-primary/20 transition-all">
+<img alt="Eleanor Vance Avatar" class="w-16 h-16 rounded-full object-cover ring-4 ring-surface-container" data-alt="Professional studio portrait of a woman in her 30s with a kind expression and corporate attire, soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC8Tk-KPq6oIOGXtnBCtKEx1gDgckLf7N2YRCAIBjCUVDuL7WHEO-KSCN3aGp_Dw0fGU9WPEeMZqzm_UTffKNX0gRs2UbHDUYtmdJ57-_7lFxM62DcYrEosAYDhfxiaQdovd0ayoFKch52xtaCaVDg3XZijBjEXeQnwP1_wXYk21JR-hizk3x27E_gDHmLQc0bB8rhId2MKcjKu0euZ6E5yJgi714ODCnpiaYmTSvHa0jT3O8lYFMqAnfEPyFz_O_HoYGLzM-5lag"/>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<h4 class="text-base font-bold text-on-surface">Eleanor Vance</h4>
+<span class="px-1.5 py-0.5 bg-tertiary-container text-white text-[8px] font-bold rounded">PLATINUM TIER</span>
+</div>
+<p class="text-xs text-secondary mb-3">Customer since 2021 • 14 Orders</p>
+<div class="flex gap-2">
+<button class="flex-1 py-1.5 bg-surface-container hover:bg-surface-container-high text-on-surface text-[10px] font-bold rounded uppercase transition-colors">Profile</button>
+<button class="flex-1 py-1.5 bg-surface-container hover:bg-surface-container-high text-on-surface text-[10px] font-bold rounded uppercase transition-colors">History</button>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="flex flex-col gap-3">
+<button class="w-full py-3 bg-tertiary-container text-white font-bold rounded-xl shadow-lg shadow-tertiary-container/20 flex items-center justify-center gap-2 hover:translate-y-[-2px] active:translate-y-0 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span> Resolve Ticket
+                    </button>
+<button class="w-full py-3 bg-white text-secondary border border-outline-variant font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">archive</span> Archive Thread
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB Suppression: FAB only on Home/Dashboard, not detail view -->
+</body></html>

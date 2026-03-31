@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Health Dashboard | Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-variant": "#e0e2f0",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "secondary-fixed": "#e0e2ed",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#002109",
+                        "on-surface": "#181b25",
+                        "outline-variant": "#c3c6d6",
+                        "on-secondary-fixed-variant": "#444650",
+                        "on-secondary-fixed": "#181b24",
+                        "on-primary-container": "#fefcff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "outline": "#737685",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "secondary-container": "#dedfeb",
+                        "on-background": "#181b25",
+                        "inverse-on-surface": "#eff0fe",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e6e7f6",
+                        "inverse-surface": "#2d303b",
+                        "on-secondary-container": "#60626c",
+                        "surface-tint": "#1b55ce",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#00174a",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-surface-variant": "#434654",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#00873b",
+                        "surface": "#faf8ff",
+                        "background": "#faf8ff",
+                        "primary-container": "#3b6de6",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary": "#006b2d",
+                        "primary": "#1653cc",
+                        "surface-bright": "#faf8ff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "surface-dim": "#d8d9e7",
+                        "on-tertiary-container": "#f7fff3",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface-container": "#ecedfb",
+                        "secondary": "#5b5e68",
+                        "on-error-container": "#93000a"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans", "sans-serif"],
+                        "body": ["IBM Plex Sans", "sans-serif"],
+                        "label": ["IBM Plex Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'IBM Plex Sans', sans-serif; }
+        h1, h2, h3 { font-family: 'DM Sans', sans-serif; }
+        .mono-text { font-family: 'JetBrains Mono', monospace; }
+        .tonal-sidebar { background-color: #13161e; }
+        .tonal-shell { background-color: #0f1117; }
+        .tonal-canvas { background-color: #f0f2f7; }
+        .glass-drawer { backdrop-filter: blur(20px); }
+    </style>
+</head>
+<body class="tonal-canvas text-on-surface antialiased overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 tonal-sidebar flex flex-col py-6 shadow-2xl">
+<div class="px-6 mb-10">
+<h1 class="text-white font-bold tracking-tighter text-xl">Command Deck</h1>
+<p class="text-slate-500 text-[0.6875rem] uppercase tracking-wider font-semibold">Enterprise Admin</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Products</span>
+</a>
+<div class="relative group">
+<a class="flex items-center px-6 py-3 bg-gradient-to-r from-[#1653cc] to-[#3b6de6] text-white rounded-r-lg translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined mr-3">hub</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">System</span>
+</a>
+<div class="ml-12 mt-2 space-y-2">
+<a class="block text-white text-xs font-medium" href="#">Health</a>
+<a class="block text-slate-400 hover:text-white text-xs" href="#">Logs</a>
+<a class="block text-slate-400 hover:text-white text-xs" href="#">Clusters</a>
+</div>
+</div>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined mr-3">package_2</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Inventory</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 pt-6 border-t border-slate-800/50">
+<a class="flex items-center py-2 text-slate-400 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">contact_support</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Support</span>
+</a>
+<a class="flex items-center py-2 text-slate-400 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">menu_book</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Documentation</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 w-full px-6 py-3 flex justify-between items-center bg-[#f0f2f7] tonal-depth shift">
+<div class="flex items-center gap-4">
+<div class="flex items-center text-slate-500 text-xs gap-2">
+<span>System</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-[#1653cc] font-semibold">Health</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<input class="bg-surface-container-low border-none text-xs rounded-xl px-4 py-2 w-64 focus:ring-1 focus:ring-primary" placeholder="Search parameters..." type="text"/>
+</div>
+<div class="flex items-center gap-4 text-slate-500">
+<button class="material-symbols-outlined hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined hover:text-primary transition-colors">help</button>
+<button class="material-symbols-outlined hover:text-primary transition-colors">settings</button>
+<div class="h-8 w-8 rounded-full bg-slate-300 overflow-hidden">
+<img alt="Administrator Profile" data-alt="Close-up portrait of a professional system administrator in a high-tech server room environment with soft blue backlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5rn6hLy7rF0UzAg7s90jKrRaYKKxhoax-P-v0GFiseFP4fMmnVYxxBG3pWY9ZInQ4-3SrjFKemq4AZw0mFzhIwoGBpJFKdY1zd5Vfpwq-3wFLq34TsoS1L3MpYriLD2kswmgtoonl2tYhM0uEM_HkBGrhPjOl1uNOWvRZdIyfHVWzFi7N52GZHref-JJ8oUWAjRgGB2-gKYXe_2kCOFRLUYyHuLRy4Ee94ALrhyiCVK94fivv-iOORXPlAIqyY0KkKvtbXy842B0"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 space-y-8 max-w-[1600px] mx-auto w-full">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-bold text-on-surface tracking-tight">System Health</h2>
+<p class="text-on-surface-variant text-sm mt-1">Real-time status of background jobs, integrations, and webhook processing.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-600 bg-surface-container-high rounded-xl hover:bg-slate-200 transition-colors">Export Report</button>
+<button class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#1653cc] to-[#3b6de6] rounded-xl hover:opacity-90 transition-opacity">Force System Sync</button>
+</div>
+</div>
+<!-- Row 1: KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Job Success Rate -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Job Success Rate %</span>
+<span class="material-symbols-outlined text-slate-300">task_alt</span>
+</div>
+<div class="flex items-baseline justify-between mt-auto">
+<span class="text-3xl font-bold tracking-tight text-on-surface">99.8%</span>
+<div class="flex items-center text-tertiary text-[0.6875rem] font-bold">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+<span>+0.2%</span>
+</div>
+</div>
+</div>
+<!-- Webhook Delivery Rate -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-orange-400"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Webhook Delivery Rate %</span>
+<span class="material-symbols-outlined text-slate-300">sync_alt</span>
+</div>
+<div class="flex items-baseline justify-between mt-auto">
+<span class="text-3xl font-bold tracking-tight text-on-surface">98.4%</span>
+<div class="flex items-center text-orange-500 text-[0.6875rem] font-bold">
+<span class="material-symbols-outlined text-xs">trending_down</span>
+<span>-0.1%</span>
+</div>
+</div>
+</div>
+<!-- Failed Jobs -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Failed Jobs (24h)</span>
+<span class="material-symbols-outlined text-slate-300">error_outline</span>
+</div>
+<div class="flex items-baseline justify-between mt-auto">
+<span class="text-3xl font-bold tracking-tight text-on-surface mono-text">14</span>
+<div class="flex items-center text-error text-[0.6875rem] font-bold">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+<span>+4</span>
+</div>
+</div>
+</div>
+<!-- Failing Integrations -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Failing Integrations</span>
+<span class="material-symbols-outlined text-slate-300">hub</span>
+</div>
+<div class="flex items-baseline justify-between mt-auto">
+<span class="text-3xl font-bold tracking-tight text-on-surface mono-text">2</span>
+<div class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[0.6rem] font-bold uppercase tracking-tighter">Critical</div>
+</div>
+</div>
+</div>
+<!-- Row 2: Full-width Webhook Processing chart -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Webhook Processing Throughput</h3>
+<p class="text-xs text-slate-400">Events per hour (Last 24h)</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-primary"></div>
+<span class="text-[0.65rem] font-bold uppercase tracking-widest text-slate-500">Processed</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-slate-300"></div>
+<span class="text-[0.65rem] font-bold uppercase tracking-widest text-slate-500">Received</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-error"></div>
+<span class="text-[0.65rem] font-bold uppercase tracking-widest text-slate-500">Failed</span>
+</div>
+</div>
+</div>
+<!-- Chart Visual Placeholder -->
+<div class="h-64 w-full flex items-end gap-1 relative overflow-hidden">
+<!-- SVG Simulation -->
+<svg class="absolute inset-0 w-full h-full opacity-20" viewbox="0 0 1000 100">
+<path d="M0,80 Q100,20 200,60 T400,30 T600,50 T800,20 T1000,40" fill="none" stroke="#1653cc" stroke-width="2"></path>
+<path d="M0,85 Q100,25 200,65 T400,35 T600,55 T800,25 T1000,45" fill="none" stroke="#cbd5e1" stroke-width="2"></path>
+</svg>
+<div class="flex-1 h-[60%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[65%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[72%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[58%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[82%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[44%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[32%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[12%] bg-error/20 rounded-t-sm border-t border-error/50"></div> <!-- Spike in failure -->
+<div class="flex-1 h-[62%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[75%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[88%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[92%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[84%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[78%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[65%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[55%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[45%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[35%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[25%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[15%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[22%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[34%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[48%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+<div class="flex-1 h-[52%] bg-primary/10 rounded-t-sm border-t border-primary/40"></div>
+</div>
+<div class="flex justify-between mt-4 text-[0.6rem] mono-text text-slate-400">
+<span>00:00</span>
+<span>04:00</span>
+<span>08:00</span>
+<span>12:00</span>
+<span>16:00</span>
+<span>20:00</span>
+<span>23:59</span>
+</div>
+</div>
+<!-- Row 3: Three Panel Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Background Jobs Status Table -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Background Jobs</h3>
+<span class="material-symbols-outlined text-slate-300">list_alt</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[0.65rem] uppercase tracking-widest text-slate-400 font-bold">
+<th class="pb-4">Job Name</th>
+<th class="pb-4">Status</th>
+<th class="pb-4 text-right">Duration</th>
+</tr>
+</thead>
+<tbody class="text-xs">
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3 font-medium text-on-surface">Invoice Generator</td>
+<td class="py-3">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary"></div>
+<span class="text-slate-600">Success</span>
+</div>
+</td>
+<td class="py-3 text-right mono-text text-slate-500">1.42s</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3 font-medium text-on-surface">Daily Sync Hub</td>
+<td class="py-3">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+<span class="text-slate-600">Running</span>
+</div>
+</td>
+<td class="py-3 text-right mono-text text-slate-500">--</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3 font-medium text-on-surface">Auth Cleanup</td>
+<td class="py-3">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-error"></div>
+<span class="text-slate-600">Failed</span>
+</div>
+</td>
+<td class="py-3 text-right mono-text text-slate-500">0.05s</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3 font-medium text-on-surface">CDN Purge Task</td>
+<td class="py-3">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary"></div>
+<span class="text-slate-600">Success</span>
+</div>
+</td>
+<td class="py-3 text-right mono-text text-slate-500">3.10s</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3 font-medium text-on-surface">Newsletter Batch</td>
+<td class="py-3">
+<div class="flex items-center gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+<span class="text-slate-600">Pending</span>
+</div>
+</td>
+<td class="py-3 text-right mono-text text-slate-500">--</td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="mt-6 w-full py-2 text-[0.65rem] font-bold uppercase tracking-widest text-primary hover:bg-primary/5 rounded-lg transition-colors border border-primary/20">View Worker Logs</button>
+</div>
+<!-- Integration Health Grid -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Integrations</h3>
+<span class="material-symbols-outlined text-slate-300">lan</span>
+</div>
+<div class="grid grid-cols-2 gap-4 flex-1">
+<!-- Stripe -->
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/20 hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-bold text-on-surface">Stripe</span>
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(34,197,94,0.4)]"></div>
+</div>
+<div class="space-y-1">
+<p class="text-[0.6rem] text-slate-400 uppercase tracking-tighter">Latency</p>
+<p class="text-sm font-bold mono-text text-primary">42ms</p>
+</div>
+</div>
+<!-- ShipStation -->
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-bold text-on-surface">ShipStation</span>
+<div class="w-2 h-2 rounded-full bg-orange-400"></div>
+</div>
+<div class="space-y-1">
+<p class="text-[0.6rem] text-slate-400 uppercase tracking-tighter">Latency</p>
+<p class="text-sm font-bold mono-text text-orange-500">1,240ms</p>
+</div>
+</div>
+<!-- Twilio -->
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-bold text-on-surface">Twilio</span>
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+<div class="space-y-1">
+<p class="text-[0.6rem] text-slate-400 uppercase tracking-tighter">Latency</p>
+<p class="text-sm font-bold mono-text text-primary">88ms</p>
+</div>
+</div>
+<!-- SendGrid -->
+<div class="p-4 bg-surface-container-low rounded-xl border border-outline-variant/20">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-bold text-on-surface">SendGrid</span>
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+</div>
+<div class="space-y-1">
+<p class="text-[0.6rem] text-slate-400 uppercase tracking-tighter">Latency</p>
+<p class="text-sm font-bold mono-text text-error">Timeout</p>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-between text-[0.65rem] text-slate-400">
+<span>Last global ping: <span class="mono-text">14:02:11</span></span>
+<a class="text-primary font-bold uppercase tracking-widest hover:underline" href="#">Full Status</a>
+</div>
+</div>
+<!-- Recent Exceptions List -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold uppercase tracking-wider text-slate-500">Recent Exceptions</h3>
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div class="space-y-4 flex-1">
+<div class="pb-3 border-b border-outline-variant/10">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-error mono-text tracking-tighter">TimeoutError</span>
+<span class="text-[0.6rem] font-bold text-slate-400 mono-text">14:01:22</span>
+</div>
+<p class="text-[0.7rem] text-slate-600 mt-1 line-clamp-1">Connection timed out while calling SendGrid API endpoint /v3/mail/send...</p>
+<div class="flex mt-2 justify-end">
+<span class="text-[0.6rem] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded font-bold mono-text">Occurrences: 8</span>
+</div>
+</div>
+<div class="pb-3 border-b border-outline-variant/10">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-error mono-text tracking-tighter">ValidationError</span>
+<span class="text-[0.6rem] font-bold text-slate-400 mono-text">13:58:04</span>
+</div>
+<p class="text-[0.7rem] text-slate-600 mt-1 line-clamp-1">Expected string for 'shipping_id', received null in webhook payload.</p>
+<div class="flex mt-2 justify-end">
+<span class="text-[0.6rem] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded font-bold mono-text">Occurrences: 2</span>
+</div>
+</div>
+<div class="pb-3 border-b border-outline-variant/10">
+<div class="flex justify-between items-start">
+<span class="text-xs font-bold text-error mono-text tracking-tighter">DatabaseLock</span>
+<span class="text-[0.6rem] font-bold text-slate-400 mono-text">13:45:10</span>
+</div>
+<p class="text-[0.7rem] text-slate-600 mt-1 line-clamp-1">Deadlock detected while updating inventory stock levels during sync.</p>
+<div class="flex mt-2 justify-end">
+<span class="text-[0.6rem] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded font-bold mono-text">Occurrences: 1</span>
+</div>
+</div>
+</div>
+<button class="mt-6 w-full py-2 text-[0.65rem] font-bold uppercase tracking-widest text-on-error bg-error rounded-lg hover:bg-error/90 transition-colors">Clear Stack Trace</button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto py-6 px-8 border-t border-outline-variant/20 text-slate-400 text-[0.65rem] flex justify-between items-center">
+<div class="flex items-center gap-4">
+<span>© 2024 Operational Architect</span>
+<span class="h-1 w-1 rounded-full bg-slate-300"></span>
+<span>Version 4.2.0-stable</span>
+</div>
+<div class="flex items-center gap-4 uppercase tracking-widest font-bold">
+<a class="hover:text-primary transition-colors" href="#">System Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">API Keys</a>
+</div>
+</footer>
+</main>
+<!-- Right Side Context Drawer (Glass Component) -->
+<div class="fixed right-0 top-0 bottom-0 w-80 tonal-sidebar glass-drawer z-[60] transform translate-x-full transition-transform duration-300 border-l border-white/5">
+<div class="p-6 h-full flex flex-col">
+<div class="flex justify-between items-center mb-10">
+<h4 class="text-white text-sm font-bold uppercase tracking-widest">Node Inspector</h4>
+<button class="material-symbols-outlined text-slate-400 hover:text-white">close</button>
+</div>
+<div class="space-y-8 overflow-y-auto pr-2">
+<div class="p-4 bg-white/5 rounded-xl">
+<h5 class="text-[0.65rem] text-slate-500 font-bold mb-2 uppercase tracking-wider">Cluster Health</h5>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-300">us-east-1a</span>
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 bg-tertiary rounded-full"></div>
+<div class="w-1.5 h-1.5 bg-tertiary rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

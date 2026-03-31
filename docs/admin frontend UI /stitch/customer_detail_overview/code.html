@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Detail Overview - Financial Reconciliation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#3b6de6",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-surface-variant": "#434654",
+              "secondary": "#5b5e68",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#f2f3ff",
+              "on-secondary-fixed": "#181b24",
+              "primary-fixed": "#dbe1ff",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-background": "#181b25",
+              "secondary-container": "#dedfeb",
+              "inverse-on-surface": "#eff0fe",
+              "surface-container-highest": "#e0e2f0",
+              "on-surface": "#181b25",
+              "tertiary-container": "#00873b",
+              "on-tertiary-container": "#f7fff3",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#fefcff",
+              "surface-container-high": "#e6e7f6",
+              "secondary-fixed": "#e0e2ed",
+              "outline-variant": "#c3c6d6",
+              "secondary-fixed-dim": "#c4c6d1",
+              "inverse-primary": "#b4c5ff",
+              "inverse-surface": "#2d303b",
+              "background": "#faf8ff",
+              "error": "#ba1a1a",
+              "primary": "#1653cc",
+              "outline": "#737685",
+              "surface-tint": "#1b55ce",
+              "on-secondary-container": "#60626c",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#4ae176",
+              "on-tertiary-fixed": "#002109",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d8d9e7",
+              "surface": "#faf8ff",
+              "surface-variant": "#e0e2f0",
+              "surface-container": "#ecedfb",
+              "on-secondary-fixed-variant": "#444650",
+              "tertiary-fixed": "#6bff8f",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary": "#006b2d",
+              "surface-bright": "#faf8ff",
+              "on-primary-fixed": "#00174a"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans", "Inter"],
+              "label": ["IBM Plex Sans", "Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f0f2f7; }
+      .shell-gradient { background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%); }
+    </style>
+</head>
+<body class="text-on-background">
+<!-- SideNavBar (JSON Derived) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-[#13161e] dark:bg-[#0f1117] flex flex-col py-6 px-4">
+<div class="mb-10 px-2">
+<h1 class="text-lg font-bold text-white tracking-tight">Command Deck</h1>
+<p class="text-[0.6875rem] uppercase tracking-widest text-slate-500">Enterprise Admin</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-200 text-slate-400 hover:text-white hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="text-sm font-medium">Financials</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-200 text-slate-400 hover:text-white hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">error_med</span>
+<span class="text-sm font-medium">Payments</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-200 text-slate-400 hover:text-white hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span class="text-sm font-medium">Exceptions</span>
+</a>
+<!-- ACTIVE TAB: Customers -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-200 bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8]" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors duration-200 text-slate-400 hover:text-white hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+<span class="text-sm font-medium">CRM</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-800 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-400 hover:text-white transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-400 hover:text-white transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<span class="text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar (JSON Derived) -->
+<header class="sticky top-0 right-0 w-[calc(100%-16rem)] ml-64 z-40 bg-[#f8f9fb]/95 dark:bg-[#1a1d27]/95 backdrop-blur-md flex justify-between items-center h-16 px-8 shadow-sm">
+<div class="flex items-center gap-6">
+<span class="font-semibold text-slate-900 dark:text-white">Financial Reconciliation</span>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-slate-500 hover:text-[#1653cc] transition-colors text-sm font-medium" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-[#1653cc] transition-colors text-sm font-medium" href="#">Reports</a>
+<a class="text-slate-500 hover:text-[#1653cc] transition-colors text-sm font-medium" href="#">Logs</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-slate-400 text-sm">search</span>
+<input class="bg-surface-container border-none rounded-full pl-10 pr-4 py-1.5 text-xs focus:ring-1 focus:ring-primary w-64" placeholder="Search entries..." type="text"/>
+</div>
+<button class="text-slate-500 hover:text-primary"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-slate-500 hover:text-primary"><span class="material-symbols-outlined">history</span></button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-white text-xs font-bold">OA</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-screen">
+<!-- Header Section -->
+<section class="mb-8">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-6">
+<div class="h-20 w-20 rounded-xl bg-primary-container text-white flex items-center justify-center text-3xl font-bold shadow-lg shadow-primary/20">
+                        JH
+                    </div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h2 class="text-3xl font-bold font-headline text-on-background">Jonathan H. Sterling</h2>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-transparent border border-tertiary-container text-tertiary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Active
+                            </span>
+<span class="text-xs bg-surface-container px-2 py-0.5 rounded font-medium text-on-surface-variant">Customer</span>
+</div>
+<div class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-500">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base">mail</span> j.sterling@enterprise-data.com</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base">call</span> +1 (555) 234-8901</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base">calendar_today</span> Joined Oct 12, 2021</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-surface-container-lowest text-primary px-4 py-2 rounded-md text-sm font-semibold shadow-sm hover:bg-surface-container-low border border-outline-variant transition-all">Send Email</button>
+<button class="bg-surface-container-lowest text-primary px-4 py-2 rounded-md text-sm font-semibold shadow-sm hover:bg-surface-container-low border border-outline-variant transition-all">View Orders</button>
+<button class="bg-error text-white px-4 py-2 rounded-md text-sm font-semibold shadow-md hover:bg-red-700 transition-all">Suspend</button>
+</div>
+</div>
+<!-- Tab Navigation -->
+<div class="mt-8 flex gap-8 border-b border-outline-variant/30">
+<button class="pb-3 text-sm font-bold border-b-2 border-primary text-primary">Overview</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-on-background transition-colors">Activity</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-on-background transition-colors">Orders</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-on-background transition-colors">Support</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-on-background transition-colors">Reviews</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-on-background transition-colors">Risk</button>
+<button class="pb-3 text-sm font-medium text-slate-500 hover:text-on-background transition-colors">Actions</button>
+</div>
+</section>
+<!-- KPI Grid -->
+<section class="grid grid-cols-6 gap-4 mb-8">
+<div class="col-span-1 bg-surface-container-lowest p-4 rounded-xl relative overflow-hidden flex flex-col justify-between h-28 border-l-4 border-primary">
+<p class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-400">Total Orders</p>
+<p class="text-2xl font-bold font-headline">42</p>
+<span class="text-[10px] text-tertiary font-bold self-end flex items-center"><span class="material-symbols-outlined text-xs">trending_up</span> +12%</span>
+</div>
+<div class="col-span-1 bg-surface-container-lowest p-4 rounded-xl relative overflow-hidden flex flex-col justify-between h-28 border-l-4 border-primary">
+<p class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-400">LTV</p>
+<p class="text-2xl font-bold font-headline font-mono">$12,450.00</p>
+<span class="text-[10px] text-slate-400 font-bold self-end uppercase">Tier: Platinum</span>
+</div>
+<div class="col-span-1 bg-surface-container-lowest p-4 rounded-xl relative overflow-hidden flex flex-col justify-between h-28 border-l-4 border-primary">
+<p class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-400">Avg. Order</p>
+<p class="text-2xl font-bold font-headline font-mono">$296.42</p>
+<span class="text-[10px] text-tertiary font-bold self-end flex items-center"><span class="material-symbols-outlined text-xs">trending_up</span> +3%</span>
+</div>
+<div class="col-span-1 bg-surface-container-lowest p-4 rounded-xl relative overflow-hidden flex flex-col justify-between h-28 border-l-4 border-slate-300">
+<p class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-400">Last Order</p>
+<p class="text-lg font-bold font-headline leading-tight">Aug 24, 2023</p>
+<span class="text-[10px] text-slate-400 font-bold self-end uppercase">3 days ago</span>
+</div>
+<div class="col-span-1 bg-surface-container-lowest p-4 rounded-xl relative overflow-hidden flex flex-col justify-between h-28 border-l-4 border-error">
+<p class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-400">Refunds</p>
+<p class="text-2xl font-bold font-headline text-error">1</p>
+<span class="text-[10px] text-slate-400 font-bold self-end uppercase">Low Risk</span>
+</div>
+<div class="col-span-1 bg-surface-container-lowest p-4 rounded-xl relative overflow-hidden flex flex-col justify-between h-28 border-l-4 border-error">
+<p class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-400">Returns</p>
+<p class="text-2xl font-bold font-headline text-error">2</p>
+<span class="text-[10px] text-error font-bold self-end uppercase">Manual Review Req.</span>
+</div>
+</section>
+<!-- 2-Column Content Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column (65%) -->
+<div class="col-span-8 space-y-6">
+<!-- Profile Info Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 bg-surface-container-low/50 flex items-center justify-between border-b border-outline-variant/20">
+<h3 class="text-sm font-bold font-headline uppercase tracking-wide">Contact &amp; Profile Information</h3>
+<button class="text-primary text-xs font-bold hover:underline">Edit Detail</button>
+</div>
+<div class="p-6 grid grid-cols-2 gap-y-6 gap-x-8">
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-widest text-slate-400 font-bold mb-1">Legal Name</label>
+<p class="text-sm font-medium">Jonathan Harold Sterling</p>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-widest text-slate-400 font-bold mb-1">Date of Birth</label>
+<p class="text-sm font-medium">May 14, 1982 (41y)</p>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-widest text-slate-400 font-bold mb-1">Primary Address</label>
+<p class="text-sm font-medium leading-relaxed">221B Baker St, London<br/>NW1 6XE, United Kingdom</p>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-widest text-slate-400 font-bold mb-1">Billing Address</label>
+<p class="text-sm font-medium leading-relaxed italic text-slate-500">Same as primary</p>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-widest text-slate-400 font-bold mb-1">Payment Method</label>
+<p class="text-sm font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-base">credit_card</span> Visa ending in •••• 4590
+                            </p>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-widest text-slate-400 font-bold mb-1">Region</label>
+<p class="text-sm font-medium">Western Europe / UK</p>
+</div>
+</div>
+</div>
+<!-- Communication Preferences Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 bg-surface-container-low/50 border-b border-outline-variant/20">
+<h3 class="text-sm font-bold font-headline uppercase tracking-wide">Communication Preferences</h3>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex items-center justify-between py-2">
+<div>
+<p class="text-sm font-semibold">Email Marketing Opt-in</p>
+<p class="text-xs text-slate-500">Subscribed to weekly newsletters and deals</p>
+</div>
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined fill-1">check_circle</span>
+<span class="text-xs font-bold uppercase">Enabled</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-2">
+<div>
+<p class="text-sm font-semibold">SMS Notifications</p>
+<p class="text-xs text-slate-500">Order status and delivery tracking updates</p>
+</div>
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined fill-1">check_circle</span>
+<span class="text-xs font-bold uppercase">Enabled</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-2">
+<div>
+<p class="text-sm font-semibold">In-App Alerts</p>
+<p class="text-xs text-slate-500">Operational alerts for account changes</p>
+</div>
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined">cancel</span>
+<span class="text-xs font-bold uppercase text-slate-400">Disabled</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (35%) -->
+<div class="col-span-4 space-y-6">
+<!-- Account Status Card -->
+<div class="bg-[#13161e] text-white rounded-xl p-6 shadow-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-8xl">verified_user</span>
+</div>
+<p class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-500 mb-4">Account Integrity</p>
+<div class="flex items-center gap-4 mb-6">
+<div class="h-12 w-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div>
+<p class="text-lg font-bold">Verified Gold</p>
+<p class="text-xs text-slate-400">KYC/AML Clearance: Oct 2022</p>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-xs">
+<span class="text-slate-500">Last Login</span>
+<span class="font-mono text-slate-300">2023-08-27 14:22:10 UTC</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-slate-500">IP Address</span>
+<span class="font-mono text-slate-300">192.168.1.104</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-slate-500">Account Health</span>
+<span class="text-tertiary font-bold">Excellent (980)</span>
+</div>
+</div>
+</div>
+<!-- Internal Notes Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 bg-surface-container-low/50 flex items-center justify-between border-b border-outline-variant/20">
+<h3 class="text-sm font-bold font-headline uppercase tracking-wide">Internal Notes</h3>
+<button class="text-primary text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add</span> Add Note
+                        </button>
+</div>
+<div class="p-6 space-y-6">
+<div class="relative pl-4 border-l-2 border-primary-container">
+<p class="text-xs text-slate-400 mb-1 flex justify-between">
+<span class="font-bold">Admin: Sarah Jenkins</span>
+<span>2 days ago</span>
+</p>
+<p class="text-sm text-on-surface-variant">Customer requested high-priority shipping for all future orders. Manually flagged for VIP Fulfillment.</p>
+</div>
+<div class="relative pl-4 border-l-2 border-outline-variant/30">
+<p class="text-xs text-slate-400 mb-1 flex justify-between">
+<span class="font-bold">System: Auth Service</span>
+<span>Aug 12</span>
+</p>
+<p class="text-sm text-on-surface-variant">Password reset completed via secure email link. 2FA successfully re-enabled.</p>
+</div>
+<div class="relative pl-4 border-l-2 border-outline-variant/30">
+<p class="text-xs text-slate-400 mb-1 flex justify-between">
+<span class="font-bold">Admin: Marcus V.</span>
+<span>July 28</span>
+</p>
+<p class="text-sm text-on-surface-variant">Confirmed delivery for lost item order #TR-8922. Refund reversed by mutual agreement.</p>
+</div>
+</div>
+</div>
+<!-- Quick Navigation Links -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm">
+<h3 class="text-[0.6875rem] uppercase font-bold tracking-widest text-slate-400 mb-3 px-2">Data Jump</h3>
+<div class="grid grid-cols-2 gap-2">
+<a class="flex items-center gap-2 p-2 rounded hover:bg-surface-container-low transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-slate-400 text-lg">history</span> Activity Logs
+                        </a>
+<a class="flex items-center gap-2 p-2 rounded hover:bg-surface-container-low transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-slate-400 text-lg">receipt_long</span> Invoices
+                        </a>
+<a class="flex items-center gap-2 p-2 rounded hover:bg-surface-container-low transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-slate-400 text-lg">shield</span> Security Logs
+                        </a>
+<a class="flex items-center gap-2 p-2 rounded hover:bg-surface-container-low transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-slate-400 text-lg">link</span> Connected Apps
+                        </a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

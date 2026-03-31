@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sales Report | Operational Architect</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#5b5e68",
+              "surface-container-high": "#e6e7f6",
+              "primary-fixed-dim": "#b4c5ff",
+              "outline": "#737685",
+              "on-tertiary-container": "#f7fff3",
+              "surface": "#faf8ff",
+              "on-secondary-fixed-variant": "#444650",
+              "on-tertiary-fixed-variant": "#005321",
+              "outline-variant": "#c3c6d6",
+              "on-primary-container": "#fefcff",
+              "on-surface": "#181b25",
+              "secondary-fixed-dim": "#c4c6d1",
+              "surface-container-low": "#f2f3ff",
+              "on-error": "#ffffff",
+              "on-secondary-container": "#60626c",
+              "surface-container-highest": "#e0e2f0",
+              "surface-bright": "#faf8ff",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-tint": "#1b55ce",
+              "primary-container": "#3b6de6",
+              "tertiary-fixed": "#6bff8f",
+              "surface-container": "#ecedfb",
+              "surface-variant": "#e0e2f0",
+              "on-secondary-fixed": "#181b24",
+              "inverse-primary": "#b4c5ff",
+              "primary-fixed": "#dbe1ff",
+              "on-surface-variant": "#434654",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "inverse-surface": "#2d303b",
+              "inverse-on-surface": "#eff0fe",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dedfeb",
+              "background": "#faf8ff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary": "#006b2d",
+              "primary": "#1653cc",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed": "#002109",
+              "secondary-fixed": "#e0e2ed",
+              "on-primary-fixed": "#00174a",
+              "on-background": "#181b25"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans", "Inter"],
+              "label": ["IBM Plex Sans", "Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-gradient {
+        background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%);
+      }
+      .ghost-border {
+        border: 1px solid rgba(115, 118, 133, 0.15);
+      }
+      body {
+        font-family: 'IBM Plex Sans', sans-serif;
+        background-color: #f0f2f7;
+      }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="bg-[#13161e] h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Operational Architect</h1>
+<p class="text-[0.6875rem] uppercase tracking-wider text-slate-500 mt-1">Enterprise Admin</p>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-4 py-3 flex items-center gap-3 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[#4f7ef8]">payments</span>
+<span class="text-sm font-medium">Sales</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Product</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Customers</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+</nav>
+<div class="px-2 pt-4 mt-4 border-t border-slate-800">
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="text-slate-400 hover:text-white hover:bg-[#1a1d27] px-4 py-3 flex items-center gap-3 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-white dark:bg-[#0f1117] flex justify-between items-center px-8 shadow-sm dark:shadow-none">
+<div class="flex items-center gap-8 h-full">
+<span class="text-lg font-semibold text-slate-900 dark:text-white font-headline">Command Deck</span>
+<nav class="flex items-center h-full gap-2">
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors text-sm font-medium" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors text-sm font-medium" href="#">Analytics</a>
+<a class="text-[#4f7ef8] font-bold border-b-2 border-[#4f7ef8] h-full flex items-center px-4 text-sm" href="#">Reports</a>
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors text-sm font-medium" href="#">Export</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg border border-outline-variant/30">
+<span class="material-symbols-outlined text-sm text-outline">calendar_today</span>
+<span class="text-xs font-medium">Oct 1, 2023 - Oct 31, 2023</span>
+<span class="material-symbols-outlined text-sm text-outline">expand_more</span>
+</div>
+<div class="flex items-center gap-4 border-l border-outline-variant/30 pl-6">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">history</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional male executive in a sharp business suit against a dark background, serious and focused" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnTpn849B4ltR73fX3UkL38xoZ8h5lr834-IG07vXAXNmnCZH0nAaRad6aeldAWpPTtk6W_cJcDcjf4bZSaF90n0S7Fy4q784mQz39y-f2_XUsoUz-O8_foLr5DeVvrsjfrQm_dzqCVmNX6JKuDz1F9-CAPRcIY65ETNhLtgqil6XUu2ZUEdqpcNqKdpWCdimjXK7lM97YTxSXTJ69BU6bk7koWcZCNtChPa1VuN_OYFR4j8BtNr5NrOwsJHw4-wD23htRrVx7gzc"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-8 min-h-[calc(100vh-4rem)]">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-2xl font-bold font-headline text-on-surface">Sales Report</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-xs font-label uppercase tracking-widest text-secondary">Operational Overview</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-xs font-mono text-outline">REF: AR-2023-10-X1</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant text-sm font-medium hover:bg-surface-container-low transition-colors rounded-md">
+<span class="material-symbols-outlined text-sm">share</span>
+                    Share
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant text-sm font-medium hover:bg-surface-container-low transition-colors rounded-md">
+<span class="material-symbols-outlined text-sm text-primary">download</span>
+                    Export CSV
+                </button>
+<button class="flex items-center gap-2 px-5 py-2 glass-gradient text-white text-sm font-bold shadow-lg shadow-primary/20 rounded-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                    Download Report
+                </button>
+</div>
+</div>
+<!-- Row 1: KPI Cards -->
+<div class="grid grid-cols-5 gap-4 mb-8">
+<!-- Gross Revenue -->
+<div class="bg-surface-container-lowest p-5 border-l-4 border-primary shadow-sm flex flex-col justify-between">
+<div>
+<p class="text-[0.6875rem] font-label uppercase tracking-wider text-secondary mb-2">Gross Revenue</p>
+<p class="text-2xl font-bold font-headline text-on-surface">$1,284,490</p>
+</div>
+<div class="flex items-center justify-end mt-4">
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span>
+                        +12.5%
+                    </span>
+</div>
+</div>
+<!-- Net Revenue -->
+<div class="bg-surface-container-lowest p-5 border-l-4 border-primary-container shadow-sm flex flex-col justify-between">
+<div>
+<p class="text-[0.6875rem] font-label uppercase tracking-wider text-secondary mb-2">Net Revenue</p>
+<p class="text-2xl font-bold font-headline text-on-surface">$1,142,000</p>
+</div>
+<div class="flex items-center justify-end mt-4">
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span>
+                        +8.2%
+                    </span>
+</div>
+</div>
+<!-- Orders -->
+<div class="bg-surface-container-lowest p-5 border-l-4 border-secondary shadow-sm flex flex-col justify-between">
+<div>
+<p class="text-[0.6875rem] font-label uppercase tracking-wider text-secondary mb-2">Orders</p>
+<p class="text-2xl font-bold font-headline text-on-surface">12,842</p>
+</div>
+<div class="flex items-center justify-end mt-4">
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span>
+                        +14.2%
+                    </span>
+</div>
+</div>
+<!-- AOV -->
+<div class="bg-surface-container-lowest p-5 border-l-4 border-tertiary shadow-sm flex flex-col justify-between">
+<div>
+<p class="text-[0.6875rem] font-label uppercase tracking-wider text-secondary mb-2">AOV</p>
+<p class="text-2xl font-bold font-headline text-on-surface font-mono">$114.20</p>
+</div>
+<div class="flex items-center justify-end mt-4">
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span>
+                        +4.7%
+                    </span>
+</div>
+</div>
+<!-- Discount Impact -->
+<div class="bg-surface-container-lowest p-5 border-l-4 border-error shadow-sm flex flex-col justify-between">
+<div>
+<p class="text-[0.6875rem] font-label uppercase tracking-wider text-secondary mb-2">Discount Impact %</p>
+<p class="text-2xl font-bold font-headline text-on-surface">8.2%</p>
+</div>
+<div class="flex items-center justify-end mt-4">
+<span class="text-[0.6875rem] font-bold text-error flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">trending_down</span>
+                        -2.1%
+                    </span>
+</div>
+</div>
+</div>
+<!-- Row 2: Trend Area Chart -->
+<div class="bg-surface-container-lowest p-6 shadow-sm mb-8">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-sm font-bold font-headline text-on-surface">Revenue Trend Analysis</h3>
+<p class="text-[0.6875rem] font-label uppercase tracking-widest text-secondary mt-1">Daily Aggregated Delta</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="text-xs font-medium text-on-surface">Gross Revenue</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="text-xs font-medium text-on-surface">Net Revenue</span>
+</div>
+</div>
+</div>
+<div class="h-64 relative flex items-end gap-1">
+<!-- Visual simulation of area chart with high density bars -->
+<div class="w-full h-full absolute flex items-end gap-[2px]">
+<div class="flex-1 bg-primary/20 h-[40%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[45%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[38%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[55%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[62%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[58%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[70%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[82%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[75%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[68%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[85%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[92%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[88%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+<div class="flex-1 bg-primary/20 h-[95%] relative"><div class="absolute top-0 w-full h-1 bg-primary"></div></div>
+</div>
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-30">
+<div class="border-b border-outline-variant"></div>
+<div class="border-b border-outline-variant"></div>
+<div class="border-b border-outline-variant"></div>
+<div class="border-b border-outline-variant"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-2">
+<span class="text-[0.625rem] font-mono text-outline">OCT 01</span>
+<span class="text-[0.625rem] font-mono text-outline">OCT 08</span>
+<span class="text-[0.625rem] font-mono text-outline">OCT 15</span>
+<span class="text-[0.625rem] font-mono text-outline">OCT 22</span>
+<span class="text-[0.625rem] font-mono text-outline">OCT 31</span>
+</div>
+</div>
+<!-- Row 3: Split Panels -->
+<div class="grid grid-cols-3 gap-8 mb-8">
+<!-- Category Table -->
+<div class="col-span-2 bg-surface-container-lowest p-6 shadow-sm">
+<h3 class="text-sm font-bold font-headline text-on-surface mb-6">Revenue by Category</h3>
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant/15">
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary">Category</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary text-right">Revenue</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary text-right">% Total</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary text-right">Orders</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary text-right">AOV</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-3.5 font-medium">Electronics</td>
+<td class="py-3.5 text-right font-mono">$482,900</td>
+<td class="py-3.5 text-right">37.6%</td>
+<td class="py-3.5 text-right font-mono">2,410</td>
+<td class="py-3.5 text-right font-mono">$200.37</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-3.5 font-medium">Apparel</td>
+<td class="py-3.5 text-right font-mono">$312,400</td>
+<td class="py-3.5 text-right">24.3%</td>
+<td class="py-3.5 text-right font-mono">4,120</td>
+<td class="py-3.5 text-right font-mono">$75.82</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-3.5 font-medium">Home &amp; Garden</td>
+<td class="py-3.5 text-right font-mono">$215,800</td>
+<td class="py-3.5 text-right">16.8%</td>
+<td class="py-3.5 text-right font-mono">1,890</td>
+<td class="py-3.5 text-right font-mono">$114.18</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-3.5 font-medium">Sports &amp; Fitness</td>
+<td class="py-3.5 text-right font-mono">$154,200</td>
+<td class="py-3.5 text-right">12.0%</td>
+<td class="py-3.5 text-right font-mono">1,215</td>
+<td class="py-3.5 text-right font-mono">$126.91</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors">
+<td class="py-3.5 font-medium">Beauty</td>
+<td class="py-3.5 text-right font-mono">$119,190</td>
+<td class="py-3.5 text-right">9.3%</td>
+<td class="py-3.5 text-right font-mono">3,207</td>
+<td class="py-3.5 text-right font-mono">$37.16</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Donut Chart -->
+<div class="bg-surface-container-lowest p-6 shadow-sm flex flex-col">
+<h3 class="text-sm font-bold font-headline text-on-surface mb-6">Payment Method Breakdown</h3>
+<div class="flex-1 flex items-center justify-center relative">
+<!-- Simple SVG Donut -->
+<svg class="w-48 h-48" viewbox="0 0 36 36">
+<path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="65, 100" stroke-width="6"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="20, 100" stroke-dashoffset="-65" stroke-width="6"></path>
+<path class="text-tertiary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="10, 100" stroke-dashoffset="-85" stroke-width="6"></path>
+<path class="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="5, 100" stroke-dashoffset="-95" stroke-width="6"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-lg font-bold font-headline">Transactions</span>
+<span class="text-xs text-secondary font-mono">TOTAL: 12,842</span>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-2 gap-y-2">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-xs font-medium">Credit Card (65%)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-xs font-medium">PayPal (20%)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-xs font-medium">Store Credit (10%)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-xs font-medium">Other (5%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 4: Top Products -->
+<div class="bg-surface-container-lowest p-6 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold font-headline text-on-surface">Top 10 Products by Revenue</h3>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container text-primary font-bold text-[0.6875rem] rounded-full">
+<span class="material-symbols-outlined text-[10px]">analytics</span>
+                    TOP PERFORMANCE
+                </div>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant/15">
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary w-16">Rank</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary">Product</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary text-right">Revenue</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary text-right">Units Sold</th>
+<th class="py-3 text-[0.6875rem] font-label uppercase tracking-wider text-secondary text-right">Margin</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<!-- Product Rows -->
+<tr class="hover:bg-surface-container-high/30 transition-colors border-b border-outline-variant/5">
+<td class="py-3 text-center font-mono font-bold text-primary">#1</td>
+<td class="py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container rounded-sm flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Modern laptop on a clean desk with soft professional lighting, premium technology aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDM9cQ1ScaJZy3P5OjGDyNWkHjzieBeQhRWhU8yzlsXcSZMi_t-Su7XjaCzT1j51CdtBkw41tlyi-ZWtCUm43cJX606RgC1cTmkLbZ1nmHXKCxikZl4ffdsMkguRqah1OL3j4ZCeoZuWIIeIDJh0sDrO2Bf8aaNErP5-E5rLDK3WF1TqX3ZSYFRQuKgt_TUO3C59BgWfe05OzgY5jv_0XcXwd97aODGiaG4D4SZjs-EuJf-5vkBMH-DPTUCL0CTipoptq34PQhYOM"/>
+</div>
+<div>
+<p class="font-medium">EliteBook Pro 16"</p>
+<p class="text-[0.625rem] text-outline font-mono">SKU: EL-99231</p>
+</div>
+</div>
+</td>
+<td class="py-3 text-right font-mono font-semibold">$142,500.00</td>
+<td class="py-3 text-right font-mono">95</td>
+<td class="py-3 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[85%]"></div>
+</div>
+<span class="text-[0.6875rem] font-mono">24.5%</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors border-b border-outline-variant/5">
+<td class="py-3 text-center font-mono font-bold text-primary">#2</td>
+<td class="py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container rounded-sm flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="High-end over-ear headphones in matte black, professional studio equipment aesthetic with dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcgng3cAsjScxuCzJ5oUPYJ0GIHPT_fvyV1zOFgyATOAdLFig-8dCB9TZ27PFD1h98tqfKrln7RpxCgbVir82kyqdRH-CQLjiWlgBgnozZARJFsZfJu9H8x5r04Z7t_GM3E0wbLzGdpIcBmgAsnvU2vDtjbRRzYdTrQhhx67TjRyLI8KH2oYY-FfxuoeCBFnEa5KGUwo-gsBO_00FvOtH05dihN3VRY3hsryiib2_1YLtxwxaEC_zdxB8_DeS-PFmO3LOShUTPXlE"/>
+</div>
+<div>
+<p class="font-medium">SoundMaster ANC-V2</p>
+<p class="text-[0.625rem] text-outline font-mono">SKU: AU-10204</p>
+</div>
+</div>
+</td>
+<td class="py-3 text-right font-mono font-semibold">$98,200.00</td>
+<td class="py-3 text-right font-mono">328</td>
+<td class="py-3 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[65%]"></div>
+</div>
+<span class="text-[0.6875rem] font-mono">18.2%</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors border-b border-outline-variant/5">
+<td class="py-3 text-center font-mono font-bold text-primary">#3</td>
+<td class="py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container rounded-sm flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Minimalist luxury wristwatch with white face and silver band, bright clean studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXYzbK-gZF495ld9DZ4iV4gSZbIasOuEhRK1WhhmX6NzxX2NnOGHZdUILqPHOA9J9ETNe37Whz64KBqKE1_0FutAz7bv0VaVnGS9azfsl2jSuznh6orGLQa1HKrCdDCSzD3cxgJ1PAbqtp0IvYgEoKvx_SNCPuCmIeHNj04OqY3-ET8PwEDpqCzHJCmWKPAWbmZSWelR--FTugMHh30K0rSpqJFQ9UuxorDjzOk57p185TE6R8Z_kDE2SX7PymGTsPCPSDR8yb1Yg"/>
+</div>
+<div>
+<p class="font-medium">Chrono-X Hybrid Watch</p>
+<p class="text-[0.625rem] text-outline font-mono">SKU: WA-44321</p>
+</div>
+</div>
+</td>
+<td class="py-3 text-right font-mono font-semibold">$76,400.00</td>
+<td class="py-3 text-right font-mono">220</td>
+<td class="py-3 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[92%]"></div>
+</div>
+<span class="text-[0.6875rem] font-mono">31.4%</span>
+</div>
+</td>
+</tr>
+<!-- Continuing truncated for density visual -->
+<tr class="hover:bg-surface-container-high/30 transition-colors border-b border-outline-variant/5">
+<td class="py-3 text-center font-mono font-bold text-primary">#4</td>
+<td class="py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container rounded-sm flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Modern office setup with ergonomic accessories, soft natural lighting from a window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCd88MnUyjMnA6mUW0MGbfT1NAcrBPt15tzYnf5PHZ0dSsNekczyvzmWYytBdASTpLDjejFAiX2MwZYxS-89uRkcoBuErn60USqUbZnMtItRdYmy8tNrJTwbHr2KcqjzdsTrzNeYs1ZiH1vmR0rBOi74bO8e5qaMJO8roZ7eBUW-Ak94GblcCyps1rTR0O7mi-5TqT8DuprkNZ9MPetpd5YzIW4-mcM1w5L6mmHpiMuL7-SBvDm6GTLXuxLTLESANSFLVbZ5_edvA"/>
+</div>
+<div>
+<p class="font-medium">ErgoDesk Mount</p>
+<p class="text-[0.625rem] text-outline font-mono">SKU: OF-88321</p>
+</div>
+</div>
+</td>
+<td class="py-3 text-right font-mono font-semibold">$54,200.00</td>
+<td class="py-3 text-right font-mono">415</td>
+<td class="py-3 text-right">
+<div class="flex items-center justify-end gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[45%]"></div>
+</div>
+<span class="text-[0.6875rem] font-mono">12.5%</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="mt-4 flex justify-center">
+<button class="text-primary text-[0.6875rem] font-label uppercase tracking-widest font-bold flex items-center gap-2 hover:opacity-80">
+                    View Full Product Analytics
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Contextual Details Drawer (Hidden by default, shown for visual completeness) -->
+<div class="fixed top-0 right-0 h-full w-96 bg-surface-container-lowest shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 pointer-events-none">
+<!-- Drawer content would go here -->
+</div>
+</body></html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings Overview | Ops Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#002109",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#f7fff3",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#ecedfb",
+                        "error": "#ba1a1a",
+                        "surface": "#faf8ff",
+                        "tertiary-container": "#00873b",
+                        "surface-dim": "#d8d9e7",
+                        "inverse-primary": "#b4c5ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface-tint": "#1b55ce",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "primary": "#1653cc",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-primary-fixed": "#00174a",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-variant": "#e0e2f0",
+                        "secondary": "#5b5e68",
+                        "inverse-surface": "#2d303b",
+                        "tertiary": "#006b2d",
+                        "on-surface": "#181b25",
+                        "on-secondary-container": "#60626c",
+                        "outline-variant": "#c3c6d6",
+                        "on-surface-variant": "#434654",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-primary-container": "#fefcff",
+                        "outline": "#737685",
+                        "on-secondary-fixed-variant": "#444650",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-secondary-fixed": "#181b24",
+                        "secondary-fixed": "#e0e2ed",
+                        "inverse-on-surface": "#eff0fe",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#3b6de6",
+                        "on-background": "#181b25",
+                        "secondary-container": "#dedfeb",
+                        "surface-container-high": "#e6e7f6"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "technical": ["JetBrains Mono"],
+                        "admin": ["DM Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f2f7; }
+        .sidebar-item { transition: all 0.2s ease-in-out; }
+        .glass-panel { backdrop-filter: blur(20px); background: rgba(255, 255, 255, 0.85); }
+        .label-sm { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="flex min-h-screen text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-[#13161e] dark:bg-[#0f1117] py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold tracking-tight text-white font-admin">Command Deck</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-1">Operational Architect</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<div class="mb-4">
+<p class="px-3 label-sm text-gray-500 mb-2">Primary</p>
+<a class="sidebar-item flex items-center px-3 py-2.5 text-gray-400 hover:text-gray-200 hover:bg-[#1a1d27]/50 rounded-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="sidebar-item flex items-center px-3 py-2.5 text-gray-400 hover:text-gray-200 hover:bg-[#1a1d27]/50 rounded-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">security_update_warning</span>
+<span class="font-medium text-sm">Incidents</span>
+</a>
+<a class="sidebar-item flex items-center px-3 py-2.5 text-gray-400 hover:text-gray-200 hover:bg-[#1a1d27]/50 rounded-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">radar</span>
+<span class="font-medium text-sm">Risk Signals</span>
+</a>
+</div>
+<div>
+<p class="px-3 label-sm text-gray-500 mb-2">System</p>
+<!-- Active Tab: System Settings -->
+<a class="sidebar-item flex items-center px-3 py-2.5 bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] rounded-r-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl text-[#4f7ef8]">settings</span>
+<span class="font-medium text-sm">System Settings</span>
+</a>
+<a class="sidebar-item flex items-center px-3 py-2.5 text-gray-400 hover:text-gray-200 hover:bg-[#1a1d27]/50 rounded-md group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">history</span>
+<span class="font-medium text-sm">Audit Logs</span>
+</a>
+</div>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-primary hover:bg-primary-container text-white py-2.5 rounded-md flex items-center justify-center text-sm font-semibold transition-all active:scale-95 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined mr-2 text-lg">add_circle</span>
+                New Investigation
+            </button>
+<div class="mt-6 pt-6 border-t border-white/10 space-y-1">
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white transition-colors text-sm" href="#">
+<span class="material-symbols-outlined mr-3 text-lg">help_outline</span>
+                    Support
+                </a>
+<a class="flex items-center px-3 py-2 text-gray-400 hover:text-white transition-colors text-sm" href="#">
+<span class="material-symbols-outlined mr-3 text-lg text-error">logout</span>
+                    Sign Out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar Component -->
+<header class="h-14 w-full sticky top-0 z-40 bg-[#f8f9fb] flex justify-between items-center px-8 shadow-sm">
+<div class="flex items-center space-x-8">
+<span class="text-lg font-semibold text-[#0f1117] font-admin">Ops Architect</span>
+<nav class="flex space-x-6 h-full items-center">
+<a class="text-gray-500 hover:text-gray-800 text-[0.75rem] font-medium uppercase tracking-wider" href="#">Global View</a>
+<a class="text-gray-500 hover:text-gray-800 text-[0.75rem] font-medium uppercase tracking-wider" href="#">Queue</a>
+<a class="text-gray-500 hover:text-gray-800 text-[0.75rem] font-medium uppercase tracking-wider" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-white border-none rounded-md text-sm focus:ring-1 focus:ring-primary w-64 shadow-inner border border-outline-variant/20" placeholder="Global Search..." type="text"/>
+</div>
+<button class="p-2 hover:bg-gray-100 rounded-md transition-colors relative">
+<span class="material-symbols-outlined text-gray-600">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-[#f8f9fb]"></span>
+</button>
+<button class="p-2 hover:bg-gray-100 rounded-md transition-colors">
+<span class="material-symbols-outlined text-gray-600">apps</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-primary/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional headshot of a technical system administrator in a modern office setting, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL48YszhWKBV4qFXBmHcpZuJMPSjUUEgELE94T4u_N-WZazLOwpnbMCHMLHCxwqGGBGXe82C5oruyVkM8lNNyDPU0EKyJ4TyYWcdnyb6VFQdAsrHqgpSwDYO5liDecdtJ9tjCqXS7UiGelCyBX8R2moSYs_0E0jJRfyAkYY5YLbHTBdavIOXBFWdU1XBpsrTtaiQqd0uH_RJowPxbe78TXo7WZrAQzSPBvRIrnOOWOZcH-MFtNIzMTQqPOEd4IuZpX32fxLsKgQIc"/>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-8 space-y-8 bg-[#f0f2f7] flex-1">
+<!-- Header Section -->
+<div class="flex flex-col space-y-1">
+<h2 class="text-3xl font-bold text-on-surface font-admin tracking-tight">Settings</h2>
+<nav class="flex text-xs text-gray-500 items-center">
+<span>System</span>
+<span class="material-symbols-outlined text-sm mx-1">chevron_right</span>
+<span class="text-primary font-medium">Control Center</span>
+</nav>
+</div>
+<!-- Bento Grid of Settings Categories -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1: Checkout & Commerce -->
+<div class="bg-surface-container-lowest p-6 flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div>
+<div class="w-10 h-10 bg-primary-fixed/30 rounded-md flex items-center justify-center mb-4 text-primary">
+<span class="material-symbols-outlined">shopping_cart_checkout</span>
+</div>
+<h3 class="text-sm font-bold text-on-surface mb-2 font-admin">Checkout &amp; Commerce</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-6">Manage global transactional flows, tax calculations, and currency mappings.</p>
+</div>
+<a class="text-xs font-bold text-primary flex items-center group-hover:underline" href="#">
+                        Configure
+                        <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+<!-- Card 2: Reviews & Moderation -->
+<div class="bg-surface-container-lowest p-6 flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
+<div>
+<div class="w-10 h-10 bg-tertiary-fixed/30 rounded-md flex items-center justify-center mb-4 text-tertiary">
+<span class="material-symbols-outlined">reviews</span>
+</div>
+<h3 class="text-sm font-bold text-on-surface mb-2 font-admin">Reviews &amp; Moderation</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-6">Control customer feedback pipelines and automated content filtering rules.</p>
+</div>
+<a class="text-xs font-bold text-primary flex items-center group-hover:underline" href="#">
+                        Configure
+                        <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+<!-- Card 3: Support & SLA -->
+<div class="bg-surface-container-lowest p-6 flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<div>
+<div class="w-10 h-10 bg-primary-fixed/30 rounded-md flex items-center justify-center mb-4 text-primary-container">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<h3 class="text-sm font-bold text-on-surface mb-2 font-admin">Support &amp; SLA</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-6">Define response thresholds, escalation paths, and support tiering.</p>
+</div>
+<a class="text-xs font-bold text-primary flex items-center group-hover:underline" href="#">
+                        Configure
+                        <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+<!-- Card 4: Notifications (Disabled) -->
+<div class="bg-surface-container-low p-6 flex flex-col justify-between grayscale opacity-60 cursor-not-allowed">
+<div>
+<div class="w-10 h-10 bg-gray-200 rounded-md flex items-center justify-center mb-4 text-gray-500">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-bold text-gray-500 font-admin">Notifications</h3>
+<span class="text-[10px] font-bold bg-surface-container px-2 py-0.5 rounded text-gray-500 tracking-tight">COMING SOON</span>
+</div>
+<p class="text-xs text-gray-400 leading-relaxed mb-6">Webhook management and cross-channel alerting infrastructure.</p>
+</div>
+<span class="text-xs font-bold text-gray-400 flex items-center">
+                        Locked
+                        <span class="material-symbols-outlined text-sm ml-1">lock</span>
+</span>
+</div>
+<!-- Card 5: Integrations -->
+<div class="bg-surface-container-lowest p-6 flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div>
+<div class="w-10 h-10 bg-primary-fixed/30 rounded-md flex items-center justify-center mb-4 text-primary">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<h3 class="text-sm font-bold text-on-surface mb-2 font-admin">Integrations</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-6">Monitor API health, connected services, and data synchronization status.</p>
+</div>
+<a class="text-xs font-bold text-primary flex items-center group-hover:underline" href="#">
+                        Integration Health
+                        <span class="material-symbols-outlined text-sm ml-1">bolt</span>
+</a>
+</div>
+<!-- Card 6: Roles & Permissions (Disabled) -->
+<div class="bg-surface-container-low p-6 flex flex-col justify-between grayscale opacity-60 cursor-not-allowed">
+<div>
+<div class="w-10 h-10 bg-gray-200 rounded-md flex items-center justify-center mb-4 text-gray-500">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-bold text-gray-500 font-admin">Roles &amp; Permissions</h3>
+<span class="text-[10px] font-bold bg-surface-container px-2 py-0.5 rounded text-gray-500 tracking-tight">COMING SOON</span>
+</div>
+<p class="text-xs text-gray-400 leading-relaxed mb-6">Granular RBAC controls and custom policy definition engine.</p>
+</div>
+<span class="text-xs font-bold text-gray-400 flex items-center">
+                        Locked
+                        <span class="material-symbols-outlined text-sm ml-1">lock</span>
+</span>
+</div>
+</div>
+<!-- Recent Changes Log -->
+<div class="bg-surface-container-lowest overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/10 flex items-center justify-between">
+<h4 class="text-xs font-bold font-admin text-on-surface uppercase tracking-widest">Recent System Modifications</h4>
+<button class="text-[10px] font-bold text-primary hover:text-primary-container uppercase tracking-tight">View Full Audit Log</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-3 label-sm text-on-surface-variant">User</th>
+<th class="px-6 py-3 label-sm text-on-surface-variant">Section</th>
+<th class="px-6 py-3 label-sm text-on-surface-variant">Action Type</th>
+<th class="px-6 py-3 label-sm text-on-surface-variant">Timestamp</th>
+<th class="px-6 py-3 label-sm text-on-surface-variant text-right">Identifier</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 flex items-center">
+<div class="w-6 h-6 rounded-full bg-secondary-container mr-3 flex items-center justify-center text-[10px] font-bold text-on-secondary-container">AL</div>
+<span class="text-xs font-medium">Alex Loomis</span>
+</td>
+<td class="px-6 py-4 text-xs font-medium">Commerce</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
+<span class="text-xs">Modified Tax Rules</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface-variant">14 mins ago</td>
+<td class="px-6 py-4 text-right">
+<span class="font-technical text-[10px] bg-surface-container px-2 py-0.5 text-secondary">#TX-9022</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 flex items-center">
+<div class="w-6 h-6 rounded-full bg-tertiary-container mr-3 flex items-center justify-center text-[10px] font-bold text-white">MK</div>
+<span class="text-xs font-medium">Maria K.</span>
+</td>
+<td class="px-6 py-4 text-xs font-medium">Moderation</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span>
+<span class="text-xs">Updated Keyword Filter</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface-variant">2 hours ago</td>
+<td class="px-6 py-4 text-right">
+<span class="font-technical text-[10px] bg-surface-container px-2 py-0.5 text-secondary">#MOD-1104</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 flex items-center">
+<div class="w-6 h-6 rounded-full bg-primary-container mr-3 flex items-center justify-center text-[10px] font-bold text-white">JD</div>
+<span class="text-xs font-medium">John Doe</span>
+</td>
+<td class="px-6 py-4 text-xs font-medium">Support</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mr-2"></span>
+<span class="text-xs">Adjusted SLA Targets</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface-variant">5 hours ago</td>
+<td class="px-6 py-4 text-right">
+<span class="font-technical text-[10px] bg-surface-container px-2 py-0.5 text-secondary">#SLA-4412</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 flex items-center">
+<div class="w-6 h-6 rounded-full bg-secondary-container mr-3 flex items-center justify-center text-[10px] font-bold text-on-secondary-container">SR</div>
+<span class="text-xs font-medium">Sarah Reed</span>
+</td>
+<td class="px-6 py-4 text-xs font-medium">Integrations</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
+<span class="text-xs">Re-authenticated Stripe</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface-variant">Yesterday</td>
+<td class="px-6 py-4 text-right">
+<span class="font-technical text-[10px] bg-surface-container px-2 py-0.5 text-secondary">#API-8800</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 flex items-center">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest mr-3 flex items-center justify-center text-[10px] font-bold text-on-surface">SYS</div>
+<span class="text-xs font-medium">System Agent</span>
+</td>
+<td class="px-6 py-4 text-xs font-medium">Core</td>
+<td class="px-6 py-4">
+<div class="flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-2"></span>
+<span class="text-xs">Automated Cert Rotation</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs text-on-surface-variant">Yesterday</td>
+<td class="px-6 py-4 text-right">
+<span class="font-technical text-[10px] bg-surface-container px-2 py-0.5 text-secondary">#SEC-0021</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Footer Metric / System Health -->
+<footer class="mt-auto px-8 py-4 border-t border-outline-variant/10 bg-surface-container-lowest flex justify-between items-center">
+<div class="flex items-center space-x-6">
+<div class="flex items-center">
+<span class="w-2 h-2 rounded-full bg-tertiary mr-2"></span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">System Status: Operational</span>
+</div>
+<div class="flex items-center text-[10px] font-technical text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1">history</span>
+                    Uptime: 99.998%
+                </div>
+</div>
+<div class="flex items-center space-x-4">
+<span class="text-[10px] text-gray-400 font-medium">v2.4.1-stable</span>
+<span class="text-[10px] text-gray-400 font-medium font-technical">DC-NORTH-04</span>
+</div>
+</footer>
+</main>
+<!-- Contextual FAB (Hidden on Settings as per instruction, but structure defined) -->
+<!-- Suppression logic: Screen purpose is Settings, FAB suppressed -->
+</body></html>

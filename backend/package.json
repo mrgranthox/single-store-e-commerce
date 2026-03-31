@@ -1,0 +1,72 @@
+{
+  "name": "ecommerce-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend foundation for the e-commerce platform",
+  "engines": {
+    "node": ">=18.19.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/bootstrap/server.ts",
+    "start": "node dist/src/bootstrap/server.js",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "NODE_ENV=test node --import tsx --test --test-concurrency=1 src/test/*.test.ts",
+    "test:integration": "npm run test:integration:core && npm run test:integration:ops",
+    "test:integration:prepare": "NODE_ENV=test prisma migrate deploy",
+    "test:integration:core": "npm run test:integration:prepare && NODE_ENV=test tsx src/test/run-integration-suite.ts",
+    "test:integration:ops": "npm run test:integration:prepare && NODE_ENV=test tsx src/test/run-admin-ops-integration-suite.ts",
+    "test:load:smoke": "tsx scripts/load-smoke.ts",
+    "test:soak:smoke": "tsx scripts/soak-smoke.ts",
+    "test:fault:injection": "tsx scripts/fault-injection.ts all",
+    "typecheck": "tsc --noEmit",
+    "verify:admin-audit": "node scripts/verify-admin-mutation-audit.mjs",
+    "verify:rbac-contracts": "node scripts/verify-rbac-contracts.mjs",
+    "verify:queue-contracts": "node scripts/verify-queue-contracts.mjs",
+    "verify:privacy-controls": "node scripts/verify-privacy-controls.mjs",
+    "verify:release-safety": "node scripts/verify-release-safety.mjs",
+    "verify:observability": "node scripts/verify-observability.mjs",
+    "verify:env-hygiene": "node scripts/verify-env-hygiene.mjs",
+    "verify:enterprise": "node scripts/verify-enterprise.mjs",
+    "worker:dev": "tsx watch src/bootstrap/worker.ts",
+    "worker": "node dist/src/bootstrap/worker.js",
+    "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "seed": "prisma db seed",
+    "export:route-catalog": "tsx scripts/export-route-catalog.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@clerk/express": "^1.3.1",
+    "@prisma/client": "^6.19.0",
+    "@sentry/node": "^10.46.0",
+    "bullmq": "^5.71.1",
+    "cloudinary": "^2.9.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
+    "nodemailer": "^8.0.4",
+    "pino": "^9.14.0",
+    "pino-pretty": "^11.3.0",
+    "svix": "^1.89.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "@types/nodemailer": "^7.0.11",
+    "prisma": "^6.19.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

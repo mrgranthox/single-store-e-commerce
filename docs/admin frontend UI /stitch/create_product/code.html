@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Product | Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-variant": "#e0e2f0",
+                        "surface-container-highest": "#e0e2f0",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "secondary-fixed": "#e0e2ed",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#002109",
+                        "on-surface": "#181b25",
+                        "outline-variant": "#c3c6d6",
+                        "on-secondary-fixed-variant": "#444650",
+                        "on-secondary-fixed": "#181b24",
+                        "on-primary-container": "#fefcff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "outline": "#737685",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "secondary-container": "#dedfeb",
+                        "on-background": "#181b25",
+                        "inverse-on-surface": "#eff0fe",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e6e7f6",
+                        "inverse-surface": "#2d303b",
+                        "on-secondary-container": "#60626c",
+                        "surface-tint": "#1b55ce",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#00174a",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-surface-variant": "#434654",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#00873b",
+                        "surface": "#faf8ff",
+                        "background": "#faf8ff",
+                        "primary-container": "#3b6de6",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary": "#006b2d",
+                        "primary": "#1653cc",
+                        "surface-bright": "#faf8ff",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "surface-dim": "#d8d9e7",
+                        "on-tertiary-container": "#f7fff3",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface-container": "#ecedfb",
+                        "secondary": "#5b5e68",
+                        "on-error-container": "#93000a"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["IBM Plex Sans"],
+                        "label": ["IBM Plex Sans"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'IBM Plex Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-[#f0f2f7] dark:bg-[#0f1117] flex justify-between items-center w-full px-6 py-3 docked full-width top-0 z-40 tonal-depth shift fixed">
+<div class="flex items-center gap-8">
+<h1 class="text-lg font-bold tracking-tight text-[#0f1117] dark:text-[#f8f9fb]">Operational Architect</h1>
+<div class="flex items-center gap-4">
+<span class="text-slate-500 font-medium text-sm">Create Product</span>
+<span class="text-xs text-[#1653cc] flex items-center gap-1.5 font-semibold">
+<span class="w-2 h-2 rounded-full bg-[#1653cc]"></span>
+                    Unsaved changes ●
+                </span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors rounded-full">
+<span class="material-symbols-outlined text-slate-500">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors rounded-full">
+<span class="material-symbols-outlined text-slate-500">help</span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors rounded-full">
+<span class="material-symbols-outlined text-slate-500">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden ml-2">
+<img alt="Administrator Profile" data-alt="professional portrait of a high-level system administrator with a focused expression in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvbhMrWTzjmHcdXpE71rYybtRXLf_ofDXDrXbOVAdB9g3rPEAetjMgUcUHudTGqIgcFuA1nD8lO9EBpGHotxmDwsyKOu2e9nmkaxRIWcxsBWic1SRAIROsPPq1f0VTNw3lTnGcjkCX0U7SkiP5O1Fv04RfiQhOAaqVdg4dU5sDj753QikpzG_1mMobysdylq3InEnzbRVqsNWTpfGdSUmWFpvIupt2czvI73jBsugBenVdBpnFh9gE7PL_PNWiwQQri6gP799MK6E"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="bg-[#13161e] fixed left-0 top-0 h-screen w-64 z-50 flex flex-col h-full py-6 shadow-2xl">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-gradient-to-br from-[#1653cc] to-[#3b6de6] rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl" style="font-variation-settings: 'FILL' 1;">deployed_code</span>
+</div>
+<div>
+<div class="text-white font-bold tracking-tighter">Command Deck</div>
+<div class="text-[0.625rem] text-slate-500 uppercase tracking-widest font-semibold">Enterprise Admin</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<div class="px-3 mb-2 text-[0.6875rem] uppercase tracking-wider font-semibold text-slate-500">Main Menu</div>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-gradient-to-r from-[#1653cc] to-[#3b6de6] text-white rounded-r-lg translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Products</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="px-3 mt-auto space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined text-sm">contact_support</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white hover:bg-[#1a1d27] transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Documentation</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-20 p-8 min-h-screen">
+<div class="max-w-6xl mx-auto">
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column (65%) -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Section 1: Basic Info -->
+<section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border-l-4 border-primary">
+<h2 class="text-sm font-bold uppercase tracking-wider text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+                            Basic Info
+                        </h2>
+<div class="space-y-6">
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Product Name</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body" placeholder="e.g., Quantum Core Processor" type="text"/>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Short Description</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body" placeholder="Brief summary for list views..." rows="2"></textarea>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Full Description</label>
+<div class="rounded-lg border border-outline-variant overflow-hidden">
+<div class="bg-surface-container flex items-center gap-1 p-2 border-b border-outline-variant">
+<button class="p-1.5 hover:bg-surface-container-highest rounded text-on-surface-variant"><span class="material-symbols-outlined text-lg">format_bold</span></button>
+<button class="p-1.5 hover:bg-surface-container-highest rounded text-on-surface-variant"><span class="material-symbols-outlined text-lg">format_italic</span></button>
+<button class="p-1.5 hover:bg-surface-container-highest rounded text-on-surface-variant"><span class="material-symbols-outlined text-lg">format_list_bulleted</span></button>
+<div class="w-px h-4 bg-outline-variant mx-1"></div>
+<button class="p-1.5 hover:bg-surface-container-highest rounded text-on-surface-variant"><span class="material-symbols-outlined text-lg">link</span></button>
+<button class="p-1.5 hover:bg-surface-container-highest rounded text-on-surface-variant"><span class="material-symbols-outlined text-lg">image</span></button>
+</div>
+<div class="p-4 min-h-[160px] bg-surface-container-low text-sm text-outline font-body">
+                                        Start typing product details here...
+                                    </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Organization -->
+<section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border-l-4 border-tertiary">
+<h2 class="text-sm font-bold uppercase tracking-wider text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-xl">category</span>
+                            Organization
+                        </h2>
+<div class="grid grid-cols-2 gap-6">
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Brand</label>
+<select class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body appearance-none">
+<option>Select Brand</option>
+<option>Titan Operations</option>
+<option>Nebula Systems</option>
+</select>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Category</label>
+<div class="flex flex-wrap gap-2 p-2 bg-surface-container-low rounded-lg min-h-[44px]">
+<span class="bg-tertiary/10 text-tertiary-container text-[0.625rem] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
+                                        Hardware <span class="material-symbols-outlined text-[12px] cursor-pointer">close</span>
+</span>
+<span class="bg-tertiary/10 text-tertiary-container text-[0.625rem] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase">
+                                        Processing <span class="material-symbols-outlined text-[12px] cursor-pointer">close</span>
+</span>
+</div>
+</div>
+<div class="col-span-2">
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Tags</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body" placeholder="Add tags separated by comma..." type="text"/>
+</div>
+</div>
+</section>
+<!-- Section 3: SEO -->
+<section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border-l-4 border-secondary">
+<h2 class="text-sm font-bold uppercase tracking-wider text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-xl">search</span>
+                            SEO Optimization
+                        </h2>
+<div class="space-y-6">
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Meta Title</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body" placeholder="Product Page Title" type="text"/>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Meta Description</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-body" placeholder="Description for search engines..." rows="3"></textarea>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">URL Slug</label>
+<div class="flex items-center bg-surface-container-low rounded-lg overflow-hidden px-4 border-2 border-transparent focus-within:border-primary/20 transition-all">
+<span class="text-slate-400 text-xs font-mono">domain.com/products/</span>
+<input class="flex-1 bg-transparent border-none py-3 text-sm font-mono focus:ring-0" type="text" value="quantum-core-processor-v1"/>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (35%) -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Publish Panel -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-6 space-y-6">
+<h2 class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface border-b border-outline-variant pb-3">Publishing Control</h2>
+<div class="flex items-center justify-between">
+<div class="text-sm font-medium">Status</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<span class="ms-3 text-xs font-semibold text-primary uppercase">Active</span>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div class="text-sm font-medium">Visibility</div>
+<select class="bg-surface-container-low border-none rounded-lg py-1.5 pl-3 pr-8 text-xs font-semibold uppercase focus:ring-0">
+<option>Public</option>
+<option>Private</option>
+</select>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-2">Schedule Publish</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">calendar_today</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-3 text-xs focus:ring-2 focus:ring-primary/20 transition-all font-body" placeholder="Select Date &amp; Time" type="text"/>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 flex gap-3">
+<button class="flex-1 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-primary border border-primary/20 hover:bg-primary/5 transition-all">Save Draft</button>
+<button class="flex-1 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#1653cc] to-[#3b6de6] shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">Publish</button>
+</div>
+</div>
+<!-- Pricing Panel -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+<h2 class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface border-b border-outline-variant pb-3 mb-6">Pricing</h2>
+<div class="space-y-4">
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-1.5">Base Price</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-sm">$</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-8 pr-4 py-3 text-sm font-mono focus:ring-2 focus:ring-primary/20 transition-all" type="text" value="299.00"/>
+</div>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-1.5">Compare Price</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-sm">$</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-8 pr-4 py-3 text-sm font-mono focus:ring-2 focus:ring-primary/20 transition-all line-through opacity-50" placeholder="0.00" type="text"/>
+</div>
+</div>
+<div class="pt-2 border-t border-outline-variant border-dashed">
+<label class="flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-wider font-semibold text-slate-400 mb-1.5">
+                                    Cost per item 
+                                    <span class="material-symbols-outlined text-[14px]">visibility_off</span>
+</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-sm">$</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-8 pr-4 py-3 text-sm font-mono focus:ring-2 focus:ring-primary/20 transition-all" type="text" value="145.20"/>
+</div>
+<p class="text-[10px] text-slate-400 mt-2 italic">Margin: 51.4% | Profit: $153.80</p>
+</div>
+</div>
+</div>
+<!-- Inventory Panel -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between border-b border-outline-variant pb-3 mb-6">
+<h2 class="text-[0.6875rem] uppercase tracking-wider font-bold text-on-surface">Inventory</h2>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold uppercase text-slate-400">Track</span>
+<input checked="" class="rounded text-primary focus:ring-primary w-4 h-4 border-slate-300" type="checkbox"/>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-1.5">SKU (Stock Keeping Unit)</label>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-low border-none rounded-lg px-4 py-3 text-xs font-mono font-medium focus:ring-2 focus:ring-primary/20 transition-all uppercase" type="text" value="QC-7742-PRO-01"/>
+<button class="p-3 bg-surface-container-high rounded-lg hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-slate-600 text-lg">autorenew</span>
+</button>
+</div>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-wider font-semibold text-outline mb-1.5">Barcode (GTIN/UPC)</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3 text-xs font-mono focus:ring-2 focus:ring-primary/20 transition-all" placeholder="123456789012" type="text"/>
+</div>
+</div>
+<div class="mt-6 p-3 bg-primary/5 rounded-lg border border-primary/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<div>
+<div class="text-[10px] font-bold uppercase text-primary">Predicted Stock-out</div>
+<div class="text-xs font-medium">12 days based on velocity</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Action Bar (Contextual) -->
+<div class="fixed bottom-0 left-64 right-0 glass-panel border-t border-outline-variant/30 py-4 px-8 z-30 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 text-slate-500 hover:text-on-surface transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-lg">keyboard_backspace</span>
+                Discard changes
+            </button>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-[10px] font-mono text-slate-400 uppercase tracking-tighter hidden md:block">
+                Last autosaved at 14:22:04
+            </div>
+<button class="px-6 py-2.5 bg-on-surface text-white text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">
+                Publish Product
+            </button>
+</div>
+</div>
+</body></html>

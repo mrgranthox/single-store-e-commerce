@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Performance Report - Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#5b5e68",
+              "surface-container-high": "#e6e7f6",
+              "primary-fixed-dim": "#b4c5ff",
+              "outline": "#737685",
+              "on-tertiary-container": "#f7fff3",
+              "surface": "#faf8ff",
+              "on-secondary-fixed-variant": "#444650",
+              "on-tertiary-fixed-variant": "#005321",
+              "outline-variant": "#c3c6d6",
+              "on-primary-container": "#fefcff",
+              "on-surface": "#181b25",
+              "secondary-fixed-dim": "#c4c6d1",
+              "surface-container-low": "#f2f3ff",
+              "on-error": "#ffffff",
+              "on-secondary-container": "#60626c",
+              "surface-container-highest": "#e0e2f0",
+              "surface-bright": "#faf8ff",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-tint": "#1b55ce",
+              "primary-container": "#3b6de6",
+              "tertiary-fixed": "#6bff8f",
+              "surface-container": "#ecedfb",
+              "surface-variant": "#e0e2f0",
+              "on-secondary-fixed": "#181b24",
+              "inverse-primary": "#b4c5ff",
+              "primary-fixed": "#dbe1ff",
+              "on-surface-variant": "#434654",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "inverse-surface": "#2d303b",
+              "inverse-on-surface": "#eff0fe",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dedfeb",
+              "background": "#faf8ff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary": "#006b2d",
+              "primary": "#1653cc",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed": "#002109",
+              "secondary-fixed": "#e0e2ed",
+              "on-primary-fixed": "#00174a",
+              "on-background": "#181b25"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans", "Inter"],
+              "label": ["IBM Plex Sans", "Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f0f2f7; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      .glass-gradient { background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%); }
+      .sidebar-label { font-size: 0.6875rem; letter-spacing: 0.05em; text-transform: uppercase; }
+      .ghost-border { border: 1px solid rgba(115, 118, 133, 0.15); }
+      .tonal-stacking { background-color: #f8f9fb; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="bg-[#13161e] h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold text-white tracking-tight">Operational Architect</h1>
+<p class="text-slate-500 text-xs mt-1">Enterprise Admin</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="sidebar-label">Sales</span>
+</a>
+<!-- Active Navigation: Product -->
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-6 py-3 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="sidebar-label">Product</span>
+</a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">warehouse</span>
+<span class="sidebar-label">Inventory</span>
+</a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="sidebar-label">Customers</span>
+</a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">support_agent</span>
+<span class="sidebar-label">Support</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-800 flex flex-col gap-1">
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="sidebar-label">Settings</span>
+</a>
+<a class="text-slate-400 hover:text-white px-6 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="sidebar-label">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-white dark:bg-[#0f1117] flex justify-between items-center px-8 shadow-sm dark:shadow-none">
+<div class="flex items-center gap-8 h-full">
+<span class="text-lg font-semibold text-slate-900 dark:text-white">Command Deck</span>
+<nav class="flex items-center gap-0 h-full">
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors" href="#">Analytics</a>
+<a class="text-[#4f7ef8] font-bold border-b-2 border-[#4f7ef8] h-full flex items-center px-4" href="#">Reports</a>
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors" href="#">Export</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:text-primary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 text-slate-500 hover:text-primary transition-colors"><span class="material-symbols-outlined">history</span></button>
+</div>
+<button class="bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 glass-gradient hover:scale-95 transition-transform">
+                Download Report
+            </button>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full border border-slate-200" data-alt="close-up portrait of a professional corporate administrator in a modern office environment, warm lighting, sharp focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAD-kQb04zpcHLIQt8PZXgmudp9cz7KkZXqomuV1isWR6o0dkMKPpiWvqleCSranbnRE-4iqDN8LKiO3FF_BzSMu8Ar_0EdyLRXVAETyipOTDOU3brmocrfmTw777Uc2-UsbE61uAbah8iNErOvrgKp9rZVLrQYLucnIwl4DWYqmEYI1jS2fib95QqYWUDpnz6ttX_8I4fCNqY2KFnsu06gewl_QvjOHRrjDC1HpTcul9nVrO7s7KBRilfbRM_uMVvMNsi8oUrOrBM"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Page Header Area -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-2xl font-bold font-headline text-on-surface">Product Performance Report</h2>
+<p class="text-secondary text-sm">Detailed operational analytics for product health and movement.</p>
+</div>
+<div class="bg-surface-container-lowest px-4 py-2 rounded-lg ghost-border flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">calendar_today</span>
+<span class="font-mono text-sm">Oct 01, 2023 - Oct 31, 2023</span>
+<span class="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
+</div>
+</div>
+<!-- Row 1: KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- KPI Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-primary shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="sidebar-label text-secondary">Total Products Sold</span>
+<span class="material-symbols-outlined text-primary">shopping_bag</span>
+</div>
+<div class="mt-4">
+<h3 class="text-3xl font-bold font-headline">42,501</h3>
+<div class="flex justify-end mt-2">
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center gap-1 uppercase tracking-wider">
+<span class="material-symbols-outlined text-xs">trending_up</span> 12.4%
+                        </span>
+</div>
+</div>
+</div>
+<!-- KPI Card 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-primary shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="sidebar-label text-secondary">Revenue</span>
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<div class="mt-4">
+<h3 class="text-3xl font-bold font-headline font-mono">$1,284,490</h3>
+<div class="flex justify-end mt-2">
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center gap-1 uppercase tracking-wider">
+<span class="material-symbols-outlined text-xs">trending_up</span> 8.2%
+                        </span>
+</div>
+</div>
+</div>
+<!-- KPI Card 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-error shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="sidebar-label text-secondary">Avg Return Rate</span>
+<span class="material-symbols-outlined text-error">keyboard_return</span>
+</div>
+<div class="mt-4">
+<h3 class="text-3xl font-bold font-headline font-mono">2.4%</h3>
+<div class="flex justify-end mt-2">
+<span class="text-[0.6875rem] font-bold text-error flex items-center gap-1 uppercase tracking-wider">
+<span class="material-symbols-outlined text-xs">trending_up</span> 0.5%
+                        </span>
+</div>
+</div>
+</div>
+<!-- KPI Card 4 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-tertiary shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="sidebar-label text-secondary">Avg Refund Rate</span>
+<span class="material-symbols-outlined text-tertiary">account_balance_wallet</span>
+</div>
+<div class="mt-4">
+<h3 class="text-3xl font-bold font-headline font-mono">1.8%</h3>
+<div class="flex justify-end mt-2">
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center gap-1 uppercase tracking-wider">
+<span class="material-symbols-outlined text-xs">trending_down</span> 0.2%
+                        </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 2: Top Products Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm mb-8 overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-bold font-headline">Top Performing Products</h3>
+<button class="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-2">View Full Inventory <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-3 sidebar-label text-outline">Rank</th>
+<th class="px-6 py-3 sidebar-label text-outline">Product</th>
+<th class="px-6 py-3 sidebar-label text-outline text-right">Units Sold</th>
+<th class="px-6 py-3 sidebar-label text-outline text-right">Revenue</th>
+<th class="px-6 py-3 sidebar-label text-outline text-center">Return %</th>
+<th class="px-6 py-3 sidebar-label text-outline text-center">Refund %</th>
+<th class="px-6 py-3 sidebar-label text-outline text-center">Stockout Days</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Table Row 1 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors group">
+<td class="px-6 py-4 font-mono text-sm">#01</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-lg object-cover" data-alt="minimalist studio product shot of a high-end white digital wristwatch on a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQzr-LlG0PzbbGxgsIfHJf1bMjc_-QwN47gcZfzPvgj6vef8qGeFGti4KccQB8CYtjxFeQD8IJJDri1EBbgfK4VofSSxiA9keHqLK018qWwUIJypMrNEviQUBKT8Df8JBVCQbD1SahD8_AMLhO9Kdgc2h3onxtc7U9Nku5Usc2Kw1JhxFq_onPrcRyCGvOnScSz6S9yduAzNWWg8g3LzfM9UcrmahbVdoGjsfMzxquSoT32BTKPpjS8kitAR9XKqEzGVoJQNwFGuk"/>
+<div>
+<p class="font-bold text-sm text-on-surface">Precision Chronograph v4</p>
+<p class="text-[10px] text-secondary font-mono">SKU: ARC-882-P</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-sm font-medium">8,124</td>
+<td class="px-6 py-4 text-right font-mono text-sm text-primary">$324,960</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-0.5 rounded ghost-border text-[10px] font-bold">1.2%</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-0.5 rounded ghost-border text-[10px] font-bold">0.8%</span>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="flex items-center justify-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="font-mono text-sm">0</span>
+</div>
+</td>
+</tr>
+<!-- Table Row 2 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors group">
+<td class="px-6 py-4 font-mono text-sm">#02</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-lg object-cover" data-alt="professional overhead studio photo of sleek wireless noise-cancelling headphones in charcoal grey" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3RnMxQKrT0wtXOqGZ2PtMBlV0rt81TVWCRG9zrvBp7-I-55Brbvto08MHbu4FgvP1ewZIt6ZTn9IAUuxcEuh4thrY50SdyM-bCR-GRqKTPJZIzA2LNfFqysa68nU2qVQTxPZ5iUSHf-MDoMadWgHlrs94vpcFMXawNJ7PGTWwUj_tEYIAFYTCrHfcYkXRal_ivSHcOPltqrUe661Ow3AC1bbdx0dgnTSGZWfWm7Ib_JkayawgYEytXSma6EG5DWlcRJtKHU3zdCg"/>
+<div>
+<p class="font-bold text-sm text-on-surface">Titanium Audio Shells</p>
+<p class="text-[10px] text-secondary font-mono">SKU: SND-401-X</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-sm font-medium">6,490</td>
+<td class="px-6 py-4 text-right font-mono text-sm text-primary">$292,050</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-0.5 rounded ghost-border text-[10px] font-bold">2.5%</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-0.5 rounded ghost-border text-[10px] font-bold text-error">3.1%</span>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="flex items-center justify-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="font-mono text-sm">4</span>
+</div>
+</td>
+</tr>
+<!-- Table Row 3 -->
+<tr class="hover:bg-surface-container-high/50 transition-colors group">
+<td class="px-6 py-4 font-mono text-sm">#03</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-lg object-cover" data-alt="lifestyle shot of a premium ceramic travel mug with wooden lid on a clean office desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYlvRhXXe-97xjnflsPNKUUoHiRE71ggdcxpHE297yXQdoruBi4k6bJHMeS_eYUA0xH-HkXXE5asTFiIz9hqoz5p5uNwagL3Zp9iZ2EwRyO2t439bor_vXq3Ljg2Jjd1CleBBXf7BuX-69xuokau6yqoy4RDZVvefPOd1_DviKhwvOW-oYQstvAfAcoR8qaI8EQrHGL_wRx5LncKngm7mO9SM2TEHX7myd-XL1QUE9B73fz33JGN7x3vScCrY0AScCcc5FFkqiYFo"/>
+<div>
+<p class="font-bold text-sm text-on-surface">Thermal Core Vessel</p>
+<p class="text-[10px] text-secondary font-mono">SKU: HME-221-V</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-sm font-medium">5,810</td>
+<td class="px-6 py-4 text-right font-mono text-sm text-primary">$203,350</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-0.5 rounded ghost-border text-[10px] font-bold">0.9%</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-0.5 rounded ghost-border text-[10px] font-bold">0.4%</span>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="flex items-center justify-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="font-mono text-sm">0</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Row 3: Two Panels -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Category Performance Chart Area -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-bold font-headline">Category Revenue Distribution</h3>
+<div class="flex gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-[10px] font-bold uppercase text-secondary">Actual</span>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Bar 1 -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-mono">
+<span>Electronics</span>
+<span>$542K</span>
+</div>
+<div class="w-full bg-surface-container-low h-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%;"></div>
+</div>
+</div>
+<!-- Bar 2 -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-mono">
+<span>Home &amp; Living</span>
+<span>$312K</span>
+</div>
+<div class="w-full bg-surface-container-low h-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 55%;"></div>
+</div>
+</div>
+<!-- Bar 3 -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-mono">
+<span>Wearables</span>
+<span>$248K</span>
+</div>
+<div class="w-full bg-surface-container-low h-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+<!-- Bar 4 -->
+<div class="space-y-1">
+<div class="flex justify-between text-xs font-mono">
+<span>Office Supplies</span>
+<span>$182K</span>
+</div>
+<div class="w-full bg-surface-container-low h-3 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 35%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Concern List: Highest Return Rates -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-bold font-headline text-error">High Return Concern List</h3>
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div class="space-y-3">
+<!-- Concern Item 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg tonal-stacking ghost-border">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-error/10 flex items-center justify-center text-error font-bold text-xs">
+                                8.2%
+                            </div>
+<div>
+<p class="text-sm font-bold">Ultra-Flex Yoga Mat</p>
+<p class="text-[10px] text-secondary">Material quality complaints</p>
+</div>
+</div>
+<button class="px-3 py-1 bg-white ghost-border rounded text-[10px] font-bold uppercase hover:bg-error hover:text-white transition-colors">Recall Audit</button>
+</div>
+<!-- Concern Item 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg tonal-stacking ghost-border">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-error/10 flex items-center justify-center text-error font-bold text-xs">
+                                6.5%
+                            </div>
+<div>
+<p class="text-sm font-bold">Wireless Keypad X-2</p>
+<p class="text-[10px] text-secondary">Bluetooth connectivity issues</p>
+</div>
+</div>
+<button class="px-3 py-1 bg-white ghost-border rounded text-[10px] font-bold uppercase hover:bg-error hover:text-white transition-colors">Tech Review</button>
+</div>
+<!-- Concern Item 3 -->
+<div class="flex items-center justify-between p-3 rounded-lg tonal-stacking ghost-border">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-error/10 flex items-center justify-center text-error font-bold text-xs">
+                                5.1%
+                            </div>
+<div>
+<p class="text-sm font-bold">Smart Ambient Lamp</p>
+<p class="text-[10px] text-secondary">Shipping damage frequency</p>
+</div>
+</div>
+<button class="px-3 py-1 bg-white ghost-border rounded text-[10px] font-bold uppercase hover:bg-error hover:text-white transition-colors">Logistics Check</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Hidden on Reports but kept for blueprint structure reference if needed elsewhere) -->
+<!-- Suppressed per Contextual FAB Suppression rule for Report screens -->
+</body></html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Product: Precision Core X9 Pro | Operational Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background-color: #f0f2f7;
+    }
+    .font-headline { font-family: 'DM Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    /* Ghost Border Fallback */
+    .ghost-border { border: 1px solid rgba(195, 198, 214, 0.15); }
+    .tonal-depth { background-color: #f0f2f7; }
+    .surface-canvas { background-color: #f8f9fb; }
+    .shell-dark { background-color: #13161e; }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e0e2f0",
+            "surface-container-highest": "#e0e2f0",
+            "on-tertiary-fixed-variant": "#005321",
+            "secondary-fixed": "#e0e2ed",
+            "primary-fixed": "#dbe1ff",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#002109",
+            "on-surface": "#181b25",
+            "outline-variant": "#c3c6d6",
+            "on-secondary-fixed-variant": "#444650",
+            "on-secondary-fixed": "#181b24",
+            "on-primary-container": "#fefcff",
+            "primary-fixed-dim": "#b4c5ff",
+            "outline": "#737685",
+            "secondary-fixed-dim": "#c4c6d1",
+            "secondary-container": "#dedfeb",
+            "on-background": "#181b25",
+            "inverse-on-surface": "#eff0fe",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e6e7f6",
+            "inverse-surface": "#2d303b",
+            "on-secondary-container": "#60626c",
+            "surface-tint": "#1b55ce",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed": "#00174a",
+            "tertiary-fixed-dim": "#4ae176",
+            "on-surface-variant": "#434654",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f2f3ff",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#00873b",
+            "surface": "#faf8ff",
+            "background": "#faf8ff",
+            "primary-container": "#3b6de6",
+            "inverse-primary": "#b4c5ff",
+            "tertiary": "#006b2d",
+            "primary": "#1653cc",
+            "surface-bright": "#faf8ff",
+            "on-primary-fixed-variant": "#003ea7",
+            "surface-dim": "#d8d9e7",
+            "on-tertiary-container": "#f7fff3",
+            "tertiary-fixed": "#6bff8f",
+            "surface-container": "#ecedfb",
+            "secondary": "#5b5e68",
+            "on-error-container": "#93000a"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+</head>
+<body class="text-on-surface">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-[#13161e] flex flex-col py-6 shadow-2xl">
+<div class="px-6 mb-8">
+<h1 class="text-white font-bold tracking-tighter text-xl">Command Deck</h1>
+<p class="text-slate-500 text-[0.6875rem] uppercase tracking-wider font-semibold">Enterprise Admin</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center px-6 py-3 bg-gradient-to-r from-[#1653cc] to-[#3b6de6] text-white rounded-r-lg translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Products</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">shopping_cart</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Orders</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">package_2</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Inventory</span>
+</a>
+<a class="flex items-center px-6 py-3 text-slate-400 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-[0.6875rem] uppercase tracking-wider font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 space-y-1">
+<a class="flex items-center py-2 text-slate-500 hover:text-white transition-all text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">contact_support</span> Support
+      </a>
+<a class="flex items-center py-2 text-slate-500 hover:text-white transition-all text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-sm">menu_book</span> Documentation
+      </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen relative">
+<!-- Top App Bar -->
+<header class="bg-[#f0f2f7] flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40">
+<div class="flex flex-col">
+<div class="flex items-center gap-3">
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold tracking-tight text-[#0f1117]">Edit Product: Precision Core X9 Pro</h2>
+</div>
+<div class="flex items-center gap-2 mt-1 ml-9">
+<span class="text-xs text-slate-500">Last saved 2 minutes ago</span>
+<span class="text-xs text-slate-400">•</span>
+<a class="text-xs text-primary font-semibold hover:underline" href="#">View 12 changes</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200/50 transition-colors rounded">Discard</button>
+<button class="px-6 py-2 bg-gradient-to-r from-[#1653cc] to-[#3b6de6] text-white text-sm font-bold rounded shadow-lg transition-transform active:scale-95">Save Changes</button>
+<div class="w-px h-6 bg-outline-variant/30 mx-2"></div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-200/50 rounded-full cursor-pointer">notifications</span>
+<span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-200/50 rounded-full cursor-pointer">settings</span>
+</div>
+</div>
+</header>
+<div class="p-8 grid grid-cols-12 gap-8">
+<!-- Left Column: Primary Content -->
+<div class="col-span-8 space-y-8">
+<!-- General Information Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl ghost-border">
+<h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-6">General Information</h3>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] uppercase tracking-wider font-semibold text-on-surface-variant">Product Title</label>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-md px-4 py-3 font-medium text-on-surface" type="text" value="Precision Core X9 Pro"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] uppercase tracking-wider font-semibold text-on-surface-variant">Description</label>
+<textarea class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-md px-4 py-3 text-on-surface leading-relaxed" rows="5">The Precision Core X9 Pro is our flagship industrial computing module, designed for high-density data processing and real-time operational analytics in demanding enterprise environments. Features an upgraded thermal management system and titanium-reinforced housing.</textarea>
+</div>
+</div>
+</section>
+<!-- Media Assets Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl ghost-border">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xs uppercase tracking-widest font-bold text-slate-400">Media Assets</h3>
+<button class="text-primary text-xs font-bold uppercase tracking-wider">+ Add Media</button>
+</div>
+<div class="grid grid-cols-4 gap-4">
+<div class="aspect-square bg-surface-container-low rounded-lg overflow-hidden group relative">
+<img class="w-full h-full object-cover" data-alt="high-tech microchip close-up with neon blue lighting and intricate golden circuits on a dark metallic background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB3fgOqqzxBhuXx_-di9iUFgw_eJD7FvonZHwY-O-cTioOlRFqpPflsFTaqejNLS-W-VfQeKCV4NkqqzJ5qfbC55YO9BoFug9TW3nz9Oob4KepP8XIPYvARwET3daAgLYXplN5fXCRMh7O6oMNPHfgXv-Znd0vw-Lh4l38B3gzM0ty1tWFvX6Y6oADSZRsupZtlzey-5DuNLs9O-CHkSxF7MXaX2bqYCd98sOony4sqgayK5IVdD4NrGPsht5M71_iQXMxD-HuqYI"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-white cursor-pointer">edit</span>
+<span class="material-symbols-outlined text-white cursor-pointer">delete</span>
+</div>
+</div>
+<div class="aspect-square bg-surface-container-low rounded-lg overflow-hidden group relative border-2 border-primary">
+<img class="w-full h-full object-cover" data-alt="macro photograph of a sleek silver industrial server component with cooling fins and polished metal texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa4HRR7vA9QjHUAawdbckPzq5q1szOULxs3XcaBMxA9iLCjejnondIgr7sC5flSZkkwX3GGhqhbuz1urhwsFEzP6Bpw1zEW5S_pVOkB4uide01CElZ6_NBkpjvveOaeqxX6DjNou1VhBrwqpG0Od8UdxKZOR8L7GKuL-BmcoXAPtbAFq5-Ud-rssvkDhmO6MmVlC5uTyJ66xKpSHDxCBweCt8Vq02ISVulaDNoahF1r7pJ-JpsF3fSgkIQGW6YZY-FMU19pO98cW0"/>
+<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">PRIMARY</div>
+</div>
+<div class="aspect-square border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center text-slate-400 hover:border-primary hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined mb-1">upload</span>
+<span class="text-[10px] font-bold">UPLOAD</span>
+</div>
+</div>
+</section>
+<!-- Pricing & Inventory Grid -->
+<div class="grid grid-cols-2 gap-8">
+<section class="bg-surface-container-lowest p-8 rounded-xl ghost-border">
+<h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-6">Pricing</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] uppercase tracking-wider font-semibold text-on-surface-variant">Base Price</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-slate-400">$</span>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-md pl-10 pr-4 py-3 font-mono text-on-surface" type="text" value="1,499.00"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] uppercase tracking-wider font-semibold text-on-surface-variant">Compare at Price</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-slate-400">$</span>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-md pl-10 pr-4 py-3 font-mono text-slate-400" type="text" value="1,850.00"/>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-surface-container-lowest p-8 rounded-xl ghost-border">
+<h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-6">Inventory</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] uppercase tracking-wider font-semibold text-on-surface-variant">SKU</label>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-md px-4 py-3 font-mono text-on-surface" type="text" value="PC-X9-PRO-882"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] uppercase tracking-wider font-semibold text-on-surface-variant">Stock Quantity</label>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-md px-4 py-3 font-mono text-on-surface" type="number" value="142"/>
+</div>
+</div>
+</section>
+</div>
+<!-- Danger Zone Card -->
+<section class="bg-white p-8 rounded-xl border-2 border-error/20">
+<div class="flex items-start justify-between">
+<div class="max-w-md">
+<h3 class="text-lg font-bold text-error flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined">warning</span> Archive Product
+              </h3>
+<p class="text-sm text-slate-500 leading-relaxed">Archiving will hide this product from your storefront and all active sales channels. This action can be undone, but may affect historical reporting and inventory links.</p>
+</div>
+<button class="px-6 py-3 border-2 border-error text-error text-[0.6875rem] uppercase tracking-widest font-bold hover:bg-error hover:text-white transition-colors rounded">Archive Product</button>
+</div>
+</section>
+</div>
+<!-- Right Column: Sidebar -->
+<div class="col-span-4 space-y-8">
+<!-- Status & Visibility Panel -->
+<section class="bg-surface-container-lowest p-6 rounded-xl ghost-border">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xs uppercase tracking-widest font-bold text-slate-400">Status</h3>
+<a class="text-primary text-[10px] font-bold flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm">history</span> Change history
+            </a>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="text-sm font-semibold text-on-surface">Active</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer">expand_more</span>
+</div>
+<div class="pt-4 border-t border-outline-variant/20">
+<p class="text-[0.6875rem] uppercase tracking-wider font-semibold text-on-surface-variant mb-3">Product Organization</p>
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<label class="text-[10px] text-slate-400 font-bold uppercase">Vendor</label>
+<input class="text-sm font-medium border-b border-outline-variant/30 py-1 focus:border-primary outline-none" type="text" value="Precision Labs"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] text-slate-400 font-bold uppercase">Category</label>
+<input class="text-sm font-medium border-b border-outline-variant/30 py-1 focus:border-primary outline-none" type="text" value="Industrial Core"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] text-slate-400 font-bold uppercase">Tags</label>
+<div class="flex flex-wrap gap-2 mt-1">
+<span class="bg-slate-100 px-2 py-1 rounded text-[10px] font-bold text-slate-600">PREMIUM</span>
+<span class="bg-slate-100 px-2 py-1 rounded text-[10px] font-bold text-slate-600">X-SERIES</span>
+<button class="text-primary text-[10px] font-bold">+ ADD</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sales Channels Summary -->
+<section class="bg-surface-container-lowest p-6 rounded-xl ghost-border">
+<h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-6">Active Channels</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">storefront</span>
+<span class="text-sm font-medium">Main Storefront</span>
+</div>
+<span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">language</span>
+<span class="text-sm font-medium">Global API</span>
+</div>
+<span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">terminal</span>
+<span class="text-sm font-medium">Developer Portal</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 text-sm">radio_button_unchecked</span>
+</div>
+</div>
+</section>
+<!-- Metadata KPI (Small) -->
+<div class="bg-[#13161e] p-6 rounded-xl relative overflow-hidden group">
+<div class="relative z-10">
+<h4 class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Lifetime Revenue</h4>
+<div class="text-2xl font-bold text-white font-mono">$212,840.00</div>
+<div class="text-[10px] text-green-400 font-bold mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +12.4% vs prev. month
+            </div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-8xl text-white">payments</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- UNSAVED CHANGES GUARD MODAL (Simulated Overlay) -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+<!-- Backdrop Blur -->
+<div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+<!-- Modal Card -->
+<div class="relative bg-white w-full max-w-md rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+<div class="p-8 text-center">
+<div class="w-16 h-16 bg-error-container text-error rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">error</span>
+</div>
+<h2 class="text-xl font-bold text-on-surface mb-3">Unsaved Changes</h2>
+<p class="text-slate-500 text-sm leading-relaxed mb-8">You have unsaved changes to "Precision Core X9 Pro". Are you sure you want to leave this page? All modifications will be lost.</p>
+<div class="flex flex-col gap-3">
+<button class="w-full py-3 bg-gradient-to-r from-[#1653cc] to-[#3b6de6] text-white font-bold rounded shadow-lg transition-transform active:scale-95">Stay and Save</button>
+<button class="w-full py-3 text-slate-500 hover:text-error font-bold text-sm transition-colors">Discard and Leave</button>
+</div>
+</div>
+<!-- Ambient Shadow Detail -->
+<div class="h-1 bg-gradient-to-r from-error to-primary"></div>
+</div>
+</div>
+</body></html>

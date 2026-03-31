@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CMS Pages Management | Command Deck</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "surface-bright": "#faf8ff",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-background": "#181b25",
+              "surface-container-highest": "#e0e2f0",
+              "inverse-surface": "#2d303b",
+              "inverse-on-surface": "#eff0fe",
+              "secondary-container": "#dedfeb",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#00873b",
+              "surface-variant": "#e0e2f0",
+              "tertiary-fixed": "#6bff8f",
+              "surface-dim": "#d8d9e7",
+              "on-primary-fixed": "#00174a",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f2f3ff",
+              "outline": "#737685",
+              "primary-fixed": "#dbe1ff",
+              "tertiary-fixed-dim": "#4ae176",
+              "on-primary-fixed-variant": "#003ea7",
+              "surface-container": "#ecedfb",
+              "on-secondary-container": "#60626c",
+              "surface": "#faf8ff",
+              "on-secondary-fixed-variant": "#444650",
+              "background": "#faf8ff",
+              "surface-tint": "#1b55ce",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-high": "#e6e7f6",
+              "secondary": "#5b5e68",
+              "primary": "#1653cc",
+              "primary-container": "#3b6de6",
+              "on-tertiary-fixed": "#002109",
+              "error": "#ba1a1a",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-secondary": "#ffffff",
+              "tertiary": "#006b2d",
+              "on-tertiary-container": "#f7fff3",
+              "on-surface-variant": "#434654",
+              "outline-variant": "#c3c6d6",
+              "secondary-fixed": "#e0e2ed",
+              "on-error-container": "#93000a",
+              "on-primary-container": "#fefcff",
+              "on-surface": "#181b25",
+              "inverse-primary": "#b4c5ff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans", "sans-serif"],
+              "body": ["IBM Plex Sans", "sans-serif"],
+              "label": ["IBM Plex Sans", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .tonal-depth-shift {
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+        }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased overflow-hidden">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#13161e] flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Command Deck</h1>
+<p class="text-[0.625rem] text-slate-400 uppercase tracking-[0.2em] font-semibold mt-1">Operational Architect</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:text-white transition-colors duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">support_agent</span>
+<span class="font-headline text-[0.6875rem] uppercase tracking-wider font-semibold">Complaints</span>
+</a>
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:text-white transition-colors duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">leaderboard</span>
+<span class="font-headline text-[0.6875rem] uppercase tracking-wider font-semibold">Analytics</span>
+</a>
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:text-white transition-colors duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">branding_watermark</span>
+<span class="font-headline text-[0.6875rem] uppercase tracking-wider font-semibold">Banners</span>
+</a>
+<a class="flex items-center px-3 py-2.5 bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] group rounded-r-lg" href="#">
+<span class="material-symbols-outlined mr-3 text-[#4f7ef8]">description</span>
+<span class="font-headline text-[0.6875rem] uppercase tracking-wider font-semibold">CMS Pages</span>
+</a>
+<a class="flex items-center px-3 py-2.5 text-slate-400 hover:text-white transition-colors duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">confirmation_number</span>
+<span class="font-headline text-[0.6875rem] uppercase tracking-wider font-semibold">Coupons</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-primary-container text-white py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Support Ticket
+            </button>
+<div class="mt-6 pt-6 border-t border-slate-800 space-y-1">
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-white transition-colors text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3">settings</span> Settings
+                </a>
+<a class="flex items-center px-3 py-2 text-slate-400 hover:text-white transition-colors text-[0.6875rem] uppercase tracking-wider font-semibold" href="#">
+<span class="material-symbols-outlined mr-3 text-error">logout</span> Logout
+                </a>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white border-b border-slate-100 flex justify-between items-center px-8">
+<div class="flex items-center gap-8">
+<div class="relative w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/20" placeholder="Search pages..." type="text"/>
+</div>
+<nav class="flex items-center gap-6">
+<a class="text-slate-500 hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-primary text-sm font-medium transition-colors" href="#">Logs</a>
+<a class="text-slate-500 hover:text-primary text-sm font-medium transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden ml-2">
+<img alt="Admin User Profile" class="w-full h-full object-cover" data-alt="Professional headshot of a business male in a dark suit with clean studio lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiMRvKY257S7z6IkbNvlB-l-yDXe0iUWYgi2fjFocDkD3WLcwR9UDLitJwHQCgpdmh26nLgCbx6u7TadWbfjdi3qFNCmurMcq02inCylozlXgpMh8DDudrRdl1t7TYNlLRIivKDkTmCk-5bGvxEXTH0vpHtmbA-hQcprJVsNT7A8mDNwBcpcb30aA8W-dP0ZnErH6-VVpiKkN1laM74oE-ucAFkH4qnK-Z0luSwY_syHfDe0J5sZ0Ds2c8_pcr7PQCdzRzyEFy4gQ"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-8 min-h-screen bg-[#f0f2f7]">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-2xl font-bold font-headline text-on-background">CMS Pages</h2>
+<p class="text-slate-500 text-sm mt-1">Manage public-facing informational content and legal policies.</p>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 shadow-lg shadow-primary/10 hover:shadow-primary/20 transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+                Create Page
+            </button>
+</div>
+<!-- Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/50 border-b border-outline-variant/15">
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Title</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Slug</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Last Updated</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500">Status</th>
+<th class="px-6 py-4 text-[0.6875rem] uppercase tracking-wider font-bold text-slate-500 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-semibold text-on-background">About Us</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">/about-us</td>
+<td class="px-6 py-4 text-slate-500">Oct 24, 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-success/30 text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span>
+                                Published
+                            </span>
+</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit_note</span></button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-lg">open_in_new</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-semibold text-on-background">Shipping Policy</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">/shipping-info</td>
+<td class="px-6 py-4 text-slate-500">Nov 12, 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-outline-variant/50 text-slate-500">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-2"></span>
+                                Draft
+                            </span>
+</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit_note</span></button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-lg">open_in_new</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-semibold text-on-background">Privacy Policy</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">/legal/privacy</td>
+<td class="px-6 py-4 text-slate-500">Dec 01, 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-success/30 text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span>
+                                Published
+                            </span>
+</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit_note</span></button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-lg">open_in_new</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-semibold text-on-background">Holiday FAQ</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">/faq/holidays-2023</td>
+<td class="px-6 py-4 text-slate-500">Nov 28, 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-success/30 text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span>
+                                Published
+                            </span>
+</td>
+<td class="px-6 py-4 text-right space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-lg">edit_note</span></button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined text-lg">open_in_new</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+<!-- Overlay Backer for Drawer -->
+<div class="fixed inset-0 bg-on-background/10 backdrop-blur-sm z-50"></div>
+<!-- Right-Side Detail Drawer (Create Page) -->
+<aside class="fixed top-0 right-0 h-full w-[480px] glass-panel shadow-2xl z-[60] border-l border-white/20 transform transition-transform duration-300">
+<div class="flex flex-col h-full">
+<!-- Drawer Header -->
+<div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white/50">
+<div>
+<h3 class="text-xl font-bold font-headline text-on-background">Create CMS Page</h3>
+<p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">New Entry Architect</p>
+</div>
+<button class="p-2 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Drawer Content -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Title & Slug -->
+<div class="space-y-4">
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Page Title</label>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none transition-all" placeholder="e.g. Terms of Service" type="text"/>
+</div>
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Slug Preview</label>
+<div class="flex items-center gap-2 px-4 py-2.5 bg-slate-100 rounded-lg border border-slate-200">
+<span class="text-slate-400 text-xs">yoursite.com/</span>
+<span class="text-primary font-mono text-xs font-medium">terms-of-service</span>
+</div>
+</div>
+</div>
+<!-- Content Area (Rich Text Placeholder) -->
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Page Content</label>
+<div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+<div class="flex items-center gap-1 p-2 border-b border-slate-100 bg-slate-50/50">
+<button class="p-1.5 hover:bg-white rounded transition-colors"><span class="material-symbols-outlined text-lg">format_bold</span></button>
+<button class="p-1.5 hover:bg-white rounded transition-colors"><span class="material-symbols-outlined text-lg">format_italic</span></button>
+<button class="p-1.5 hover:bg-white rounded transition-colors"><span class="material-symbols-outlined text-lg">format_list_bulleted</span></button>
+<button class="p-1.5 hover:bg-white rounded transition-colors"><span class="material-symbols-outlined text-lg">link</span></button>
+<div class="w-px h-4 bg-slate-200 mx-1"></div>
+<button class="p-1.5 hover:bg-white rounded transition-colors"><span class="material-symbols-outlined text-lg">image</span></button>
+</div>
+<textarea class="w-full border-none focus:ring-0 p-4 text-sm text-on-background resize-none" placeholder="Start drafting your content here..." rows="8"></textarea>
+</div>
+</div>
+<!-- SEO Meta Section -->
+<div class="pt-4 border-t border-slate-100 space-y-4">
+<h4 class="text-xs font-bold text-primary uppercase tracking-widest">SEO Configuration</h4>
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Meta Title</label>
+<input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/10" type="text"/>
+</div>
+<div>
+<label class="block text-[0.6875rem] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Meta Description</label>
+<textarea class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/10" rows="3"></textarea>
+</div>
+</div>
+<!-- Status Toggle -->
+<div class="flex items-center justify-between p-4 bg-primary/5 rounded-xl border border-primary/10">
+<div>
+<p class="text-sm font-bold text-primary">Publish immediately</p>
+<p class="text-[0.625rem] text-primary/70 uppercase font-semibold">Make visible to public upon save</p>
+</div>
+<button class="relative inline-flex h-6 w-11 items-center rounded-full bg-primary-container">
+<span class="inline-block h-4 w-4 transform translate-x-6 rounded-full bg-white transition"></span>
+</button>
+</div>
+</div>
+<!-- Drawer Footer -->
+<div class="p-6 border-t border-slate-100 bg-white/50 flex gap-3">
+<button class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">Save as Draft</button>
+<button class="flex-1 px-4 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-lg shadow-primary/10 transition-all">Publish Page</button>
+</div>
+</div>
+</aside>
+</body></html>

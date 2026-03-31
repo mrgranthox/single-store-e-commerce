@@ -1,0 +1,326 @@
+# Admin Frontend Cursor Rules — Stitch 1:1 Mirroring Mode
+
+## Mission
+You are working on a production-grade e-commerce admin frontend that is already largely implemented in terms of routes, hooks, API wiring, and workflows.
+
+Your primary job is now **pixel-faithful UI mirroring and admin UX refinement**.
+
+The imported Google Stitch screens are the **highest-priority visual source of truth**.
+
+The goal is to make every admin screen match the Stitch design **1:1 as closely as possible** while preserving working functionality.
+
+---
+
+## Absolute priorities
+1. **Mirror Google Stitch screens 1:1**
+2. Preserve existing working logic, routes, hooks, queries, mutations, and workflows
+3. Keep the admin usable for **non-technical business users**
+4. Avoid raw technical rendering in the visible UI
+5. Only change what is necessary for fidelity, usability, and safe integration
+
+---
+
+## Non-negotiable design fidelity rules
+- Treat the Stitch screenshot as **visual truth**
+- Treat the Stitch HTML as **structural truth**
+- Treat the existing codebase as the implementation base
+- Treat backend contracts and hooks as behavior truth
+- Do **not** redesign
+- Do **not** modernize
+- Do **not** simplify
+- Do **not** reinterpret
+- Do **not** improve styling unless explicitly instructed
+- Do **not** replace layouts with your own preferences
+- Do **not** compress layout structure just because it looks cleaner to you
+- Do **not** merge sections that are separate in Stitch
+- Do **not** remove wrappers, cards, panels, tabs, headers, drawers, or modals that are present in Stitch
+- Do **not** invent new widgets, new cards, new tables, new filters, new tabs, or new sections unless needed only to present already-existing data in a cleaner business-friendly way without altering the design intent
+
+---
+
+## Definition of 1:1 mirroring
+1:1 mirroring means preserving as closely as possible:
+- overall page layout
+- section order
+- panel grouping
+- spacing rhythm
+- alignment
+- card structure
+- header hierarchy
+- tab structure
+- filter placement
+- table structure
+- table column order
+- button placement
+- action menu placement
+- drawer placement
+- modal placement
+- badge placement
+- empty state structure
+- loading state structure
+- information hierarchy
+- visual emphasis
+
+If there is any ambiguity:
+- first follow the screenshot
+- then follow the Stitch HTML
+- then preserve current app architecture
+
+---
+
+## Admin user assumption
+Assume the primary admin user is:
+- a catalog manager
+- an inventory operator
+- a finance/admin officer
+- a support lead
+- an operations manager
+- a business administrator
+
+Assume they are **not developers**.
+
+Therefore:
+- do not expose raw technical payloads in the default UI
+- do not render raw JSON as visible business UI
+- do not show backend response blobs directly
+- do not use developer-centric labels where business-friendly wording is better
+- do not make screens feel like internal debugging tools
+
+---
+
+## Raw data rendering rules
+Never present backend payloads as raw JSON in the normal admin UI.
+
+Instead, render data using clean UI patterns such as:
+- summary cards
+- labeled detail rows
+- tables
+- badges/status chips
+- timelines
+- activity feeds
+- accordions
+- tabs
+- drawers
+- grouped forms
+- comparison blocks
+- info panels
+- sectioned detail layouts
+
+If technical inspection is necessary:
+- place it behind an "Advanced Details" or "Debug" expandable panel
+- never make it the default visible presentation
+- never let raw payload blocks dominate the screen
+
+---
+
+## Functional preservation rules
+- Preserve existing routes
+- Preserve existing data hooks
+- Preserve existing API integrations
+- Preserve existing query keys unless necessary
+- Preserve existing mutation flows unless necessary
+- Preserve existing permission logic unless instructed otherwise
+- Preserve existing working workflows
+- Do not break unrelated screens
+- Do not refactor broadly unless explicitly requested
+- Do not move files around unless needed for the current scoped task
+
+When making changes:
+- behavior-preserving refactors only
+- visual corrections first
+- targeted changes only
+
+---
+
+## Scope control rules
+Always work in **small batches of closely related screens**.
+
+Never try to solve all screens at once.
+
+Default batch size:
+- 3 to 6 closely related screens
+
+Do not modify screens outside the requested batch.
+
+Do not perform cross-module restyling.
+
+Do not "clean up the whole app" unless explicitly asked.
+
+---
+
+## Work mode rules
+Every task must be treated as one of these modes:
+
+### 1. Mirror-only pass
+Use this when the goal is visual fidelity.
+- focus only on matching Stitch
+- use mock/static placeholders if needed
+- do not alter business logic unless required for rendering
+- do not do broad refactors
+
+### 2. Structure-only pass
+Use this when the screen already visually matches.
+- preserve the rendered output exactly
+- refactor into reusable components only if behavior and visual output remain unchanged
+- keep route/module structure stable
+
+### 3. Behavior-only pass
+Use this when visual fidelity is already acceptable.
+- preserve the UI exactly
+- wire or adjust data hooks, filters, search, pagination, dialogs, mutations, permission visibility, loading/empty/error states
+- do not redesign anything
+
+If a task request is unclear, prefer treating it as a **visual-correction pass**, not a feature-generation pass.
+
+---
+
+## Required execution order for every batch
+For each requested batch:
+
+### Step 1 — Audit first
+Before changing code, identify:
+- visual mismatches against Stitch
+- structural mismatches against Stitch HTML
+- places where raw payloads/JSON are shown in the visible UI
+- spacing/alignment issues
+- wrong card grouping
+- wrong table structure
+- wrong tab structure
+- wrong drawer/modal placement
+- wrong action placement
+
+### Step 2 — Fix only scoped issues
+Make targeted corrections only.
+
+### Step 3 — Preserve behavior
+Ensure existing logic remains intact.
+
+### Step 4 — Clean admin UX
+Replace developer-style rendering with clean business-friendly rendering where needed.
+
+### Step 5 — Report clearly
+Always report:
+- files changed
+- screens affected
+- mismatches fixed
+- remaining mismatches
+- any raw JSON/payload areas replaced with cleaner UI
+- any ambiguity from Stitch
+
+---
+
+## Visual implementation rules
+When converting or correcting Stitch-based screens:
+- preserve the DOM hierarchy as much as practical
+- preserve wrapper nesting if it affects layout
+- preserve container sizing intent
+- preserve visual grouping
+- preserve content density
+- preserve action placement
+- preserve responsive layout intent where visible
+- prefer exact reproduction over simplification
+
+Do not:
+- flatten layout hierarchy unnecessarily
+- swap table-based presentation for card presentation unless Stitch clearly does so
+- convert multi-panel layouts into single-column layouts unless Stitch does so
+- change tabbed areas into accordions unless Stitch does so
+- replace drawers with full pages unless Stitch or architecture requires it
+
+---
+
+## Business-friendly UI transformation rules
+If current implementation shows technical content such as:
+- raw JSON payloads
+- object dumps
+- verbose provider metadata
+- raw API response blocks
+- internal IDs without context
+- unformatted timestamps
+- raw enum dumps
+
+Transform them into:
+- labeled fields
+- formatted dates
+- readable status chips
+- sectioned cards
+- timelines
+- structured tables
+- summary strips
+- human-readable descriptions
+
+Keep technical details accessible only in a secondary advanced panel if necessary.
+
+---
+
+## Permissions and admin behavior rules
+When implementing or correcting admin actions:
+- preserve route guards
+- preserve component-level permission visibility
+- preserve mutation-level checks
+- preserve high-risk confirmation flows
+- preserve reason capture where applicable
+
+Do not expose actions in the UI if they should be hidden or disabled by permission rules.
+
+Do not replace controlled action flows with raw developer controls.
+
+---
+
+## Shared UI preference rules
+Prefer reusing or introducing stable shared patterns only when they do not change the visual result:
+- PageHeader
+- FilterBar
+- EntityTable
+- StatsCardRow
+- DetailSection
+- Timeline
+- RightDrawer
+- ConfirmActionDialog
+- ApprovalDialogWithReason
+- StatusBadge
+- EmptyState
+- LoadingSkeleton
+
+But never let abstraction override fidelity.
+
+---
+
+## Forbidden behaviors
+You must not:
+- redesign the admin
+- improvise alternative layouts
+- add trendy UI flourishes not present in Stitch
+- expose raw JSON in normal business screens
+- break working hooks
+- rename modules without need
+- alter unrelated pages
+- convert this into a developer console
+- replace dense operational pages with oversimplified cards
+- "improve" spacing in ways that diverge from Stitch
+- drop business context fields because they look verbose
+
+---
+
+## Default response style when working
+When you complete a task, summarize:
+1. which screens were updated
+2. which files changed
+3. which Stitch mismatches were fixed
+4. which mismatches remain
+5. which technical/raw payload renderings were converted into cleaner UI
+6. whether functionality was preserved
+
+---
+
+## If the task involves a screen batch
+Always begin from this assumption:
+- the screen already exists
+- functionality likely exists
+- the current job is fidelity correction and UX cleanup unless explicitly stated otherwise
+
+---
+
+## Golden rule
+When in doubt:
+**preserve behavior, match Stitch, and render for business users — not developers.**

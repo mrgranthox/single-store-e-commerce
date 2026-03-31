@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Report | Command Deck</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#5b5e68",
+              "surface-container-high": "#e6e7f6",
+              "primary-fixed-dim": "#b4c5ff",
+              "outline": "#737685",
+              "on-tertiary-container": "#f7fff3",
+              "surface": "#faf8ff",
+              "on-secondary-fixed-variant": "#444650",
+              "on-tertiary-fixed-variant": "#005321",
+              "outline-variant": "#c3c6d6",
+              "on-primary-container": "#fefcff",
+              "on-surface": "#181b25",
+              "secondary-fixed-dim": "#c4c6d1",
+              "surface-container-low": "#f2f3ff",
+              "on-error": "#ffffff",
+              "on-secondary-container": "#60626c",
+              "surface-container-highest": "#e0e2f0",
+              "surface-bright": "#faf8ff",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "surface-tint": "#1b55ce",
+              "primary-container": "#3b6de6",
+              "tertiary-fixed": "#6bff8f",
+              "surface-container": "#ecedfb",
+              "surface-variant": "#e0e2f0",
+              "on-secondary-fixed": "#181b24",
+              "inverse-primary": "#b4c5ff",
+              "primary-fixed": "#dbe1ff",
+              "on-surface-variant": "#434654",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "inverse-surface": "#2d303b",
+              "inverse-on-surface": "#eff0fe",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dedfeb",
+              "background": "#faf8ff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#003ea7",
+              "tertiary": "#006b2d",
+              "primary": "#1653cc",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed": "#002109",
+              "secondary-fixed": "#e0e2ed",
+              "on-primary-fixed": "#00174a",
+              "on-background": "#181b25"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans", "DM Sans", "sans-serif"],
+              "body": ["Inter", "IBM Plex Sans", "sans-serif"],
+              "label": ["Inter", "IBM Plex Sans", "sans-serif"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'IBM Plex Sans', sans-serif;
+        background-color: #f0f2f7;
+      }
+      .font-headline { font-family: 'DM Sans', sans-serif; }
+      .font-mono { font-family: 'JetBrains Mono', monospace; }
+      .tonal-depth-shell { background-color: #0f1117; }
+      .sidebar-surface { background-color: #13161e; }
+      .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+      .ghost-border { border: 1px solid rgba(115, 118, 133, 0.15); }
+      .custom-gradient { background: linear-gradient(135deg, #1653cc 0%, #3b6de6 100%); }
+    </style>
+</head>
+<body class="text-on-background selection:bg-primary-container selection:text-white">
+<!-- SideNavBar Shell -->
+<aside class="sidebar-surface h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 flex flex-col py-6">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold text-white tracking-tight font-headline">Operational Architect</h1>
+<p class="text-[0.6875rem] uppercase tracking-[0.05em] text-slate-500 font-label mt-1">Enterprise Admin</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Inactive -->
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27] group" href="#">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Sales</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27] group" href="#">
+<span class="material-symbols-outlined text-xl">update</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Product</span>
+</a>
+<!-- Active (Inventory maps to Inventory Report) -->
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-4 py-3 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined text-xl text-[#4f7ef8]">inventory_2</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Inventory</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27] group" href="#">
+<span class="material-symbols-outlined text-xl">warehouse</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Warehouse</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27] group" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Customers</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27] group" href="#">
+<span class="material-symbols-outlined text-xl">support_agent</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Support</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-800 pt-4">
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Settings</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-label">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-white dark:bg-[#0f1117] flex justify-between items-center px-8">
+<div class="flex items-center gap-8 h-full">
+<span class="text-lg font-semibold text-slate-900 dark:text-white font-headline">Command Deck</span>
+<nav class="flex items-center h-full space-x-2">
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors font-label uppercase tracking-tighter text-[0.75rem]" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors font-label uppercase tracking-tighter text-[0.75rem]" href="#">Analytics</a>
+<a class="text-[#4f7ef8] font-bold border-b-2 border-[#4f7ef8] h-full flex items-center px-4 font-label uppercase tracking-tighter text-[0.75rem]" href="#">Reports</a>
+<a class="text-slate-500 dark:text-slate-400 h-full flex items-center px-4 hover:text-[#4f7ef8] transition-colors font-label uppercase tracking-tighter text-[0.75rem]" href="#">Export</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-sm">
+<span class="material-symbols-outlined text-slate-400 text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body" placeholder="Search parameters..." type="text"/>
+</div>
+<div class="flex items-center gap-3 border-l border-slate-100 dark:border-slate-800 pl-6">
+<button class="text-slate-500 hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-transform active:scale-95">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="custom-gradient text-white px-4 py-1.5 rounded-sm text-xs font-bold uppercase tracking-wider shadow-md hover:opacity-90 active:scale-95 transition-all">
+                    Download Report
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto space-y-8">
+<!-- Page Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-bold text-on-surface font-headline tracking-tight">Inventory Report</h2>
+<p class="text-secondary mt-1 font-body text-sm">Operational performance and stock movement analytics</p>
+</div>
+<div class="flex items-center gap-4 bg-white p-2 rounded-lg ghost-border">
+<div class="flex flex-col px-3 border-r border-slate-100">
+<span class="text-[0.6rem] uppercase tracking-[0.1em] text-outline font-label">Date Range</span>
+<span class="text-xs font-bold font-mono">OCT 01, 2023 - OCT 31, 2023</span>
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-md transition-colors text-primary">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</div>
+<!-- Row 1: KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase font-bold tracking-[0.05em] text-outline font-label">Total SKUs</span>
+<span class="material-symbols-outlined text-primary-container/20 group-hover:text-primary transition-colors">category</span>
+</div>
+<div class="mt-4 flex justify-between items-baseline">
+<h3 class="text-3xl font-bold font-mono text-on-surface">14,284</h3>
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center gap-1 font-label">
+<span class="material-symbols-outlined text-sm">trending_up</span> +2.4%
+                        </span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary-container"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase font-bold tracking-[0.05em] text-outline font-label">Avg In-Stock Rate %</span>
+<span class="material-symbols-outlined text-tertiary-container/20 group-hover:text-tertiary-container transition-colors">inventory</span>
+</div>
+<div class="mt-4 flex justify-between items-baseline">
+<h3 class="text-3xl font-bold font-mono text-on-surface">94.2%</h3>
+<span class="text-[0.6875rem] font-bold text-tertiary flex items-center gap-1 font-label">
+<span class="material-symbols-outlined text-sm">check_circle</span> Target: 95%
+                        </span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase font-bold tracking-[0.05em] text-outline font-label">Low-Stock Events</span>
+<span class="material-symbols-outlined text-error/20 group-hover:text-error transition-colors">warning</span>
+</div>
+<div class="mt-4 flex justify-between items-baseline">
+<h3 class="text-3xl font-bold font-mono text-on-surface">24</h3>
+<span class="text-[0.6875rem] font-bold text-error flex items-center gap-1 font-label">
+<span class="material-symbols-outlined text-sm">trending_up</span> +8 events
+                        </span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase font-bold tracking-[0.05em] text-outline font-label">Revenue Lost (Est)</span>
+<span class="material-symbols-outlined text-primary-container/20 group-hover:text-primary-container transition-colors">money_off</span>
+</div>
+<div class="mt-4 flex justify-between items-baseline">
+<h3 class="text-3xl font-bold font-mono text-on-surface">$12,402</h3>
+<span class="text-[0.6875rem] font-bold text-secondary flex items-center gap-1 font-label">
+<span class="material-symbols-outlined text-sm">schedule</span> Real-time
+                        </span>
+</div>
+</div>
+</div>
+<!-- Row 2: Trend Visualization -->
+<div class="bg-surface-container-lowest p-8 rounded-xl ghost-border relative">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="text-sm font-bold text-on-surface font-headline uppercase tracking-widest">Stock Level Trend</h3>
+<p class="text-xs text-secondary font-body">Aggregate inventory health over the 30-day period</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-[0.65rem] font-bold bg-surface-container-high rounded text-primary">DAILY</button>
+<button class="px-3 py-1 text-[0.65rem] font-bold hover:bg-surface-container-low rounded text-secondary transition-colors">WEEKLY</button>
+</div>
+</div>
+<!-- Simplified Trend Visualization -->
+<div class="h-64 flex items-end gap-1 w-full border-b border-slate-100 pb-1 relative">
+<!-- Background Grid -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="w-full border-t border-slate-400"></div>
+<div class="w-full border-t border-slate-400"></div>
+<div class="w-full border-t border-slate-400"></div>
+</div>
+<!-- Bars/Points representing trend -->
+<div class="flex-1 flex items-end justify-around h-full pt-12 z-10">
+<div class="w-1 bg-primary h-[80%] rounded-t-full opacity-40"></div>
+<div class="w-1 bg-primary h-[85%] rounded-t-full opacity-40"></div>
+<div class="w-1 bg-primary h-[78%] rounded-t-full opacity-40"></div>
+<div class="w-1 bg-primary h-[92%] rounded-t-full"></div>
+<div class="w-1 bg-primary h-[90%] rounded-t-full"></div>
+<div class="w-1 bg-primary h-[94%] rounded-t-full relative">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-2 border-primary rounded-full shadow-sm"></div>
+</div>
+<div class="w-1 bg-primary h-[88%] rounded-t-full opacity-40"></div>
+<div class="w-1 bg-primary h-[82%] rounded-t-full opacity-40"></div>
+<div class="w-1 bg-primary h-[95%] rounded-t-full"></div>
+</div>
+</div>
+<div class="flex justify-between mt-2 px-2">
+<span class="text-[0.6rem] font-mono text-outline">OCT 01</span>
+<span class="text-[0.6rem] font-mono text-outline">OCT 15</span>
+<span class="text-[0.6rem] font-mono text-outline">OCT 31</span>
+</div>
+</div>
+<!-- Row 3: Bar Chart & Table Panel -->
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+<!-- Panel 1: Movement Patterns (2/5 width) -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl ghost-border flex flex-col h-full">
+<h3 class="text-sm font-bold text-on-surface font-headline uppercase tracking-widest mb-6">Movement Patterns</h3>
+<div class="flex-1 space-y-6">
+<!-- Sales -->
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold font-label">
+<span class="text-on-surface">SALES</span>
+<span class="text-primary-container">6,842 units</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[85%]"></div>
+</div>
+</div>
+<!-- Restocks -->
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold font-label">
+<span class="text-on-surface">RESTOCKS</span>
+<span class="text-tertiary-container">4,120 units</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container w-[60%]"></div>
+</div>
+</div>
+<!-- Adjustments -->
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold font-label">
+<span class="text-on-surface">ADJUSTMENTS</span>
+<span class="text-secondary">842 units</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[25%]"></div>
+</div>
+</div>
+<!-- Returns -->
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold font-label">
+<span class="text-on-surface">RETURNS</span>
+<span class="text-outline">324 units</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-outline w-[12%]"></div>
+</div>
+</div>
+<!-- Damage -->
+<div class="space-y-2">
+<div class="flex justify-between text-[0.6875rem] font-bold font-label">
+<span class="text-on-surface">DAMAGE</span>
+<span class="text-error">112 units</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-error w-[5%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Panel 2: Most Adjusted SKUs Table (3/5 width) -->
+<div class="lg:col-span-3 bg-surface-container-lowest rounded-xl ghost-border overflow-hidden flex flex-col h-full">
+<div class="p-8 pb-4">
+<h3 class="text-sm font-bold text-on-surface font-headline uppercase tracking-widest">Most Adjusted SKUs</h3>
+<p class="text-xs text-secondary font-body mt-1">Manual overrides and cycle count discrepancies</p>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low/50">
+<tr>
+<th class="px-8 py-4 text-[0.625rem] font-bold text-outline uppercase tracking-widest font-label">Product</th>
+<th class="px-6 py-4 text-[0.625rem] font-bold text-outline uppercase tracking-widest font-label">SKU</th>
+<th class="px-6 py-4 text-[0.625rem] font-bold text-outline uppercase tracking-widest font-label">Adj. Count</th>
+<th class="px-6 py-4 text-[0.625rem] font-bold text-outline uppercase tracking-widest font-label">Qty Change</th>
+<th class="px-8 py-4 text-[0.625rem] font-bold text-outline uppercase tracking-widest font-label text-right">Reason</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-slate-400">inventory_2</span>
+</div>
+<span class="text-xs font-bold text-on-surface">Premium Ergonomic Chair</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-secondary">FUR-928-AX</td>
+<td class="px-6 py-4 font-mono text-xs font-bold">12</td>
+<td class="px-6 py-4 text-xs font-bold text-error">-42</td>
+<td class="px-8 py-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[0.65rem] font-bold border border-error/20 text-error">Damaged</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-slate-400">inventory_2</span>
+</div>
+<span class="text-xs font-bold text-on-surface">Mechanical Keycap Set</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-secondary">ACC-041-MS</td>
+<td class="px-6 py-4 font-mono text-xs font-bold">8</td>
+<td class="px-6 py-4 text-xs font-bold text-tertiary">+15</td>
+<td class="px-8 py-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[0.65rem] font-bold border border-tertiary/20 text-tertiary">Cycle Count</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-slate-400">inventory_2</span>
+</div>
+<span class="text-xs font-bold text-on-surface">27" 4K Creator Monitor</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-secondary">DIS-002-LG</td>
+<td class="px-6 py-4 font-mono text-xs font-bold">5</td>
+<td class="px-6 py-4 text-xs font-bold text-error">-2</td>
+<td class="px-8 py-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[0.65rem] font-bold border border-secondary/20 text-secondary">Correction</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-slate-400">inventory_2</span>
+</div>
+<span class="text-xs font-bold text-on-surface">Noise Cancelling Pods</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-secondary">AUD-883-WT</td>
+<td class="px-6 py-4 font-mono text-xs font-bold">4</td>
+<td class="px-6 py-4 text-xs font-bold text-error">-18</td>
+<td class="px-8 py-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[0.65rem] font-bold border border-error/20 text-error">Theft/Loss</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for quick action (Suppressed on analytics screens usually, but kept for context if meaningful) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 custom-gradient text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">add</span>
+</button>
+</body></html>

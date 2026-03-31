@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Precision Core X9 Pro - Inventory | Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'IBM Plex Sans', sans-serif; }
+        .font-headline { font-family: 'DM Sans', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed-variant": "#444650",
+              "outline-variant": "#c3c6d6",
+              "on-primary-container": "#fefcff",
+              "on-tertiary-fixed-variant": "#005321",
+              "on-tertiary-container": "#f7fff3",
+              "surface": "#faf8ff",
+              "outline": "#737685",
+              "secondary": "#5b5e68",
+              "surface-container-high": "#e6e7f6",
+              "primary-fixed-dim": "#b4c5ff",
+              "on-error-container": "#93000a",
+              "surface-bright": "#faf8ff",
+              "error-container": "#ffdad6",
+              "surface-tint": "#1b55ce",
+              "primary-container": "#3b6de6",
+              "on-secondary-container": "#60626c",
+              "surface-container-highest": "#e0e2f0",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-error": "#ffffff",
+              "surface-container-low": "#f2f3ff",
+              "on-surface": "#181b25",
+              "tertiary-fixed-dim": "#4ae176",
+              "tertiary-container": "#00873b",
+              "inverse-primary": "#b4c5ff",
+              "on-surface-variant": "#434654",
+              "primary-fixed": "#dbe1ff",
+              "tertiary-fixed": "#6bff8f",
+              "surface-variant": "#e0e2f0",
+              "on-secondary-fixed": "#181b24",
+              "surface-container": "#ecedfb",
+              "secondary-fixed": "#e0e2ed",
+              "on-primary-fixed": "#00174a",
+              "on-tertiary-fixed": "#002109",
+              "on-background": "#181b25",
+              "on-primary-fixed-variant": "#003ea7",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "tertiary": "#006b2d",
+              "primary": "#1653cc",
+              "on-secondary": "#ffffff",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#eff0fe",
+              "surface-dim": "#d8d9e7",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dedfeb",
+              "background": "#faf8ff",
+              "inverse-surface": "#2d303b"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-[#f0f2f7] text-on-surface">
+<!-- SideNavBar -->
+<aside class="bg-[#13161e] h-screen w-64 fixed left-0 top-0 overflow-y-auto flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight">Command Deck</h1>
+<p class="text-[0.6875rem] uppercase tracking-widest text-slate-500 mt-1">Operational Architect</p>
+</div>
+<nav class="flex-1 space-y-1 px-2">
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-medium">Catalog</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="shopping_cart">shopping_cart</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<!-- Active State: Inventory -->
+<a class="bg-[#1a1d27] text-white border-l-4 border-[#4f7ef8] px-4 py-3 flex items-center gap-3 active:scale-[0.98] transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[20px] text-[#4f7ef8]" data-icon="warehouse">warehouse</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="text-slate-400 hover:text-white px-4 py-3 flex items-center gap-3 transition-colors hover:bg-[#1a1d27]" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="text-sm font-medium">System</span>
+</a>
+</nav>
+<div class="px-6 mt-auto pt-6 border-t border-slate-800/50">
+<div class="flex items-center gap-3">
+<img alt="Admin User Avatar" class="w-8 h-8 rounded-full bg-slate-700" data-alt="close-up portrait of a professional operations manager in a clean corporate setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwjDKxsLUjrMNKk5KN0URdBDcEmK9RfA_jroEIDctaYKVvI3BaZh0oR1oM9Rv7BsTFVhSLZn7E-9ysc4PKHXrK-w2p2t0MaUc3YNb9-Fg0uwjtlwcBQh8K9Ww0sdIfCQLGRbWeXu1wC7qWew5FLZbXz15C_4XnVuqRz5upsC4bGABOVig2tzXUIYsjp-xqJBfA4qVD-5KB182x0XOodwXySXtd4WApfTzwFU5znumA9PppV7mhZHtc4EbccEDb_mXUs4w5b-5m6ck"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-white truncate">Admin User</p>
+<p class="text-[10px] text-slate-500 truncate uppercase tracking-tighter">Operational Architect</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white flex justify-between items-center px-8 shadow-[0_4px_24px_rgba(24,27,37,0.04)]">
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-50 border-none rounded-md text-sm w-64 focus:ring-1 focus:ring-primary" placeholder="Search operational core..." type="text"/>
+</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-slate-500 hover:text-primary transition-colors text-[0.75rem] font-medium uppercase tracking-wider" href="#">Overview</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-[0.75rem] font-medium uppercase tracking-wider" href="#">Analytics</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-[0.75rem] font-medium uppercase tracking-wider" href="#">Variants</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-[0.75rem] font-medium uppercase tracking-wider" href="#">Media</a>
+<a class="text-slate-500 hover:text-primary transition-colors text-[0.75rem] font-medium uppercase tracking-wider" href="#">Pricing</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 text-[0.75rem] font-medium uppercase tracking-wider" href="#">Inventory</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-full transition-colors active:scale-[0.97]">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-full transition-colors active:scale-[0.97]">
+<span class="material-symbols-outlined text-[20px]" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-1"></div>
+<img alt="Admin Profile" class="w-8 h-8 rounded-full border border-slate-200" data-alt="blurred background of a high-tech control center with multiple screens and soft blue ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9PCqAbUrj1brCZy6rWHOyV3x5U7FN14rSLw5225S6r_LLuUt6tLBk0IPuD6JLqib6jtYnIJixvuqKlGW-SC1pYIX4Moovz7_TJlEaieltIW0RXifCspzEeE_NUIBaAIj9lsxKwJ20ZJjFYJqJ6d9Zo6oRdHwmMzol0rsUTQI9zmP_Bx8Ao4RauHY4TFm9my5VS8cp-ZDmyM7-A_6qbFNZoFxqX4poVLD1byVl7tkXpdf9686-53xqhErEN3E5XCW968CQUJcshSE"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<!-- Alert Banner -->
+<div class="px-8 pt-6">
+<div class="bg-error-container text-on-error-container px-4 py-3 rounded-lg flex items-center gap-3 border-l-4 border-error">
+<span class="material-symbols-outlined" data-icon="warning" data-weight="fill" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-sm font-semibold">Low Stock Alert: 2 variants are below reorder level.</span>
+</div>
+</div>
+<div class="p-8 space-y-8">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500 mb-1">
+<span>Catalog</span>
+<span class="material-symbols-outlined text-[12px]" data-icon="chevron_right">chevron_right</span>
+<span>Products</span>
+</nav>
+<h2 class="text-2xl font-bold font-headline text-on-surface">Precision Core X9 Pro</h2>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white border border-outline-variant text-sm font-semibold rounded-md hover:bg-slate-50 transition-colors active:scale-[0.97] flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="file_download">file_download</span>
+                        Export Report
+                    </button>
+<button class="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-semibold rounded-md shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity active:scale-[0.97] flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        New Adjustment
+                    </button>
+</div>
+</div>
+<!-- KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Total Stock -->
+<div class="bg-surface-container-lowest p-6 rounded-lg relative overflow-hidden border-l-4 border-primary">
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase font-bold tracking-[0.05em] text-slate-500">Total Stock</span>
+<span class="material-symbols-outlined text-primary/20 text-3xl" data-icon="inventory">inventory</span>
+</div>
+<div class="mt-2">
+<span class="text-3xl font-bold font-headline text-on-surface">1,248</span>
+<p class="text-[10px] text-slate-400 mt-1 uppercase tracking-tighter">Gross units across all hubs</p>
+</div>
+</div>
+<!-- Reserved -->
+<div class="bg-surface-container-lowest p-6 rounded-lg relative overflow-hidden border-l-4 border-amber-500">
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase font-bold tracking-[0.05em] text-slate-500">Reserved</span>
+<span class="material-symbols-outlined text-amber-500/20 text-3xl" data-icon="pending_actions">pending_actions</span>
+</div>
+<div class="mt-2">
+<span class="text-3xl font-bold font-headline text-on-surface">12</span>
+<div class="flex items-center gap-1 mt-1">
+<span class="text-[10px] text-amber-600 font-bold uppercase">Pending in 4 orders</span>
+</div>
+</div>
+</div>
+<!-- Available -->
+<div class="bg-surface-container-lowest p-6 rounded-lg relative overflow-hidden border-l-4 border-tertiary">
+<div class="flex justify-between items-start">
+<span class="text-[0.6875rem] uppercase font-bold tracking-[0.05em] text-slate-500">Available</span>
+<span class="material-symbols-outlined text-tertiary/20 text-3xl" data-icon="check_circle">check_circle</span>
+</div>
+<div class="mt-2">
+<span class="text-3xl font-bold font-headline text-on-surface">1,236</span>
+<p class="text-[10px] text-tertiary font-bold mt-1 uppercase tracking-tighter">Ready for fulfillment</p>
+</div>
+</div>
+</div>
+<!-- Main Table Section -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant/15 flex justify-between items-center bg-[#f8f9fb]">
+<h3 class="text-sm font-bold uppercase tracking-wider text-on-surface">Stock By Variant</h3>
+<div class="flex gap-2">
+<button class="p-1.5 text-slate-400 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/50">
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500">Variant</th>
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500">SKU</th>
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500">Warehouse</th>
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500 text-right">On Hand</th>
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500 text-right">Reserved</th>
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500 text-right">Available</th>
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500 text-right">Reorder</th>
+<th class="px-6 py-3 text-[0.6875rem] uppercase tracking-[0.05em] font-bold text-slate-500">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 text-sm font-semibold text-on-surface">Titanium Grey / 512GB</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">X9P-TG-512</td>
+<td class="px-6 py-4 text-[0.75rem] text-slate-500">Primary Hub (Berlin)</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right font-medium">412</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right text-amber-600">4</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right font-bold text-on-surface">408</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right text-slate-400">100</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center gap-2 border border-outline-variant/20 px-2 py-0.5 rounded-full">
+<div class="w-1.5 h-1.5 rounded-full bg-success bg-emerald-500"></div>
+<span class="text-[0.625rem] font-bold uppercase tracking-tight text-emerald-600">Healthy</span>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 text-sm font-semibold text-on-surface">Obsidian Black / 1TB</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">X9P-OB-1TB</td>
+<td class="px-6 py-4 text-[0.75rem] text-slate-500">Primary Hub (Berlin)</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right font-medium text-error">12</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right text-amber-600">8</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right font-bold text-error">4</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right text-slate-400">50</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center gap-2 border border-error/20 px-2 py-0.5 rounded-full">
+<div class="w-1.5 h-1.5 rounded-full bg-error"></div>
+<span class="text-[0.625rem] font-bold uppercase tracking-tight text-error">Critical</span>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4 text-sm font-semibold text-on-surface">Snow White / 256GB</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-slate-600">X9P-SW-256</td>
+<td class="px-6 py-4 text-[0.75rem] text-slate-500">Satellite (Munich)</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right font-medium">824</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right text-slate-400">0</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right font-bold text-on-surface">824</td>
+<td class="px-6 py-4 font-mono text-[0.75rem] text-right text-slate-400">200</td>
+<td class="px-6 py-4">
+<div class="inline-flex items-center gap-2 border border-outline-variant/20 px-2 py-0.5 rounded-full">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+<span class="text-[0.625rem] font-bold uppercase tracking-tight text-emerald-600">Healthy</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Movement History Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant/15 flex justify-between items-center">
+<h3 class="text-sm font-bold uppercase tracking-wider text-on-surface">Movement History</h3>
+<a class="text-[0.75rem] font-bold text-primary hover:underline" href="#">View all movements</a>
+</div>
+<div class="p-0">
+<!-- Movement Entry -->
+<div class="px-6 py-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-emerald-50 flex items-center justify-center text-emerald-600">
+<span class="material-symbols-outlined" data-icon="south_west">south_west</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-on-surface"><span class="text-emerald-600 font-bold">+50</span> from Shipment #482</p>
+<p class="text-xs text-slate-500">Berlin Hub · Titanium Grey / 512GB</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[0.75rem] font-medium text-on-surface">Alex S.</p>
+<p class="text-[10px] text-slate-400 uppercase font-mono">14:22:01 · Today</p>
+</div>
+</div>
+<!-- Movement Entry -->
+<div class="px-6 py-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors border-t border-outline-variant/5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-red-50 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined" data-icon="north_east">north_east</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-on-surface"><span class="text-red-600 font-bold">-2</span> for Order #99102</p>
+<p class="text-xs text-slate-500">Berlin Hub · Titanium Grey / 512GB</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[0.75rem] font-medium text-on-surface">Auto-System</p>
+<p class="text-[10px] text-slate-400 uppercase font-mono">11:05:44 · Today</p>
+</div>
+</div>
+<!-- Movement Entry -->
+<div class="px-6 py-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors border-t border-outline-variant/5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-blue-50 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="sync_alt">sync_alt</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-on-surface">Stock Count Adjustment</p>
+<p class="text-xs text-slate-500">Munich Satellite · Snow White / 256GB</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[0.75rem] font-medium text-on-surface">Maria K.</p>
+<p class="text-[10px] text-slate-400 uppercase font-mono">Yesterday · 16:40</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Info Card -->
+<div class="bg-surface-container-low rounded-xl p-6 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 opacity-5">
+<span class="material-symbols-outlined text-[120px]" data-icon="warehouse">warehouse</span>
+</div>
+<div>
+<h4 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4">Storage Velocity</h4>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-[10px] font-bold uppercase tracking-tighter mb-1">
+<span>Stock Turnover Rate</span>
+<span>4.2x / Year</span>
+</div>
+<div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[75%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[10px] font-bold uppercase tracking-tighter mb-1">
+<span>Space Utilization</span>
+<span>88%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-amber-500 w-[88%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<button class="w-full py-3 bg-white text-on-surface text-xs font-bold uppercase tracking-widest border border-outline-variant/50 hover:bg-surface transition-colors active:scale-[0.98]">
+                            Download Audit Logs
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed based on context: Inventory sub-page doesn't require a global FAB) -->
+</body></html>

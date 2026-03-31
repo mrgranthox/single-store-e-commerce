@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Set New Password | Command Deck</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#1b55ce",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-high": "#e6e7f6",
+                        "primary-container": "#3b6de6",
+                        "secondary": "#5b5e68",
+                        "on-secondary-fixed": "#181b24",
+                        "on-secondary-fixed-variant": "#444650",
+                        "background": "#faf8ff",
+                        "surface-container": "#ecedfb",
+                        "on-secondary-container": "#60626c",
+                        "on-primary-fixed-variant": "#003ea7",
+                        "surface": "#faf8ff",
+                        "primary": "#1653cc",
+                        "on-surface": "#181b25",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#fefcff",
+                        "secondary-fixed": "#e0e2ed",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c3c6d6",
+                        "on-tertiary-container": "#f7fff3",
+                        "tertiary": "#006b2d",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#434654",
+                        "secondary-container": "#dedfeb",
+                        "surface-container-highest": "#e0e2f0",
+                        "inverse-surface": "#2d303b",
+                        "secondary-fixed-dim": "#c4c6d1",
+                        "on-background": "#181b25",
+                        "inverse-on-surface": "#eff0fe",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "primary-fixed": "#dbe1ff",
+                        "outline": "#737685",
+                        "surface-variant": "#e0e2f0",
+                        "tertiary-container": "#00873b",
+                        "surface-container-low": "#f2f3ff",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#d8d9e7",
+                        "on-primary-fixed": "#00174a",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["DM Sans", "Plus Jakarta Sans"],
+                        "body": ["IBM Plex Sans", "Inter"],
+                        "label": ["IBM Plex Sans", "Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+        }
+        .dot-grid {
+            background-image: radial-gradient(rgba(248, 249, 251, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-[#f0f2f7] font-body text-on-surface antialiased overflow-hidden">
+<main class="flex min-h-screen w-full max-w-[1280px] mx-auto overflow-hidden">
+<!-- Left Panel: The Shell (Dark Mode Anchor) -->
+<section class="hidden lg:flex flex-col justify-between w-[480px] bg-[#13161e] p-12 relative overflow-hidden">
+<div class="dot-grid absolute inset-0 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-16">
+<div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<span class="text-xl font-bold text-white tracking-tight font-headline">Admin Panel</span>
+</div>
+<div class="space-y-6">
+<h2 class="text-3xl font-bold text-white leading-tight font-headline">
+                        Secure your <br/>
+<span class="text-primary-fixed-dim">Command Deck.</span>
+</h2>
+<p class="text-slate-400 text-lg max-w-xs font-body">
+                        Establish your new credentials to maintain high-level operational control.
+                    </p>
+</div>
+</div>
+<div class="relative z-10">
+<div class="p-6 rounded-xl bg-[#1a1d27] border border-white/5 space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed-dim text-sm">verified_user</span>
+<span class="text-xs uppercase tracking-[0.1em] text-slate-500 font-mono">System Integrity</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex -space-x-2">
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-[#1a1d27]" data-alt="professional portrait of a tech executive in subtle blue lighting with a clean dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCad6rS9jqcAJgxT6b6Qs0N0dW3-e4ZHcPv4qo4FrRlg5XLTJOYqBWD1alfL7DjAdatery7WWQXoWnQ-D1_XJ8gaYefLdrSVlEt8u4hfN61V4_mzlKLrngfk3kFDJx9qHrUWq_5TAQtwZ51fH6OlPWGbUZNSm_ua9qetb59GgLtKxGBpEVhvOWPyth3k4DJvCmeoyUz_pGP05SYTwryCjeMy4rapD3PN6SulJumh1b2Gu_iCBPcTkDLbpLQXOkTUu2x7BFRdHsYyug"/>
+<img alt="User" class="w-8 h-8 rounded-full border-2 border-[#1a1d27]" data-alt="close up headshot of a female software architect with minimal aesthetic and professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbLi_x7jw5GeNfDJctuGh2HDBngUX_TpA6szrysm7M0dMUE1SrAESDHpllcXUTaaiWhet0Fi-C8U8LYehuUb8c9p1kBhcE_QLx03hCNK67uKy1qYu6LBVLj33GhbfztucaOvmqd43s2_1SUMtc8ZN69E2lf0g-vZdo4z_BOxRbYNCcSrjwfyGsjg6Dja6QGeGAIoK6qIRDTq99WnefJC5SqoHU2k2IDN4zvY1uag7PFHgpFpb_a-EtE5JNj0PxPdSD29B0oFf6KOw"/>
+</div>
+<span class="text-xs text-slate-400 font-body">Joined by 2.4k operators worldwide.</span>
+</div>
+</div>
+</div>
+<!-- Background Gradient Decoration -->
+<div class="absolute -bottom-24 -left-24 w-96 h-96 bg-primary opacity-10 blur-[100px] rounded-full"></div>
+</section>
+<!-- Right Panel: The Canvas -->
+<section class="flex-1 flex flex-col justify-center items-center px-6 lg:px-24 bg-[#f0f2f7]">
+<div class="w-full max-w-[440px]">
+<!-- Header Section -->
+<div class="mb-10">
+<h1 class="text-[2rem] font-bold text-[#0f1117] font-headline mb-2">Set new password</h1>
+<p class="text-on-surface-variant font-body">Enter a strong password to protect your account access.</p>
+</div>
+<!-- Form Section -->
+<form class="space-y-6">
+<!-- New Password Field -->
+<div class="space-y-2">
+<label class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant font-body" for="new-password">New Password</label>
+<div class="relative">
+<input class="w-full h-[44px] px-4 bg-white border border-[#e5e7eb] rounded-xl focus:ring-2 focus:ring-[#4f7ef8] focus:border-[#4f7ef8] outline-none transition-all font-body text-on-surface" id="new-password" placeholder="••••••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+<!-- Strength Indicator -->
+<div class="pt-2">
+<div class="flex gap-1.5 mb-2">
+<div class="h-1 flex-1 rounded-full bg-error"></div>
+<div class="h-1 flex-1 rounded-full bg-[#f97316]"></div>
+<div class="h-1 flex-1 rounded-full bg-[#eab308]"></div>
+<div class="h-1 flex-1 rounded-full bg-surface-variant"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[11px] font-medium text-on-surface-variant font-body">Strength: <span class="text-[#f97316]">Medium</span></span>
+<span class="text-[11px] font-mono text-outline">8+ Characters</span>
+</div>
+</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="space-y-2">
+<label class="text-xs font-semibold uppercase tracking-wider text-on-surface-variant font-body" for="confirm-password">Confirm Password</label>
+<input class="w-full h-[44px] px-4 bg-white border border-[#e5e7eb] rounded-xl focus:ring-2 focus:ring-[#4f7ef8] focus:border-[#4f7ef8] outline-none transition-all font-body text-on-surface" id="confirm-password" placeholder="••••••••••••" type="password"/>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-12 bg-gradient-to-r from-[#1653cc] to-[#3b6de6] hover:opacity-95 text-white font-semibold rounded-xl transition-all shadow-lg shadow-[#1653cc]/20 flex items-center justify-center gap-2" type="submit">
+                        Save Password
+                    </button>
+</form>
+<!-- Alternate View: Error State (Hidden by default, shown for demonstration) -->
+<div class="mt-12 p-5 bg-error-container/30 border-l-4 border-error rounded-r-xl">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="space-y-2">
+<p class="text-sm font-bold text-on-error-container font-headline">Token Expired</p>
+<p class="text-xs text-on-error-container/80 leading-relaxed font-body">
+                                This reset link has expired for security reasons. Please initiate a new request.
+                            </p>
+<a class="inline-block text-xs font-bold text-error hover:underline transition-all" href="#">
+                                Back to forgot password
+                            </a>
+</div>
+</div>
+</div>
+<!-- Footer Links -->
+<div class="mt-12 text-center">
+<p class="text-sm text-outline font-body">
+                        Suddenly remembered? 
+                        <a class="text-primary font-semibold hover:underline ml-1" href="#">Log in here</a>
+</p>
+</div>
+</div>
+<!-- Minimal Technical Metadata -->
+<div class="absolute bottom-8 right-8 hidden lg:flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-[10px] font-mono text-outline tracking-widest uppercase">Encryption SSL-256</span>
+</div>
+<div class="text-[10px] font-mono text-outline tracking-widest uppercase">
+                    Ref: <span class="text-on-surface">AUTH_RDX_772</span>
+</div>
+</div>
+</section>
+</main>
+</body></html>

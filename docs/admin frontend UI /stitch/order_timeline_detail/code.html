@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order #[ORD-10042] — Timeline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#faf8ff",
+              "on-tertiary-fixed-variant": "#005321",
+              "inverse-on-surface": "#eff0fe",
+              "primary-container": "#3b6de6",
+              "error-container": "#ffdad6",
+              "on-surface-variant": "#434654",
+              "tertiary": "#006b2d",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#60626c",
+              "on-primary-fixed-variant": "#003ea7",
+              "on-primary-fixed": "#00174a",
+              "surface-variant": "#e0e2f0",
+              "outline-variant": "#c3c6d6",
+              "tertiary-container": "#00873b",
+              "primary-fixed": "#dbe1ff",
+              "on-tertiary": "#ffffff",
+              "on-primary-container": "#fefcff",
+              "on-secondary-fixed-variant": "#444650",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-container": "#ecedfb",
+              "primary": "#1653cc",
+              "tertiary-fixed": "#6bff8f",
+              "surface": "#faf8ff",
+              "secondary-fixed-dim": "#c4c6d1",
+              "on-tertiary-container": "#f7fff3",
+              "inverse-surface": "#2d303b",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#181b25",
+              "tertiary-fixed-dim": "#4ae176",
+              "surface-tint": "#1b55ce",
+              "secondary-fixed": "#e0e2ed",
+              "outline": "#737685",
+              "surface-container-low": "#f2f3ff",
+              "on-surface": "#181b25",
+              "on-secondary-fixed": "#181b24",
+              "surface-container-high": "#e6e7f6",
+              "surface-container-highest": "#e0e2f0",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "inverse-primary": "#b4c5ff",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d8d9e7",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed": "#002109",
+              "surface-bright": "#faf8ff",
+              "secondary": "#5b5e68",
+              "secondary-container": "#dedfeb"
+            },
+            fontFamily: {
+              "headline": ["DM Sans", "Plus Jakarta Sans"],
+              "body": ["IBM Plex Sans", "Inter"],
+              "label": ["IBM Plex Sans", "Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #f0f2f7; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 1.5rem;
+            bottom: 0;
+            width: 2px;
+            background-color: #e0e2f0;
+        }
+        .technical-mono { font-family: 'JetBrains Mono', monospace; }
+        .high-density-row { height: 1.75rem; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-[#13161e] flex flex-col py-6">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-white tracking-tight">Operational Architect</h1>
+<p class="text-xs text-gray-500 font-medium mt-1">Enterprise Admin</p>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-[#1a1d27] text-white font-semibold rounded-lg" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">conveyor_belt</span>
+<span class="text-sm font-medium">Fulfillment</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+</nav>
+<div class="px-3 pt-6 border-t border-white/5 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#1a1d27] transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Anchor -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-white dark:bg-[#0f1117] shadow-sm dark:shadow-none h-16 px-8 flex justify-between items-center">
+<div class="flex items-center gap-4">
+<span class="text-lg font-bold text-slate-900 dark:text-white">Command Deck</span>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<div class="flex items-center gap-2 text-slate-500 text-sm">
+<span>Orders</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-primary font-medium">ORD-10042</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container-low px-3 py-1.5 rounded-lg border-transparent focus-within:ring-2 focus-within:ring-primary/20">
+<span class="material-symbols-outlined text-slate-400 text-lg">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 w-48" placeholder="Search orders..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-primary transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-all">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="flex items-center gap-2 pl-2 border-l border-outline-variant">
+<img alt="User Profile" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhfWL9WlgH2bA5PVoSvE2bPAdtYd8aS1LorgvqlSKaV9kcqZZ_dNEO2JY7NlG3RcMyvUZTgDWuz7GM4ZPgHjdboOBwz7QT-ikDQVzntL-zgyL2YiJIomFoa74zd-7DbZDxNxQ5-GcJB82Lel25cLXKU7XB_JBeDR_IZAuQQUKzMU5ONXs0P__MK32hEQCm6gvO8F8eh8VTGECbmKy4us2MUJnR4E1lgng7HwFKHHcoytysvzZ0wQhwctkMLBJ5Gr-lzSa2_HUnZqI"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Page Header -->
+<div class="mb-8">
+<h2 class="text-2xl font-bold font-headline text-on-background tracking-tight">Order #[ORD-10042] — Timeline</h2>
+<div class="flex items-center gap-3 mt-2">
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded border border-outline-variant text-[10px] uppercase tracking-wider font-semibold text-tertiary">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                        Delivered
+                    </div>
+<span class="text-sm text-on-surface-variant">Created on <span class="technical-mono text-xs">2023-10-24 14:22:01</span></span>
+</div>
+</div>
+<!-- Dashboard Layout Grid -->
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- Left: Full Chronological Timeline (65%) -->
+<div class="col-span-8 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl p-8 relative">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-10">Fulfillment Journey</h3>
+<div class="space-y-12 relative timeline-line">
+<!-- Event 1: Delivered -->
+<div class="relative pl-12">
+<div class="absolute left-0 w-6 h-6 rounded-full bg-tertiary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-white text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-on-surface">Order Delivered</h4>
+<p class="text-sm text-on-surface-variant mt-1">Package successfully handed to recipient at front desk.</p>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">person</span>
+<span class="text-xs font-medium">Courier: J. Miller</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">local_shipping</span>
+<a class="technical-mono text-xs text-primary hover:underline" href="#">SHP-99283-X</a>
+</div>
+</div>
+</div>
+<span class="technical-mono text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">2023-10-27 11:45:00</span>
+</div>
+</div>
+<!-- Event 2: Dispatched -->
+<div class="relative pl-12">
+<div class="absolute left-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center z-10 border-4 border-white shadow-sm">
+<span class="material-symbols-outlined text-white text-[10px]" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-on-surface">Dispatched</h4>
+<p class="text-sm text-on-surface-variant mt-1">Consignment left the Central Distribution Center (CDC-4).</p>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">hub</span>
+<span class="text-xs font-medium">Node: North Logistics Hub</span>
+</div>
+</div>
+</div>
+<span class="technical-mono text-xs text-on-surface-variant">2023-10-26 09:12:33</span>
+</div>
+</div>
+<!-- Event 3: Fulfillment Assigned -->
+<div class="relative pl-12">
+<div class="absolute left-0 w-6 h-6 rounded-full bg-surface-container-highest border-2 border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-outline text-[10px]">inventory</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-on-surface">Fulfillment Assigned</h4>
+<p class="text-sm text-on-surface-variant mt-1">Picking and packing initiated at Warehouse <span class="technical-mono text-xs">WH-EAST-12</span>.</p>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">assignment_ind</span>
+<span class="text-xs font-medium">Assigned to: Operator-82</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">list_alt</span>
+<a class="technical-mono text-xs text-primary hover:underline" href="#">PICK-0042-A</a>
+</div>
+</div>
+</div>
+<span class="technical-mono text-xs text-on-surface-variant">2023-10-25 15:30:12</span>
+</div>
+</div>
+<!-- Event 4: Payment Confirmed -->
+<div class="relative pl-12">
+<div class="absolute left-0 w-6 h-6 rounded-full bg-surface-container-highest border-2 border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-outline text-[10px]">payments</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-on-surface">Payment Confirmed</h4>
+<p class="text-sm text-on-surface-variant mt-1">Transaction verified via Stripe Gateway. Funds captured.</p>
+<div class="flex items-center gap-4 mt-3">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-outline">receipt_long</span>
+<a class="technical-mono text-xs text-primary hover:underline" href="#">TXN-7721-BD-90</a>
+</div>
+</div>
+</div>
+<span class="technical-mono text-xs text-on-surface-variant">2023-10-24 14:25:45</span>
+</div>
+</div>
+<!-- Event 5: Order Placed -->
+<div class="relative pl-12 pb-4">
+<div class="absolute left-0 w-6 h-6 rounded-full bg-surface-container-highest border-2 border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-outline text-[10px]">shopping_basket</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-on-surface">Order Placed</h4>
+<p class="text-sm text-on-surface-variant mt-1">Order submitted via <span class="font-medium text-on-surface">B2B Portal</span> by Client-44.</p>
+</div>
+<span class="technical-mono text-xs text-on-surface-variant">2023-10-24 14:22:01</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Compact Order Summary & Linked Entities (35%) -->
+<div class="col-span-4 space-y-6">
+<!-- Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<div class="bg-[#13161e] p-4 text-white">
+<h3 class="text-xs font-bold uppercase tracking-widest opacity-70">Order Snapshot</h3>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-end mb-6">
+<div>
+<span class="text-[10px] uppercase font-bold text-outline tracking-wider">Total Value</span>
+<h4 class="text-2xl font-bold font-headline mt-1">$4,820.50</h4>
+</div>
+<div class="text-right">
+<span class="text-[10px] uppercase font-bold text-outline tracking-wider">Qty</span>
+<p class="text-sm font-semibold">12 Items</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="Tech Product" class="w-full h-full object-cover" data-alt="close-up of electronic component hardware on professional industrial surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5FJ2hGUeMusYGu_r1SaMQZ_QBTz-fvcWFQ2DKzr7ez3rceK5zXx6JYDQ8zm8SXS48BFB1RGnwrKEtK8zjGIpiuhnkqtdghcGYCP1MhutIJADjSV0Hzfu4fxqe1TLIGokNaeRKv30dXDSBRtrXLJ8D8cEGaCYY1_5ZhZriOiXPMPi2w4n9R7NaIGArW3NZdcX-VdiK7jd_JC_9lOmuHN-_Z_07HOZJBbhiVRB2G_0R79JhSDPad_O4wdw_S24mkhqCkUTDHaY-tDc"/>
+</div>
+<div class="flex-1">
+<p class="text-xs font-semibold text-on-surface truncate">AX-900 Processor Hub</p>
+<p class="text-[10px] technical-mono text-on-surface-variant">SKU: PRO-9902</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold">$1,200.00</p>
+<p class="text-[10px] text-on-surface-variant">x4</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="Hardware Part" class="w-full h-full object-cover" data-alt="modern hardware parts for industrial computing systems neatly arranged" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDSyBPVK6-38I_ikzHXQpA02l0VueGdcZn3cRGlLot3VYMhyU9B679e6GIRXeYfBH_wuOkEkRqYZBg87g6vuFGxcvwkFMWrkOIxNblMQpy7H5-6LsXIoUyx1wvd7wmOzX2v8OHcIs0Uys3G6Okpy2StNUIezw035fPJy6D_XWBRmT3ygIKP9wY8wDpz75UtKXUiYjE0vFv1sx-a18HmM6vC9-SHNGuXUbCZPtXevHxLRU94TljJ_FFOOSlai6qdFAwsNEyUIGqdnU"/>
+</div>
+<div class="flex-1">
+<p class="text-xs font-semibold text-on-surface truncate">Thermal Cooling Array</p>
+<p class="text-[10px] technical-mono text-on-surface-variant">SKU: COL-4410</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold">$2,020.50</p>
+<p class="text-[10px] text-on-surface-variant">x8</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2.5 bg-primary text-white text-xs font-bold rounded-lg shadow-sm hover:opacity-90 transition-opacity">
+                                VIEW FULL MANIFEST
+                            </button>
+</div>
+</div>
+<!-- Linked Entities Panel -->
+<div class="bg-surface-container-low rounded-xl p-6 border border-white">
+<h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Linked Entities</h3>
+<div class="space-y-3">
+<!-- Payment -->
+<div class="bg-surface-container-lowest p-3 rounded-lg flex items-center justify-between group cursor-pointer hover:ring-1 hover:ring-primary/20 transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-primary">credit_card</span>
+<div>
+<p class="text-xs font-semibold">Payment</p>
+<p class="technical-mono text-[10px] text-on-surface-variant">PAY-0042-CAPTURED</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<!-- Shipment -->
+<div class="bg-surface-container-lowest p-3 rounded-lg flex items-center justify-between group cursor-pointer hover:ring-1 hover:ring-primary/20 transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-tertiary">local_shipping</span>
+<div>
+<p class="text-xs font-semibold">Shipment</p>
+<p class="technical-mono text-[10px] text-on-surface-variant">SHP-99283-X</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+<!-- Return (None) -->
+<div class="bg-surface-container-lowest p-3 rounded-lg flex items-center justify-between opacity-50 grayscale">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-outline">assignment_return</span>
+<div>
+<p class="text-xs font-semibold">Returns</p>
+<p class="text-[10px] italic">No active returns</p>
+</div>
+</div>
+</div>
+<!-- Support -->
+<div class="bg-surface-container-lowest p-3 rounded-lg flex items-center justify-between group cursor-pointer hover:ring-1 hover:ring-primary/20 transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-lg text-error">confirmation_number</span>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-xs font-semibold">Support Ticket</p>
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+</div>
+<p class="technical-mono text-[10px] text-on-surface-variant">TCK-5510-ACTIVE</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Help Tooltip -->
+<div class="p-4 rounded-xl border-l-4 border-primary bg-primary-fixed/20">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+<div>
+<h4 class="text-xs font-bold text-on-primary-fixed">Pro Tip</h4>
+<p class="text-[11px] text-on-primary-fixed-variant mt-1 leading-relaxed">
+                                    Click on any technical ID to view detailed system logs or associated metadata for that specific event.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

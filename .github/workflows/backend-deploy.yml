@@ -1,0 +1,110 @@
+name: Backend Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy from GHCR"
+        required: true
+        default: "latest"
+      rollout_strategy:
+        description: "Deployment strategy profile"
+        required: true
+        default: "direct"
+      auto_rollback:
+        description: "Rollback automatically if post-deploy health checks fail"
+        required: true
+        default: "true"
+      allow_destructive_migration:
+        description: "Allow latest migration to include destructive SQL"
+        required: true
+        default: "false"
+      health_url:
+        description: "Optional explicit health base URL"
+        required: false
+        default: ""
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify migration safety
+        env:
+          ALLOW_DESTRUCTIVE_MIGRATION: ${{ github.event.inputs.allow_destructive_migration }}
+        run: ./deploy/scripts/verify-migration-safety.sh
+      - name: Prepare SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+      - name: Upload deploy assets
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "mkdir -p '${{ secrets.DEPLOY_PATH }}'"
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deploy/docker-compose.ghcr.yml "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/docker-compose.yml"
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 deploy/scripts/deploy-release.sh deploy/scripts/rollback-release.sh deploy/scripts/verify-stack-health.sh "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
+      - name: Deploy stack
+        run: |
+          HEALTH_URL="${{ github.event.inputs.health_url }}"
+          if [ -z "${HEALTH_URL}" ]; then
+            HEALTH_URL="${{ secrets.APP_BASE_URL }}"
+          fi
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
+            mkdir -p '${{ secrets.DEPLOY_PATH }}' &&
+            cd '${{ secrets.DEPLOY_PATH }}' &&
+            cat > .env <<'EOF'
+BACKEND_IMAGE=ghcr.io/${{ github.repository_owner }}/ecommerce-backend:${{ github.event.inputs.image_tag }}
+NODE_ENV=production
+QUEUE_PREFIX=${{ secrets.QUEUE_PREFIX }}
+PAYMENT_PROVIDER=${{ secrets.PAYMENT_PROVIDER }}
+PAYSTACK_VERIFY_TRANSACTIONS=${{ secrets.PAYSTACK_VERIFY_TRANSACTIONS }}
+POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+DATABASE_URL=${{ secrets.DATABASE_URL }}
+REDIS_URL=${{ secrets.REDIS_URL }}
+APP_BASE_URL=${{ secrets.APP_BASE_URL }}
+ADMIN_APP_URL=${{ secrets.ADMIN_APP_URL }}
+CUSTOMER_APP_URL=${{ secrets.CUSTOMER_APP_URL }}
+MOBILE_APP_URL=${{ secrets.MOBILE_APP_URL }}
+CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }}
+CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
+CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
+CLERK_WEBHOOK_SECRET=${{ secrets.CLERK_WEBHOOK_SECRET }}
+SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+SENTRY_ENABLED=${{ secrets.SENTRY_ENABLED }}
+SENTRY_ENVIRONMENT=${{ secrets.SENTRY_ENVIRONMENT }}
+SENTRY_TRACES_SAMPLE_RATE=${{ secrets.SENTRY_TRACES_SAMPLE_RATE }}
+SENTRY_PROFILE_SAMPLE_RATE=${{ secrets.SENTRY_PROFILE_SAMPLE_RATE }}
+SENTRY_ATTACH_STACKTRACE=${{ secrets.SENTRY_ATTACH_STACKTRACE }}
+SENTRY_SEND_DEFAULT_PII=${{ secrets.SENTRY_SEND_DEFAULT_PII }}
+SENTRY_DEBUG=${{ secrets.SENTRY_DEBUG }}
+PAYSTACK_SECRET_KEY=${{ secrets.PAYSTACK_SECRET_KEY }}
+PAYSTACK_PUBLIC_KEY=${{ secrets.PAYSTACK_PUBLIC_KEY }}
+PAYSTACK_WEBHOOK_SECRET=${{ secrets.PAYSTACK_WEBHOOK_SECRET }}
+EMAIL_PROVIDER=${{ secrets.EMAIL_PROVIDER }}
+BREVO_SMTP_HOST=${{ secrets.BREVO_SMTP_HOST }}
+BREVO_SMTP_PORT=${{ secrets.BREVO_SMTP_PORT }}
+BREVO_SMTP_LOGIN=${{ secrets.BREVO_SMTP_LOGIN }}
+BREVO_SMTP_PASSWORD=${{ secrets.BREVO_SMTP_PASSWORD }}
+BREVO_API_KEY=${{ secrets.BREVO_API_KEY }}
+EMAIL_FROM=${{ secrets.EMAIL_FROM }}
+EMAIL_FROM_NAME=${{ secrets.EMAIL_FROM_NAME }}
+EMAIL_REPLY_TO=${{ secrets.EMAIL_REPLY_TO }}
+STORAGE_PROVIDER=${{ secrets.STORAGE_PROVIDER }}
+CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+ABUSE_CHALLENGE_PROVIDER=${{ secrets.ABUSE_CHALLENGE_PROVIDER }}
+PUBLIC_SUPPORT_CAPTCHA_ENABLED=${{ secrets.PUBLIC_SUPPORT_CAPTCHA_ENABLED }}
+TURNSTILE_SITE_KEY=${{ secrets.TURNSTILE_SITE_KEY }}
+TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}
+TURNSTILE_EXPECTED_HOSTNAMES=${{ secrets.TURNSTILE_EXPECTED_HOSTNAMES }}
+SESSION_SECRET=${{ secrets.SESSION_SECRET }}
+LOG_LEVEL=${{ secrets.LOG_LEVEL }}
+ALLOW_DEV_AUTH_BYPASS=false
+EOF
+            echo '${{ secrets.GHCR_PAT }}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin &&
+            chmod +x deploy-release.sh rollback-release.sh verify-stack-health.sh &&
+            ./deploy-release.sh '${{ secrets.DEPLOY_PATH }}' 'ghcr.io/${{ github.repository_owner }}/ecommerce-backend:${{ github.event.inputs.image_tag }}' \"${HEALTH_URL}\" '${{ github.event.inputs.rollout_strategy }}' '${{ github.event.inputs.auto_rollback }}'
+          "
