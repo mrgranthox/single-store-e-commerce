@@ -4,7 +4,7 @@
   "private": true,
   "description": "Backend foundation for the e-commerce platform",
   "engines": {
-    "node": ">=18.19.0"
+    "node": ">=18.19.0 <27"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -57,16 +57,16 @@
     "pino": "^9.14.0",
     "pino-pretty": "^11.3.0",
     "svix": "^1.89.0",
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
+    "zod": "^4.3.6",
     "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "@types/nodemailer": "^7.0.11",
     "prisma": "^6.19.0",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
+    "typescript": "6.0.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }
