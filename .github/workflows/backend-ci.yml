@@ -106,12 +106,14 @@ jobs:
       ALLOW_DEV_AUTH_BYPASS: "true"
       PAYSTACK_SECRET_KEY: test-secret
       PAYSTACK_WEBHOOK_SECRET: test-secret
+      PAYSTACK_API_BASE_URL: https://api.paystack.co
       PAYSTACK_VERIFY_TRANSACTIONS: "false"
       PUBLIC_SUPPORT_CAPTCHA_ENABLED: "true"
       ABUSE_CHALLENGE_PROVIDER: turnstile
       TURNSTILE_SITE_KEY: test-site-key
       TURNSTILE_SECRET_KEY: test-secret
       TURNSTILE_EXPECTED_HOSTNAMES: 127.0.0.1,localhost
+      TURNSTILE_VERIFY_URL: https://challenges.cloudflare.com/turnstile/v0/siteverify
       PAYSTACK_ALLOWED_WEBHOOK_IPS: 127.0.0.1,::1
     steps:
       - uses: actions/checkout@v4

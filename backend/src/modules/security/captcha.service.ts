@@ -79,10 +79,15 @@ export const verifyPublicSupportCaptcha = async (input: {
     });
   }
 
+  const verifyUrl = env.TURNSTILE_VERIFY_URL?.trim();
+  if (!verifyUrl) {
+    throw serviceUnavailableError("TURNSTILE_VERIFY_URL is not configured.");
+  }
+
   let response: Response;
 
   try {
-    response = await fetch(env.TURNSTILE_VERIFY_URL, {
+    response = await fetch(verifyUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"

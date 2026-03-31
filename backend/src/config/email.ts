@@ -74,6 +74,14 @@ const parseBrevoApiError = async (response: Response) => {
 
 const isAbortError = (error: unknown) => error instanceof Error && error.name === "AbortError";
 
+const requireBrevoApiBaseUrl = () => {
+  const base = env.BREVO_API_BASE_URL?.trim().replace(/\/$/, "");
+  if (!base) {
+    throw serviceUnavailableError("BREVO_API_BASE_URL is not configured.");
+  }
+  return base;
+};
+
 export const resetEmailRuntimeState = () => {
   transport = null;
   discoveredSender = null;
@@ -84,10 +92,11 @@ const fetchBrevoSenders = async () => {
     throw serviceUnavailableError("Brevo API credentials are not configured for sender discovery.");
   }
 
+  const brevoApiBase = requireBrevoApiBaseUrl();
   let response: Response;
 
   try {
-    response = await fetch(`${env.BREVO_API_BASE_URL}/senders`, {
+    response = await fetch(`${brevoApiBase}/senders`, {
       method: "GET",
       headers: {
         accept: "application/json",
@@ -260,10 +269,11 @@ export const sendTransactionalEmail = async (input: {
   }
 
   const from = await getEmailFromAddress();
+  const brevoApiBase = requireBrevoApiBaseUrl();
   let response: Response;
 
   try {
-    response = await fetch(`${env.BREVO_API_BASE_URL}/smtp/email`, {
+    response = await fetch(`${brevoApiBase}/smtp/email`, {
       method: "POST",
       headers: {
         accept: "application/json",

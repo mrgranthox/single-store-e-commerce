@@ -71,7 +71,9 @@ const DEPLOY_EMPTY_MEANS_UNSET = new Set([
   "CLOUDINARY_API_SECRET",
   "TURNSTILE_SITE_KEY",
   "TURNSTILE_SECRET_KEY",
+  "TURNSTILE_VERIFY_URL",
   "TURNSTILE_EXPECTED_HOSTNAMES",
+  "BREVO_API_BASE_URL",
   "SEED_DEFAULT_ADMIN_EMAIL",
   "SEED_DEFAULT_ADMIN_CLERK_USER_ID",
   "SEED_DEFAULT_ADMIN_PASSWORD",
@@ -187,7 +189,7 @@ const envSchema = z.object({
   PAYSTACK_SECRET_KEY: z.string().optional(),
   PAYSTACK_PUBLIC_KEY: z.string().optional(),
   PAYSTACK_WEBHOOK_SECRET: z.string().optional(),
-  PAYSTACK_API_BASE_URL: z.string().trim().url().default("https://api.paystack.co"),
+  PAYSTACK_API_BASE_URL: z.string().trim().url(),
   PAYSTACK_REQUEST_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(60_000).default(10_000),
   PAYSTACK_ALLOWED_CHANNELS: z.string().default("card,mobile_money"),
   PAYSTACK_ALLOWED_WEBHOOK_IPS: z.string().default("52.31.139.75,52.49.173.169,52.214.14.220"),
@@ -215,7 +217,7 @@ const envSchema = z.object({
   BREVO_SMTP_GREETING_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(60_000).default(10_000),
   BREVO_SMTP_SOCKET_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(120_000).default(15_000),
   BREVO_API_KEY: z.string().optional(),
-  BREVO_API_BASE_URL: z.string().trim().url().default("https://api.brevo.com/v3"),
+  BREVO_API_BASE_URL: z.string().trim().url().optional(),
   BREVO_API_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(60_000).default(10_000),
   EMAIL_FROM: z.string().default("no-reply@example.com"),
   EMAIL_FROM_NAME: z.string().trim().min(1).max(120).optional(),
@@ -245,11 +247,7 @@ const envSchema = z.object({
   PUBLIC_SUPPORT_CAPTCHA_ENABLED: booleanFromString.default(false),
   TURNSTILE_SITE_KEY: z.string().optional(),
   TURNSTILE_SECRET_KEY: z.string().optional(),
-  TURNSTILE_VERIFY_URL: z
-    .string()
-    .trim()
-    .url()
-    .default("https://challenges.cloudflare.com/turnstile/v0/siteverify"),
+  TURNSTILE_VERIFY_URL: z.string().trim().url().optional(),
   TURNSTILE_EXPECTED_HOSTNAMES: z.string().default(""),
   TURNSTILE_ENFORCE_ACTION: booleanFromString.default(true),
   TURNSTILE_TIMEOUT_MS: z.coerce.number().int().min(1000).max(30000).default(5000),
@@ -328,6 +326,14 @@ if (parsedEnv.NODE_ENV === "production") {
     );
   }
 
+  if (parsedEnv.EMAIL_PROVIDER === "brevo") {
+    if (!parsedEnv.BREVO_API_BASE_URL?.trim()) {
+      throw new Error(
+        "EMAIL_PROVIDER is brevo but BREVO_API_BASE_URL is missing or empty in production. Set it in the environment (see .env.example)."
+      );
+    }
+  }
+
   if (parsedEnv.EMAIL_PROVIDER === "brevo" && !isBrevoEmailConfigured(parsedEnv)) {
     throw new Error(
       "EMAIL_PROVIDER is brevo but Brevo is not configured. Set BREVO_SMTP_LOGIN + BREVO_SMTP_PASSWORD (or BREVO_API_KEY for SMTP key / transactional API), or set EMAIL_PROVIDER=none to disable email at boot (notifications will fail at send time)."
@@ -367,6 +373,11 @@ if (parsedEnv.NODE_ENV === "production") {
     if (!parsedEnv.TURNSTILE_SITE_KEY?.trim() || !parsedEnv.TURNSTILE_SECRET_KEY?.trim()) {
       throw new Error(
         "PUBLIC_SUPPORT_CAPTCHA_ENABLED is true with ABUSE_CHALLENGE_PROVIDER=turnstile but TURNSTILE_SITE_KEY or TURNSTILE_SECRET_KEY is missing in production."
+      );
+    }
+    if (!parsedEnv.TURNSTILE_VERIFY_URL?.trim()) {
+      throw new Error(
+        "PUBLIC_SUPPORT_CAPTCHA_ENABLED is true with ABUSE_CHALLENGE_PROVIDER=turnstile but TURNSTILE_VERIFY_URL is missing or empty in production. Set it in the environment (see .env.example)."
       );
     }
   }
