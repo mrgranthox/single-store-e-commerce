@@ -287,28 +287,21 @@ const parsedEnv = (() => {
     return result.data;
   }
 
-  const missingRequired = [
+  const missingKeys = [
     ...new Set(
       result.error.issues
-        .filter(
-          (issue): issue is typeof issue & { path: (string | number)[] } =>
-            issue.code === "invalid_type" &&
-            "received" in issue &&
-            (issue as { received?: string }).received === "undefined" &&
-            issue.path.length > 0
-        )
+        .filter((issue) => issue.path.length > 0)
         .map((issue) => issue.path.map(String).join("."))
     )
   ];
 
-  if (missingRequired.length > 0) {
-    throw new Error(
-      `Missing required environment variable(s): ${missingRequired.join(", ")}. ` +
-        "Define them on your host (e.g. Render → Environment). The deployed server does not load backend/.env from your machine."
-    );
-  }
-
-  throw result.error;
+  const detail = missingKeys.length > 0 ? `: ${missingKeys.join(", ")}` : "";
+  throw new Error(
+    `Environment validation failed${detail}. ` +
+      "Add the missing variable(s) in Render → Environment (or your host's env), then redeploy. " +
+      "The server does not read backend/.env from your local machine in the cloud.\n" +
+      result.error.issues.map((i) => `  ${i.path.join(".")}: ${i.message}`).join("\n")
+  );
 })();
 
 if (
