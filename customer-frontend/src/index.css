@@ -36,8 +36,8 @@ body {
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
   line-height: 1.5;
-  background: #f8f9ff;
-  color: #0b1c30;
+  background: #fff7fb;
+  color: #3a0a2e;
   margin: 0;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
@@ -141,6 +141,6 @@ p {
 }
 
 ::selection {
-  background: #dbe1ff;
-  color: #00174b;
+  background: #fbcfe8;
+  color: #3a0a2e;
 }

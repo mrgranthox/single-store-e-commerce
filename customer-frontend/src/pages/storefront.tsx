@@ -48,36 +48,36 @@ export const HomePage = () => {
       >
         <section className="relative min-h-[min(72dvh,540px)] md:min-h-0 md:h-[min(92dvh,920px)] w-full overflow-hidden bg-primary-container">
           <img
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-55 md:opacity-50"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_hcc82H9gNhpAxZ-TofQGXOkMdTid-d1NhkQkUWjMdSjkkQgD5iKD1pIPRDfARutQlOC-dlMWGA29z-U5SYtKE7ZOkl1x4B3r0f633Ng7miUjoOpR7YlyxIiJ6fyE7p2tF-dIvnjJYZVDiBiCEvNqjjRWOeaVTcPqSBhmdx6yTeRRoDmK4dCmI2GaRAHtAj3z8Znc6IdK01gVgRT3BfvWxttpLmHdptUbURhMGhZFVkhKmWcXbB6Yl_1ihTgTEW5wetOGYVngXNpv"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-75 md:opacity-70"
+            src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=85&w=2400"
             alt=""
           />
-          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/92 md:from-primary-container/85 via-primary-container/35 md:via-primary-container/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/88 md:from-primary-container/78 via-fuchsia-950/40 md:via-fuchsia-950/25 to-transparent" />
           <div className="relative z-[1] min-h-[min(72dvh,540px)] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-stretch sm:items-start pb-16 md:pb-0 pt-24 md:pt-0 w-full min-w-0">
             <span className="font-label text-tertiary-fixed tracking-[0.2em] sm:tracking-[0.28em] uppercase text-[10px] sm:text-xs mb-3 md:mb-5 font-bold">
-              {STORE_NAME_SHORT} · Curated tees &amp; staples
+              {STORE_NAME_SHORT} · Vibrant beauty &amp; care
             </span>
             <h1 className="font-headline text-3xl leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white tracking-tighter max-w-full sm:max-w-3xl md:leading-[0.92] mb-4 md:mb-7 break-words text-balance">
-              The art of <span className="text-primary-fixed-dim">curated</span> living.
+              Color that <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-pink-200 to-fuchsia-200">performs</span>.
             </h1>
-            <p className="text-primary-fixed-dim text-sm sm:text-base md:text-lg max-w-full sm:max-w-md md:max-w-lg mb-6 md:mb-10 font-light leading-relaxed">
-              Brands, categories, and drops in one place — easy checkout with card or mobile money (MTN, Telecel, AirtelTigo) via Paystack.
+            <p className="text-primary-fixed text-sm sm:text-base md:text-lg max-w-full sm:max-w-md md:max-w-lg mb-6 md:mb-10 font-light leading-relaxed">
+              Pigment-rich makeup, skin-first essentials, and drops you will actually use — checkout with card or mobile money (MTN, Telecel, AirtelTigo) via Paystack.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto min-w-0">
               <Link
                 to="/shop"
-                className="bg-secondary text-on-secondary px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:opacity-95 transition-all flex items-center justify-center gap-2 group shadow-lg shadow-secondary/20 text-center"
+                className="bg-secondary text-on-secondary px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:opacity-95 transition-all flex items-center justify-center gap-2 group shadow-lg shadow-secondary/30 text-center"
                 aria-label="Shop the full catalogue"
               >
-                Shop the catalogue
+                Shop the edit
                 <Icon name="arrow_forward" className="text-lg group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 to="/brands"
-                className="inline-flex items-center justify-center text-center border border-white/35 text-white px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:bg-white/10 backdrop-blur-sm transition-all"
+                className="inline-flex items-center justify-center text-center border border-white/40 text-white px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:bg-white/15 backdrop-blur-sm transition-all"
                 aria-label="Browse all designer brands and houses"
               >
-                Explore houses
+                Explore brands
               </Link>
             </div>
           </div>
