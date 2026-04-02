@@ -1,3 +1,4 @@
+import { formatGhs } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
 
 export interface Product {
@@ -453,7 +454,7 @@ export const homeCouponPromos: HomeCouponPromo[] = [
     badge: "First purchase",
     headline: "15% off your first full-price order",
     body: "Authentic materials, insured delivery, and 30-day returns — the same standard on every order.",
-    terms: "Applies to orders over $150. Excludes sale and campaign SKUs. One use per customer.",
+    terms: `Applies to orders over ${formatGhs(150, 0)}. Excludes sale and campaign SKUs. One use per customer.`,
     bannerImageUrl: mockImages.promoFirst,
     productSlugs: ["organic-cotton-tee", "heritage-wool-overcoat", "horizon-spectacles"],
     ctaLabel: "Browse eligible edit",
@@ -463,7 +464,7 @@ export const homeCouponPromos: HomeCouponPromo[] = [
     id: "layer-pair",
     code: "LAYER20",
     badge: "Pair & save",
-    headline: "$20 off knit + outerwear together",
+    headline: `${formatGhs(20, 0)} off knit + outerwear together`,
     body: "Build a considered kit: one knit layer and one outer piece — shipped in our archival packaging.",
     terms: "Mock storefront: code shown for UX preview; applied at checkout when both categories are in cart.",
     bannerImageUrl: mockImages.promoPair,
@@ -479,9 +480,9 @@ export const pages = {
     title: "Shipping Policy",
     sections: [
       { heading: "Standard Delivery", body: "We ship all domestic orders within 1–2 business days. Standard delivery takes 3–5 business days after dispatch." },
-      { heading: "Express Delivery", body: "Express next-day delivery is available for orders placed before 2pm (Mon–Fri). Additional fee of $15 applies." },
+      { heading: "Express Delivery", body: `Express next-day delivery is available for orders placed before 2pm (Mon–Fri). Additional fee of ${formatGhs(15)} applies.` },
       { heading: "International Shipping", body: "We ship to 40+ countries. International orders take 5–10 business days. Customs duties and taxes are the responsibility of the recipient." },
-      { heading: "Free Shipping", body: "Complimentary standard shipping on all orders over $200." },
+      { heading: "Free Shipping", body: `Complimentary standard shipping on all orders over ${formatGhs(200, 0)}.` },
     ],
   },
   returns: {
@@ -507,7 +508,7 @@ export const pages = {
     sections: [
       { heading: "Acceptance of Terms", body: "By using our website or placing an order, you agree to these terms and conditions." },
       { heading: "Products", body: "We make every effort to display our products as accurately as possible. Colours may vary slightly due to screen calibration." },
-      { heading: "Pricing", body: "All prices are in USD and inclusive of applicable taxes unless stated otherwise. We reserve the right to change prices at any time." },
+      { heading: "Pricing", body: "All prices are in Ghana cedis (GHS, ₵) and inclusive of applicable taxes unless stated otherwise. We reserve the right to change prices at any time." },
       { heading: "Governing Law", body: "These terms are governed by the laws of the State of New York, without regard to conflict-of-law principles." },
     ],
   },

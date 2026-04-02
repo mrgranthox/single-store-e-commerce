@@ -6,6 +6,7 @@ import { z } from "zod";
 import { CheckoutHeader, CheckoutStepBar, CheckoutFooter, StoreBrandLink, StorefrontMain, StorefrontShell } from "@/components/layout";
 import { STORE_NAME_FULL } from "@/lib/brand";
 import { mockImages } from "@/lib/data/mock-images";
+import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 import { CheckoutOrderSummary } from "@/components/ui";
 import { Icon } from "@/components/Icon";
@@ -37,7 +38,7 @@ export const CartPage = () => {
   const navigate = useNavigate();
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal >= 250 ? 0 : 45;
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD_GHS ? 0 : 45;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
@@ -56,7 +57,7 @@ export const CartPage = () => {
             <Icon name="shopping_bag" className="text-5xl sm:text-6xl text-outline mb-6" />
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-3">Your bag is empty</h1>
             <p className="text-on-surface-variant text-sm sm:text-base max-w-md mb-8 leading-relaxed">
-              Discover pieces from our edit — shipping is complimentary over $250.
+              {`Discover pieces from our edit — shipping is complimentary over ${formatGhs(FREE_SHIPPING_THRESHOLD_GHS, 0)}.`}
             </p>
             <Link
               to="/shop"
@@ -138,7 +139,7 @@ export const CartPage = () => {
                       </button>
                     </div>
                     <span className="text-base sm:text-lg md:text-xl font-bold text-on-surface tabular-nums shrink-0">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      {formatGhs(item.price * item.quantity)}
                     </span>
                   </div>
                 </div>
@@ -153,20 +154,20 @@ export const CartPage = () => {
               <div className="space-y-6 mb-10 pb-10 border-b border-outline-variant/20">
                 <div className="flex justify-between items-center text-on-surface-variant">
                   <span className="font-body">Subtotal</span>
-                  <span className="font-bold text-on-surface">${subtotal.toFixed(2)}</span>
+                  <span className="font-bold text-on-surface">{formatGhs(subtotal)}</span>
                 </div>
                 <div className="flex justify-between items-center text-on-surface-variant">
                   <span className="font-body">Shipping</span>
-                  <span className="font-bold text-on-surface">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                  <span className="font-bold text-on-surface">{shipping === 0 ? "Free" : formatGhs(shipping)}</span>
                 </div>
                 <div className="flex justify-between items-center text-on-surface-variant">
                   <span className="font-body">Estimated Tax</span>
-                  <span className="font-bold text-on-surface">${tax.toFixed(2)}</span>
+                  <span className="font-bold text-on-surface">{formatGhs(tax)}</span>
                 </div>
               </div>
               <div className="flex justify-between items-center mb-10">
                 <span className="text-xl font-bold tracking-tight">Total</span>
-                <span className="text-3xl font-extrabold tracking-tighter text-primary">${total.toFixed(2)}</span>
+                <span className="text-3xl font-extrabold tracking-tighter text-primary">{formatGhs(total)}</span>
               </div>
               <div className="mb-8">
                 <label className="text-[10px] uppercase tracking-widest font-bold text-outline block mb-3">Add Coupon</label>
@@ -220,6 +221,7 @@ export const CheckoutShippingPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(shippingSchema),
   });
+  const expressShippingLabel = formatGhs(24);
 
   return (
     <div className="bg-background font-body text-on-background antialiased">
@@ -268,7 +270,7 @@ export const CheckoutShippingPage = () => {
                 <div className="grid grid-cols-1 gap-4">
                   {[
                     { id: "standard", icon: "local_shipping", title: "Standard Delivery", sub: "3-5 business days", price: "Free" },
-                    { id: "express", icon: "rocket_launch", title: "Express Shipping", sub: "Next day delivery", price: "$24.00" },
+                    { id: "express", icon: "rocket_launch", title: "Express Shipping", sub: "Next day delivery", price: expressShippingLabel },
                   ].map((method) => (
                     <label
                       key={method.id}
@@ -488,7 +490,7 @@ export const CheckoutPaymentPage = () => {
                           <h4 className="font-bold text-sm mb-1">{item.name}</h4>
                           <p className="text-xs text-on-surface-variant">{item.variant}</p>
                         </div>
-                        <p className="font-bold text-sm">${item.price.toFixed(2)}</p>
+                        <p className="font-bold text-sm">{formatGhs(item.price)}</p>
                       </div>
                     </div>
                   ))}
@@ -496,7 +498,7 @@ export const CheckoutPaymentPage = () => {
                 <div className="space-y-3 border-t border-outline-variant/20 pt-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-on-surface-variant">Subtotal</span>
-                    <span>$770.00</span>
+                    <span>{formatGhs(770)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-on-surface-variant">Shipping</span>
@@ -504,11 +506,11 @@ export const CheckoutPaymentPage = () => {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-on-surface-variant">Tax</span>
-                    <span>$61.60</span>
+                    <span>{formatGhs(61.6)}</span>
                   </div>
                   <div className="flex justify-between pt-4 font-extrabold text-lg">
                     <span>Total</span>
-                    <span>$831.60</span>
+                    <span>{formatGhs(831.6)}</span>
                   </div>
                 </div>
               </div>
@@ -700,19 +702,19 @@ export const OrderSuccessPage = () => (
                     <p className="text-sm text-outline">{item.variant}</p>
                     <div className="flex justify-between items-center mt-2">
                       <span className="text-xs font-label text-outline">Qty: {item.qty}</span>
-                      <span className="font-bold text-on-background">${item.price.toFixed(2)}</span>
+                      <span className="font-bold text-on-background">{formatGhs(item.price)}</span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             <div className="pt-6 space-y-3 border-t border-outline-variant/20">
-              <div className="flex justify-between text-sm"><span className="text-outline">Subtotal</span><span className="text-on-background">$970.00</span></div>
+              <div className="flex justify-between text-sm"><span className="text-outline">Subtotal</span><span className="text-on-background">{formatGhs(970)}</span></div>
               <div className="flex justify-between text-sm"><span className="text-outline">Shipping</span><span className="text-secondary font-medium">Free</span></div>
-              <div className="flex justify-between text-sm"><span className="text-outline">Tax</span><span className="text-on-background">$77.60</span></div>
+              <div className="flex justify-between text-sm"><span className="text-outline">Tax</span><span className="text-on-background">{formatGhs(77.6)}</span></div>
               <div className="flex justify-between pt-4">
                 <span className="font-headline font-bold text-lg">Total</span>
-                <span className="font-headline font-extrabold text-lg text-secondary">$1,047.60</span>
+                <span className="font-headline font-extrabold text-lg text-secondary">{formatGhs(1047.6)}</span>
               </div>
             </div>
             <div className="bg-surface-container-low p-4 rounded-xl flex items-start gap-3">

@@ -20,6 +20,7 @@ import {
   campaignBySlug,
 } from "@/lib/data/customer-mock";
 import { STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
+import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 import { searchCatalog } from "@/lib/catalog-search";
@@ -94,7 +95,7 @@ export const HomePage = () => {
             <TrustBadge
               icon="local_shipping"
               title="Insured delivery"
-              sub="Complimentary over $250"
+              sub={`Complimentary over ${formatGhs(FREE_SHIPPING_THRESHOLD_GHS, 0)}`}
               to="/pages/shipping-policy"
               ariaLabel="Read shipping policy — insured delivery and free shipping thresholds"
             />
@@ -247,7 +248,7 @@ export const HomePage = () => {
                           key={p.id}
                           to={`/products/${p.slug}`}
                           className="group/p flex min-w-0 flex-col gap-1.5"
-                          aria-label={`${p.name} by ${b.name} — ${p.category}, $${p.price.toFixed(2)}. View product.`}
+                          aria-label={`${p.name} by ${b.name} — ${p.category}, ${formatGhs(p.price)}. View product.`}
                         >
                           <div className="aspect-[3/4] rounded-lg overflow-hidden border border-outline-variant/15 bg-surface-container-low w-full">
                             <img
@@ -538,9 +539,9 @@ export const ShopAllPage = () => {
             </label>
             <select className={`w-full rounded-lg py-3 px-4 text-sm outline-none ${neutralFieldClass}`}>
               <option>All Prices</option>
-              <option>Under $100</option>
-              <option>$100 – $500</option>
-              <option>$500+</option>
+              <option>{`Under ${formatGhs(100, 0)}`}</option>
+              <option>{`${formatGhs(100, 0)} – ${formatGhs(500, 0)}`}</option>
+              <option>{`${formatGhs(500, 0)}+`}</option>
             </select>
           </div>
         </div>
@@ -697,13 +698,13 @@ export const ProductDetailPage = () => {
                 <div className="flex flex-wrap items-end gap-3 sm:gap-4">
                   <div className="flex flex-col min-w-0">
                     {product.originalPrice && (
-                      <span className="text-xs font-label text-outline line-through">${product.originalPrice.toFixed(2)}</span>
+                      <span className="text-xs font-label text-outline line-through">{formatGhs(product.originalPrice)}</span>
                     )}
-                    <span className="text-2xl sm:text-3xl font-headline font-bold text-on-surface tabular-nums">${product.price.toFixed(2)}</span>
+                    <span className="text-2xl sm:text-3xl font-headline font-bold text-on-surface tabular-nums">{formatGhs(product.price)}</span>
                   </div>
                   {product.originalPrice && (
                     <div className="bg-secondary-container text-white px-3 py-1 rounded-sm text-xs font-label font-bold flex items-center gap-1 self-end mb-0.5">
-                      Save ${(product.originalPrice - product.price).toFixed(0)}
+                      {`Save ${formatGhs(product.originalPrice - product.price, 0)}`}
                     </div>
                   )}
                 </div>

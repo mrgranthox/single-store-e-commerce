@@ -1,6 +1,7 @@
 import { TopNavBar, Footer, BottomNavBar } from "@/components/layout";
 import { Icon } from "@/components/Icon";
 import { STORE_EMAIL_PRIVACY, STORE_EMAIL_SUPPORT, STORE_NAME_FULL } from "@/lib/brand";
+import { formatGhs } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 
@@ -176,7 +177,10 @@ export const AboutPage = () => (
 export const ShippingPolicyPage = () => (
   <PolicyLayout title="Shipping Policy">
     <ProseSection title="Delivery Timeframes" text="Standard delivery takes 3-5 business days within the United States. Express shipping delivers next business day for orders placed before 12pm EST. International orders typically take 7-14 business days and may be subject to customs delays." />
-    <ProseSection title="Shipping Costs" text="We offer free standard shipping on all orders over $250. For orders below this threshold, standard shipping is $12.00. Express shipping is $24.00 regardless of order size." />
+    <ProseSection
+      title="Shipping Costs"
+      text={`We offer free standard shipping on all orders over ${formatGhs(250, 0)}. For orders below this threshold, standard shipping is ${formatGhs(12)}. Express shipping is ${formatGhs(24)} regardless of order size.`}
+    />
     <ProseSection title="International Shipping" text={`We ship to many countries worldwide. International orders may incur customs duties and taxes, which are the responsibility of the recipient. ${STORE_NAME_FULL} is not responsible for customs delays.`} />
     <ProseSection title="Order Tracking" text="Once your order has been dispatched, you will receive a confirmation email with a tracking link. You can also track your orders in your account dashboard." />
     <ProseSection title="Packaging" text={`All ${STORE_NAME_FULL} orders ship in minimal, recyclable packaging. We avoid single-use plastics wherever possible.`} />
@@ -218,7 +222,7 @@ export const TermsPage = () => (
     <ProseSection title="Acceptance of Terms" text={`By accessing and using the ${STORE_NAME_FULL} website, you accept and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our website.`} />
     <ProseSection title="Use of the Website" text="You agree to use this website only for lawful purposes and in a manner that does not infringe the rights of others or restrict their use of this website." />
     <ProseSection title="Product Descriptions" text="We make every effort to ensure that product descriptions are accurate. However, we do not warrant that product descriptions or other content is accurate, complete, or error-free." />
-    <ProseSection title="Pricing" text="All prices are listed in USD and are subject to change without notice. We reserve the right to modify or discontinue products at any time." />
+    <ProseSection title="Pricing" text="All prices are listed in Ghana cedis (GHS) using the cedi symbol (₵) and are subject to change without notice. We reserve the right to modify or discontinue products at any time." />
     <ProseSection title="Intellectual Property" text={`All content on this website, including text, images, graphics, and logos, is the property of ${STORE_NAME_FULL} and protected by copyright laws. Unauthorized use is strictly prohibited.`} />
     <ProseSection title="Limitation of Liability" text={`${STORE_NAME_FULL} shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our products or services.`} />
   </PolicyLayout>

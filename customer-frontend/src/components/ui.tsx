@@ -1,6 +1,7 @@
 import type React from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "@/components/Icon";
+import { formatGhs } from "@/lib/currency";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 import { useCustomerStore } from "@/lib/store/customer-store";
 import type { Product } from "@/lib/data/customer-mock";
@@ -73,10 +74,10 @@ export const ProductCard = ({ product }: { product: Product }) => {
           </div>
           <div className="text-right shrink-0 tabular-nums">
             {product.originalPrice && (
-              <p className="text-xs text-outline line-through">${product.originalPrice.toFixed(2)}</p>
+              <p className="text-xs text-outline line-through">{formatGhs(product.originalPrice)}</p>
             )}
             <p className={`font-headline font-bold text-base sm:text-lg ${product.originalPrice ? "text-error" : ""}`}>
-              ${product.price.toFixed(2)}
+              {formatGhs(product.price)}
             </p>
           </div>
         </div>
@@ -162,7 +163,7 @@ export const CheckoutOrderSummary = ({
               </div>
               <div className="flex justify-between items-center">
                 {item.qty != null && <span className="text-xs font-label text-outline">Qty: {item.qty}</span>}
-                <p className="font-bold text-sm">${item.price.toFixed(2)}</p>
+                <p className="font-bold text-sm">{formatGhs(item.price)}</p>
               </div>
             </div>
           </div>
@@ -172,7 +173,7 @@ export const CheckoutOrderSummary = ({
         {subtotal != null && (
           <div className="flex justify-between text-sm">
             <span className="text-on-surface-variant">Subtotal</span>
-            <span className="font-medium">${subtotal.toFixed(2)}</span>
+            <span className="font-medium">{formatGhs(subtotal)}</span>
           </div>
         )}
         <div className="flex justify-between text-sm">
@@ -182,13 +183,13 @@ export const CheckoutOrderSummary = ({
         {tax != null && (
           <div className="flex justify-between text-sm">
             <span className="text-on-surface-variant">Tax</span>
-            <span className="font-medium">${tax.toFixed(2)}</span>
+            <span className="font-medium">{formatGhs(tax)}</span>
           </div>
         )}
         {total != null && (
           <div className="flex justify-between text-lg font-extrabold border-t border-outline-variant/20 pt-6 mt-2">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>{formatGhs(total)}</span>
           </div>
         )}
       </div>

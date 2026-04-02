@@ -4,6 +4,7 @@ import { AccountLayout } from "@/components/layout";
 import { OrderStatusBadge } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { orders, tickets } from "@/lib/data/customer-mock";
+import { formatGhs } from "@/lib/currency";
 import { neutralCheckboxClass, neutralFieldClass } from "@/lib/form-field-styles";
 import { STORE_NAME_FULL, STORE_NAME_SHORT, SUPPORT_SENDER_LABEL } from "@/lib/brand";
 import { useCustomerStore } from "@/lib/store/customer-store";
@@ -121,7 +122,7 @@ export const AccountDashboardPage = () => {
             <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-outline-variant/15 sm:min-w-[7rem]">
               <div className="text-left sm:text-right">
                 <p className="text-[10px] uppercase tracking-widest font-bold text-outline mb-0.5">Total</p>
-                <p className="text-lg sm:text-2xl font-headline font-extrabold text-on-background tabular-nums">${order.total.toFixed(2)}</p>
+                <p className="text-lg sm:text-2xl font-headline font-extrabold text-on-background tabular-nums">{formatGhs(order.total)}</p>
               </div>
               <Link
                 to={`/account/orders/${order.id}`}
@@ -225,7 +226,7 @@ export const OrdersListPage = () => {
               </div>
               <div className="mt-6 lg:mt-0 lg:text-right border-t lg:border-t-0 lg:border-l border-outline-variant/20 pt-6 lg:pt-0 lg:pl-12">
                 <p className="text-[10px] uppercase tracking-widest font-bold text-outline mb-1">Total</p>
-                <p className="text-2xl font-headline font-extrabold text-on-background">${order.total.toFixed(2)}</p>
+                <p className="text-2xl font-headline font-extrabold text-on-background">{formatGhs(order.total)}</p>
                 <Link
                   to={`/account/orders/${order.id}`}
                   className="inline-flex items-center gap-2 mt-4 text-secondary font-bold text-sm hover:underline underline-offset-4"
@@ -333,7 +334,7 @@ export const OrderDetailPage = () => {
                   {item.variant && <p className="text-sm text-on-surface-variant">{item.variant}</p>}
                   <p className="text-sm text-on-surface-variant">Qty: {item.qty}</p>
                 </div>
-                <p className="font-headline font-bold text-xl">${item.price.toFixed(2)}</p>
+                <p className="font-headline font-bold text-xl">{formatGhs(item.price)}</p>
               </div>
             </div>
           ))}
@@ -343,11 +344,11 @@ export const OrderDetailPage = () => {
           <div className="bg-surface-container-low p-8 rounded-xl">
             <h3 className="font-headline font-bold text-lg mb-6">Order Summary</h3>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-on-surface-variant">Subtotal</span><span>${order.total.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="text-on-surface-variant">Subtotal</span><span>{formatGhs(order.total)}</span></div>
               <div className="flex justify-between"><span className="text-on-surface-variant">Shipping</span><span className="text-secondary">Free</span></div>
               <div className="flex justify-between border-t border-outline-variant/20 pt-3 font-bold text-base">
                 <span>Total</span>
-                <span>${order.total.toFixed(2)}</span>
+                <span>{formatGhs(order.total)}</span>
               </div>
             </div>
           </div>
@@ -880,7 +881,7 @@ export const ReturnRequestPage = () => {
                   <div>
                     <p className="font-bold">{item.name}</p>
                     <p className="text-xs text-outline uppercase tracking-widest mb-1">Order #{o.orderNumber}</p>
-                    <p className="text-sm text-on-surface-variant">${item.price.toFixed(2)}</p>
+                    <p className="text-sm text-on-surface-variant">{formatGhs(item.price)}</p>
                   </div>
                 </label>
               ))
