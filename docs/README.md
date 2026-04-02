@@ -1,5 +1,7 @@
 # E-Commerce Platform README
 
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/mrgranthox/multi-store-react-native?utm_source=oss&utm_medium=github&utm_campaign=mrgranthox%2Fmulti-store-react-native&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)s
+
 ## Single-store now · Future multi-store ready · Full-system implementation guide
 
 This README is the **master overview for the entire e-commerce platform**. It consolidates the current system scope, architecture direction, major modules, operational rules, and implementation boundaries into one implementation-oriented reference.
