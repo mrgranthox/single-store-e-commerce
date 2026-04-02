@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CheckoutHeader, CheckoutStepBar, CheckoutFooter, StoreBrandLink, StorefrontMain, StorefrontShell } from "@/components/layout";
 import { STORE_NAME_FULL } from "@/lib/brand";
+import { mockImages } from "@/lib/data/mock-images";
 import { CheckoutOrderSummary } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { useCustomerStore } from "@/lib/store/customer-store";
@@ -15,16 +16,14 @@ const SUMMARY_ITEMS = [
     variant: "Sand / Medium",
     qty: 1,
     price: 450.0,
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuC9Jhtz3Zgjuot1dkhppz3dGhwlaHfjHmsyUvp2h5awaN31xdbOaZHje7fGruu1Lv_0SXBTsYEuYVgtw7Neh6bpI_bjE52pyWy8UE8tZddXr4Le2ajIHsibrZ5MGtMz2E2eiccgSu7ISPVlrTW17FKPID4JltrOVdNTzB6sl-1To74kgbSVBLB8ESvUuKGZLNgO5JH24-2tAW63n3kG_fMpRJ_tIoHfJ3lCdifdMauPewTQq0bHw1y5QAxt7VDWFcUdXWoaK7zYPBrx",
+    image: mockImages.checkoutA,
   },
   {
     name: "Monolith Loafers",
     variant: "Mahogany / 42",
     qty: 1,
     price: 320.0,
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuB_jIdeOopNiTAKL3_A9Xhbmm2u_HuoHKmiiB1TSYixwtm9qnekuge0dmqJLBogw6UI7l4o3hBs_wxhrXYEylpEdM-1v_rlJHsFPi1BtclhnBxwBC8mrFPcyrW3Z6dpRtU5eq09qeghWuM7UImVDkXRXMMQ1ep6nA5qgsAs3lzWSyRcEaQ-rrcr4hdC06t8msMXm23SjLKcO_oPlHcZzTY5RNlLwBBGrS3Tiqe98p48y7wodHEXXKt6Bl4cXuqARMZNsccJg0wBs72T",
+    image: mockImages.checkoutB,
   },
 ];
 
@@ -688,8 +687,8 @@ export const OrderSuccessPage = () => (
             <h2 className="text-xl font-headline font-bold text-on-background">Order Summary</h2>
             <div className="space-y-6">
               {[
-                { name: "Artisan Wool Overcoat", variant: "Midnight Navy / Size 40", price: 850.0, qty: 1, image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA0-B5zH_1AtbjC-OzN_cHUCrQxORAm2dSW-X2SvQeOJoWAk5Lvnd2GT1zGuzi3eaaTPez_HnF9ZlET-mYCjKC6KtUpEXgBf38_ARZQbLjUfX5rmROkBhEha1wQaUwSNGUcRyutah6sVGLq4C6aWGLTAusCu6Ozkbk3EwBVor8mbyuYYZrowo3e92mJpX3D3S4uqsEi69ukiy3s3lT0AiU3t3u7rcf_SwrZpU99vSKsIgdnQUOfEcAsn5rpb-UmtYs2IzHvOZ8TZwSS" },
-                { name: "Essential Fold Wallet", variant: "Tan Vachetta", price: 120.0, qty: 1, image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB4vSc255h0Hg1t4h60QADAMHIsVQCrk5HwStv0BY9wpfy-SVRxyaWA7KALlYbx9VSbfVTicrCxu0wyNAGABE6eCNMx6juEPACLnThKvTbW73nG-1ayWIycpXgQqxowCQAgGjjqMJ7RB7gwnmFDjnSS-PKR9RdlmXIYkR2RMD8puczlZjpn0mUyDnxdexMXzfokVMX80NCAt_8nVGDokZd11b61SSpDj_76KyH-o7bddo34iOwTKIYLoF1p1M3k0RxJt8ACseAyqu7E" },
+                { name: "Artisan Wool Overcoat", variant: "Midnight Navy / Size 40", price: 850.0, qty: 1, image: mockImages.checkoutOrderA },
+                { name: "Essential Fold Wallet", variant: "Tan Vachetta", price: 120.0, qty: 1, image: mockImages.checkoutOrderB },
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
                   <div className="w-20 h-24 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">

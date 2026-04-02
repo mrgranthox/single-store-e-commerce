@@ -1,6 +1,7 @@
 import { TopNavBar, Footer, BottomNavBar } from "@/components/layout";
 import { Icon } from "@/components/Icon";
 import { STORE_EMAIL_PRIVACY, STORE_EMAIL_SUPPORT, STORE_NAME_FULL } from "@/lib/brand";
+import { mockImages } from "@/lib/data/mock-images";
 
 const PolicyLayout = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="bg-surface text-on-background font-body">
@@ -114,7 +115,7 @@ export const AboutPage = () => (
       <section className="relative min-h-[50dvh] md:h-[600px] md:min-h-0 overflow-hidden bg-primary-container">
         <img
           className="absolute inset-0 w-full h-full object-cover opacity-60"
-          src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=85&w=2000"
+          src={mockImages.heroAbout}
           alt=""
         />
         <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/85 md:from-primary-container/80 via-transparent to-transparent" />
@@ -139,7 +140,7 @@ export const AboutPage = () => (
           <div className="aspect-[4/3] bg-surface-container-low rounded-2xl overflow-hidden">
             <img
               className="w-full h-full object-cover"
-              src="https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=85&w=1600"
+              src={mockImages.aboutStory}
               alt="Product craftsmanship"
             />
           </div>

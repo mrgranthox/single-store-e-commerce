@@ -7,6 +7,7 @@ import { z } from "zod";
 import { Icon } from "@/components/Icon";
 import { StoreBrandLink } from "@/components/layout";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL } from "@/lib/brand";
+import { mockImages } from "@/lib/data/mock-images";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const AuthFooter = () => (
@@ -63,7 +64,7 @@ export const LoginPage = () => {
             <img
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu3-W9TBN4tmE0Yf9_E5vUepA0oiO7jJvjId8d2enoyBYXM3Ql70L-a7n65pgbUelQhTKJaAhVgRn9y-8ntg1xgzz7gVISLGw0z0lXFpmE6mDmo2EXS6V3CHTuPidT313QQo3GlgLwd2SvwUMZqNUsbDWPGoKBMvQJE3HFFauvqBI9RTS-XiahUUGwyDGUGdBECWZ3C25rN6EGtSRSoEwaj4CDaAt91Sy2aozMM4XBWto6THU4Jy4iT1iUrCyiVtuLDm3zr8sMUX4C"
+              src={mockImages.authPanel}
             />
             <div className="absolute bottom-12 left-12 right-12 z-20">
               <div className="text-surface-bright mb-4">
@@ -232,10 +233,7 @@ export const RegisterPage = () => {
             </p>
             <div className="flex items-center gap-4 py-6 border-t border-outline-variant/30">
               <div className="flex -space-x-3">
-                {[
-                  "https://lh3.googleusercontent.com/aida-public/AB6AXuAxy8QYrdZqDYWn6hgysyaoL_QWOgFmN4KGrxXWzwR4WIbvhq8N_prIGnV7jGZqci55kDlY-AkeR7Xszcgn-yV-GPgKoGD0r72I4ZPc-udGGefAHtm9vXGso8HT2qoc9PQyVe90KPXB5vFjfCTJDExVrbG0j0XhEB00u1FvxAF5XEMUZpc8n5y4UTU3D11yseYfwbMDfNk3ZJYkt1XyFsDHvg9pXm5aoXa75xUhgPGUsfnXzchleCh13qpqZnTK0ekxo5MCHWXPo8pg",
-                  "https://lh3.googleusercontent.com/aida-public/AB6AXuDwdrliLEbTO45JGNbnUMXahiw0EE4THyi6BES4BSAmHCW8bq0xivisjeYWgsoYcf1JYQhGiuuuoklMLpRZ0QFb6hGjwAxGonBt4YDAXxw9a3b8WYyy5tNddftDfqZ7UVCfv8iJXmlSRoO9RhEBlLiQ0VHtGNVoSJS3pZU4yiWxiCGQbzCfs5gVqS0CL_0fBAQ6JZD72f40JHhstYMcnvvkmNk4Xt0zOebV4-UmFd4YQkhDp3-Sz_A11SygofcZNxLBfAEHvfE78PAB",
-                ].map((src, i) => (
+                {[mockImages.authSlide1, mockImages.authSlide2, mockImages.authSlide3].map((src, i) => (
                   <img key={i} className="w-10 h-10 rounded-full border-2 border-surface-container-low object-cover" src={src} alt="" />
                 ))}
               </div>

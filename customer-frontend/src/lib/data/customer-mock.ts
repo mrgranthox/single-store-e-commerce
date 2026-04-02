@@ -1,3 +1,5 @@
+import { mockImages } from "@/lib/data/mock-images";
+
 export interface Product {
   id: string;
   slug: string;
@@ -44,8 +46,7 @@ export const featuredProducts: Product[] = [
     name: "Heritage Wool Overcoat",
     category: "Outerwear",
     price: 450.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAd9OZgJzQcF1i4XkuFSLINMyli6B8NHK8RLDLp2pqIHFXzVKoooKWtKRqQpDIqq397qa3W2EipH-d8FNidqSItkShSHMxGduqulenCFgekYlxUPVpHJZE8GoZE3imqIwIwrT5VmrZsrd41lfjVOKDVVU3c7y21bCG1iCgyAcLKD-cLAiw7cLsyv-cxt2R6lqCmxGUsJhzEWz841kyWvOARLPNWn0X4h_PvOxGtu4U0vrCqhv_htPtY-3UNybpn-OZrJas-TKoC24Zb",
+    imageUrl: mockImages.productP1,
     badge: "New Arrival",
     rating: 4,
     reviewCount: 48,
@@ -68,8 +69,7 @@ export const featuredProducts: Product[] = [
     category: "Basics",
     price: 68.0,
     originalPrice: 85.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuD45A2gMDbqYiKXLsq83JsSGxUEhh8fQ0w4YtPs82toBDoRKzQbibELV0dxlMBa5xTcPR1MkRFZXhMax2RavCM_R7Pm9Z8sg0Mzta_jlA20TDtq-cPxA5P-Wb96lrdaQphMPJsttDFUcMuXQezZCThCtKicPhPM6aupwfpC9WEfvyQT6ZjNL6pV0y3u6VE-hSzLR2CuVngxftNbZKGpoJrzNtUi6fcDKxAq_BvyY2A9SwWOgK_jAmW-zhBBd84Chs5FrwGpjEIYN_Bi",
+    imageUrl: mockImages.productP2,
     badge: "-20%",
     rating: 5,
     reviewCount: 124,
@@ -88,8 +88,7 @@ export const featuredProducts: Product[] = [
     name: "Velocity Trainer",
     category: "Footwear",
     price: 185.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCPcMkNmrM9O6wOqB9l449CkRbzVObEMvr2aaLIPGcYbBbZmt7QgVc31NNe3DOCaq4w-H4F2duq76Xroyth-spwnzXlJU6gwrzChB64w2oR-4kZy-p45ZNmBi-uLPicy95CBlKK7JgT4krmGX12SiXE0OzcgcDUmZhEdciffVxF6MlGPnXFyHXih4iVFohidhX3ZL5kefj6Jgfweab_sV9nooODoriFCWZxGMQ2cKXLprgMBPKfamUpF_8lXTwET2kbQgzD5a3QZlb5",
+    imageUrl: mockImages.productP3,
     rating: 5,
     reviewCount: 89,
     description: "Technical performance meets refined aesthetic in this award-winning trainer.",
@@ -104,8 +103,7 @@ export const featuredProducts: Product[] = [
     name: "Horizon Spectacles",
     category: "Eyewear",
     price: 210.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAVzrV-UVmJVNz7ptoMDAQ7m7DugQGOuqs0lO83AEu5Ct5TP_Mjo8nQ-ty_Mo4X_Cu1nMOnMI2AgiUEu7Z8wFExs5WqSocxD8G0EHhjs0w4v1Lknys2jmwwoBplvXWfjUqpl81LHDIhRQUOzgzT5GEX65YCCgrKL1XYWNsDmRkMueDrge07quHe-IY5XuAsnZJlbiy8sJchTPv6sCjiQswUErzvTlLqZxGKPcCljlvcgnnJ14ZbuIvWaPZbKNzYdM_mMHQprCzT4Da-",
+    imageUrl: mockImages.productP4,
     badge: "Editor's Pick",
     rating: 4,
     reviewCount: 32,
@@ -121,8 +119,7 @@ export const featuredProducts: Product[] = [
     category: "Luxury Wear",
     price: 890.0,
     originalPrice: 1240.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuC_iajTZFt8CfKLC0CEj0DCTfn2t9bLeOeynsXBqG3X1tccZeKG6HiuGl6-iCCdn8u8-Kx-SnMeurLhB-wYU0uc7ic5A08spkd8ZV0nHuwXYmtZ7gPDb1lwFAT_vSqjgsRUNGjb9BWeMEwx_a9xNKcby4qNIdjigOKo7tisK4YaKuWhrAAW2Ziu9G67OAYz2xsqPeryDBmU6M1PO5VwLojKCjqTBFNP__FD0GeTya-yORyXd0VBDhIFSaTOwY8wiQ1F1C_4X9Xtei4q",
+    imageUrl: mockImages.productP5,
     badge: "New Collection",
     rating: 4,
     reviewCount: 42,
@@ -144,8 +141,7 @@ export const featuredProducts: Product[] = [
     name: "Merino Shell Layer",
     category: "Knitwear",
     price: 185.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDgUBOnNqUXEeljr3SDN4gmqzRc-RE1maUDD6ppfY82-A6JpO5KKdvGoBqwVbeoGjLqk6XmYxOxPFJ_RTgXFa6bcuTzkclllzByJEtEwG7SZJ8jUUiAqijoid63ybucQH3X64p0sc9hWhEVfOLyTZpWQLJy5RTXvfkFFXVOQNwd0JST80waooYRF3W4M8ujFhBh2ucsdcp7Tei8Ctx5LvALZu9_zil_PViVyy12vfT7SIboRQhWSTQM3ivKHOi-8guIZV6rRJkXE6",
+    imageUrl: mockImages.productP6,
     rating: 5,
     reviewCount: 60,
     description: "100% Merino wool knit layer – perfect base for a capsule wardrobe.",
@@ -159,8 +155,7 @@ export const featuredProducts: Product[] = [
     name: "Nordic Parka v2",
     category: "Outerwear",
     price: 450.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuA3J0-WKHZSTrwvhVIeVkJn0xX7PbbEMZO9cZddF5YISOcalOEomybdAFEaBT8vCfAbNv2be829O1uCHnJKrRoGj3BBZALdlhRHzyiGofDOF_tDDn4ji8qGxa3-xUo6jkdHbqVBLAdZ7MyU6rGmwshgQG0MVL3i5iwavBnLyOXk1Mx4nGRMGqyXMIltFfFxNBtYNGdTt-RzQHVRz9nqLL6qtFdp5q3nkbgO2Ait3gXnQtCSQiLzTbVA7F9jUJZXeYfshrQMvgG4-QsS",
+    imageUrl: mockImages.productP7,
     rating: 4,
     reviewCount: 28,
     description: "Technical waterproof shell with insulated inner lining.",
@@ -174,8 +169,7 @@ export const featuredProducts: Product[] = [
     name: "The Summit Boot",
     category: "Footwear",
     price: 320.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCVLBTr8sxtNCte6PpWkHeVGFs10OwXS7t0OSveRLbfVQj1ScgqMIuu8K9owXUcNcoOL831S3kC1vLETdofV4s3E_bcF2Ryrmhj8PJe2MXMRdF3L1FYltZEa4HEVs1zPKQ5wLib9-tCSpRSnJzAlG3MC9D18z7Bm-gwRddDkq4HiYmffzf8qKqXdk0Bwh4Ifm_bPlCo5M7juz1E7vPzWff-9r_6eYeF9BdmOGcKcB3k3bFqyYuj-Ou9uXiJBebi5v5KtGkAS9-oE7Bw",
+    imageUrl: mockImages.productP8,
     rating: 5,
     reviewCount: 44,
     description: "Premium brown leather boots — constructed to last decades.",
@@ -193,8 +187,7 @@ export const allProducts: Product[] = [
     name: "Essential Chelsea Boot",
     category: "Footwear",
     price: 450.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCEHdjPb7Tr7TyfPqLXXkz_rsLXhPtJCYD09r1fIXxG04rykMwNroaWIingz_9Dw2TwniWwTj50heZoETfiVSLDOFk3TKPUQAzdbMjaPsrQndea48sIBE6esBwJ6ndS-GOrhOlDdwhdXHYBwdRmNHMqGiPcORNNrCqQse-v_0XRAeyV_k3nB6C9dlsF_mvOIEA2x1X4t5PtOQqldq8kXd1HIx2dR7Ecl8WhzjEA1pWXfJ9u-ScqHvp7xZE7NYYHVxYnDN1mXpP2QApE",
+    imageUrl: mockImages.productP9,
     rating: 4,
     reviewCount: 16,
     description: "Matte obsidian chelsea boot — the capsule wardrobe essential.",
@@ -208,8 +201,7 @@ export const allProducts: Product[] = [
     name: "Cashmere Blend Tee",
     category: "Basics",
     price: 125.0,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuB7V3dAdzfU2_j4rDBcCN0dzhtlV30cHoNEKqs2wRkp3jHm2G8Iz7jdAJPhKRIkMYTs4bSPpmpHAkylB0Dp5El3jE79mLw43bvjDRVWAcQrU435BKKerWdZ4NcsIwor-xMMued2sJAqFCw4ad_5oglK1DX1CbhXqJuevyXkIi0INs1cLnZvX5PP5swnsYIwxgRUFDEYZ5u2KffwLu6eOcEnuoa_NayGCdzkNPzoDPjoWwKRzJOvqa3u-lnci6TCqHDW7inA4zAn90p",
+    imageUrl: mockImages.productP10,
     rating: 5,
     reviewCount: 89,
     description: "Luxurious cashmere-cotton blend tee with a clean contemporary drape.",
@@ -282,8 +274,7 @@ export const orders: Order[] = [
     items: [
       {
         name: "Tees Signature Heavyweight Tee",
-        imageUrl:
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuAvRQmiMcf17y9SfZVtjonRKD1lPs5LnpF6NQ5adMtBxPKNj_YgSyz759x4kzoYYYOfooMRqJnLrv74Seq3tK2SkpK0dUogrsLIepQXf9KEUOmCCi22L5b-H64-_2I_Nv9p7zgCVbsEXnW1lIm6m1r9G7TNpmutoTpqtQ1iHe699zkmDWGjMQmsjka5dVCCKqoR4rwxB2ON4Bj5TB0z2HXJmeWqcty8WagYmv3hYrO-62HAOTa6bgauJ1vPExJLAwK7NCBsR8HPGR-R",
+        imageUrl: mockImages.order1,
         price: 1250.0,
         qty: 1,
       },
@@ -298,8 +289,7 @@ export const orders: Order[] = [
     items: [
       {
         name: "Acoustic Studio Over-Ear",
-        imageUrl:
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuDrf5fF-U3t3U5IkwRqqAYEZDEEXDr8xVYoJHoJMnZhcXS9a_WTLlq01rq_ZavmGUO0wK4UDpH48jAwNX2gJKpzz_LGIwTUUapxikO-LjevvQSDIIHS3pIcLXtVFlo63og_y6ORV6Lv6TAu4TBXdr0YQeuDKRRLi5Fa_JEh2EJX7KqNDZMiNt3_SSNYQtSISpLg6Uonm-Fqb948VbxlvBXXbLAMWzzUoDtTxKuWHjp7LD4SX1uWLRYCxLzMCHz6246DYdp62NPRJlqj",
+        imageUrl: mockImages.order2,
         price: 499.0,
         qty: 1,
       },
@@ -314,8 +304,7 @@ export const orders: Order[] = [
     items: [
       {
         name: "Heirloom Leather Journal Set",
-        imageUrl:
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuDektpKxh71m-NdCFbUu_nPLcMJxQNSIBgCevKzsunKKZXVJRRpEuH-qivBl90ViWHov2SS2P1mCu2U25Bo9v-0XafX61I1gkU79qkHRs5qglpsBFNjYVzy9qFhgFTsnPwqDh8AGeOfHZX7bL0T4g82LQ-Xm71t0dLoNROtFGmy-A3g2p13rr1jNpBlxZ9MoyOPZkrMNlquGB86Ea_-5dIybtGd1O9e2lwU1F4qgw46QoaTxqqIULTycmMP6R2zrrEY1Mll6V_-FPTU",
+        imageUrl: mockImages.order3,
         price: 185.0,
         qty: 1,
       },
@@ -371,24 +360,21 @@ export const campaigns = [
     slug: "the-winter-edit",
     title: "The Winter Edit",
     subtitle: "Cold-weather layers and footwear — up to 40% off selected lines while supplies last.",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=85&w=2000",
+    heroImageUrl: mockImages.campaignWinter,
     products: ["heritage-wool-overcoat", "the-sculpted-trench", "nordic-parka-v2", "the-summit-boot"],
   },
   {
     slug: "summer-edit-2024",
     title: "The Summer Edit",
     subtitle: "Refined essentials for warm-weather living.",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=85&w=2000",
+    heroImageUrl: mockImages.campaignSummer,
     products: ["organic-cotton-tee", "merino-shell-layer", "velocity-trainer"],
   },
   {
     slug: "new-arrivals",
     title: "New Arrivals",
     subtitle: "Just landed — the latest pieces from our winter collection.",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=85&w=2000",
+    heroImageUrl: mockImages.campaignNew,
     products: ["heritage-wool-overcoat", "the-sculpted-trench", "nordic-parka-v2"],
   },
 ];
@@ -419,36 +405,31 @@ export const homeCategoryTiles = [
     slug: "outerwear",
     title: "Outerwear",
     description: "Coats, trenches & parkas",
-    imageUrl:
-      "https://images.unsplash.com/photo-1571875257727-256c39da42af?auto=format&fit=crop&q=80&w=1200",
+    imageUrl: mockImages.catOuterwear,
   },
   {
     slug: "footwear",
     title: "Footwear",
     description: "Leather, boots & trainers",
-    imageUrl:
-      "https://images.unsplash.com/photo-1583241803100-ec28d1801aec?auto=format&fit=crop&q=80&w=1200",
+    imageUrl: mockImages.catFootwear,
   },
   {
     slug: "basics",
     title: "Basics",
     description: "Organic cotton & tees",
-    imageUrl:
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=1200",
+    imageUrl: mockImages.catBasics,
   },
   {
     slug: "knitwear",
     title: "Knitwear",
     description: "Merino & shell layers",
-    imageUrl:
-      "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=1200",
+    imageUrl: mockImages.catKnitwear,
   },
   {
     slug: "eyewear",
     title: "Eyewear",
     description: "Optical & editorial sun",
-    imageUrl:
-      "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&q=80&w=1200",
+    imageUrl: mockImages.catEyewear,
   },
 ];
 
@@ -473,8 +454,7 @@ export const homeCouponPromos: HomeCouponPromo[] = [
     headline: "15% off your first full-price order",
     body: "Authentic materials, insured delivery, and 30-day returns — the same standard on every order.",
     terms: "Applies to orders over $150. Excludes sale and campaign SKUs. One use per customer.",
-    bannerImageUrl:
-      "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=85&w=2000",
+    bannerImageUrl: mockImages.promoFirst,
     productSlugs: ["organic-cotton-tee", "heritage-wool-overcoat", "horizon-spectacles"],
     ctaLabel: "Browse eligible edit",
     ctaTo: "/shop",
@@ -486,8 +466,7 @@ export const homeCouponPromos: HomeCouponPromo[] = [
     headline: "$20 off knit + outerwear together",
     body: "Build a considered kit: one knit layer and one outer piece — shipped in our archival packaging.",
     terms: "Mock storefront: code shown for UX preview; applied at checkout when both categories are in cart.",
-    bannerImageUrl:
-      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=85&w=2000",
+    bannerImageUrl: mockImages.promoPair,
     productSlugs: ["merino-shell-layer", "heritage-wool-overcoat", "the-sculpted-trench"],
     ctaLabel: "Shop the pairing",
     ctaTo: "/shop",

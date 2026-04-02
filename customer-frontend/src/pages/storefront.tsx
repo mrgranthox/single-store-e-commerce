@@ -20,6 +20,7 @@ import {
   campaignBySlug,
 } from "@/lib/data/customer-mock";
 import { STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
+import { mockImages } from "@/lib/data/mock-images";
 import { searchCatalog } from "@/lib/catalog-search";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
@@ -49,7 +50,7 @@ export const HomePage = () => {
         <section className="relative min-h-[min(72dvh,540px)] md:min-h-0 md:h-[min(92dvh,920px)] w-full overflow-hidden bg-primary-container">
           <img
             className="absolute inset-0 w-full h-full object-cover object-center opacity-75 md:opacity-70"
-            src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=85&w=2400"
+            src={mockImages.heroHome}
             alt=""
           />
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/88 md:from-primary-container/78 via-fuchsia-950/40 md:via-fuchsia-950/25 to-transparent" />
@@ -63,21 +64,14 @@ export const HomePage = () => {
             <p className="text-primary-fixed text-sm sm:text-base md:text-lg max-w-full sm:max-w-md md:max-w-lg mb-6 md:mb-10 font-light leading-relaxed">
               Pigment-rich makeup, skin-first essentials, and drops you will actually use — checkout with card or mobile money (MTN, Telecel, AirtelTigo) via Paystack.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto min-w-0">
+            <div className="w-full sm:w-auto min-w-0">
               <Link
                 to="/shop"
-                className="bg-secondary text-on-secondary px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:opacity-95 transition-all flex items-center justify-center gap-2 group shadow-lg shadow-secondary/30 text-center"
+                className="bg-secondary text-on-secondary px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:opacity-95 transition-all inline-flex items-center justify-center gap-2 group shadow-lg shadow-secondary/30 text-center w-full sm:w-auto"
                 aria-label="Shop the full catalogue"
               >
                 Shop the edit
                 <Icon name="arrow_forward" className="text-lg group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-              <Link
-                to="/brands"
-                className="inline-flex items-center justify-center text-center border border-white/40 text-white px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:bg-white/15 backdrop-blur-sm transition-all"
-                aria-label="Browse all designer brands and houses"
-              >
-                Explore brands
               </Link>
             </div>
           </div>
@@ -447,17 +441,17 @@ export const HomePage = () => {
                 {
                   quote: `"The pigment payoff is unreal — one swipe and it stays put through dinner. My vanity finally feels curated, not cluttered."`,
                   name: "Eleanor Vance",
-                  image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256&h=256",
+                  image: mockImages.testimonial1,
                 },
                 {
                   quote: `"Finally a routine that looks as good on my shelf as it does on my skin. ${STORE_NAME_FULL} ships fast and packs like a luxury house."`,
                   name: "Julian Archer",
-                  image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
+                  image: mockImages.testimonial2,
                 },
                 {
                   quote: `"Customer care helped me shade-match over chat. The box arrived in two days — everything smelled amazing. Already reordering."`,
                   name: "Sasha Grey",
-                  image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=256&h=256",
+                  image: mockImages.testimonial3,
                 },
               ].map((r, i) => (
                 <div
