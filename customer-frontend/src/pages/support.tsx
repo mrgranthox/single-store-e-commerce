@@ -1,10 +1,22 @@
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { SupportLayout, Footer, TopNavBar, BottomNavBar } from "@/components/layout";
+import { Footer, TopNavBar, BottomNavBar } from "@/components/layout";
 import { Icon } from "@/components/Icon";
 import { faqItems, tickets } from "@/lib/data/customer-mock";
 import { SUPPORT_SENDER_LABEL } from "@/lib/brand";
 import { neutralFieldClass } from "@/lib/form-field-styles";
+
+const SupportPageShell = ({ children }: { children: ReactNode }) => (
+  <div className="bg-surface text-on-background font-body">
+    <TopNavBar />
+    <main className="pt-[calc(5rem+env(safe-area-inset-top,0px))] md:pt-24 pb-24 md:pb-20 max-w-4xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
+      {children}
+    </main>
+    <Footer />
+    <BottomNavBar />
+  </div>
+);
 
 /* ─────────────────────────────────────────────
    SUPPORT CENTER — Help/FAQ
@@ -21,9 +33,7 @@ export const SupportCenterPage = () => {
   );
 
   return (
-    <div className="bg-surface text-on-background font-body">
-      <TopNavBar />
-      <main className="pt-[calc(5rem+env(safe-area-inset-top,0px))] md:pt-24 pb-24 md:pb-20 max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+    <SupportPageShell>
         <header className="text-center mb-10 md:mb-16">
           <span className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-4 block">Help Center</span>
           <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-4 px-1">How can we help you?</h1>
@@ -99,15 +109,12 @@ export const SupportCenterPage = () => {
             <Link to="/contact" className="bg-white text-primary-container px-6 py-3 rounded-md font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
               Contact Us
             </Link>
-            <Link to="/account/support/new" className="bg-secondary text-on-secondary px-6 py-3 rounded-md font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
+            <Link to="/support/new" className="bg-secondary text-on-secondary px-6 py-3 rounded-md font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
               Open a Ticket
             </Link>
           </div>
         </div>
-      </main>
-      <Footer />
-      <BottomNavBar />
-    </div>
+    </SupportPageShell>
   );
 };
 
@@ -121,7 +128,7 @@ export const CreateTicketPage = () => {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <SupportLayout>
+    <SupportPageShell>
       <header className="mb-12">
         <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">Open a Support Ticket</h1>
         <p className="text-on-surface-variant">Describe your issue and we'll get back to you within 24 hours.</p>
@@ -167,12 +174,12 @@ export const CreateTicketPage = () => {
           <p className="text-on-surface-variant">
             We've received your request and will reply within 24 hours. You can track the status in My Tickets.
           </p>
-          <Link to="/account/support" className="inline-block bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90">
+          <Link to="/support/tickets" className="inline-block bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90">
             View My Tickets
           </Link>
         </div>
       )}
-    </SupportLayout>
+    </SupportPageShell>
   );
 };
 
@@ -180,7 +187,7 @@ export const CreateTicketPage = () => {
    TICKETS LIST
 ───────────────────────────────────────────── */
 export const TicketsListPage = () => (
-  <SupportLayout>
+  <SupportPageShell>
     <header className="mb-12">
       <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">My Tickets</h1>
       <p className="text-on-surface-variant">Track all your active support requests.</p>
@@ -205,14 +212,14 @@ export const TicketsListPage = () => (
           <Icon name="chevron_right" className="text-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
         </Link>
       ))}
-      <Link to="/account/support/new" className="flex items-center gap-3 p-6 bg-surface-container-low rounded-2xl border-2 border-dashed border-outline-variant/30 hover:border-secondary/30 transition-colors">
+      <Link to="/support/new" className="flex items-center gap-3 p-6 bg-surface-container-low rounded-2xl border-2 border-dashed border-outline-variant/30 hover:border-secondary/30 transition-colors">
         <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
           <Icon name="add" className="text-secondary" />
         </div>
         <span className="font-label font-bold text-sm uppercase tracking-widest text-on-surface-variant">Open New Ticket</span>
       </Link>
     </div>
-  </SupportLayout>
+  </SupportPageShell>
 );
 
 /* ─────────────────────────────────────────────
@@ -223,9 +230,9 @@ export const TicketDetailPage = () => {
   const ticket = tickets.find((t) => t.id === ticketId) ?? tickets[0];
 
   return (
-    <SupportLayout>
+    <SupportPageShell>
       <nav className="flex items-center gap-2 text-xs font-label tracking-widest uppercase text-outline mb-10">
-        <Link className="hover:text-secondary transition-colors" to="/account/support">Tickets</Link>
+        <Link className="hover:text-secondary transition-colors" to="/support/tickets">Tickets</Link>
         <Icon name="chevron_right" className="text-[10px]" />
         <span className="text-on-surface">{ticket.id}</span>
       </nav>
@@ -262,7 +269,7 @@ export const TicketDetailPage = () => {
           <button className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90">Send Reply</button>
         </div>
       )}
-    </SupportLayout>
+    </SupportPageShell>
   );
 };
 
@@ -270,9 +277,8 @@ export const TicketDetailPage = () => {
    ISSUE REPORTING (bug / site issue)
 ───────────────────────────────────────────── */
 export const IssueReportingPage = () => (
-  <div className="bg-surface text-on-background font-body">
-    <TopNavBar />
-    <main className="pt-24 pb-20 max-w-xl mx-auto px-6">
+  <SupportPageShell>
+    <div className="max-w-xl mx-auto">
       <header className="mb-12">
         <h1 className="text-4xl font-headline font-extrabold tracking-tighter mb-2">Report an Issue</h1>
         <p className="text-on-surface-variant">Encountered a problem with our website? Let us know.</p>
@@ -298,7 +304,6 @@ export const IssueReportingPage = () => (
         </div>
         <button type="submit" className="w-full bg-secondary text-on-secondary py-4 rounded-md font-bold uppercase tracking-widest hover:opacity-90">Submit Report</button>
       </form>
-    </main>
-    <Footer />
-  </div>
+    </div>
+  </SupportPageShell>
 );
