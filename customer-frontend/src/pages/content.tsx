@@ -2,6 +2,7 @@ import { TopNavBar, Footer, BottomNavBar } from "@/components/layout";
 import { Icon } from "@/components/Icon";
 import { STORE_EMAIL_PRIVACY, STORE_EMAIL_SUPPORT, STORE_NAME_FULL } from "@/lib/brand";
 import { mockImages } from "@/lib/data/mock-images";
+import { neutralFieldClass } from "@/lib/form-field-styles";
 
 const PolicyLayout = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="bg-surface text-on-background font-body">
@@ -49,17 +50,17 @@ export const ContactPage = () => (
               {["First Name", "Last Name"].map((label) => (
                 <div key={label} className="space-y-2">
                   <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">{label}</label>
-                  <input className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" type="text" />
+                  <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} type="text" />
                 </div>
               ))}
             </div>
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Email</label>
-              <input className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" type="email" />
+              <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} type="email" />
             </div>
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Subject</label>
-              <select className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary outline-none">
+              <select className={`w-full rounded-lg py-3 px-4 ${neutralFieldClass}`}>
                 <option>Order Support</option>
                 <option>Returns & Refunds</option>
                 <option>Product Question</option>
@@ -69,7 +70,7 @@ export const ContactPage = () => (
             </div>
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Message</label>
-              <textarea className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none resize-none" rows={5} placeholder="How can we help?" />
+              <textarea className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`} rows={5} placeholder="How can we help?" />
             </div>
             <button type="submit" className="w-full bg-secondary text-on-secondary py-4 rounded-md font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
               Send Message

@@ -8,6 +8,7 @@ import { Icon } from "@/components/Icon";
 import { StoreBrandLink } from "@/components/layout";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL } from "@/lib/brand";
 import { mockImages } from "@/lib/data/mock-images";
+import { neutralCheckboxClass, neutralFieldClass } from "@/lib/form-field-styles";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const AuthFooter = () => (
@@ -118,7 +119,7 @@ export const LoginPage = () => {
                 <input
                   {...register("email")}
                   id="email"
-                  className="w-full px-5 py-4 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface font-body outline-none placeholder:text-outline/60"
+                  className={`w-full rounded-md px-5 py-4 font-body ${neutralFieldClass}`}
                   placeholder="name@example.com"
                   type="email"
                 />
@@ -136,7 +137,7 @@ export const LoginPage = () => {
                 <input
                   {...register("password")}
                   id="password"
-                  className="w-full px-5 py-4 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface font-body outline-none placeholder:text-outline/60"
+                  className={`w-full rounded-md px-5 py-4 font-body ${neutralFieldClass}`}
                   placeholder="••••••••"
                   type="password"
                 />
@@ -147,7 +148,7 @@ export const LoginPage = () => {
                   {...register("remember")}
                   id="remember"
                   type="checkbox"
-                  className="w-4 h-4 rounded-sm border-outline-variant bg-surface-container-high text-secondary focus:ring-secondary"
+                  className={`h-4 w-4 ${neutralCheckboxClass}`}
                 />
                 <label className="text-sm font-body text-on-surface-variant" htmlFor="remember">Keep me signed in</label>
               </div>
@@ -260,7 +261,7 @@ export const RegisterPage = () => {
                   <input
                     {...register(name as "fullName" | "email")}
                     id={name}
-                    className="w-full px-4 py-3 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface outline-none placeholder:text-outline-variant"
+                    className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`}
                     placeholder={placeholder}
                     type={type}
                   />
@@ -280,7 +281,7 @@ export const RegisterPage = () => {
                     <input
                       {...register(name as "password" | "confirmPassword")}
                       id={name}
-                      className="w-full px-4 py-3 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface outline-none placeholder:text-outline-variant"
+                      className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`}
                       placeholder={placeholder}
                       type="password"
                     />
@@ -309,13 +310,13 @@ export const RegisterPage = () => {
               {/* Options */}
               <div className="space-y-4 pt-4">
                 <label className="flex items-start gap-3 cursor-pointer group">
-                  <input {...register("newsletter")} type="checkbox" className="peer h-5 w-5 rounded border-outline-variant bg-surface-container-high text-secondary focus:ring-secondary/20" />
+                  <input {...register("newsletter")} type="checkbox" className={`peer h-5 w-5 ${neutralCheckboxClass}`} />
                   <span className="text-sm text-on-surface-variant font-body leading-tight group-hover:text-on-surface transition-colors">
                     Email me about new drops, restocks, and exclusive offers from {STORE_NAME_FULL}.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer group">
-                  <input {...register("terms")} type="checkbox" required className="peer h-5 w-5 rounded border-outline-variant bg-surface-container-high text-secondary focus:ring-secondary/20" />
+                  <input {...register("terms")} type="checkbox" required className={`peer h-5 w-5 ${neutralCheckboxClass}`} />
                   <span className="text-sm text-on-surface-variant font-body leading-tight group-hover:text-on-surface transition-colors">
                     I accept the{" "}
                     <Link className="text-on-surface font-semibold underline decoration-outline-variant hover:decoration-secondary transition-all" to="/pages/terms">Terms of Service</Link>{" "}
@@ -376,7 +377,7 @@ export const ForgotPasswordPage = () => {
             <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-6">
               <div>
                 <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2">Email Address</label>
-                <input required className="w-full px-5 py-4 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all outline-none" placeholder="name@example.com" type="email" />
+                <input required className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`} placeholder="name@example.com" type="email" />
               </div>
               <button type="submit" className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all">
                 Send Reset Link
@@ -415,7 +416,7 @@ export const ResetPasswordPage = () => {
             {[{ label: "New Password", placeholder: "••••••••" }, { label: "Confirm Password", placeholder: "••••••••" }].map(({ label, placeholder }) => (
               <div key={label}>
                 <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2">{label}</label>
-                <input required minLength={8} className="w-full px-5 py-4 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all outline-none" placeholder={placeholder} type="password" />
+                <input required minLength={8} className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`} placeholder={placeholder} type="password" />
               </div>
             ))}
             <button type="submit" className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all">

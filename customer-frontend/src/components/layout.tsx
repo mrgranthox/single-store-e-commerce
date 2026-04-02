@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Icon } from "@/components/Icon";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
-import { neutralFieldClass } from "@/lib/data/mock-images";
+import { neutralFieldClass } from "@/lib/form-field-styles";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const topNavIconBtn =
@@ -366,7 +366,7 @@ export const Footer = () => (
         <h4 className="font-headline font-bold text-sm text-on-background mb-6">Stay Connected</h4>
         <div className="flex gap-2">
           <input
-            className="bg-surface-container-lowest border border-outline-variant/20 rounded-md px-4 py-2 text-xs w-full focus:ring-2 focus:ring-secondary/30 outline-none"
+            className={`rounded-md px-4 py-2 text-xs w-full ${neutralFieldClass}`}
             placeholder="Your email"
             type="email"
           />

@@ -20,7 +20,8 @@ import {
   campaignBySlug,
 } from "@/lib/data/customer-mock";
 import { STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
-import { mockImages, neutralFieldClass } from "@/lib/data/mock-images";
+import { mockImages } from "@/lib/data/mock-images";
+import { neutralFieldClass } from "@/lib/form-field-styles";
 import { searchCatalog } from "@/lib/catalog-search";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
@@ -59,7 +60,11 @@ export const HomePage = () => {
               {STORE_NAME_SHORT} · Vibrant beauty &amp; care
             </span>
             <h1 className="font-headline text-3xl leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white tracking-tighter max-w-full sm:max-w-3xl md:leading-[0.92] mb-4 md:mb-7 break-words text-balance">
-              Color that <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-pink-200 to-fuchsia-200">performs</span>.
+              Color that{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-emerald-200 to-amber-200">
+                performs
+              </span>
+              .
             </h1>
             <p className="text-primary-fixed text-sm sm:text-base md:text-lg max-w-full sm:max-w-md md:max-w-lg mb-6 md:mb-10 font-light leading-relaxed">
               Pigment-rich makeup, skin-first essentials, and drops you will actually use — checkout with card or mobile money (MTN, Telecel, AirtelTigo) via Paystack.

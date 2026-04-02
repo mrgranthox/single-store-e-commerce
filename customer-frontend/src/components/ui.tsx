@@ -1,12 +1,12 @@
 import type React from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "@/components/Icon";
+import { neutralFieldClass } from "@/lib/form-field-styles";
 import { useCustomerStore } from "@/lib/store/customer-store";
 import type { Product } from "@/lib/data/customer-mock";
 
 /* ── input ── */
-export const fieldClass =
-  "w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none text-on-surface placeholder:text-outline/60";
+export const fieldClass = `w-full rounded-lg px-4 py-4 ${neutralFieldClass}`;
 
 export const labelClass = "font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant block mb-2";
 
@@ -194,7 +194,7 @@ export const CheckoutOrderSummary = ({
       </div>
       <div className="mt-8 flex gap-2">
         <input
-          className="flex-1 bg-surface-container-lowest border-none px-4 py-3 text-sm rounded focus:ring-1 focus:ring-secondary outline-none"
+          className={`flex-1 rounded px-4 py-3 text-sm ${neutralFieldClass}`}
           placeholder="Promo Code"
           type="text"
         />

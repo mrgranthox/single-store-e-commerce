@@ -36,8 +36,8 @@ body {
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
   line-height: 1.5;
-  background: #fff7fb;
-  color: #3a0a2e;
+  background: #eef6f3;
+  color: #142824;
   margin: 0;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
@@ -144,13 +144,13 @@ p {
 @keyframes hero-cta-glow {
   0%,
   100% {
-    filter: drop-shadow(0 0 14px rgba(236, 72, 153, 0.55)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.38));
+    filter: drop-shadow(0 0 14px rgba(30, 92, 82, 0.5)) drop-shadow(0 0 26px rgba(91, 143, 154, 0.4));
   }
   35% {
-    filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.45)) drop-shadow(0 0 32px rgba(244, 114, 182, 0.42));
+    filter: drop-shadow(0 0 18px rgba(184, 149, 106, 0.45)) drop-shadow(0 0 30px rgba(74, 158, 140, 0.38));
   }
   70% {
-    filter: drop-shadow(0 0 16px rgba(192, 132, 252, 0.5)) drop-shadow(0 0 30px rgba(236, 72, 153, 0.35));
+    filter: drop-shadow(0 0 16px rgba(91, 143, 154, 0.48)) drop-shadow(0 0 28px rgba(30, 92, 82, 0.35));
   }
 }
 
@@ -162,11 +162,11 @@ p {
 @media (prefers-reduced-motion: reduce) {
   .hero-cta-glow {
     animation: none;
-    filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.4));
+    filter: drop-shadow(0 0 12px rgba(30, 92, 82, 0.35));
   }
 }
 
 ::selection {
-  background: #fbcfe8;
-  color: #3a0a2e;
+  background: #c8ddd6;
+  color: #142824;
 }

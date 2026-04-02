@@ -6,6 +6,7 @@ import { z } from "zod";
 import { CheckoutHeader, CheckoutStepBar, CheckoutFooter, StoreBrandLink, StorefrontMain, StorefrontShell } from "@/components/layout";
 import { STORE_NAME_FULL } from "@/lib/brand";
 import { mockImages } from "@/lib/data/mock-images";
+import { neutralFieldClass } from "@/lib/form-field-styles";
 import { CheckoutOrderSummary } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { useCustomerStore } from "@/lib/store/customer-store";
@@ -171,7 +172,7 @@ export const CartPage = () => {
                 <label className="text-[10px] uppercase tracking-widest font-bold text-outline block mb-3">Add Coupon</label>
                 <div className="flex gap-2">
                   <input
-                    className="flex-grow bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none"
+                    className={`flex-grow rounded-lg px-4 py-3 ${neutralFieldClass}`}
                     placeholder="CODE2024"
                     type="text"
                   />
@@ -237,27 +238,27 @@ export const CheckoutShippingPage = () => {
             >
               <div className="md:col-span-2 space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Full Name</label>
-                <input {...register("fullName")} className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none" placeholder="Julianne Moore" type="text" />
+                <input {...register("fullName")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="Julianne Moore" type="text" />
                 {errors.fullName && <p className="text-xs text-error">{errors.fullName.message}</p>}
               </div>
               <div className="md:col-span-2 space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Address</label>
-                <input {...register("address")} className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none" placeholder="Street, area, landmark" type="text" />
+                <input {...register("address")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="Street, area, landmark" type="text" />
                 {errors.address && <p className="text-xs text-error">{errors.address.message}</p>}
               </div>
               <div className="space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">City</label>
-                <input {...register("city")} className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none" placeholder="New York" type="text" />
+                <input {...register("city")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="New York" type="text" />
                 {errors.city && <p className="text-xs text-error">{errors.city.message}</p>}
               </div>
               <div className="space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Zip Code</label>
-                <input {...register("zip")} className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none" placeholder="10001" type="text" />
+                <input {...register("zip")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="10001" type="text" />
                 {errors.zip && <p className="text-xs text-error">{errors.zip.message}</p>}
               </div>
               <div className="md:col-span-2 space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Phone</label>
-                <input {...register("phone")} className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none" placeholder="+1 (555) 000-0000" type="tel" />
+                <input {...register("phone")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="+1 (555) 000-0000" type="tel" />
                 {errors.phone && <p className="text-xs text-error">{errors.phone.message}</p>}
               </div>
 
@@ -390,7 +391,7 @@ export const CheckoutPaymentPage = () => {
                   ].map(({ label, placeholder, type }) => (
                     <div key={label} className="space-y-2">
                       <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">{label}</label>
-                      <input className="w-full bg-surface-container-high border-none rounded-md px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none" placeholder={placeholder} type={type} />
+                      <input className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} placeholder={placeholder} type={type} />
                     </div>
                   ))}
                   <div className="grid grid-cols-2 gap-6">
@@ -400,7 +401,7 @@ export const CheckoutPaymentPage = () => {
                     ].map(({ label, placeholder }) => (
                       <div key={label} className="space-y-2">
                         <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">{label}</label>
-                        <input className="w-full bg-surface-container-high border-none rounded-md px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none" placeholder={placeholder} type="text" />
+                        <input className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} placeholder={placeholder} type="text" />
                       </div>
                     ))}
                   </div>
@@ -414,7 +415,7 @@ export const CheckoutPaymentPage = () => {
                     <select
                       value={mmNetwork}
                       onChange={(e) => setMmNetwork(e.target.value as typeof mmNetwork)}
-                      className="w-full bg-surface-container-high border-none rounded-md px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none font-body text-on-surface"
+                      className={`w-full rounded-md px-4 py-3 font-body text-zinc-900 ${neutralFieldClass}`}
                     >
                       <option value="mtn">MTN</option>
                       <option value="telecel">Telecel</option>
@@ -424,7 +425,7 @@ export const CheckoutPaymentPage = () => {
                   <div className="space-y-2">
                     <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Mobile money number</label>
                     <input
-                      className="w-full bg-surface-container-high border-none rounded-md px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none"
+                      className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`}
                       placeholder="0XX XXX XXXX"
                       type="tel"
                       inputMode="tel"
@@ -756,11 +757,11 @@ export const GuestTrackingPage = () => {
           >
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant block">Order Number</label>
-              <input required className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" placeholder="TC-88291" type="text" />
+              <input required className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="TC-88291" type="text" />
             </div>
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant block">Email Address</label>
-              <input required className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" placeholder="name@example.com" type="email" />
+              <input required className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="name@example.com" type="email" />
             </div>
             <button type="submit" className="w-full bg-secondary text-on-secondary py-4 rounded-md font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
               Track Order

@@ -4,7 +4,7 @@ import { AccountLayout } from "@/components/layout";
 import { OrderStatusBadge } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { orders, tickets } from "@/lib/data/customer-mock";
-import { neutralFieldClass } from "@/lib/data/mock-images";
+import { neutralCheckboxClass, neutralFieldClass } from "@/lib/form-field-styles";
 import { STORE_NAME_FULL, STORE_NAME_SHORT, SUPPORT_SENDER_LABEL } from "@/lib/brand";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
@@ -400,7 +400,7 @@ export const ProfilePage = () => (
             <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">{label}</label>
             <input
               defaultValue={value}
-              className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none"
+              className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`}
               type={type ?? "text"}
               placeholder={placeholder}
             />
@@ -465,7 +465,7 @@ export const AddressesPage = () => {
               {["Label", "Full Name", "Address Line 1", "City", "Zip Code", "Country"].map((f) => (
                 <div key={f} className={`space-y-2 ${f === "Address Line 1" ? "md:col-span-2" : ""}`}>
                   <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">{f}</label>
-                  <input className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" type="text" />
+                  <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} type="text" />
                 </div>
               ))}
             </div>
@@ -555,7 +555,7 @@ export const ReviewsCenterPage = () => {
               </div>
               <div>
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant block mb-2">Review</label>
-                <textarea className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none resize-none" rows={4} placeholder="Share your experience with this product..." />
+                <textarea className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`} rows={4} placeholder="Share your experience with this product..." />
               </div>
               <button className="bg-secondary text-on-secondary px-6 py-3 rounded-md font-bold hover:opacity-90">Submit Review</button>
             </div>
@@ -581,7 +581,7 @@ export const SecurityPage = () => (
         {["Current Password", "New Password", "Confirm New Password"].map((label) => (
           <div key={label} className="space-y-2">
             <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">{label}</label>
-            <input className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" type="password" placeholder="••••••••" />
+            <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} type="password" placeholder="••••••••" />
           </div>
         ))}
         <button className="bg-secondary text-on-secondary px-6 py-3 rounded-md font-bold hover:opacity-90">Update Password</button>
@@ -719,7 +719,7 @@ export const AccountTicketDetailPage = () => {
       {ticket.status !== "resolved" && (
         <div className="max-w-2xl space-y-4">
           <textarea
-            className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none resize-none"
+            className={`w-full resize-none rounded-lg px-4 py-4 ${neutralFieldClass}`}
             rows={4}
             placeholder="Add a reply..."
           />
@@ -873,7 +873,7 @@ export const ReturnRequestPage = () => {
                   key={`${o.id}-${i}`}
                   className="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-xl border border-outline-variant/20 cursor-pointer hover:border-secondary/30 transition-colors"
                 >
-                  <input type="checkbox" className="w-5 h-5 rounded text-secondary focus:ring-secondary" />
+                  <input type="checkbox" className={`h-5 w-5 ${neutralCheckboxClass}`} />
                   <div className="w-16 h-20 bg-surface-container rounded-lg overflow-hidden">
                     <img className="w-full h-full object-cover" src={item.imageUrl} alt={item.name} />
                   </div>
@@ -895,7 +895,7 @@ export const ReturnRequestPage = () => {
             <h2 className="font-headline font-bold text-xl">Return Reason</h2>
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Reason</label>
-              <select className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 outline-none">
+              <select className={`w-full rounded-lg py-3 px-4 ${neutralFieldClass}`}>
                 <option>Wrong size</option>
                 <option>Not as described</option>
                 <option>Defective or damaged</option>
@@ -904,7 +904,7 @@ export const ReturnRequestPage = () => {
             </div>
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Additional Notes</label>
-              <textarea className="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 outline-none resize-none" rows={4} placeholder="Please describe the issue..." />
+              <textarea className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`} rows={4} placeholder="Please describe the issue..." />
             </div>
             <div className="flex gap-4">
               <button onClick={() => setStep(1)} className="text-on-surface-variant font-medium hover:text-on-surface">Back</button>

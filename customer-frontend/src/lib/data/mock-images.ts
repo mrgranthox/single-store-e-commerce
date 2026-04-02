@@ -6,8 +6,8 @@ const p = (id: string, w: number) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=85&w=${w}`;
 
 export const mockImages = {
-  /** Premium beauty editorial — vibrant, campaign-ready */
-  heroHome: p("1596755094514-f87e34085b2c", 2400),
+  /** Cosmetics flatlay — clear product / beauty story */
+  heroHome: p("1596462502278-27bfdc403348", 2400),
   heroAbout: p("1596462502278-27bfdc403348", 2000),
   aboutStory: p("1612817288484-6f916006741a", 1600),
   campaignWinter: p("1608231387042-66d1773070a5", 2000),
@@ -47,7 +47,3 @@ export const mockImages = {
   testimonial2: p("1507003211169-0a1dd7228f2d", 256),
   testimonial3: p("1438761681033-6461ffad8d80", 256),
 } as const;
-
-/** Neutral chrome for search / filters (no brand tint). */
-export const neutralFieldClass =
-  "bg-white border border-outline-variant/35 text-on-surface placeholder:text-outline/55 shadow-sm focus:outline-none focus:ring-1 focus:ring-outline-variant/55 focus:border-outline-variant/50";

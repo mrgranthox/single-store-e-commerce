@@ -4,7 +4,7 @@ import { SupportLayout, Footer, TopNavBar, BottomNavBar } from "@/components/lay
 import { Icon } from "@/components/Icon";
 import { faqItems, tickets } from "@/lib/data/customer-mock";
 import { SUPPORT_SENDER_LABEL } from "@/lib/brand";
-import { neutralFieldClass } from "@/lib/data/mock-images";
+import { neutralFieldClass } from "@/lib/form-field-styles";
 
 /* ─────────────────────────────────────────────
    SUPPORT CENTER — Help/FAQ
@@ -133,11 +133,11 @@ export const CreateTicketPage = () => {
         >
           <div className="space-y-2">
             <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Subject</label>
-            <input required className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" placeholder="Briefly describe your issue" type="text" />
+            <input required className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} placeholder="Briefly describe your issue" type="text" />
           </div>
           <div className="space-y-2">
             <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Category</label>
-            <select className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary transition-all outline-none">
+            <select className={`w-full rounded-lg py-3 px-4 ${neutralFieldClass}`}>
               <option>Order Issue</option>
               <option>Shipping & Delivery</option>
               <option>Returns & Refunds</option>
@@ -148,11 +148,11 @@ export const CreateTicketPage = () => {
           </div>
           <div className="space-y-2">
             <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Order Number (if applicable)</label>
-            <input className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none" placeholder="TC-88291" type="text" />
+            <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} placeholder="TC-88291" type="text" />
           </div>
           <div className="space-y-2">
             <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Message</label>
-            <textarea required className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none resize-none" rows={6} placeholder="Please describe your issue in detail..." />
+            <textarea required className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`} rows={6} placeholder="Please describe your issue in detail..." />
           </div>
           <button type="submit" className="bg-secondary text-on-secondary px-8 py-4 rounded-md font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
             Submit Ticket
@@ -258,7 +258,7 @@ export const TicketDetailPage = () => {
 
       {ticket.status !== "resolved" && (
         <div className="max-w-2xl space-y-4">
-          <textarea className="w-full bg-surface-container-high border-none px-4 py-4 rounded-lg focus:ring-2 focus:ring-secondary transition-all outline-none resize-none" rows={4} placeholder="Add a reply..." />
+          <textarea className={`w-full resize-none rounded-lg px-4 py-4 ${neutralFieldClass}`} rows={4} placeholder="Add a reply..." />
           <button className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90">Send Reply</button>
         </div>
       )}
@@ -280,7 +280,7 @@ export const IssueReportingPage = () => (
       <form className="space-y-6">
         <div className="space-y-2">
           <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Issue Type</label>
-          <select className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary outline-none">
+          <select className={`w-full rounded-lg py-3 px-4 ${neutralFieldClass}`}>
             <option>Website Bug</option>
             <option>Payment Problem</option>
             <option>Missing Order</option>
@@ -290,11 +290,11 @@ export const IssueReportingPage = () => (
         </div>
         <div className="space-y-2">
           <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Page or URL</label>
-          <input className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none" placeholder="https://teescollection.com/..." type="url" />
+          <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} placeholder="https://teescollection.com/..." type="url" />
         </div>
         <div className="space-y-2">
           <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Description</label>
-          <textarea className="w-full bg-surface-container-high border-none px-4 py-3 rounded-lg focus:ring-2 focus:ring-secondary outline-none resize-none" rows={5} placeholder="Describe what happened..." />
+          <textarea className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`} rows={5} placeholder="Describe what happened..." />
         </div>
         <button type="submit" className="w-full bg-secondary text-on-secondary py-4 rounded-md font-bold uppercase tracking-widest hover:opacity-90">Submit Report</button>
       </form>
