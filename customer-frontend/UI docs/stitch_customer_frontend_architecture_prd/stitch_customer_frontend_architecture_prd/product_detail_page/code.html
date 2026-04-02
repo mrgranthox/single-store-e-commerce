@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface": "#f8f9ff",
+              "tertiary-container": "#2a1700",
+              "error-container": "#ffdad6",
+              "surface-container-highest": "#d3e4fe",
+              "surface-container-low": "#eff4ff",
+              "on-secondary": "#ffffff",
+              "primary-fixed-dim": "#bec6e0",
+              "secondary-fixed": "#dbe1ff",
+              "on-secondary-container": "#fefcff",
+              "inverse-primary": "#bec6e0",
+              "on-primary-fixed": "#131b2e",
+              "on-background": "#0b1c30",
+              "primary-fixed": "#dae2fd",
+              "surface-tint": "#565e74",
+              "secondary": "#0051d5",
+              "on-primary-container": "#7c839b",
+              "surface-dim": "#cbdbf5",
+              "on-tertiary-container": "#b87500",
+              "on-surface": "#0b1c30",
+              "surface-container": "#e5eeff",
+              "background": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "outline": "#76777d",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container-high": "#dce9ff",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#d3e4fe",
+              "tertiary": "#000000",
+              "on-primary-fixed-variant": "#3f465c",
+              "inverse-surface": "#213145",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#003ea8",
+              "primary": "#000000",
+              "error": "#ba1a1a",
+              "primary-container": "#131b2e",
+              "outline-variant": "#c6c6cd",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .no-line { border: none !important; }
+        .tonal-shift { transition: background-color 0.3s ease; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased">
+<!-- Top Navigation Bar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl tonal-shift bg-slate-100">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tighter text-slate-900 font-headline">Atelier</span>
+<div class="hidden md:flex gap-8 items-center font-headline tracking-tight text-sm font-semibold">
+<a class="text-blue-700 border-b-2 border-blue-700 pb-1 hover:text-blue-600 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors" href="#">Categories</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors" href="#">Sale</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" placeholder="Search curated collections..." type="text"/>
+</div>
+<div class="flex gap-4 text-slate-900">
+<button class="hover:opacity-70 transition-opacity"><span class="material-symbols-outlined">favorite</span></button>
+<button class="hover:opacity-70 transition-opacity relative">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="absolute -top-1 -right-1 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">2</span>
+</button>
+<button class="hover:opacity-70 transition-opacity"><span class="material-symbols-outlined">person</span></button>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 max-w-screen-2xl mx-auto px-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-xs font-label tracking-widest uppercase text-outline mb-10">
+<a class="hover:text-secondary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<a class="hover:text-secondary transition-colors" href="#">Luxury Wear</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-on-surface">The Sculpted Trench</span>
+</nav>
+<div class="grid grid-cols-12 gap-16">
+<!-- Product Gallery Section -->
+<div class="col-span-12 lg:col-span-7">
+<div class="flex gap-6">
+<!-- Thumbnails -->
+<div class="flex flex-col gap-4 w-20">
+<button class="aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm group border-2 border-secondary">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="close-up studio shot of a high-end camel wool trench coat showing premium stitching and fabric texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbTqbvqsnpD5TDofHsEcGfo3EMOCmX6AeFHHTd6X4P22oLvFObpbUG_e_0ELNotE918WUh6CSbfZ8Kkqpf3DENoE97BQljfia3QNJmpUrrOYq5MfnE40nrr-QvLWPBT7lVEZBeJ_umlUQjQ-0vqWOCrxJKv9rVBWwXdwepAUuzmw_BqoHJJbntm9Q-FihveCpqiJzJxt38I2nwjHFGst4h8_6b1CIVvj8btJbLfnuVXwbPTc-cy3iBDSGknuHAi82rntOh_p6N9wlb"/>
+</button>
+<button class="aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm group border-2 border-transparent">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="side view of a luxury trench coat on a minimalist mannequin against a soft gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY0AoNyS63iHSrDo46srd8_dSBMQT8c172btABrHAY145WQdcFYUU7G0S14idmzRy1kuKc8x1E3hoKDbFE7idA7SfiV7Zqmx4efblXMi8ixgAUIe2ld5rr02ziOdcKvDaIczsIVZScMwlmHNHVIaE4LbVw5jtFFmxH0-p9cTdIzM16tD14yD-8yFIdt0oi2kQ8ZJK7eNp39CjkpCovc_uGDUK3xvmDfqfdIX3VQvRWLYItqDwWLWxCvopyC-m3F1S8zHIPwcjZLCJA"/>
+</button>
+<button class="aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm group border-2 border-transparent">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="back detail of a designer trench coat highlighting the waist belt and tailored silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiyAjYxr3d_9RGVCQDZk6VcWTdoAq-AMYYMvKM4XzBUCT3GsfbmVyLJ_QgzS1eJO0BOfe8XdL4GQQ6N2bYg4UgmKoR3kP8ySvroX1FGIw3xbScA4w1Zmzsy7JxPfRhbHVlQzXSG25fe12LyIm7GklIMHD7r3GXs_l9o1SdiTls2GoV3PZ3P0VL4-WD21SqFScXqZXW16wAmp5AAjHF8LWTbCYEDZHG692gAN6dmmWTCYDIhCwof95uQ8WJcXK8KGP0qlJzy9J-vSEA"/>
+</button>
+<div class="aspect-[3/4] bg-surface-container-low flex flex-col items-center justify-center text-outline cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-2xl">360</span>
+<span class="text-[10px] font-label font-bold uppercase mt-1">View</span>
+</div>
+</div>
+<!-- Main Image Canvas -->
+<div class="flex-1 relative aspect-[4/5] bg-surface-container-low overflow-hidden rounded-sm group">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in" data-alt="full length studio photography of a premium camel wool trench coat with architectural lapels and modern belt design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_iajTZFt8CfKLC0CEj0DCTfn2t9bLeOeynsXBqG3X1tccZeKG6HiuGl6-iCCdn8u8-Kx-SnMeurLhB-wYU0uc7ic5A08spkd8ZV0nHuwXYmtZ7gPDb1lwFAT_vSqjgsRUNGjb9BWeMEwx_a9xNKcby4qNIdjigOKo7tisK4YaKuWhrAAW2Ziu9G67OAYz2xsqPeryDBmU6M1PO5VwLojKCjqTBFNP__FD0GeTya-yORyXd0VBDhIFSaTOwY8wiQ1F1C_4X9Xtei4q"/>
+<div class="absolute top-6 left-6">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 text-[10px] font-label font-bold uppercase tracking-widest shadow-sm">New Collection</span>
+</div>
+<div class="absolute bottom-6 right-6 flex flex-col gap-2">
+<button class="w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-on-surface shadow-lg hover:bg-white transition-all active:scale-95">
+<span class="material-symbols-outlined">fullscreen</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Info Section -->
+<div class="col-span-12 lg:col-span-5">
+<div class="sticky top-32">
+<div class="mb-2 flex items-center gap-2">
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<a class="text-xs font-label text-outline hover:text-secondary underline underline-offset-4" href="#reviews">42 Reviews</a>
+</div>
+<h1 class="text-4xl font-headline font-extrabold tracking-tighter text-on-surface mb-2">The Sculpted Trench</h1>
+<p class="text-outline font-body mb-8 leading-relaxed max-w-md">An architectural masterpiece crafted from Italian double-faced wool, featuring a structured silhouette and bespoke horn buttons.</p>
+<!-- Price Block -->
+<div class="mb-10 flex items-end gap-4">
+<div class="flex flex-col">
+<span class="text-xs font-label text-outline line-through">$1,240.00</span>
+<span class="text-3xl font-headline font-bold text-on-surface">$890.00</span>
+</div>
+<div class="bg-secondary-container text-white px-3 py-1 rounded-sm text-xs font-label font-bold flex items-center gap-1 mb-1">
+                            Save $350
+                        </div>
+<div class="ml-auto text-right">
+<span class="text-[10px] font-label font-bold text-error uppercase tracking-widest flex items-center gap-1 justify-end">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                                Only 2 Left
+                            </span>
+</div>
+</div>
+<!-- Variants: Color -->
+<div class="mb-8">
+<div class="flex justify-between items-end mb-4">
+<span class="text-xs font-label font-bold uppercase tracking-widest">Color: <span class="text-outline font-normal">Deep Camel</span></span>
+</div>
+<div class="flex gap-3">
+<button class="w-10 h-10 rounded-full bg-[#C19A6B] border-2 border-on-surface ring-2 ring-offset-2 ring-transparent transition-all"></button>
+<button class="w-10 h-10 rounded-full bg-[#1A1A1A] border-2 border-transparent hover:border-outline-variant transition-all"></button>
+<button class="w-10 h-10 rounded-full bg-[#4A5D4E] border-2 border-transparent hover:border-outline-variant transition-all"></button>
+</div>
+</div>
+<!-- Variants: Size -->
+<div class="mb-10">
+<div class="flex justify-between items-end mb-4">
+<span class="text-xs font-label font-bold uppercase tracking-widest">Size</span>
+<button class="text-[10px] font-label text-secondary underline underline-offset-2 uppercase tracking-widest font-bold">Size Guide</button>
+</div>
+<div class="grid grid-cols-4 gap-3">
+<button class="py-3 text-sm font-label border border-outline-variant hover:border-on-surface transition-colors">XS</button>
+<button class="py-3 text-sm font-label border border-on-surface bg-on-surface text-white">S</button>
+<button class="py-3 text-sm font-label border border-outline-variant hover:border-on-surface transition-colors">M</button>
+<button class="py-3 text-sm font-label border border-outline-variant opacity-40 cursor-not-allowed line-through">L</button>
+</div>
+</div>
+<!-- CTA Actions -->
+<div class="flex gap-4 mb-10">
+<button class="flex-1 bg-primary text-on-primary py-5 rounded-sm font-label font-bold uppercase tracking-widest hover:bg-secondary transition-all active:scale-[0.98] flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">shopping_bag</span>
+                            Add to Bag
+                        </button>
+<button class="w-16 h-16 border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined group-hover:text-error transition-colors">favorite</span>
+</button>
+</div>
+<!-- Trust Cues -->
+<div class="bg-surface-container-low p-6 rounded-sm space-y-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary">local_shipping</span>
+<div>
+<h4 class="text-xs font-label font-bold uppercase tracking-wider mb-1">Complimentary Shipping</h4>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">Exclusively via Atelier Express. Arrives in signature garment packaging within 3-5 business days.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+<div>
+<h4 class="text-xs font-label font-bold uppercase tracking-wider mb-1">Authenticity Guaranteed</h4>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">Each piece includes a digital certificate of authenticity and unique serial number.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Tabs Section -->
+<div class="mt-32 border-t border-outline-variant/20 pt-16">
+<div class="flex gap-16 mb-12 border-b border-outline-variant/10">
+<button class="pb-6 text-sm font-label font-bold uppercase tracking-widest border-b-2 border-on-surface">Description</button>
+<button class="pb-6 text-sm font-label font-medium uppercase tracking-widest text-outline hover:text-on-surface transition-colors">Specifications</button>
+<button class="pb-6 text-sm font-label font-medium uppercase tracking-widest text-outline hover:text-on-surface transition-colors">Shipping &amp; Returns</button>
+</div>
+<div class="grid grid-cols-12 gap-16">
+<div class="col-span-12 lg:col-span-6">
+<h3 class="text-2xl font-headline font-bold mb-6">The Narrative</h3>
+<div class="space-y-4 text-on-surface-variant leading-loose font-light">
+<p>The Sculpted Trench is an exercise in restrained luxury. We've removed the traditional military epaulettes and excessive hardware to focus on the purity of the silhouette. Every line has been considered to create an architectural profile that moves with the body.</p>
+<p>Fabricated from our signature double-faced wool, this piece offers exceptional warmth without the bulk. The interior is finished with hand-rolled silk seams, a hallmark of atelier craftsmanship usually reserved for haute couture.</p>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-6 grid grid-cols-2 gap-8">
+<div class="aspect-square bg-surface-container overflow-hidden rounded-sm">
+<img class="w-full h-full object-cover" data-alt="extreme close-up of heavy luxury fabric weave and a dark metallic button with brand engraving" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpijfF1lua5u5V5nX06ktXiEdnW1_eSV5gU8AufGT72KzWYPVAFcO6PdcjAcYfD2N7hnQuhkZ16xIeDOdnm_qny3Wuth22UPWPYxk32b-41anWX9duKjauPGOg-w23qjHyk6RxBJpDXH9k6zkEWptKzaMmNi2xfUY1D4vsANPfXXz2pN-HX-sNpO3PrB6Yo2bjGycM7i2wYKhTgXQZa7zX192ZRbucCYtmQsiZZsJ2_pTa_2GInNBDZJrq_YYZ9aAhq8vYBlWNQjc5"/>
+</div>
+<div class="flex flex-col justify-center">
+<h4 class="text-xs font-label font-bold uppercase tracking-widest mb-4">Craftsmanship Details</h4>
+<ul class="space-y-3 text-sm text-on-surface-variant">
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> 100% Virgin Italian Wool</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Genuine Buffalo Horn Buttons</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Hand-finished blind hems</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> Silk-lined sleeves for layering</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Products Section -->
+<div class="mt-40">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="text-xs font-label text-secondary font-bold uppercase tracking-widest mb-2 block">Complete the Look</span>
+<h2 class="text-4xl font-headline font-extrabold tracking-tighter">Customers also bought</h2>
+</div>
+<button class="text-sm font-label font-bold uppercase tracking-widest underline underline-offset-8 decoration-secondary">View Collection</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Product Card 1 -->
+<div class="group">
+<div class="aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="minimalist black leather chelsea boots with a clean matte finish on a white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEHdjPb7Tr7TyfPqLXXkz_rsLXhPtJCYD09r1fIXxG04rykMwNroaWIingz_9Dw2TwniWwTj50heZoETfiVSLDOFk3TKPUQAzdbMjaPsrQndea48sIBE6esBwJ6ndS-GOrhOlDdwhdXHYBwdRmNHMqGiPcORNNrCqQse-v_0XRAeyV_k3nB6C9dlsF_mvOIEA2x1X4t5PtOQqldq8kXd1HIx2dR7Ecl8WhzjEA1pWXfJ9u-ScqHvp7xZE7NYYHVxYnDN1mXpP2QApE"/>
+<button class="absolute bottom-4 right-4 w-10 h-10 bg-white shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<h4 class="text-sm font-headline font-bold mb-1">Essential Chelsea Boot</h4>
+<p class="text-xs font-label text-outline mb-2">Matte Obsidian</p>
+<p class="text-sm font-headline font-bold">$450.00</p>
+</div>
+<!-- Product Card 2 -->
+<div class="group">
+<div class="aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="high-waisted tailored charcoal wool trousers with a sharp front crease" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXid5RcWFR5nUHdSF64IS8buhm4YQYbBc20XVGl2EI47BXVFu9JeYDCX5VnjNk3ZeaQnAfj7ApHMe4q9figXt7bcEXIzURps0_M_1IZRxrz4HZbfZEoIjDSAkobXvHLQmSsK7SIcp6moDrfZhPE0P6RCq1R9ExO8eO24BA2LCtDmEndzyDDwFReIoar2dViEZszxhHRrkEtgB9gdzVumM_hKFjy5PPwYTS_L0vJha_2W8RpGRIqIk5U9kMf8gay7ujAgyzq43eH4B1"/>
+<button class="absolute bottom-4 right-4 w-10 h-10 bg-white shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<h4 class="text-sm font-headline font-bold mb-1">Pleated Wool Trouser</h4>
+<p class="text-xs font-label text-outline mb-2">Charcoal Heather</p>
+<p class="text-sm font-headline font-bold">$380.00</p>
+</div>
+<!-- Product Card 3 -->
+<div class="group">
+<div class="aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="heavyweight white cotton cashmere blend t-shirt showing premium texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7V3dAdzfU2_j4rDBcCN0dzhtlV30cHoNEKqs2wRkp3jHm2G8Iz7jdAJPhKRIkMYTs4bSPpmpHAkylB0Dp5El3jE79mLw43bvjDRVWAcQrU435BKKerWdZ4NcsIwor-xMMued2sJAqFCw4ad_5oglK1DX1CbhXqJuevyXkIi0INs1cLnZvX5PP5swnsYIwxgRUFDEYZ5u2KffwLu6eOcEnuoa_wNAyGCdzkNPzoDPjoWwKRzJOvqa3u-lnci6TCqHDW7inA4zAn90p"/>
+<button class="absolute bottom-4 right-4 w-10 h-10 bg-white shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<h4 class="text-sm font-headline font-bold mb-1">Cashmere Blend Tee</h4>
+<p class="text-xs font-label text-outline mb-2">Optic White</p>
+<p class="text-sm font-headline font-bold">$125.00</p>
+</div>
+<!-- Product Card 4 -->
+<div class="group">
+<div class="aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="sleek luxury black leather shoulder bag with minimal gold hardware" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi_IOU_HJ-Mb0FLhzBrrwAzkWcxTqZtC4El_kus0Q8tZN8mW9rFpukyWgtsnljMSW2glDzL3qvgm_L5-_xMGgOIWeeMGyCpVA8llm8lYmwYzdKR0mo8Ak38cVhIeAqqyyuCHZlKRoeKN2dBiIfksCycTVyZel9FxNH-UcDtDmRj261bUhzG0VKlxeFbNZ2mCvAHSu-3M92mSJzCR3Ljb4iBP4fa1wfgLDg0u3OvsX8AUTzaPp8c1lEdA87-FOYNdeFP91iojWdJLgv"/>
+<button class="absolute bottom-4 right-4 w-10 h-10 bg-white shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<h4 class="text-sm font-headline font-bold mb-1">The Archetype Tote</h4>
+<p class="text-xs font-label text-outline mb-2">Pebbled Black</p>
+<p class="text-sm font-headline font-bold">$790.00</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-slate-100 dark:bg-slate-950 w-full mt-20 pb-12 pt-16 font-inter text-xs tracking-wide uppercase">
+<div class="max-w-screen-2xl mx-auto px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12">
+<div class="col-span-2 lg:col-span-1">
+<span class="text-lg font-black tracking-widest text-slate-900 mb-6 block">Atelier</span>
+<p class="text-slate-500 normal-case tracking-normal mb-6">Redefining modern luxury through curated editorial experiences and uncompromising craftsmanship.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 hover:text-secondary cursor-pointer">public</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-secondary cursor-pointer">potted_plant</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-secondary cursor-pointer">star</span>
+</div>
+</div>
+<div>
+<h5 class="font-bold text-slate-900 mb-6">Concierge</h5>
+<ul class="space-y-4">
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Help &amp; Contact</a></li>
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Shipping &amp; Returns</a></li>
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Order Tracking</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-slate-900 mb-6">The House</h5>
+<ul class="space-y-4">
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Our Story</a></li>
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Sustainability</a></li>
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Atelier Program</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-slate-900 mb-6">Legal</h5>
+<ul class="space-y-4">
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Privacy Policy</a></li>
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Terms of Service</a></li>
+<li><a class="text-slate-500 hover:underline decoration-blue-500 underline-offset-4 transition-all" href="#">Accessibility</a></li>
+</ul>
+</div>
+<div class="col-span-2 lg:col-span-1">
+<h5 class="font-bold text-slate-900 mb-6">Newsletter</h5>
+<p class="text-slate-500 normal-case tracking-normal mb-4">Join our inner circle for exclusive previews.</p>
+<div class="flex gap-2">
+<input class="bg-white border-none rounded-none text-[10px] w-full focus:ring-1 focus:ring-secondary py-3" placeholder="Email Address" type="email"/>
+<button class="bg-primary text-white px-4 hover:bg-secondary transition-colors"><span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+</div>
+</div>
+<div class="max-w-screen-2xl mx-auto px-8">
+<div class="bg-slate-200 h-px w-full my-8"></div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="text-slate-500">© 2024 Atelier Editorial Storefront. All rights reserved.</span>
+<div class="flex gap-6 text-[10px] text-slate-400">
+<span>English (US)</span>
+<span>USD ($)</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

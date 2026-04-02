@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Support Tickets | NORDIC ATELIER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary": "#000000",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-container": "#316bf3",
+                        "on-secondary-container": "#fefcff",
+                        "surface": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#cbdbf5",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-fixed": "#00174b",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#45464d",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-primary": "#bec6e0",
+                        "inverse-surface": "#213145",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-error": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "surface-container-low": "#eff4ff",
+                        "outline": "#76777d",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-container": "#2a1700",
+                        "tertiary": "#000000",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "surface-tint": "#565e74",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "secondary": "#0051d5",
+                        "primary-container": "#131b2e",
+                        "error": "#ba1a1a",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#003ea8"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-12 py-6 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 uppercase">
+                NORDIC ATELIER
+            </div>
+<div class="hidden md:flex items-center space-x-12">
+<a class="font-manrope tracking-tight font-light uppercase text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-colors" href="#">Shop</a>
+<a class="font-manrope tracking-tight font-light uppercase text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-colors" href="#">Collections</a>
+<a class="font-manrope tracking-tight font-light uppercase text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-colors" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hover:opacity-70 transition-opacity duration-300">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">shopping_bag</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 text-blue-700 dark:text-blue-400 border-b border-blue-700 pb-1">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-screen-2xl mx-auto w-full flex flex-col md:flex-row gap-12">
+<!-- Account Sidebar -->
+<aside class="w-full md:w-64 shrink-0">
+<div class="sticky top-32 space-y-8">
+<div>
+<h3 class="text-xs font-bold tracking-widest uppercase text-on-primary-container mb-6">Account Hub</h3>
+<nav class="flex flex-col space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl opacity-60 group-hover:opacity-100">dashboard</span>
+                            Overview
+                        </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl opacity-60 group-hover:opacity-100">package_2</span>
+                            Orders
+                        </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm bg-surface-container-high text-on-surface font-semibold group" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+                            Support Tickets
+                        </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-on-surface-variant hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl opacity-60 group-hover:opacity-100">settings</span>
+                            Settings
+                        </a>
+</nav>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-xs font-bold uppercase tracking-widest text-secondary mb-2">Need help?</p>
+<p class="text-sm text-on-surface-variant mb-4">Our concierge is available 24/7 for Atelier members.</p>
+<button class="w-full bg-primary text-on-primary py-3 text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">Start Chat</button>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-8xl">forum</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Content Area -->
+<section class="flex-1 min-w-0">
+<header class="mb-10">
+<h1 class="text-4xl md:text-5xl font-bold tracking-tighter text-on-surface mb-4">Support Tickets</h1>
+<p class="text-on-surface-variant max-w-xl">Track and manage your inquiries with our design team. Most requests are resolved within 24 business hours.</p>
+</header>
+<!-- Filters & Search -->
+<div class="flex flex-col lg:flex-row gap-4 mb-8">
+<div class="relative flex-1 group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-secondary transition-colors">search</span>
+<input class="w-full bg-surface-container-high border-none pl-12 pr-4 py-4 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline/60 text-sm" placeholder="Search by Ticket ID or Subject..." type="text"/>
+</div>
+<div class="flex gap-4">
+<select class="bg-surface-container-high border-none py-4 px-6 text-sm focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest appearance-none min-w-[140px]">
+<option>All Statuses</option>
+<option>Open</option>
+<option>Pending</option>
+<option>Resolved</option>
+</select>
+<button class="flex items-center gap-2 bg-surface-container-high px-6 py-4 hover:bg-surface-container-highest transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-xl">tune</span>
+                        Filter
+                    </button>
+</div>
+</div>
+<!-- Table Layout -->
+<div class="bg-surface-container-lowest overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-outline">Ticket ID</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-outline">Subject</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-outline">Status</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-outline text-right">Last Activity</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-container-low/50 cursor-pointer transition-colors">
+<td class="px-6 py-6 text-sm font-mono text-outline">#TK-8842</td>
+<td class="px-6 py-6">
+<div class="font-medium text-on-surface mb-1">Muted Oak Chair - Custom Finish Query</div>
+<div class="text-xs text-on-surface-variant line-clamp-1">Requesting a darker stain for the legs of the dining set...</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-container-highest text-secondary rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                                        Open
+                                    </span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="text-sm text-on-surface">14 mins ago</div>
+<div class="text-[10px] text-outline uppercase tracking-wider">Agent Assigned</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-container-low/50 cursor-pointer transition-colors">
+<td class="px-6 py-6 text-sm font-mono text-outline">#TK-8711</td>
+<td class="px-6 py-6">
+<div class="font-medium text-on-surface mb-1">Missing Assembly Hardware - Order #NA-2922</div>
+<div class="text-xs text-on-surface-variant line-clamp-1">The hardware box for the modular shelving unit was not found...</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+                                        Pending
+                                    </span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="text-sm text-on-surface">2 hours ago</div>
+<div class="text-[10px] text-outline uppercase tracking-wider">Awaiting Parts</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-container-low/50 cursor-pointer transition-colors">
+<td class="px-6 py-6 text-sm font-mono text-outline">#TK-8509</td>
+<td class="px-6 py-6">
+<div class="font-medium text-on-surface mb-1">Shipping Quote for Oslo Showroom</div>
+<div class="text-xs text-on-surface-variant line-clamp-1">International freight logistics for the Winter collection...</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-dim/30 text-outline rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                        Resolved
+                                    </span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="text-sm text-on-surface">Yesterday</div>
+<div class="text-[10px] text-outline uppercase tracking-wider">Archived</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-surface-container-low/50 cursor-pointer transition-colors">
+<td class="px-6 py-6 text-sm font-mono text-outline">#TK-8492</td>
+<td class="px-6 py-6">
+<div class="font-medium text-on-surface mb-1">Fabric Swatch Request: Icelandic Wool</div>
+<div class="text-xs text-on-surface-variant line-clamp-1">Please send samples of the Grey and Charcoal knits...</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-surface-dim/30 text-outline rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                        Resolved
+                                    </span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="text-sm text-on-surface">3 days ago</div>
+<div class="text-[10px] text-outline uppercase tracking-wider">Archived</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-8 flex items-center justify-between border-t border-outline-variant/10 pt-6">
+<span class="text-xs text-on-surface-variant font-medium uppercase tracking-widest">Showing 1-4 of 12 Tickets</span>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center bg-surface-container-high opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-surface-container-high hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-20 pb-10 mt-auto bg-slate-100 dark:bg-slate-900 tonal shift via bg-slate-100">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 px-12 max-w-screen-2xl mx-auto">
+<div class="col-span-2">
+<span class="text-lg font-black text-slate-900 dark:text-slate-50 mb-4 block">NORDIC ATELIER</span>
+<p class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400 max-w-xs">
+                    Curating high-end editorial experiences for the modern home. Focused on intentional asymmetry and expansive breathing room.
+                </p>
+</div>
+<div>
+<h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 dark:text-slate-50 mb-4">Support</h4>
+<div class="flex flex-col space-y-3">
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-transform duration-200 hover:translate-x-1" href="#">Shipping &amp; Returns</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-transform duration-200 hover:translate-x-1" href="#">Contact Us</a>
+</div>
+</div>
+<div>
+<h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 dark:text-slate-50 mb-4">Company</h4>
+<div class="flex flex-col space-y-3">
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-transform duration-200 hover:translate-x-1" href="#">Brand Story</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-transform duration-200 hover:translate-x-1" href="#">Sustainability</a>
+</div>
+</div>
+<div>
+<h4 class="text-[10px] font-bold uppercase tracking-widest text-slate-900 dark:text-slate-50 mb-4">Legal</h4>
+<div class="flex flex-col space-y-3">
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-transform duration-200 hover:translate-x-1" href="#">Privacy Policy</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-transform duration-200 hover:translate-x-1" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+<div class="mt-16 px-12 max-w-screen-2xl mx-auto flex justify-between items-center">
+<p class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 dark:text-slate-400">© 2024 Nordic Atelier. All rights reserved.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-outline text-lg">public</span>
+<span class="material-symbols-outlined text-outline text-lg">shield</span>
+</div>
+</div>
+</footer>
+</body></html>

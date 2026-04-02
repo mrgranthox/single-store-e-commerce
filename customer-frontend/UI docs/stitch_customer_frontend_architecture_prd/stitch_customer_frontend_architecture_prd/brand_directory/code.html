@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#565e74",
+              "primary": "#000000",
+              "surface-container-high": "#dce9ff",
+              "surface-variant": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "tertiary": "#000000",
+              "on-surface-variant": "#45464d",
+              "error": "#ba1a1a",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "secondary-container": "#316bf3",
+              "on-surface": "#0b1c30",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "outline-variant": "#c6c6cd",
+              "outline": "#76777d",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-container-low": "#eff4ff",
+              "on-primary-fixed": "#131b2e",
+              "inverse-on-surface": "#eaf1ff",
+              "tertiary-container": "#2a1700",
+              "surface-dim": "#cbdbf5",
+              "background": "#f8f9ff",
+              "primary-container": "#131b2e",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-fixed": "#2a1700",
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "secondary-fixed": "#dbe1ff",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "inverse-primary": "#bec6e0",
+              "on-primary-container": "#7c839b",
+              "primary-fixed": "#dae2fd"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-12">
+<span class="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 font-headline">Nordic Atelier</span>
+<div class="hidden md:flex gap-8 items-center font-manrope tracking-tight text-sm font-semibold">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">New Arrivals</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Archive</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body" placeholder="Find a brand..." type="text"/>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined cursor-pointer text-on-surface-variant hover:text-primary transition-colors" data-icon="shopping_bag">shopping_bag</span>
+<span class="material-symbols-outlined cursor-pointer text-on-surface-variant hover:text-primary transition-colors" data-icon="person">person</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20">
+<!-- Hero Section: Editorial Spotlight -->
+<section class="px-6 max-w-screen-2xl mx-auto mb-20">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+<div class="md:col-span-7">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-secondary font-semibold mb-4 block">Curated Excellence</span>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.95] mb-8">
+                        The Brand <br/>Directory
+                    </h1>
+<p class="font-body text-lg text-on-surface-variant max-w-md leading-relaxed mb-8">
+                        An exhaustive atlas of visionaries, minimalist masters, and contemporary houses defining the modern aesthetic.
+                    </p>
+</div>
+<div class="md:col-span-5 relative group cursor-pointer overflow-hidden rounded-xl">
+<div class="aspect-[4/5] bg-surface-container">
+<img alt="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="minimalist architectural studio interior with clean lines, soft natural light, and a single designer chair in neutral tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnuyqx0OfYnsQAeb9kWZEgToPxcyDclopUUiZzrpTs1oyOr9_9fNXe5zBUwnGNAnidxGIqQQLW9Ykk_OBLrAMG7rs-FvRyYa1p6IWbJDJvL-st3pP_WOuXDwIGpnCAB1j8mxAEl-GXOQbz7ThuYLXGHQY8z_FImpMCgTLULV586p8vhH11TeanrU5c8LdqokeZM2m-vnbFrsUYQ0jZvSab0jziwfrm-3pNI8dH9bhiSZmTC4CtfuxAoy-gLEF222Pq2qCGZ9NVFmmM"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8">
+<span class="text-white/80 text-xs font-label tracking-widest uppercase mb-2">Featured Spotlight</span>
+<h3 class="text-white text-3xl font-headline font-bold">Æther Form</h3>
+<p class="text-white/70 font-body text-sm mt-2">Explore the SS24 Architectural Series</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Alphabetical Quick Nav -->
+<section class="sticky top-[72px] z-40 bg-surface/95 backdrop-blur-md border-y border-outline-variant/10 mb-16">
+<div class="max-w-screen-2xl mx-auto px-6 py-4">
+<div class="flex gap-2 md:gap-4 overflow-x-auto hide-scrollbar">
+<button class="flex-shrink-0 px-4 py-2 rounded-full bg-primary text-white text-xs font-bold font-label">ALL</button>
+<!-- Generation of Alphabet -->
+<script>
+                        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+                        letters.forEach(l => {
+                            document.write(`<button class="flex-shrink-0 px-4 py-2 rounded-full hover:bg-surface-container-high transition-colors text-xs font-bold font-label text-on-surface-variant">${l}</button>`);
+                        });
+                    </script>
+<button class="flex-shrink-0 px-4 py-2 rounded-full hover:bg-surface-container-high transition-colors text-xs font-bold font-label text-on-surface-variant">0-9</button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Spotlights -->
+<section class="px-6 max-w-screen-2xl mx-auto mb-24">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Large Card -->
+<div class="md:col-span-2 md:row-span-2 bg-surface-container-low rounded-xl p-10 flex flex-col justify-between relative overflow-hidden group">
+<div class="relative z-10">
+<h2 class="font-headline text-4xl font-bold mb-4">Lumina <br/>Structural</h2>
+<p class="max-w-xs text-on-surface-variant mb-6">Redefining the boundaries between techwear and high-end tailoring.</p>
+<a class="inline-flex items-center gap-2 text-secondary font-bold text-sm uppercase tracking-wider group-hover:gap-4 transition-all" href="#">
+                            View Brand Page <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="absolute right-0 bottom-0 w-2/3 h-full opacity-40 md:opacity-100 mix-blend-multiply">
+<img alt="" class="w-full h-full object-cover grayscale" data-alt="high-fashion editorial shot of a model in avant-garde black textured clothing against a stark white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3uTjGj4K9l46rVa-H3FlOpkjh7z7Ql7h1u7CUgAqGYC3P2jIsMP80u3fJqlePaRXLyAQ2SkSZPSUM9ax78wKNphboR7T3KzTLozV-msJ_hWypJTzDuq-XK4Ur2RFHpXZ_7aFaoGttzhyIMIvpb9qWIH6FygxniIw8CeExbql3DYXphvIp0G1BqjlKI6gwbnlpr7V7bNZpA9Woa3pNbASWHgB4A13Q_Vnlux5r_yv_WFmwIjnLUcGIrnTGyjNlqBI0H3-bPg-nm2xs"/>
+</div>
+</div>
+<!-- Small Card 1 -->
+<div class="bg-surface-container-highest rounded-xl p-8 hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-12">
+<span class="font-label text-xs font-bold bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full">New to Atelier</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">north_east</span>
+</div>
+<h3 class="font-headline text-2xl font-bold">Nordic Stone</h3>
+<p class="text-sm text-on-surface-variant mt-2">Sustainable heavy-knit essentials.</p>
+</div>
+<!-- Small Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-8 hover:shadow-xl hover:shadow-on-surface/5 transition-all cursor-pointer group">
+<div class="aspect-square bg-surface-container-low mb-6 overflow-hidden rounded-lg">
+<img alt="" class="w-full h-full object-cover" data-alt="close-up of premium leather sneakers in off-white color on a minimalist pedestal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4Vyu-GVNJH2AydL4HgbaN5bOq1SMhskVoxabBRYXO10x8Buf0dScNA5g-trFqVRV7BaHMpy9VBTcDs5su8_r8Lp2tPfVJIkxvJzzR3saB06y5j_aglX9lFOJ8IW2VDeGQyuy1ARoc6fcwG9eXk8HefWtFhQsJ6zKHWVrbSWU5ckFuGNlI61KOkxYisGz_vuKymRMFxD0aJSSAQptO7sL_EWf-Q9QlIcm6c2fZLiWnDpms_f5nts-tHOKqn_y12Ty3GUZqiyvnyMfv"/>
+</div>
+<h3 class="font-headline text-2xl font-bold">Vestige</h3>
+<p class="text-sm text-on-surface-variant mt-2">The Archive Collection</p>
+</div>
+</div>
+</section>
+<!-- Directory List: Asymmetric Alphabetical Sections -->
+<section class="px-6 max-w-screen-2xl mx-auto">
+<div class="space-y-32">
+<!-- Section A -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+<div class="md:col-span-2">
+<span class="font-headline text-8xl font-black text-surface-container-highest select-none">A</span>
+</div>
+<div class="md:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Æther Form <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">124 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Alabaster Studio <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">42 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Apex Collective <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">89 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Aris &amp; Co. <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">12 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Atelier Noir <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">210 Items</span>
+</h4>
+</div>
+</div>
+</div>
+<!-- Section B -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+<div class="md:col-span-2">
+<span class="font-headline text-8xl font-black text-surface-container-highest select-none">B</span>
+</div>
+<div class="md:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Bare Minimum <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">33 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Beam House <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">56 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Blue Horizon <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">18 Items</span>
+</h4>
+</div>
+</div>
+</div>
+<!-- Section C -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+<div class="md:col-span-2">
+<span class="font-headline text-8xl font-black text-surface-container-highest select-none">C</span>
+</div>
+<div class="md:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Canvas &amp; Clay <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">67 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Cipher <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">102 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Cloud Tailor <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">45 Items</span>
+</h4>
+</div>
+<div class="group cursor-pointer">
+<h4 class="font-headline text-lg font-bold group-hover:text-secondary transition-colors border-b border-outline-variant/30 pb-4 flex justify-between items-center">
+                                Core Collective <span class="text-xs font-label text-outline group-hover:translate-x-1 transition-transform">14 Items</span>
+</h4>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / CTA -->
+<section class="mt-40 bg-surface-dim px-6 py-24">
+<div class="max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="max-w-xl">
+<h2 class="font-headline text-4xl font-bold mb-4">Become an Insider</h2>
+<p class="text-on-surface-variant leading-relaxed">Early access to brand launches, seasonal retrospectives, and exclusive designer interviews delivered bi-weekly.</p>
+</div>
+<div class="w-full max-w-md">
+<form class="flex flex-col sm:flex-row gap-2">
+<input class="flex-grow bg-surface-container-highest border-none focus:ring-2 focus:ring-secondary px-6 py-4 rounded-md" placeholder="Email address" type="email"/>
+<button class="bg-primary text-white font-bold px-8 py-4 rounded-md hover:bg-on-primary-fixed transition-colors">Subscribe</button>
+</form>
+<p class="text-[10px] text-outline mt-4 uppercase tracking-widest font-label">By subscribing, you agree to our privacy policy.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
+<div class="w-full py-12 px-6 flex flex-col md:flex-row justify-between items-center max-w-screen-2xl mx-auto">
+<div class="mb-8 md:mb-0">
+<span class="font-manrope font-bold text-slate-900 dark:text-slate-50 text-lg">Nordic Atelier</span>
+<p class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 mt-2">© 2024 Nordic Atelier. Crafted for the minimalist.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 font-inter text-xs tracking-wide uppercase">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Privacy Policy</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Terms of Service</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Sustainability</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

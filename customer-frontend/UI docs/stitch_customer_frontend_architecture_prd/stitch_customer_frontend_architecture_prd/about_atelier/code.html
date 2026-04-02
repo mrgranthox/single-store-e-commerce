@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface": "#0b1c30",
+              "background": "#f8f9ff",
+              "on-primary-container": "#7c839b",
+              "secondary": "#0051d5",
+              "primary": "#000000",
+              "secondary-fixed": "#dbe1ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-container": "#b87500",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#213145",
+              "on-error": "#ffffff",
+              "on-background": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface-container": "#e5eeff",
+              "surface-bright": "#f8f9ff",
+              "primary-fixed": "#dae2fd",
+              "inverse-primary": "#bec6e0",
+              "tertiary-container": "#2a1700",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#bec6e0",
+              "tertiary-fixed": "#ffddb8",
+              "on-surface-variant": "#45464d",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "outline": "#76777d",
+              "surface-dim": "#cbdbf5",
+              "outline-variant": "#c6c6cd",
+              "secondary-container": "#316bf3",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container-low": "#eff4ff",
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-secondary": "#ffffff",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed": "#00174b",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-tint": "#565e74",
+              "primary-container": "#131b2e",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .tonal-shift { background-color: #eff4ff; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary-fixed">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-slate-900 font-headline">The Digital Atelier</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 font-inter text-sm tracking-wide hover:text-slate-900 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 font-inter text-sm tracking-wide hover:text-slate-900 transition-colors" href="#">Editorial</a>
+<a class="text-blue-700 font-inter text-sm tracking-wide border-b-2 border-blue-700 pb-1 font-bold" href="#">About</a>
+<a class="text-slate-600 font-inter text-sm tracking-wide hover:text-slate-900 transition-colors" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-900 hover:opacity-80 transition-opacity">shopping_bag</button>
+<button class="material-symbols-outlined text-slate-900 hover:opacity-80 transition-opacity">person</button>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="px-8 py-24 max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+<div class="md:col-span-7 pr-0 md:pr-24">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-secondary font-semibold mb-6 block">Our Ethos</span>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter text-primary leading-[1.1] mb-8">
+                    Craftsmanship <br/>
+<span class="text-on-primary-container font-light italic">&amp;</span> Curation.
+                </h1>
+<p class="font-body text-xl text-on-surface-variant leading-relaxed max-w-xl">
+                    A dialogue between traditional Nordic handcraft and contemporary digital precision. We don't just sell objects; we curate a lifestyle of intentionality.
+                </p>
+</div>
+<div class="md:col-span-5 relative">
+<div class="aspect-[4/5] overflow-hidden rounded-lg bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="Minimalist sunlit studio space with clean lines, white walls, and a single designer chair casting long shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFLdcHGxtq5MAVFm0PCeyOyqaBx_itvqZJ5Yk0R64JDoKBWXsknSO879xzk5kyHUUxaMLVpHuG2IR8R5HrsKivB1D2IwXsb_NoQh0UKlnu0dCVuXTbkC5blXK5UxuVi1Sn1xz24f9WbnElj8ct-CrWWzQupqW1zN_Rz8DCGt0ofM56sZiimKromCtWb9Kdxe2kP_Ji9C831EiduXe0ipXoQy7PU2LEDXF7c1OmFOgF1oOjbg7_U3Vab-lcnpS-6mOp-BpQfyEqZ3sM"/>
+</div>
+<div class="absolute -bottom-8 -left-8 bg-surface-container-lowest p-8 hidden lg:block shadow-sm">
+<p class="font-headline text-2xl font-bold italic text-primary">Est. 2014</p>
+<p class="font-body text-sm text-outline">Stockholm, Sweden</p>
+</div>
+</div>
+</section>
+<!-- Our Heritage Section -->
+<section class="bg-surface-container-low py-32">
+<div class="px-8 max-w-screen-2xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+<div class="lg:col-span-4 sticky top-32">
+<h2 class="font-headline text-4xl font-bold tracking-tight text-primary mb-6">Our Heritage</h2>
+<div class="w-12 h-1 bg-secondary mb-8"></div>
+<p class="text-on-surface-variant leading-relaxed">
+                            Founded in a small basement workshop in Södermalm, The Digital Atelier began as a restoration project for mid-century furniture. Today, it stands as a global beacon for Nordic minimalism.
+                        </p>
+</div>
+<div class="lg:col-span-8 space-y-24">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<div class="order-2 md:order-1">
+<h3 class="font-headline text-xl font-bold mb-4">The Early Years</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                                    Our journey started with a singular focus: longevity. We believed that an object well-made should outlast its owner. This philosophy remains our guiding star.
+                                </p>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden order-1 md:order-2">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" data-alt="Black and white close up of weathered hands working with raw timber on a carpenter's workbench" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc-mj02v0OPMICTzAxIeRJI4Ng557_A9m6B6jfWDjLd2yhxSKoQgD6Ehh1xnsYUXqTSoxOBz0V8qIpB-OD_Yd-h-MzzKzLAUkk3h8ERPK2zynum5iOJkzo5_w9OB4ej4albH8CysYPP9-yDcgnEYUqI2ecHYN6d7Q6JBzKSCyzawfttfwwUFzE03a_rHP3dwrzE6Iqvsy2csd9JisUNYCiY-3baUmFT6vR6b47jYvB7OwgX19189BSe1-y65TgmucQszkVVGH7eTg7"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<div class="aspect-square rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Modern architecture with concrete walls and floor to ceiling glass windows overlooking a snowy forest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnjoZTDjwFl4TmO1WTDD73z24iIm8sAD82kqfYLAMGgR9DRHA2lzOA6GR4ok2FFCqCDJv3glAA4-wAg86tYqOMVESHhZcPJF5JLxQwPswauLsrkaqFij_Eb9sSmeM_HaNtR9_T-R-9QnqQ0M1AXQ1MhVAheAYSBQtwCuRevLKjFQ-5v3n9kpLzF4spxoHVd-xJUwY75MhIbTMPWHGOr1mobBxW7iEDv4jH-EQ665_tewbUImq9Gh-FXYnGeG0BWXiH3Ti1zK8hH_RW"/>
+</div>
+<div class="pl-0 md:pl-12">
+<h3 class="font-headline text-xl font-bold mb-4">The Digital Pivot</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                                    In 2018, we integrated algorithmic design with traditional joinery. This allowed us to scale our artisan principles without sacrificing the soul of the product.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- The Atelier Way (Bento Grid) -->
+<section class="px-8 py-32 max-w-screen-2xl mx-auto">
+<div class="mb-16 text-center max-w-2xl mx-auto">
+<h2 class="font-headline text-4xl font-extrabold mb-4">The Atelier Way</h2>
+<p class="text-on-surface-variant">A commitment to the earth and the hand that crafts.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 h-[800px]">
+<div class="md:col-span-2 md:row-span-2 bg-primary-container p-12 flex flex-col justify-end text-on-primary rounded-xl group relative overflow-hidden">
+<img class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700" data-alt="Sustainably harvested raw linen fabric being woven on a traditional loom in a soft sunlit room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMuxhkvty2smjF5RcjbBGBGtlBhY_qNB678Kfge_KbDI7yUa15UfYdQWKtM1zQfpSnV_uqa4haLGAVZldfThDEK-QAAS6Vky38dw5uHIb125DuxdgZ_zjvkbskq7e8OquzerpWZ0e5E79ib6cvaD7l7JL3WhTkLZIi12BdcyRgSW8y6vg4Jny8vOqKY5XY7Ifs4lSiUNiNQSUwKjGkKDb5AuvIAdXcY6ZZQa-iBBKsG6YGxi1XviL2_Ui7ze2t_0wr4E5VTmI6kTuW"/>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-4xl mb-6">eco</span>
+<h3 class="text-3xl font-headline font-bold mb-4">Circular Lifecycle</h3>
+<p class="text-on-primary-container max-w-md">98% of our materials are sourced within 200km of our production facilities, ensuring a minimal carbon footprint.</p>
+</div>
+</div>
+<div class="md:col-span-2 bg-surface-container-high p-8 flex flex-col justify-between rounded-xl">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-headline font-bold">Artisanal Quality</h3>
+<span class="material-symbols-outlined">diamond</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">Every piece is hand-finished by a master craftsman. No two items are identical, bearing the unique marks of their creation.</p>
+</div>
+<div class="md:col-span-1 bg-tertiary-fixed p-8 flex flex-col justify-between rounded-xl">
+<span class="material-symbols-outlined text-on-tertiary-fixed">verified</span>
+<h3 class="text-lg font-headline font-bold text-on-tertiary-fixed">Lifetime Guarantee</h3>
+</div>
+<div class="md:col-span-1 bg-surface-container-highest p-8 flex flex-col justify-between rounded-xl">
+<span class="material-symbols-outlined">palette</span>
+<h3 class="text-lg font-headline font-bold">Bespoke Curation</h3>
+</div>
+</div>
+</section>
+<!-- Meet the Curators -->
+<section class="bg-surface py-32">
+<div class="px-8 max-w-screen-2xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+<div>
+<h2 class="font-headline text-4xl font-bold">Meet the Curators</h2>
+<p class="text-on-surface-variant mt-2">The visionaries behind our collection.</p>
+</div>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-md font-label text-sm uppercase tracking-wider flex items-center gap-2 hover:opacity-90 transition-opacity">
+                        Join the Team <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Curator 1 -->
+<div class="group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg mb-4 bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Professional portrait of a woman with glasses and a black turtleneck standing against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAOBUfFed9SN1p3MDYuZl0WyR562VXOfe2qlUkh39fXrpJ7BX_F0UJmHEJ3opCx6vuJ3QEhCUL7miIM1JDLAY_PQFMiqfLcJY7qc9mu2amymXrDksrhoSm5ol6GSIewuec30UCa74fQPOPgWCPm2mGfE5klXrPDe5pLSSikiL3G9UuVLhCaVCz6KD-FiKRP3SZW249ehRnioqopxasBzUMuk3Rb6Inn-yTbsUHk_vmIotl9Qr6h4dLExwCyBKn_kV9s09UL2QkUzSM"/>
+</div>
+<h4 class="font-headline font-bold text-lg">Elin Nordström</h4>
+<p class="text-secondary text-sm font-label uppercase tracking-widest">Creative Director</p>
+</div>
+<!-- Curator 2 -->
+<div class="group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg mb-4 bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up portrait of a man with a short beard wearing a charcoal gray wool sweater" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGawukMiOu3LBAbzX_PJ5lNh5NflHF3jy9f5tEXuxXpqcgQRW9MuGO-kj8EwWpzWi4CdAAJEVJ1GrRQl1_Q7rFQj-Jkutt9KLUgWX_hIB1aIPGm0u1IArVlQIFmDM21IxfhNFqjVDk4H09UhWG1XweZ2hOpPVXey1PPuNO0GdL9VIpwCauZhMlNXvAWJ1yXDUaVf47k9i2JSbMSfIL_3OMyXVZXf9bwBcUc7bAPD3fmkSeD0X7Tv2D9zebl-06BJuL0ViBTZkJVCzw"/>
+</div>
+<h4 class="font-headline font-bold text-lg">Lukas Berg</h4>
+<p class="text-secondary text-sm font-label uppercase tracking-widest">Head of Sourcing</p>
+</div>
+<!-- Curator 3 -->
+<div class="group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg mb-4 bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Studio portrait of a woman with a confident smile wearing a minimalist white shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMds2LHZoRybRmwFXPLzKwEQCGLg0sBJD5Bw3bTnNrfEmH0NAZShZutdq9_HnQcMxItBroXUPeVQYIU41pG7RgRUjpK-U_Wr7T49Dcia9IlVvA0janm6LX014oEWoaTx3kVcVTXSNeDzZuhkXV-UzNJtE7iSc9pp7J0RZzXX7k1wCZJ0oxxk53LfQTQlu3GxfAYVhqzh_e43xTonIY2U_YLtJOLI53AlNUksPsIdWrneTvC1ZZpO6KLaKeQ8g9fd7ZnMHPxf8HKaty"/>
+</div>
+<h4 class="font-headline font-bold text-lg">Sonia Larsson</h4>
+<p class="text-secondary text-sm font-label uppercase tracking-widest">Digital Architect</p>
+</div>
+<!-- Curator 4 -->
+<div class="group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg mb-4 bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Candid portrait of a young man in a minimalist interior design studio with sketches in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBioySsQ8ICMB3jw3a8Qm0UNZTo5Isp8gRyuMh-cddo3nUxPPWd9yldauB1cI22XU1BmI4_QcetLwZfIc4GyfHnxu8zfAUtdle1PyCN40pgjQsTaR6OvOTuk5roZHctXyQa_sqFWE9TMcUYQeF9pFAcEin_yUrEJrnK23l8ZmP2G1PTFyzP2eDie_1HxAYLVoMIMtMb5i4p1tMC1l4o6r3Yj9u13ByQrkXnuXQBmWP8kIa7ws50QHrDe-CmJD9PMjPwdQKZS4jnIl7z"/>
+</div>
+<h4 class="font-headline font-bold text-lg">Mikael Sund</h4>
+<p class="text-secondary text-sm font-label uppercase tracking-widest">Editorial Lead</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Our Global Reach -->
+<section class="py-32 px-8 max-w-screen-2xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="order-2 lg:order-1 h-[500px] rounded-2xl overflow-hidden shadow-2xl relative">
+<div class="absolute inset-0 bg-blue-100/20 pointer-events-none"></div>
+<img class="w-full h-full object-cover" data-alt="Abstract world map with glowing nodes representing global connectivity on a deep navy background" data-location="Stockholm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVRi5GDK5ypKTUufifGIAMa7xHT4oX2S4Se7TztaLEEaS3OTuBGvjTidiagnms3PgbPgOkr2b3GWrdbWUufaI7tOErICjKVZBrb-LFDtuSaHHfj4VKwbNf2aVnV3J-WLb8beJwVobGaLIfAeAkJ4Y5HfV0vfHljO9Vlqlrwm2yVK6ptasNca9QmFLRr3mYijlB4-QwNqWZra7VCtGAyde9Wr1A9wv50ERRvDFdRsjqx2olvSLFAcAiWReAQZWx_6ch2AUUJKDTjs7J"/>
+</div>
+<div class="order-1 lg:order-2">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-secondary font-semibold mb-6 block">Presence</span>
+<h2 class="font-headline text-5xl font-extrabold tracking-tighter mb-8 leading-tight">From Stockholm <br/>to the World.</h2>
+<div class="space-y-8">
+<div>
+<h4 class="font-bold text-lg mb-2">Flagship Atelier</h4>
+<p class="text-on-surface-variant italic">Biblioteksgatan 12, Stockholm</p>
+</div>
+<div>
+<h4 class="font-bold text-lg mb-2">Regional Hubs</h4>
+<div class="flex flex-wrap gap-4 text-sm font-medium">
+<span class="px-4 py-2 bg-surface-container-low rounded-full">Copenhagen</span>
+<span class="px-4 py-2 bg-surface-container-low rounded-full">Berlin</span>
+<span class="px-4 py-2 bg-surface-container-low rounded-full">Tokyo</span>
+<span class="px-4 py-2 bg-surface-container-low rounded-full">New York</span>
+</div>
+</div>
+<p class="text-on-surface-variant leading-relaxed border-l-4 border-secondary-container pl-6 mt-8">
+                            While our roots are Nordic, our community is borderless. We ship to over 45 countries, ensuring that intentional design is accessible to all.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="bg-surface-dim py-24 text-center px-8">
+<h2 class="font-headline text-3xl font-bold mb-8">Ready to explore the collection?</h2>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<a class="bg-primary text-on-primary px-10 py-4 font-label uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform" href="#">View Catalogue</a>
+<a class="bg-surface-container-lowest text-on-surface px-10 py-4 font-label uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform" href="#">Latest Editorial</a>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-200 dark:bg-slate-900 w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="font-manrope font-bold text-lg text-slate-900 dark:text-slate-100">The Digital Atelier</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-inter text-sm tracking-wide text-slate-500 hover:text-blue-700 hover:underline underline-offset-4 transition-all duration-300" href="#">Privacy Policy</a>
+<a class="font-inter text-sm tracking-wide text-slate-500 hover:text-blue-700 hover:underline underline-offset-4 transition-all duration-300" href="#">Terms of Service</a>
+<a class="font-inter text-sm tracking-wide text-slate-500 hover:text-blue-700 hover:underline underline-offset-4 transition-all duration-300" href="#">Shipping &amp; Returns</a>
+<a class="font-inter text-sm tracking-wide text-slate-500 hover:text-blue-700 hover:underline underline-offset-4 transition-all duration-300" href="#">Sustainability</a>
+</div>
+<div class="font-inter text-sm tracking-wide text-slate-500">
+            © 2024 The Digital Atelier. All rights reserved.
+        </div>
+</footer>
+</body></html>

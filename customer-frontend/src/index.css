@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Material Symbols ── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+}
+
+/* ── Base typography (fluid root → rem-based scale) ── */
+html {
+  font-size: 15px;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: #f8f9ff;
+  color: #0b1c30;
+  margin: 0;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-headline {
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.55;
+}
+
+/* ── Glass nav ── */
+.glass-header {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.no-line {
+  border: none !important;
+}
+
+.tonal-shift {
+  transition: background-color 0.3s ease;
+}
+
+/* ── No scrollbar ── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Fixed bottom nav (~5rem) + iOS home indicator */
+@layer utilities {
+  .pb-mobile-nav {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+  @media (min-width: 768px) {
+    .pb-mobile-nav {
+      padding-bottom: 0;
+    }
+  }
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .safe-area-pt {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+/* Mobile: −2px on control text (buttons / submit inputs with Tailwind text-*) */
+@media (max-width: 767px) {
+  button.font-bold:not(.text-xs):not(.text-sm):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(
+      .material-symbols-outlined
+    ),
+  button.font-semibold:not(.text-xs):not(.text-sm):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(
+      .material-symbols-outlined
+    ) {
+    font-size: calc(1rem - 2px) !important;
+  }
+  button.text-xs,
+  input.text-xs[type="submit"],
+  input.text-xs[type="button"] {
+    font-size: calc(0.75rem - 2px) !important;
+  }
+  button.text-sm,
+  input.text-sm[type="submit"],
+  input.text-sm[type="button"] {
+    font-size: calc(0.875rem - 2px) !important;
+  }
+  button.text-base,
+  input.text-base[type="submit"],
+  input.text-base[type="button"] {
+    font-size: calc(1rem - 2px) !important;
+  }
+  button.text-lg,
+  input.text-lg[type="submit"],
+  input.text-lg[type="button"] {
+    font-size: calc(1.125rem - 2px) !important;
+  }
+  button.text-xl,
+  input.text-xl[type="submit"],
+  input.text-xl[type="button"] {
+    font-size: calc(1.25rem - 2px) !important;
+  }
+  button.text-2xl,
+  input.text-2xl[type="submit"],
+  input.text-2xl[type="button"] {
+    font-size: calc(1.5rem - 2px) !important;
+  }
+  button.text-\[10px\] {
+    font-size: calc(10px - 2px) !important;
+  }
+  button.text-\[9px\] {
+    font-size: calc(9px - 2px) !important;
+  }
+  button.text-\[8px\] {
+    font-size: calc(8px - 2px) !important;
+  }
+}
+
+::selection {
+  background: #dbe1ff;
+  color: #00174b;
+}

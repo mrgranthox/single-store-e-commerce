@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#76777d",
+              "inverse-on-surface": "#eaf1ff",
+              "background": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "on-primary-container": "#7c839b",
+              "surface-dim": "#cbdbf5",
+              "surface-container": "#e5eeff",
+              "on-tertiary-container": "#b87500",
+              "on-surface": "#0b1c30",
+              "surface-tint": "#565e74",
+              "primary-fixed": "#dae2fd",
+              "on-background": "#0b1c30",
+              "secondary": "#0051d5",
+              "on-secondary-container": "#fefcff",
+              "inverse-primary": "#bec6e0",
+              "on-primary-fixed": "#131b2e",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#dbe1ff",
+              "primary-fixed-dim": "#bec6e0",
+              "tertiary-container": "#2a1700",
+              "surface-container-highest": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "surface-container-low": "#eff4ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface": "#f8f9ff",
+              "primary-container": "#131b2e",
+              "outline-variant": "#c6c6cd",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#003ea8",
+              "primary": "#000000",
+              "error": "#ba1a1a",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary": "#ffffff",
+              "tertiary": "#000000",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-container-high": "#dce9ff",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#316bf3"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-secondary-fixed">
+<nav class="w-full sticky top-0 z-50 bg-slate-50 dark:bg-slate-950 font-manrope antialiased tracking-tight">
+<div class="flex justify-between items-center px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-white uppercase">Nordic Commerce</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Shop</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Story</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Help</a>
+<a class="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Policy</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">shopping_bag</span>
+</button>
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="max-w-screen-2xl mx-auto flex flex-col lg:flex-row min-h-screen">
+<aside class="w-72 flex-shrink-0 p-6 h-screen sticky top-[72px] hidden lg:flex flex-col border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 font-manrope text-sm">
+<div class="mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">gavel</span>
+</div>
+<div>
+<div class="text-lg font-bold text-slate-900 dark:text-white leading-tight">Legal &amp; Help</div>
+<div class="text-xs text-on-primary-container">Resources and Policies</div>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-all hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined">info</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-bold rounded-lg translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Privacy Policy</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-all hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Terms of Service</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-all hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span>Shipping Policy</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-all hover:bg-slate-100 dark:hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined">quiz</span>
+<span>Returns &amp; FAQ</span>
+</a>
+</nav>
+</aside>
+<section class="flex-1 px-6 md:px-12 lg:px-24 py-16 bg-surface">
+<header class="mb-20 max-w-3xl">
+<span class="text-xs font-bold uppercase tracking-[0.2em] text-secondary mb-4 block">Last Updated: October 2024</span>
+<h1 class="text-5xl md:text-6xl font-extrabold tracking-tighter text-on-surface leading-[1.1] mb-8">Privacy Policy</h1>
+<p class="text-xl text-on-surface-variant font-light leading-relaxed">
+                    At Nordic Commerce, we honor the simplicity and integrity of Scandinavian design in everything we do—including how we handle your personal data. This policy outlines our commitment to transparency and your privacy rights.
+                </p>
+</header>
+<div class="space-y-32">
+<div class="group" id="information-collection">
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="md:w-1/3">
+<h2 class="text-2xl font-bold tracking-tight text-on-surface sticky top-32">01 / Information Collection</h2>
+</div>
+<div class="md:w-2/3 space-y-6 text-on-surface-variant leading-loose">
+<p>We collect information that helps us provide a curated shopping experience. This includes direct identifiers like your name, email address, and shipping details provided during checkout or account creation.</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+<div class="p-6 bg-surface-container-low rounded-xl">
+<span class="material-symbols-outlined text-secondary mb-3">person</span>
+<h3 class="font-bold text-on-surface mb-2">Personal Identity</h3>
+<p class="text-sm">Name, contact info, and biographical details you share.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl">
+<span class="material-symbols-outlined text-secondary mb-3">payments</span>
+<h3 class="font-bold text-on-surface mb-2">Transaction Data</h3>
+<p class="text-sm">Order history and secure payment tokens (never raw card data).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="group" id="use-of-data">
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="md:w-1/3">
+<h2 class="text-2xl font-bold tracking-tight text-on-surface sticky top-32">02 / Use of Data</h2>
+</div>
+<div class="md:w-2/3 space-y-6 text-on-surface-variant leading-loose">
+<p>Your data isn't just numbers to us; it's the blueprint for a better service. We use your information to fulfill orders, personalize your editorial feed, and maintain the security of our atelier platform.</p>
+<ul class="space-y-4 list-none">
+<li class="flex gap-4">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mt-3 flex-shrink-0"></span>
+<span>Processing and delivering your handcrafted selections.</span>
+</li>
+<li class="flex gap-4">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mt-3 flex-shrink-0"></span>
+<span>Sending curated newsletters and story updates (only with your consent).</span>
+</li>
+<li class="flex gap-4">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mt-3 flex-shrink-0"></span>
+<span>Improving site performance through anonymous behavioral analysis.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="cookies">
+<div class="relative overflow-hidden rounded-3xl bg-primary-container p-8 md:p-16 text-on-secondary-container">
+<div class="relative z-10 max-w-2xl">
+<h2 class="text-3xl font-bold tracking-tight mb-6">03 / Cookies &amp; Tracking</h2>
+<p class="text-lg opacity-80 mb-8 leading-relaxed">
+                                We use essential and functional cookies to ensure our site feels as smooth as a polished oak surface. These small files help us remember your preferences and keep your shopping bag intact across sessions.
+                            </p>
+<button class="px-8 py-3 bg-secondary text-white font-bold rounded-lg hover:opacity-90 transition-all active:scale-95">Manage Cookie Settings</button>
+</div>
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
+<div class="absolute -left-10 -bottom-10 w-64 h-64 bg-secondary-container/20 rounded-full blur-2xl"></div>
+</div>
+</div>
+<div class="group" id="third-party-sharing">
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="md:w-1/3">
+<h2 class="text-2xl font-bold tracking-tight text-on-surface sticky top-32">04 / Third-Party Sharing</h2>
+</div>
+<div class="md:w-2/3 space-y-6 text-on-surface-variant leading-loose">
+<p>We believe in quality over quantity. We only share data with trusted partners who are essential to our operations, such as logistics providers and secure payment gateways.</p>
+<div class="border-l-2 border-surface-container-high pl-8 py-2 italic font-light text-xl text-on-surface">
+                                "We never sell your personal data to third-party advertisers. Our commerce is built on trust, not data brokering."
+                            </div>
+</div>
+</div>
+</div>
+<div class="group" id="data-rights">
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="md:w-1/3">
+<h2 class="text-2xl font-bold tracking-tight text-on-surface sticky top-32">05 / Your Data Rights</h2>
+</div>
+<div class="md:w-2/3 space-y-6 text-on-surface-variant leading-loose">
+<p>You are the owner of your digital identity. Under global privacy standards, you have the right to access, correct, or delete any personal information we hold about you.</p>
+<div class="flex flex-wrap gap-4 mt-8">
+<a class="inline-flex items-center gap-2 text-secondary font-bold hover:underline" href="#">
+                                    Request Data Export <span class="material-symbols-outlined text-sm">arrow_outward</span>
+</a>
+<span class="text-outline-variant">|</span>
+<a class="inline-flex items-center gap-2 text-secondary font-bold hover:underline" href="#">
+                                    Account Deletion <span class="material-symbols-outlined text-sm">delete</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-32 p-12 bg-surface-container-lowest rounded-3xl border border-outline-variant/20 text-center">
+<h3 class="text-2xl font-bold text-on-surface mb-4">Questions about your privacy?</h3>
+<p class="text-on-surface-variant mb-8 max-w-lg mx-auto">Our dedicated privacy team is ready to assist you with any inquiries regarding our data practices.</p>
+<a class="inline-block px-10 py-4 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all" href="mailto:privacy@nordiccommerce.com">Contact Support</a>
+</div>
+</section>
+</main>
+<footer class="w-full mt-auto py-12 px-6 border-t border-slate-300 dark:border-slate-800 bg-slate-200 dark:bg-slate-900 font-manrope text-xs tracking-wide">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:flex lg:justify-between items-start max-w-screen-2xl mx-auto gap-8">
+<div class="flex flex-col gap-4">
+<div class="text-md font-black text-slate-900 dark:text-white uppercase">Nordic Commerce</div>
+<p class="max-w-xs text-slate-500 leading-relaxed">Curating functional elegance for the modern home. Designed in Stockholm, enjoyed globally.</p>
+</div>
+<div class="flex flex-wrap gap-x-12 gap-y-6">
+<div class="flex flex-col gap-3">
+<span class="font-bold text-slate-900 dark:text-white uppercase tracking-widest">Resources</span>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:underline transition-all" href="#">Accessibility</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:underline transition-all" href="#">Cookie Settings</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-bold text-slate-900 dark:text-white uppercase tracking-widest">Company</span>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:underline transition-all" href="#">Sustainability</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:underline transition-all" href="#">Contact Support</a>
+</div>
+</div>
+<div class="lg:text-right flex flex-col gap-4">
+<div class="flex gap-4 lg:justify-end">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 hover:text-secondary cursor-pointer">language</span>
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 hover:text-secondary cursor-pointer">verified_user</span>
+</div>
+<p class="text-slate-500">© 2024 Nordic Commerce. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Tracking | Nordic Commerce</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "on-surface-variant": "#45464d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "background": "#f8f9ff",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed-dim": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#131b2e",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5eeff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "outline": "#76777d",
+              "inverse-primary": "#bec6e0",
+              "outline-variant": "#c6c6cd",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#ffddb8",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "secondary-container": "#316bf3",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#2a1700",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .map-gradient-overlay {
+            background: linear-gradient(180deg, rgba(248, 249, 255, 0.8) 0%, rgba(248, 249, 255, 0) 20%, rgba(248, 249, 255, 0) 80%, rgba(248, 249, 255, 1) 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-none">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white font-headline">Nordic Commerce</div>
+<div class="hidden md:flex items-center space-x-8 font-['Manrope'] tracking-tight">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Editorial</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface">shopping_bag</span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-blue-700 dark:text-blue-400" style="font-variation-settings: 'FILL' 1;">person</span>
+</button>
+</div>
+</nav>
+<main class="pt-24 pb-32 px-4 md:px-8 max-w-7xl mx-auto">
+<!-- Header Section -->
+<header class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-secondary font-semibold mb-2 block">Order #NC-882910</span>
+<h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface">Track Shipment</h1>
+</div>
+<div class="bg-surface-container-low px-6 py-4 rounded-xl flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<p class="font-label text-xs text-on-surface-variant uppercase tracking-wider">Estimated Arrival</p>
+<p class="font-headline text-xl font-bold">Today, 2:45 PM – 4:15 PM</p>
+</div>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Map View (Bento Large) -->
+<div class="lg:col-span-8 relative h-[500px] md:h-[600px] rounded-full overflow-hidden bg-surface-container-high group">
+<img alt="Clean minimalist map view of Copenhagen streets with a subtle blue navigation line showing a delivery route and a van icon" class="w-full h-full object-cover grayscale opacity-80 group-hover:scale-105 transition-transform duration-700" data-location="Copenhagen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrly79q-GAuKxq5c6iK8Cw4WeaNzPqAiHi07f4zHgNRSAeJu45-JsfcNaKWGFXmnh3pZQvh2rUNLoIqZv_EIS6uze24RwTLqATaf_NjhVIoPikrUChAZXFM5ZrGBQff7Ftnz8lOhUzqgin-rtQhZHq0lMarFzRiFlweetSaTDONT15n5dW_33OnnSkUdVNVsWY8BSQEPJcxtavMJYeTsM_22CPpa51UprCczJKydKxk3qWaQjvKy8CeQ4fX5ig-sSJxJvwG1PEzgUf"/>
+<div class="absolute inset-0 map-gradient-overlay pointer-events-none"></div>
+<!-- Floating Map Overlays -->
+<div class="absolute top-8 left-8 bg-surface-container-lowest/90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/20">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="font-label text-sm font-medium">Driver is 2.4 miles away</span>
+</div>
+</div>
+<!-- Map Marker Visuals -->
+<div class="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2">
+<div class="relative">
+<div class="absolute -inset-4 bg-secondary/20 rounded-full animate-ping"></div>
+<div class="relative bg-secondary text-white p-3 rounded-full shadow-xl">
+<span class="material-symbols-outlined block">local_shipping</span>
+</div>
+</div>
+</div>
+<div class="absolute bottom-1/4 right-1/4">
+<div class="bg-primary text-white p-3 rounded-full shadow-xl ring-4 ring-white/50">
+<span class="material-symbols-outlined block">home</span>
+</div>
+</div>
+</div>
+<!-- Tracking Details Sidebar -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Status Milestones -->
+<section class="bg-surface-container-lowest p-8 rounded-full border border-outline-variant/20 shadow-sm">
+<h3 class="font-headline text-lg font-bold mb-8">Delivery Progress</h3>
+<div class="space-y-0 relative">
+<!-- Vertical Line -->
+<div class="absolute left-[11px] top-2 bottom-2 w-[2px] bg-surface-container"></div>
+<div class="absolute left-[11px] top-2 h-[66%] w-[2px] bg-secondary"></div>
+<!-- Milestone: Dispatched -->
+<div class="relative flex gap-6 pb-10">
+<div class="z-10 w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<p class="font-label text-sm font-bold text-on-surface">Order Dispatched</p>
+<p class="font-body text-xs text-on-surface-variant">Nov 24, 08:30 AM</p>
+</div>
+</div>
+<!-- Milestone: Transit -->
+<div class="relative flex gap-6 pb-10">
+<div class="z-10 w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<p class="font-label text-sm font-bold text-on-surface">At Local Facility</p>
+<p class="font-body text-xs text-on-surface-variant">Nov 24, 11:45 AM</p>
+</div>
+</div>
+<!-- Milestone: Out for Delivery -->
+<div class="relative flex gap-6 pb-10">
+<div class="z-10 w-6 h-6 rounded-full bg-secondary ring-4 ring-secondary/20 flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-white"></div>
+</div>
+<div>
+<p class="font-label text-sm font-bold text-secondary">Out for Delivery</p>
+<p class="font-body text-xs text-on-surface-variant">In transit — Estimated by 4:15 PM</p>
+</div>
+</div>
+<!-- Milestone: Delivered -->
+<div class="relative flex gap-6">
+<div class="z-10 w-6 h-6 rounded-full bg-surface-container flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+</div>
+<div>
+<p class="font-label text-sm font-bold text-outline">Delivered</p>
+<p class="font-body text-xs text-on-surface-variant">Expected soon</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Courier Details -->
+<section class="bg-surface-container-low p-8 rounded-full">
+<h3 class="font-headline text-lg font-bold mb-6">Courier Details</h3>
+<div class="flex items-center gap-4 mb-6">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="Professional portrait of a delivery courier smiling in a blue uniform" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw9ZRgB_tD8Vw3jg4dgObsMVNfwAiWYaEyTAemNYSYB04oWlm0NGelnDTSoUj3bLQZ6nsGSiN3wi15TO85R4Mh-tif7G24xxiY9VXxX5v0HbgiJCa72Fba6EuTbvnp1crZ_Y5UWhD02zt5xIhueoegfcCR7Me9crAWkzCWIgMD92tIdyDdYK04cDni0EZYhZ-CnceCCJc12znDi02cOO6ZE0wXowFmB69gRmoWHGUkgHJl50vJaS9EMT3MlB9eY4ZH9GZm-BkCzyVK"/>
+</div>
+<div>
+<p class="font-headline font-bold text-on-surface">Mads Sorensen</p>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label text-xs font-semibold">4.98 Rating</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface py-3 px-4 rounded-xl font-label text-sm font-semibold hover:bg-white transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+                            Message
+                        </button>
+<button class="flex items-center justify-center gap-2 bg-primary text-white py-3 px-4 rounded-xl font-label text-sm font-semibold hover:opacity-90 transition-all shadow-md">
+<span class="material-symbols-outlined text-lg">call</span>
+                            Call
+                        </button>
+</div>
+</section>
+<!-- Delivery Address Card -->
+<section class="bg-surface-container-highest/30 p-8 rounded-full border border-surface-container">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Shipping Address</h3>
+<span class="material-symbols-outlined text-on-surface-variant">home_pin</span>
+</div>
+<p class="font-headline font-bold text-on-surface">The Editorial Atelier</p>
+<p class="font-body text-sm text-on-surface-variant leading-relaxed">
+                        Østerbrogade 124, 2nd Floor<br/>
+                        2100 Copenhagen, Denmark
+                    </p>
+</section>
+</div>
+</div>
+<!-- Trust & Security Banner -->
+<section class="mt-16 flex flex-col md:flex-row items-center justify-center gap-12 py-10 border-t border-surface-container">
+<div class="flex items-center gap-3 grayscale opacity-60">
+<span class="material-symbols-outlined text-2xl">verified_user</span>
+<span class="font-label text-xs font-bold uppercase tracking-widest">Insured Delivery</span>
+</div>
+<div class="flex items-center gap-3 grayscale opacity-60">
+<span class="material-symbols-outlined text-2xl">package_2</span>
+<span class="font-label text-xs font-bold uppercase tracking-widest">Carbon Neutral</span>
+</div>
+<div class="flex items-center gap-3 grayscale opacity-60">
+<span class="material-symbols-outlined text-2xl">support_agent</span>
+<span class="font-label text-xs font-bold uppercase tracking-widest">24/7 Concierge</span>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full mt-20 bg-slate-100 dark:bg-slate-900 w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center border-t border-slate-200 dark:border-slate-800">
+<div class="font-['Manrope'] font-bold text-lg text-slate-900 dark:text-white mb-6 md:mb-0">Nordic Commerce</div>
+<div class="flex flex-wrap justify-center gap-8 mb-8 md:mb-0">
+<a class="font-['Inter'] text-sm tracking-normal text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-all" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-sm tracking-normal text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-all" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-sm tracking-normal text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-all" href="#">Sustainability</a>
+<a class="font-['Inter'] text-sm tracking-normal text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-all" href="#">Contact</a>
+</div>
+<div class="font-['Inter'] text-sm tracking-normal text-slate-500 dark:text-slate-400">
+            © 2024 Nordic Commerce. An Editorial Atelier.
+        </div>
+</footer>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 md:hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(11,28,48,0.04)]">
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Collections</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Editorial</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-3 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_outline</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Account</span>
+</div>
+</nav>
+</body></html>

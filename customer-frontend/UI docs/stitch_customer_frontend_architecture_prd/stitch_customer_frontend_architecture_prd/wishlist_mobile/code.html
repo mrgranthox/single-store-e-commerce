@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wishlist | NordicAtelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-error": "#ffffff",
+              "background": "#f8f9ff",
+              "secondary-fixed": "#dbe1ff",
+              "outline-variant": "#c6c6cd",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-secondary": "#ffffff",
+              "on-surface": "#0b1c30",
+              "surface-dim": "#cbdbf5",
+              "on-tertiary-container": "#b87500",
+              "on-primary-container": "#7c839b",
+              "error": "#ba1a1a",
+              "surface-container-low": "#eff4ff",
+              "tertiary": "#000000",
+              "on-tertiary": "#ffffff",
+              "inverse-primary": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "outline": "#76777d",
+              "surface-bright": "#f8f9ff",
+              "on-background": "#0b1c30",
+              "surface": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-fixed-dim": "#bec6e0",
+              "primary-container": "#131b2e",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "surface-container-highest": "#d3e4fe",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed": "#00174b",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#2a1700",
+              "primary": "#000000",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-surface-variant": "#45464d",
+              "surface-tint": "#565e74",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container": "#e5eeff",
+              "secondary": "#0051d5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-secondary-container": "#fefcff",
+              "on-primary-fixed": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background antialiased selection:bg-secondary-fixed">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface hover:opacity-80 transition-opacity duration-300">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-headline font-bold tracking-tighter text-slate-900 dark:text-slate-50">NordicAtelier</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-opacity duration-300" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-opacity duration-300" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-opacity duration-300" href="#">Journal</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-8 max-w-5xl mx-auto">
+<!-- Wishlist Header Section -->
+<section class="mb-10 flex items-end justify-between">
+<div class="max-w-md">
+<span class="font-label text-xs font-medium tracking-widest uppercase text-secondary mb-2 block">Curated Space</span>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface leading-tight">Spring Favorites</h2>
+<p class="text-on-surface-variant mt-2 text-sm">6 Items saved for your next interior refresh.</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]" data-icon="share">share</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors duration-300">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</section>
+<!-- Wishlist Grid -->
+<div class="grid grid-cols-2 gap-4 md:gap-8">
+<!-- Wishlist Item 1 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-on-surface/[0.03]">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img alt="Minimalist Chair" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Modern sculptural lounge chair in light oak wood against a clean white gallery wall with soft afternoon shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF2vt0T3d7cvioPpurWizHTr8tqpPO31xU93jdtFixxS1vFMyl847-3szj1LH9DTyHxgNI_kKoLntgtInEQKg_hay4N4gjZl_lptA5dcKVdzaYuXib-hwzfvToo9WfQBYISA7wbucrr0WN16V3WVytTJkXpdAQhkDyCKT_-aSzwE-U4O7KbcQoUhKaTbQlPRuC5dxkYlagvYRNrxQj73BVxlQWy4heCSxYh_9GsaIQfnmMPWNjDo0rDlESGbKEfu23Kz5t3srek_F0"/>
+<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-tighter">New</span>
+</div>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface leading-snug truncate">Aalto Lounge Shell</h3>
+<p class="font-body font-semibold text-secondary text-sm">$840</p>
+</div>
+<p class="text-on-surface-variant text-[11px] mb-4">Natural Oak Finish</p>
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-lg text-xs font-semibold transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Add to Bag
+                    </button>
+</div>
+</article>
+<!-- Wishlist Item 2 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-on-surface/[0.03]">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img alt="Glass Vase" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Hand-blown smoked glass vase with organic ripples reflecting soft studio lighting on a dark stone surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRaIjst2-NAOj2YjAiMzbHJMpc9EUmxdb5PGZ-pe8qM1fRI_FavTDNkAXgYbjAWkVOi-c_IdklikIL29I-DoWWzBATjLzX2VdYOQKJc5Zo6TpVb9qWerPC2JaIiDZtbaIS0ZaSj6cTkZlSDhFv49pBIOuvhiccRK5iHgVZX7u6EAnbHAVG7IYgUAHenSG1RB4mGB3C2TojRv2c9QkjShEziL6kCSgKJrJCkJ4VYAKTSbOqo47aVkn11FIvsCjOrGAs2U6g0FmBokCb"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface leading-snug truncate">Smoked Glass Vessel</h3>
+<p class="font-body font-semibold text-secondary text-sm">$125</p>
+</div>
+<p class="text-on-surface-variant text-[11px] mb-4">Mouth-blown Glass</p>
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-lg text-xs font-semibold transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Add to Bag
+                    </button>
+</div>
+</article>
+<!-- Wishlist Item 3 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-on-surface/[0.03]">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img alt="Linen Sofa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close up texture of a cream-colored high-end linen sofa cushion with professional tailored stitching and soft bokeh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp1A9KVecS6CWinK4SHDRsKnVK2gC9OPTFhOKE1e2W53sQXyVJqChspHEWM18Wh9gQ8ZlwnqJcR5iTzsr4yvOiXMyzsvQg8ECfjroa-GO5qfH_82e00KVmUTKklCr0GduevXZ5RxxfCQW2DjzSLjQ7JrqEgp85ikCIVILmasjx67N1cSy_M9ufBey86MuqMDrlfH6Eh-I7Du1Rome1gTIiFbu5Wzm-7HMKnUAln343dYrJg6kWDJEKReC1ALrRHLubemOtjT7CbiSJ"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface leading-snug truncate">Linen Blend Cushion</h3>
+<p class="font-body font-semibold text-secondary text-sm">$85</p>
+</div>
+<p class="text-on-surface-variant text-[11px] mb-4">Ivory Weave</p>
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-lg text-xs font-semibold transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Add to Bag
+                    </button>
+</div>
+</article>
+<!-- Wishlist Item 4 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-on-surface/[0.03]">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img alt="Table Lamp" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Brushed brass adjustable table lamp with a minimalist silhouette on a walnut desk at twilight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkuGs9G5jwU93EQaHbE2URDmUg_j7oaz8nS_D_JsOfbGIBUwQyJnF0O45mlN0mNRdFO32K8A1qaB9131seoX2IEvMqhMPmCND8Qe_WBEufUlz-jw7a8EqCKgexst92_0jnf4Y4cx8xTaoQKiMIMqllbzEesGHZj-IXsqc4aLefCHL75BXLFsxFDjbv2FjIcIk27EXOHTbtZpyXcpFf_iZz8wRLCf0v4jUJiHJYtqj52FVw9bf2dUMBYIpT3VkZxoXldaas1i1aSynE"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface leading-snug truncate">Linear Brass Lamp</h3>
+<p class="font-body font-semibold text-secondary text-sm">$320</p>
+</div>
+<p class="text-on-surface-variant text-[11px] mb-4">Brushed Brass Finish</p>
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-lg text-xs font-semibold transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Add to Bag
+                    </button>
+</div>
+</article>
+<!-- Wishlist Item 5 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-on-surface/[0.03]">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img alt="Coffee Table Book" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A stack of premium hardcover architecture books with textured paper covers and minimalist typography on a light gray surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqO54PG_CwdaeOEU-EGnQpN-O9bRniBnvzvRq25MBN8974S2qTe7Lsa_2HjG3S8ewcLxdDIa2LX3Ynmrhs85AfdrQ4e93hZatbyiFy8ykXR1bjlNaq0w883tUqeVfcrfbLzTQwEijlO2Ovu7BCqX_-yTSaPfrPozXjvNchWslENLq9oFTrqVhm-Rj7BkYM1k7gQ0X9OiJfXtxiIeHVHoT1qimGXifYBJSiAm8SKnIz1S659K6bafL-YrmOjOi92wzRjEnfGGMxf47-"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface leading-snug truncate">Nordic Spaces Vol. 1</h3>
+<p class="font-body font-semibold text-secondary text-sm">$65</p>
+</div>
+<p class="text-on-surface-variant text-[11px] mb-4">Hardcover Edition</p>
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-lg text-xs font-semibold transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Add to Bag
+                    </button>
+</div>
+</article>
+<!-- Wishlist Item 6 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-on-surface/[0.03]">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low relative">
+<img alt="Scented Candle" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Matte black ceramic candle jar with a wooden lid on a minimalist shelf with a small green plant leaf in frame" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdOrIG_NOud-50zJHoPGVqYEOrU-nH4F6wIN4Vg98eWlKihQ69kKNwpMDwhvPbpNll6L60S9yhVfYf-gjk5Dj_QTWcZiUDjKExNsYsWPggJjLx74eaTctgTIEHrylgmBKfchi_Q5MLBGbjWqg92ZODmQ9OGOKySx2_EIQzVKZqffH7MxjF2MFtKwTTwhhmRPJuj9yEUYzbwqVVXXZKgv6cW8y83X_vhu6pE1Xtlfotz2kF54-zzjaNYSFsG_qqAVWZ4QMiiEU-ZPrX"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface leading-snug truncate">Dusk Ceramic Candle</h3>
+<p class="font-body font-semibold text-secondary text-sm">$48</p>
+</div>
+<p class="text-on-surface-variant text-[11px] mb-4">Sandalwood &amp; Pine</p>
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-lg text-xs font-semibold transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+                        Add to Bag
+                    </button>
+</div>
+</article>
+</div>
+<!-- Empty State Hint -->
+<div class="mt-16 text-center border-t border-outline-variant/20 pt-12">
+<h4 class="font-headline font-bold text-on-surface mb-2">Want more inspiration?</h4>
+<p class="text-on-surface-variant text-sm mb-6 max-w-xs mx-auto">Discover our latest collections and find more pieces to love.</p>
+<button class="px-8 py-3 bg-surface-container-low text-on-surface rounded-full text-sm font-bold tracking-wide transition-all hover:bg-surface-container-high active:scale-95">
+                Explore Collections
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<footer class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg z-50 rounded-t-2xl shadow-[0_-4px_20px_rgba(11,28,48,0.06)] md:hidden">
+<button class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 tap-highlight-transparent active:scale-95 transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-4 py-1 tap-highlight-transparent active:scale-95 transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Wishlist</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 tap-highlight-transparent active:scale-95 transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="receipt_long">receipt_long</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Orders</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 tap-highlight-transparent active:scale-95 transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Profile</span>
+</button>
+</footer>
+</body></html>

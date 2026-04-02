@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#dbe1ff",
+              "secondary": "#0051d5",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "on-tertiary-container": "#b87500",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#eaf1ff",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "on-surface": "#0b1c30",
+              "on-primary-container": "#7c839b",
+              "surface-container-low": "#eff4ff",
+              "on-background": "#0b1c30",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "tertiary-fixed": "#ffddb8",
+              "surface-tint": "#565e74",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-variant": "#d3e4fe",
+              "on-error": "#ffffff",
+              "surface-bright": "#f8f9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-container-high": "#dce9ff",
+              "on-surface-variant": "#45464d",
+              "on-secondary-fixed": "#00174b",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "outline-variant": "#c6c6cd",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "tertiary": "#000000",
+              "background": "#f8f9ff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+            color: #0b1c30;
+        }
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+        .editorial-shadow {
+            box-shadow: 0 20px 40px -5px rgba(11, 28, 48, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
+<div class="flex justify-between items-center h-20 px-12 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-slate-50">NORDIC ATELIER</div>
+<div class="hidden md:flex space-x-10 items-center font-manrope tracking-tight font-light">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Collections</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Objects</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Editorial</a>
+</div>
+<div class="flex items-center space-x-6">
+<div class="hidden lg:block relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="bg-surface-container-high border-none rounded-lg pl-10 pr-4 py-2 text-sm w-64 focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Search curated pieces..." type="text"/>
+</div>
+<button class="hover:opacity-70 transition-opacity duration-300 scale-100 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-900">shopping_bag</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 scale-100 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-900">person</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Content Canvas -->
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-screen-xl mx-auto">
+<!-- Hero Header Section -->
+<header class="mb-20">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+<div class="max-w-2xl">
+<span class="text-secondary font-semibold tracking-widest text-[0.7rem] uppercase mb-4 block">Legal Framework</span>
+<h1 class="text-6xl md:text-7xl font-extrabold tracking-tighter text-on-surface leading-tight">
+                        Terms <br/>&amp; Conditions
+                    </h1>
+</div>
+<div class="pb-2">
+<p class="text-outline-variant font-medium text-sm">Last Updated: October 24, 2024</p>
+</div>
+</div>
+</header>
+<!-- Asymmetric Layout: Sticky Nav + Content -->
+<div class="flex flex-col lg:flex-row gap-16">
+<!-- Sidebar Navigation (Sticky) -->
+<aside class="lg:w-1/4">
+<div class="sticky top-32 space-y-4 border-l border-surface-container-high pl-6">
+<nav class="flex flex-col gap-3">
+<a class="text-secondary font-semibold text-sm hover:translate-x-1 transition-transform" href="#introduction">01 Introduction</a>
+<a class="text-outline hover:text-on-surface text-sm transition-colors" href="#intellectual-property">02 Intellectual Property</a>
+<a class="text-outline hover:text-on-surface text-sm transition-colors" href="#user-accounts">03 User Accounts</a>
+<a class="text-outline hover:text-on-surface text-sm transition-colors" href="#purchases">04 Purchases &amp; Payment</a>
+<a class="text-outline hover:text-on-surface text-sm transition-colors" href="#shipping">05 Shipping &amp; Returns</a>
+<a class="text-outline hover:text-on-surface text-sm transition-colors" href="#liability">06 Limitation of Liability</a>
+<a class="text-outline hover:text-on-surface text-sm transition-colors" href="#governing-law">07 Governing Law</a>
+</nav>
+<div class="mt-12 pt-8 border-t border-surface-container-high">
+<p class="text-xs text-outline-variant leading-relaxed">
+                            Need clarification? Our legal team is available for inquiries regarding these terms.
+                        </p>
+<a class="text-secondary text-xs font-bold mt-2 block hover:underline" href="mailto:legal@nordicatelier.com">legal@nordicatelier.com</a>
+</div>
+</div>
+</aside>
+<!-- Document Content -->
+<article class="lg:w-3/4 space-y-20">
+<!-- Section 01 -->
+<section class="scroll-mt-32" id="introduction">
+<div class="bg-surface-container-low p-10 rounded-xl editorial-shadow">
+<h2 class="text-3xl font-bold tracking-tight mb-6 text-on-surface">01 Introduction</h2>
+<div class="space-y-4 text-on-surface-variant leading-loose font-body">
+<p>
+                                Welcome to Nordic Atelier. These Terms and Conditions govern your use of our website and the purchase of our curated furniture and object collections. By accessing this website, we assume you accept these terms and conditions in full. 
+                            </p>
+<p>
+                                The term "Nordic Atelier", "us", or "we" refers to the owner of the website. The term "you" refers to the user or viewer of our website. Your use of this website is subject to the following terms of use and our Privacy Policy.
+                            </p>
+</div>
+</div>
+</section>
+<!-- Section 02 -->
+<section class="scroll-mt-32" id="intellectual-property">
+<h2 class="text-3xl font-bold tracking-tight mb-8 text-on-surface">02 Intellectual Property</h2>
+<div class="grid md:grid-cols-2 gap-12">
+<div class="space-y-4 text-on-surface-variant leading-loose font-body">
+<p>
+                                Unless otherwise stated, Nordic Atelier and/or its licensors own the intellectual property rights for all material on Nordic Atelier. All intellectual property rights are reserved.
+                            </p>
+<p>
+                                You may view and/or print pages from our website for your own personal use subject to restrictions set in these terms and conditions.
+                            </p>
+</div>
+<div class="bg-surface-container-highest p-8 rounded-lg">
+<h3 class="font-bold text-sm uppercase tracking-widest mb-4">Prohibited Actions:</h3>
+<ul class="space-y-3 text-sm text-on-surface-variant">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-base">close</span>
+                                    Republishing material from this site.
+                                </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-base">close</span>
+                                    Selling, renting or sub-licensing material.
+                                </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-base">close</span>
+                                    Reproducing or duplicating site content.
+                                </li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Section 03 -->
+<section class="scroll-mt-32" id="user-accounts">
+<h2 class="text-3xl font-bold tracking-tight mb-8 text-on-surface">03 User Accounts</h2>
+<div class="bg-surface-container-lowest border border-surface-container-high p-10 rounded-xl">
+<p class="text-on-surface-variant leading-loose font-body mb-6">
+                            When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.
+                        </p>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="p-6 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-on-primary-fixed-variant mb-4">security</span>
+<p class="text-xs font-bold uppercase tracking-wider mb-2">Confidentiality</p>
+<p class="text-xs text-on-surface-variant">You are responsible for safeguarding the password that you use to access the service.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-on-primary-fixed-variant mb-4">person_alert</span>
+<p class="text-xs font-bold uppercase tracking-wider mb-2">Responsibility</p>
+<p class="text-xs text-on-surface-variant">You agree not to disclose your password to any third party.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-on-primary-fixed-variant mb-4">notifications_active</span>
+<p class="text-xs font-bold uppercase tracking-wider mb-2">Notification</p>
+<p class="text-xs text-on-surface-variant">You must notify us immediately upon becoming aware of any breach of security.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Break / Image Section -->
+<section class="h-[400px] overflow-hidden rounded-2xl relative">
+<img alt="Minimalist design interior" class="w-full h-full object-cover" data-alt="Minimalist living room with a single designer chair and architectural shadows on soft blue walls during afternoon sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO4V5T3Ji8OBdL_wBRg0Ty82P0SHtc_H4dAhIFATMiuOrXxOSavdRJeslIFrnhmOOvQQw-JefjpJruJgg3Ti8r5Q26w3xWy58mY3cI-xxO69bUTCAzrLubJWYzInNA7iL0KNd9904PAC03t4WPTL-iXBrMaG4Ko3I6H5LUTLpksKFGUrYXRHsamUXNkGzVMd5SCr2x7Bc7bmp0czxcg0ojY36O8HByX4KkDly77kk_us7_nE_dsvOYJuOZt2i-S7rkG7YabQMdPnCa"/>
+<div class="absolute inset-0 bg-primary-container/20 flex items-center justify-center">
+<div class="text-white text-center px-12">
+<p class="text-display-lg font-headline font-extrabold tracking-tighter text-4xl">Design Integrity.</p>
+<p class="text-body-sm opacity-80 mt-2">Legal clarity meets aesthetic precision.</p>
+</div>
+</div>
+</section>
+<!-- Section 04 & 05 -->
+<div class="grid md:grid-cols-2 gap-16">
+<section class="scroll-mt-32" id="purchases">
+<h2 class="text-2xl font-bold tracking-tight mb-6 text-on-surface">04 Purchases &amp; Payment</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4">
+                            If you wish to purchase any product, you may be asked to supply certain information relevant to your Purchase including, without limitation, your credit card number, the expiration date of your credit card, and your billing address.
+                        </p>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                            We reserve the right to refuse or cancel your order if fraud or an unauthorized or illegal transaction is suspected.
+                        </p>
+</section>
+<section class="scroll-mt-32" id="shipping">
+<h2 class="text-2xl font-bold tracking-tight mb-6 text-on-surface">05 Shipping &amp; Returns</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4">
+                            Shipping times may vary depending on the destination and the nature of the artisanal pieces ordered. Standard shipping for in-stock items is 7-14 business days.
+                        </p>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                            Returns are accepted within 30 days of delivery, provided items are in their original condition and packaging.
+                        </p>
+</section>
+</div>
+<!-- Section 06 -->
+<section class="scroll-mt-32" id="liability">
+<h2 class="text-3xl font-bold tracking-tight mb-8 text-on-surface">06 Limitation of Liability</h2>
+<div class="border-t-2 border-primary pt-8">
+<p class="text-on-surface text-lg font-medium leading-relaxed italic">
+                            "In no event shall Nordic Atelier, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+                        </p>
+</div>
+</section>
+<!-- Section 07 -->
+<section class="scroll-mt-32 pb-20" id="governing-law">
+<h2 class="text-3xl font-bold tracking-tight mb-6 text-on-surface">07 Governing Law</h2>
+<p class="text-on-surface-variant leading-loose font-body">
+                        These Terms shall be governed and construed in accordance with the laws of Sweden, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. 
+                    </p>
+<div class="mt-12 p-8 border border-outline-variant/30 rounded-lg flex items-center justify-between">
+<div>
+<p class="font-bold text-on-surface">Agreement of Terms</p>
+<p class="text-sm text-outline">By continuing to browse, you signify your acceptance of these terms.</p>
+</div>
+<button class="bg-primary text-on-primary px-8 py-3 rounded hover:opacity-90 transition-opacity font-bold text-sm tracking-wide">
+                            DOWNLOAD AS PDF
+                        </button>
+</div>
+</section>
+</article>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-100 dark:bg-slate-950 w-full py-20 px-12">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-screen-2xl mx-auto font-inter text-sm tracking-wide">
+<div class="col-span-1 md:col-span-1">
+<div class="text-xl font-black text-slate-900 dark:text-slate-100 mb-6">NORDIC ATELIER</div>
+<p class="text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
+                    Curating timeless Scandinavian design for the modern living space. Focus on quality, sustainability, and form.
+                </p>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-slate-50 mb-6 uppercase tracking-tighter">Collections</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Furniture</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Lighting</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Textiles</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Accessories</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-slate-50 mb-6 uppercase tracking-tighter">Company</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Sustainability</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Shipping &amp; Returns</a></li>
+<li><a class="text-blue-700 dark:text-blue-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Privacy Policy</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Our Story</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-slate-50 mb-6 uppercase tracking-tighter">Newsletter</h4>
+<p class="text-slate-500 dark:text-slate-400 mb-6">Receive curated editorial content and collection previews.</p>
+<div class="flex">
+<input class="bg-surface-container-high border-none w-full p-3 text-sm focus:ring-1 focus:ring-secondary" placeholder="email@example.com" type="email"/>
+<button class="bg-primary text-on-primary px-4 transition-all active:scale-95">
+<span class="material-symbols-outlined">east</span>
+</button>
+</div>
+</div>
+</div>
+<div class="max-w-screen-2xl mx-auto mt-20 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-slate-400 text-xs">© 2024 Nordic Atelier. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+</div>
+</div>
+</footer>
+</body></html>

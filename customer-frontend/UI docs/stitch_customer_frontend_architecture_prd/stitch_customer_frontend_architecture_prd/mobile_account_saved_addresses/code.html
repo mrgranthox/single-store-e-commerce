@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NORDIC | Saved Addresses</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50">
+<div class="flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-manrope font-bold tracking-tight text-xl font-black tracking-tighter text-slate-900 dark:text-white">NORDIC</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-2xl mx-auto">
+<!-- Header Section -->
+<section class="mb-10">
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+<span class="font-label text-xs font-semibold uppercase tracking-widest">Back to Account</span>
+</div>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface mb-2">Saved Addresses</h2>
+<p class="text-on-surface-variant font-light">Manage your shipping destinations and billing information for a faster checkout experience.</p>
+</section>
+<!-- Address List (Bento-style depth) -->
+<div class="space-y-6">
+<!-- Add New Address CTA -->
+<button class="w-full group relative flex items-center justify-center gap-3 p-8 rounded-xl border-2 border-dashed border-outline-variant hover:border-secondary hover:bg-surface-container-low transition-all duration-300">
+<span class="material-symbols-outlined text-secondary scale-125">add_location_alt</span>
+<span class="font-headline font-bold text-lg text-primary">Add New Address</span>
+</button>
+<!-- Default Address Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)] relative overflow-hidden">
+<div class="absolute top-0 right-0">
+<div class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-bl-xl">
+                        Default Shipping
+                    </div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-high p-3 rounded-lg">
+<span class="material-symbols-outlined text-secondary">home</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-xl text-primary">Apartment (Primary)</h3>
+<p class="text-on-surface-variant mt-1 leading-relaxed">
+                                Erik Jönsson<br/>
+                                Sveavägen 42, Apt 4B<br/>
+                                111 34 Stockholm, Sweden
+                            </p>
+</div>
+</div>
+<div class="flex items-center gap-4 mt-2 pt-4 border-t border-outline-variant/20">
+<button class="flex items-center gap-2 text-sm font-semibold text-secondary hover:underline">
+<span class="material-symbols-outlined text-lg">edit</span>
+                            Edit
+                        </button>
+<button class="flex items-center gap-2 text-sm font-semibold text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Remove
+                        </button>
+</div>
+</div>
+</div>
+<!-- Billing Address Card -->
+<div class="bg-surface-container-low rounded-xl p-6 relative">
+<div class="flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-high p-3 rounded-lg">
+<span class="material-symbols-outlined text-secondary">corporate_fare</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline font-bold text-xl text-primary">Nordic Studio</h3>
+<span class="text-[10px] bg-surface-variant px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Billing</span>
+</div>
+<p class="text-on-surface-variant mt-1 leading-relaxed">
+                                Erik Jönsson<br/>
+                                Hamngatan 15<br/>
+                                111 47 Stockholm, Sweden
+                            </p>
+</div>
+</div>
+<div class="flex items-center gap-4 mt-2 pt-4 border-t border-outline-variant/20">
+<button class="flex items-center gap-2 text-sm font-semibold text-secondary hover:underline">
+<span class="material-symbols-outlined text-lg">edit</span>
+                            Edit
+                        </button>
+<button class="flex items-center gap-2 text-sm font-semibold text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Remove
+                        </button>
+</div>
+</div>
+</div>
+<!-- Vacation Home Card -->
+<div class="bg-surface-container-low rounded-xl p-6 relative">
+<div class="flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-high p-3 rounded-lg">
+<span class="material-symbols-outlined text-secondary">cabin</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-xl text-primary">Summer Cabin</h3>
+<p class="text-on-surface-variant mt-1 leading-relaxed">
+                                Erik Jönsson<br/>
+                                Strandvägen 8<br/>
+                                621 57 Visby, Sweden
+                            </p>
+</div>
+</div>
+<div class="flex items-center gap-4 mt-2 pt-4 border-t border-outline-variant/20">
+<button class="flex items-center gap-2 text-sm font-semibold text-secondary hover:underline">
+<span class="material-symbols-outlined text-lg">edit</span>
+                            Edit
+                        </button>
+<button class="flex items-center gap-2 text-sm font-semibold text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Remove
+                        </button>
+<button class="ml-auto text-xs font-bold text-on-primary-container hover:text-primary transition-colors">
+                            Set as Default
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Indicator -->
+<section class="mt-12 p-6 rounded-xl bg-surface-dim/30 flex items-center gap-4">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">encrypted</span>
+<div class="flex flex-col">
+<span class="text-xs font-bold uppercase tracking-widest text-outline">Secure Storage</span>
+<p class="text-[10px] text-on-surface-variant">Your addresses are encrypted and stored according to Nordic privacy standards.</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md fixed bottom-0 w-full z-50 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/20 dark:border-slate-800/20">
+<div class="flex justify-around items-center h-20 w-full px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

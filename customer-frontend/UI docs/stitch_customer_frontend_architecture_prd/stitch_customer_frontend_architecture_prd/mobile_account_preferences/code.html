@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-secondary-container": "#fefcff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#b87500",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "secondary": "#0051d5",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-primary-container": "#7c839b",
+                        "on-surface": "#0b1c30",
+                        "primary": "#000000",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-container": "#131b2e",
+                        "outline": "#76777d",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-background": "#0b1c30",
+                        "surface-container-low": "#eff4ff",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-surface": "#213145",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-tint": "#565e74",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#316bf3",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#00174b",
+                        "on-surface-variant": "#45464d",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "tertiary-container": "#2a1700",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "tertiary": "#000000",
+                        "background": "#f8f9ff",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        
+        /* Custom Toggle Styling */
+        .toggle-checkbox:checked { right: 0; border-color: #0051d5; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #0051d5; }
+        .toggle-checkbox { right: 20px; transition: all 0.3s ease-in-out; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="font-manrope font-bold tracking-tight text-xl font-black tracking-tighter text-slate-900 dark:text-white">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-md mx-auto">
+<!-- Hero Title Section -->
+<div class="mb-10">
+<h1 class="text-display-lg text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">Preferences</h1>
+<p class="text-on-surface-variant body-md">Tailor your NORDIC experience to your specific lifestyle and language needs.</p>
+</div>
+<!-- Section: Localization -->
+<section class="mb-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="text-label-md font-semibold uppercase tracking-widest text-secondary">Localization</span>
+</div>
+<div class="space-y-4">
+<!-- Language Dropdown -->
+<div class="bg-surface-container-low p-5 rounded-xl">
+<label class="block text-label-md font-semibold text-on-surface mb-3">Display Language</label>
+<div class="relative">
+<select class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 appearance-none focus:ring-2 focus:ring-secondary text-on-surface font-medium">
+<option>English (United Kingdom)</option>
+<option>Svenska (Sweden)</option>
+<option>Norsk (Norway)</option>
+<option>Dansk (Denmark)</option>
+<option>Deutsch (Germany)</option>
+</select>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Currency Dropdown -->
+<div class="bg-surface-container-low p-5 rounded-xl">
+<label class="block text-label-md font-semibold text-on-surface mb-3">Store Currency</label>
+<div class="relative">
+<select class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 appearance-none focus:ring-2 focus:ring-secondary text-on-surface font-medium">
+<option>EUR (€) - Euro</option>
+<option>SEK (kr) - Swedish Krona</option>
+<option>NOK (kr) - Norwegian Krone</option>
+<option>GBP (£) - British Pound</option>
+<option>USD ($) - US Dollar</option>
+</select>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Communication -->
+<section class="mb-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="text-label-md font-semibold uppercase tracking-widest text-secondary">Communication</span>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<!-- Email Notifications -->
+<div class="flex items-center justify-between p-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="mail">mail</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Email Channel</p>
+<p class="text-xs text-on-surface-variant">Newsletters and order updates</p>
+</div>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none" id="toggle-email" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer" for="toggle-email"></label>
+</div>
+</div>
+<div class="mx-5 h-px bg-outline-variant/20"></div>
+<!-- SMS Notifications -->
+<div class="flex items-center justify-between p-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="sms">sms</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">SMS Channel</p>
+<p class="text-xs text-on-surface-variant">Instant delivery alerts</p>
+</div>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none" id="toggle-sms" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer" for="toggle-sms"></label>
+</div>
+</div>
+<div class="mx-5 h-px bg-outline-variant/20"></div>
+<!-- Push Notifications -->
+<div class="flex items-center justify-between p-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="notifications_active">notifications_active</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Push Notifications</p>
+<p class="text-xs text-on-surface-variant">App exclusive offers</p>
+</div>
+</div>
+<div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none" id="toggle-push" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer" for="toggle-push"></label>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Context Card -->
+<div class="relative rounded-xl overflow-hidden mb-12 aspect-[16/9] group">
+<img alt="Nordic Lifestyle" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Minimalist modern interior design with clean white surfaces, a single designer chair, and soft Nordic sunlight streaming through a large window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK3vx35ozCYR5wYTpFkHzokgcGT-kX4PifIuNvJ79cuZt0D5r5V_6IxBruDDWC00MIjMxRADuOjcLSWa1oDwS7Hp35D3EmC2bjvQ2uZS86NLalzczswb3wj-Vn48k6zcCrLMVcowP4txEvA4luW7f6lT1xpRqqdxg03yj2rWTQxr05n8CdCBZavXEanrVsPb_hCXzYxWAGJlFEG8gaRtisDOWL60sEHWAzg9-Irl1ENdQANob5sN3DEw9L6x1_k0_F8hI7iYLfKWr_"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/60 to-transparent flex items-end p-6">
+<div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm mb-2 inline-block">Pro Membership</span>
+<h3 class="text-white font-headline font-bold text-lg">Curated Just For You</h3>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary text-on-primary font-headline font-bold py-4 rounded-lg active:scale-95 transition-all duration-200 shadow-lg shadow-primary/10">
+            Save Preferences
+        </button>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] flex justify-around items-center h-20 w-full px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

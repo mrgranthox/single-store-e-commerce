@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50">
+<div class="flex justify-between items-center px-6 h-16 w-full">
+<button class="hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50" data-icon="menu">menu</span>
+</button>
+<h1 class="text-xl font-black tracking-tighter text-slate-900 dark:text-white font-manrope">NORDIC</h1>
+<button class="hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50" data-icon="search">search</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-6 max-w-md mx-auto">
+<!-- Editorial Header Section -->
+<section class="mb-12">
+<span class="font-label text-[10px] uppercase tracking-[0.2em] text-secondary font-bold mb-2 block">Curation</span>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface leading-none mb-4">Brand Directory</h2>
+<p class="text-on-surface-variant leading-relaxed text-sm font-medium">A curated index of the world's most visionary ateliers and design houses, organized for discovery.</p>
+</section>
+<!-- Featured Carousel (Asymmetric Layout) -->
+<section class="mb-16 -mx-6 pl-6">
+<div class="flex overflow-x-auto gap-6 hide-scrollbar pb-4">
+<div class="flex-none w-64 group">
+<div class="relative aspect-[4/5] bg-surface-container-low overflow-hidden rounded-xl">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="high-end minimalist leather sneaker displayed on a textured stone plinth with soft architectural shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYokDrlZP9wGVpEBblY_KCkTn8wVd9B6KYRkVF4QBB8EX50Efj3OOUwZxAAy8mOqqb78rEKDfsI5ho9Sgc6uAKZJopP2twGaz6l14wJwSCZmfPHc1ZZPpeBU820elNR8Y8QLyPinMDg8SoHVHkr774t1LVInZhz3BjHciHsiFczD-jqTGRzpWQTk9hqDdzSp6v8pz2J6o0gHiM54YBoYLdDUyOPtl-1KKfolUBu8SjPwpGViYceSHVjwXv3GCUlqCm29k_4AN0pd8Z"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline text-white font-bold text-xl tracking-tight">Acne Studios</h3>
+<p class="text-white/80 text-xs font-label uppercase tracking-widest">Stockholm, SE</p>
+</div>
+</div>
+</div>
+<div class="flex-none w-64 mt-8 group">
+<div class="relative aspect-[4/5] bg-surface-container-low overflow-hidden rounded-xl">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="editorial shot of designer sunglasses reflecting a bright modernist interior with sharp linear geometry" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMipw6AhO2Zhm0Qalz8OjlxlgOpP7QCd-LnG5jZCAZ2tnI5afsIdHOG5HBKWRyLiv-inIj6jaYbgfJEKp6yssCA9IBHmjxSaka7NonJyCY3_NMb1oAaBpaAQqgOVZ87Pz7MfZvtZn9dG8nE7L1ca39VK-qpKy3XVCLsw_DIXuiI3ZkvQ8So5cgd9jn_1xxEw-yubjcw6askk80hTFKUzgc5kerd-iy_8golplGKGAB0Bu9gLYvzY4DKIajolsDwUVwsUnxOxH9CWDi"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<h3 class="font-headline text-white font-bold text-xl tracking-tight">Balenciaga</h3>
+<p class="text-white/80 text-xs font-label uppercase tracking-widest">Paris, FR</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Search & Filter Bar (Glassmorphism) -->
+<div class="sticky top-20 z-40 mb-10">
+<div class="bg-surface-container-high/80 backdrop-blur-xl rounded-full px-5 py-3 flex items-center gap-3">
+<span class="material-symbols-outlined text-outline text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full font-medium placeholder:text-outline/60" placeholder="Search 428 brands..." type="text"/>
+<span class="material-symbols-outlined text-on-surface text-sm" data-icon="filter_list">filter_list</span>
+</div>
+</div>
+<!-- Alphabetical Directory (The Index) -->
+<div class="space-y-12">
+<!-- Section A -->
+<div class="relative">
+<div class="absolute -left-4 top-0 font-headline text-6xl font-black text-surface-container-highest opacity-40 select-none">A</div>
+<div class="pt-8 space-y-6">
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Acne Studios</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">Contemporary</span>
+</div>
+<span class="text-xs font-bold text-secondary-container bg-secondary-fixed px-2 py-1 rounded-full">142</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Adidas Originals</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">Sportswear</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded-full">89</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Ami Paris</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">Luxury</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded-full">56</span>
+</div>
+</div>
+</div>
+<!-- Section B -->
+<div class="relative">
+<div class="absolute -left-4 top-0 font-headline text-6xl font-black text-surface-container-highest opacity-40 select-none">B</div>
+<div class="pt-8 space-y-6">
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Balenciaga</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">High Fashion</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded-full">210</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Botter</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">Avant-Garde</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded-full">34</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Burberry</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">Heritage</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded-full">115</span>
+</div>
+</div>
+</div>
+<!-- Section C -->
+<div class="relative">
+<div class="absolute -left-4 top-0 font-headline text-6xl font-black text-surface-container-highest opacity-40 select-none">C</div>
+<div class="pt-8 space-y-6">
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Carhartt WIP</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">Workwear</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded-full">92</span>
+</div>
+<div class="flex justify-between items-center group cursor-pointer">
+<div>
+<span class="font-headline font-bold text-lg text-on-surface">Casablanca</span>
+<span class="block text-[10px] font-label uppercase tracking-widest text-outline">Apres-Sport</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded-full">47</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Jump Navigation (Sidebar floating strip) -->
+<div class="fixed right-2 top-1/2 -translate-y-1/2 flex flex-col gap-1 z-50">
+<a class="text-[10px] font-bold text-secondary p-1" href="#">A</a>
+<a class="text-[10px] font-bold text-outline p-1" href="#">B</a>
+<a class="text-[10px] font-bold text-outline p-1" href="#">C</a>
+<a class="text-[10px] font-bold text-outline p-1" href="#">D</a>
+<a class="text-[10px] font-bold text-outline p-1" href="#">E</a>
+<a class="text-[10px] font-bold text-outline p-1" href="#">F</a>
+<a class="text-[10px] font-bold text-outline p-1" href="#">G</a>
+<a class="text-[10px] font-bold text-outline p-1" href="#">H</a>
+<span class="text-[8px] text-outline text-center">•</span>
+<span class="text-[8px] text-outline text-center">•</span>
+<a class="text-[10px] font-bold text-outline p-1" href="#">Z</a>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md fixed bottom-0 w-full z-50 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/20 dark:border-slate-800/20">
+<div class="flex justify-around items-center h-20 w-full px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

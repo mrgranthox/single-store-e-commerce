@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "secondary": "#0051d5",
+              "inverse-primary": "#bec6e0",
+              "primary-fixed": "#dae2fd",
+              "outline": "#76777d",
+              "on-tertiary-fixed": "#2a1700",
+              "on-error": "#ffffff",
+              "on-primary-container": "#7c839b",
+              "inverse-on-surface": "#eaf1ff",
+              "tertiary": "#000000",
+              "surface-container-low": "#eff4ff",
+              "on-surface-variant": "#45464d",
+              "surface-dim": "#cbdbf5",
+              "inverse-surface": "#213145",
+              "error-container": "#ffdad6",
+              "secondary-fixed": "#dbe1ff",
+              "on-secondary-fixed-variant": "#003ea8",
+              "surface-container": "#e5eeff",
+              "background": "#f8f9ff",
+              "primary": "#000000",
+              "surface-container-high": "#dce9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#d3e4fe",
+              "on-background": "#0b1c30",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-container": "#fefcff",
+              "secondary-container": "#316bf3",
+              "on-secondary-fixed": "#00174b",
+              "primary-container": "#131b2e",
+              "on-surface": "#0b1c30",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "surface-tint": "#565e74",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#653e00",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-container": "#b87500",
+              "on-primary-fixed": "#131b2e",
+              "primary-fixed-dim": "#bec6e0",
+              "tertiary-fixed": "#ffddb8",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#2a1700",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex items-center justify-between px-6 py-4 w-full">
+<button class="active:scale-95 duration-200 hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">arrow_back</span>
+</button>
+<h1 class="font-manrope font-bold tracking-tight text-lg text-slate-900 dark:text-slate-50">Nordic Commerce</h1>
+<div class="w-6"></div> <!-- Spacer for symmetry -->
+</div>
+<div class="bg-slate-200/50 dark:bg-slate-800/50 h-[1px] w-full"></div>
+</header>
+<main class="px-6 pt-8 max-w-md mx-auto">
+<!-- Progress Indicator -->
+<section class="mb-10">
+<div class="flex items-center justify-between relative">
+<!-- Line -->
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-surface-container -z-10 -translate-y-1/2"></div>
+<!-- Steps -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold ring-4 ring-surface">1</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary">Shipping</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center text-xs font-bold ring-4 ring-surface">2</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Payment</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center text-xs font-bold ring-4 ring-surface">3</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Review</span>
+</div>
+</div>
+</section>
+<!-- Shipping Address Form -->
+<section class="mb-10">
+<div class="flex items-baseline justify-between mb-6">
+<h2 class="text-2xl font-extrabold tracking-tight font-headline">Shipping Address</h2>
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary">Step 1 of 3</span>
+</div>
+<div class="space-y-4">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline ml-1">Full Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant text-on-surface font-medium" placeholder="Erik Solbakken" type="text"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline ml-1">Street Address</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant text-on-surface font-medium" placeholder="Karl Johans gate 22" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline ml-1">City</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant text-on-surface font-medium" placeholder="Oslo" type="text"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline ml-1">ZIP Code</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all placeholder:text-outline-variant text-on-surface font-medium" placeholder="0154" type="text"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline ml-1">Country</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-high border-none rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all text-on-surface font-medium pr-10">
+<option>Norway</option>
+<option>Sweden</option>
+<option>Denmark</option>
+<option>Finland</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Delivery Method -->
+<section class="mb-12">
+<h2 class="text-lg font-bold tracking-tight font-headline mb-4">Delivery Method</h2>
+<div class="space-y-3">
+<!-- Option 1: Selected -->
+<label class="relative flex items-center p-4 rounded-xl cursor-pointer bg-surface-container-lowest ring-2 ring-secondary transition-all">
+<input checked="" class="hidden" name="delivery" type="radio"/>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-on-surface">Standard Shipping</span>
+<span class="font-bold text-secondary">$8.00</span>
+</div>
+<p class="text-xs text-on-surface-variant">3-5 business days delivery</p>
+</div>
+<div class="ml-4 w-5 h-5 rounded-full border-2 border-secondary flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-secondary"></div>
+</div>
+</label>
+<!-- Option 2 -->
+<label class="relative flex items-center p-4 rounded-xl cursor-pointer bg-surface-container-low hover:bg-surface-container transition-all">
+<input class="hidden" name="delivery" type="radio"/>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-on-surface">Express Courier</span>
+<span class="font-bold text-on-surface">$15.00</span>
+</div>
+<p class="text-xs text-on-surface-variant">1-2 business days delivery</p>
+</div>
+<div class="ml-4 w-5 h-5 rounded-full border-2 border-outline-variant"></div>
+</label>
+</div>
+</section>
+<!-- Order Summary (Expandable/Visible) -->
+<section class="mb-8 p-6 bg-surface-container-low rounded-xl">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-on-surface">Order Summary</h3>
+<span class="text-xs font-medium text-outline">2 Items</span>
+</div>
+<div class="space-y-2 border-b border-outline-variant/20 pb-4 mb-4">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Subtotal</span>
+<span class="text-on-surface font-medium">$420.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Shipping</span>
+<span class="text-on-surface font-medium">$8.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Est. Taxes</span>
+<span class="text-on-surface font-medium">$33.60</span>
+</div>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-lg font-extrabold font-headline">Total</span>
+<span class="text-xl font-extrabold font-headline text-secondary">$461.60</span>
+</div>
+</section>
+</main>
+<!-- Bottom CTA Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest/80 backdrop-blur-xl px-6 pt-4 pb-10 z-40 border-t border-outline-variant/10">
+<div class="max-w-md mx-auto">
+<button class="w-full bg-secondary text-on-secondary py-4 rounded-lg font-bold text-sm tracking-widest uppercase transition-all active:scale-95 shadow-lg shadow-secondary/20">
+                Continue to Payment
+            </button>
+<p class="text-center mt-3 text-[10px] text-outline uppercase tracking-tighter">Secure encrypted checkout session</p>
+</div>
+</div>
+</body></html>

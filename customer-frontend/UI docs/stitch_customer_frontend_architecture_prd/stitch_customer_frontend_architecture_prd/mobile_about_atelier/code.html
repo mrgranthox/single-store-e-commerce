@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-xl font-black tracking-tighter text-slate-900 dark:text-white font-manrope font-bold tracking-tight">NORDIC</h1>
+</div>
+<div class="flex items-center">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="pt-16 pb-24 overflow-x-hidden">
+<!-- Editorial Hero Section -->
+<section class="relative h-[751px] w-full flex flex-col justify-end p-8 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Atelier interior" class="w-full h-full object-cover" data-alt="Minimalist high-end atelier interior with clean white walls, natural oak wood furniture, and soft cinematic daylight coming through a large window." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWXZ6fKfsTVkTrBOC0y2qAXLEvwYXZEVMWRegMRxZobrApV8v0AkQp9m8atocWIxSnbyjx21TQqTSZJkv37hkhiXlRk3-OrIwiyrzuyQ0YRgwSKFl_MgXMWPUDQym9KyvLYbuJCQqPkX2n2yx3LgX7FaGdGitTLyHGuZjyLeE-6GtcH2_q38VQJTbrGIvS8P_wp-Y51Ke_fHec3iGv6Xh5Pigu1wD3hHzJ67KmZcGaGNq21Hf-m60P8iCeNBbfJrD7vke654um5Qc_"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/80 via-transparent to-transparent"></div>
+</div>
+<div class="relative z-10 space-y-4">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-surface-container-low font-semibold">Established 1994</span>
+<h2 class="font-headline text-5xl font-black text-white leading-[0.9] tracking-tighter">THE<br/>ATELIER<br/>SPIRIT.</h2>
+<div class="h-1 w-12 bg-secondary"></div>
+</div>
+</section>
+<!-- Mission Statement: Tonal Layering -->
+<section class="bg-surface-container-low py-20 px-8">
+<div class="max-w-md mx-auto space-y-6">
+<h3 class="font-headline text-sm font-bold tracking-widest uppercase text-secondary">Our Philosophy</h3>
+<p class="font-headline text-2xl font-light leading-snug text-on-surface">
+                    We believe in the <span class="font-bold italic">quiet power</span> of craftsmanship. Every piece is a dialogue between material and form, curated for the modern minimalist.
+                </p>
+</div>
+</section>
+<!-- Heritage Bento Grid -->
+<section class="p-4 grid grid-cols-12 gap-4">
+<!-- Large Focus Image -->
+<div class="col-span-12 rounded-xl overflow-hidden aspect-[4/5] relative">
+<img alt="Craftsmanship" class="w-full h-full object-cover" data-alt="Close up of a master artisan's hands carefully stitching premium dark leather with precision tools on a rustic wooden workbench." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt__XqgjcEErx8hYEm8_8wc1pRTDhxg6YXbaqLpJTAzh_TwgDGxBnJ5v6254BuJFAQ3wUNasjQ4bCT4ME4P3e5FU50YB_7xWsyNIj9fj4yR3Xv_cl7VeNWGPT3E085CW9aTqClHPyNeFOQd1QNRQf0qoAOz1ue-tGRzXj4WjyoMLn272s2CPihc7SJnN4jXfpiUr_SZT61JRdnLBWopfmsP1Y741E7HUJSJ2wRcwBUMCqkYl7NISwrkelf56fzLrS65asl941rpwfG"/>
+<div class="absolute bottom-6 left-6 right-6">
+<p class="text-white font-headline text-lg font-bold">Patience in every stitch.</p>
+</div>
+</div>
+<!-- Asymmetric Secondary Items -->
+<div class="col-span-7 bg-surface-container-high p-6 rounded-xl flex flex-col justify-between">
+<span class="material-symbols-outlined text-secondary text-4xl">history_edu</span>
+<div>
+<h4 class="font-headline font-bold text-lg mt-4">Heritage</h4>
+<p class="text-xs text-on-surface-variant font-body leading-relaxed mt-2">Born in the heart of Copenhagen, inspired by the raw textures of the North.</p>
+</div>
+</div>
+<div class="col-span-5 rounded-xl overflow-hidden aspect-square">
+<img alt="Storefront" class="w-full h-full object-cover" data-alt="Detail of a modern high-end retail storefront window with minimalist branding and elegant architectural lines at twilight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOnfv_NA8_FJPtidt003etU2q7KCoTcJ-GopXuW5Sdm-nbLh3CIdboQwkZaLfSwn-SqyleTUxEFD-hf_mq6IeIL0cTjl2UlA9SpkhVfftztMUwdKXD5wljrMmAOHUlQObAipsg8Vd8NjDyMqlRGkPokv1LqoJ1KeEUT2Hi_iLV-jU9cmj59bTq_7cOb-M6oLLmo6gxfcCX5ip8rk3TVXuXOj5UceWkNX8O4MqDNx2Hv2FI1fcbCV3v_CQLscf3PMYmjARYjyMnJP5z"/>
+</div>
+<!-- Full Width Narrative Card -->
+<div class="col-span-12 bg-primary-container text-white p-10 rounded-xl relative overflow-hidden">
+<div class="relative z-10 space-y-4">
+<h4 class="font-headline text-3xl font-extrabold tracking-tight">Radical Transparency.</h4>
+<p class="text-on-primary-container text-sm leading-relaxed max-w-[280px]">From sourcing the finest raw materials to the final finishing, our process is open and honest.</p>
+<button class="mt-4 flex items-center gap-2 text-secondary-fixed font-label text-xs font-bold uppercase tracking-widest">
+                        View Traceability Report
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Abstract Texture Background -->
+<div class="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+<div class="w-full h-full bg-gradient-to-br from-secondary to-transparent"></div>
+</div>
+</div>
+</section>
+<!-- The Founders Section -->
+<section class="py-20 px-8 bg-surface">
+<div class="flex flex-col gap-12">
+<div class="space-y-4">
+<h3 class="font-headline text-4xl font-black tracking-tighter">The Visionaries.</h3>
+<p class="text-on-surface-variant leading-relaxed">Meet the collective of designers and architects shaping the NORDIC aesthetic.</p>
+</div>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar -mx-8 px-8">
+<!-- Founder Card 1 -->
+<div class="min-w-[280px] space-y-4">
+<div class="aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low">
+<img alt="Founder" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="Portrait of a creative professional man in his 40s wearing a high-quality charcoal turtleneck against a neutral studio background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvf_joSwXjc_yQFQ9hETya8IWesltToXdxIcefBZ7fmtoEigf3zk8oK8Blrd-joL60F5ECE0HDDNNggb7r6Sw0rk62BDKtib5RIa-sDFei4GgJ1FwK6po39n9p4KoG3ZF7rmxRWYTWD-g7BHaHbVj_DDUa40i03Kxqyt67DF3wqWF8iN2WCMN6JkI1aRW2WGM7x3Al4_XMTZtYIZD5VZd_IbF2Fk9_1KHtp1rjwunnm6im2FRqCMiHgVxgaR2yU1s1Nhr1w-QQ4zBP"/>
+</div>
+<div>
+<p class="font-headline font-bold text-lg">Erik Solberg</p>
+<p class="text-xs text-secondary font-semibold uppercase tracking-widest">Creative Director</p>
+</div>
+</div>
+<!-- Founder Card 2 -->
+<div class="min-w-[280px] space-y-4">
+<div class="aspect-[3/4] rounded-xl overflow-hidden bg-surface-container-low">
+<img alt="Head of Design" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="Portrait of an elegant woman with minimalist silver jewelry and a clean white blazer, representing modern luxury design leadership." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1QwoUAbbQRaW_tRL_zlDPzT5dw_1ouoae_D74Hj5OhQJDLw6FBfuSud_wh-LvkGg297TvXnEC9JFQDz4ZpzYltU6urKraFiiG_lJI7vAYju8NMl2KfjUA4ka7LepBAlq-_hap0IzO0lB6LCakBbLCNtiVUSKzLxGX6UHTHb_vBefY3rYOESqW7wNdFwcgahRJqikMJyNFdnat01JQM1u4ktsn90DIDTH-6cE47uzFSYdlM-fS46bjMzhpNdeXFO4dk_8ez7wjKrMf"/>
+</div>
+<div>
+<p class="font-headline font-bold text-lg">Elena Vance</p>
+<p class="text-xs text-secondary font-semibold uppercase tracking-widest">Head of Atelier</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sustainability Stats -->
+<section class="bg-surface-container-highest/30 py-16 px-8 border-y border-outline-variant/10">
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-2">
+<p class="text-4xl font-headline font-black text-secondary tracking-tighter">100%</p>
+<p class="text-[10px] uppercase font-bold tracking-widest text-outline">Certified Organic</p>
+</div>
+<div class="space-y-2">
+<p class="text-4xl font-headline font-black text-secondary tracking-tighter">0%</p>
+<p class="text-[10px] uppercase font-bold tracking-widest text-outline">Plastic Waste</p>
+</div>
+<div class="space-y-2">
+<p class="text-4xl font-headline font-black text-secondary tracking-tighter">12k+</p>
+<p class="text-[10px] uppercase font-bold tracking-widest text-outline">Trees Planted</p>
+</div>
+<div class="space-y-2">
+<p class="text-4xl font-headline font-black text-secondary tracking-tighter">CO2</p>
+<p class="text-[10px] uppercase font-bold tracking-widest text-outline">Neutral Shipping</p>
+</div>
+</div>
+</section>
+<!-- Newsletter / Footer Callout -->
+<section class="py-24 px-8 text-center space-y-8">
+<h3 class="font-headline text-3xl font-bold tracking-tight">Join the Circle.</h3>
+<p class="text-sm text-on-surface-variant max-w-[260px] mx-auto leading-relaxed">Receive exclusive updates on new collections and atelier events.</p>
+<div class="flex flex-col gap-3">
+<input class="w-full h-14 bg-surface-container-high border-none rounded-md px-6 text-sm focus:ring-2 focus:ring-secondary/20 transition-all outline-none" placeholder="Your email address" type="email"/>
+<button class="w-full h-14 bg-primary text-white font-label font-bold uppercase tracking-widest text-xs hover:bg-secondary transition-colors duration-300">Subscribe</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/20 dark:border-slate-800/20 flex justify-around items-center h-20 px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

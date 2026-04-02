@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nordic Atelier | Community Q&amp;A</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary": "#000000",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-container": "#316bf3",
+                        "on-secondary-container": "#fefcff",
+                        "surface": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#cbdbf5",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary-container": "#7c839b",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-fixed": "#00174b",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#45464d",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-primary": "#bec6e0",
+                        "inverse-surface": "#213145",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-error": "#ffffff",
+                        "on-background": "#0b1c30",
+                        "surface-container-low": "#eff4ff",
+                        "outline": "#76777d",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-container": "#2a1700",
+                        "tertiary": "#000000",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "surface-tint": "#565e74",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "secondary": "#0051d5",
+                        "primary-container": "#131b2e",
+                        "error": "#ba1a1a",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#003ea8"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-12 py-6 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 uppercase">
+                NORDIC ATELIER
+            </div>
+<div class="hidden md:flex items-center space-x-12 font-manrope tracking-tight font-light uppercase text-sm">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hover:opacity-70 transition-opacity duration-300">
+<span class="material-symbols-outlined text-xl">shopping_bag</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300">
+<span class="material-symbols-outlined text-xl">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-screen-xl mx-auto">
+<!-- Back Link & Header -->
+<div class="mb-12">
+<a class="inline-flex items-center text-sm font-medium text-secondary hover:underline underline-offset-4 mb-6 transition-all group" href="#">
+<span class="material-symbols-outlined mr-2 text-base group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                Back to Product Details
+            </a>
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+<div class="max-w-2xl">
+<h1 class="text-5xl md:text-6xl font-extrabold tracking-tighter mb-4">Questions &amp; Answers</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed font-light">
+                        Real insights from our community regarding the <span class="font-bold text-primary italic">Fjord Wool Overcoat</span>. Ask anything or share your expertise.
+                    </p>
+</div>
+<div class="flex flex-col items-start lg:items-end gap-2">
+<div class="flex items-center bg-surface-container-low px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-on-tertiary-container mr-2" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold tracking-tight">4.9 Community Trust Score</span>
+</div>
+<span class="text-xs text-outline uppercase tracking-widest">Based on 142 verified answers</span>
+</div>
+</div>
+</div>
+<!-- Sticky Interaction Bar -->
+<div class="sticky top-24 z-30 mb-12">
+<div class="bg-surface-container-lowest/90 backdrop-blur-md p-1 rounded-xl shadow-2xl shadow-on-background/5 grid md:grid-cols-[1fr_auto] gap-2">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-6 text-outline">search</span>
+<input class="w-full pl-14 pr-6 py-5 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline/60 font-body" placeholder="Search existing questions..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-8 py-4 font-headline font-bold uppercase tracking-wider text-sm hover:opacity-90 active:scale-95 transition-all">
+                    Ask a Question
+                </button>
+</div>
+</div>
+<!-- Threaded Content -->
+<div class="space-y-10">
+<!-- Question 1 -->
+<div class="group">
+<div class="bg-surface-container-low p-8 rounded-2xl transition-all hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">help</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-widest text-secondary">Sizing &amp; Fit</span>
+<span class="text-xs text-outline">2 days ago</span>
+</div>
+<h3 class="text-xl font-bold mb-4 leading-snug">Does the Fjord Overcoat run large? I'm between an M and L.</h3>
+<div class="flex items-center gap-4">
+<span class="text-xs font-medium text-on-surface-variant italic">Asked by Julian V.</span>
+<button class="text-xs font-bold text-primary hover:text-secondary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm">reply</span> Answer this
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Responses -->
+<div class="ml-12 md:ml-20 mt-4 space-y-4 border-l-2 border-surface-container">
+<div class="pl-8 py-4 relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-surface-container"></div>
+<div class="flex gap-4">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="headshot portrait of a stylish man in his 30s with short beard wearing a neutral colored minimalist sweater" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJupheC2p9plo8RcWmVzY95clRkv1y2oh1rvl9HH_Gnr77G_52wAEeEC7MTUehVTjZ3V2-iEEqDQJO6YZlvhWD0F0q3CrMO2Rda4FjrSIUUTOWAju1uxTgR0GC-fJy3N2jUtXndNHce5zAgDjL3ry3MgOdUoaO9R215CFHHJrzyqnlv8y2ANk-n1s8TXBOw2ulgvve9cRDokvM97TDoK37nvGsGf-Y5aT5znMAitTGoQGosmNfQpzSbn4MlPRoIylL8T_5OQSJaIkl"/>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-sm font-bold">Erik Sørensen</span>
+<span class="bg-secondary-container/20 text-secondary text-[10px] px-2 py-0.5 font-bold uppercase tracking-tighter">Verified Owner</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed max-w-xl">
+                                    I recommend sizing down if you want a tailored look. I'm usually an L but went with M and it fits perfectly even with a light sweater underneath. The shoulders are quite structured.
+                                </p>
+<div class="mt-3 flex items-center gap-4">
+<button class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-outline hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-sm">thumb_up</span> Helpful (12)
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+<div class="pl-8 py-4 relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-surface-container"></div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">
+                                NA
+                            </div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-sm font-bold">Atelier Team</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] px-2 py-0.5 font-bold uppercase tracking-tighter">Expert</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed max-w-xl">
+                                    Great question, Julian. The Fjord is designed with an 'Editorial Oversize' cut. If you prefer the look in our lookbook, stay true to size. For a classic fit, size down.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Question 2 -->
+<div class="group">
+<div class="bg-surface-container-low p-8 rounded-2xl transition-all hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">help</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold uppercase tracking-widest text-secondary">Material Care</span>
+<span class="text-xs text-outline">1 week ago</span>
+</div>
+<h3 class="text-xl font-bold mb-4 leading-snug">How does the wool handle light rain? Is it water-resistant?</h3>
+<div class="flex items-center gap-4">
+<span class="text-xs font-medium text-on-surface-variant italic">Asked by Elena M.</span>
+<button class="text-xs font-bold text-primary hover:text-secondary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm">reply</span> Answer this
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<div class="ml-12 md:ml-20 mt-4 border-l-2 border-surface-container">
+<div class="pl-8 py-4 relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-surface-container"></div>
+<div class="flex gap-4">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="candid portrait of a young woman with natural hair and minimal makeup smiling softly against a blurred neutral architectural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzZ5ISsBFZ31r2_sdO-_PqtcOZO4yxcYThUG7evK3An3b7pI-MfsYVyAPmZKHvMb8qqbZf1zETwFa4myDQzT_RG7Jz8HECw_v98qM_T8E116N9_AkoSXWOb--95QvlYKe516EX3RVI1fTCw7rxxRD6oLFZmh1T7w-jp2NuGzygal8F7H-LvwGWmbeb0zZmoLnnLMl3-CSeyjpNcGlwBWbX5oMDf9AnOFL8S6LIxWm-3PU6EILVBpjrHBS6y3GpnNNASNa82WCYT5_2"/>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-sm font-bold">Sarah T.</span>
+<span class="bg-secondary-container/20 text-secondary text-[10px] px-2 py-0.5 font-bold uppercase tracking-tighter">Verified Owner</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed max-w-xl">
+                                    The wool is quite dense. I've worn it in light London drizzle and the water beads off fairly well. It's not a raincoat, but it handles moisture much better than my other wool coats.
+                                </p>
+<div class="mt-3 flex items-center gap-4">
+<button class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-outline hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-sm">thumb_up</span> Helpful (24)
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Featured Inquiry -->
+<div class="grid md:grid-cols-3 gap-6 pt-12">
+<div class="md:col-span-2 bg-primary-container text-on-primary-container p-10 rounded-3xl flex flex-col justify-between overflow-hidden relative">
+<div class="relative z-10">
+<span class="text-xs font-bold uppercase tracking-widest text-on-primary-container/60 mb-4 block">Most Helpful Guide</span>
+<h2 class="text-3xl font-bold text-white mb-6">Sustainable Wool Sourcing &amp; Traceability FAQ</h2>
+<p class="text-on-primary-container/80 font-light mb-8 max-w-md">
+                            Learn about our zero-waste knitting process and how we ensure every fiber in the Fjord Overcoat is ethically sourced.
+                        </p>
+<button class="bg-secondary text-white px-6 py-3 font-bold uppercase tracking-tighter text-sm flex items-center gap-2 hover:translate-x-1 transition-transform">
+                            Read Transparency Report <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<!-- Abstract image for background -->
+<div class="absolute right-0 top-0 h-full w-1/3 opacity-20 bg-gradient-to-l from-secondary to-transparent"></div>
+<img class="absolute right-0 bottom-0 w-2/3 h-full object-cover mix-blend-overlay opacity-30 pointer-events-none" data-alt="macro texture of high quality woven wool fabric with visible weave patterns in charcoal and navy blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiSALvsUi9T0lDuyBUvK1LQRC7NJqoOLqPcdJepHRu1nKyrZawqrEbmyv1DDmsm_kVzLZAxtrQgPihHK--PhdWjrKOfsJ-ewDK3aUlP89lWR2H7W2fPgVDWzXxk7m9hAayytNrkwNohZWNccqw4RTpUnOvpNDjf12EM91rYP-l7pN42dfi6q0RP067VJpK7_qXx9eJPoO5mpElJqbExOSjO9ePa_0MlsemnO32-SMOSiCmTnAHZcTFKjCxzNKEJnjfOW0hUj40GW3L"/>
+</div>
+<div class="bg-tertiary-fixed p-10 rounded-3xl flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-4xl mb-4" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<h3 class="text-xl font-bold mb-2">Direct Inquiry</h3>
+<p class="text-sm text-on-tertiary-fixed-variant leading-relaxed mb-6">
+                        Can't find what you're looking for? Speak directly with a design specialist.
+                    </p>
+<button class="w-full border-2 border-primary py-3 font-bold uppercase tracking-widest text-xs hover:bg-primary hover:text-white transition-all">
+                        Start Live Chat
+                    </button>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-20 flex justify-center items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant text-outline hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="w-10 h-10 flex items-center justify-center bg-primary text-white font-bold text-sm">1</span>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface font-medium text-sm hover:bg-surface-container-low transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface font-medium text-sm hover:bg-surface-container-low transition-colors">3</button>
+<span class="text-outline mx-2">...</span>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface font-medium text-sm hover:bg-surface-container-low transition-colors">8</button>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant text-outline hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-20 pb-10 mt-auto bg-slate-100 dark:bg-slate-900">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 px-12 max-w-screen-2xl mx-auto">
+<div class="col-span-2">
+<span class="text-lg font-black text-slate-900 dark:text-slate-50 mb-4 block">NORDIC ATELIER</span>
+<p class="text-slate-500 font-inter text-xs leading-relaxed tracking-wide mb-6 max-w-xs">
+                    Curating high-performance garments with a minimalist soul. Designed in Oslo, worn globally.
+                </p>
+</div>
+<div class="flex flex-col space-y-3">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Shop</span>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">New Arrivals</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">All Outerwear</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Sustainability</a>
+</div>
+<div class="flex flex-col space-y-3">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Help</span>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Shipping &amp; Returns</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Privacy Policy</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col space-y-3">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Brand</span>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Brand Story</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Contact Us</a>
+</div>
+<div class="flex flex-col space-y-3">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Social</span>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Instagram</a>
+<a class="font-inter text-xs leading-relaxed tracking-wide text-slate-500 hover:text-blue-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Journal</a>
+</div>
+</div>
+<div class="mt-20 px-12 max-w-screen-2xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8 flex justify-between items-center">
+<span class="font-inter text-xs leading-relaxed tracking-wide text-slate-500">© 2024 Nordic Atelier. All rights reserved.</span>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-lg text-slate-400">payments</span>
+<span class="material-symbols-outlined text-lg text-slate-400">lock</span>
+</div>
+</div>
+</footer>
+</body></html>

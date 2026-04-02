@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-error": "#ffffff",
+              "background": "#f8f9ff",
+              "secondary-fixed": "#dbe1ff",
+              "outline-variant": "#c6c6cd",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-secondary": "#ffffff",
+              "on-surface": "#0b1c30",
+              "surface-dim": "#cbdbf5",
+              "on-tertiary-container": "#b87500",
+              "on-primary-container": "#7c839b",
+              "error": "#ba1a1a",
+              "surface-container-low": "#eff4ff",
+              "tertiary": "#000000",
+              "on-tertiary": "#ffffff",
+              "inverse-primary": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "outline": "#76777d",
+              "surface-bright": "#f8f9ff",
+              "on-background": "#0b1c30",
+              "surface": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-fixed-dim": "#bec6e0",
+              "primary-container": "#131b2e",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "surface-container-highest": "#d3e4fe",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed": "#00174b",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#2a1700",
+              "primary": "#000000",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-surface-variant": "#45464d",
+              "surface-tint": "#565e74",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container": "#e5eeff",
+              "secondary": "#0051d5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-secondary-container": "#fefcff",
+              "on-primary-fixed": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .tap-highlight-transparent {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer">arrow_back</span>
+<span class="text-xl font-headline font-bold tracking-tighter text-slate-900">NordicAtelier</span>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface">favorite</span>
+<span class="material-symbols-outlined text-on-surface">shopping_bag</span>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-24 px-5">
+<!-- Review Summary Header -->
+<section class="mb-8">
+<h1 class="font-headline text-3xl font-extrabold tracking-tight mb-6">Customer Reviews</h1>
+<div class="bg-surface-container-lowest rounded-xl p-6 flex items-center gap-8">
+<div class="text-center">
+<div class="text-5xl font-headline font-extrabold text-primary">4.8</div>
+<div class="flex justify-center text-tertiary mt-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<p class="text-[10px] font-label font-medium uppercase tracking-wider text-outline mt-2">124 Reviews</p>
+</div>
+<div class="flex-1 space-y-2">
+<!-- Rating Bars -->
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-label font-semibold w-2">5</span>
+<div class="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[85%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-label font-semibold w-2">4</span>
+<div class="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[10%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-label font-semibold w-2">3</span>
+<div class="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[3%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-label font-semibold w-2">2</span>
+<div class="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[1%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-label font-semibold w-2">1</span>
+<div class="flex-1 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[1%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Sort & Filter Controls -->
+<div class="flex gap-3 mb-8">
+<button class="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-low text-on-surface font-label font-semibold rounded-lg tap-highlight-transparent active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg">sort</span>
+                Sort by: Newest
+            </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-surface-container-low text-on-surface font-label font-semibold rounded-lg tap-highlight-transparent active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                Filter
+            </button>
+</div>
+<!-- Reviews List -->
+<div class="space-y-6">
+<!-- Review Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl p-5">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a confident woman in a modern minimalist setting with natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJlqlbo1_FfQY310hSC6czf0uZaMb4YstDklmUFj-y5o4jcSbYvt_rJ6sf7IA9bIktjK8mNBV-294NWLXlY6M75KG1E5E6_S7Lx8auoSu682VJgsWWZzMwva0LE8Wk7xfPu3GlgwilPTTW5JsGRIKkmHuBwI7-JKG5k5MINDbNVNlzpX-afS2cf9vDeWV7qpidfn9QuFlxXTGZqC4CHXssfRAfw8LzGwu6EvzwSfpDerakqLWKcyT_2Zlhe6mq1OhyqUQEQA5eZ-Pa"/>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm">Elena Vogt</h4>
+<p class="text-[10px] text-outline font-label uppercase tracking-widest">Verified Buyer</p>
+</div>
+</div>
+<div class="text-[10px] text-outline font-label">2 days ago</div>
+</div>
+<div class="flex text-tertiary mb-3">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h5 class="font-headline font-bold mb-2">Absolutely stunning design</h5>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-3">
+                    The attention to detail on this piece is unlike anything I've purchased before. The texture of the fabric feels premium and the cut is exactly as pictured. It fits like a glove and the Nordic minimalist aesthetic is spot on... <span class="text-secondary font-semibold cursor-pointer">Read more</span>
+</p>
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<div class="w-20 h-20 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close up detail of high quality minimalist clothing texture in soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7Aep06-LLDsR-dQqvBGUUwtEKJcpNr8AYfEIxXXeEYrZoMMd6NlZy6iLbwGpLBYIwInQFsUgKHzEDAK3u5j0eC_WOcFIe65NRcxObMhyOpa-fshd3z9DzHyN4YhdpdHF65r02-eDDSI3FRsQlN-TLbkxkNmcf_vwnDzmzUDOaZnYL1Oc9JhJGt6-XiJc7YjFnFhlw-YxvlosCbcq_EGpEsBKe9C_-HLvPG5S57sr4wsJRIl6DIppKLA3EFZspuNaSVJa7diqVUZPV"/>
+</div>
+<div class="w-20 h-20 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="lifestyle shot of a minimalist product placed on a clean white wooden table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVoTCVYufQswobzAoZbxSJ-vLv7tD4pJRtPLloPBi0WR_a-0kh0K6MffhTHIv6NtE6o5B4pHCp2H0R3NoQdgcT4AmEK7p3-AO7lZHjop_cNNkujAY7G7SJCJkBze2O5bpX048lOREmO7mCYGMdSSyWRUmPHHrN4QIUIG55-a1AiKKpQ-Mjn_vjjDETTgvGDxl_u_NfyKh3IcjsUZ2tYxeRamlcZtz7MwOEIlfCMoI5GmnqRwShRLNGnjSd2yMqD_kjikudDRW9eUZn"/>
+</div>
+</div>
+</article>
+<!-- Review Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl p-5">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a man with a friendly expression in a bright airy studio environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBaEwgJWmGOEJCWrq8BtQTgOZ59nZ06SWz1NHmBXeIGfmRqz0o5EmwcJlV0-ZFBn60P4kWPjNyEX0VwKSp6v5QVuqnY5jWkGfXNORL6rnvYNz29hnkiusgXt-0k8ooahufT3LSvVkKxep-aJEgNHOxt23B80p2Q3KZ40FRV-WqTae4ss8Eq5wFAI_n8G7yEP18BzF51N2qk7evUfVhdH-Eo85v6T_DRG_tGtTMaibjIklXnAsyUzO0NdT3WawZv_Hov6cX91DhDOLM"/>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm">Marcus Berg</h4>
+<p class="text-[10px] text-outline font-label uppercase tracking-widest">Verified Buyer</p>
+</div>
+</div>
+<div class="text-[10px] text-outline font-label">1 week ago</div>
+</div>
+<div class="flex text-tertiary mb-3">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs">star</span>
+</div>
+<h5 class="font-headline font-bold mb-2">Great quality, runs slightly small</h5>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                    The material is fantastic and heavy. You can tell it's built to last. I usually wear a medium but had to exchange for a large as the chest area was a bit tight. The exchange process was seamless though!
+                </p>
+</article>
+<!-- Review Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl p-5">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close up of a smiling woman with soft skin and natural makeup in a sunny outdoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJMgtsrtF1rDQGHeYQi6CUORVLF4WhkPex5u7XxzPzvyU8M_FkckgJ9CIgY2pqFwA1UhyiRc9rtOPT_I5jcXMtjYP3qQejVThokbEK2KC1Oab-xHvZE4GGQA2NKMA0mzGXW0iTgZRWPlT03LcTmh7y2wCEtSiHDat_nLQdh8n4Xbs6lBvCDiNampQgKM-7HuITzBDUPi6xKKIFEfzhPKqRMojYV0iiTE6NTVWLeziWS9l0J6-8WrfG9Nc6Ly_QiTOkr-PbGHdDXU-l"/>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm">Sonia Holm</h4>
+<p class="text-[10px] text-outline font-label uppercase tracking-widest">Verified Buyer</p>
+</div>
+</div>
+<div class="text-[10px] text-outline font-label">2 weeks ago</div>
+</div>
+<div class="flex text-tertiary mb-3">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h5 class="font-headline font-bold mb-2">The perfect addition</h5>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-3">
+                    I've been looking for something like this for months. NordicAtelier never disappoints. The packaging was eco-friendly and very chic. 10/10 would recommend.
+                </p>
+</article>
+</div>
+<!-- Load More Section -->
+<div class="mt-10 mb-20 text-center">
+<button class="px-8 py-3 bg-primary text-on-primary font-label font-bold rounded-lg tap-highlight-transparent active:scale-95 transition-all">
+                Load More Reviews
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-lg flex justify-around items-center px-4 pb-6 pt-2 shadow-[0_-4px_20px_rgba(11,28,48,0.06)] rounded-t-2xl">
+<div class="flex flex-col items-center justify-center text-slate-500 hover:text-blue-600 transition-all">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-label font-medium tracking-wide uppercase mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 hover:text-blue-600 transition-all">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-label font-medium tracking-wide uppercase mt-1">Wishlist</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-700 bg-blue-50 rounded-xl px-4 py-1 transition-all">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-label font-medium tracking-wide uppercase mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 hover:text-blue-600 transition-all">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-label font-medium tracking-wide uppercase mt-1">Profile</span>
+</div>
+</nav>
+</body></html>

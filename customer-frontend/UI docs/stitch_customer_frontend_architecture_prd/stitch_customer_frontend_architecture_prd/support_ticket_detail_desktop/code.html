@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#dce9ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary-container": "#fefcff",
+              "surface-container-highest": "#d3e4fe",
+              "surface-bright": "#f8f9ff",
+              "primary": "#000000",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "outline": "#76777d",
+              "on-surface-variant": "#45464d",
+              "on-background": "#0b1c30",
+              "inverse-primary": "#bec6e0",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "tertiary": "#000000",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary-fixed": "#dae2fd",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary": "#0051d5",
+              "on-primary-container": "#7c839b",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-fixed-variant": "#003ea8",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-tertiary-container": "#b87500",
+              "outline-variant": "#c6c6cd",
+              "surface-container": "#e5eeff",
+              "secondary-container": "#316bf3",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed": "#ffddb8",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#00174b",
+              "background": "#f8f9ff",
+              "tertiary-container": "#2a1700",
+              "surface": "#f8f9ff",
+              "primary-container": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-6 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-950 dark:text-white uppercase font-headline">NORDIC ATELIER</div>
+<div class="hidden md:flex space-x-8 font-manrope tracking-tight text-sm font-medium uppercase">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Objects</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Editorial</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Archive</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="material-symbols-outlined text-slate-900 dark:text-slate-50 hover:scale-95 duration-200">shopping_bag</button>
+<button class="material-symbols-outlined text-slate-900 dark:text-slate-50 hover:scale-95 duration-200">person</button>
+</div>
+</div>
+</nav>
+<div class="flex pt-24 min-h-screen max-w-screen-2xl mx-auto">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen sticky top-24 w-64 bg-slate-50 dark:bg-slate-900 px-6 py-8">
+<div class="flex items-center gap-4 mb-10">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Close-up portrait of a professional man in a minimalist studio setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnIBb1iAX4aPp0iH76XfqdNwLDevRXQ2fvXuNvlOzzbjyf3vV5qT80mGF5t1BSIg9fIpADM7PKTsWYRISzvKL4hFOi8gTwAIKibpBdioUTvBK_XE-oSMzaXZf5afuWA8ewDsAgxxB9O-kiHFwNPsgSMJYyNa1mnaqaRUShk0pFzIGwqIImoDUuMTdDtva_5xuh6nkvXGjnzn52kvc0h6tuLj6end7DISBGPxsb-J8HidV75MEqIbQVUFXheax9P1ZyMy8nxKIe99YC"/>
+<div>
+<h3 class="font-bold text-lg text-slate-900 dark:text-white leading-tight font-headline">Member Atelier</h3>
+<p class="text-xs text-slate-500 font-body">Curated since 2023</p>
+</div>
+</div>
+<nav class="space-y-1 font-manrope text-sm flex-1">
+<a class="flex items-center gap-3 py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="package_2">package_2</span>
+<span>Orders</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="location_on">location_on</span>
+<span>Addresses</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="credit_card">credit_card</span>
+<span>Payments</span>
+</a>
+<a class="flex items-center gap-3 py-3 text-blue-700 dark:text-blue-400 font-bold border-l-4 border-blue-700 dark:border-blue-400 pl-4 bg-slate-100/50 dark:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<button class="mt-auto bg-primary-container text-white py-4 px-6 rounded-lg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
+                Exclusive Access
+            </button>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 px-8 md:px-16 py-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-xs text-outline mb-8 font-label uppercase tracking-widest">
+<a class="hover:text-secondary" href="#">Account</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<a class="hover:text-secondary" href="#">Support</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-on-surface">Ticket #TK-9842</span>
+</nav>
+<!-- Ticket Header -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div class="max-w-2xl">
+<div class="flex items-center gap-3 mb-4">
+<span class="px-3 py-1 bg-surface-container-high text-secondary text-[10px] font-bold uppercase tracking-widest rounded-full">Active Case</span>
+<span class="text-sm text-outline font-label">Opened Oct 24, 2024</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tighter font-headline text-on-background leading-none">
+                        Delayed Delivery: Archive Collection Ceramic Vase
+                    </h1>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-low text-on-surface text-sm font-medium hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-lg">close</span>
+                        Close Ticket
+                    </button>
+</div>
+</header>
+<!-- Threaded Conversation -->
+<section class="space-y-8 max-w-4xl">
+<!-- Customer Message -->
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 flex-shrink-0 bg-surface-container-low flex items-center justify-center rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of the customer in a warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb5arCoREKVUBK4iOEOG_CnqTbbxgw5OOmH6tWgRF-T-ulXjFnsYAj5Md8a4pMuFyK5xxEMsb18LTXwL3S1QPdhjGvEsVlUYh9pJD2lShZrcfSY8cwknYbtQ082juo4oOSP7RUrwBfLNjGAwEMyvPJ6SUQ6OWMWUHTcikaxv2gj62st8xdWVz3F6vQ52MXJIcQ6qzu5R8xJxk-l1yS0zEjgl8QQDgE9U5N8NW2tCYOMh1mVf5rxJMxM2isNzSawrRti_QRmMRB9aK1"/>
+</div>
+<div class="flex-1 bg-surface-container-lowest p-8 rounded-xl relative">
+<div class="flex items-center justify-between mb-4">
+<span class="font-bold text-sm font-headline">You (Member Atelier)</span>
+<span class="text-xs text-outline font-label">10:42 AM</span>
+</div>
+<div class="text-on-surface-variant leading-relaxed font-body">
+<p class="mb-4">Hello, I'm reaching out regarding Order #NA-2291. It's been two weeks since the shipping notification for the Archive Collection Ceramic Vase, but the tracking status hasn't updated beyond 'Processing'.</p>
+<p>This was intended as a gift for an upcoming event. Could you provide an update on the actual location of the item?</p>
+</div>
+<!-- Attachment Placeholder -->
+<div class="mt-6 flex items-center gap-4 p-4 bg-surface-container-low rounded-lg w-fit">
+<span class="material-symbols-outlined text-outline">description</span>
+<div class="text-xs">
+<p class="font-bold text-on-surface">order_confirmation.pdf</p>
+<p class="text-outline">1.2 MB</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Support Response -->
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 flex-shrink-0 bg-primary-container flex items-center justify-center rounded-full text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="flex-1 bg-surface-container-high/40 p-8 rounded-xl border-l-4 border-secondary">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="font-bold text-sm font-headline">Elena — Logistics Specialist</span>
+<span class="px-2 py-0.5 bg-secondary text-white text-[9px] font-bold uppercase tracking-tighter rounded">Official</span>
+</div>
+<span class="text-xs text-outline font-label">11:15 AM</span>
+</div>
+<div class="text-on-surface-variant leading-relaxed font-body">
+<p class="mb-4">Dear Member, thank you for reaching out to Nordic Atelier Support. I have personally looked into your order #NA-2291.</p>
+<p class="mb-4">It appears there was a brief delay at our Copenhagen sorting facility due to a temporary stock discrepancy with the Archive series. We have confirmed that your specific vase has passed final quality inspection and is now in the hands of our courier partners.</p>
+<p>You should see the tracking update within the next 4–6 hours. As a gesture of our appreciation for your patience, I have applied a 15% credit to your account for your next acquisition.</p>
+</div>
+</div>
+</div>
+<!-- Second Customer Message -->
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 flex-shrink-0 bg-surface-container-low flex items-center justify-center rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of the customer in a warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUCzldjxXYHMLa34wCVaAInjxFeBAZcWHhs568y4SLeBI-Se7SDUwZpEWyC1LLnNEbJCPPRIhdZqg_h9PRJgL54CrVka4A5XFE9Z-kilpnvvCVLePULwBeHJ6dLfdZWyykTUH_krXh4tEgRGTe2HqC_1VAwtzxojERK8eccuE63p7fwWBaKYLWGT5Q_Q9ouwG27wHmK0Tcc4cI504mVDQC9bbGnV2uYZeR6g4FmrcgTqlfAvECy4_6_hFmbZLe7D_UtfoyrbMy6Ofn"/>
+</div>
+<div class="flex-1 bg-surface-container-lowest p-8 rounded-xl">
+<div class="flex items-center justify-between mb-4">
+<span class="font-bold text-sm font-headline">You (Member Atelier)</span>
+<span class="text-xs text-outline font-label">1:30 PM</span>
+</div>
+<div class="text-on-surface-variant leading-relaxed font-body">
+<p>Thank you for the update, Elena. I appreciate the credit. Is there any way to expedite the final delivery leg given the initial delay?</p>
+</div>
+</div>
+</div>
+<!-- Reply Box -->
+<div class="mt-12 pt-12 border-t border-outline-variant/30">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<h3 class="font-bold text-sm font-headline mb-6 uppercase tracking-widest text-on-surface">Post a Reply</h3>
+<div class="relative">
+<textarea class="w-full bg-surface-container-high border-none rounded-lg p-6 font-body text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline" placeholder="Write your message to the atelier team..." rows="6"></textarea>
+<div class="absolute bottom-4 right-4 flex items-center gap-4">
+<button class="material-symbols-outlined text-outline hover:text-secondary transition-colors">attach_file</button>
+<button class="material-symbols-outlined text-outline hover:text-secondary transition-colors">image</button>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-center">
+<p class="text-xs text-outline font-label">Our support specialists typically respond within 2 hours.</p>
+<button class="bg-secondary text-white px-10 py-4 font-bold uppercase text-xs tracking-widest hover:bg-secondary-container transition-all flex items-center gap-2">
+                                Send Message
+                                <span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Right Sidebar Info -->
+<aside class="hidden xl:block w-80 px-8 py-8 border-l border-outline-variant/10">
+<div class="sticky top-32 space-y-10">
+<section>
+<h4 class="font-bold text-xs font-headline uppercase tracking-widest text-outline mb-6">Linked Product</h4>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<img class="w-full h-32 object-cover rounded mb-4" data-alt="Minimalist ceramic vase on a stone plinth with dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDue4qoh-NQpy0-T0Hn8l7wyYWt89AtUY9iG39Xw8pWyJGWChdPvkBeSnDnRtjcoV80De8SQYWD7AViUPkW_QZjYUkFzzW9eaB0kdwHij_aB4TOI6yGeAis-AJjJ3qzdqi0C-Ys83kA7tDcpaMzu82avyV2GUzThg6v036TIbapra5-StVevR2r36F_PNW2UGkDJ9a4LkVHQfME0lj5UelbFvDyxdywa87_uypE07T4Vv-xLLhlAZDtVY6p9CVpDh0ZIJJdk5h6yrdV"/>
+<h5 class="font-bold text-sm text-on-surface leading-tight">Archive Collection: No. 04 Ceramic Vase</h5>
+<p class="text-xs text-secondary mt-1">$450.00 USD</p>
+</div>
+</section>
+<section>
+<h4 class="font-bold text-xs font-headline uppercase tracking-widest text-outline mb-4">Assigned Specialist</h4>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface leading-none">Elena K.</p>
+<p class="text-[10px] text-outline uppercase tracking-tight mt-1">Global Logistics</p>
+</div>
+</div>
+</section>
+<section>
+<h4 class="font-bold text-xs font-headline uppercase tracking-widest text-outline mb-4">Quick Actions</h4>
+<ul class="space-y-3">
+<li>
+<button class="text-sm text-on-surface-variant hover:text-secondary flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-lg">local_shipping</span>
+                                View Tracking Details
+                            </button>
+</li>
+<li>
+<button class="text-sm text-on-surface-variant hover:text-secondary flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-lg">description</span>
+                                Download Invoice
+                            </button>
+</li>
+<li>
+<button class="text-sm text-error hover:opacity-80 flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-lg">flag</span>
+                                Escalate Ticket
+                            </button>
+</li>
+</ul>
+</section>
+</div>
+</aside>
+</div>
+<!-- Footer -->
+<footer class="w-full mt-24 bg-slate-100 dark:bg-slate-950">
+<div class="w-full px-12 py-16 grid grid-cols-1 md:grid-cols-4 gap-12 font-inter text-xs tracking-widest uppercase text-slate-900 dark:text-slate-100">
+<div class="col-span-1 md:col-span-1">
+<div class="text-xl font-black text-slate-900 dark:text-white mb-6">NORDIC ATELIER</div>
+<p class="normal-case tracking-normal text-slate-500 max-w-xs">Curating essential objects for the modern dwelling with a commitment to Scandinavian craft and sustainability.</p>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-slate-900 dark:text-white">Assistance</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Shipping &amp; Returns</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Contact</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Care Guide</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-slate-900 dark:text-white">Legal</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Privacy Policy</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Terms of Service</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Sustainability Report</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-slate-900 dark:text-white">Journal</h4>
+<p class="normal-case tracking-normal text-slate-500 mb-4">Join our community for early access and editorial stories.</p>
+<div class="flex">
+<input class="bg-transparent border-b border-slate-300 dark:border-slate-700 py-2 w-full focus:outline-none focus:border-blue-700 transition-colors uppercase text-[10px]" placeholder="Email Address" type="email"/>
+<button class="material-symbols-outlined">arrow_forward</button>
+</div>
+</div>
+</div>
+<div class="px-12 py-8 border-t border-slate-200 dark:border-slate-900 text-[10px] text-slate-400 flex justify-between items-center">
+<span>© 2024 NORDIC ATELIER. SUSTAINABLY CRAFTED.</span>
+<div class="flex gap-6">
+<a href="#">Instagram</a>
+<a href="#">Pinterest</a>
+</div>
+</div>
+</footer>
+</body></html>

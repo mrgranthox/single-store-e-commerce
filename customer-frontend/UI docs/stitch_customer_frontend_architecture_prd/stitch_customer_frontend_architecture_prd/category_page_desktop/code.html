@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#ffddb8",
+              "background": "#f8f9ff",
+              "outline": "#76777d",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary": "#0051d5",
+              "surface-tint": "#565e74",
+              "primary-fixed": "#dae2fd",
+              "on-background": "#0b1c30",
+              "surface-dim": "#cbdbf5",
+              "surface-container": "#e5eeff",
+              "on-tertiary-container": "#b87500",
+              "on-surface": "#0b1c30",
+              "on-primary-container": "#7c839b",
+              "secondary-fixed": "#dbe1ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "on-secondary-container": "#fefcff",
+              "inverse-primary": "#bec6e0",
+              "surface": "#f8f9ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface-container-highest": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "surface-container-low": "#eff4ff",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "primary": "#000000",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff",
+              "primary-container": "#131b2e",
+              "outline-variant": "#c6c6cd",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary": "#ffffff",
+              "tertiary": "#000000",
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#316bf3",
+              "surface-container-high": "#dce9ff",
+              "on-secondary-fixed": "#00174b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+            font-family: 'Inter', sans-serif;
+        }
+        .editorial-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl no-border bg-slate-50/50 dark:bg-slate-800/50 flat no shadows">
+<div class="flex items-center justify-between px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 font-['Manrope']">AELIA</div>
+<div class="hidden md:flex items-center space-x-8 font-['Manrope'] tracking-tight">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors hover:opacity-80 transition-opacity duration-300" href="#">New Arrivals</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors hover:opacity-80 transition-opacity duration-300" href="#">Curated</a>
+<a class="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400 pb-1 hover:opacity-80 transition-opacity duration-300" href="#">Living</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors hover:opacity-80 transition-opacity duration-300" href="#">Objects</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors hover:opacity-80 transition-opacity duration-300" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-6 text-slate-900 dark:text-slate-50">
+<button class="hover:opacity-80 transition-opacity duration-300 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="hover:opacity-80 transition-opacity duration-300 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-20">
+<!-- Hero Section -->
+<header class="max-w-screen-2xl mx-auto px-8 mb-24">
+<div class="editorial-grid">
+<div class="col-span-12 md:col-span-5 flex flex-col justify-center">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-secondary font-bold mb-6">Collection 04</span>
+<h1 class="font-headline text-7xl md:text-8xl font-bold tracking-tighter text-on-surface mb-8 leading-[0.9]">Living <br/>&amp; Spaces.</h1>
+<p class="font-body text-lg text-on-surface-variant max-w-md leading-relaxed">
+                        A curated exploration of Nordic minimalism and domestic sanctuary. We believe in the quiet power of functional art—objects that breathe life into the architecture of home.
+                    </p>
+</div>
+<div class="col-span-12 md:col-span-7 relative">
+<div class="aspect-[4/5] md:aspect-[16/10] overflow-hidden rounded-lg bg-surface-container-low">
+<img alt="Minimalist Living" class="w-full h-full object-cover" data-alt="Modern minimalist living room with a neutral palette, architectural concrete walls, a low-profile linen sofa, and soft natural morning light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ2q_x66VE6RYrp3kGmg-jKd-v70FI5HPRf_6Gm2PcSyKBEm9JgD6QID_z0xLs_2Cebel1jzvOHyJ7Zs5yuv8E1ksx_5aMcyqwKFNVXACsl5gX560GlByxs1LY2IfH60we1Te1ed-2yW2V4g5E-OvXm7N-MO3bfBzYpkdFUfzd4Dger7n00ZlC3-v-rYn6nXeuPJPueNCs7qkonTpSTYl9PpneS7bfP59K0j86Uv8rnGTD5ZQNOkcuwBqAb07VX2FLzvpzY0Xl6hio"/>
+</div>
+<div class="absolute -bottom-12 -left-12 hidden lg:block p-8 bg-surface-container-lowest rounded-xl shadow-2xl max-w-xs border border-outline-variant/20">
+<p class="font-body text-sm italic text-on-surface-variant">"Design is not for philosophy, it's for life."</p>
+<p class="font-label text-[10px] uppercase tracking-widest mt-4 font-bold text-secondary">Isak Vestergaard — Lead Curator</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Sub-category Bento Grid -->
+<section class="max-w-screen-2xl mx-auto px-8 mb-32">
+<div class="flex items-end justify-between mb-12">
+<h2 class="font-headline text-4xl font-bold tracking-tight">The Categories</h2>
+<a class="font-label text-sm font-bold text-secondary border-b border-secondary pb-1 hover:opacity-70 transition-opacity" href="#">Explore All Directories</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[300px]">
+<!-- Card 1: Large -->
+<div class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-xl bg-surface-container-low transition-transform duration-500">
+<img alt="Seating" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="High-end designer lounge chair made of light oak and cream wool bouclé in a bright, sun-drenched studio setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE2TVQi-WYoe626cm_AvxyipoAyVgSx5fQRx-QlzOTLJhb9gSCK4rwOlKtCvM6zlgFBNPTboHhXj58Z5l2sSxxULpq8cE69qYjaGXoZ95RalpDKOw0YdanwvI2rGRku3ydMC1idUirHyKX51fsReSrUPzlXsVQ-i2jkGyGz3Dvc3mSOf001G696FCINme3l0gttt7ax0tD9ib2ORyHNlnrt1IkpKpYFoFX5dxNTXUZVBbfjyibh9v55ikbmKf8w79QwSOv9FDl_85p"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex flex-col justify-end p-8">
+<h3 class="text-white font-headline text-3xl font-bold">Sculptural Seating</h3>
+<p class="text-white/80 font-body text-sm mt-2">Form meets the body in perfect harmony.</p>
+</div>
+</div>
+<!-- Card 2: Wide -->
+<div class="md:col-span-2 group relative overflow-hidden rounded-xl bg-surface-container-low transition-transform duration-500">
+<img alt="Lighting" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A collection of contemporary pendant lights with matte charcoal finishes illuminating a dark, moody wooden dining table." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtZs9hja8cNfMQ6v4ozfY__V4Db_1jypYewgSwgg9E1ylzkWYkpP_Fv0bVpwwnHJHs4oxXo5OOZdnNlADCZOZ63PzC4bWdBjxlv9NPPmYizlszeGLZKSSCrEjqkjPqd39SDF22HpdSuWbaWMjgez8vSJntjt0CF-qlOGEWag3-RR7-I2PFE-EzM9ACq7HJasV1aasp3D9j30HKHWDE518RTAVxDW6BVV5hsivydJ4PbM60t9_-DqkgbDbUvN58TbWPakyTlu5B8aVO"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex flex-col justify-end p-8">
+<h3 class="text-white font-headline text-2xl font-bold">Ambient Lighting</h3>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative overflow-hidden rounded-xl bg-surface-container-low transition-transform duration-500">
+<img alt="Tables" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close-up of a solid travertine coffee table with organic edges and natural stone textures in a soft light environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeDhi0C-qqGittn9RO16hpXTLHmdb1hDIii4Mh3H1sO44rl5WkMBDMs4IVubGXqgkrijby82TV1JDVURvbG9FGdC68n5mZ6vCrGgkfesay6wVXXKmoYD-gsT6H-oQAD0ab7pV-IST8RTfx6S43M6qv_8Bscaz_UxGHOGA_HbG1wIsDnTF8_IMAVNDgOzVbtSBlBWXHA_69BJYxR8qLfD48Zw5o87Y7f5mnR48ezLqkdBK_PUbNMXbIPQxYjlSkzXTHAeSGIFSLcV4L"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex flex-col justify-end p-6">
+<h3 class="text-white font-headline text-xl font-bold">Living Tables</h3>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative overflow-hidden rounded-xl bg-surface-container-low transition-transform duration-500">
+<img alt="Storage" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist modular shelving unit made of light wood against a white wall, sparsely decorated with ceramic vases." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw5TMNNtZ17Gw30VXA6g-1Yu3Y5EKr_IRlTHvngjHq_A7ATLuO_Xd5jweveTDRVihlaWghYlBPXd8w_ftsyjm4kY19u2hW-ZmKDKB5mCFpgblfOA_nVJ0CMCDitKzOJmj9AQU1YDTPzs0b0ybi32J2oyW1pki9VzMvckwm5r-_7LrkUin6ej8GifdnJhuFiCiuNdk1PHiQp_QdAA7h2aMeo0OITkfZtj_z5hlrw13wYkQw6L2lFmrx6YcJJ90dCWk879Um5dfd0TvU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent flex flex-col justify-end p-6">
+<h3 class="text-white font-headline text-xl font-bold">Storage Systems</h3>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Items Editorial -->
+<section class="bg-surface-container-low py-32 overflow-hidden">
+<div class="max-w-screen-2xl mx-auto px-8">
+<div class="flex flex-col md:flex-row gap-16 items-start">
+<div class="w-full md:w-1/3 sticky top-32">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-secondary font-bold mb-4 block">The Selection</span>
+<h2 class="font-headline text-5xl font-bold tracking-tighter mb-8">Iconic Pieces.</h2>
+<p class="font-body text-on-surface-variant leading-relaxed mb-10">
+                            Our editors select one piece every month that defines the current zeitgeist of Nordic living. This season, we focus on the raw textures of stone and the warmth of untreated oak.
+                        </p>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-md font-label text-sm font-bold uppercase tracking-widest hover:bg-secondary transition-colors duration-300">
+                            Shop the Edit
+                        </button>
+</div>
+<div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-12">
+<!-- Product 1 -->
+<div class="space-y-6 group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-lowest">
+<img alt="Object" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A sculptural velvet armchair in deep forest green, showcasing its elegant curves and high-quality upholstery texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA70y1YRlTw38gyJMcTyHFBb-0kq_0-3X0Qj49hXFafkF6Bic2LGM1IyFmvF52WEkJbusDHW1D5WPL2pGiUh6wLK970FoKJwpZkC09ZPa9JHJZ-VDY_kVLYC4CcprFxV9NzMDdmbCMZzwKQRrhGH20GUPaqpN8R0KoMspwiJslpo5cOu-gkQlGQ-_ciJ8OYHGVWDpoxha6FpB_PnRwayKJar28cC5XldFTlGJPnH3hcez6knBhfFMetvmcV0yrICDHDAPAxq62ASZqd"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-xl font-bold">Verona Lounge Chair</h4>
+<p class="font-body text-sm text-outline">Velvet &amp; Walnut</p>
+</div>
+<span class="font-label font-bold text-secondary">$2,450</span>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="space-y-6 group transform translate-y-16">
+<div class="aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-lowest">
+<img alt="Object" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Modern geometric floor lamp with a thin black metal frame and a spherical opal glass shade, soft glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsV_bxnGBC66LFN89k5lCBRt5mZzhQIUvGvZEcJEipubKqZLaM_7J2V4rIPiNWt32ZNPivlVuWaPVGE3kk6S-ClIFH-FmqCnzd9DKtjG2seVHziEE_1TnpRkl97ZxAu1sjJaXOHaw2-GMtGesZplCrmNUKDcm4YtJK0RmgPmXzz2RZCbPV-er-5ao7y8v7ov6d6IzhzU5Nm4MCYse9mh3F4A5yfyWEWHjhVCZUNmGb5v1jCDrOQUf3l230hJ5IlcVYPNNOykvgC3PF"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-xl font-bold">Orbiter Floor Light</h4>
+<p class="font-body text-sm text-outline">Opal Glass &amp; Steel</p>
+</div>
+<span class="font-label font-bold text-secondary">$890</span>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="space-y-6 group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-lowest">
+<img alt="Object" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Three varying sized ceramic vases in earth tones arranged on a textured plaster pedestal, soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3lRzhwBGMy4EnRdqKB5I69p0byNkT2Ca1v86wm0XdzkEAr_I-t0EgdaTAM2hMggBIWWyBwqcmuhCKCAWqY_DI9iBEajJsjVSe51F5ecFpBgWkKshaFXHpkq99f4qVAt96qP369yEqyt_oSlqMOD-yS4FeNVmri1oGqdWg3hbEzA48kxiEQ0WM8NsVc3ws7YIO0ZEMW02xfceBtahCs73--ry_mPbLBPrG2q4iclRj70RZnTLUKZB5A7Xs6-2eAb0lnQhY-VTZDIsW"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-xl font-bold">Tidal Ceramic Series</h4>
+<p class="font-body text-sm text-outline">Hand-thrown Clay</p>
+</div>
+<span class="font-label font-bold text-secondary">$320</span>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="space-y-6 group transform translate-y-16">
+<div class="aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-lowest">
+<img alt="Object" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A low oak sideboard with sliding doors and a seamless grain finish, minimalist and functional design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARNGv3fVLElRUmRtAJGSiwdFv57W4cv143e9UuvkJ_uplp_7oxMpxk5Bg56HLYOOQ6Y4JDmP8UmLAovsyzW3UBO97p7SJDO9fPZgPaNYuljBsblhov5fPoSjFMm-h1bujpzPi0j5PRZRsL8xXPmOYT6gUdUWOroIHiOCE816a0cYcdopXVEuoVxvQGvWrGy4xYw76K1xFwPmTl622uXysf8KWLLLPfScJv94ZCeeChUACHFvUOqipb7mCqIe13mFtY8cPc8Af4LfxH"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-xl font-bold">Linear Oak Sideboard</h4>
+<p class="font-body text-sm text-outline">Solid White Oak</p>
+</div>
+<span class="font-label font-bold text-secondary">$3,100</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Journal/Editorial Content -->
+<section class="max-w-screen-2xl mx-auto px-8 mt-48 mb-32">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="order-2 lg:order-1 relative">
+<div class="aspect-square overflow-hidden rounded-lg">
+<img alt="Journal" class="w-full h-full object-cover" data-alt="A cozy, sunlit reading corner with a large bookshelf, a comfortable armchair, and a warm cup of coffee on a side table." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG0rURsjmvjfhrjhNRkszc7rtQNvTso4QjhL_F6HQiq3louVO0a37-PE9YmMvbHo9W_IPmTYUpEc8cdVWmkX0Inv5N_zZZbl1UqTtxVcXF596cqnscdndU8LS7IFfGCT7zezLDdibkmHEo1_cUX19GeAq1nSn5HuD3cyr-pLRS5U0RgN1M2u_2VqBjo25IwVfQXIhsQfWIeb8naRYlKOlfxl-IfuoKAIXAVp1PN2mSdKGaVnLk8PsZHDKn_ncB6FNoo-Jc1G5hILNi"/>
+</div>
+<div class="absolute -top-12 -right-12 w-48 h-48 bg-tertiary-fixed rounded-full flex items-center justify-center p-6 text-center transform -rotate-12">
+<p class="font-label text-[10px] uppercase tracking-widest font-bold leading-tight">Featured in the Journal: <br/> The Art of Stillness</p>
+</div>
+</div>
+<div class="order-1 lg:order-2 space-y-8">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-secondary font-bold">From The Journal</span>
+<h3 class="font-headline text-5xl font-bold tracking-tighter leading-[1.1]">Rethinking the <br/> Common Space.</h3>
+<p class="font-body text-lg text-on-surface-variant leading-relaxed">
+                        In our latest essay, we speak with architect Elena Rossi about the blurring lines between public and private spaces. Discover how to create "pockets of silence" in even the most open-plan environments.
+                    </p>
+<a class="inline-flex items-center gap-4 group" href="#">
+<span class="font-label font-bold uppercase tracking-widest text-sm">Read the Article</span>
+<span class="w-12 h-px bg-on-surface group-hover:w-16 transition-all duration-300"></span>
+</a>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-20 pt-16 pb-8 bg-slate-100 dark:bg-slate-950 tonal-shift bg-slate-200 dark:bg-slate-900 flat no shadows font-['Inter'] text-[11px] uppercase tracking-widest">
+<div class="max-w-screen-2xl mx-auto px-8 flex flex-col items-center space-y-12">
+<div class="text-lg font-black text-slate-900 dark:text-slate-50">AELIA ATELIER</div>
+<div class="flex flex-wrap justify-center gap-12 text-slate-500 dark:text-slate-400">
+<a class="hover:text-blue-600 transition-colors fade-in duration-500" href="#">Sustainability</a>
+<a class="hover:text-blue-600 transition-colors fade-in duration-500" href="#">Terms of Service</a>
+<a class="hover:text-blue-600 transition-colors fade-in duration-500 text-blue-600 underline" href="#">Privacy Policy</a>
+<a class="hover:text-blue-600 transition-colors fade-in duration-500" href="#">Accessibility</a>
+</div>
+<div class="text-slate-500 dark:text-slate-400">
+                © 2024 AELIA ATELIER. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Report an Issue | Nordic Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#000000",
+              "surface-container-high": "#dce9ff",
+              "surface-tint": "#565e74",
+              "surface-variant": "#d3e4fe",
+              "error": "#ba1a1a",
+              "error-container": "#ffdad6",
+              "tertiary": "#000000",
+              "on-surface-variant": "#45464d",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "secondary-container": "#316bf3",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-surface": "#0b1c30",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "tertiary-fixed-dim": "#ffb95f",
+              "secondary-fixed-dim": "#b4c5ff",
+              "outline-variant": "#c6c6cd",
+              "outline": "#76777d",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-container-low": "#eff4ff",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "primary-container": "#131b2e",
+              "on-primary-fixed": "#131b2e",
+              "inverse-on-surface": "#eaf1ff",
+              "tertiary-container": "#2a1700",
+              "surface-dim": "#cbdbf5",
+              "background": "#f8f9ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#dbe1ff",
+              "on-tertiary-fixed": "#2a1700",
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "secondary": "#0051d5",
+              "on-tertiary-container": "#b87500",
+              "inverse-primary": "#bec6e0",
+              "primary-fixed": "#dae2fd",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl border-none">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-900 font-headline">Nordic Atelier</div>
+<div class="hidden md:flex items-center gap-8 font-headline tracking-tight font-semibold">
+<a class="text-slate-600 hover:text-slate-900 transition-colors duration-200" href="#">Shop</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors duration-200" href="#">Curation</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors duration-200" href="#">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100/50 transition-colors duration-200 rounded-full">
+<span class="material-symbols-outlined text-on-surface" data-icon="account_circle">account_circle</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 transition-colors duration-200 rounded-full">
+<span class="material-symbols-outlined text-on-surface" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-32">
+<!-- Hero & Context -->
+<header class="max-w-7xl mx-auto px-6 mb-16 mt-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+<div class="lg:col-span-7">
+<span class="inline-block text-secondary font-headline font-bold text-sm tracking-[0.2em] mb-4 uppercase">Quality Assurance</span>
+<h1 class="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter text-primary leading-[0.9] mb-6">
+                        We are here to <span class="text-secondary">make it right.</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-xl leading-relaxed">
+                        At Nordic Atelier, precision is our standard. If your experience or product has fallen short of excellence, please allow us to rectify the situation with the attention it deserves.
+                    </p>
+</div>
+<div class="lg:col-span-5 flex flex-col items-start lg:items-end">
+<div class="bg-surface-container-low p-6 rounded-xl max-w-xs">
+<span class="material-symbols-outlined text-secondary mb-3" data-icon="verified_user">verified_user</span>
+<h3 class="font-headline font-bold text-lg mb-2">Our 24h Promise</h3>
+<p class="text-sm text-on-surface-variant">All formal reports are reviewed by our dedicated quality team within one business day.</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Reporting Interface -->
+<section class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Guidelines & Process -->
+<div class="lg:col-span-4 space-y-12">
+<div class="space-y-8">
+<div>
+<h4 class="font-headline font-bold text-sm tracking-widest uppercase mb-6 text-outline">Submission Process</h4>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="flex-none w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm">1</div>
+<div>
+<p class="font-bold text-on-surface">Identify Issue</p>
+<p class="text-sm text-on-surface-variant">Select the product and describe the specific quality concern.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-none w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-sm">2</div>
+<div>
+<p class="font-bold text-on-surface">Documentation</p>
+<p class="text-sm text-on-surface-variant">Upload high-resolution images showing the defect or issue.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-none w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-sm">3</div>
+<div>
+<p class="font-bold text-on-surface">Resolution</p>
+<p class="text-sm text-on-surface-variant">Our specialists will contact you with a proposed solution.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-dim rounded-2xl overflow-hidden relative group">
+<img alt="Nordic furniture quality check" class="w-full h-64 object-cover grayscale opacity-50 group-hover:scale-105 transition-transform duration-700" data-alt="Close-up of a craftsman's hands inspecting a textured fabric swatch with professional tools in a bright minimalist studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYz5CeWhQ3DnRWdy9oKJPZVW_yg-KSRJ7M_hD84kkpCDANrl1FAjdhitRZip9DxN5_I9Z8io5Me3WzxQDlV_WB5UXeoyyGGM-HO-wkx_K-ODHbqS-cnnFnckt4Izr319gp-GazLhLyPlHv0KpR7AjArln0GYEEWoxgcfuS7UihyXTU7PWjY1ZG3eVMPdPzAd0QghhXQlqxPGkTSSbcpzQa3_2yKS0ucpqkCY3bkrfHjMqgYgdpYj9XprPbwMQCErpyoNfgKEHEOBSo"/>
+<div class="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-primary-container/80 to-transparent">
+<p class="text-white font-headline font-bold">Committed to Craft</p>
+<p class="text-slate-300 text-xs">Learn about our Nordic standards</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Form Section -->
+<div class="lg:col-span-8">
+<div class="bg-surface-container-lowest p-8 md:p-12 rounded-2xl shadow-[20px_40px_60px_-15px_rgba(11,28,48,0.06)] border border-outline-variant/10">
+<form class="space-y-10">
+<!-- Personal Info Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline ml-1">Order Number</label>
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-4 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/20 transition-all font-body text-on-surface outline-none" placeholder="e.g. NA-92834" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline ml-1">Full Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-4 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/20 transition-all font-body text-on-surface outline-none" placeholder="Enter your name" type="text"/>
+</div>
+</div>
+<!-- Issue Categorization -->
+<div class="space-y-4">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline ml-1">Issue Category</label>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-3 rounded-full bg-secondary text-on-secondary text-sm font-semibold transition-all" type="button">Product Defect</button>
+<button class="px-5 py-3 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest text-sm font-semibold transition-all" type="button">Shipping Damage</button>
+<button class="px-5 py-3 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest text-sm font-semibold transition-all" type="button">Incorrect Item</button>
+<button class="px-5 py-3 rounded-full bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest text-sm font-semibold transition-all" type="button">Service Quality</button>
+</div>
+</div>
+<!-- Detailed Description -->
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline ml-1">Issue Description</label>
+<textarea class="w-full bg-surface-container-high border-none rounded-md px-4 py-4 focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/20 transition-all font-body text-on-surface outline-none resize-none" placeholder="Please provide specific details about the issue..." rows="6"></textarea>
+</div>
+<!-- Image Upload Zone -->
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline ml-1">Visual Evidence</label>
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-12 flex flex-col items-center justify-center bg-surface-container-low hover:bg-surface-container-high transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-outline group-hover:text-secondary transition-colors mb-4" data-icon="cloud_upload">cloud_upload</span>
+<p class="font-bold text-on-surface">Drag &amp; drop files here</p>
+<p class="text-sm text-outline mt-1">PNG, JPG or HEIC up to 10MB each</p>
+<button class="mt-6 text-secondary text-sm font-bold underline decoration-2 underline-offset-4" type="button">Browse Files</button>
+</div>
+</div>
+<!-- Resolution Preference -->
+<div class="space-y-4">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline ml-1">Preferred Resolution</label>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<label class="relative flex items-center p-4 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container-high transition-all">
+<input class="w-4 h-4 text-secondary focus:ring-secondary" name="res" type="radio"/>
+<span class="ml-3 text-sm font-semibold">Full Refund</span>
+</label>
+<label class="relative flex items-center p-4 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container-high transition-all">
+<input class="w-4 h-4 text-secondary focus:ring-secondary" name="res" type="radio"/>
+<span class="ml-3 text-sm font-semibold">Replacement</span>
+</label>
+<label class="relative flex items-center p-4 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container-high transition-all">
+<input class="w-4 h-4 text-secondary focus:ring-secondary" name="res" type="radio"/>
+<span class="ml-3 text-sm font-semibold">Store Credit</span>
+</label>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-6 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 rounded text-secondary focus:ring-secondary border-outline-variant" id="consent" type="checkbox"/>
+<label class="text-sm text-on-surface-variant leading-tight" for="consent">I certify that the information provided is accurate and I agree to the <a class="text-secondary font-semibold underline" href="#">Terms of Resolution</a>.</label>
+</div>
+<button class="w-full md:w-auto px-10 py-5 bg-primary text-on-primary rounded-md font-headline font-bold tracking-tight hover:bg-secondary transition-all active:scale-95 shadow-xl shadow-primary/10" type="submit">
+                                    Report Issue
+                                </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- Secondary Support -->
+<section class="mt-24 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-surface-container-low p-8 rounded-2xl group hover:bg-surface-container-high transition-all">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="support_agent">support_agent</span>
+</div>
+<h4 class="text-xl font-headline font-bold mb-3">Live Specialist</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Need immediate guidance? Connect with a quality specialist in real-time for urgent concerns.</p>
+<a class="inline-flex items-center text-sm font-bold text-secondary" href="#">
+                    Start Chat <span class="material-symbols-outlined ml-2 text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="bg-surface-container-low p-8 rounded-2xl group hover:bg-surface-container-high transition-all">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="history">history</span>
+</div>
+<h4 class="text-xl font-headline font-bold mb-3">Track Report</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Already submitted a report? Check the status and read our specialist's feedback.</p>
+<a class="inline-flex items-center text-sm font-bold text-secondary" href="#">
+                    View History <span class="material-symbols-outlined ml-2 text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="bg-surface-container-low p-8 rounded-2xl group hover:bg-surface-container-high transition-all">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="help">help</span>
+</div>
+<h4 class="text-xl font-headline font-bold mb-3">FAQ &amp; Policies</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Review our comprehensive warranties and return policies for different product categories.</p>
+<a class="inline-flex items-center text-sm font-bold text-secondary" href="#">
+                    Read Policies <span class="material-symbols-outlined ml-2 text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-100 py-12 border-t border-slate-200">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto">
+<div class="mb-6 md:mb-0">
+<div class="font-bold text-slate-900 font-headline text-lg">Nordic Atelier</div>
+<p class="text-sm font-body text-slate-500 mt-1">© 2024 Nordic Atelier. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-sm font-body text-slate-500 hover:text-slate-800 transition-all" href="#">Privacy Policy</a>
+<a class="text-sm font-body text-slate-500 hover:text-slate-800 transition-all" href="#">Terms of Service</a>
+<a class="text-sm font-body text-slate-500 hover:text-slate-800 transition-all" href="#">Shipping Info</a>
+<a class="text-sm font-body text-slate-500 hover:text-slate-800 transition-all" href="#">Returns</a>
+</div>
+</div>
+</footer>
+<!-- Bottom Navigation (Mobile Only) -->
+<div class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-3 pb-6 bg-white/90 backdrop-blur-lg border-t border-slate-100 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] rounded-t-2xl">
+<div class="flex flex-col items-center justify-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[11px] font-medium uppercase tracking-wider mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-[11px] font-medium uppercase tracking-wider mt-1">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span class="text-[11px] font-medium uppercase tracking-wider mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-700 font-bold">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="text-[11px] font-medium uppercase tracking-wider mt-1">Support</span>
+</div>
+</div>
+</body></html>

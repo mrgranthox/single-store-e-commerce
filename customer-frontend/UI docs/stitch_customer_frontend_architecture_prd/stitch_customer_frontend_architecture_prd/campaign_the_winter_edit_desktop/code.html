@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#dce9ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary-container": "#fefcff",
+              "surface-container-highest": "#d3e4fe",
+              "surface-bright": "#f8f9ff",
+              "primary": "#000000",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "outline": "#76777d",
+              "on-surface-variant": "#45464d",
+              "on-background": "#0b1c30",
+              "inverse-primary": "#bec6e0",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "tertiary": "#000000",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary-fixed": "#dae2fd",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary": "#0051d5",
+              "on-primary-container": "#7c839b",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-fixed-variant": "#003ea8",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-tertiary-container": "#b87500",
+              "outline-variant": "#c6c6cd",
+              "surface-container": "#e5eeff",
+              "secondary-container": "#316bf3",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed": "#ffddb8",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#00174b",
+              "background": "#f8f9ff",
+              "tertiary-container": "#2a1700",
+              "surface": "#f8f9ff",
+              "primary-container": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0 20px 40px -5px rgba(11, 28, 48, 0.06);
+        }
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-6 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-950 font-headline">NORDIC ATELIER</div>
+<div class="hidden md:flex items-center gap-12 font-headline tracking-tight text-sm font-medium uppercase">
+<a class="text-blue-700 border-b-2 border-blue-700 pb-1 hover:text-blue-600 transition-colors duration-300" href="#">Collections</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors duration-300" href="#">Objects</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors duration-300" href="#">Editorial</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors duration-300" href="#">Archive</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-low px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-32 font-medium" placeholder="Search" type="text"/>
+</div>
+<button class="hover:scale-95 duration-200 ease-in-out text-slate-900">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="hover:scale-95 duration-200 ease-in-out text-slate-900">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section: The Winter Edit -->
+<section class="relative h-[921px] w-full px-8 mb-24">
+<div class="grid grid-cols-12 h-full gap-4">
+<div class="col-span-12 lg:col-span-8 relative overflow-hidden rounded-xl">
+<img alt="The Winter Edit Hero" class="w-full h-full object-cover" data-alt="Minimalist Scandinavian living room with a crackling fireplace, soft wool throws, and warm ambient lighting during a snowy twilight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLN9LEyqZdDt8RYnu2DqrRHgC7O1mPMUwIZ-AJRvhRkfR_qFdM-Mfw9AL-1XHpjrsPxYLRlRIfNNaHiyarQKYifH_Mhpb9QkxnhbBwmXg4TO1HD00nuAZ1R76irPDqBBmcHcxiFjU_tzVly_Rr7L8k4DY7v9C63UPN1AJkUwUX5AfwFyGJWmxG45RnkTfCHzvL5VZSJ5Q1biVBl69xj9wKbQN4OIJpDjolm1QM63We5yErp9kKD0pKG1PDKcqk40xQcU5oBEtGQv23"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/40 to-transparent"></div>
+</div>
+<div class="col-span-12 lg:col-span-4 flex flex-col justify-end p-8 lg:p-12 bg-surface-container-low rounded-xl">
+<span class="font-headline font-bold text-sm tracking-[0.2em] uppercase text-secondary mb-4">Seasonal Editorial</span>
+<h1 class="font-headline text-5xl lg:text-7xl font-extrabold tracking-tighter leading-[0.9] mb-8">THE <br/>WINTER <br/>EDIT</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed mb-10 max-w-sm">
+                        Curating the essence of Nordic hygge. Discover a sanctuary of tactile warmth and soft luminosity for the coldest months.
+                    </p>
+<a class="group flex items-center gap-4 text-primary font-bold uppercase tracking-widest text-sm" href="#collections">
+                        Explore the Collection
+                        <span class="w-12 h-[1px] bg-primary group-hover:w-16 transition-all duration-300"></span>
+</a>
+</div>
+</div>
+</section>
+<!-- Editorial Content: Asymmetric Bento Grid -->
+<section class="max-w-screen-2xl mx-auto px-8 mb-32" id="collections">
+<div class="flex flex-col lg:flex-row justify-between items-baseline mb-16 border-b border-outline-variant/20 pb-8">
+<h2 class="font-headline text-4xl font-bold tracking-tight">Curated Textures</h2>
+<p class="font-label text-sm uppercase tracking-widest text-outline">01 / Materiality &amp; Warmth</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Large Vertical Item -->
+<div class="md:col-span-1 flex flex-col gap-6">
+<div class="aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-low">
+<img alt="Wool Throws" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" data-alt="Extreme close-up of high-quality chunky knit merino wool throw in cream white with soft natural shadows and high texture detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLSBJBPtLa8gEz5WjjZBSPlAM0N5_l8FpdRchKrGmr7ss1ZgQIHcyeayrlS1TYw3GrVHvPTfZR2GDvJBtIkFFfta69bmc-B0mVxFKRAFdrXYLU1OksEqv9gRaZtoZJMCVX0Hqh2UQ6Gs1EcYAEz2o3nyUd7dpXp5zU8PCJhs32vtVcBFt1MVEHpFTVRKa-v7XgCim4KRYcB8-Fqhiyc5kOQQAXIoGwLScVVn77YynqdgNuHzrRrpMk2sbz5u2Rlo8IAQjY1Ae7hB4E"/>
+</div>
+<div>
+<h3 class="font-headline text-xl font-bold mb-2 uppercase">Soft Throws</h3>
+<p class="text-on-surface-variant text-sm mb-4">Hand-woven in Copenhagen using sustainably sourced merino fibers.</p>
+<a class="text-secondary text-sm font-bold uppercase tracking-widest hover:underline underline-offset-4" href="#">Shop Throws</a>
+</div>
+</div>
+<!-- Bento Middle Column -->
+<div class="md:col-span-1 flex flex-col gap-8">
+<div class="aspect-square overflow-hidden rounded-lg bg-surface-container-low">
+<img alt="Ambient Lighting" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" data-alt="A modern minimalist table lamp with a frosted glass globe shade casting a warm golden glow on a dark wooden surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFSnVhFtiAe2aUaXEfJEQeDGq44zf8_xKCSjMsBy9nDcnGFqef2-Eh2Q6IHAj91te25u_d51nTuxNO_9DRW22gBsgKY8nm6SXMpeiNEdDGwiZNvJsHi7UDDA7rnC5jGhLw-o57kKRP7PRdABQE38TH6JPrLBy0BYNgMi30ZXHPED3LvHTMw0Dk0AVonlze2Kl8jia8AiumqOwJJuUn2O4T0Gv6EdL6MlKxf2GnzWwPssCAjpYpCkw-aJkmDSAvDcBfE0g4pKtaTUea"/>
+</div>
+<div class="bg-primary-container p-8 rounded-lg text-on-primary h-full flex flex-col justify-center">
+<span class="text-tertiary-fixed text-xs font-bold tracking-widest uppercase mb-4">Winter Exclusive</span>
+<h3 class="font-headline text-2xl font-bold mb-4">The Glow of Solstice</h3>
+<p class="text-on-primary-container text-sm leading-relaxed mb-6">Experience our new line of ambient lighting designed to mimic the soft, low sun of a Nordic winter afternoon.</p>
+<button class="bg-secondary text-white py-3 px-6 text-xs font-bold uppercase tracking-widest rounded-md self-start hover:bg-secondary-container transition-colors">Pre-order Now</button>
+</div>
+</div>
+<!-- Right Column Small Stack -->
+<div class="md:col-span-1 flex flex-col gap-8 justify-between">
+<div class="aspect-video overflow-hidden rounded-lg bg-surface-container-low relative">
+<img alt="Ceramics" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" data-alt="Handcrafted ceramic mugs in muted earth tones sitting on a rustic stone countertop with steam rising from one." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByRBIfLgNoHAhmSk3jskxN4Rr_rb3oAI-yZt04xIRvfUtHKR_oLx0iB37tQ6-uLA8nY2hwS5YlZ-Ie2YIqBvWP3E8F-r7tNdBKuuKNzjI2Aj6oGHBPs5KWG_OBSaW_MSUzcy-c7HxXXiEwGVwetmn710IqLpxdvG_Bb84KvSJFHK-jIj1kJ0AWRzQ5jzBl2YZzJbdmcCeZH-93X7zA7BXno1fXyma1bi5AxzMWIa0bmFpQslTatQHwoOkwOHJYujdFX28ReYAc7i3w"/>
+<div class="absolute bottom-4 left-4 bg-white/90 glass-nav px-3 py-1 rounded text-[10px] font-bold tracking-tighter uppercase">New Arrivals</div>
+</div>
+<div class="flex flex-col gap-4">
+<h3 class="font-headline text-4xl font-extrabold tracking-tighter">ESSENTIAL <br/>TEXTURES</h3>
+<p class="text-on-surface-variant text-sm border-l-2 border-secondary pl-4 py-2 italic">"Design is not just what it looks like, but how it feels to the touch in the silence of winter."</p>
+</div>
+<div class="aspect-square overflow-hidden rounded-lg bg-surface-container-low">
+<img alt="Winter Interior" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" data-alt="A cozy corner of a house featuring a grey armchair, a minimalist side table, and a large window looking out at a snowy forest." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo412saVqBRQQLC2Whv3PbVZaU78zXYZCW_0Q3TV_hkOcMaIn-fI9pB60tvWINfiP68gMFRWT2Y9gu03hER8uBEBtsZhyKH9qyDVxz8pN8k0277YGAK1lJyDOT84dgcfyfDN3VkCzrtwzcKRXuKKGhWUVniwB15EtpWV9eEGr-Xv6KzwVB--5zT3GP0SIzS5EKWEaJxS5sO91SZ_JlKqvs6MBXqONbYCFggRmw9z6EP-rxjv5OSe53Hbkf1GXe8MI1Mz2Vgo8pXEMX"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Showcase Section: Horizontal Scroll / Cards -->
+<section class="bg-surface-container-low py-24 mb-32">
+<div class="max-w-screen-2xl mx-auto px-8">
+<div class="flex justify-between items-end mb-16">
+<div>
+<span class="text-secondary font-bold text-xs tracking-widest uppercase block mb-2">Winter Icons</span>
+<h2 class="font-headline text-4xl font-bold tracking-tight">Shop the Collection</h2>
+</div>
+<div class="flex gap-4">
+<button class="w-12 h-12 flex items-center justify-center rounded-full border border-outline-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-full border border-outline-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Product 1 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-lg mb-6 relative">
+<img alt="Solstice Lamp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Minimalist brass floor lamp with a thin curved neck and a small spotlight head on a clean white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf7yXiXa8C0mNj6hLP8g6r0kaL-NB5baZ74KkLs4d9obXUAx0N_tnQ_aQ7m97T9Hdl8OjWb3APMRbmc6Yvre-GQr4lrAMF03uBhns-tp_8TX9dOUs8VsCuE8E_s7Vlq_2HyYziiNYCOhxzwfEf9YhEk8ZY_NkK0K22jb3qzWL_W_Ov8VByojB6VtxI4q9JhEKu53Vb4FR8fAvhhGdLPptAFdr3AVJunbrBVucaZOkPFGfR7fHw8TWI3C9VJpE8G5DBOIhe81ZsnO1M"/>
+<div class="absolute top-4 right-4 bg-tertiary-fixed text-on-tertiary-fixed px-2 py-1 text-[10px] font-bold uppercase tracking-widest rounded">Best Seller</div>
+<button class="absolute bottom-4 left-4 right-4 translate-y-12 group-hover:translate-y-0 bg-primary text-white py-3 text-xs font-bold uppercase tracking-widest transition-transform duration-300">Quick Add</button>
+</div>
+<h4 class="font-headline font-bold text-base mb-1">Solstice Floor Lamp</h4>
+<p class="text-on-surface-variant text-sm mb-2">Aged Brass &amp; Frosted Glass</p>
+<p class="font-bold text-secondary text-sm">$420.00</p>
+</div>
+<!-- Product 2 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-lg mb-6 relative">
+<img alt="Knit Throw" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Folded grey cashmere throw blanket showing off its soft fiber and intricate weaving pattern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPOritsTjKdYIlElJrN7yKas17WD5_rAjGs5GdV51GUfocsm37OPchi_vkpsDUx7F03Zq6V4EaKQoWtqaikjun7AHNA8qSX2MB7uBAy6Pm8cAXCzBlJVjfEkdYj-7rglKRPaw6gU58WLZNrP6Z5CLrYY7tCQ_223aiec_mx7B1jgkRBpLNNlLlaoVdFjKus7dXnWamuKasRvFTXRBFZbkXAfpIjB1fi9sDy26V4gjagx7s6m4vVWrNVawEKCaVVxsr6_EWiAylPy-w"/>
+<button class="absolute bottom-4 left-4 right-4 translate-y-12 group-hover:translate-y-0 bg-primary text-white py-3 text-xs font-bold uppercase tracking-widest transition-transform duration-300">Quick Add</button>
+</div>
+<h4 class="font-headline font-bold text-base mb-1">Oslo Cashmere Throw</h4>
+<p class="text-on-surface-variant text-sm mb-2">100% Mongolian Cashmere</p>
+<p class="font-bold text-secondary text-sm">$280.00</p>
+</div>
+<!-- Product 3 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-lg mb-6 relative">
+<img alt="Scented Candle" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Luxury scented candle in a dark glass jar with a wooden lid, minimal white label." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtrdNuHr29AzVcAjglR9HEb1_hDO-wF0AJuLe9OC2p-5ojSCeeWn1uD6IYUNNdd50gdywpT3lxL8a_uAOJO1ttSQ-DYdVj_zmRsBWpRbxTSs-kIIBJoVrC8fa1pRpB4iEcrzk2PK3-LkbNAHnIKHOWBslwG0wDJdmK5kx4hdykhHkHv-kbrpeOXwPNuByBEAMKFf-wH5PUUFLVR4RHQ6Bk8Du_W4yw-rVekUSNmXxH4_9Gm2HgksfP-rSXexvRl9H2JB7OZ47SsQnB"/>
+<button class="absolute bottom-4 left-4 right-4 translate-y-12 group-hover:translate-y-0 bg-primary text-white py-3 text-xs font-bold uppercase tracking-widest transition-transform duration-300">Quick Add</button>
+</div>
+<h4 class="font-headline font-bold text-base mb-1">Midnight Forest Candle</h4>
+<p class="text-on-surface-variant text-sm mb-2">Pine, Cedar &amp; Smoke</p>
+<p class="font-bold text-secondary text-sm">$55.00</p>
+</div>
+<!-- Product 4 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest overflow-hidden rounded-lg mb-6 relative">
+<img alt="Lounge Chair" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Sculptural wooden lounge chair with a dark leather seat, sleek and modern Scandinavian design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhy4GQg_ZBPhcys8P6klwygFuluhOUbzSXfRVUd2R7i4CGmHLGIAUEUQYr4YnQ-8BKXY-D2pjionmaEozAul1qH00MUtGm5PacQHPpg1pZtrs604VdY8prmr14VW_8l1BnTZWGBZTFg3dX4Y2dKU-ePDQySZniQyxInx9JZfKnEIwsIaU1j0ElmydsA047bZYVlKTxlycwfHkoRCqXK4A-11BkWinMwPfs91bsfH9knaLpKt3gKlhkMl_Mgr7JiC8LOvRlKKxHTCr_"/>
+<div class="absolute top-4 right-4 bg-secondary text-white px-2 py-1 text-[10px] font-bold uppercase tracking-widest rounded">Limited</div>
+<button class="absolute bottom-4 left-4 right-4 translate-y-12 group-hover:translate-y-0 bg-primary text-white py-3 text-xs font-bold uppercase tracking-widest transition-transform duration-300">Quick Add</button>
+</div>
+<h4 class="font-headline font-bold text-base mb-1">Aura Lounge Chair</h4>
+<p class="text-on-surface-variant text-sm mb-2">Solid Oak &amp; Cognac Leather</p>
+<p class="font-bold text-secondary text-sm">$1,850.00</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Editorial Storytelling: Full Width Narrative -->
+<section class="mb-32">
+<div class="max-w-4xl mx-auto px-8 text-center">
+<span class="material-symbols-outlined text-4xl text-secondary mb-8" style="font-variation-settings: 'FILL' 1;">eco</span>
+<h2 class="font-headline text-5xl font-extrabold tracking-tighter mb-10 leading-[1.1]">The philosophy of slow winter living.</h2>
+<div class="flex flex-col gap-8 text-lg text-on-surface-variant leading-relaxed text-justify">
+<p>
+                        In the Nordic North, winter is not a season to be endured, but a time to be embraced. It is a mandatory pause—an invitation to return to the hearth and find solace in the fundamental qualities of our immediate surroundings. 
+                    </p>
+<p>
+                        The Winter Edit is born from this intentionality. We have selected materials that respond to the cold with tactile resilience: heavy-gauge wools, hand-carved solid oaks, and mouth-blown glass that diffuses light with the softness of a winter moon.
+                    </p>
+<div class="pt-8 flex justify-center">
+<img alt="Founder Signature" class="h-24 grayscale opacity-60" data-alt="Close up shot of a person sketching furniture designs on a minimalist wooden desk with architectural drafting tools." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBNOIM7FDlnlN08PW67X_eytTE2AZ3h1MTENNjY-WCqlAE5MjJRLTsH1WcJLm1kVUvgy6dG1byLTLVqZ6f2YfV8N683i86uajYrLpKx1xQhPVsZ58AwhT0pvHCimMFN-xAN1deWLBmUWBA3ikc9w784t2Gvt45R72qgbgz3H0rg3QEJ9ldtYx4EN8upN6UOs9yorLLdccWOvIrBQnu0JkP2IXMreYvtHQvC7MRdwwB9gVTAzMEoifNiONu4CZilXNw4s_YeZ6BK6_d"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-24 bg-slate-100">
+<div class="w-full px-12 py-16 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="flex flex-col gap-6">
+<div class="text-xl font-black text-slate-900 font-headline">NORDIC ATELIER</div>
+<p class="font-body text-xs text-slate-500 leading-relaxed uppercase tracking-widest">
+                    Crafting timeless environments for the modern soul. Sustainability at the core of every thread.
+                </p>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="font-headline text-xs font-bold uppercase tracking-widest text-slate-900">Collections</h5>
+<ul class="flex flex-col gap-2 font-inter text-xs tracking-widest uppercase">
+<li><a class="text-slate-500 hover:text-blue-700 transition-opacity" href="#">New Season</a></li>
+<li><a class="text-slate-500 hover:text-blue-700 transition-opacity" href="#">Living Room</a></li>
+<li><a class="text-slate-500 hover:text-blue-700 transition-opacity" href="#">Lighting</a></li>
+<li><a class="text-slate-500 hover:text-blue-700 transition-opacity" href="#">Objects</a></li>
+</ul>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="font-headline text-xs font-bold uppercase tracking-widest text-slate-900">Information</h5>
+<ul class="flex flex-col gap-2 font-inter text-xs tracking-widest uppercase text-slate-500">
+<li><a class="hover:text-blue-700 underline-offset-4 hover:underline transition-opacity" href="#">Sustainability Report</a></li>
+<li><a class="hover:text-blue-700 underline-offset-4 hover:underline transition-opacity" href="#">Shipping &amp; Returns</a></li>
+<li><a class="hover:text-blue-700 underline-offset-4 hover:underline transition-opacity" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-blue-700 underline-offset-4 hover:underline transition-opacity" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="flex flex-col gap-6">
+<h5 class="font-headline text-xs font-bold uppercase tracking-widest text-slate-900">Newsletter</h5>
+<div class="flex border-b border-slate-300 pb-2">
+<input class="bg-transparent border-none focus:ring-0 text-xs tracking-widest w-full p-0" placeholder="JOIN THE ATELIER" type="email"/>
+<button class="text-slate-900 hover:text-blue-700">
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 text-lg">public</span>
+<span class="material-symbols-outlined text-slate-400 text-lg">camera</span>
+<span class="material-symbols-outlined text-slate-400 text-lg">mail</span>
+</div>
+</div>
+</div>
+<div class="px-12 py-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="font-inter text-[10px] tracking-widest uppercase text-slate-400">© 2024 NORDIC ATELIER. SUSTAINABLY CRAFTED.</span>
+<div class="flex gap-8 font-inter text-[10px] tracking-widest uppercase text-slate-400">
+<span>STOCKHOLM</span>
+<span>COPENHAGEN</span>
+<span>OSLO</span>
+</div>
+</div>
+</footer>
+</body></html>

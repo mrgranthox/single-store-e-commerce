@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#000000",
+              "on-surface-variant": "#45464d",
+              "on-secondary-container": "#fefcff",
+              "secondary": "#0051d5",
+              "outline": "#76777d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed": "#00174b",
+              "inverse-on-surface": "#eaf1ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "tertiary": "#000000",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-container": "#b87500",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "outline-variant": "#c6c6cd",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "surface": "#f8f9ff",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "on-primary-fixed": "#131b2e",
+              "secondary-fixed": "#dbe1ff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-fixed-dim": "#bec6e0",
+              "inverse-primary": "#bec6e0",
+              "tertiary-container": "#2a1700",
+              "surface-container-high": "#dce9ff",
+              "surface-container": "#e5eeff",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-primary": "#ffffff",
+              "background": "#f8f9ff",
+              "inverse-surface": "#213145",
+              "on-surface": "#0b1c30",
+              "surface-variant": "#d3e4fe",
+              "on-error": "#ffffff",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-container-lowest": "#ffffff",
+              "surface-bright": "#f8f9ff",
+              "secondary-container": "#316bf3",
+              "primary-container": "#131b2e",
+              "surface-tint": "#565e74",
+              "on-primary-container": "#7c839b",
+              "on-tertiary": "#ffffff",
+              "surface-dim": "#cbdbf5",
+              "on-primary-fixed-variant": "#3f465c"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-100 hover:opacity-70 transition-opacity active:duration-150 scale-95">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<span class="text-lg font-extrabold tracking-tighter text-slate-900 dark:text-white font-headline">Nordic Commerce</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-100 hover:opacity-70 transition-opacity active:duration-150 scale-95">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</nav>
+<main class="pt-16 pb-24">
+<!-- Hero Banner: The Winter Collection -->
+<section class="relative w-full h-[751px] overflow-hidden bg-primary-container">
+<img alt="Winter Collection Hero" class="absolute inset-0 w-full h-full object-cover opacity-80" data-alt="Cinematic shot of a minimalist winter landscape with a person wearing a high-end charcoal wool coat standing against a soft snowy backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvD-ffSf6H9YApDF9hNAfp8UwFomJhQF22paH0PEruahZnMLDjhiaW7CdWGOr5KsJCApJSMzHyE8I6Wt00V3fcWwQf7vL3h7xFn0fzIHdHOJTpOoRr3x8SBTJ7BbYyPWOlgCkMUT1NhD5S0rIQlWeSzKIb3pubFS2ze8zl0RZafY5pjeqFaBYgfBIV8NPwKL3R-8zIKWB8WlhWHHXY-WKm37fPaVhRLPAiC9gzB0-rsrQBx0mwgTYK2DOKabb_rKWPRr4IsQxuFzvu"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<span class="inline-block px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold tracking-[0.2em] uppercase mb-4 rounded-full">New Season</span>
+<h1 class="text-5xl font-headline font-extrabold text-white tracking-tighter mb-4 leading-none">The Winter Collection</h1>
+<p class="text-on-primary-container text-sm max-w-[280px] mb-8 leading-relaxed">Curated essentials designed for the sub-zero landscape. Where precision meets warmth.</p>
+<button class="bg-secondary text-on-secondary px-8 py-4 rounded-md font-semibold text-sm transition-all active:scale-95 hover:bg-secondary-container">
+                    Explore Collection
+                </button>
+</div>
+</section>
+<!-- New Arrivals: Horizontal Scroll -->
+<section class="py-12 bg-surface">
+<div class="px-6 flex justify-between items-end mb-8">
+<div>
+<h2 class="text-2xl font-headline font-bold tracking-tight text-primary">New Arrivals</h2>
+<p class="text-on-surface-variant text-xs">Freshly dropped from our atelier.</p>
+</div>
+<button class="text-secondary text-xs font-bold uppercase tracking-widest border-b-2 border-secondary/20 pb-1">View All</button>
+</div>
+<div class="flex overflow-x-auto gap-6 px-6 no-scrollbar snap-x">
+<!-- Product Card 1 -->
+<div class="flex-shrink-0 w-64 snap-start group">
+<div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-low mb-4">
+<img alt="Merino Sweater" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Minimalist studio shot of a light grey merino wool sweater on a clean white surface with sharp shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgUBOnNqUXEeljr3SDN4gmqzRc-RE1maUDD6ppfY82-A6JpO5KKdvGQZOBqwVbeoGjLqk6XmYxOxPFJ_RTgXFa6bcuTzkclllzByJEtEwG7SZJ8jUUiAqijoid63ybucQH3X64p0sc9hWhEVfOLyTZpWQLJy5RTXvfkFFXVOQNwd0JST80waooYRF3W4M8ujFhBh2ucsdcp7Tei8Ctx5LvALZu9_zil_PViVyy12vfT7SIboRQhWSTQM3ivKHOi-8guIZV6rRJkXE6"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-3 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Knitwear</p>
+<h3 class="font-headline font-bold text-lg text-primary">Merino Shell Layer</h3>
+<p class="text-on-surface-variant text-sm mt-1">$185.00</p>
+</div>
+<!-- Product Card 2 -->
+<div class="flex-shrink-0 w-64 snap-start group">
+<div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-low mb-4">
+<img alt="Technical Parka" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Detailed close-up of high-tech waterproof fabric on a black parka with matte finishes and heavy zippers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3J0-WKHZSTrwvhVIeVkJn0xX7PbbEMZO9cZddF5YISOcalOEomybdAFEaBT8vCfAbNv2be829O1uCHnJKrRoGj3BBZALdlhRHzyiGofDOF_tDDn4ji8qGxa3-xUo6jkdHbqVBLAdZ7MyU6rGmwshgQG0MVL3i5iwavBnLyOXk1Mx4nGRMGqyXMIltFfFxNBtYNGdTt-RzQHVRz9nqLL6qtFdp5q3nkbgO2Ait3gXnQtCSQiLzTbVA7F9jUJZXeYfshrQMvgG4-QsS"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-3 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Outerwear</p>
+<h3 class="font-headline font-bold text-lg text-primary">Nordic Parka v2</h3>
+<p class="text-on-surface-variant text-sm mt-1">$450.00</p>
+</div>
+<!-- Product Card 3 -->
+<div class="flex-shrink-0 w-64 snap-start group">
+<div class="relative aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-low mb-4">
+<img alt="Leather Boots" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Premium brown leather boots standing on a piece of raw volcanic rock with dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVLBTr8sxtNCte6PpWkHeVGFs10OwXS7t0OSveRLbfVQj1ScgqMIuu8K9owXUcNcoOL831S3kC1vLETdofV4s3E_bcF2Ryrmhj8PJe2MXMRdF3L1FYltZEa4HEVs1zPKQ5wLib9-tCSpRSnJzAlG3MC9D18z7Bm-gwRddDkq4HiYmffzf8qKqXdk0Bwh4Ifm_bPlCo5M7juz1E7vPzWff-9r_6eYeF9BdmOGcKcB3k3bFqyYuj-Ou9uXiJBebi5v5KtGkAS9-oE7Bw"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-3 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-1">Footwear</p>
+<h3 class="font-headline font-bold text-lg text-primary">The Summit Boot</h3>
+<p class="text-on-surface-variant text-sm mt-1">$320.00</p>
+</div>
+</div>
+</section>
+<!-- Editorial Content: Craftsmanship -->
+<section class="px-6 py-16 bg-surface-container-low">
+<div class="max-w-md mx-auto">
+<div class="mb-12">
+<h4 class="text-[10px] font-bold tracking-[0.3em] uppercase text-outline mb-4">The Craft</h4>
+<h2 class="text-4xl font-headline font-extrabold text-primary leading-[1.1] mb-6">Built for the long haul.</h2>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+                        Every piece in the Nordic Commerce catalog undergoes 12 stages of durability testing. We believe in the "Forever Wardrobe"—garments that don't just last seasons, but lifetimes.
+                    </p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="aspect-square bg-surface-container-lowest rounded-lg overflow-hidden relative">
+<img alt="Sewing" class="w-full h-full object-cover" data-alt="Extreme close-up of a high-end sewing machine stitching heavy navy canvas with white thread" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2851r1etCiu6QgEnhSHlQRI-pO94BNcP-Kfq9P380onbxdDw158-z5_uEoScdRnO5GKnnkYVwdtLgYvas6d5wc5M_PNYI5oRvAuzc9k8vS7VwLAKgi3BQOERzOaA7yChJhX2u-Hne8o8tbnLjzT-0-tBErjLnyguxVK86Xvp3u4ERGPFIAxWuKOGo4l-aHo39hSncPabdxCZc3JbA-m_v4CCq5U8k_Verjh1bIMd2Ttiu32R7Dn4439Z1Uj2akfhsCjvtsgpALo4h"/>
+<div class="absolute inset-0 bg-black/10"></div>
+</div>
+<div class="aspect-square bg-surface-container-lowest rounded-lg overflow-hidden relative mt-8">
+<img alt="Material Study" class="w-full h-full object-cover" data-alt="Samples of different fabric textures including wool, cotton and nylon arranged in a beautiful color palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8PMY7VFTrunxsc372oFwi8aAe8Anm6f7XB_NqmxGk3zzfNpDAyeyF5bLlSxzioZHUkhcVLEhl-jzvdOx2Lm2lpN5JQqNFAXZHplOcNlcSZpezaGd770qU22UMJ4_JD0J_pLHa4YamG5Bosen8kAoVrK8UXr7dS0rzKjM-HNrrm9HcM7CkqchWsbfXkvuEB-EMYabOL54UVUKJd_N-hUOJzGPpEHGg1nkipwY-ebBohoVs__cgoYmaDMl_v4Yv14payzFbY6JiQKLR"/>
+<div class="absolute inset-0 bg-black/10"></div>
+</div>
+</div>
+<div class="mt-12 flex items-center gap-6">
+<div class="h-[1px] flex-grow bg-outline-variant"></div>
+<button class="flex items-center gap-2 group">
+<span class="text-xs font-bold uppercase tracking-widest text-primary">Read Our Story</span>
+<span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Featured Product: Bento Style -->
+<section class="py-16 px-6 bg-surface">
+<div class="mb-10 text-center">
+<h2 class="text-3xl font-headline font-extrabold text-primary">Featured Selection</h2>
+<div class="w-12 h-1 bg-secondary mx-auto mt-4"></div>
+</div>
+<div class="grid grid-cols-1 gap-6">
+<!-- Large Feature Card -->
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_-10px_40px_rgba(11,28,48,0.04)] relative overflow-hidden group">
+<div class="relative z-10">
+<span class="text-[10px] font-bold text-tertiary uppercase tracking-widest bg-tertiary-fixed px-2 py-1 rounded">Limited Release</span>
+<h3 class="text-3xl font-headline font-bold text-primary mt-6 leading-tight">Artisan<br/>Series Jacket</h3>
+<p class="text-on-surface-variant text-sm mt-4 mb-8 max-w-[200px]">Hand-numbered and constructed from deadstock military wool.</p>
+<button class="bg-primary text-white px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest">Shop Series</button>
+</div>
+<img alt="Featured Jacket" class="absolute -right-12 -bottom-12 w-64 h-64 object-cover rotate-12 opacity-80 group-hover:scale-110 group-hover:rotate-0 transition-all duration-1000" data-alt="A rugged dark brown leather jacket with a vintage finish, artistically posed against a textured grey wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZcy3yY7eM5O8VT6Vt4u3r_QHCYQ3bIdpuDDp0Sh9bgtXYWqJ3anUFw2V07DfnZPw7Cm90SJ13VpZ7QsNt6DL8-PCxw8Hia7qB0qNTHfXx5ode9LzxRk2CYxhSVt-5SSznRLUK4K_zM3nGF1udstMmfEwlJaOHZCcFooRUrM8ndA4aA9zOHzWCJSi0dqXSVZ4ah99ric93nTrLF8h_bBHLJ_3dg1u8skuZ8GKO52k1lxIr-ipsny_PbblksFJTVY47-xaC4_rOob2S"/>
+</div>
+<!-- Secondary Split -->
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-surface-container-high p-4 rounded-lg flex flex-col justify-between aspect-square">
+<span class="material-symbols-outlined text-secondary" data-icon="verified">verified</span>
+<div>
+<p class="font-headline font-bold text-primary">Certified Sourcing</p>
+<p class="text-[10px] text-on-surface-variant mt-1">100% Traceable materials.</p>
+</div>
+</div>
+<div class="bg-primary-container p-4 rounded-lg flex flex-col justify-between aspect-square">
+<span class="material-symbols-outlined text-tertiary-fixed" data-icon="eco">eco</span>
+<div class="text-white">
+<p class="font-headline font-bold">Plastic Free</p>
+<p class="text-[10px] text-on-primary-container mt-1">Recyclable packaging only.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe h-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl z-50 border-t border-slate-100/50 dark:border-slate-800/50 shadow-[0_-10px_40px_rgba(11,28,48,0.04)]">
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/20 rounded-xl px-4 py-1 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-manrope text-[10px] font-semibold tracking-widest uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 py-1 transition-all duration-300 ease-out hover:text-slate-900 dark:hover:text-slate-100" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold tracking-widest uppercase mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 py-1 transition-all duration-300 ease-out hover:text-slate-900 dark:hover:text-slate-100" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold tracking-widest uppercase mt-1">Cart</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-4 py-1 transition-all duration-300 ease-out hover:text-slate-900 dark:hover:text-slate-100" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[10px] font-semibold tracking-widest uppercase mt-1">Account</span>
+</a>
+</nav>
+</body></html>

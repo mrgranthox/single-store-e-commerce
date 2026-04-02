@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface": "#0b1c30",
+              "background": "#f8f9ff",
+              "on-primary-container": "#7c839b",
+              "secondary": "#0051d5",
+              "primary": "#000000",
+              "secondary-fixed": "#dbe1ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-container": "#b87500",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#213145",
+              "on-error": "#ffffff",
+              "on-background": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface-container": "#e5eeff",
+              "surface-bright": "#f8f9ff",
+              "primary-fixed": "#dae2fd",
+              "inverse-primary": "#bec6e0",
+              "tertiary-container": "#2a1700",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#bec6e0",
+              "tertiary-fixed": "#ffddb8",
+              "on-surface-variant": "#45464d",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "outline": "#76777d",
+              "surface-dim": "#cbdbf5",
+              "outline-variant": "#c6c6cd",
+              "secondary-container": "#316bf3",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container-low": "#eff4ff",
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-secondary": "#ffffff",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed": "#00174b",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-tint": "#565e74",
+              "primary-container": "#131b2e",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-nav {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .no-line { border: none !important; }
+      .tonal-shift { transition: background-color 0.3s ease; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black tracking-tighter text-slate-900 dark:text-slate-50 font-headline">The Digital Atelier</div>
+<div class="hidden md:flex items-center space-x-8 font-manrope tracking-tight font-bold">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Editorial</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">About</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Contact</a>
+</div>
+<div class="flex items-center space-x-5">
+<button class="hover:opacity-80 transition-opacity scale-95 active:transition-all">
+<span class="material-symbols-outlined text-on-surface">shopping_bag</span>
+</button>
+<button class="hover:opacity-80 transition-opacity scale-95 active:transition-all">
+<span class="material-symbols-outlined text-on-surface">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24">
+<!-- Hero Section: Asymmetric Layout -->
+<section class="max-w-screen-2xl mx-auto px-8 mb-24">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+<div class="lg:col-span-7">
+<span class="font-label text-secondary uppercase tracking-[0.2em] text-xs font-bold mb-4 block">Reach Out</span>
+<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.9] text-on-surface">
+                        Let’s start a <br/>conversation.
+                    </h1>
+</div>
+<div class="lg:col-span-5 pb-4">
+<p class="text-on-surface-variant text-lg max-w-md font-light leading-relaxed">
+                        Whether you're inquiring about a bespoke order or simply seeking advice on our curated collections, our atelier team is here to guide you.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Main Content: Bento-ish Grid -->
+<section class="max-w-screen-2xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Contact Form Card -->
+<div class="lg:col-span-8 bg-surface-container-low p-8 md:p-12 rounded-xl">
+<h2 class="font-headline text-3xl font-bold mb-10 tracking-tight">Get in Touch</h2>
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Name</label>
+<input class="w-full bg-surface-container-high border-none focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all p-4 rounded-md" placeholder="Elias Thorne" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Email</label>
+<input class="w-full bg-surface-container-high border-none focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all p-4 rounded-md" placeholder="elias@atelier.com" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Subject</label>
+<input class="w-full bg-surface-container-high border-none focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all p-4 rounded-md" placeholder="Bespoke Collection Inquiry" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Message</label>
+<textarea class="w-full bg-surface-container-high border-none focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all p-4 rounded-md resize-none" placeholder="How can we assist you today?" rows="6"></textarea>
+</div>
+<div class="pt-4">
+<button class="bg-primary text-on-primary px-10 py-4 font-bold tracking-tight hover:opacity-90 transition-all flex items-center group" type="submit">
+                            Send Message
+                            <span class="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Sidebar Info & Hours -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Contact Info -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/10">
+<h3 class="font-headline text-xl font-bold mb-6">Contact Info</h3>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary">mail</span>
+<div>
+<p class="text-xs font-bold uppercase tracking-tighter text-outline mb-1">Email</p>
+<p class="text-on-surface font-medium">concierge@digitalatelier.no</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary">call</span>
+<div>
+<p class="text-xs font-bold uppercase tracking-tighter text-outline mb-1">Phone</p>
+<p class="text-on-surface font-medium">+47 55 12 34 56</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+<div>
+<p class="text-xs font-bold uppercase tracking-tighter text-outline mb-1">Flagship Studio</p>
+<p class="text-on-surface font-medium leading-relaxed">
+                                    Bryggen 15, <br/>5003 Bergen, Norway
+                                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Studio Hours -->
+<div class="bg-primary-container text-on-primary p-8 rounded-xl">
+<h3 class="font-headline text-xl font-bold mb-6 text-white">Studio Hours</h3>
+<div class="space-y-3 font-light text-on-primary-container">
+<div class="flex justify-between border-b border-on-primary-fixed-variant/30 pb-2">
+<span>Mon — Fri</span>
+<span class="text-white font-medium">10:00 – 18:00</span>
+</div>
+<div class="flex justify-between border-b border-on-primary-fixed-variant/30 pb-2">
+<span>Saturday</span>
+<span class="text-white font-medium">11:00 – 16:00</span>
+</div>
+<div class="flex justify-between pb-2">
+<span>Sunday</span>
+<span class="text-on-primary-container/60 italic">Closed for Curator Rest</span>
+</div>
+</div>
+</div>
+<!-- Map Placeholder -->
+<div class="h-48 rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" data-alt="minimalist aesthetic map of Bergen Norway harbor area with clean lines and soft blue tones" data-location="Bergen, Norway" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATfuhePYBj0MFJ_9kGGMYp6kkcP-5UD1RlOuKcJYuwHT1bmrMJut_0TXZL-NDM-qd_Sq51Ydid1Dtclyam9UxUZiqDxkEMWkk3ttGvvuuadUUPcqvt9HfN4-KQ39BHK1BSZJU3k7leq2LrpX1PQs6u4xD2cQSbhUcM4tHhvMkU1ijae0KzwAKJKbYorVoj6Nwu9Hl8rNFgo9SAyOyX5cVPGh-sAolkqVKg7OSQnAtx62byIoRMtMbYm83O0Xd9FDdGc4XVFPyhaFH8"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-xl">
+<p class="text-xs font-bold tracking-widest uppercase">View on Map</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Quick Links -->
+<section class="max-w-screen-2xl mx-auto px-8 mt-24">
+<div class="bg-surface-dim rounded-2xl p-12 overflow-hidden relative">
+<div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div>
+<h2 class="font-headline text-4xl font-extrabold tracking-tight mb-4">Frequently Asked</h2>
+<p class="text-on-surface-variant font-light mb-8 max-w-sm">Quick answers for our most common inquiries regarding shipping, care, and returns.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest hover:bg-secondary hover:text-white transition-all rounded-lg group" href="#">
+<span class="font-medium">Shipping &amp; Delivery</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest hover:bg-secondary hover:text-white transition-all rounded-lg group" href="#">
+<span class="font-medium">Returns Policy</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest hover:bg-secondary hover:text-white transition-all rounded-lg group" href="#">
+<span class="font-medium">Product Care</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-surface-container-lowest hover:bg-secondary hover:text-white transition-all rounded-lg group" href="#">
+<span class="font-medium">Support Center</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">arrow_outward</span>
+</a>
+</div>
+</div>
+<div class="hidden lg:block">
+<div class="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+<img class="w-full h-full object-cover" data-alt="minimalist interior of a high-end nordic studio with natural wood light pouring in from large windows and curated furniture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLK1IEdtx-T5p2bAbdxz_RGQe34pVk407FnO0GvHPcS_bcn5NJQmhu1q34Vw_ZFtlQJap9IdwCJZnIacXSnhZfMn2ZHnzT8HfOo7V2yyPlgfqfLhMEQGemAyLZjebKwVCqcPJp4XSb8bA4a3LJ77kKwskyie3EDORHRhCYsiSCB3WEktfdlNR1sj9aypYw8RWdO6eBp-8wQ93C8iANi05FFIayPUT6pBMsI90lzMkf27PARNyv6ovk6avDDeGhyGFVQoy8-s-ePvFo"/>
+</div>
+</div>
+</div>
+<!-- Abstract visual element -->
+<div class="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-slate-200 dark:bg-slate-900 tonal-layering">
+<div class="w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-6 max-w-screen-2xl mx-auto">
+<div class="font-manrope font-bold text-lg text-slate-900 dark:text-slate-100">The Digital Atelier</div>
+<div class="flex flex-wrap justify-center gap-8 font-inter text-sm tracking-wide">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 underline-offset-4 hover:underline transition-all duration-300" href="#">Privacy Policy</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 underline-offset-4 hover:underline transition-all duration-300" href="#">Terms of Service</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 underline-offset-4 hover:underline transition-all duration-300" href="#">Shipping &amp; Returns</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-300 underline-offset-4 hover:underline transition-all duration-300" href="#">Sustainability</a>
+</div>
+<div class="text-slate-500 dark:text-slate-400 font-inter text-sm tracking-wide">
+                © 2024 The Digital Atelier. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

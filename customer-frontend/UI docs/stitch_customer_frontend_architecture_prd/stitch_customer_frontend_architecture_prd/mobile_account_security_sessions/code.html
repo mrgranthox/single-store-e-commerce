@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NORDIC | Security &amp; Sessions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-secondary-container": "#fefcff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#b87500",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "secondary": "#0051d5",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-primary-container": "#7c839b",
+                        "on-surface": "#0b1c30",
+                        "primary": "#000000",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-container": "#131b2e",
+                        "outline": "#76777d",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-background": "#0b1c30",
+                        "surface-container-low": "#eff4ff",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-surface": "#213145",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-tint": "#565e74",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#316bf3",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#00174b",
+                        "on-surface-variant": "#45464d",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "tertiary-container": "#2a1700",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "tertiary": "#000000",
+                        "background": "#f8f9ff",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 px-6 max-w-2xl mx-auto w-full">
+<!-- Header Section -->
+<div class="mb-10">
+<h1 class="text-4xl font-extrabold tracking-tight text-primary mb-2">Security</h1>
+<p class="text-on-surface-variant body-md">Manage your digital atelier's integrity through advanced authentication and session control.</p>
+</div>
+<!-- 2FA Bento Section -->
+<section class="mb-12">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-primary-container text-on-primary p-6 rounded-xl flex flex-col justify-between h-48 relative overflow-hidden">
+<div class="z-10">
+<span class="material-symbols-outlined text-tertiary-fixed mb-4" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<h3 class="text-xl font-bold mb-1">Two-Factor Auth</h3>
+<p class="text-on-primary-container text-sm">Enhanced protection enabled.</p>
+</div>
+<button class="z-10 self-start text-xs font-bold tracking-widest uppercase border-b border-tertiary-fixed pb-1 hover:opacity-70 transition-opacity">Configure</button>
+<!-- Decorative background glow -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-secondary rounded-full blur-[80px] opacity-30"></div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between h-48">
+<div>
+<span class="material-symbols-outlined text-primary mb-4" data-icon="password">password</span>
+<h3 class="text-xl font-bold mb-1">Password</h3>
+<p class="text-on-surface-variant text-sm">Last updated 42 days ago.</p>
+</div>
+<button class="self-start text-xs font-bold tracking-widest uppercase text-secondary hover:underline transition-all">Update Key</button>
+</div>
+</div>
+</section>
+<!-- Session Management -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-bold tracking-tight">Active Sessions</h2>
+<span class="text-[10px] font-bold tracking-widest uppercase bg-surface-container-high px-2 py-1 rounded">3 Total</span>
+</div>
+<div class="space-y-4">
+<!-- Current Device -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-5 border border-outline-variant/10">
+<div class="w-12 h-12 bg-surface-container-low rounded-full flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="smartphone" style="font-variation-settings: 'FILL' 1;">smartphone</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-2">
+<h4 class="font-bold text-on-surface">iPhone 15 Pro</h4>
+<span class="text-[9px] font-black bg-secondary/10 text-secondary px-1.5 py-0.5 rounded tracking-tighter uppercase">This Device</span>
+</div>
+<p class="text-xs text-on-surface-variant">London, UK • Active now</p>
+</div>
+<div class="text-outline">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Other Devices -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-5">
+<div class="w-12 h-12 bg-surface-container-low rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="desktop_windows">desktop_windows</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-on-surface">MacBook Pro 16"</h4>
+<p class="text-xs text-on-surface-variant">Chrome • Paris, FR • 2h ago</p>
+</div>
+<button class="text-xs font-bold text-error tracking-tight bg-error-container/20 px-4 py-2 rounded-lg hover:bg-error-container/40 transition-colors">Revoke</button>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center gap-5">
+<div class="w-12 h-12 bg-surface-container-low rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="tablet_mac">tablet_mac</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-on-surface">iPad Air</h4>
+<p class="text-xs text-on-surface-variant">Nordic App • Berlin, DE • Oct 24</p>
+</div>
+<button class="text-xs font-bold text-error tracking-tight bg-error-container/20 px-4 py-2 rounded-lg hover:bg-error-container/40 transition-colors">Revoke</button>
+</div>
+</div>
+<button class="w-full mt-6 py-4 border-2 border-dashed border-outline-variant rounded-xl text-xs font-bold tracking-widest uppercase text-on-surface-variant hover:bg-surface-container-low transition-colors">
+                Sign out of all other sessions
+            </button>
+</section>
+<!-- Trust & Compliance Section -->
+<section class="bg-surface-dim rounded-2xl p-8 relative overflow-hidden">
+<div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+<div class="w-full md:w-1/2">
+<h2 class="text-2xl font-extrabold tracking-tight mb-4">Identity Verification</h2>
+<p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Level 3 encryption ensures your atelier’s data remains private. Periodically review your recovery methods to maintain access.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-outline" data-icon="encrypted">encrypted</span>
+<span class="material-symbols-outlined text-outline" data-icon="gpp_good">gpp_good</span>
+<span class="material-symbols-outlined text-outline" data-icon="security_update_good">security_update_good</span>
+</div>
+</div>
+<div class="w-full md:w-1/2 aspect-video rounded-lg overflow-hidden grayscale contrast-125">
+<img alt="Abstract security pattern" class="w-full h-full object-cover" data-alt="Close-up of a high-tech circuit board with blue glowing light patterns and metallic textures in a futuristic dark setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3vXTaV_HXr-211hRG8qxL1Ucej_dhFnCFkFy5vXfFJngRRGDYhLFrimT-3rhiSoAv-F1zegEZOWVsNNZbG3PksVnJDnQH88wX_E5dRviUdZQ1BSs2sYaHYOqRhl2Xwg6V0OiAnEIYk6l_FByanrRi8TqoXXd90Y7v1CoT9SeC74RZNB9jB9iNyk6-9FU16F6o5Cz949wrEwfpms-fMZU1tPO7umUi66Zp6hHLC8j2EH0o5I2cjE_JA3K9ASJn-hIkaDfR8Zr9ubb4"/>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<!-- Navigation hidden on linear settings sub-page per "Destination Rule" in prompt, 
+         but implementing per JSON requirements if needed for the top-level shell. 
+         Assuming this is a deep-link security page, so we keep the shell but highlight "Profile". -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md flex justify-around items-center h-20 w-full px-4 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/20 dark:border-slate-800/20">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

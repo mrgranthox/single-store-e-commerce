@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Success | The Atelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary": "#ffffff",
+              "on-error": "#ffffff",
+              "tertiary": "#000000",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#dce9ff",
+              "tertiary-fixed": "#ffddb8",
+              "on-tertiary-fixed": "#2a1700",
+              "background": "#f8f9ff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed-variant": "#003ea8",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#2a1700",
+              "secondary-fixed-dim": "#b4c5ff",
+              "secondary": "#0051d5",
+              "on-surface-variant": "#45464d",
+              "surface": "#f8f9ff",
+              "on-primary-fixed": "#131b2e",
+              "on-secondary-container": "#fefcff",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#3f465c",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-variant": "#d3e4fe",
+              "on-primary-container": "#7c839b",
+              "on-background": "#0b1c30",
+              "surface-dim": "#cbdbf5",
+              "on-tertiary-container": "#b87500",
+              "on-primary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "error": "#ba1a1a",
+              "surface-container": "#e5eeff",
+              "surface-bright": "#f8f9ff",
+              "primary": "#000000",
+              "outline": "#76777d",
+              "secondary-container": "#316bf3",
+              "on-secondary-fixed": "#00174b",
+              "secondary-fixed": "#dbe1ff",
+              "surface-tint": "#565e74",
+              "primary-fixed-dim": "#bec6e0",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#eff4ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-surface": "#0b1c30",
+              "inverse-primary": "#bec6e0",
+              "primary-fixed": "#dae2fd",
+              "on-tertiary-fixed-variant": "#653e00",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary-container": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-nav {
+        backdrop-filter: blur(12px);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<nav class="bg-slate-50 dark:bg-slate-950 sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-white font-headline">
+                The Atelier
+            </div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50" data-icon="lock">lock</span>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-6 py-12 md:py-20 lg:py-24">
+<div class="flex flex-col lg:flex-row gap-16 items-start">
+<div class="w-full lg:w-3/5 space-y-10">
+<header class="space-y-4">
+<div class="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase font-label">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Order Confirmed
+                    </div>
+<h1 class="text-5xl md:text-6xl font-headline font-extrabold tracking-tight text-on-background leading-tight">
+                        Thank you for <br/>your curation.
+                    </h1>
+<p class="text-lg text-outline leading-relaxed max-w-lg">
+                        Your order has been received and is being prepared with artisan care at our workshop. We'll notify you once it's on its way.
+                    </p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-low p-8 rounded-xl space-y-2">
+<p class="text-xs font-label uppercase tracking-widest text-on-primary-container font-bold">Order Number</p>
+<p class="text-2xl font-headline font-bold text-on-background">#AT-82944012</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl space-y-2">
+<p class="text-xs font-label uppercase tracking-widest text-on-primary-container font-bold">Estimated Arrival</p>
+<p class="text-2xl font-headline font-bold text-on-background">Oct 24 — Oct 26</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<a class="bg-secondary text-on-secondary px-8 py-4 rounded-md font-bold tracking-tight text-center hover:opacity-90 transition-opacity bg-gradient-to-r from-secondary to-secondary-container" href="#">
+                        Track Your Order
+                    </a>
+<a class="bg-surface-container-high text-on-surface px-8 py-4 rounded-md font-bold tracking-tight text-center hover:bg-surface-variant transition-colors" href="#">
+                        Continue Shopping
+                    </a>
+</div>
+<div class="pt-12 space-y-6">
+<h3 class="text-xs font-label uppercase tracking-widest text-on-primary-container font-bold">Shipping Details</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+<div class="space-y-1">
+<p class="font-bold text-on-background">Delivery Address</p>
+<p class="text-outline">Julianne Sterling<br/>1248 North Highland Ave<br/>Los Angeles, CA 90038<br/>United States</p>
+</div>
+<div class="space-y-1">
+<p class="font-bold text-on-background">Shipping Method</p>
+<p class="text-outline">Premium Express (2-3 Business Days)<br/>Fully insured and tracked</p>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full lg:w-2/5 sticky top-32">
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)] space-y-8">
+<h2 class="text-xl font-headline font-bold text-on-background">Order Summary</h2>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="w-20 h-24 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Item" class="w-full h-full object-cover" data-alt="Close-up of a high-quality navy wool overcoat featuring clean stitching and premium horn buttons on a soft grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0-B5zH_1AtbjC-OzN_cHUCrQxORAm2dSW-X2SvQeOJoWAk5Lvnd2GT1zGuzi3eaaTPez_HnF9ZlET-mYCjKC6KtUpEXgBf38_ARZQbLjUfX5rmROkBhEha1wQaUwSNGUcRyutah6sVGLq4C6aWGLTAusCu6Ozkbk3EwBVor8mbyuYYZrowo3e92mJpX3D3S4uqsEi69ukiy3s3lT0AiU3t3u7rcf_SwrZpU99vSKsIgdnQUOfEcAsn5rpb-UmtYs2IzHvOZ8TZwSS"/>
+</div>
+<div class="flex-grow flex flex-col justify-center">
+<p class="font-bold text-on-background">Artisan Wool Overcoat</p>
+<p class="text-sm text-outline">Midnight Navy / Size 40</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xs font-label text-outline">Qty: 1</span>
+<span class="font-bold text-on-background">$850.00</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-20 h-24 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Item" class="w-full h-full object-cover" data-alt="Handcrafted minimalist leather wallet in tan color resting on a white marble surface with soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4vSc255h0Hg1t4h60QADAMHIsVQCrk5HwStv0BY9wpfy-SVRxyaWA7KALlYbx9VSbfVTicrCxu0wyNAGABE6eCNMx6juEPACLnThKvTbW73nG-1ayWIycpXgQqxowCQAgGjjqMJ7RB7gwnmFDjnSS-PKR9RdlmXIYkR2RMD8puczlZjpn0mUyDnxdexMXzfokVMX80NCAt_8nVGDokZd11b61SSpDj_76KyH-o7bddo34iOwTKIYLoF1p1M3k0RxJt8ACseAyqu7E"/>
+</div>
+<div class="flex-grow flex flex-col justify-center">
+<p class="font-bold text-on-background">Essential Fold Wallet</p>
+<p class="text-sm text-outline">Tan Vachetta</p>
+<div class="flex justify-between items-center mt-2">
+<span class="text-xs font-label text-outline">Qty: 1</span>
+<span class="font-bold text-on-background">$120.00</span>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-6 space-y-3 border-t border-outline-variant/20">
+<div class="flex justify-between text-sm">
+<span class="text-outline">Subtotal</span>
+<span class="text-on-background">$970.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-outline">Shipping</span>
+<span class="text-secondary font-medium">Free</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-outline">Tax</span>
+<span class="text-on-background">$77.60</span>
+</div>
+<div class="flex justify-between pt-4">
+<span class="font-headline font-bold text-lg">Total</span>
+<span class="font-headline font-extrabold text-lg text-secondary">$1,047.60</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="verified">verified</span>
+<div class="text-xs leading-relaxed text-on-surface-variant">
+<strong>Authenticity Guaranteed.</strong> Every piece from The Atelier is inspected for quality before it leaves our studio.
+                        </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-surface-dim mt-20 pt-16 pb-32">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-12">
+<div class="space-y-6 max-w-xs">
+<p class="text-xl font-bold tracking-tighter text-on-background font-headline">The Atelier</p>
+<p class="text-sm text-outline leading-relaxed">Defining modern elegance through artisan craft and intentional design since 2014.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div class="space-y-4">
+<p class="text-xs font-label font-bold uppercase tracking-widest text-on-background">Customer</p>
+<ul class="text-sm text-outline space-y-2">
+<li><a class="hover:text-secondary transition-colors" href="#">Order Tracking</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Returns &amp; Exchanges</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Contact Support</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<p class="text-xs font-label font-bold uppercase tracking-widest text-on-background">Company</p>
+<ul class="text-sm text-outline space-y-2">
+<li><a class="hover:text-secondary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">The Studio</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<p class="text-xs font-label font-bold uppercase tracking-widest text-on-background">Legal</p>
+<ul class="text-sm text-outline space-y-2">
+<li><a class="hover:text-secondary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+</div>
+</footer>
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-10px_40px_rgba(11,28,48,0.06)] md:hidden">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 opacity-60">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Cart</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 opacity-60">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Shipping</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 opacity-60">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Payment</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-105">
+<span class="material-symbols-outlined" data-icon="fact_check" style="font-variation-settings: 'FILL' 1;">fact_check</span>
+<span class="font-inter text-[10px] uppercase tracking-widest font-bold mt-1">Review</span>
+</div>
+</nav>
+</body></html>

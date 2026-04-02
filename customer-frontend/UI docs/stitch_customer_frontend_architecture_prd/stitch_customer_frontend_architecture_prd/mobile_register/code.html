@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex flex-col">
+<!-- Header / Brand Anchor (Suppressed Nav logic: TopAppBar remains but active links hidden for task focus) -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 active:scale-95 duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="text-xl font-black tracking-tighter text-slate-900 font-headline">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-slate-500 font-label font-semibold text-xs uppercase tracking-widest">Step 1 of 2</span>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-12 px-6 max-w-md mx-auto w-full">
+<!-- Editorial Hero Section -->
+<section class="mb-10">
+<h1 class="font-headline font-bold text-4xl tracking-tight text-primary leading-tight mb-3">Create your account</h1>
+<p class="text-on-primary-container font-body leading-relaxed">Join the Digital Atelier and start curating your personal collection today.</p>
+</section>
+<!-- Social Register (Bento Style) -->
+<div class="grid grid-cols-2 gap-3 mb-8">
+<button class="flex items-center justify-center gap-2 py-4 bg-surface-container-lowest rounded-xl active:scale-[0.98] transition-all duration-200">
+<img alt="Google" class="w-5 h-5" data-alt="Google logo icon on transparent background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCpxbbgDjSzIA9VAHeIqM5g1OHgDkq2P4m7MxduKfOHOh_EI969ReCLDr4tMHcAeJY-uVqFG2onUcxXXBsfz9tE0Un8y7_nnr8Bcyv72IGzvuospHyi1zkWxn3fSNOgRrSGPO5dHlT9VgayXS52XrR3CSzcVL8mrpjwyQLOCYL0xnP4RD4RWgHiisqnCiyazov0cM_97PCaGyHS1LfLUTSrBSXy0PgCzOo0wDNRXnWkqtSCMWeCiwPf9PNYbCELwdEbUxbVkkky4ER"/>
+<span class="font-label font-semibold text-sm">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-4 bg-primary text-on-primary rounded-xl active:scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined text-lg">ios</span>
+<span class="font-label font-semibold text-sm">Apple</span>
+</button>
+</div>
+<div class="flex items-center gap-4 mb-8">
+<div class="h-[1px] flex-grow bg-outline-variant opacity-20"></div>
+<span class="text-outline font-label text-[10px] uppercase tracking-[0.2em]">Or continue with email</span>
+<div class="h-[1px] flex-grow bg-outline-variant opacity-20"></div>
+</div>
+<!-- Optimized One-Handed Form -->
+<form class="space-y-6">
+<div class="space-y-4">
+<div class="space-y-1.5">
+<label class="font-label text-[10px] font-bold uppercase tracking-wider text-on-primary-container ml-1">Full Name</label>
+<input class="w-full h-14 px-5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface placeholder:text-outline/50" placeholder="Erik Nord" type="text"/>
+</div>
+<div class="space-y-1.5">
+<label class="font-label text-[10px] font-bold uppercase tracking-wider text-on-primary-container ml-1">Email Address</label>
+<input class="w-full h-14 px-5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface placeholder:text-outline/50" placeholder="erik@nordic.com" type="email"/>
+</div>
+<div class="space-y-1.5">
+<label class="font-label text-[10px] font-bold uppercase tracking-wider text-on-primary-container ml-1">Password</label>
+<div class="relative">
+<input class="w-full h-14 px-5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface placeholder:text-outline/50" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+<p class="text-[10px] text-on-primary-container/70 mt-1 ml-1 italic">Minimum 8 characters with one special symbol</p>
+</div>
+</div>
+<div class="flex items-start gap-3 mt-4">
+<div class="mt-1">
+<input class="rounded-sm border-outline-variant text-secondary focus:ring-secondary" id="terms" type="checkbox"/>
+</div>
+<label class="text-xs text-on-primary-container leading-relaxed" for="terms">
+                    I agree to the <a class="text-secondary font-semibold underline decoration-secondary/30" href="#">Terms of Service</a> and <a class="text-secondary font-semibold underline decoration-secondary/30" href="#">Privacy Policy</a>.
+                </label>
+</div>
+<!-- Primary CTA -->
+<button class="w-full h-16 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-headline font-bold text-lg rounded-xl shadow-lg active:scale-[0.97] transition-all duration-300">
+                Create Account
+            </button>
+</form>
+<!-- Trust Badges Section -->
+<section class="mt-12 bg-surface-container-low rounded-2xl p-6">
+<h3 class="font-label text-[10px] font-bold uppercase tracking-widest text-on-primary-container text-center mb-6">Secured &amp; Encrypted</h3>
+<div class="flex justify-around items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-2xl">verified_user</span>
+<span class="text-[8px] font-bold uppercase tracking-tighter">SSL Secure</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-2xl">lock_open</span>
+<span class="text-[8px] font-bold uppercase tracking-tighter">AES-256</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-2xl">fingerprint</span>
+<span class="text-[8px] font-bold uppercase tracking-tighter">Privacy First</span>
+</div>
+</div>
+</section>
+<!-- Login Redirect -->
+<p class="mt-10 text-center text-sm text-on-primary-container">
+            Already have an account? 
+            <a class="text-secondary font-bold ml-1" href="#">Sign in here</a>
+</p>
+</main>
+<!-- Footer Decorative / Spacer -->
+<footer class="mt-auto py-8 text-center px-6">
+<div class="flex justify-center gap-8 mb-4">
+<span class="material-symbols-outlined text-outline/30">language</span>
+<span class="material-symbols-outlined text-outline/30">help_center</span>
+<span class="material-symbols-outlined text-outline/30">info</span>
+</div>
+<p class="text-[10px] text-outline font-label uppercase tracking-widest">© 2024 NORDIC ATELIER GMBH</p>
+</footer>
+<!-- Suppressed BottomNavBar for transactional flow as per instructions -->
+</body></html>

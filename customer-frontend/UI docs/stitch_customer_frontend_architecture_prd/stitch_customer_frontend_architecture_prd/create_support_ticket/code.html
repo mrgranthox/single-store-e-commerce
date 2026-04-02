@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Submit Ticket | Nordic Atelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+        .glass-effect {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        /* Custom scrollbar for a cleaner editorial look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8f9ff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dce9ff;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#000000",
+                        "surface-container-high": "#dce9ff",
+                        "surface-tint": "#565e74",
+                        "surface-variant": "#d3e4fe",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#000000",
+                        "on-surface-variant": "#45464d",
+                        "surface-bright": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed": "#00174b",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "secondary-container": "#316bf3",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#0b1c30",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "outline-variant": "#c6c6cd",
+                        "outline": "#76777d",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-background": "#0b1c30",
+                        "primary-container": "#131b2e",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary-container": "#2a1700",
+                        "surface-dim": "#cbdbf5",
+                        "background": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f8f9ff",
+                        "on-secondary-container": "#fefcff",
+                        "secondary": "#0051d5",
+                        "on-tertiary-container": "#b87500",
+                        "inverse-primary": "#bec6e0",
+                        "primary-fixed": "#dae2fd",
+                        "on-primary-container": "#7c839b"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl border-none">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-900 font-headline">Nordic Atelier</div>
+<!-- Desktop Navigation -->
+<div class="hidden md:flex items-center space-x-8 font-manrope tracking-tight font-semibold">
+<a class="text-slate-600 hover:text-slate-900 transition-colors duration-200" href="#">Shop</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors duration-200" href="#">Curation</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors duration-200" href="#">About</a>
+</div>
+<div class="flex items-center space-x-5 text-blue-700">
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-all active:opacity-80 active:scale-[0.99]">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-all active:opacity-80 active:scale-[0.99]">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-grow pt-24 pb-32 px-6">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left Column: Editorial Content -->
+<div class="lg:col-span-5 space-y-8 lg:sticky lg:top-32 self-start">
+<div>
+<span class="text-[11px] font-label font-medium uppercase tracking-widest text-secondary mb-4 block">Concierge Services</span>
+<h1 class="text-5xl lg:text-6xl font-headline font-extrabold tracking-tighter text-on-surface leading-none mb-6">
+                        Seamless <br/>Support.
+                    </h1>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-md">
+                        Our atelier is committed to your experience. Whether it's a sizing inquiry or a technical hurdle, our dedicated team is here to assist.
+                    </p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+<div class="flex items-start space-x-4">
+<div class="bg-secondary/10 p-3 rounded-lg text-secondary">
+<span class="material-symbols-outlined" data-icon="speed">speed</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Priority Response</h4>
+<p class="text-sm text-on-surface-variant">Avg. response time under 4 hours for priority tickets.</p>
+</div>
+</div>
+<div class="flex items-start space-x-4">
+<div class="bg-secondary/10 p-3 rounded-lg text-secondary">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Secure Handling</h4>
+<p class="text-sm text-on-surface-variant">Your data and attachments are encrypted and private.</p>
+</div>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-2xl aspect-[4/3]">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="minimalist modern office interior with large windows soft natural lighting and clean aesthetic furniture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4TnYti4Ef7KtmpNsFUKQaF9OQAcnX23UnspnbBpuoSSHO_e0jKjG6toOHSCBwuy0iNxwVm4r-eh1hcneJNOn7QY1cK4JdsAcwK2CJyntrefgCgDtKOxfm1y7t2T5S-T2Ji9qRbh1ehFu-VkENP0b3FpQtFzKpDQqkyTIo5R3XFHwmLCZxa2nlA7KF00fZ5tmBZt7tIgeEcQ96feaStDq6fJ7VlRLZbistP58flSDnQGe3Konigzn6X6kbipqmpqutnS3omGWGGSgV"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/60 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-on-primary">
+<p class="font-headline font-bold text-xl italic tracking-tight">"Crafting excellence through communication."</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Form -->
+<div class="lg:col-span-7">
+<div class="bg-surface-container-lowest p-8 lg:p-12 rounded-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-white">
+<form class="space-y-10">
+<!-- Category Selection -->
+<div class="space-y-4">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline">Category</label>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<label class="relative group cursor-pointer">
+<input checked="" class="peer sr-only" name="category" type="radio"/>
+<div class="p-6 bg-surface-container-low border border-transparent rounded-xl transition-all peer-checked:bg-secondary-container peer-checked:text-on-secondary-container group-hover:bg-surface-container-high">
+<span class="material-symbols-outlined mb-2 block" data-icon="shopping_cart">shopping_cart</span>
+<span class="block font-headline font-bold text-sm">Order Issue</span>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="category" type="radio"/>
+<div class="p-6 bg-surface-container-low border border-transparent rounded-xl transition-all peer-checked:bg-secondary-container peer-checked:text-on-secondary-container group-hover:bg-surface-container-high">
+<span class="material-symbols-outlined mb-2 block" data-icon="inventory_2">inventory_2</span>
+<span class="block font-headline font-bold text-sm">Product Question</span>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="category" type="radio"/>
+<div class="p-6 bg-surface-container-low border border-transparent rounded-xl transition-all peer-checked:bg-secondary-container peer-checked:text-on-secondary-container group-hover:bg-surface-container-high">
+<span class="material-symbols-outlined mb-2 block" data-icon="settings">settings</span>
+<span class="block font-headline font-bold text-sm">Technical</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Subject & Description -->
+<div class="space-y-8">
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline" for="subject">Subject</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-6 py-4 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline" id="subject" placeholder="Summarize your request..." type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline" for="description">Description</label>
+<textarea class="w-full bg-surface-container-high border-none rounded-lg px-6 py-4 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline resize-none" id="description" placeholder="Provide as much detail as possible..." rows="5"></textarea>
+</div>
+</div>
+<!-- File Upload Zone -->
+<div class="space-y-4">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline">Attachments</label>
+<div class="border-2 border-dashed border-outline-variant rounded-2xl p-10 flex flex-col items-center justify-center bg-surface-container-low/30 hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined text-4xl text-outline group-hover:text-secondary mb-3 transition-colors" data-icon="cloud_upload">cloud_upload</span>
+<p class="text-sm font-medium text-on-surface">Click to upload or drag and drop</p>
+<p class="text-xs text-outline mt-1">PDF, JPG, PNG up to 10MB</p>
+<input class="hidden" type="file"/>
+</div>
+</div>
+<!-- Priority Level -->
+<div class="space-y-4">
+<label class="block text-xs font-bold uppercase tracking-widest text-outline">Priority Level</label>
+<div class="flex flex-wrap gap-3">
+<button class="px-6 py-2 rounded-full text-xs font-bold border border-outline-variant hover:border-secondary hover:text-secondary transition-all" type="button">LOW</button>
+<button class="px-6 py-2 rounded-full text-xs font-bold border border-secondary text-secondary bg-secondary/5 transition-all" type="button">NORMAL</button>
+<button class="px-6 py-2 rounded-full text-xs font-bold border border-outline-variant hover:border-error hover:text-error transition-all" type="button">URGENT</button>
+</div>
+</div>
+<!-- CTA -->
+<div class="pt-6">
+<button class="w-full bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-headline font-bold py-5 rounded-lg shadow-xl shadow-secondary/10 hover:shadow-secondary/20 hover:scale-[1.01] active:scale-[0.98] transition-all" type="submit">
+                                Submit Ticket
+                            </button>
+<p class="text-center text-[11px] text-outline mt-6 uppercase tracking-tighter">
+                                By submitting, you agree to our <a class="underline" href="#">Terms of Service</a>
+</p>
+</div>
+</form>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-3 pb-8 bg-white/90 backdrop-blur-lg rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-100">
+<div class="flex flex-col items-center justify-center text-slate-400 font-manrope font-medium uppercase tracking-wider text-[11px]">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+            Home
+        </div>
+<div class="flex flex-col items-center justify-center text-slate-400 font-manrope font-medium uppercase tracking-wider text-[11px]">
+<span class="material-symbols-outlined mb-1" data-icon="search">search</span>
+            Search
+        </div>
+<div class="flex flex-col items-center justify-center text-slate-400 font-manrope font-medium uppercase tracking-wider text-[11px]">
+<span class="material-symbols-outlined mb-1" data-icon="package_2">package_2</span>
+            Orders
+        </div>
+<div class="flex flex-col items-center justify-center text-blue-700 font-bold font-manrope uppercase tracking-wider text-[11px]">
+<span class="material-symbols-outlined mb-1" data-icon="contact_support">contact_support</span>
+            Support
+        </div>
+</nav>
+<!-- Footer (Shared Component) -->
+<footer class="w-full mt-auto py-12 bg-slate-100 border-t border-slate-200">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto">
+<div class="mb-6 md:mb-0">
+<span class="font-bold text-slate-900 font-headline">Nordic Atelier</span>
+<p class="text-sm font-manrope text-slate-500 mt-2">© 2024 Nordic Atelier. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-sm font-manrope text-slate-500 hover:text-slate-800 transition-all duration-200" href="#">Privacy Policy</a>
+<a class="text-sm font-manrope text-slate-500 hover:text-slate-800 transition-all duration-200" href="#">Terms of Service</a>
+<a class="text-sm font-manrope text-slate-500 hover:text-slate-800 transition-all duration-200" href="#">Shipping Info</a>
+<a class="text-sm font-manrope text-slate-500 hover:text-slate-800 transition-all duration-200" href="#">Returns</a>
+</div>
+</div>
+</footer>
+</body></html>

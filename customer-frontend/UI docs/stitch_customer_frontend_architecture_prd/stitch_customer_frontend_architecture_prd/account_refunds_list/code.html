@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Refunds | Nordic Commerce</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "on-surface-variant": "#45464d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "background": "#f8f9ff",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed-dim": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#131b2e",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5eeff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "outline": "#76777d",
+              "inverse-primary": "#bec6e0",
+              "outline-variant": "#c6c6cd",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#ffddb8",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "secondary-container": "#316bf3",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#2a1700",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 flex justify-between items-center w-full px-8 py-4 max-w-none">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">Nordic Commerce</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-['Manrope'] tracking-tight" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-['Manrope'] tracking-tight" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-['Manrope'] tracking-tight" href="#">Editorial</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface">shopping_bag</span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all active:scale-95 duration-200 text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</nav>
+<main class="pt-28 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
+<!-- Editorial Header Section -->
+<div class="mb-12 md:mb-16">
+<div class="flex items-center gap-2 text-secondary font-medium mb-4 tracking-widest text-[10px] uppercase">
+<span>Account Overview</span>
+<span class="w-8 h-[1px] bg-secondary-container"></span>
+</div>
+<h1 class="text-5xl md:text-6xl font-extrabold tracking-tighter text-on-surface mb-4">Refunds History</h1>
+<p class="text-on-surface-variant max-w-xl text-lg leading-relaxed font-body">
+                View the status of your returns and processed reimbursements. Every transaction is tracked with editorial precision.
+            </p>
+</div>
+<!-- Asymmetric Dashboard Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Sidebar Navigation (Desktop) -->
+<div class="hidden lg:block lg:col-span-3">
+<div class="sticky top-32 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">shopping_basket</span>
+<span class="font-medium">Recent Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-container-high text-on-surface rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">assignment_return</span>
+<span class="font-medium">Refunds</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+<span class="font-medium">Wishlist</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-medium">Account Settings</span>
+</a>
+</div>
+</div>
+<!-- Content Canvas -->
+<div class="lg:col-span-9">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)]">
+<!-- Clean Table Layout -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Request ID</th>
+<th class="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Order Ref</th>
+<th class="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Status</th>
+<th class="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">Amount</th>
+<th class="px-6 py-5 text-[11px] font-bold uppercase tracking-[0.15em] text-on-surface-variant text-right">Date</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Refund Item 1 -->
+<tr class="group hover:bg-surface-container-lowest/50 transition-colors">
+<td class="px-6 py-6">
+<div class="flex flex-col">
+<span class="font-headline font-bold text-on-surface">#RF-9021</span>
+<span class="text-xs text-outline">Nordic Wool Scarf</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<a class="text-secondary font-medium hover:underline" href="#">#ORD-44219</a>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                            Issued
+                                        </span>
+</td>
+<td class="px-6 py-6 font-headline font-bold text-on-surface">$128.00</td>
+<td class="px-6 py-6 text-right text-on-surface-variant font-body text-sm">Oct 12, 2023</td>
+</tr>
+<!-- Refund Item 2 -->
+<tr class="group hover:bg-surface-container-lowest/50 transition-colors">
+<td class="px-6 py-6">
+<div class="flex flex-col">
+<span class="font-headline font-bold text-on-surface">#RF-8842</span>
+<span class="text-xs text-outline">Minimalist Ceramic Set</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<a class="text-secondary font-medium hover:underline" href="#">#ORD-44102</a>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tertiary-fixed text-on-tertiary-fixed">
+                                            Pending
+                                        </span>
+</td>
+<td class="px-6 py-6 font-headline font-bold text-on-surface">$345.00</td>
+<td class="px-6 py-6 text-right text-on-surface-variant font-body text-sm">Oct 05, 2023</td>
+</tr>
+<!-- Refund Item 3 -->
+<tr class="group hover:bg-surface-container-lowest/50 transition-colors">
+<td class="px-6 py-6">
+<div class="flex flex-col">
+<span class="font-headline font-bold text-on-surface">#RF-8711</span>
+<span class="text-xs text-outline">Atelier Cotton Shirt</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<a class="text-secondary font-medium hover:underline" href="#">#ORD-43988</a>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                                            Issued
+                                        </span>
+</td>
+<td class="px-6 py-6 font-headline font-bold text-on-surface">$89.00</td>
+<td class="px-6 py-6 text-right text-on-surface-variant font-body text-sm">Sep 28, 2023</td>
+</tr>
+<!-- Refund Item 4 -->
+<tr class="group hover:bg-surface-container-lowest/50 transition-colors">
+<td class="px-6 py-6">
+<div class="flex flex-col">
+<span class="font-headline font-bold text-on-surface">#RF-8650</span>
+<span class="text-xs text-outline">Oak Floor Lamp</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<a class="text-secondary font-medium hover:underline" href="#">#ORD-43850</a>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-error-container text-on-error-container">
+                                            Declined
+                                        </span>
+</td>
+<td class="px-6 py-6 font-headline font-bold text-on-surface">$420.00</td>
+<td class="px-6 py-6 text-right text-on-surface-variant font-body text-sm">Sep 15, 2023</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bento Style Support Card -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between h-full">
+<div>
+<span class="material-symbols-outlined text-secondary text-3xl mb-4">help_outline</span>
+<h3 class="text-xl font-bold mb-2">Need assistance?</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Our concierge team is available 24/7 to discuss your return status or payment issues.</p>
+</div>
+<button class="mt-6 inline-flex items-center text-secondary font-semibold group">
+                            Contact Support
+                            <span class="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<div class="bg-primary text-on-primary p-8 rounded-xl overflow-hidden relative">
+<div class="relative z-10">
+<h3 class="text-xl font-bold mb-2">Refund Policy</h3>
+<p class="text-on-primary/70 text-sm leading-relaxed mb-6">Learn more about our editorial quality guarantee and returns window.</p>
+<a class="px-6 py-3 bg-secondary text-white rounded-lg text-sm font-semibold inline-block" href="#">Read Policy</a>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-10">
+<span class="material-symbols-outlined text-[160px]" style="font-variation-settings: 'FILL' 1;">assignment_return</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 md:hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(11,28,48,0.04)]">
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Collections</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Editorial</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-3 py-1 transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">person_outline</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Account</span>
+</div>
+</nav>
+<!-- Footer -->
+<footer class="w-full mt-20 bg-slate-100 dark:bg-slate-900 w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center border-t border-slate-200 dark:border-slate-800">
+<div class="flex flex-col items-center md:items-start mb-8 md:mb-0">
+<div class="font-['Manrope'] font-bold text-lg text-slate-900 dark:text-white mb-2">Nordic Commerce</div>
+<p class="font-['Inter'] text-sm tracking-normal text-slate-500 dark:text-slate-400">© 2024 Nordic Commerce. An Editorial Atelier.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal hover:opacity-80 transition-all" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal hover:opacity-80 transition-all" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal hover:opacity-80 transition-all" href="#">Sustainability</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal hover:opacity-80 transition-all" href="#">Contact</a>
+</div>
+</footer>
+</body></html>

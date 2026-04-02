@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Preferences | NORDIC ATELIER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#dce9ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary-container": "#fefcff",
+              "surface-container-highest": "#d3e4fe",
+              "surface-bright": "#f8f9ff",
+              "primary": "#000000",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "outline": "#76777d",
+              "on-surface-variant": "#45464d",
+              "on-background": "#0b1c30",
+              "inverse-primary": "#bec6e0",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "tertiary": "#000000",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary-fixed": "#dae2fd",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary": "#0051d5",
+              "on-primary-container": "#7c839b",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-fixed-variant": "#003ea8",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-tertiary-container": "#b87500",
+              "outline-variant": "#c6c6cd",
+              "surface-container": "#e5eeff",
+              "secondary-container": "#316bf3",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed": "#ffddb8",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#00174b",
+              "background": "#f8f9ff",
+              "tertiary-container": "#2a1700",
+              "surface": "#f8f9ff",
+              "primary-container": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-6 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-950 dark:text-white">NORDIC ATELIER</div>
+<div class="hidden md:flex items-center space-x-8 font-manrope tracking-tight text-sm font-medium uppercase">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Objects</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Editorial</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Archive</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="material-symbols-outlined text-slate-900 dark:text-slate-50 hover:scale-95 duration-200">shopping_bag</button>
+<button class="material-symbols-outlined text-slate-900 dark:text-slate-50 hover:scale-95 duration-200">person</button>
+</div>
+</div>
+</nav>
+<div class="flex min-h-screen pt-24 max-w-screen-2xl mx-auto">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-[calc(100vh-6rem)] sticky top-24 w-64 bg-slate-50 dark:bg-slate-900 border-r-0 font-manrope text-sm">
+<div class="p-8 space-y-2">
+<div class="flex items-center space-x-4 mb-8">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Close-up studio portrait of a sophisticated man with minimalist glasses and neutral grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqttysAAZmidsMBTv1_8XRGzRTJNtqDAHlLTnwTeoIuC92t3fWDtmlqYMzjjPc-kLuqCVNPuqj8CTnFPXTV_YQbliknGY4i_r1rtWK8_OpzOp612FByzKKBCUrPh4vSN4Bzft_o5ObMv_uqfY3zlz49139sZo6ofEgRenxB2pvk86Wh2y6a3nuaqBsTdH6olCXQYWcpw_rYdscjkT5etpNubNYRZ0seRt0DMrVBuJd1nVeEIS_qp4j6NKQ5RoTYdAwsDr_klbWYt7H"/>
+<div>
+<div class="font-bold text-lg text-slate-900 dark:text-white">Member Atelier</div>
+<div class="text-xs text-slate-500">Curated since 2023</div>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span> Overview
+                    </a>
+<a class="flex items-center py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="package_2">package_2</span> Orders
+                    </a>
+<a class="flex items-center py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="location_on">location_on</span> Addresses
+                    </a>
+<a class="flex items-center py-3 text-slate-500 dark:text-slate-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="credit_card">credit_card</span> Payments
+                    </a>
+<a class="flex items-center py-3 text-blue-700 dark:text-blue-400 font-bold border-l-4 border-blue-700 dark:border-blue-400 pl-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span> Settings
+                    </a>
+</nav>
+<div class="mt-auto pt-12">
+<button class="w-full py-3 bg-primary-container text-white text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
+                        Exclusive Access
+                    </button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 px-8 md:px-16 pb-24">
+<header class="mb-12">
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tighter text-on-surface mb-2">Account Preferences</h1>
+<p class="text-on-surface-variant max-w-2xl font-body">Tailor your Atelier experience. Manage how we communicate with you, your regional settings, and accessibility enhancements.</p>
+</header>
+<div class="space-y-12">
+<!-- Notifications Section -->
+<section class="bg-surface-container-low p-8 rounded-lg">
+<h2 class="text-xl font-bold tracking-tight mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2" data-icon="notifications">notifications</span> Communication
+                    </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<label class="block text-sm font-bold uppercase tracking-widest text-on-surface-variant">Email Notifications</label>
+<div class="space-y-4">
+<label class="flex items-center cursor-pointer group">
+<input checked="" class="w-5 h-5 border-0 bg-surface-container-high text-secondary focus:ring-0 rounded-sm" type="checkbox"/>
+<span class="ml-4 text-sm font-medium group-hover:text-secondary transition-colors">Exclusive Collection Drops</span>
+</label>
+<label class="flex items-center cursor-pointer group">
+<input checked="" class="w-5 h-5 border-0 bg-surface-container-high text-secondary focus:ring-0 rounded-sm" type="checkbox"/>
+<span class="ml-4 text-sm font-medium group-hover:text-secondary transition-colors">Order Status Updates</span>
+</label>
+<label class="flex items-center cursor-pointer group">
+<input class="w-5 h-5 border-0 bg-surface-container-high text-secondary focus:ring-0 rounded-sm" type="checkbox"/>
+<span class="ml-4 text-sm font-medium group-hover:text-secondary transition-colors">Weekly Editorial Highlights</span>
+</label>
+</div>
+</div>
+<div class="space-y-4">
+<label class="block text-sm font-bold uppercase tracking-widest text-on-surface-variant">SMS &amp; Mobile</label>
+<div class="space-y-4">
+<label class="flex items-center cursor-pointer group">
+<input class="w-5 h-5 border-0 bg-surface-container-high text-secondary focus:ring-0 rounded-sm" type="checkbox"/>
+<span class="ml-4 text-sm font-medium group-hover:text-secondary transition-colors">Instant Delivery Alerts</span>
+</label>
+<label class="flex items-center cursor-pointer group">
+<input class="w-5 h-5 border-0 bg-surface-container-high text-secondary focus:ring-0 rounded-sm" type="checkbox"/>
+<span class="ml-4 text-sm font-medium group-hover:text-secondary transition-colors">Two-Factor Authentication</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Regional Settings -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-lg shadow-sm">
+<h2 class="text-xl font-bold tracking-tight mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2" data-icon="language">language</span> Regional Settings
+                        </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-tighter text-outline">Preferred Language</label>
+<select class="w-full bg-surface-container-high border-0 py-3 px-4 focus:ring-2 focus:ring-secondary rounded-md text-sm">
+<option>English (International)</option>
+<option>Danish (Dansk)</option>
+<option>Swedish (Svenska)</option>
+<option>German (Deutsch)</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-tighter text-outline">Currency</label>
+<select class="w-full bg-surface-container-high border-0 py-3 px-4 focus:ring-2 focus:ring-secondary rounded-md text-sm">
+<option>USD ($)</option>
+<option>EUR (€)</option>
+<option>DKK (kr.)</option>
+<option>GBP (£)</option>
+</select>
+</div>
+<div class="space-y-2 md:col-span-2">
+<label class="text-xs font-bold uppercase tracking-tighter text-outline">Time Zone</label>
+<select class="w-full bg-surface-container-high border-0 py-3 px-4 focus:ring-2 focus:ring-secondary rounded-md text-sm">
+<option>(GMT+01:00) Central European Time - Copenhagen</option>
+<option>(GMT+00:00) Greenwich Mean Time - London</option>
+<option>(GMT-05:00) Eastern Time - New York</option>
+<option>(GMT+09:00) Japan Standard Time - Tokyo</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Side Profile Preview/Ad -->
+<div class="relative overflow-hidden rounded-lg group h-full min-h-[300px] flex flex-col justify-end p-8 text-white">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Modern minimalist interior with sculptural furniture and large windows overlooking a misty forest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT1S9c1Oji-4E9Ma3HHZy9msUM5dP8owvZMTGpbveuqGcJdsl4OcGwhunWr6eiHLoPcxmqDa_LBRWZ3kaC6Xq4oRorNPrCVhHu-6P10G54MKLhVL66zOGgqLVSHf6847bV7zwtnPpe08Zpc32MQCdU5ShoGDJzIgzXG0bQXG5Kn5ODeGWJvP1AfTFax3BIwPuHtnj1p_HBL7r_0VYxuQKcVGzUN1i9a6HpekkP4cGD6jz1AsiBqOFGXI7cp4wUc1RTYLGJV4HtjlLs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-transparent opacity-80"></div>
+<div class="relative z-10">
+<p class="text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Curated Membership</p>
+<h3 class="text-2xl font-bold leading-none mb-4 tracking-tighter">Your space, <br/>your rules.</h3>
+<button class="text-sm font-medium underline underline-offset-4 hover:text-secondary transition-colors">Explore Perks</button>
+</div>
+</div>
+</section>
+<!-- Accessibility -->
+<section class="bg-surface-container-low p-8 rounded-lg">
+<h2 class="text-xl font-bold tracking-tight mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2" data-icon="accessibility_new">accessibility_new</span> Accessibility Options
+                    </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="p-6 bg-surface-container-lowest rounded-md space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<div class="font-bold text-sm">Reduced Motion</div>
+<p class="text-xs text-on-surface-variant mt-1">Minimizes animations and transitions across the interface.</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded-md space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<div class="font-bold text-sm">High Contrast</div>
+<p class="text-xs text-on-surface-variant mt-1">Increases contrast ratios for better text legibility.</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded-md space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<div class="font-bold text-sm">Screen Reader Optimized</div>
+<p class="text-xs text-on-surface-variant mt-1">Forces semantic layout structures for assistive tech.</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Save Actions -->
+<footer class="pt-8 border-t-0 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<p class="text-xs text-outline font-medium uppercase tracking-widest italic">Changes are synced across all your devices.</p>
+<div class="flex items-center space-x-4">
+<button class="px-8 py-3 text-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors">Discard</button>
+<button class="px-12 py-3 bg-secondary text-white text-sm font-bold rounded-sm shadow-xl shadow-secondary/20 hover:scale-[1.02] active:scale-95 transition-all">Update Preferences</button>
+</div>
+</footer>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full mt-24 bg-slate-100 dark:bg-slate-950">
+<div class="w-full px-12 py-16 grid grid-cols-1 md:grid-cols-4 gap-12 font-inter text-xs tracking-widest uppercase">
+<div class="md:col-span-1">
+<div class="text-xl font-black text-slate-900 dark:text-white mb-6">NORDIC ATELIER</div>
+<p class="text-slate-500 lowercase normal-case leading-relaxed max-w-xs">A curation of timeless objects, sustainably crafted for the modern dwelling.</p>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-6">Explore</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Sustainability Report</a></li>
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Editorial</a></li>
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Archive</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-6">Support</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Shipping &amp; Returns</a></li>
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-6">Connect</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Contact</a></li>
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Instagram</a></li>
+<li><a class="hover:text-blue-700 dark:hover:text-blue-400 underline-offset-4 hover:underline" href="#">Journal</a></li>
+</ul>
+</div>
+</div>
+<div class="px-12 py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+<p class="text-[10px] text-slate-400">© 2024 NORDIC ATELIER. SUSTAINABLY CRAFTED.</p>
+</div>
+</footer>
+</body></html>

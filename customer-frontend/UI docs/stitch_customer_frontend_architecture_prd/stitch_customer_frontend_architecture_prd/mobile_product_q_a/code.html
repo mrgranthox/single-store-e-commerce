@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary/30">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-manrope font-bold tracking-tight text-xl font-black tracking-tighter text-slate-900">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="pt-20 pb-32 px-6 max-w-md mx-auto">
+<!-- Editorial Header -->
+<section class="mb-10">
+<span class="font-label text-[10px] font-semibold uppercase tracking-[0.2em] text-secondary mb-3 block">Community Support</span>
+<h1 class="font-headline text-[2.75rem] leading-none font-extrabold tracking-tight text-primary-container mb-4">Product Q&amp;A</h1>
+<p class="text-on-surface-variant font-body leading-relaxed max-w-[85%]">Find answers from the NORDIC community or consult our specialists for detailed product inquiries.</p>
+</section>
+<!-- Search & Filter Area -->
+<section class="mb-12">
+<div class="relative group">
+<input class="w-full bg-surface-container-high border-none h-14 pl-12 pr-4 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all duration-300" placeholder="Search questions..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+</div>
+<div class="flex gap-2 mt-4 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-5 py-2 bg-primary-container text-white rounded-full text-xs font-semibold whitespace-nowrap">All Topics</button>
+<button class="px-5 py-2 bg-surface-container-low text-on-surface-variant rounded-full text-xs font-semibold whitespace-nowrap hover:bg-surface-container-high transition-colors">Technical</button>
+<button class="px-5 py-2 bg-surface-container-low text-on-surface-variant rounded-full text-xs font-semibold whitespace-nowrap hover:bg-surface-container-high transition-colors">Shipping</button>
+<button class="px-5 py-2 bg-surface-container-low text-on-surface-variant rounded-full text-xs font-semibold whitespace-nowrap hover:bg-surface-container-high transition-colors">Sizing</button>
+</div>
+</section>
+<!-- Product Context Card -->
+<section class="mb-12 bg-surface-container-low p-6 rounded-xl flex items-center gap-6">
+<div class="w-20 h-24 bg-surface-container-lowest rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Minimalist luxury designer watch with clean white face and silver mesh band on soft blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVpP9EueM0s1eIxjKU0ePh3G7gQotW8FXahpiyKicEo0R7ocQ9SO7ru2rAiqLupsqQ_7-4RfuA0E0e9LG-hSXZHb0gl1p7EYLgfna7ECSEi2fyYLSJ6uEdeEWiQHKmyjwEkMrOulIyA_wta6eYJRI0wdv5CvVvYxQdIAPhijAfXv7SNmz0j-AwqTr1sG4GXIe7Zw9Hnp8UicY8pQj95RBW-5cnO84EhN6rUOkyv1cc1zteUn4sn5P42doVkG9BA5b1gho4omDRHGiV"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight text-primary-container">Nordic Chrono v2</h3>
+<p class="text-xs text-on-surface-variant mt-1">Series: Essential Atelier</p>
+<div class="flex items-center mt-3 gap-1">
+<span class="material-symbols-outlined text-[14px] text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">4.9</span>
+<span class="text-xs text-outline ml-1">(124 active discussions)</span>
+</div>
+</div>
+</section>
+<!-- Q&A Feed (Editorial Layout) -->
+<section class="space-y-10">
+<!-- Question 1 -->
+<article>
+<div class="flex items-start justify-between gap-4 mb-3">
+<h4 class="font-headline font-bold text-lg leading-snug">Does the sapphire crystal have an anti-reflective coating?</h4>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-1 text-[10px] font-bold rounded shrink-0">TOPIC: SPEC</span>
+</div>
+<div class="flex gap-4 items-start pl-4 border-l-2 border-secondary/10">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest shrink-0 flex items-center justify-center text-[10px] font-bold">SM</div>
+<div class="space-y-2">
+<p class="text-sm leading-relaxed text-on-surface-variant">Yes, the Nordic Chrono v2 features double-domed sapphire with a 7-layer internal AR coating for maximum clarity in direct sunlight.</p>
+<div class="flex items-center gap-4 pt-1">
+<button class="flex items-center gap-1 text-[11px] font-bold text-secondary">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span> 42
+                            </button>
+<span class="text-[11px] text-outline">2 days ago</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Question 2 -->
+<article>
+<div class="flex items-start justify-between gap-4 mb-3">
+<h4 class="font-headline font-bold text-lg leading-snug">How long is the actual leather strap for smaller wrists?</h4>
+</div>
+<div class="flex gap-4 items-start pl-4 border-l-2 border-secondary/10">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest shrink-0 flex items-center justify-center text-[10px] font-bold">JL</div>
+<div class="space-y-2">
+<p class="text-sm leading-relaxed text-on-surface-variant">The standard strap fits 145mm–210mm. We offer a "Short" version for 120mm–175mm if you contact support right after ordering.</p>
+<div class="flex items-center gap-4 pt-1">
+<button class="flex items-center gap-1 text-[11px] font-bold text-secondary">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span> 18
+                            </button>
+<span class="text-[11px] text-outline">1 week ago</span>
+</div>
+</div>
+</div>
+</article>
+</section>
+<!-- Submit Inquiry Form -->
+<section class="mt-20 pt-12 border-t border-outline-variant/20">
+<div class="mb-8">
+<h2 class="font-headline font-extrabold text-2xl tracking-tight mb-2">Can't find an answer?</h2>
+<p class="text-sm text-on-surface-variant">Submit a private inquiry to our design studio. Response time is typically within 24 hours.</p>
+</div>
+<form class="space-y-4">
+<div class="space-y-1">
+<label class="font-label text-[10px] font-bold uppercase tracking-wider text-outline ml-1">Subject</label>
+<input class="w-full bg-surface-container-high border-none h-14 px-4 rounded-lg focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" placeholder="Product Maintenance, Fit, etc." type="text"/>
+</div>
+<div class="space-y-1">
+<label class="font-label text-[10px] font-bold uppercase tracking-wider text-outline ml-1">Your Message</label>
+<textarea class="w-full bg-surface-container-high border-none p-4 rounded-lg focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all resize-none" placeholder="How can we help you today?" rows="4"></textarea>
+</div>
+<div class="pt-4">
+<button class="w-full bg-secondary text-white font-bold h-14 rounded-lg shadow-xl shadow-secondary/10 flex items-center justify-center gap-2 active:scale-[0.98] transition-all" type="submit">
+                        Submit Inquiry
+                        <span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+<p class="text-center text-[10px] text-outline mt-4">By submitting, you agree to our Community Terms &amp; Privacy Policy.</p>
+</div>
+</form>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 backdrop-blur-md border-t border-slate-200/20 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] flex justify-around items-center h-20 w-full px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 active:scale-90 transition-all duration-300 ease-out relative" href="#">
+<span class="material-symbols-outlined mb-1">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Bag</span>
+<div class="absolute -top-1 right-2 w-4 h-4 bg-secondary text-white rounded-full flex items-center justify-center text-[8px] font-bold">2</div>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Settings | AELIA ATELIER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#ffddb8",
+              "background": "#f8f9ff",
+              "outline": "#76777d",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary": "#0051d5",
+              "surface-tint": "#565e74",
+              "primary-fixed": "#dae2fd",
+              "on-background": "#0b1c30",
+              "surface-dim": "#cbdbf5",
+              "surface-container": "#e5eeff",
+              "on-tertiary-container": "#b87500",
+              "on-surface": "#0b1c30",
+              "on-primary-container": "#7c839b",
+              "secondary-fixed": "#dbe1ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "on-secondary-container": "#fefcff",
+              "inverse-primary": "#bec6e0",
+              "surface": "#f8f9ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface-container-highest": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "surface-container-low": "#eff4ff",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "primary": "#000000",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff",
+              "primary-container": "#131b2e",
+              "outline-variant": "#c6c6cd",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary": "#ffffff",
+              "tertiary": "#000000",
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#316bf3",
+              "surface-container-high": "#dce9ff",
+              "on-secondary-fixed": "#00174b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl no-border bg-slate-50/50">
+<div class="flex items-center justify-between px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 font-headline uppercase">AELIA</div>
+<div class="hidden md:flex items-center space-x-8 font-['Manrope'] tracking-tight">
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">New Arrivals</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">Curated</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">Living</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">Objects</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hover:opacity-80 transition-opacity"><span class="material-symbols-outlined">shopping_bag</span></button>
+<button class="text-blue-700 font-semibold border-b-2 border-blue-700 pb-1"><span class="material-symbols-outlined">person</span></button>
+</div>
+</div>
+</nav>
+<main class="pt-24 flex min-h-screen max-w-screen-2xl mx-auto">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-64 flex flex-col p-6 space-y-2 bg-slate-50 border-r-0 sticky top-24">
+<div class="mb-10 px-2">
+<div class="flex items-center space-x-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img alt="Marcus V." class="w-full h-full object-cover" data-alt="portrait of a handsome man with short dark hair and a confident expression in a clean studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsiwMCMPqaqHCzMyZNYO6-vFFkuj1UgibV1dPAIH-TwBB-PESKCZj-iTgwrIiiVn_xag-eD-Jk7DogzjAk6fZEDy7sJ2HGarkbvEzPlX5Asj7GkJB4-DpVH6pKT1hwoWVwmCFtL4N3g7fM5u_7ieMjKjyJ_1Y2DQvkwvu_-RhN6PfjhgYcJcy-8fjeF1DpmaohBPb7LbsrJML_SqGAu9lERcDGiVoSW5gE_LEr_176XH4K4BTrmdpTY5bT2MLT8fT_XZb8kvlH2OhO"/>
+</div>
+<div>
+<div class="font-bold text-sm text-on-surface">Marcus V.</div>
+<div class="text-[10px] text-slate-500 uppercase tracking-widest">Premium Member</div>
+</div>
+</div>
+<button class="w-full py-2 px-4 bg-primary text-on-primary text-xs font-bold rounded shadow-sm hover:opacity-90 transition-all uppercase tracking-wider">Contact Concierge</button>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 hover:bg-slate-200 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 hover:bg-slate-200 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 hover:bg-slate-200 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">assignment_return</span>
+<span class="text-sm font-medium">Returns</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 hover:bg-slate-200 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">location_on</span>
+<span class="text-sm font-medium">Addresses</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 bg-white text-blue-700 rounded-lg shadow-sm font-bold border-l-4 border-blue-700" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pb-12 space-y-1">
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 hover:bg-slate-200 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 hover:bg-slate-200 hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<section class="flex-1 px-12 py-12 bg-surface">
+<div class="max-w-4xl">
+<header class="mb-12">
+<h1 class="text-4xl font-extrabold tracking-tight text-on-surface mb-2">Account Settings</h1>
+<p class="text-on-surface-variant max-w-2xl">Manage your atelier profile, digital identity, and curated preferences for a tailored shopping experience.</p>
+</header>
+<div class="space-y-10">
+<!-- Personal Information -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h2 class="text-xl font-bold mb-8 tracking-tight flex items-center">
+<span class="material-symbols-outlined mr-2">person_outline</span> Personal Information
+                        </h2>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest font-bold text-outline">First Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-white transition-all" type="text" value="Marcus"/>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest font-bold text-outline">Last Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-white transition-all" type="text" value="Vandermeer"/>
+</div>
+<div class="space-y-2 col-span-2">
+<label class="text-[10px] uppercase tracking-widest font-bold text-outline">Email Address</label>
+<div class="relative">
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-white transition-all" type="email" value="m.vandermeer@atelier.com"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-tertiary-container text-[10px] font-bold uppercase bg-tertiary-fixed px-2 py-1 rounded">Verified</span>
+</div>
+</div>
+<div class="space-y-2 col-span-2">
+<label class="text-[10px] uppercase tracking-widest font-bold text-outline">Phone Number</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-secondary focus:bg-white transition-all" type="tel" value="+31 6 12 34 56 78"/>
+</div>
+</div>
+</div>
+<!-- Notification Preferences -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h2 class="text-xl font-bold mb-8 tracking-tight flex items-center">
+<span class="material-symbols-outlined mr-2">notifications</span> Notifications
+                            </h2>
+<div class="space-y-6">
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="text-sm font-medium text-on-surface">Order Tracking Updates</span>
+<div class="relative inline-flex items-center">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="text-sm font-medium text-on-surface">Curated Newsletters</span>
+<div class="relative inline-flex items-center">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="text-sm font-medium text-on-surface">Concierge Notifications</span>
+<div class="relative inline-flex items-center">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+</label>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h2 class="text-xl font-bold mb-8 tracking-tight flex items-center">
+<span class="material-symbols-outlined mr-2">security</span> Privacy &amp; Security
+                            </h2>
+<div class="space-y-4">
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all group">
+<span class="text-sm font-medium">Update Password</span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all group">
+<span class="text-sm font-medium">Two-Factor Authentication</span>
+<span class="text-[10px] font-bold text-secondary uppercase bg-secondary-fixed px-2 py-1 rounded">Enabled</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-lowest rounded-lg hover:shadow-sm transition-all group">
+<span class="text-sm font-medium">Manage Active Sessions</span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-end space-x-6 pt-10 border-t border-slate-100">
+<button class="text-sm font-bold uppercase tracking-widest text-outline hover:text-on-surface transition-colors">Discard Changes</button>
+<button class="px-12 py-4 bg-secondary text-on-secondary text-sm font-bold rounded-lg shadow-lg hover:bg-on-secondary-fixed-variant transition-all transform active:scale-95">Save Profile</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="w-full mt-20 pt-16 pb-8 bg-slate-100 tonal-shift">
+<div class="max-w-screen-2xl mx-auto px-8 flex flex-col items-center space-y-12">
+<div class="text-lg font-black text-slate-900 tracking-[0.2em]">AELIA ATELIER</div>
+<div class="flex flex-wrap justify-center gap-x-12 gap-y-4">
+<a class="text-[11px] font-['Inter'] uppercase tracking-widest text-slate-500 hover:text-blue-600 transition-colors" href="#">Sustainability</a>
+<a class="text-[11px] font-['Inter'] uppercase tracking-widest text-slate-500 hover:text-blue-600 transition-colors" href="#">Terms of Service</a>
+<a class="text-[11px] font-['Inter'] uppercase tracking-widest text-slate-500 hover:text-blue-600 transition-colors" href="#">Privacy Policy</a>
+<a class="text-[11px] font-['Inter'] uppercase tracking-widest text-slate-500 hover:text-blue-600 transition-colors" href="#">Accessibility</a>
+</div>
+<div class="text-[11px] font-['Inter'] uppercase tracking-widest text-slate-400">© 2024 AELIA ATELIER. ALL RIGHTS RESERVED.</div>
+</div>
+</footer>
+</body></html>

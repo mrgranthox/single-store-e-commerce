@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#565e74",
+              "primary": "#000000",
+              "surface-container-high": "#dce9ff",
+              "surface-variant": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "tertiary": "#000000",
+              "on-surface-variant": "#45464d",
+              "error": "#ba1a1a",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "secondary-container": "#316bf3",
+              "on-surface": "#0b1c30",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "outline-variant": "#c6c6cd",
+              "outline": "#76777d",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-container-low": "#eff4ff",
+              "on-primary-fixed": "#131b2e",
+              "inverse-on-surface": "#eaf1ff",
+              "tertiary-container": "#2a1700",
+              "surface-dim": "#cbdbf5",
+              "background": "#f8f9ff",
+              "primary-container": "#131b2e",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-fixed": "#2a1700",
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "secondary-fixed": "#dbe1ff",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "inverse-primary": "#bec6e0",
+              "on-primary-container": "#7c839b",
+              "primary-fixed": "#dae2fd"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- The Shell Visibility & Relevance Filter: Navigational shells are suppressed for transactional/focused states like Session Expired. -->
+<main class="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
+<!-- Background Architectural Planes -->
+<div class="absolute inset-0 z-0">
+<div class="absolute top-0 right-0 w-[60vw] h-[614px] bg-surface-container-low rounded-bl-[120px] -mr-20 -mt-20"></div>
+<div class="absolute bottom-0 left-0 w-[40vw] h-[409px] bg-surface-container-high opacity-40 rounded-tr-[100px] -ml-10 -mb-10"></div>
+</div>
+<!-- Focused Content Canvas -->
+<div class="relative z-10 w-full max-w-lg">
+<!-- Brand Anchor -->
+<div class="flex justify-center mb-16">
+<span class="font-headline font-extrabold text-2xl tracking-tighter text-primary">
+                    Nordic Atelier
+                </span>
+</div>
+<!-- Session Expiry Card (Tonal Layering instead of shadows) -->
+<div class="bg-surface-container-lowest p-10 md:p-14 rounded-xl flex flex-col items-center text-center">
+<!-- Security Indicator -->
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="lock_clock">lock_clock</span>
+</div>
+<h1 class="font-headline font-bold text-3xl md:text-4xl tracking-tight text-on-surface mb-6">
+                    Session Expired
+                </h1>
+<p class="font-body text-on-surface-variant leading-relaxed mb-10 max-w-sm">
+                    For your security, we've signed you out after a period of inactivity. Your progress and cart have been saved to your account.
+                </p>
+<!-- Action Group -->
+<div class="w-full space-y-4">
+<button class="w-full bg-secondary text-on-secondary font-headline font-semibold py-4 px-8 rounded-md transition-all hover:bg-secondary-container hover:scale-[1.02] active:scale-95">
+                        Log In Again
+                    </button>
+<button class="w-full bg-surface-container-low text-on-surface font-headline font-semibold py-4 px-8 rounded-md transition-all hover:bg-surface-container-high">
+                        Return to Homepage
+                    </button>
+</div>
+<!-- Security Meta -->
+<div class="mt-12 flex items-center justify-center gap-2 text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="shield">shield</span>
+<span class="font-label text-xs uppercase tracking-[0.1em]">Secure Environment</span>
+</div>
+</div>
+<!-- Supporting Brand Imagery (Editorial Asymmetry) -->
+<div class="mt-12 flex justify-between items-end">
+<div class="hidden md:block w-32 h-32 overflow-hidden rounded-xl bg-surface-container">
+<img alt="" class="w-full h-full object-cover grayscale opacity-40" data-alt="Minimalist architectural detail of a concrete staircase with soft shadows and neutral tones for a luxury brand aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZpLY9XUMqRTISowgLfUdYDqzqolZVEHvHZ8o-NHAhwEhvfaLqnC0u4zE0aXR632PMI4hXnFnkOXJsXC9yQFTGuz504A7dNNrNeI_ckQ5ctmr3nGCHN6qHyPr4onfuQNEeImUdEyepn2jfPja34pCnHD3L-96hPKyIjiweRUpzQSMpDCy1FgzxpMhEWmLPFnz9UJHgxFrabu2aaiuU6mvl5L9iDZeV-neTdGiaaPsB21FO6TjCdeNs1r9ex5gYVP1szC3NU8rdSTvr"/>
+</div>
+<div class="text-left max-w-[200px]">
+<p class="font-label text-[10px] text-outline-variant leading-tight">
+                        NEED ASSISTANCE? CONTACT OUR ATELIER CONCIERGE AT SUPPORT@NORDICATELIER.COM
+                    </p>
+</div>
+</div>
+</div>
+<!-- Footer Shell (Minimal version for focused task) -->
+<footer class="absolute bottom-0 w-full py-8 px-10 flex flex-col md:flex-row justify-between items-center opacity-60">
+<p class="font-label text-[10px] tracking-widest text-outline uppercase mb-4 md:mb-0">
+                © 2024 Nordic Atelier. Crafted for the minimalist.
+            </p>
+<div class="flex gap-6">
+<a class="font-label text-[10px] tracking-widest text-outline uppercase hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label text-[10px] tracking-widest text-outline uppercase hover:text-secondary transition-colors" href="#">Terms of Service</a>
+</div>
+</footer>
+</main>
+</body></html>

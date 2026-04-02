@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atelier | Curated Collections</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .tonal-shift { transition: background-color 0.3s ease; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "tertiary-fixed-dim": "#ffb95f",
+                "surface": "#f8f9ff",
+                "tertiary-container": "#2a1700",
+                "error-container": "#ffdad6",
+                "surface-container-highest": "#d3e4fe",
+                "surface-container-low": "#eff4ff",
+                "on-secondary": "#ffffff",
+                "primary-fixed-dim": "#bec6e0",
+                "secondary-fixed": "#dbe1ff",
+                "on-secondary-container": "#fefcff",
+                "inverse-primary": "#bec6e0",
+                "on-primary-fixed": "#131b2e",
+                "on-background": "#0b1c30",
+                "primary-fixed": "#dae2fd",
+                "surface-tint": "#565e74",
+                "secondary": "#0051d5",
+                "on-primary-container": "#7c839b",
+                "surface-dim": "#cbdbf5",
+                "on-tertiary-container": "#b87500",
+                "on-surface": "#0b1c30",
+                "surface-container": "#e5eeff",
+                "background": "#f8f9ff",
+                "tertiary-fixed": "#ffddb8",
+                "outline": "#76777d",
+                "inverse-on-surface": "#eaf1ff",
+                "surface-container-high": "#dce9ff",
+                "on-secondary-fixed": "#00174b",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#316bf3",
+                "on-tertiary": "#ffffff",
+                "surface-variant": "#d3e4fe",
+                "primary": "#000000",
+                "error": "#ba1a1a",
+                "primary-container": "#131b2e",
+                "outline-variant": "#c6c6cd",
+                "on-surface-variant": "#45464d",
+                "on-error": "#ffffff"
+              },
+              fontFamily: {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900">Atelier</div>
+<div class="hidden md:flex items-center space-x-8 font-manrope tracking-tight text-sm font-semibold">
+<a class="text-blue-700 border-b-2 border-blue-700 pb-1 hover:text-blue-600 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors" href="#">Categories</a>
+<a class="text-slate-600 hover:text-blue-600 transition-colors" href="#">Sale</a>
+</div>
+<div class="flex items-center space-x-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-secondary transition-all" placeholder="Search collections..." type="text"/>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-slate-600 hover:text-blue-700 transition-opacity active:opacity-70">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button class="text-slate-600 hover:text-blue-700 transition-opacity active:opacity-70">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="text-slate-600 hover:text-blue-700 transition-opacity active:opacity-70">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex pt-20 min-h-screen">
+<!-- SideNavBar / Filter System -->
+<aside class="hidden md:flex flex-col h-full w-64 fixed left-0 top-20 z-40 bg-white border-r border-slate-100 overflow-y-auto no-scrollbar">
+<div class="px-8 py-6">
+<h2 class="text-xl font-bold text-slate-900 font-headline mb-1">Curated Collections</h2>
+<p class="text-xs text-slate-500 font-body mb-8">Exclusively for you</p>
+<div class="space-y-8">
+<!-- Categories -->
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Categories</h3>
+<div class="flex flex-col space-y-1">
+<button class="flex items-center justify-between bg-blue-50 text-blue-700 font-bold rounded-lg px-4 py-3 text-sm transition-transform duration-150 scale-95 group">
+<span class="flex items-center"><span class="material-symbols-outlined mr-3 text-lg" data-icon="auto_awesome">auto_awesome</span>New Arrivals</span>
+</button>
+<button class="flex items-center text-slate-500 px-4 py-3 text-sm hover:bg-slate-50 transition-all rounded-lg">
+<span class="flex items-center"><span class="material-symbols-outlined mr-3 text-lg" data-icon="trending_up">trending_up</span>Best Sellers</span>
+</button>
+<button class="flex items-center text-slate-500 px-4 py-3 text-sm hover:bg-slate-50 transition-all rounded-lg">
+<span class="flex items-center"><span class="material-symbols-outlined mr-3 text-lg" data-icon="diamond">diamond</span>Luxury Wear</span>
+</button>
+</div>
+</div>
+<!-- Price Range -->
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Price Range</h3>
+<div class="px-2">
+<input class="w-full accent-secondary" max="5000" min="0" type="range"/>
+<div class="flex justify-between mt-2 text-xs font-medium text-slate-600">
+<span>$0</span>
+<span>$5,000+</span>
+</div>
+</div>
+</div>
+<!-- Color Swatches -->
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Color</h3>
+<div class="flex flex-wrap gap-3 px-2">
+<button class="w-6 h-6 rounded-full bg-slate-900 ring-2 ring-offset-2 ring-slate-200"></button>
+<button class="w-6 h-6 rounded-full bg-slate-400"></button>
+<button class="w-6 h-6 rounded-full bg-blue-600"></button>
+<button class="w-6 h-6 rounded-full bg-amber-800"></button>
+<button class="w-6 h-6 rounded-full bg-white border border-slate-200"></button>
+</div>
+</div>
+<!-- Size -->
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Size</h3>
+<div class="grid grid-cols-3 gap-2 px-2">
+<button class="py-2 text-xs border border-outline-variant hover:border-secondary transition-colors font-medium">XS</button>
+<button class="py-2 text-xs border border-secondary text-secondary bg-blue-50 font-bold">S</button>
+<button class="py-2 text-xs border border-outline-variant hover:border-secondary transition-colors font-medium">M</button>
+<button class="py-2 text-xs border border-outline-variant hover:border-secondary transition-colors font-medium">L</button>
+<button class="py-2 text-xs border border-outline-variant hover:border-secondary transition-colors font-medium">XL</button>
+</div>
+</div>
+<!-- Rating -->
+<div>
+<h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Rating</h3>
+<div class="space-y-2 px-2">
+<label class="flex items-center text-sm text-slate-600 cursor-pointer">
+<input class="rounded border-slate-300 text-secondary focus:ring-secondary mr-3" type="checkbox"/>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<span class="ml-2 text-xs">&amp; Up</span>
+</label>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-slate-100">
+<button class="w-full py-3 bg-slate-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-black transition-colors">
+                        View All Categories
+                    </button>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-64 px-8 pb-20">
+<!-- Breadcrumbs & Header -->
+<div class="py-12">
+<nav class="text-xs text-slate-400 mb-4 font-body">
+<a class="hover:text-secondary" href="#">Home</a> / <a class="text-slate-900 font-semibold" href="#">Shop All</a>
+</nav>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-5xl font-extrabold tracking-tighter text-slate-900 font-headline mb-2">The Autumn Edit</h1>
+<p class="text-on-surface-variant max-w-xl">Explore our curated selection of high-end garments, designed for the modern individual who values artisanal craftsmanship and timeless silhouettes.</p>
+</div>
+<div class="flex items-center justify-between md:justify-end w-full md:w-auto border-b border-slate-200 pb-4 md:border-none md:pb-0">
+<span class="text-sm font-medium text-slate-500 mr-8">144 products found</span>
+<div class="relative group">
+<button class="flex items-center text-sm font-bold text-slate-900">
+                                Sort By: <span class="ml-2 text-secondary">Newest Arrivals</span>
+<span class="material-symbols-outlined ml-1 text-lg">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-12 gap-x-8">
+<!-- Product Card 1 -->
+<div class="group relative flex flex-col">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img alt="Luxury wool coat" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Studio portrait of a premium charcoal wool overcoat with structured shoulders and minimalist design against a soft grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg200UgpTQnz2n5WEhZyOkLbiuA3MVPjR9Ewbaha5-8rR2hithEAgstUPuj5OgwfNV_igXF4QEmABwvRfv97r13zoN_JyqOf_4ps2PJhAG2EAoIxSY0AkwKT0l0PuG9pPqNFf56Jp1aa3xbJuZNQBHuJBgp4CYlLj67TpOBYAhwRkY-NvnJTpvO0S0cLM_eQ7BlNOCRmoLDVawBfCQI9I23OK93lphJwdAKK1uc5-XEOFbZhkD0v7-EI1y83gWWSoiq-uZr6qH-Qa8"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary-fixed text-on-tertiary-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest">New</span>
+</div>
+<div class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex gap-2">
+<button class="flex-1 bg-white/90 backdrop-blur text-slate-900 py-3 text-xs font-bold uppercase tracking-wider hover:bg-white">Quick View</button>
+<button class="w-12 bg-white/90 backdrop-blur text-slate-900 flex items-center justify-center hover:bg-white">
+<span class="material-symbols-outlined text-lg" data-icon="favorite">favorite</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-secondary transition-colors">Sculpted Wool Overcoat</h3>
+<span class="text-sm font-semibold text-slate-900">$895</span>
+</div>
+<p class="text-xs text-slate-500 font-body mb-3">Charcoal Grey • 100% Virgin Wool</p>
+<div class="flex gap-2">
+<span class="w-3 h-3 rounded-full bg-slate-800 ring-1 ring-offset-1 ring-slate-300"></span>
+<span class="w-3 h-3 rounded-full bg-amber-900"></span>
+<span class="w-3 h-3 rounded-full bg-slate-300"></span>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group relative flex flex-col">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img alt="Silk evening dress" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Ethereal silk slip dress in champagne gold flowing naturally, high-end fashion editorial style with soft side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDh3_Q7ps0x7GSHPUcX9ldY1cVENH9QkAKMZSWRkFi1YGH-TBBYBInuY5fZvX-46tAg0qI0WIwyR7aAsNHCmB9fRHyXp4ZhuAFq4nDOP6EMDQwViGOt6jSEB9jduCKRSLIysD16j6gSxETWkUjmaBBBV2Oro-G6cV6JKvM8EhRRIoHffv76wOuBfap-BMfAQWWZDP9bn3OCwPSLtxOXm36H8w9uheSXbcnMY5-XDN78XqVJ713Z4Ow90-YCft96u9rfFdHXLeIn6tso"/>
+<div class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex gap-2">
+<button class="flex-1 bg-white/90 backdrop-blur text-slate-900 py-3 text-xs font-bold uppercase tracking-wider hover:bg-white">Quick View</button>
+<button class="w-12 bg-white/90 backdrop-blur text-slate-900 flex items-center justify-center hover:bg-white">
+<span class="material-symbols-outlined text-lg" data-icon="favorite">favorite</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-secondary transition-colors">Liquid Silk Slip Dress</h3>
+<span class="text-sm font-semibold text-slate-900">$420</span>
+</div>
+<p class="text-xs text-slate-500 font-body mb-3">Champagne • Mulberry Silk</p>
+<div class="flex gap-2">
+<span class="w-3 h-3 rounded-full bg-orange-100 ring-1 ring-offset-1 ring-slate-300"></span>
+<span class="w-3 h-3 rounded-full bg-black"></span>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group relative flex flex-col">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img alt="Leather boots" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Handcrafted black leather chelsea boots on a clean white plinth, professional studio lighting highlighting the grain and finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5egz-qe-xiESJxgk25DtDS65wzee2VWi8dW5FeY5nyZH0Dvg7PBjY4ORjO3AFWu7O1NOikoX4phmhUkMfbWd2dOYWAJsGpxEDjGVjBhRwhy1ad5ZCmHghlvz3PZe2mP582GG6Jqv3U9qQL1lnPCttTb9Kz1yAxYd4JVWDyoBAg64ItFpMMcYqA9RjpXDam4bR2H94yJL5VQwFTDZupZYW49V1ZV2pMTDFwrdiPGcZLf15oAFbZ6GO7eJsjrnselS0fgLuJO3jwW80"/>
+<div class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex gap-2">
+<button class="flex-1 bg-white/90 backdrop-blur text-slate-900 py-3 text-xs font-bold uppercase tracking-wider hover:bg-white">Quick View</button>
+<button class="w-12 bg-white/90 backdrop-blur text-slate-900 flex items-center justify-center hover:bg-white">
+<span class="material-symbols-outlined text-lg" data-icon="favorite">favorite</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-secondary transition-colors">Artisan Chelsea Boot</h3>
+<span class="text-sm font-semibold text-slate-900">$550</span>
+</div>
+<p class="text-xs text-slate-500 font-body mb-3">Onyx Black • Italian Leather</p>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group relative flex flex-col">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img alt="Cotton shirt" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Crisp white heavy-weight organic cotton t-shirt neatly folded on a minimal wooden shelf with soft natural window light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCtCXdmi_c_0Qqi8GPem9WqEom2eY7_nTjv2PofNQEZr0-jkIHj77oN080cAP_iVpirRTybSfBewYN4zU5Xy739NPUkngl7hXNtJMIsrNAMduD_RCf4aripwt-UT4r5elIvIZ9zLYi4fidR7oVZt3xvvW0Gf7ZswNI5Pt4_9AvJVqHzijDCtBinu33R8FlcgilpAgyb7E01qbZivZpymqReSF63hbSEfJS8prs7HEVnTuk53GJ6Lz9L_AUStBH8D4TjoPYPdWCTs8s"/>
+<div class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex gap-2">
+<button class="flex-1 bg-white/90 backdrop-blur text-slate-900 py-3 text-xs font-bold uppercase tracking-wider hover:bg-white">Quick View</button>
+<button class="w-12 bg-white/90 backdrop-blur text-slate-900 flex items-center justify-center hover:bg-white">
+<span class="material-symbols-outlined text-lg" data-icon="favorite">favorite</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-secondary transition-colors">Essential Organic Tee</h3>
+<span class="text-sm font-semibold text-slate-900">$95</span>
+</div>
+<p class="text-xs text-slate-500 font-body mb-3">Optic White • 300gsm Cotton</p>
+<div class="flex gap-2">
+<span class="w-3 h-3 rounded-full bg-white ring-1 ring-offset-1 ring-slate-300"></span>
+<span class="w-3 h-3 rounded-full bg-slate-900"></span>
+<span class="w-3 h-3 rounded-full bg-blue-900"></span>
+</div>
+</div>
+</div>
+<!-- Product Card 5 (Repeated for Grid demonstration) -->
+<div class="group relative flex flex-col">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img alt="Cashmere sweater" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Luxury beige cashmere turtleneck sweater textured close-up, high-end fashion knitwear photography with warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5oRs04cUBSURQNiGmtLsmwCO-fKp-kIB6b83AaeB4vqSGnWJ3Fkm7vaHAObB6aseyWX3P3oL77znMEPQwEpv6cxbHTqPwfg7KQPEekdNERjP-azjUo5d0LEVh3xfXsr1kC7sDHhvmmUILLM9yi4Zm1ZA_fXiJFIhQBTJSGwu0CvmQDd8I6A1nGIJNCFaL1ro1tA6fxeUZXIowoCB_fRsMOKHAyuEITxzoRZJXHi3KLT1Ng4zoB84iS27DzGhWwLXp5KDa5iESzWYL"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary-fixed text-on-tertiary-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest">Sale</span>
+</div>
+<div class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex gap-2">
+<button class="flex-1 bg-white/90 backdrop-blur text-slate-900 py-3 text-xs font-bold uppercase tracking-wider hover:bg-white">Quick View</button>
+<button class="w-12 bg-white/90 backdrop-blur text-slate-900 flex items-center justify-center hover:bg-white">
+<span class="material-symbols-outlined text-lg" data-icon="favorite">favorite</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-slate-900 group-hover:text-secondary transition-colors">Ribbed Cashmere Knit</h3>
+<div class="flex flex-col items-end">
+<span class="text-sm font-semibold text-error">$280</span>
+<span class="text-[10px] text-slate-400 line-through">$450</span>
+</div>
+</div>
+<p class="text-xs text-slate-500 font-body mb-3">Sandstone • Pure Cashmere</p>
+</div>
+</div>
+</div>
+<!-- Empty State Illustration (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center py-32 text-center">
+<span class="material-symbols-outlined text-6xl text-slate-200 mb-6" style="font-variation-settings: 'wght' 200;">search_off</span>
+<h3 class="text-2xl font-bold text-slate-900 mb-2">No results matched your filters</h3>
+<p class="text-slate-500 max-w-xs mb-8">Try adjusting your selection or removing some filters to find what you're looking for.</p>
+<button class="px-8 py-3 bg-secondary text-white text-xs font-bold uppercase tracking-widest hover:bg-blue-700 transition-colors">Clear All Filters</button>
+</div>
+<!-- Pagination -->
+<div class="mt-24 flex items-center justify-center space-x-2">
+<button class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-xs font-bold bg-slate-900 text-white">1</button>
+<button class="w-10 h-10 flex items-center justify-center text-xs font-medium text-slate-500 hover:bg-slate-100 transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center text-xs font-medium text-slate-500 hover:bg-slate-100 transition-colors">3</button>
+<span class="px-2 text-slate-400">...</span>
+<button class="w-10 h-10 flex items-center justify-center text-xs font-medium text-slate-500 hover:bg-slate-100 transition-colors">12</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-900 hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full mt-20 pb-12 pt-16 bg-slate-100">
+<div class="max-w-screen-2xl mx-auto px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12">
+<div class="col-span-2 lg:col-span-1">
+<div class="text-lg font-black tracking-widest text-slate-900 mb-6">ATELIER</div>
+<p class="text-xs text-slate-500 font-inter leading-relaxed">
+                        Curating the finest in contemporary design and artisanal craft since 2024. A sanctuary for quality and minimalist aesthetics.
+                    </p>
+</div>
+<div>
+<h4 class="font-inter text-xs tracking-wide uppercase text-slate-900 font-bold mb-6">Shop</h4>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">New Arrivals</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Best Sellers</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Accessories</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-inter text-xs tracking-wide uppercase text-slate-900 font-bold mb-6">Assistance</h4>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Help &amp; Contact</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Shipping &amp; Returns</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Account Management</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-inter text-xs tracking-wide uppercase text-slate-900 font-bold mb-6">Legal</h4>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy Policy</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-inter text-xs tracking-wide uppercase text-slate-900 font-bold mb-6">Connect</h4>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Instagram</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:underline decoration-blue-500 underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Pinterest</a></li>
+</ul>
+</div>
+</div>
+<div class="bg-slate-200 h-px w-full my-8"></div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-inter text-xs tracking-wide uppercase text-slate-500">
+                    © 2024 Atelier Editorial Storefront. All rights reserved.
+                </p>
+<div class="flex items-center space-x-6 text-slate-400">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="material-symbols-outlined text-xl">shield_locked</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

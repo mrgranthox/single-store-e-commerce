@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#000000",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#3f465c",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-high": "#dce9ff",
+              "secondary-container": "#316bf3",
+              "surface-container-lowest": "#ffffff",
+              "on-error-container": "#93000a",
+              "primary": "#000000",
+              "error": "#ba1a1a",
+              "on-secondary-fixed-variant": "#003ea8",
+              "primary-container": "#131b2e",
+              "outline-variant": "#c6c6cd",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-bright": "#f8f9ff",
+              "on-primary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#dbe1ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary-container": "#fefcff",
+              "inverse-primary": "#bec6e0",
+              "on-primary-fixed": "#131b2e",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface": "#f8f9ff",
+              "tertiary-container": "#2a1700",
+              "surface-container-low": "#eff4ff",
+              "surface-container-highest": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "background": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "inverse-on-surface": "#eaf1ff",
+              "outline": "#76777d",
+              "surface-tint": "#565e74",
+              "primary-fixed": "#dae2fd",
+              "on-background": "#0b1c30",
+              "secondary": "#0051d5",
+              "on-primary-container": "#7c839b",
+              "surface-container": "#e5eeff",
+              "on-tertiary-container": "#b87500",
+              "on-surface": "#0b1c30",
+              "surface-dim": "#cbdbf5"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar from JSON -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-none">
+<div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50">Nordic Atelier</div>
+<div class="hidden md:flex items-center space-x-8 font-manrope tracking-tight font-medium text-sm">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Collections</a>
+<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hover:opacity-70 transition-opacity duration-300 Active: scale-95 transition-transform">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">person</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 Active: scale-95 transition-transform relative">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">shopping_bag</span>
+<span class="absolute -top-1 -right-1 bg-secondary text-[10px] text-white rounded-full w-4 h-4 flex items-center justify-center">0</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section: Editorial Manifesto -->
+<section class="px-8 md:px-24 py-20 bg-surface">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+<div class="md:col-span-7">
+<h1 class="text-6xl md:text-8xl font-extrabold tracking-tighter text-primary leading-[0.9] mb-8">
+                        The Future <br/>is Circular.
+                    </h1>
+<p class="text-xl text-on-surface-variant max-w-xl font-light leading-relaxed">
+                        At Nordic Atelier, we believe that true luxury is defined by longevity, not excess. Our Sustainability Manifesto is a commitment to the earth, our artisans, and the future of conscious craftsmanship.
+                    </p>
+</div>
+<div class="md:col-span-5 relative">
+<div class="aspect-[3/4] overflow-hidden rounded-lg shadow-2xl">
+<img class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" data-alt="close-up of raw organic linen fabric being woven on a traditional wooden loom in a bright sunlight studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSIdVvniqBcQ3TAaK0eMw-0YMH5qAE5x29QBgCJSQub6Yt-Q8UlqrrQ-TNa4BcZAEQjJn4Vnx1hw0UswNXrVXElgEbkbkiUszeNlD4ctRK8cpW7stlAt10AR8e6jQXphz3MY-PF1FentJkb4zsBeYoIB1eLuHjfAGsJ55Ytd9o276DPyJGTPji7qQSuwGK41kR7CuWNN1NgOxLGBK8RHj2crr3M-e-fla10BpWZg3a-ipDSaD6uv4KhMY7-9Iz9Z3PxVvgoUzWhOg3"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Traceability: The Glass Bento -->
+<section class="bg-surface-container-low py-32 px-8 md:px-24">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16">
+<span class="label-md uppercase tracking-[0.2em] text-secondary font-bold text-xs">Integrity &amp; Origin</span>
+<h2 class="text-4xl font-bold mt-4 tracking-tight">Radical Traceability</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Bento Card 1 -->
+<div class="bg-surface-container-lowest p-10 flex flex-col justify-between min-h-[400px]">
+<div>
+<span class="material-symbols-outlined text-4xl text-secondary mb-6">qr_code_2</span>
+<h3 class="text-2xl font-bold mb-4">Fiber to Finish</h3>
+<p class="text-on-surface-variant font-light">Every garment in our Atelier collection carries a unique digital passport. Track the journey of your item from the raw material source to the final stitch.</p>
+</div>
+<div class="mt-8 border-t border-outline-variant pt-6">
+<a class="text-secondary font-bold text-sm inline-flex items-center group" href="#">
+                                View Map <span class="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
+</a>
+</div>
+</div>
+<!-- Bento Card 2: Visual Heavy -->
+<div class="md:col-span-2 relative overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover brightness-75 group-hover:scale-105 transition-transform duration-700" data-alt="scenic wide shot of a sustainable cotton field in northern europe during dawn with light fog and soft blue light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcDbYDq4TB0LGIsSP4tMo4jjRM241heVSwEup1I7efdA15RvjzFmQPa_Wol0_CTEqamOBs0XrYtgQA55aOXlPsXRZ3mc6CDop7MSHaBnxCJ4-z-jKR9TP_o3GzW38374zTZke4jOVioZUv8Q5xKF6ygt2Vnvo5GinpgPI4I8J83O6uBUB8x9vlYO7rQGN9R-IelfSzRB0yYvGG1kbNfCtBdBy4xGZ4FmYCFcc60srikdUn5-jhnLvbaJdPDJ0yVqzM8UPKrdeerXnt"/>
+<div class="relative z-10 p-10 h-full flex flex-col justify-end bg-gradient-to-t from-black/60 to-transparent">
+<h3 class="text-3xl font-bold text-white mb-2">Regenerative Sourcing</h3>
+<p class="text-white/80 max-w-md font-light">We exclusively partner with farms that practice carbon-sequestering agriculture, restoring biodiversity to the landscapes we touch.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Artisan Partnerships: Asymmetric Layout -->
+<section class="py-32 bg-surface">
+<div class="max-w-7xl mx-auto px-8 md:px-24 grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+<div class="order-2 md:order-1 relative">
+<div class="bg-surface-container-highest absolute -top-8 -left-8 w-48 h-48 -z-10 rounded-full blur-3xl opacity-50"></div>
+<img class="w-full h-[600px] object-cover rounded-lg" data-alt="hands of an elderly artisan carefully working on high-quality leather goods in a rustic workspace with warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6yXIlmIs897rrjF6xdrqL4tIvXUur6dfEjAYjix7_JxraYTpsQuoB1GhESnlGOtSZArdGpnJZehRBgKpzPd0OqK84kGRMY_mWZG4Oek2IkdJV_OTp7j_Bf2MHBnC2WxHT0SOH-acK50A6_hvoBzeCpj6Xa5lvco7WjUg4os4jsmC9hDrL0xBXfD9KnxB-DlRZsEfG-8A7KfTqZUMAW10KAFhSJS_V5mgWBP0zghNkSwIU6fGFYLTnsOebPeSOivTSsVcQLtLRdNdi"/>
+</div>
+<div class="order-1 md:order-2">
+<h2 class="text-5xl font-extrabold tracking-tighter mb-8 leading-tight">Human over Machine.</h2>
+<p class="text-lg text-on-surface-variant mb-10 font-light leading-relaxed">
+                        We don't believe in mass production. Our atelier works with independent artisans across Scandinavia and Southern Europe, ensuring living wages and preserving centuries-old techniques that are at risk of disappearing.
+                    </p>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 bg-surface-container-high flex items-center justify-center rounded-full shrink-0">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Ethical Certification</h4>
+<p class="text-sm text-on-surface-variant">All workshop partners are audited annually by third-party fair trade organizations.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 bg-surface-container-high flex items-center justify-center rounded-full shrink-0">
+<span class="material-symbols-outlined text-secondary">eco</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Zero Waste Patterning</h4>
+<p class="text-sm text-on-surface-variant">Our design team utilizes architectural cutting techniques to minimize textile scrap by up to 98%.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Carbon Neutrality: The "Tonal Shift" Section -->
+<section class="bg-primary-container text-white py-32 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-secondary via-transparent to-transparent"></div>
+</div>
+<div class="max-w-4xl mx-auto px-8 text-center relative z-10">
+<span class="label-md uppercase tracking-[0.3em] text-on-primary-container mb-6 block">The Climate Goal</span>
+<h2 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-10">Carbon Negative by 2026.</h2>
+<p class="text-xl text-on-primary-container font-light leading-relaxed mb-12">
+                    We aren't just offsetting; we're redesigning. From solar-powered logistics hubs to sea-freight exclusively, every decision is measured against its impact on the planet.
+                </p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+<div class="p-6 bg-white/5 backdrop-blur-md rounded-lg border border-white/10">
+<div class="text-3xl font-bold mb-1">100%</div>
+<div class="text-[10px] uppercase tracking-widest text-on-primary-container">Renewable Energy</div>
+</div>
+<div class="p-6 bg-white/5 backdrop-blur-md rounded-lg border border-white/10">
+<div class="text-3xl font-bold mb-1">0%</div>
+<div class="text-[10px] uppercase tracking-widest text-on-primary-container">Single Use Plastic</div>
+</div>
+<div class="p-6 bg-white/5 backdrop-blur-md rounded-lg border border-white/10">
+<div class="text-3xl font-bold mb-1">-15t</div>
+<div class="text-[10px] uppercase tracking-widest text-on-primary-container">CO2/Year Per Hub</div>
+</div>
+<div class="p-6 bg-white/5 backdrop-blur-md rounded-lg border border-white/10">
+<div class="text-3xl font-bold mb-1">4.8x</div>
+<div class="text-[10px] uppercase tracking-widest text-on-primary-container">Investment/R&amp;D</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Signals: Minimal Grid -->
+<section class="py-24 px-8 bg-surface">
+<div class="max-w-7xl mx-auto border-t border-outline-variant pt-16 grid grid-cols-2 md:grid-cols-5 gap-12 grayscale opacity-60">
+<div class="flex items-center justify-center font-manrope font-extrabold text-xl tracking-tighter italic">GOTS CERTIFIED</div>
+<div class="flex items-center justify-center font-manrope font-extrabold text-xl tracking-tighter italic">B CORP PENDING</div>
+<div class="flex items-center justify-center font-manrope font-extrabold text-xl tracking-tighter italic">FAIR TRADE</div>
+<div class="flex items-center justify-center font-manrope font-extrabold text-xl tracking-tighter italic">ISO 14001</div>
+<div class="flex items-center justify-center font-manrope font-extrabold text-xl tracking-tighter italic">OEKO-TEX</div>
+</div>
+</section>
+<!-- Call to Action -->
+<section class="pb-32 px-8 bg-surface">
+<div class="max-w-5xl mx-auto bg-tertiary-fixed p-16 md:p-24 rounded-lg text-center relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="text-4xl font-bold text-on-tertiary-fixed mb-6">Invest in Permanence.</h2>
+<p class="text-on-tertiary-fixed-variant mb-10 max-w-lg mx-auto font-light">Join us in our mission to redefine luxury through a sustainable lens. Receive our quarterly impact report and exclusive atelier updates.</p>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<input class="px-8 py-4 bg-white/50 border-none rounded-md focus:ring-2 focus:ring-secondary w-full md:w-80 placeholder:text-on-tertiary-fixed-variant" placeholder="Email address" type="email"/>
+<button class="bg-primary text-on-primary px-10 py-4 rounded-md font-bold hover:bg-secondary transition-colors duration-300">Subscribe</button>
+</div>
+</div>
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+</div>
+</section>
+</main>
+<!-- Footer from JSON -->
+<footer class="bg-slate-100 dark:bg-slate-950 w-full border-t border-transparent">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 px-12 py-20 w-full">
+<div class="col-span-2 md:col-span-1">
+<div class="text-lg font-black text-slate-900 dark:text-slate-100 mb-6">Nordic Atelier</div>
+<p class="text-slate-500 dark:text-slate-400 font-inter text-xs tracking-wide uppercase leading-loose">
+                    © 2024 Nordic Atelier.<br/>All rights reserved.
+                </p>
+</div>
+<div>
+<h5 class="font-manrope text-sm font-bold mb-6 text-slate-900 dark:text-slate-50">Support</h5>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Shipping</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Returns</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-manrope text-sm font-bold mb-6 text-slate-900 dark:text-slate-50">Legal</h5>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-manrope text-sm font-bold mb-6 text-slate-900 dark:text-slate-50">About</h5>
+<ul class="space-y-4">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-900 dark:text-slate-50 underline" href="#">Sustainability</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Æther Form | NordicAtelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-error": "#ffffff",
+              "background": "#f8f9ff",
+              "secondary-fixed": "#dbe1ff",
+              "outline-variant": "#c6c6cd",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-secondary": "#ffffff",
+              "on-surface": "#0b1c30",
+              "surface-dim": "#cbdbf5",
+              "on-tertiary-container": "#b87500",
+              "on-primary-container": "#7c839b",
+              "error": "#ba1a1a",
+              "surface-container-low": "#eff4ff",
+              "tertiary": "#000000",
+              "on-tertiary": "#ffffff",
+              "inverse-primary": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "outline": "#76777d",
+              "surface-bright": "#f8f9ff",
+              "on-background": "#0b1c30",
+              "surface": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-fixed-dim": "#bec6e0",
+              "primary-container": "#131b2e",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "surface-container-highest": "#d3e4fe",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed": "#00174b",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#2a1700",
+              "primary": "#000000",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-surface-variant": "#45464d",
+              "surface-tint": "#565e74",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container": "#e5eeff",
+              "secondary": "#0051d5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-secondary-container": "#fefcff",
+              "on-primary-fixed": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl transition-all duration-300">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 font-headline">NordicAtelier</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-body" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-opacity duration-300 font-body" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-opacity duration-300 font-body" href="#">Journal</a>
+</div>
+<div class="flex items-center gap-5 text-on-surface">
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="hover:opacity-80 transition-opacity duration-300 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Hero Section: Editorial & Asymmetric -->
+<section class="relative min-h-[921px] flex items-center overflow-hidden px-6 lg:px-24 py-20">
+<div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7 z-10">
+<span class="text-secondary font-label uppercase tracking-[0.2em] text-xs font-semibold mb-6 block">Featured Atelier</span>
+<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter text-on-surface leading-[0.9] mb-8">
+                        Æther <br/>Form
+                    </h1>
+<p class="text-xl text-on-surface-variant max-w-lg font-light leading-relaxed mb-10">
+                        Bridging the gap between mathematical precision and organic fluidity. A curated exploration of sculptural living.
+                    </p>
+<div class="flex items-center gap-6">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-md font-medium hover:opacity-90 transition-all active:scale-95">Explore Collection</button>
+<button class="text-secondary font-semibold group flex items-center gap-2">
+                            Our Philosophy 
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="lg:col-span-5 relative">
+<div class="aspect-[4/5] bg-surface-container-low rounded-xl overflow-hidden shadow-2xl transform lg:translate-x-12 lg:-rotate-2 hover:rotate-0 transition-transform duration-700">
+<img class="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-1000" data-alt="minimalist architectural interior with a single sculptural chair and dramatic light beam casting sharp shadows on concrete floor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3xWtqn95k1o5mRg5Q7XSLlIFvXuzs1rY8JpG5Z-n3yvnoks23h6tAOnJhsnFTGpgDm8heZcUQiyaWNh-PGFqikVGZeUX7xv7nKQkYaaRFUuU06LPv3SDLe56gpS1-SFpogoJhGzBtxLt08Sgz91_YgJ-Pk2AmC_5VoetkvIyrIEmr60cFkXivc1q6lE993Hs-yIVYSqAsNId_gq9ufRz8SscazKx0cBN47wlQ_WRW6kR1Zjrj_qEoNERiJjtuhM1iD87fKggj1RoH"/>
+</div>
+<div class="absolute -bottom-8 -left-8 md:-left-16 w-48 h-48 bg-tertiary-fixed rounded-full flex items-center justify-center p-8 text-center text-on-tertiary-fixed text-xs font-bold leading-tight rotate-12 hidden md:flex">
+                        ESTABLISHED<br/>MCMXCIV<br/>NORDIC DESIGN
+                    </div>
+</div>
+</div>
+</section>
+<!-- Manifesto Section: The Brand Voice -->
+<section class="bg-primary-container text-on-primary-container py-32 px-6 lg:px-24">
+<div class="max-w-4xl mx-auto text-center">
+<h2 class="font-headline text-4xl md:text-5xl font-bold mb-12 text-surface-container-lowest">The Æther Manifesto</h2>
+<div class="space-y-8 font-body text-xl md:text-2xl font-light leading-relaxed text-on-primary-container/80">
+<p>We believe that an object should not just occupy space, but <span class="text-secondary-fixed italic">elevate</span> it.</p>
+<p>Form is not a consequence of function, but its equal partner in a dance of aesthetic necessity. Every curve we trace is a response to the light it will eventually capture.</p>
+<p>Sustainability is not a feature; it is the foundation. We build for generations, not seasons.</p>
+</div>
+<div class="mt-16 flex justify-center gap-12">
+<div class="text-center">
+<div class="text-3xl font-headline font-bold text-secondary-fixed">100%</div>
+<div class="text-xs uppercase tracking-widest mt-2 font-medium">Recycled Ore</div>
+</div>
+<div class="text-center border-x border-on-primary-container/20 px-12">
+<div class="text-3xl font-headline font-bold text-secondary-fixed">02</div>
+<div class="text-xs uppercase tracking-widest mt-2 font-medium">Design Awards</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-headline font-bold text-secondary-fixed">∞</div>
+<div class="text-xs uppercase tracking-widest mt-2 font-medium">Timeless Life</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Grid with Tonal Layering -->
+<section class="py-24 px-6 lg:px-24 bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+<div>
+<h3 class="font-headline text-4xl font-bold mb-4">Current Curation</h3>
+<p class="text-on-surface-variant font-light">Filtered by "Æther Form" signature series.</p>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
+<button class="bg-surface-container-highest text-on-surface px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap">All Items</button>
+<button class="bg-surface-container-low text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-container-high transition-colors">Seating</button>
+<button class="bg-surface-container-low text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-container-high transition-colors">Lighting</button>
+<button class="bg-surface-container-low text-on-surface-variant px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-container-high transition-colors">Objects</button>
+</div>
+</div>
+<!-- Bento-style Product Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Product 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl mb-6 relative">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">New Arrival</span>
+</div>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="brutalist concrete table lamp with warm circular glow against a minimalist off-white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdWNGU_gTzYuXQk-WTflJX4Wo5pfFog6tlM8-KsRHhcCnRsQfr-qhnJLjZDTW39wGFe7uQI7jNP7TBUXLrgGAE6dtOIXSkMZD_s3JnRii_8-qy0h7m66Ipdda2PyHS1xMUPDzVgte0kIu5MFLiXCAPRgGruNhOZnZySIOeL6mYUtzYa4jGiLrJYHO9vUeF9CQIfJsBj4Yj9aSYemDb44Tcb38lmRruNNAnk2o0fhpGfwRbyWGh82JZgRLmrr-h9wBAMNni4LtxZ4va"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-xl font-bold">Orbital Desk Luminaire</h4>
+<p class="text-on-surface-variant text-sm font-light mt-1 text-slate-500">Brutalist Series / Cast Concrete</p>
+</div>
+<span class="font-headline font-bold text-lg">$420</span>
+</div>
+</div>
+<!-- Product 2 (Large Spacing/Offset) -->
+<div class="group cursor-pointer md:mt-12">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl mb-6 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="contemporary ergonomic chair with black steel frame and curved wooden backrest in a bright studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHG4hb2lshc58p5CvBEnvgJCtTRwiqde9zPUGR9MkW4_B-87zHPe5q5zPcij5BN3i0IG60UqOFHsgYyZLCtZzjX4PieYEdEj3DW4IFLW7BEjf7rwz0VGxG6GrumNfKhpCWaOQB-WHXqPOMSNGpAh5nEOKnqYKz6TTMmVihlXLtfyGQixiaIJGwGm-pHu4k7_ihDsyYyN_9lDZDgy-YmHtJvuBxGW99B3tBRkXDheAZYb25OnGV8RFn-6tnnN7E2_hy-ZkbhHM11ZV2"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-xl font-bold">Monolith Lounge Chair</h4>
+<p class="text-on-surface-variant text-sm font-light mt-1 text-slate-500">Form 01 / Oak &amp; Steel</p>
+</div>
+<span class="font-headline font-bold text-lg">$1,850</span>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl mb-6 relative">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-primary text-on-primary text-[10px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider">Limited</span>
+</div>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="minimalist white ceramic vase with organic asymmetrical shape on a wooden pedestal with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3muLZ-kU7sRB5u_0wp4Cn3CokIDDqksBu9ussYcZpXMswUicMsdK1-zsHgGUqvjnR2vupEql72YzkfJYlgfX9mFYAYTya9MWw6uau6ZT74gFyHqZujfudZoKY43-A1y5lkxz2njrvJ92pHiWhGmxcIOUjhFkArhz3lufndE_p9psKBerjgYfo7DkyUNiCQuMJdx30ba4xo4_cuwhCABfL6iJ3cU18Ab8VpiLmfwm6TN9GpaQv4oIuIFiYWRgM_a-dzDjBtNjMyGyM"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline text-xl font-bold">Vessel No. 04</h4>
+<p class="text-on-surface-variant text-sm font-light mt-1 text-slate-500">Sculptural Ceramics / Bone China</p>
+</div>
+<span class="font-headline font-bold text-lg">$210</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Brand Detail Mosaic -->
+<section class="py-24 px-6 lg:px-24 bg-surface-container-low overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="relative order-2 lg:order-1">
+<div class="grid grid-cols-2 gap-4">
+<div class="aspect-square rounded-xl overflow-hidden mt-12">
+<img class="w-full h-full object-cover grayscale" data-alt="extreme close-up of high quality grey textile fabric showing detailed weave and texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnJmEIPNr2oAGMyr5CEJBFP_INzkSHnKfjOwi1_6XWbj_xZvnHrhXdMwebpK18eHcOpqauL9xrsLgEScESjj8KAcsOolP0eSFlsAF72Gk7YBdip4RMU1sU9dMhEXF064iyJ7RsEX65f0qdC35vVjBh7IbZ6yvzvUhnsgs6Bc6VoBiiY80ge46-iM-xuQia0qQElMFOKBkfb8Rr_S1MSQ-N8zvGphVZUQRrO1Pl_3C0zZ-ap11nEhuzg1qs2CNa6GYe9HbsT_qDMc7m"/>
+</div>
+<div class="aspect-[3/4] rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="modern kitchen interior with marble countertops and sleek cabinetry at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0XRtIMrAAbRZbZPb6GrP99ZiX7-_q_dkGkkTM8USQXT8FewuNFOxFehH8x2xqXBIKQYcd9CS9Lp72b4y5PII4BbHwBv9R2C07yc41kwIio1cPtWU8ImqNdzWEs7P-jgSk1ToAH4TFTcNRWMlMo8IPOUVE6MRf9_Jt4Xw1qU7JAYP2XZU9KQpGl8kgkTIeBPFgsErGL_adZidt-wGdIL2SfgXrTzYGISveyYrKpxNtmNRsFHfWWuHhfBhm7Md-TdCpS764gnR_95Mw"/>
+</div>
+</div>
+<div class="absolute -right-8 top-1/2 -translate-y-1/2 w-2/3 aspect-[4/3] bg-surface-container-lowest shadow-xl rounded-xl p-2 hidden md:block">
+<img class="w-full h-full object-cover rounded-lg" data-alt="bright open living room with white walls and minimalist furniture featuring the brand aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqxzsYuVfKV2o66q-6v_uZ9alMvoQ6DWwzGYh6O4WA4tLITFzGaR5rND3E4PdTjZ_-aaTsR8DR_2FCE2s4gWTgk3pi-ZyAE6F9fC9PIRZ2ec7nQGJWKpMG-b7mxnw7w4bIVnwKo_AsZw4NUlGimUljqCyh69pLTsTtXRbgLoHVDOIFfYjIDOmkNngJLauv0OmMM4oGvxQDtksRK6e0abmzGbw49m0ivDapNFDVKUiEvIiDbCb90HM6zYyK0FO4i4oe7cldCXzvGkSo"/>
+</div>
+</div>
+<div class="order-1 lg:order-2">
+<h3 class="font-headline text-4xl font-bold mb-8 leading-tight">The Precision <br/>of Craft.</h3>
+<div class="space-y-6 text-on-surface-variant font-light leading-relaxed">
+<p>Our workshop in Stockholm remains the heart of our operations. Each piece is hand-finished by master craftsmen who have dedicated their lives to understanding the nuances of material integrity.</p>
+<p>We don't believe in mass production. We believe in curated editions that gain character with time. Every join, every seam, and every surface is inspected with a jeweler's precision.</p>
+</div>
+<div class="mt-12 pt-12 border-t border-outline-variant/30">
+<blockquote class="italic text-on-surface font-light text-xl">
+                            "Æther Form creates the heirlooms of tomorrow. Their restraint is their greatest strength."
+                        </blockquote>
+<cite class="block mt-4 text-xs uppercase tracking-widest font-bold text-secondary">— Architectural Digest</cite>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / CTA -->
+<section class="py-32 px-6 lg:px-24">
+<div class="max-w-7xl mx-auto bg-surface-container-highest rounded-[2rem] p-12 lg:p-24 relative overflow-hidden text-center">
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+<div class="absolute bottom-0 left-0 w-64 h-64 bg-tertiary-fixed/20 rounded-full -ml-32 -mb-32 blur-3xl"></div>
+<h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 relative z-10">Join the Collective</h2>
+<p class="text-on-surface-variant max-w-xl mx-auto mb-12 relative z-10">Receive early access to limited atelier drops and editorial stories from our Stockholm studio.</p>
+<form class="max-w-md mx-auto flex flex-col md:flex-row gap-4 relative z-10">
+<input class="flex-1 bg-surface-container-lowest border-none px-6 py-4 rounded-md focus:ring-2 focus:ring-secondary text-sm" placeholder="Email Address" type="email"/>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-md font-bold uppercase tracking-widest text-xs hover:opacity-90 transition-all">Subscribe</button>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-dim pt-24 pb-32 px-6 lg:px-24">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+<div class="col-span-1 md:col-span-1">
+<div class="text-2xl font-bold tracking-tighter text-on-surface font-headline mb-8">NordicAtelier</div>
+<p class="text-on-surface-variant text-sm font-light leading-relaxed">Curating the world's most innovative design studios into a single editorial storefront.</p>
+</div>
+<div>
+<h5 class="font-bold text-xs uppercase tracking-[0.2em] mb-8">Navigation</h5>
+<ul class="space-y-4 text-sm font-light text-on-surface-variant">
+<li><a class="hover:text-secondary transition-colors" href="#">Shop All</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Collections</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Journal</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">About</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-xs uppercase tracking-[0.2em] mb-8">Support</h5>
+<ul class="space-y-4 text-sm font-light text-on-surface-variant">
+<li><a class="hover:text-secondary transition-colors" href="#">Shipping</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Returns</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Contact</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">FAQ</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-xs uppercase tracking-[0.2em] mb-8">Social</h5>
+<ul class="space-y-4 text-sm font-light text-on-surface-variant">
+<li><a class="hover:text-secondary transition-colors" href="#">Instagram</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Pinterest</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Twitter</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-12 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between gap-8">
+<p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest">© 2024 NordicAtelier. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<a class="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest hover:text-secondary transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg z-50 rounded-t-2xl shadow-[0_-4px_20px_rgba(11,28,48,0.06)]">
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-4 py-1 tap-highlight-transparent active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 tap-highlight-transparent active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase mt-1">Wishlist</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 tap-highlight-transparent active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 tap-highlight-transparent active:scale-95 transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

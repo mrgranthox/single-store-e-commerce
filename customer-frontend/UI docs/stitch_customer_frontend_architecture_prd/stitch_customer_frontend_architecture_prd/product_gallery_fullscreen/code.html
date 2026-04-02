@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "on-surface-variant": "#45464d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "background": "#f8f9ff",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed-dim": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#131b2e",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5eeff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "outline": "#76777d",
+              "inverse-primary": "#bec6e0",
+              "outline-variant": "#c6c6cd",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#ffddb8",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "secondary-container": "#316bf3",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#2a1700",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .perspective-lg { perspective: 1000px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center w-full px-8 py-4 max-w-none">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white font-['Manrope']">Nordic Commerce</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-['Manrope'] tracking-tight text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Shop</a>
+<a class="font-['Manrope'] tracking-tight text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Collections</a>
+<a class="font-['Manrope'] tracking-tight text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Editorial</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all p-2 active:scale-95 duration-200 ease-in-out">
+<span class="material-symbols-outlined text-on-surface">shopping_bag</span>
+</button>
+<button class="hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all p-2 active:scale-95 duration-200 ease-in-out">
+<span class="material-symbols-outlined text-on-surface">person</span>
+</button>
+</div>
+</nav>
+<!-- Main Content: Immersive Gallery -->
+<main class="min-h-screen pt-20 pb-24 md:pb-0 overflow-hidden relative">
+<!-- Background Narrative Section (Asymmetric Editorial Style) -->
+<div class="absolute left-8 top-1/4 hidden lg:block z-0 pointer-events-none">
+<h1 class="font-headline text-[12rem] font-extrabold text-surface-container-high leading-none -ml-4 opacity-50 select-none">NORDIC</h1>
+<p class="font-label text-xs uppercase tracking-[0.4em] text-outline mt-4 max-w-[200px] leading-relaxed">
+                A study in structured minimalism and thermal resilience. Designed in Stockholm.
+            </p>
+</div>
+<div class="max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-0 lg:h-[calc(100vh-120px)] relative z-10">
+<!-- Left Thumbnails / Controls -->
+<div class="lg:col-span-1 flex flex-row lg:flex-col order-2 lg:order-1 items-center justify-center gap-4 py-8 lg:py-0">
+<div class="w-12 h-12 rounded-full border border-secondary p-0.5 cursor-pointer">
+<img class="w-full h-full object-cover rounded-full" data-alt="Close up thumbnail of a navy blue structured overcoat with premium wool texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdqc_UKTaHf4juyZ4kXNzOXzlrGTIdAq_Je2DDCYUngYGNA-9AAGM3cZGcBjFeFdE7TEIfPcjvFxYlkWv7O_ok8pgOlSBU24eaMwbrgmUVEaJ7-cklnRlmsQGxtmLcjASP9vXP5n-rn3UkSZfCKLv1-EiFD4steS9USGFb_aNP4OCem0-c-0unK2p-Ui1bKWWEshIjfPmbOX8LvhVFO093hG3N6vPVz1_y9aMiBbfgbJAUOigmUICXVbdfqmJCwBnLES9rWVljZuV_"/>
+</div>
+<div class="w-10 h-10 rounded-full border border-outline-variant hover:border-secondary transition-colors cursor-pointer opacity-60 hover:opacity-100">
+<img class="w-full h-full object-cover rounded-full" data-alt="Back view of a long navy wool overcoat showing minimalist seam details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnoWMFyd7181B4Deay0BcdJakb4SGgmkWL3f2y4fkqHQU1OFAVRx6p94fMh9CWUO8-kqnu2njeXeTxeIZIWBB7Sp2jKbyilkAkhXBa7x5iWGMjL3rvDlajsahytmqKZaohIxSQNU-jv6T6F3Wqm29OWe0yGX8_VfzBrwhNy7WGwMxXBEhdsQxtlkMOS-LuuH9TOt7gb73Gl2cHg787tf-H2LSTlmp8Cp5wxMQBXRnMq946IMy1jeCTsYKWDPm0whaNNThP6DxsDKV9"/>
+</div>
+<div class="w-10 h-10 rounded-full border border-outline-variant hover:border-secondary transition-colors cursor-pointer opacity-60 hover:opacity-100">
+<img class="w-full h-full object-cover rounded-full" data-alt="Close up of fabric texture showing high quality weave and navy blue wool fibers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKg88b5_MkvlhXLu-tbStC8duUhWRXaMl1-zyBpAlTFudKcZEgT-bmiHIp1oij4FyZoNnFk6qyUqK2l9zwn1Yg0avXC-66rUfn7Gtp0T7YDc-hw80wVLW3vTkD_nSI9x-iVZJFckhIIQz4nCac4P3Rfu5MpFHeXnuxTH76CzYzpWprYsW4T6itQrww5W9ed1a-CLIc2ttIW24bfKcM0xO4-4LxRvjpY13CMLeQNXN6O69mwpY0otBYOENaiKTFMLDZCFCFpezJ_8vD"/>
+</div>
+<div class="w-px h-12 bg-outline-variant/30 hidden lg:block my-4"></div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface hover:bg-secondary hover:text-white transition-all">
+<span class="material-symbols-outlined text-lg" data-weight="fill">360</span>
+</button>
+</div>
+<!-- Central Large Media View -->
+<div class="lg:col-span-8 relative group order-1 lg:order-2 h-[614px] lg:h-full">
+<div class="w-full h-full bg-surface-container-low overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 cursor-zoom-in" data-alt="Full screen editorial portrait of a tall model wearing a sharp navy blue nordic structured overcoat in a minimalist concrete gallery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFCEIh-8nsVB_7aVRFvdBjUEHCymggqLhL_8o5G4b1tcC38TG5z4ZqB79bhrG7kcjaJUX_vA7Wd3HbRTDXmNQY10yt3zk0Uo0pOJL1czb9Fh28NdDAa41ZNgk5m4lRYzjfYLLt3eSdn_YKtDJahqQrTbwGZH2hMtET9BJOaO7W_jGRNIH81gE3WOqtcVayKTPFLw2gEUDjn4EgKdpZ2a8uaps9xeXIuMZut_8h7urUE51UNOyxPMI26-2EX_WbY6Ee9nyWjENPqbnS"/>
+<!-- Overlay Controls -->
+<div class="absolute inset-0 flex items-center justify-between px-6 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-12 h-12 flex items-center justify-center bg-white/40 backdrop-blur-md rounded-full text-primary shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center bg-white/40 backdrop-blur-md rounded-full text-primary shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<!-- Material Tag Overlay -->
+<div class="absolute bottom-12 left-12 bg-white/60 backdrop-blur-lg px-6 py-4 rounded-xl border border-white/40 max-w-xs transition-all hover:translate-y-[-4px]">
+<div class="flex items-center gap-3 mb-2">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="font-label text-[10px] tracking-widest uppercase text-on-surface-variant font-semibold">Material Detail</span>
+</div>
+<p class="font-body text-sm text-on-surface font-medium leading-relaxed">
+                            Italian-milled Virgin Wool &amp; Cashmere blend for superior thermal regulation.
+                        </p>
+</div>
+<!-- Top Action Overlays -->
+<div class="absolute top-8 right-8 flex flex-col gap-4">
+<button class="w-10 h-10 flex items-center justify-center bg-white/80 backdrop-blur-md rounded-lg text-primary shadow-sm hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">fullscreen</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-white/80 backdrop-blur-md rounded-lg text-primary shadow-sm hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Sidebar Details -->
+<div class="lg:col-span-3 flex flex-col justify-center px-8 lg:px-12 order-3 py-12 lg:py-0">
+<div class="space-y-8">
+<header>
+<span class="inline-block px-3 py-1 bg-tertiary-fixed text-on-tertiary-container text-[10px] uppercase font-bold tracking-widest mb-6">New Collection</span>
+<h2 class="font-headline text-5xl font-extrabold tracking-tight text-on-surface leading-tight">Nordic Structured Overcoat</h2>
+<div class="mt-4 flex items-center gap-4">
+<span class="text-2xl font-body font-semibold text-secondary">$890.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm text-on-tertiary-container">star_half</span>
+<span class="text-xs text-outline ml-1 font-medium">(124 Reviews)</span>
+</div>
+</div>
+</header>
+<div class="space-y-6">
+<div>
+<label class="font-label text-[10px] uppercase tracking-widest text-outline mb-4 block">Select Shade</label>
+<div class="flex gap-3">
+<button class="w-8 h-8 rounded-full bg-primary-container ring-2 ring-secondary ring-offset-2"></button>
+<button class="w-8 h-8 rounded-full bg-stone-900 border border-outline-variant"></button>
+<button class="w-8 h-8 rounded-full bg-stone-100 border border-outline-variant"></button>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-4">
+<label class="font-label text-[10px] uppercase tracking-widest text-outline block">Select Size</label>
+<button class="text-[10px] uppercase tracking-widest text-secondary font-bold hover:underline">Size Guide</button>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<button class="py-3 text-xs font-semibold bg-surface-container-low border border-transparent hover:border-secondary transition-all rounded-lg">46</button>
+<button class="py-3 text-xs font-semibold bg-surface-container-low border border-transparent hover:border-secondary transition-all rounded-lg">48</button>
+<button class="py-3 text-xs font-semibold bg-primary text-white rounded-lg">50</button>
+<button class="py-3 text-xs font-semibold bg-surface-container-low border border-transparent hover:border-secondary transition-all rounded-lg">52</button>
+</div>
+</div>
+</div>
+<div class="pt-4 flex flex-col gap-3">
+<button class="w-full py-5 bg-primary text-white font-headline font-bold uppercase tracking-widest text-sm hover:bg-secondary transition-colors rounded-lg flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">shopping_cart</span>
+                            Add to Bag
+                        </button>
+<button class="w-full py-5 border border-outline text-on-surface font-headline font-bold uppercase tracking-widest text-sm hover:bg-surface-container-low transition-colors rounded-lg">
+                            Find in Store
+                        </button>
+</div>
+<div class="pt-8 border-t border-outline-variant/30">
+<div class="flex gap-6 items-center opacity-70 grayscale">
+<span class="material-symbols-outlined text-2xl">verified_user</span>
+<span class="material-symbols-outlined text-2xl">package_2</span>
+<span class="material-symbols-outlined text-2xl">eco</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(11,28,48,0.04)]">
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Collections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-all" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Editorial</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-all" href="#">
+<span class="material-symbols-outlined">person_outline</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Account</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full mt-20 bg-slate-100 dark:bg-slate-900 w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center border-t border-slate-200 dark:border-slate-800">
+<div class="flex flex-col items-center md:items-start gap-4">
+<div class="font-['Manrope'] font-bold text-lg text-slate-900 dark:text-white">Nordic Commerce</div>
+<p class="font-['Inter'] text-sm tracking-normal text-slate-500">© 2024 Nordic Commerce. An Editorial Atelier.</p>
+</div>
+<div class="flex gap-8 mt-8 md:mt-0">
+<a class="font-['Inter'] text-sm tracking-normal text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-sm tracking-normal text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200" href="#">Sustainability</a>
+<a class="font-['Inter'] text-sm tracking-normal text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200" href="#">Contact</a>
+</div>
+</footer>
+</body></html>

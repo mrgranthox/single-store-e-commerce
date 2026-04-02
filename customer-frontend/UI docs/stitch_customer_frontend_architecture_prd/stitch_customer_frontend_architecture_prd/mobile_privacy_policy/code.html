@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-fixed">
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white font-headline">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50" data-icon="share">share</span>
+</div>
+</nav>
+<main class="pt-24 pb-32 px-6 max-w-md mx-auto">
+<header class="mb-12">
+<span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-secondary mb-3 block">Legal Documentation</span>
+<h1 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface leading-tight">Privacy Policy</h1>
+<p class="mt-4 text-on-surface-variant text-sm font-medium">Last Updated: October 24, 2023</p>
+</header>
+<section class="space-y-12">
+<div>
+<h2 class="text-xl font-bold font-headline mb-4 text-on-surface">1. Introduction</h2>
+<div class="space-y-4 text-on-surface-variant leading-relaxed text-[15px]">
+<p>Welcome to Nordic. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website or use our mobile application.</p>
+<p>By accessing or using our services, you agree to the terms outlined in this policy. We ensure that our editorial-first approach extends to how we handle your information: with clarity, transparency, and integrity.</p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl">
+<h2 class="text-xl font-bold font-headline mb-4 text-on-surface">2. Data We Collect</h2>
+<p class="text-on-surface-variant mb-6 text-[15px]">We collect several types of information from and about users of our App, including:</p>
+<ul class="space-y-6">
+<li class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="person">person</span>
+</div>
+<div>
+<span class="block font-bold text-on-surface text-sm">Identity Data</span>
+<span class="text-sm text-on-surface-variant">First name, last name, username or similar identifier.</span>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="contact_mail">contact_mail</span>
+</div>
+<div>
+<span class="block font-bold text-on-surface text-sm">Contact Data</span>
+<span class="text-sm text-on-surface-variant">Billing address, delivery address, email address and telephone numbers.</span>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="payments">payments</span>
+</div>
+<div>
+<span class="block font-bold text-on-surface text-sm">Financial Data</span>
+<span class="text-sm text-on-surface-variant">Bank account and payment card details processed via secure gateways.</span>
+</div>
+</li>
+</ul>
+</div>
+<div>
+<h2 class="text-xl font-bold font-headline mb-4 text-on-surface">3. How We Use Your Data</h2>
+<div class="space-y-4 text-on-surface-variant leading-relaxed text-[15px]">
+<p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
+<ul class="list-disc pl-5 space-y-2">
+<li>To register you as a new customer.</li>
+<li>To process and deliver your order including managing payments.</li>
+<li>To manage our relationship with you which will include notifying you about changes to our terms or privacy policy.</li>
+<li>To use data analytics to improve our website, products/services, marketing, customer relationships and experiences.</li>
+</ul>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl bg-primary-container p-8 text-on-primary">
+<div class="relative z-10">
+<h3 class="text-2xl font-bold font-headline mb-3">Your Security First</h3>
+<p class="text-on-primary-container text-sm leading-relaxed mb-6">We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way.</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-fixed" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-xs font-bold tracking-widest uppercase font-label">256-Bit Encrypted</span>
+</div>
+</div>
+<div class="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 bg-secondary/20 rounded-full blur-3xl"></div>
+</div>
+<div>
+<h2 class="text-xl font-bold font-headline mb-4 text-on-surface">4. Data Retention</h2>
+<p class="text-on-surface-variant leading-relaxed text-[15px]">We will only retain your personal data for as long as necessary to fulfill the purposes we collected it for, including for the purposes of satisfying any legal, accounting, or reporting requirements.</p>
+</div>
+<div>
+<h2 class="text-xl font-bold font-headline mb-4 text-on-surface">5. Your Legal Rights</h2>
+<div class="grid grid-cols-1 gap-4">
+<div class="p-4 bg-surface-container-lowest border border-outline-variant/20 rounded-lg flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="key">key</span>
+<p class="text-sm text-on-surface-variant"><strong class="text-on-surface">Access:</strong> Request access to your personal data.</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant/20 rounded-lg flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="edit_note">edit_note</span>
+<p class="text-sm text-on-surface-variant"><strong class="text-on-surface">Correction:</strong> Request correction of the personal data that we hold about you.</p>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant/20 rounded-lg flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="delete_forever">delete_forever</span>
+<p class="text-sm text-on-surface-variant"><strong class="text-on-surface">Erasure:</strong> Request erasure of your personal data.</p>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 pt-12 text-center">
+<p class="text-sm text-on-surface-variant mb-6">If you have any questions about this privacy policy, please contact our privacy team.</p>
+<button class="bg-primary text-on-primary px-8 py-3 font-bold text-sm tracking-tight rounded-md active:scale-95 transition-all">
+                    Contact Privacy Team
+                </button>
+</div>
+</section>
+</main>
+<footer class="bg-surface-dim pt-12 pb-24 px-6 mt-12">
+<div class="max-w-md mx-auto">
+<h4 class="text-xl font-black font-headline tracking-tighter text-on-surface mb-6">NORDIC</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-8">Crafting a premium editorial experience for the modern digital atelier. Your trust is our foundation.</p>
+<div class="flex gap-6 mb-8">
+<span class="material-symbols-outlined text-on-surface" data-icon="language">language</span>
+<span class="material-symbols-outlined text-on-surface" data-icon="mail">mail</span>
+<span class="material-symbols-outlined text-on-surface" data-icon="rss_feed">rss_feed</span>
+</div>
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest">© 2023 NORDIC ATELIER INC. ALL RIGHTS RESERVED.</p>
+</div>
+</footer>
+</body></html>

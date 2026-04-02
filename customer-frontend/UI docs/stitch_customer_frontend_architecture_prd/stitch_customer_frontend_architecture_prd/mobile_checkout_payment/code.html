@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Checkout: Payment - Nordic Commerce</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#f8f9ff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "secondary": "#0051d5",
+                        "inverse-primary": "#bec6e0",
+                        "primary-fixed": "#dae2fd",
+                        "outline": "#76777d",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#7c839b",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#000000",
+                        "surface-container-low": "#eff4ff",
+                        "on-surface-variant": "#45464d",
+                        "surface-dim": "#cbdbf5",
+                        "inverse-surface": "#213145",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-container": "#e5eeff",
+                        "background": "#f8f9ff",
+                        "primary": "#000000",
+                        "surface-container-high": "#dce9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-background": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "on-secondary-container": "#fefcff",
+                        "secondary-container": "#316bf3",
+                        "on-secondary-fixed": "#00174b",
+                        "primary-container": "#131b2e",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "surface-tint": "#565e74",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-bright": "#f8f9ff",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#2a1700",
+                        "on-secondary": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active { font-variation-settings: 'FILL' 1; }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 duration-200 hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">arrow_back</span>
+</button>
+<h1 class="text-lg font-extrabold tracking-tighter text-slate-900 dark:text-slate-50 uppercase font-manrope">Nordic Commerce</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500">lock</span>
+<span class="text-[10px] font-bold tracking-widest uppercase text-slate-500 font-manrope">Secure</span>
+</div>
+</header>
+<main class="pb-32">
+<!-- Progress Indicator -->
+<section class="px-6 py-8">
+<div class="flex items-center justify-between relative">
+<!-- Line background -->
+<div class="absolute top-1/2 left-0 w-full h-[1px] bg-outline-variant/30 -translate-y-1/2 z-0"></div>
+<!-- Step 1: Done -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary">Shipping</span>
+</div>
+<!-- Step 2: Active -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center ring-4 ring-surface">
+<span class="material-symbols-outlined text-lg step-active">payments</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary">Payment</span>
+</div>
+<!-- Step 3: Pending -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-outline flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">inventory_2</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Review</span>
+</div>
+</div>
+</section>
+<!-- Payment Method Selection -->
+<section class="px-6 space-y-6">
+<div class="flex flex-col gap-1">
+<h2 class="text-2xl font-headline font-bold tracking-tight">Payment Method</h2>
+<p class="text-sm text-on-surface-variant">Select how you'd like to pay for your order.</p>
+</div>
+<!-- Express Checkout Options -->
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 py-4 px-4 bg-surface-container-lowest rounded-xl shadow-sm border border-transparent active:border-secondary transition-all">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">ios</span>
+<span class="font-bold text-sm tracking-tight">Apple Pay</span>
+</button>
+<button class="flex items-center justify-center gap-2 py-4 px-4 bg-surface-container-lowest rounded-xl shadow-sm border border-transparent active:border-secondary transition-all">
+<span class="material-symbols-outlined text-blue-600" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-bold text-sm tracking-tight">PayPal</span>
+</button>
+</div>
+<!-- Credit Card Form -->
+<div class="p-6 bg-surface-container-low rounded-xl space-y-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">credit_card</span>
+<span class="font-bold text-sm tracking-tight">Credit or Debit Card</span>
+</div>
+<div class="flex gap-1">
+<div class="w-6 h-4 bg-slate-300 rounded-sm"></div>
+<div class="w-6 h-4 bg-slate-400 rounded-sm"></div>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Card Number -->
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline">Card Number</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-sm focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" placeholder="0000 0000 0000 0000" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Expiry -->
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline">Expiry Date</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-sm focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" placeholder="MM / YY" type="text"/>
+</div>
+<!-- CVV -->
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-outline">CVV</label>
+<div class="relative">
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-sm focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" placeholder="***" type="password"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline text-sm">help</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Billing Address Checkbox -->
+<div class="flex items-start gap-3 p-4 bg-surface-container-lowest rounded-xl">
+<div class="pt-0.5">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-sm tracking-tight">Billing address same as shipping</span>
+<span class="text-xs text-on-surface-variant">124 Nordic Way, Stockholm, SE 111 22</span>
+</div>
+</div>
+</section>
+<!-- Order Summary Updated -->
+<section class="mt-10 px-6 space-y-4">
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary">Order Summary</h3>
+<div class="p-6 bg-surface-container-lowest rounded-xl space-y-3 shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)]">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Subtotal (2 items)</span>
+<span class="font-medium">$840.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Express Shipping</span>
+<span class="font-medium text-secondary">+$25.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Estimated Tax</span>
+<span class="font-medium">$12.40</span>
+</div>
+<div class="pt-3 border-t border-outline-variant/20 flex justify-between items-end">
+<span class="font-headline font-extrabold text-lg">Total</span>
+<span class="font-headline font-extrabold text-2xl text-primary">$877.40</span>
+</div>
+</div>
+</section>
+<!-- Trust Badges -->
+<section class="mt-8 px-6 flex justify-center gap-6 opacity-50 grayscale">
+<span class="material-symbols-outlined text-2xl">verified_user</span>
+<span class="material-symbols-outlined text-2xl">lock</span>
+<span class="material-symbols-outlined text-2xl">payment_card</span>
+</section>
+</main>
+<!-- Fixed Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-2xl px-6 pb-10 pt-4 border-t border-slate-200/30">
+<button class="w-full bg-secondary py-5 rounded-lg flex items-center justify-center gap-3 active:scale-[0.98] transition-all duration-300 shadow-xl shadow-secondary/20">
+<span class="text-on-secondary font-headline font-bold tracking-tight">Complete Purchase</span>
+<span class="material-symbols-outlined text-on-secondary text-lg">arrow_forward</span>
+</button>
+<p class="text-center text-[10px] text-outline mt-4 font-medium uppercase tracking-tighter">By clicking, you agree to our Terms of Service</p>
+</div>
+</body></html>

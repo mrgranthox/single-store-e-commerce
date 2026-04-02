@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile Settings | Atelier Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-container-high": "#dce9ff",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#bec6e0",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-surface-variant": "#45464d",
+                        "on-background": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "tertiary": "#000000",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#565e74",
+                        "error-container": "#ffdad6",
+                        "secondary": "#0051d5",
+                        "on-primary-container": "#7c839b",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "primary-fixed": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "secondary-fixed": "#dbe1ff",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c6c6cd",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-tertiary-container": "#b87500",
+                        "surface-container": "#e5eeff",
+                        "secondary-container": "#316bf3",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-fixed": "#00174b",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "primary-container": "#131b2e",
+                        "background": "#f8f9ff",
+                        "tertiary-container": "#2a1700"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl border-none">
+<div class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 font-headline">Atelier Account</div>
+<div class="hidden md:flex space-x-12 items-center">
+<a class="font-manrope tracking-tight font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Shop</a>
+<a class="font-manrope tracking-tight font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Collections</a>
+<a class="font-manrope tracking-tight font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-on-surface hover:opacity-80 transition-all"><span class="material-symbols-outlined">shopping_bag</span></button>
+<button class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-manrope tracking-tight font-bold"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span></button>
+</div>
+</div>
+</nav>
+<div class="flex min-h-screen pt-20">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-slate-50 dark:bg-slate-950 p-6 space-y-8 sticky top-20 border-r-0">
+<div class="mb-4">
+<h3 class="text-slate-900 dark:text-slate-100 font-headline font-black text-xl">Welcome back, Julian</h3>
+<p class="text-slate-500 text-xs font-medium font-body mt-1">Premium Member since 2023</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-manrope font-medium text-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-blue-700 dark:text-blue-400 font-bold bg-blue-50/50 dark:bg-blue-900/20 rounded-lg font-manrope text-sm translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_edit</span>
+<span>Profile</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-manrope font-medium text-sm" href="#">
+<span class="material-symbols-outlined">home_pin</span>
+<span>Addresses</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-manrope font-medium text-sm" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span>Orders</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full text-left flex items-center space-x-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-manrope font-medium text-sm mb-2">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</button>
+<button class="w-full text-left flex items-center space-x-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg font-manrope font-medium text-sm">
+<span class="material-symbols-outlined">logout</span>
+<span>Sign Out</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary py-3 rounded-md font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all">
+                Contact Concierge
+            </button>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 bg-surface-container-low px-8 md:px-16 py-12 pb-32">
+<div class="max-w-4xl mx-auto">
+<header class="mb-12">
+<h1 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">Profile Settings</h1>
+<p class="text-on-surface-variant font-body">Manage your personal information and security preferences.</p>
+</header>
+<div class="space-y-10">
+<!-- Avatar Section -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_20px_40px_rgba(11,28,48,0.06)] flex flex-col md:flex-row items-center gap-8">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full overflow-hidden bg-surface-container-high border-4 border-surface-container-lowest">
+<img alt="Julian" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional man with short dark hair in a clean minimalist studio setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJXX0bDSNMFv-sHFQGUeFRpEV_NrViVFqRDrn1w_gI38LI6G7fgyf95s6gqKQHbP0XbSLLsZgNA_u1k8CCC8-ceponTZkRE0i8czooyOyOHzzK9UuKO80yVE_5bOf7xKfwDi_0xt6S1nQtDqfsQzF-Q4QfdChlNK57vBaQgnA1Dgdhphf4MjhfLIUBtz9I3OsxMnuNJ5JdyvdJT2-d4YvUTdUZMPlbh4x96Fnv21k5DmEzmamS4ts6QzPEK-AtCikBjK2mL5VwV26d"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-secondary text-on-secondary p-2 rounded-full shadow-lg hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-sm">photo_camera</span>
+</button>
+</div>
+<div class="flex-1 text-center md:text-left">
+<h3 class="font-headline font-bold text-xl mb-1">Profile Photo</h3>
+<p class="text-on-surface-variant text-sm mb-4">Update your avatar to personalize your account experience. Recommended size: 400x400px.</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-4">
+<button class="px-5 py-2.5 bg-secondary text-on-secondary text-sm font-bold rounded-lg hover:bg-secondary-container transition-colors">Upload New</button>
+<button class="px-5 py-2.5 bg-surface-container-low text-on-surface text-sm font-bold rounded-lg hover:bg-surface-container-high transition-colors">Remove</button>
+</div>
+</div>
+</section>
+<!-- Personal Information Form -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_20px_40px_rgba(11,28,48,0.06)]">
+<h2 class="font-headline font-bold text-2xl mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">badge</span>
+                            Personal Information
+                        </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Full Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" type="text" value="Julian Alexander"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Display Name</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" type="text" value="JulianA"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Email Address</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" type="email" value="julian.a@atelier.com"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Phone Number</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" type="tel" value="+1 (555) 123-4567"/>
+</div>
+</div>
+</section>
+<!-- Password & Security -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_20px_40px_rgba(11,28,48,0.06)]">
+<h2 class="font-headline font-bold text-2xl mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">lock_reset</span>
+                            Security
+                        </h2>
+<div class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Current Password</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">New Password</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" type="password"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Confirm New Password</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all" type="password"/>
+</div>
+</div>
+<div class="pt-4 flex items-center gap-4 text-sm text-on-surface-variant italic">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">info</span>
+                                Password must be at least 12 characters and include a special character.
+                            </div>
+</div>
+</section>
+<!-- Sticky Save Bar -->
+<div class="flex justify-end items-center gap-4 pt-4">
+<button class="px-8 py-4 text-on-surface-variant font-headline font-bold hover:text-on-surface transition-colors">Discard Changes</button>
+<button class="px-12 py-4 bg-primary text-on-primary font-headline font-extrabold tracking-tight rounded-lg shadow-xl hover:scale-[1.02] active:scale-95 transition-all">
+                            Save Changes
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-8 pt-4 md:hidden bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-lg border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-10px_40px_rgba(11,28,48,0.06)] rounded-t-3xl">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-100/50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-100 rounded-xl px-4 py-1 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Account</span>
+</a>
+</nav>
+</body></html>

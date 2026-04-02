@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#dbe1ff",
+                        "secondary": "#0051d5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "on-tertiary-container": "#b87500",
+                        "on-secondary-container": "#fefcff",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-primary": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "primary": "#000000",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#7c839b",
+                        "surface-container-low": "#eff4ff",
+                        "on-background": "#0b1c30",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "primary-container": "#131b2e",
+                        "outline": "#76777d",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-tint": "#565e74",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-surface": "#213145",
+                        "surface-variant": "#d3e4fe",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-surface-variant": "#45464d",
+                        "on-secondary-fixed": "#00174b",
+                        "secondary-container": "#316bf3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#2a1700",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "inverse-primary": "#bec6e0",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed": "#dae2fd",
+                        "tertiary": "#000000",
+                        "background": "#f8f9ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased">
+<!-- TopAppBar -->
+<header class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50">
+<div class="flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity cursor-pointer">menu</span>
+</div>
+<h1 class="text-xl font-extrabold tracking-[0.2em] text-slate-900 dark:text-slate-50 font-manrope">ATELIER</h1>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity cursor-pointer">shopping_bag</span>
+</div>
+</div>
+</header>
+<main class="min-h-screen flex flex-col items-center justify-center px-8 pt-16 pb-20">
+<!-- Success Animation / Illustration Wrapper -->
+<div class="relative w-full max-w-sm flex flex-col items-center">
+<!-- Abstract Editorial Background Element -->
+<div class="absolute -top-12 -left-4 w-64 h-64 bg-surface-container-high rounded-full blur-3xl opacity-50 -z-10"></div>
+<div class="absolute top-20 -right-8 w-48 h-48 bg-secondary-fixed rounded-full blur-3xl opacity-30 -z-10"></div>
+<!-- Main Content Card -->
+<div class="w-full bg-surface-container-lowest p-10 rounded-xl shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)] flex flex-col items-center text-center">
+<!-- Icon Visual -->
+<div class="w-20 h-20 bg-secondary-container rounded-full flex items-center justify-center mb-8 shadow-lg shadow-secondary/20">
+<span class="material-symbols-outlined text-on-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<!-- Headline -->
+<h2 class="font-headline font-bold text-3xl tracking-tight text-on-surface mb-4">
+                    Verified
+                </h2>
+<!-- Editorial Copy -->
+<p class="text-on-surface-variant leading-relaxed mb-10 font-body text-base">
+                    Your account is now active. Welcome to the <span class="italic">Atelier</span>. You can now explore our curated collections and manage your orders.
+                </p>
+<!-- CTA Section -->
+<div class="w-full space-y-4">
+<button class="w-full bg-primary text-on-primary font-label font-semibold py-4 px-6 rounded-md hover:opacity-90 active:scale-95 transition-all duration-200 uppercase tracking-widest text-xs">
+                        Continue to Shop
+                    </button>
+<button class="w-full bg-surface-container-low text-on-surface font-label font-semibold py-4 px-6 rounded-md hover:bg-surface-container-high active:scale-95 transition-all duration-200 text-xs">
+                        View Profile
+                    </button>
+</div>
+</div>
+<!-- Minimalist Product Preview (Editorial Touch) -->
+<div class="mt-12 w-full">
+<div class="flex items-center justify-between mb-4 px-2">
+<span class="font-headline font-bold text-sm tracking-widest uppercase">New Arrivals</span>
+<span class="text-secondary font-label text-xs font-semibold cursor-pointer">Browse All</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-lg mb-2">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Minimalist architectural interior with soft natural light and a single designer chair in a clean Nordic style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4Bxpv-i4DJ-C4hoYDdPVAX6olUVnL-ls2Mjq3zXXXXdAuCx6zIOt6H_qE72mAEVfCnd78JGaURV2-2iTorVv_VTbLLY9s9jmAsmqpQcKgf_yw7il6UPUfXIEvPluXxfGccBoAsooS5B4eo2taRJz0C_TiShOEMUCGisTaoETKON9gLo6vcgmxbrvoz3oJiM88N72a1-I0mITAC9yZhMwUmUwh3F9EwRHQiNYWPsdJOWoWgdlKkCDhCmulsoL6ROaMoav5XxMQ9PLA"/>
+</div>
+<p class="font-body text-xs font-medium truncate">Minimalist Oak Chair</p>
+<p class="font-body text-[10px] text-outline">$420.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-lg mb-2">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Abstract ceramic vase on a textured stone surface with deep shadows and editorial high-contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDfEa6P3X5Y-LCAKVHHwvcF-xgZuYeophS2ABMEuZSGmN009kxamaBEIMrr8kFciz9qUY_Ue7Y-_mJNtvu477MSTct-iqtdYJ2qaJQ6-zG7A_b6ZzoloJqTxf9W0qWw13BEWilthwnotPewxkoZPcl3NGweAbhUnEx6wPPWCU2ljl8jQqppiOKvpUNESi12EYVfD8nx0E9N4RIMugxbd7jK2KER8VhQ0InPvUR7IVVEqxOxiLxc8wSuGBaxoGQnlQ6x-K-rbkH0V72"/>
+</div>
+<p class="font-body text-xs font-medium truncate">Ceramic Form No. 4</p>
+<p class="font-body text-[10px] text-outline">$185.00</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Hidden if task implies specific focused journey, but included for top-level context) -->
+<!-- Nav is included because Shop is a primary destination as defined in the rules -->
+<nav class="bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-lg fixed bottom-0 w-full z-50 pb-safe shadow-[0_-4px_20px_rgba(11,28,48,0.04)] md:hidden">
+<div class="flex justify-around items-center h-20 w-full px-4">
+<!-- Shop (Active Mapping Logic: Prompt is for Success Verification, but "Shop" is the target destination button) -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 transition-colors hover:text-slate-900 dark:hover:text-slate-100" href="#">
+<span class="material-symbols-outlined mb-1">storefront</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 transition-colors hover:text-slate-900 dark:hover:text-slate-100" href="#">
+<span class="material-symbols-outlined mb-1">search</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 transition-colors hover:text-slate-900 dark:hover:text-slate-100" href="#">
+<span class="material-symbols-outlined mb-1">shopping_cart</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Bag</span>
+</a>
+<!-- Profile Active - Verification relates to the User Account -->
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 transition-colors translate-y-[-2px] duration-300" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

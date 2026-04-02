@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body { font-family: 'Inter', sans-serif; }
+      h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 active:scale-95 duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-manrope font-bold tracking-tight text-slate-900">Review Order</h1>
+</div>
+<div class="text-xl font-black tracking-tighter text-slate-900">NORDIC</div>
+</header>
+<main class="pt-24 px-6 max-w-md mx-auto space-y-8">
+<!-- Progress Stepper -->
+<nav class="flex items-center justify-between px-2 mb-10">
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
+<span class="material-symbols-outlined !text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary">Shipping</span>
+</div>
+<div class="h-[2px] flex-grow bg-primary mx-4 -mt-6"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
+<span class="material-symbols-outlined !text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary">Payment</span>
+</div>
+<div class="h-[2px] flex-grow bg-primary mx-4 -mt-6"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full border-2 border-secondary flex items-center justify-center text-secondary text-xs font-bold">3</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary">Review</span>
+</div>
+</nav>
+<!-- Shipping Summary -->
+<section class="space-y-4">
+<div class="flex justify-between items-end">
+<h2 class="text-[10px] font-bold uppercase tracking-widest text-on-primary-container">Shipping Address</h2>
+<button class="text-secondary text-xs font-semibold hover:opacity-70 transition-opacity">Edit</button>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none ring-1 ring-outline-variant/20 shadow-[0_4px_20px_rgba(11,28,48,0.03)]">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-outline">location_on</span>
+<div class="space-y-1">
+<p class="font-semibold text-on-surface">Erik Solberg</p>
+<p class="text-sm text-on-surface-variant leading-relaxed">Skovveien 12, Frogner<br/>0257 Oslo, Norway</p>
+<p class="text-xs text-on-surface-variant pt-2">+47 22 83 00 00</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Payment Summary -->
+<section class="space-y-4">
+<div class="flex justify-between items-end">
+<h2 class="text-[10px] font-bold uppercase tracking-widest text-on-primary-container">Payment Method</h2>
+<button class="text-secondary text-xs font-semibold hover:opacity-70 transition-opacity">Edit</button>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none ring-1 ring-outline-variant/20 shadow-[0_4px_20px_rgba(11,28,48,0.03)]">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-6 bg-primary-container rounded flex items-center justify-center">
+<span class="text-[8px] font-bold text-white tracking-widest">VISA</span>
+</div>
+<div>
+<p class="font-semibold text-on-surface">Visa ending in 4421</p>
+<p class="text-xs text-on-surface-variant">Expires 12/26</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+</div>
+</section>
+<!-- Item Summary -->
+<section class="space-y-4">
+<div class="flex justify-between items-end">
+<h2 class="text-[10px] font-bold uppercase tracking-widest text-on-primary-container">Order Items (2)</h2>
+<button class="text-secondary text-xs font-semibold hover:opacity-70 transition-opacity">Edit Bag</button>
+</div>
+<div class="space-y-3">
+<!-- Product Item 1 -->
+<div class="flex gap-4 p-4 bg-surface-container-low rounded-xl">
+<img alt="Premium Wool Coat" class="w-20 h-20 object-cover rounded-lg" data-alt="studio shot of a minimalist charcoal wool overcoat with clean lines and premium texture against a light grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDahrq9mtoklDq6uJL2fA0YacMeBXcJ4SS4ZnLqw-_8odmF0aYFdMlXOBqq9WPCkq6B5U9CQ1CIlJIct6PIKBldFDVB4LHgWvD_W67iEo91GKJ678M5e6Dsw13Y5AHT1tJy15V4M1QX_c0RdjY5PpBR0iQJpQiQBcYL2g4MglHizD4PrcB8iIU8v0f-KdxXdu0OLHZXeCGqbdFX-vi-g2v2ggdn8XMtWF9a_XaZmEcwtHAZoO4hKpUOwyhiYFQhVJnkqH2E3iUzMxek"/>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div>
+<h3 class="font-bold text-sm text-on-surface">Fjell Wool Overcoat</h3>
+<p class="text-xs text-on-surface-variant">Size: L | Color: Anthracite</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="text-xs font-medium text-outline">Qty: 1</span>
+<span class="font-bold text-sm">€450.00</span>
+</div>
+</div>
+</div>
+<!-- Product Item 2 -->
+<div class="flex gap-4 p-4 bg-surface-container-low rounded-xl">
+<img alt="Technical Trainers" class="w-20 h-20 object-cover rounded-lg" data-alt="side view of modern technical running shoes in deep navy and white with innovative sole design and high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGrrYncDz0gFp6xf5IcJqYFkVNODWL-BpU5xj6Wg95d0A2cRonAOwDJMvEYChAcF43Vkrnqom5ze03o-GWOtEkc3pbJyFwvn8glz4ON39IsrwSpW1S3i9K4Fjv-N4qLQrU66Wsjetu9a3Ry1rR1jl4GNrTI7QbyQsYWJYtZgR4N2H1rQUBQwu4z2DNQmDdW4vXvwWAXMfJj-l5TvMISQi1inWyBdK-pT22eVXt0g8JZCGKNpvcWJsbZ7pIliGJ5TUpHPo0Wq3_yamk"/>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div>
+<h3 class="font-bold text-sm text-on-surface">Nord Urban Trainer</h3>
+<p class="text-xs text-on-surface-variant">Size: 44 | Color: Midnight</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="text-xs font-medium text-outline">Qty: 1</span>
+<span class="font-bold text-sm">€180.00</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Totals Card -->
+<section class="bg-primary-container text-white p-8 rounded-2xl space-y-4 mt-8">
+<div class="flex justify-between text-sm opacity-70">
+<span>Subtotal</span>
+<span>€630.00</span>
+</div>
+<div class="flex justify-between text-sm opacity-70">
+<span>Shipping (Express)</span>
+<span>€15.00</span>
+</div>
+<div class="flex justify-between text-sm opacity-70">
+<span>Estimated Tax</span>
+<span>€126.00</span>
+</div>
+<div class="pt-4 mt-4 border-t border-white/10 flex justify-between items-baseline">
+<span class="text-lg font-bold">Total</span>
+<span class="text-2xl font-black tracking-tight">€771.00</span>
+</div>
+</section>
+<!-- Terms -->
+<p class="text-[10px] text-center text-on-surface-variant leading-relaxed px-4">
+            By clicking "Complete Purchase", you agree to Nordic's Terms of Service and Privacy Policy. All prices include applicable VAT.
+        </p>
+</main>
+<!-- Bottom Action Bar (Fixed) -->
+<div class="fixed bottom-0 left-0 w-full bg-slate-50/90 backdrop-blur-md px-6 py-6 border-t border-slate-200/20 z-50">
+<button class="w-full bg-primary text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs flex items-center justify-center gap-3 active:scale-[0.98] transition-all duration-300 ease-out">
+            Complete Purchase
+            <span class="material-symbols-outlined !text-[18px]">lock</span>
+</button>
+</div>
+</body></html>

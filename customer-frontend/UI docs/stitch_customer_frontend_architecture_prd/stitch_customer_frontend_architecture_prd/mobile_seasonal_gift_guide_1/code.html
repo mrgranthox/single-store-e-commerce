@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#dbe1ff",
+                        "secondary": "#0051d5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "on-tertiary-container": "#b87500",
+                        "on-secondary-container": "#fefcff",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-primary": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "primary": "#000000",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#7c839b",
+                        "surface-container-low": "#eff4ff",
+                        "on-background": "#0b1c30",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "primary-container": "#131b2e",
+                        "outline": "#76777d",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-tint": "#565e74",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-surface": "#213145",
+                        "surface-variant": "#d3e4fe",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-surface-variant": "#45464d",
+                        "on-secondary-fixed": "#00174b",
+                        "secondary-container": "#316bf3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#2a1700",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "outline-variant": "#c6c6cd",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "inverse-primary": "#bec6e0",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed": "#dae2fd",
+                        "tertiary": "#000000",
+                        "background": "#f8f9ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- Top Navigation Shell -->
+<header class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl text-slate-900 dark:text-slate-50 fixed top-0 w-full z-50">
+<div class="flex justify-between items-center px-6 h-16 w-full">
+<button class="hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="text-xl font-extrabold tracking-[0.2em] text-slate-900 dark:text-slate-50 font-manrope">ATELIER</h1>
+<button class="hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</header>
+<main class="pt-16 pb-24">
+<!-- Hero Section -->
+<section class="relative h-[751px] w-full overflow-hidden bg-primary-container">
+<img alt="Atmospheric holiday setting" class="h-full w-full object-cover opacity-60 mix-blend-overlay" data-alt="Close-up of minimalist holiday gift wrapping in neutral tones with dried botanical sprigs and soft morning light casting gentle shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2m9cJOWm3PYzdH70m7kr56Z_iJdl80S9jyTD9HHf3UCauGAcyb8sFF1MiDcjZZN3wdvuvjgtopjwn0FZ25yQHAB2iEwjXc07Do0HKSig0Zh7asRoOhF7ae12oVvY6U6nU9LhtQmvRFJrMHn0Q4-XLegTKztGkQbYyfnuEoM1v0c_EsBf0nRdhrnGIDCcUmXKsS-VIkLtn-lojqXSolrvdAgxpg0PMBs726-jEt3PVTBPBxYg_TRLXcp8DUaRL7EsEipcnpn40BN5i"/>
+<div class="absolute inset-0 flex flex-col justify-end p-8 pb-16">
+<p class="font-label text-tertiary-fixed text-[10px] uppercase tracking-[0.3em] mb-4">Winter Collection 2024</p>
+<h2 class="font-headline font-extrabold text-5xl tracking-tighter text-on-primary mb-6 leading-[0.9]">Seasonal Gift Guide.</h2>
+<p class="text-on-primary-container text-lg max-w-[280px] leading-relaxed mb-8">A curated selection of meaningful objects for the ones you love.</p>
+<div class="flex">
+<button class="bg-secondary px-8 py-4 text-on-secondary font-semibold text-sm rounded-none tracking-widest hover:bg-secondary-container transition-all">
+                        EXPLORE NOW
+                    </button>
+</div>
+</div>
+</section>
+<!-- Curated Bento Grid (For the Minimalist) -->
+<section class="mt-12 px-6">
+<div class="flex items-baseline justify-between mb-8">
+<h3 class="font-headline font-bold text-2xl tracking-tight">For the Minimalist</h3>
+<span class="text-secondary font-label text-xs uppercase tracking-widest">View All</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Large Feature Card -->
+<div class="col-span-2 bg-surface-container-low overflow-hidden relative group">
+<img class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Brushed metal desk lamp with clean lines on a concrete surface, dramatic side lighting highlighting the texture and form" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASFLrzBeQ0WmoW1Se1I-Xh6nWrV4fTQlqzbvuVF6_typgWU5k_7O4OghNdLVYd1XtQtQlYgXNUfH47iQhpDcPfyWWHm3qTkJ8giNE5gWH2rdDmsY6eezMs5rDWY60nwGuNmjRDJiklVsd6OFVxFNhrxMm-ojhvfdykxWbaDkFMNvtBKjECqceyYbBN2qeYeJteAWWDkgYmnAGdGL6RZtgR3Uvgqs8e3dKCx79yjQ3KncC_pUstn8sgFVwHRkm0CPLYvWsIayzza4zU"/>
+<div class="p-4">
+<p class="text-[10px] font-label text-outline uppercase tracking-widest mb-1">Aesthetic Focus</p>
+<h4 class="font-headline font-bold text-lg">Brushed Steel Lamp</h4>
+<p class="text-secondary font-semibold mt-2">$240</p>
+</div>
+</div>
+<!-- Smaller Item 1 -->
+<div class="bg-surface-container-low overflow-hidden group">
+<img class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Pair of ceramic handleless cups in matte charcoal gray on a light wood tray, soft neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDknRh7ii28iZstZ2jGPmudfzVPRJiWrJJgdyrj_KAKXrgznlUYc83xGz6pez9facO8GYfiu6FTFgRMpo01AoDCXclWW8a6y75UmYVEKo6pWguvBZT7Cbr-jEeUP76lXY9I9aJzCjSf3SGq8w9tzrv978JUWVYsFoKzVn0lHgIYNI8LU6CqZYPY31dIZUghgoL_rwiutr27FGI_gjildjxNGq3gNgnZHXSj1HbcoSTeSOUYQnz1g0RoljaZX5wkoChnxRIze4neBjHP"/>
+<div class="p-4">
+<h4 class="font-headline font-bold text-sm">Ceramic Tumbler Set</h4>
+<p class="text-outline text-xs mt-1">$45</p>
+</div>
+</div>
+<!-- Smaller Item 2 -->
+<div class="bg-surface-container-low overflow-hidden group">
+<img class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Minimalist linen notebook with raw edge paper and a slim black fountain pen resting on it, moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIPM-V8aTUDdxexhZzGvdmOMb_LeDQfP0JsOpyfGlRL_m0RyT2DDuYao650pWOGllT3ytI9hqeHYU7YNI33A41Tn3rkwq7gJRwem0uZOJaC0r_HF3ZfYLiY228RHRvCiU1SSLFwIGfJeaYfiAHECXh6pHR7vYqxpIrKn-9nhscAZ9u1d_bkd_onVx9kV0dVMQT9Pm4atoOXs8Fh2JBf7t7l9tyTJZJjSwBXB-2ex9RFMjnPaXNhd7PKSJykW5dhzlCwhLm0ipu5S5l"/>
+<div class="p-4">
+<h4 class="font-headline font-bold text-sm">Linen Journal</h4>
+<p class="text-outline text-xs mt-1">$32</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Artisanal Objects Editorial Spread -->
+<section class="mt-20 bg-surface-container-highest py-16">
+<div class="px-6 mb-12">
+<h3 class="font-headline font-extrabold text-4xl tracking-tighter mb-4">Artisanal Objects.</h3>
+<p class="text-on-surface-variant leading-relaxed">Hand-crafted pieces that celebrate the beauty of imperfection and the touch of the maker.</p>
+</div>
+<!-- Horizontal Scroll Container -->
+<div class="flex overflow-x-auto hide-scrollbar gap-6 px-6">
+<!-- Card 1 -->
+<div class="flex-shrink-0 w-72">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low">
+<img class="h-full w-full object-cover" data-alt="Artisanal hand-blown glass vase with subtle blue swirls and organic shape, captured in natural window light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7aj-C64c_tJVp-UgiLRmrG4bx2oyvgYczQRBDAI91BqXBuxdHW1LSPZk4sYNOOxJK4x3Ds2MmRpbsh-LwG0QPxh-_e16NyAWt7C68UKppc3DJPPaAsJAtunRGRfvbxfvIacx3R33kcvUlvpVveTSJgx2f0FlA0-4z5yplk3ex-g79ohihMbEFcgiJt2jGva49C7PRvEkTojqtYjsjPDr9rZzw5dwXTByBUYabHg8cxSCeaIqs5qpup1S3wB59MNEFo5zwJ3uOGFyq"/>
+</div>
+<div class="mt-4">
+<h4 class="font-headline font-bold text-lg">Twisted Glass Vase</h4>
+<p class="font-label text-xs text-outline uppercase tracking-widest mt-1">Limited Edition</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex-shrink-0 w-72">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low">
+<img class="h-full w-full object-cover" data-alt="Hand-woven merino wool throw blanket with chunky knit texture in ivory white, draped over a sculptural chair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKs3pdBvlZNHjcuDI8FUt-NLhYxTR1r50ZyvNIsqVh6kKFxFvSoci-zlQ2mc8ErbknLrTM_2Rp0RHNMwynUXMNogPd2jMYJpw-GAq77LK0qNU-7uioXnlokrBMpGgK0--GiXw7soeSbkurgAh-lchI4dRANWZFu85QwC4TclWxtg6H-TTIqvREFhIjnPQH8DxvJcEq99iwidYz2qNz0vHjAfMyGPpnUTmT9O88MfjUZfRWaXdHCJuwkqRtuZm7jSPeYrn6pMIGZteK"/>
+</div>
+<div class="mt-4">
+<h4 class="font-headline font-bold text-lg">Merino Wool Throw</h4>
+<p class="font-label text-xs text-outline uppercase tracking-widest mt-1">Ethically Sourced</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex-shrink-0 w-72">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low">
+<img class="h-full w-full object-cover" data-alt="Set of architectural candle holders made of dark walnut wood with brass inserts, elegant minimalist design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClYERx4f_C8Z1Q3HEIJyTyDI8Fa2H1r-_xCx2yydF2ddKTk_rItsaaw1WHIwG1flOFN9O7O1a2l4fu3qbxbApLVKf02gBnZDRwqg4v0-nNM2UjWxOFng7DaIkOufVO1tBec_aETUobe_Gn2KTKYtkG-8TxmsrmmKgF667E5xUUiBMm4-VBYuTxi__0mfhQwW6lqVQM_WWE4dkCikVo7X5GGoZhqbzw5l6IA49VG5njbGbKPYiv66-T9gaeBMHhtQbTwwLCmh_yoO7e"/>
+</div>
+<div class="mt-4">
+<h4 class="font-headline font-bold text-lg">Walnut Taper Holders</h4>
+<p class="font-label text-xs text-outline uppercase tracking-widest mt-1">Hand-Finished</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / CTA -->
+<section class="my-20 px-6 text-center">
+<div class="bg-primary text-on-primary py-12 px-6">
+<span class="material-symbols-outlined text-4xl mb-4" data-icon="mail">mail</span>
+<h3 class="font-headline font-bold text-2xl mb-2">Join the Atelier</h3>
+<p class="text-on-primary-container text-sm mb-8">Receive early access to seasonal guides and exclusive limited drops.</p>
+<div class="flex flex-col gap-3">
+<input class="bg-surface-container-low text-on-surface border-none px-4 py-3 text-sm focus:ring-2 focus:ring-secondary" placeholder="Your Email Address" type="email"/>
+<button class="bg-secondary text-on-secondary py-3 font-semibold text-sm tracking-[0.2em]">SUBSCRIBE</button>
+</div>
+</div>
+</section>
+<!-- Footer Visual -->
+<section class="px-6 mb-12">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-40" data-alt="Modern architectural interior with clean lines and soft shadows, expressing a sense of calm and order" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTzdx2z1sObYqGB6-j8J_DpOnq3r9RtD9t8PLRepEvfUJRRn-AS_MA8jjhLRjOUoh9mbrk-Ka1j1vspOBx0SfP5rsXzehonRS9l51puH9pkzRAwNSbUHLaB58L459O9obkskZ2O8t8xklnD9Ut098BktuMtOFxu8BFg-ySi8jN2Ie_BDJ7hMtGLc1uJdxbL1rRz5VD50Ef5x2txMxWkVPfckfE5rdyBJkKjafUVPqrN8W2ZD76sBhYHESypXNWSXdchH4fdg1nyIKc"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<p class="font-headline font-extrabold text-3xl tracking-[0.4em] opacity-80">ATELIER</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Shell (Bottom NavBar for Mobile) -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-lg shadow-[0_-4px_20px_rgba(11,28,48,0.04)] md:hidden">
+<div class="flex justify-around items-center h-20 w-full px-4">
+<!-- Active: Shop (Home to the Guide) -->
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 transition-colors active:translate-y-[-2px] duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-colors active:translate-y-[-2px] duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="search">search</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-colors active:translate-y-[-2px] duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 hover:text-slate-900 dark:hover:text-slate-100 transition-colors active:translate-y-[-2px] duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest font-semibold">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>NORDIC | Reviews Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Manrope', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white font-manrope font-bold tracking-tight">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-md mx-auto">
+<!-- Tab Navigation (Custom) -->
+<nav class="flex gap-8 mb-10 overflow-x-auto hide-scrollbar">
+<button class="flex-shrink-0 text-secondary border-b-2 border-secondary pb-2 font-headline font-bold text-lg">Pending</button>
+<button class="flex-shrink-0 text-outline pb-2 font-headline font-semibold text-lg hover:text-on-surface transition-colors">History</button>
+<button class="flex-shrink-0 text-outline pb-2 font-headline font-semibold text-lg hover:text-on-surface transition-colors">Drafts</button>
+</nav>
+<!-- Editorial Hero Section -->
+<section class="mb-12">
+<div class="bg-surface-container-low rounded-xl p-8 relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label text-[10px] uppercase tracking-widest text-on-primary-container mb-2">Curated Experience</p>
+<h1 class="font-headline text-3xl font-extrabold tracking-tight leading-tight text-on-surface max-w-[200px]">Share Your Narrative.</h1>
+<p class="text-on-surface-variant text-sm mt-4 leading-relaxed max-w-[220px]">Help our community of minimalists find the perfect fit with your honest perspective.</p>
+</div>
+<div class="absolute -right-8 -bottom-8 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
+</div>
+</section>
+<!-- Eligible Products Bento Grid -->
+<div class="grid grid-cols-1 gap-6">
+<h2 class="font-headline text-xl font-bold tracking-tight text-on-surface px-1">Eligible for Review</h2>
+<!-- Product 1: The Review Focus -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+<div class="aspect-[4/3] w-full overflow-hidden bg-surface-container-high">
+<img alt="Minimalist Wool Coat" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" data-alt="Close-up of a premium minimalist wool coat in charcoal grey with subtle texture and clean lines on a cool studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiOSC9BnSTXaNwemGgJc3YyWWoH04yP3pgHax_oMpmEfr3pc_hVsv16uBUOlW2BgGqQAsXp-TA07IwvPv5QGtKK7OvruuQcWQjKYjjEFJI191TFjSKRFtqyMXXWJTOsKeBnPhXeHM-5k7IovlC5XiuDWBps3X1-NKy5Qej5W3gtwumv95YuZSdhhkEyBaSALY7mcq4tuykF_dpmNKv-qwYpUB8LBay15mkiXsNTourhEOx1k0UqRDWjp9cRqvH9pp7v_ehD0M5qkHd"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-secondary font-bold mb-1 block">Outerwear</span>
+<h3 class="font-headline text-lg font-bold text-on-surface leading-snug">The Architectural Wool Coat</h3>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-2 py-1 text-[10px] font-bold rounded">UNREVIEWED</span>
+</div>
+<!-- Simplified Mobile Star Rating -->
+<div class="flex gap-2 mb-6">
+<span class="material-symbols-outlined text-tertiary text-2xl" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-2xl" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-2xl" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-2xl" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-outline-variant text-2xl" data-icon="star">star</span>
+</div>
+<!-- Minimalist Text Area -->
+<div class="relative mb-6">
+<textarea class="w-full bg-surface-container-high border-none rounded-lg p-4 text-sm font-body text-on-surface placeholder:text-outline focus:ring-2 focus:ring-secondary/20 transition-all resize-none" placeholder="How did it feel on the first wear?" rows="3"></textarea>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-md font-headline font-bold text-sm tracking-wide hover:opacity-90 active:scale-[0.98] transition-all">
+                        SUBMIT REVIEW
+                    </button>
+</div>
+</article>
+<!-- Product 2: Secondary Option -->
+<article class="flex bg-surface-container-lowest rounded-xl p-4 gap-4 items-center">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high">
+<img alt="Performance Sneakers" class="w-full h-full object-cover" data-alt="Sleek white performance sneakers with minimal branding on a clean grey background with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtj5VWUn_DusN-vSIaRnkxdvzRpDtPCmyLKqjfBgTo9Rkh_Q_Nhkl58bDawbMYBwmtdH4BL3WIMypqyeUPE45C-Bmn8a0wChm2eTvVpfobqUnTrqJZ7EJeY23UJCXXVgAuMQIZzKscfYvJTYhFx6EV_n2gyC6RRgJpIx13jDO9_Ic3OusMXtLQwpkMWYWaoQP2xrnMwzKry-uVlvn78QlZhT4OFWMxNDPg5Ua_yPG-OAz3JO-4N7J21NKZtvaim9UYxlJYFhRYeAZy"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface text-sm">Linear Runner Sneakers</h3>
+<p class="text-on-surface-variant text-xs mt-1">Purchased 12 days ago</p>
+<button class="mt-2 text-secondary font-label text-[10px] font-extrabold uppercase tracking-widest border-b border-secondary/30 pb-0.5">Write Review</button>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</article>
+<!-- Product 3: Secondary Option -->
+<article class="flex bg-surface-container-lowest rounded-xl p-4 gap-4 items-center">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high">
+<img alt="Minimalist Watch" class="w-full h-full object-cover" data-alt="Modern silver wristwatch with a black face and minimal indices on a piece of slate rock" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNcG2ekPK09-zaj0Pv8z_9UjPmSK_KTfNEd9lQfS2_Iyem6yLvwwJZXhMDytRhOG6eT7lI4UionlAp5yJgAjd-9Gp5BQkFPbQ1s5lusw4twbM1vtit2O2x23Ir8vLRqBuwC6J7yoNgOrXUhBt_jfGtKJOCKzY78u6MXPNOESShEZVH0w6hB5vgVpLoPhT33EWvXPgsNih8KetqbecCnHVt3qu2--ZSQNOfRSbL4bWprKpy44h3Tk9AaNONz6CDDcSD7wbDmGMAKNWO"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface text-sm">Monochrome Slate Watch</h3>
+<p class="text-on-surface-variant text-xs mt-1">Purchased 3 weeks ago</p>
+<button class="mt-2 text-secondary font-label text-[10px] font-extrabold uppercase tracking-widest border-b border-secondary/30 pb-0.5">Write Review</button>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</article>
+</div>
+<!-- History Preview Header -->
+<section class="mt-16 mb-8">
+<div class="flex justify-between items-end px-1">
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-container mb-1 block">Your Impact</span>
+<h2 class="font-headline text-xl font-bold tracking-tight text-on-surface">Recent Submissions</h2>
+</div>
+<a class="text-secondary font-label text-[10px] font-bold uppercase tracking-widest" href="#">View All</a>
+</div>
+</section>
+<!-- History Card (Glassmorphism inspired) -->
+<section class="space-y-4">
+<div class="bg-surface-container-low/50 border border-outline-variant/10 rounded-xl p-6 relative">
+<div class="flex items-center gap-3 mb-4">
+<div class="flex">
+<span class="material-symbols-outlined text-tertiary text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="text-xs text-outline font-body">• 2 days ago</span>
+</div>
+<h4 class="font-headline font-bold text-on-surface mb-2">Essential Cotton Tote</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">The weave is much denser than expected. Perfect for weekend markets and heavy books. Truly an atelier-grade accessory.</p>
+<div class="mt-4 flex gap-2">
+<div class="bg-surface-container-highest/30 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span>
+<span class="text-[10px] font-bold">12</span>
+</div>
+<button class="bg-surface-container-highest/30 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Edit</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/20 dark:border-slate-800/20">
+<div class="flex justify-around items-center h-20 w-full px-4">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</div>
+<!-- Profile Active -->
+<div class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</div>
+</div>
+</nav>
+</body></html>

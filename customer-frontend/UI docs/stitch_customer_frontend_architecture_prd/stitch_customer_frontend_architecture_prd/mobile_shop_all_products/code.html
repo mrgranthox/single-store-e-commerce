@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white font-manrope font-bold tracking-tight">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<!-- Content Area -->
+<main class="pt-20 px-6">
+<!-- Hero Editorial Section -->
+<section class="mt-8 mb-12">
+<h1 class="text-4xl font-extrabold tracking-tight text-on-surface mb-2">Curated Living.</h1>
+<p class="text-on-surface-variant font-light max-w-[80%] leading-relaxed">Essential pieces for the modern home, designed with Scandinavian precision and soul.</p>
+</section>
+<!-- Filter and Sort Triggers (No Borders) -->
+<div class="flex items-center justify-between mb-8 sticky top-16 bg-surface/90 backdrop-blur-sm py-4 z-40">
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low rounded-lg text-sm font-semibold tracking-wide hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">tune</span>
+<span class="uppercase tracking-widest text-[10px]">Filter</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low rounded-lg text-sm font-semibold tracking-wide hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">swap_vert</span>
+<span class="uppercase tracking-widest text-[10px]">Sort</span>
+</button>
+</div>
+<span class="text-[10px] uppercase tracking-widest text-outline">128 Products</span>
+</div>
+<!-- Product Grid (Asymmetric & Editorial) -->
+<div class="grid grid-cols-2 gap-x-4 gap-y-10">
+<!-- Product Item 1 -->
+<div class="group">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="minimalist white ceramic vase on a wooden table with soft morning light and long shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-jgSAjvEi8_HvdsT46PzMJlMbbywjwiyrVBYO7bwcyMvvJZt1EfKhYL3F99X6B8PQu48T0Cbu6azHW_w32zgvlXQ_6n9vHO-GOrMvgcGO46A7ubYJO9stT-mIEOxoTyVkVIieNaJUgKQEdc_ltXOVHGg5LtK2OgnC9ghq9_2EzbLmbpolp7ESh4Y6yVrax15izOYp2GFsvAV1d1_7jKd3WPYuZcKnrorOWJQ9M9a8hl59FhjGq06nVMB8QzQQLoZxp86WHkmLMCwq"/>
+<div class="absolute top-3 left-3">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-2 py-1 uppercase tracking-widest">New</span>
+</div>
+</div>
+<div class="space-y-1">
+<h3 class="font-semibold text-sm tracking-tight text-on-surface">Kruger Ceramic Vase</h3>
+<p class="text-xs text-outline font-medium tracking-wide">Decor</p>
+<p class="text-sm font-bold text-secondary mt-1">$85.00</p>
+</div>
+</div>
+<!-- Product Item 2 (Slightly Offset/Asymmetric visual) -->
+<div class="group mt-8">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="heavy knit charcoal grey wool sweater folded neatly on a light wood surface with dramatic natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9qxVtUwuU6fJOn9pDovcQ6qnPlUtCYmXub9ddbD2kbpeoMJh_4AgrAK_ZADcW44ieaglk_2ucS20IRfW_ZyFfoD4LznNULOj5cUQRuubOHs9oEH0wnRpLR5wfZ2nPXljgXHE-Ccr0cBjWc2_fUQQfu_CTN3D5RVeC_eWY_pns7g5d7zfOHEnZQ9NRhpMQ8_Xc7QwExCO0c0o9j9OVyHb9giPo-xqumYE75Ex0A52YAwZsaS845jD2IajGURXdwqIWK4MufX41n7Zw"/>
+</div>
+<div class="space-y-1">
+<h3 class="font-semibold text-sm tracking-tight text-on-surface">Larsen Knit Pullover</h3>
+<p class="text-xs text-outline font-medium tracking-wide">Apparel</p>
+<p class="text-sm font-bold text-secondary mt-1">$140.00</p>
+</div>
+</div>
+<!-- Product Item 3 -->
+<div class="group">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="modern scandinavian living room with a sleek grey armchair and minimalist wooden side table in bright daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfUnUXQgL16TrVsv2F3EpPfDZYfKlNDO35PVPhQ2iQig-2dpeNUiARNtWyhFRqAyPWAWmX8j-V1z1lgE7RaiYFtoqSGpczx7S5_G61ivBmMRP5esIrnLWuMaIdoknzUGaYhlUwf4-vU0_iT8e8UlU3NbKLDu54QIBBOHGyJUF4FdvqrYBlQ7CJ0sR9TBehhxAat7U6G_mqtxzQe5v-Fw6RmIMe3yEHn5KIs7UPS4CAcOIra8yVH7ockJCYjY1hgAWmmAkjjQlu7hs2"/>
+</div>
+<div class="space-y-1">
+<h3 class="font-semibold text-sm tracking-tight text-on-surface">Odin Lounge Chair</h3>
+<p class="text-xs text-outline font-medium tracking-wide">Furniture</p>
+<p class="text-sm font-bold text-secondary mt-1">$890.00</p>
+</div>
+</div>
+<!-- Product Item 4 -->
+<div class="group mt-8">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="woman wearing an oversized beige linen shirt standing against a clean white architectural wall with harsh shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ9-sWv5P3p3-2KMkVdN9ECyu7cR87GXgFds2dS5TX16REIq5TplZXIS1OOE04pzZqRcKh4c7c1JqcbGuIYJuvby5zIx2JXsOR5bSw1sUHMxz2xF8lsQ6d21DlzHMKGBVmaS1cansfgtaCn8xpbE_C63q33o9ztLXB3I21pXXLbTlAJJUEUzdisgGEho8D4Mfv8BmCrDuZxM6jSeVvzE7e446ZIXEtce5WBQDNRMePHeOzm9kODKnMVrcql3mEdZgqEHdcWjBTl1NF"/>
+<div class="absolute top-3 right-3">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest">Sold Out</span>
+</div>
+</div>
+<div class="space-y-1">
+<h3 class="font-semibold text-sm tracking-tight text-on-surface">Oslo Linen Tunic</h3>
+<p class="text-xs text-outline font-medium tracking-wide">Apparel</p>
+<p class="text-sm font-bold text-outline line-through mt-1">$110.00</p>
+</div>
+</div>
+<!-- Product Item 5 -->
+<div class="group">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="set of matte black architectural kitchen containers on a concrete countertop with soft moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb7GQTeRTYCTeEOX8GMbjmXNxiMicaWW8XyG7lp6Yjr3MDq4M0WscGaMcz5S8t9y906DA7Ef21pC3j0ajI2UAe5aPj5WFSqMKK0-lKdKhynvBitoegrt9MQuyR8R_jsTkmWI5tcRtKQQWo-YkrX7PnPuDUIzaHr1dDFBBtNu4iW7UD38m1ub11uV3lVAGQRkRWkgj1TNepXn6m1mFlt3yAs7FcIaK-afyI0YUqm5osBDxB3eUsuOpB_d3Njgca1ZjLcHHzrM-qnr_N"/>
+</div>
+<div class="space-y-1">
+<h3 class="font-semibold text-sm tracking-tight text-on-surface">Køkken Canister Set</h3>
+<p class="text-xs text-outline font-medium tracking-wide">Kitchen</p>
+<p class="text-sm font-bold text-secondary mt-1">$62.00</p>
+</div>
+</div>
+<!-- Product Item 6 -->
+<div class="group mt-8">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="modern glass pendant lamp with brass details hanging in a minimalist studio with clean lines and soft ambient glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFMv3lzzvAC3_02B5VxelFpTq_twXSJeMtsuKAKghtbjV5rOx_w9R38e6Ms6fC4fR8XUrXkeXngLAvn-A3B8koDBGBzgkvpF34qhNqTio-e91DrLdi_h7TzbXOCLpmxvMUYHsO749-RTz1rLPQUshJy0mLGAn476cUffh2-Xx9iH5l-uTLlqL9PtHgKd89i9zyibD8gKf3gfPZxd-4pA8v1NmH_NlwLgnN1mQgLCCWM-CatUqo9f48DRzHVSvcHhbbgkT2fMDEYo6h"/>
+</div>
+<div class="space-y-1">
+<h3 class="font-semibold text-sm tracking-tight text-on-surface">Fjord Glass Pendant</h3>
+<p class="text-xs text-outline font-medium tracking-wide">Lighting</p>
+<p class="text-sm font-bold text-secondary mt-1">$225.00</p>
+</div>
+</div>
+</div>
+<!-- Newsletter / Editorial Sign-off -->
+<section class="mt-24 mb-12 p-8 bg-surface-container-low rounded-xl">
+<h2 class="text-2xl font-bold tracking-tight mb-4">The Nordic Journal</h2>
+<p class="text-sm text-on-surface-variant mb-6 leading-relaxed">Join our inner circle for early access to seasonal drops and interior inspiration.</p>
+<div class="flex gap-2">
+<input class="flex-grow bg-surface-container-lowest border-none text-sm px-4 py-3 rounded-md focus:ring-2 focus:ring-secondary" placeholder="Email Address" type="email"/>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-md text-xs font-bold uppercase tracking-widest">Join</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] flex justify-around items-center h-20 w-full px-4">
+<!-- Active Tab: Shop -->
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="storefront" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all active:scale-90 duration-300 ease-out" href="#">
+<div class="relative">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="absolute -top-1 -right-1 bg-secondary text-white text-[8px] w-4 h-4 flex items-center justify-center rounded-full">2</span>
+</div>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

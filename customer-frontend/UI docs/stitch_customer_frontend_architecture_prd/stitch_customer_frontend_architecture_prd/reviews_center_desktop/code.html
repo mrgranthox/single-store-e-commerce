@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Reviews Center | NORDIC ATELIER</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#dbe1ff",
+              "secondary": "#0051d5",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "on-tertiary-container": "#b87500",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#eaf1ff",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "on-surface": "#0b1c30",
+              "on-primary-container": "#7c839b",
+              "surface-container-low": "#eff4ff",
+              "on-background": "#0b1c30",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "tertiary-fixed": "#ffddb8",
+              "surface-tint": "#565e74",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-variant": "#d3e4fe",
+              "on-error": "#ffffff",
+              "surface-bright": "#f8f9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-container-high": "#dce9ff",
+              "on-surface-variant": "#45464d",
+              "on-secondary-fixed": "#00174b",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "outline-variant": "#c6c6cd",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "tertiary": "#000000",
+              "background": "#f8f9ff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .star-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
+<div class="flex justify-between items-center h-20 px-12 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 font-headline">NORDIC ATELIER</div>
+<div class="hidden md:flex items-center space-x-10 font-manrope tracking-tight font-light">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Collections</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Objects</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Editorial</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hover:opacity-70 transition-opacity duration-300 scale-100 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-50">shopping_bag</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 scale-100 active:scale-95 duration-200 text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400 pb-1">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-20 px-12 max-w-screen-2xl mx-auto">
+<!-- Editorial Header Section -->
+<header class="mb-16">
+<h1 class="font-headline text-6xl font-extrabold tracking-tighter mb-4 text-primary">Reviews Center</h1>
+<p class="font-body text-on-primary-container max-w-2xl text-lg">Manage your feedback and document your curated journey with Nordic Atelier. Share your experience to help the community grow.</p>
+</header>
+<!-- Main Content Tabs -->
+<div class="flex gap-12 mb-12">
+<button class="font-headline text-xl font-bold border-b-2 border-primary pb-2">Pending Reviews (2)</button>
+<button class="font-headline text-xl font-light text-outline hover:text-on-surface transition-colors pb-2">History (14)</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Pending Reviews Column -->
+<div class="lg:col-span-8 space-y-12">
+<!-- Review Card 01 (Expanded/Active) -->
+<div class="bg-surface-container-lowest p-10 rounded-xl shadow-sm border-l-4 border-secondary">
+<div class="flex flex-col md:flex-row gap-8">
+<div class="w-full md:w-48 h-48 bg-surface-container overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Minimalist wooden lounge chair with a neutral fabric cushion against a clean white gallery wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDghRie8rmupv_6H8Jh__gIC64nJIQM9GC8RsQ5I3xSU2T1hOH-7HHcPA6bHNnVNERFYzyVJ-CABDF-whafHQhpwGlc30pN-LJcexdK2Q6bEWROuBgRqaOJHum82qqRduxz5XxREm6l-H7-j9BGvUvjfXjqW_waj67l3gT-SrKlfrCjHYoUpk0Gm5lt0cTSSbHMcJVGjJ_DrTlf8tjmOVk5Uik5gXCDhtSbnGiwTgXRbBHIV1Tq5pQMt5UCNTa5JYiqw4B5c0qtCnFo"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-on-tertiary-container bg-tertiary-fixed px-3 py-1 rounded-full">New Purchase</span>
+<span class="font-body text-sm text-outline">Purchased Jan 14, 2024</span>
+</div>
+<h2 class="font-headline text-3xl font-bold mb-6">Sjöberg Lounge Chair</h2>
+<!-- Review Form -->
+<div class="space-y-8">
+<!-- Rating Stars -->
+<div>
+<label class="block font-label text-xs font-bold uppercase tracking-wider mb-3 text-outline">Overall Rating</label>
+<div class="flex gap-2">
+<button class="text-tertiary hover:scale-110 transition-transform"><span class="material-symbols-outlined text-4xl star-fill">star</span></button>
+<button class="text-tertiary hover:scale-110 transition-transform"><span class="material-symbols-outlined text-4xl star-fill">star</span></button>
+<button class="text-tertiary hover:scale-110 transition-transform"><span class="material-symbols-outlined text-4xl star-fill">star</span></button>
+<button class="text-tertiary hover:scale-110 transition-transform"><span class="material-symbols-outlined text-4xl star-fill">star</span></button>
+<button class="text-outline-variant hover:scale-110 transition-transform"><span class="material-symbols-outlined text-4xl">star</span></button>
+</div>
+</div>
+<!-- Text Input -->
+<div>
+<label class="block font-label text-xs font-bold uppercase tracking-wider mb-3 text-outline">Your Review</label>
+<textarea class="w-full bg-surface-container-high border-none rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline/50" placeholder="Describe the texture, comfort, and how it fits your space..." rows="4"></textarea>
+</div>
+<!-- Photo Upload -->
+<div>
+<label class="block font-label text-xs font-bold uppercase tracking-wider mb-3 text-outline">Add Photos</label>
+<div class="flex gap-4">
+<button class="w-24 h-24 border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center text-outline hover:border-secondary hover:text-secondary transition-all group">
+<span class="material-symbols-outlined">add_a_photo</span>
+<span class="text-[10px] mt-1 font-bold">UPLOAD</span>
+</button>
+<div class="w-24 h-24 bg-surface-container-low rounded-lg animate-pulse"></div>
+</div>
+</div>
+<div class="pt-4">
+<button class="bg-primary text-on-primary px-10 py-4 font-headline font-bold text-sm tracking-wide rounded-md hover:bg-secondary transition-colors">SUBMIT REVIEW</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Review Card 02 (Collapsed State) -->
+<div class="bg-surface-container-low p-8 rounded-xl flex items-center gap-8 group hover:bg-surface-container transition-colors cursor-pointer">
+<div class="w-24 h-24 bg-surface-container-lowest overflow-hidden rounded-lg shrink-0">
+<img class="w-full h-full object-cover" data-alt="Modern sculptural ceramic vase with organic curves in a matte basalt black finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnyArzoRzYQroifcYCHmPhW2A3ydssGgJk2-bFMZMmvX5XH5JP9AhXRLe5jK28FGMbwyHNuPFIpXrjvFDcVUYSN8nTSPRkbHuzZJceK98djF2dR68474m0KceCi6gphn3328c1pTQ0O3c87Zy-HBfXwceYeEJ_1oks2z08Z9Oex8zONMb_4ee4eN7qz_LsUMpe7rTAxZSC4FGdIWglP4sJ0QD4EFbOVLq6m2t8UTa-4F3YWBZ31lY_Ml7vT3mxwGx2x3363650x8-6"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline text-xl font-bold">Elowen Ceramic Vase</h3>
+<p class="font-body text-sm text-outline">Delivered Dec 28, 2023</p>
+</div>
+<button class="flex items-center gap-2 font-label text-xs font-bold uppercase tracking-widest text-secondary group-hover:gap-4 transition-all">
+                        Write Review <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Sidebar Statistics/History Summary -->
+<div class="lg:col-span-4">
+<div class="bg-surface-container-low p-10 rounded-xl space-y-10 sticky top-32">
+<div>
+<h4 class="font-headline text-xl font-bold mb-6">Your Impact</h4>
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-lg">
+<span class="block text-3xl font-black font-headline text-primary">14</span>
+<span class="text-xs font-label text-outline uppercase tracking-tighter">Reviews Written</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg">
+<span class="block text-3xl font-black font-headline text-primary">2.4k</span>
+<span class="text-xs font-label text-outline uppercase tracking-tighter">Views</span>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<h4 class="font-label text-xs font-bold uppercase tracking-[0.2em] text-outline">Recent Activity</h4>
+<div class="flex gap-4 items-start">
+<div class="w-12 h-12 bg-surface-container overflow-hidden rounded-full shrink-0">
+<img class="w-full h-full object-cover" data-alt="Overhead view of a minimalist marble coffee table with an art book and a single candle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxzH5FjmWTVsAFlmVov60LgYUSObSoqu8YJXg66-8XCXst03QG74o29c5_Mrk7qMwfoYrxPtgvp6tOZHlICwdAIPB6yH1VhYcUEJ2mQ5qDVZ15Ng7tRIwZwPIEXF5tIgrOiMPskWg2u5JgAbTzlBevSoHL1McZWMXDbH40T9Br7EjoWnq1pzrp9si2Al1fAWzQIlXdypOJ1OVYMlP6feIBZ339p_ChuDocwkGi7jSak_NWoMrnWa_2WfWpOYIUdlPC4ul_2qoIGZXE"/>
+</div>
+<div>
+<p class="text-sm font-body font-medium">You reviewed <span class="font-bold">Carrara Marble Table</span></p>
+<div class="flex gap-0.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+</div>
+<p class="text-[10px] text-outline mt-1">2 days ago</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="w-12 h-12 bg-surface-container overflow-hidden rounded-full shrink-0">
+<img class="w-full h-full object-cover" data-alt="Abstract monochrome framed wall art on a soft gray wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBJxURpr03qiDhwf4fbiIR2vM6SQHznQKB1-DfGnNyesWQ6OS2mpPOWtdddRMadlcrDYyjhvAPeHOOJEu5fCR-2uUf4JPmE8x-r2MTiQzJEzK8_faxAGKthAvZuPvwnYk2gV3KYnU8q-sV22gMDl5aJGR-tLZ8Q7ko6cmVFx3zlr3E_FXPLMzUVHf-ml659dfzKghHa8Xd2rGGDun22p0PYZ3MTJCqT-7_SsE3PauFuhgGA5jh_7m0m3AEQClYRnJrv6G9ORnF4PzE"/>
+</div>
+<div>
+<p class="text-sm font-body font-medium">You reviewed <span class="font-bold">Monolith Series Art</span></p>
+<div class="flex gap-0.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary star-fill">star</span>
+<span class="material-symbols-outlined text-[14px] text-outline-variant">star</span>
+</div>
+<p class="text-[10px] text-outline mt-1">1 week ago</p>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/30">
+<button class="w-full text-center py-4 text-xs font-bold uppercase tracking-widest hover:text-secondary transition-colors">View All Review History</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-100 dark:bg-slate-950 w-full py-20 px-12">
+<div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 font-inter text-sm tracking-wide">
+<div class="col-span-1 md:col-span-1">
+<div class="text-xl font-black text-slate-900 dark:text-slate-100 mb-6 font-headline">NORDIC ATELIER</div>
+<p class="text-slate-500 dark:text-slate-400 max-w-xs">Curating essential objects for the modern living space with an emphasis on Scandinavian craftsmanship.</p>
+</div>
+<div>
+<h5 class="font-bold mb-6 text-slate-900 dark:text-slate-50">Support</h5>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Shipping &amp; Returns</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Contact Us</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6 text-slate-900 dark:text-slate-50">Company</h5>
+<ul class="space-y-4">
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Our Story</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:underline decoration-slate-300 underline-offset-4 transition-all" href="#">Sustainability</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6 text-slate-900 dark:text-slate-50">Connect</h5>
+<div class="flex space-x-4">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-primary transition-colors">brand_awareness</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-primary transition-colors">nest_eco_leaf</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-primary transition-colors">share</span>
+</div>
+</div>
+</div>
+<div class="max-w-screen-2xl mx-auto mt-20 pt-8 border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-xs">
+            © 2024 Nordic Atelier. All rights reserved.
+        </div>
+</footer>
+</body></html>

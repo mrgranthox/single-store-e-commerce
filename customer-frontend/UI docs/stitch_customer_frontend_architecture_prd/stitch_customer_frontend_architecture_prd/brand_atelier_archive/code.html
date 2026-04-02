@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "on-surface-variant": "#45464d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "background": "#f8f9ff",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed-dim": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#131b2e",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5eeff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "outline": "#76777d",
+              "inverse-primary": "#bec6e0",
+              "outline-variant": "#c6c6cd",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#ffddb8",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "secondary-container": "#316bf3",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#2a1700",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Navigation Shell (TopNavBar) -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<nav class="flex justify-between items-center w-full px-8 py-4 max-w-none">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white font-headline">
+                Nordic Commerce
+            </div>
+<div class="hidden md:flex items-center gap-8 font-['Manrope'] tracking-tight text-slate-900 dark:text-slate-50">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Shop</a>
+<a class="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Editorial</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all p-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all p-2 active:scale-95 duration-200">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="pt-24 pb-32">
+<!-- Hero Section: Editorial Spread -->
+<section class="relative min-h-[921px] flex items-center px-8 md:px-24 py-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-90" data-alt="Minimalist fashion studio setting with soft natural light, featuring a silk garment draped over an architectural concrete pedestal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUfTAaRRdxP-z3m7dhTPN-L4quANnAFdSfkhgK4HUwuIvETO2Q4fKmeMofzHe2hmMhZpcmGl6zjOBjdAs52UKsBwOR0uzftGGMkTKprLtFuwP_Jlnp3t2qZFF2ossIGJyW5ot5mJ6qyAxVZE84QmQw4epeZWd7j5wq76jL3UIhqxN7EOPRi-yF8mR4p-tcjjhVwnPOuEEIFkHOEOumntF54i7gRn6E3F-KXCG86Q9PwjZzB16dAPsLgjNXs0vKypGKnhrbuh63BP7x"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/40 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-3xl">
+<span class="inline-block px-4 py-1 mb-6 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">
+                    Heritage Series
+                </span>
+<h1 class="text-6xl md:text-8xl font-extrabold font-headline tracking-tighter leading-[0.9] text-on-surface mb-8">
+                    Atelier<br/>Archive
+                </h1>
+<p class="text-xl md:text-2xl text-on-surface-variant font-light leading-relaxed mb-12 max-w-xl">
+                    A permanent collection of silhouettes that define our history. Re-released in limited quantities, crafted for the decades ahead.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-primary text-on-primary font-semibold rounded-md shadow-2xl hover:bg-secondary transition-all active:scale-95">
+                        Explore the Collection
+                    </button>
+<button class="px-8 py-4 bg-surface-container-low text-on-surface font-semibold rounded-md hover:bg-surface-container-high transition-all">
+                        View Editorial
+                    </button>
+</div>
+</div>
+</section>
+<!-- Storytelling Section: Asymmetric Layout -->
+<section class="mt-32 px-8 md:px-24">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+<div class="md:col-span-7 relative group">
+<div class="aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Black and white close-up of high-quality wool fabric texture with visible weave and soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-G_Z4u16ede_59EkzeEwViGTMJPeIhCsccP7AoiSCFtPsHj5FZGYEFekQOubaN4if3YCT4-DYxgAtgC0yvH7aPnZBIUHpre621e8_nYwx7JoofZm8X1s_6l5jPqCBRjTylhjpDUdZmzgWL0002va8PRsRZ_DoprH5RsQ3NH5EHZnCDsZ91dCeA2pQtKdd--SGBnJZAm4PezRozH0J7REUkX7_g9pWnl9rmD8q1cdFyZdPlMeArbBbWOQGcO3GwI3VlgBupVGXLW7O"/>
+</div>
+<div class="absolute -bottom-8 -right-8 md:w-64 bg-surface-container-lowest p-8 shadow-xl hidden md:block">
+<p class="text-sm font-label italic text-outline">"We believe in the longevity of form, where every stitch serves a purpose beyond the season."</p>
+</div>
+</div>
+<div class="md:col-span-5 space-y-8">
+<h2 class="text-4xl font-headline font-bold text-on-surface leading-tight">Crafted from the <br/>Inside Out</h2>
+<p class="text-on-surface-variant leading-relaxed">
+                        The Archive represents our commitment to circularity and timeless design. Each piece is constructed using deadstock textiles sourced from heritage mills in Biella and Kyoto.
+                    </p>
+<div class="space-y-4 pt-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+<div>
+<h4 class="font-bold">Lifetime Repair</h4>
+<p class="text-sm text-on-surface-variant">Complimentary restoration for all archive garments.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary">eco</span>
+<div>
+<h4 class="font-bold">Traceable Origins</h4>
+<p class="text-sm text-on-surface-variant">100% transparency from fiber to finished product.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Curated Product List: Bento Grid Style -->
+<section class="mt-48 px-8 md:px-24">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+<div class="max-w-xl">
+<h3 class="text-3xl font-headline font-bold mb-4">The Current Selection</h3>
+<p class="text-on-surface-variant">Archival staples currently available for pre-order. Hand-numbered and finished to order.</p>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2 group" href="#">
+                    Full Catalog 
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<!-- Large Item -->
+<div class="md:col-span-2 md:row-span-2 group">
+<div class="relative bg-surface-container-low overflow-hidden rounded-xl aspect-[1/1.2]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Luxury charcoal grey wool overcoat displayed on a minimal wooden hanger against a clean white wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1tY2QEBY7WinEMPCAQHfi5cDde3EB9SPy7v7CMrppPRa5MPhtaHv9UxgDD9-qBOgOMhOR_v-SLxpDXfGpWKZ4ihNMbqs9zYiCku0BvsSHNWc1XGxRSUtuAbDHAtVKSGkh4glF8LWUa4Yp7bDHKWxDZnFaRAJ9rgqtcWL-NLai5snzrpMKWaB3pFacua3TVtslZ0nqItnAPVzS0e5ulQHzVXIONEobkxZiFajJayKzXxXWp0oNjR2fl4WRgmIOi_jN2gbsNdO-lHD4"/>
+<div class="absolute top-6 left-6">
+<span class="bg-tertiary text-on-tertiary px-3 py-1 text-[10px] font-bold tracking-widest uppercase rounded">Pre-Order</span>
+</div>
+</div>
+<div class="mt-6">
+<h4 class="text-xl font-headline font-bold">The 1994 Signature Overcoat</h4>
+<p class="text-outline mb-2">Virgin Loro Piana Wool</p>
+<p class="text-lg font-bold text-secondary">$1,450</p>
+</div>
+</div>
+<!-- Small Item 1 -->
+<div class="group">
+<div class="relative bg-surface-container-low overflow-hidden rounded-xl aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="White organic cotton poplin shirt with architectural collar design laid flat" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOQ9Xa_Tn5D-VVUZaf0mTOS-qcPLj9M-O2zedBGffKVnOyml5Nn9igf-GgK9bVprr856LETxrXX7d2ZeaiOOJ-qJfTp0vEj_I4ZAVJpahYeShfoZEcoLIc2k3qh5rKhV3a0ltiMoE81oUzCzx9Np4wKTYha5yZALax1tjKdkLwmsEWFXVM1zH3PO5VPhfj0h1LmJvj9oYXr5E82ttRn4mL17WVxZlWAvUL0VpuAG8oODM5ONRGM1ajgPQfhGCniX3cBT62s7PcLT6G"/>
+</div>
+<div class="mt-4">
+<h4 class="font-headline font-bold">Atelier Shirt 01</h4>
+<p class="text-sm text-outline mb-1">Egyptian Giza Cotton</p>
+<p class="font-bold">$280</p>
+</div>
+</div>
+<!-- Small Item 2 -->
+<div class="group">
+<div class="relative bg-surface-container-low overflow-hidden rounded-xl aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Italian calfskin leather loafers in deep burgundy sitting on a polished stone surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIXpLGwVq-c2TZPDE48l95Ac1fboB8MuuZQGsR8lo-HzsV5ojgkWqam4IB5qRPP5uB2ZdHfJXSv6XP7anZvpZRpCHSzf7tP4m7RXX7tkbhKBjeZ10BQrE7jCmt1IC5zb5RkSqIMVb1o_GWIm_yCvS3F1i6MeeDPlt3paE3CpwAbScgnt9eZZW1SFwF8ceTx79bcCgSy0MWI0PDnkPUfGmK-5szrRGw8IzNHkMOz3FSBsjU7WfZfbRwhE2a3qZgT-jVYtzyyxrChbN3"/>
+</div>
+<div class="mt-4">
+<h4 class="font-headline font-bold">The Archive Loafer</h4>
+<p class="text-sm text-outline mb-1">Polished Calfskin</p>
+<p class="font-bold">$540</p>
+</div>
+</div>
+<!-- Small Item 3 -->
+<div class="group">
+<div class="relative bg-surface-container-low overflow-hidden rounded-xl aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Premium black leather belt with a minimalist brushed steel buckle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6V5Um8EhUvE4IjUsHhQqRon61QfAlAhY-0uUVVjEcykF86EAtSNsV7pPA4gg8sXO4pxsGo-0TkALWfwP_0J6xsxh3HhLSHU0NBL__Gjpwt28Mr-JfA51cRN9zcysYoIYmrzP5DZbGn2kNFT56cdPl1BT3KedoBWApOTvi1ZVQC3KnV9xBIpmEuJlQt0yHmuQalF4AwpKdOpMBjjQXQTj-ngbQFYyLBsXSLM2otS7ygqb8JlRk_ibh6QC7nio1PZLTdCXlXttbhe1d"/>
+</div>
+<div class="mt-4">
+<h4 class="font-headline font-bold">Belt No. 4</h4>
+<p class="text-sm text-outline mb-1">Vegetable Tanned Leather</p>
+<p class="font-bold">$165</p>
+</div>
+</div>
+<!-- Small Item 4 -->
+<div class="group">
+<div class="relative bg-surface-container-low overflow-hidden rounded-xl aspect-square">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Oversized navy blue cashmere knit sweater on a mannequin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz7RPmV45zamcSAgy932Cvo_-K0Gnwq46zGci7WCLY-tY9qjiO0mWd1Er1h9bPMY5ytGJ2EZT6nQCebq_bGYnkzFPQjIRdvmxjsCO1bGvX_pPqJuctqCNUovT4xmqXUI63dVCc0NMJcTJP5cf6JArHkF_uJLNvQGmI3DcpsyeyICcO-SS4VcoDrSbKtutz7uPRYpuO_98cE4w0o0uLM0v2FZASdTrSgSZsZhNotL0W7x5xhlh9lGg_f_6phyQCSYPic1nG7FE5NAaz"/>
+</div>
+<div class="mt-4">
+<h4 class="font-headline font-bold">Fisherman Knit</h4>
+<p class="text-sm text-outline mb-1">100% Grade-A Cashmere</p>
+<p class="font-bold">$620</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Editorial Feature: Immersive Dark Section -->
+<section class="mt-48 bg-primary-container text-on-primary py-32 px-8 md:px-24 rounded-[3rem] mx-4 md:mx-12">
+<div class="max-w-4xl mx-auto text-center">
+<h2 class="text-4xl md:text-6xl font-headline font-extrabold mb-12 leading-tight">Beyond the Trend</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
+<div class="space-y-4">
+<div class="h-px bg-on-primary-container w-12"></div>
+<h5 class="text-xl font-bold">Provenance</h5>
+<p class="text-on-primary-container leading-relaxed text-sm">Every material choice is documented, ensuring that our heritage remains as ethical as it is beautiful.</p>
+</div>
+<div class="space-y-4">
+<div class="h-px bg-on-primary-container w-12"></div>
+<h5 class="text-xl font-bold">Precision</h5>
+<p class="text-on-primary-container leading-relaxed text-sm">We maintain patterns dating back to our founding, allowing for perfect recreation of historical cuts.</p>
+</div>
+<div class="space-y-4">
+<div class="h-px bg-on-primary-container w-12"></div>
+<h5 class="text-xl font-bold">Purpose</h5>
+<p class="text-on-primary-container leading-relaxed text-sm">We design for the long term, creating heirlooms that will be passed down through generations.</p>
+</div>
+</div>
+<button class="mt-16 px-12 py-5 border border-on-primary/30 hover:bg-on-primary hover:text-primary transition-all rounded-full font-bold uppercase tracking-widest text-xs">
+                    Read the Manifesto
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="w-full mt-20 bg-slate-100 dark:bg-slate-900">
+<div class="w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center border-t border-slate-200 dark:border-slate-800">
+<div class="font-['Manrope'] font-bold text-lg text-slate-900 dark:text-white mb-6 md:mb-0">
+                Nordic Commerce
+            </div>
+<div class="flex gap-8 mb-8 md:mb-0">
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal" href="#">Sustainability</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm tracking-normal" href="#">Contact</a>
+</div>
+<div class="text-slate-500 dark:text-slate-400 font-['Inter'] text-sm tracking-normal">
+                © 2024 Nordic Commerce. An Editorial Atelier.
+            </div>
+</div>
+</footer>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 md:hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(11,28,48,0.04)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-all" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-3 py-1 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Collections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-all" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Editorial</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-all" href="#">
+<span class="material-symbols-outlined">person_outline</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Account</span>
+</a>
+</nav>
+</body></html>

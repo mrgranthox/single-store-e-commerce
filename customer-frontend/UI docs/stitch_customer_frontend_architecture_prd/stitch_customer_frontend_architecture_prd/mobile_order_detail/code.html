@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 active:scale-95 duration-200 transition-opacity hover:opacity-70">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="font-manrope font-bold tracking-tight text-slate-900">Order #NR-99281</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 active:scale-95 duration-200 transition-opacity hover:opacity-70">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+</nav>
+<main class="pt-20 px-4 space-y-6">
+<!-- Order Header Status Card -->
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_20px_rgba(11,28,48,0.04)]">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-[10px] font-manrope font-semibold uppercase tracking-widest text-on-primary-container mb-1">Current Status</p>
+<h2 class="text-2xl font-bold font-headline text-primary tracking-tight">Out for Delivery</h2>
+</div>
+<div class="bg-tertiary-fixed px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-on-tertiary-fixed">
+                    On Track
+                </div>
+</div>
+<div class="relative py-4">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-surface-container-high rounded-full"></div>
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-3/4 h-0.5 bg-secondary rounded-full"></div>
+<div class="flex justify-between relative z-10">
+<div class="w-4 h-4 bg-secondary rounded-full border-4 border-surface-container-lowest"></div>
+<div class="w-4 h-4 bg-secondary rounded-full border-4 border-surface-container-lowest"></div>
+<div class="w-4 h-4 bg-secondary rounded-full border-4 border-surface-container-lowest"></div>
+<div class="w-4 h-4 bg-surface-container-high rounded-full border-4 border-surface-container-lowest"></div>
+</div>
+<div class="flex justify-between mt-3 text-[10px] font-medium text-outline">
+<span>Placed</span>
+<span>Processed</span>
+<span class="text-secondary font-bold">Shipped</span>
+<span>Delivered</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/20">
+<p class="text-xs text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="local_shipping">local_shipping</span>
+                    Arriving by 8:00 PM tonight
+                </p>
+</div>
+</section>
+<!-- Product List -->
+<section class="space-y-4">
+<h3 class="text-sm font-bold font-headline uppercase tracking-widest text-on-surface ml-1">Order Items (2)</h3>
+<div class="bg-surface-container-low rounded-xl overflow-hidden p-4 flex gap-4">
+<div class="w-24 h-24 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Product" class="w-full h-full object-cover" data-alt="high-end minimalist red sneaker shot from a side profile against a clean studio background with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAwHbdfPZonTGVq7dViITmCeU6KkjGY0gYaBHZhWuHETT7ezH9FDV1YcZkJmo50aA6UmvcH9G3BQrHR8ccT73_iwzPRaIkJWkT78pS59-Z6obK6zbZHzEehEsNiRO-kVeDvUeOJSz1yKo3-AFBbsdsSnFljkJalQYjMfzHxVml0c56GIAv9p-6vcvGCW66VPU1uYU0ofSOVxhxiujpJGWJJ6AHzG0lSIrcZD2l2BrJlH8Ad9nc9gkda6cEja7qumrh-Tc7-JdLkJul"/>
+</div>
+<div class="flex flex-col justify-between py-1 flex-grow">
+<div>
+<h4 class="font-headline font-bold text-sm text-primary">Nordic Ultra-Light Runner</h4>
+<p class="text-xs text-outline mt-1">Midnight Blue / Size 10</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="text-xs font-medium">Qty: 1</span>
+<span class="font-headline font-bold text-secondary">$185.00</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden p-4 flex gap-4">
+<div class="w-24 h-24 bg-surface-container-high rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Product" class="w-full h-full object-cover" data-alt="premium minimalist black t-shirt folded neatly on a textured cool grey surface with elegant shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi0Dj9QWP0WWS614muWem2vVCHLww-rW1P1Gnpz1p8Sr0wqlaYUqniKgRjprbXU0e-w9gVcH_ieTnUFIOVVuk5DNFygYq0Ljdv21rEGNqTOod-EuVbNmkBWoHgYuDt1qk69RtNGUIQGAn8Xp80vZzxEF5EIq0w9gnhkdgRxnhjxfr31COiWVyXYdoaCj4DkWp0WOUOwqZ4Sq67st2taIQPXihOMUb2zrUIr7CTZJ8686AiE9fXLCKX76g78gHR7X65G9h29V63OIt0"/>
+</div>
+<div class="flex flex-col justify-between py-1 flex-grow">
+<div>
+<h4 class="font-headline font-bold text-sm text-primary">Merino Base Layer</h4>
+<p class="text-xs text-outline mt-1">Oatmeal Heather / Size L</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="text-xs font-medium">Qty: 1</span>
+<span class="font-headline font-bold text-secondary">$95.00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Delivery Address -->
+<section class="bg-surface-container-low p-6 rounded-xl">
+<h3 class="text-[10px] font-manrope font-semibold uppercase tracking-widest text-on-primary-container mb-4">Delivery Address</h3>
+<div class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-secondary" data-icon="location_on">location_on</span>
+<div class="text-sm leading-relaxed">
+<p class="font-bold text-on-surface">Soren Kierkegaard</p>
+<p class="text-on-surface-variant">221B Baker Street, Apt 4C</p>
+<p class="text-on-surface-variant">London, NW1 6XE</p>
+<p class="text-on-surface-variant">United Kingdom</p>
+</div>
+</div>
+</section>
+<!-- Payment Summary -->
+<section class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10">
+<h3 class="text-[10px] font-manrope font-semibold uppercase tracking-widest text-on-primary-container mb-4">Payment Summary</h3>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Subtotal</span>
+<span class="text-on-surface font-medium">$280.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Shipping (Express)</span>
+<span class="text-on-surface font-medium">$15.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Estimated Tax</span>
+<span class="text-on-surface font-medium">$22.40</span>
+</div>
+<div class="pt-3 mt-3 border-t border-outline-variant/20 flex justify-between items-end">
+<span class="font-headline font-bold text-primary">Total Amount</span>
+<span class="font-headline font-extrabold text-xl text-secondary">$317.40</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-3 bg-surface-container-low p-3 rounded-lg">
+<span class="material-symbols-outlined text-outline" data-icon="credit_card">credit_card</span>
+<div class="text-xs">
+<p class="font-bold text-on-surface">Visa ending in 4242</p>
+<p class="text-outline">Billed on Oct 24, 2023</p>
+</div>
+</div>
+</section>
+<!-- Actions -->
+<section class="grid grid-cols-2 gap-4 pb-8">
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-high rounded-xl hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined mb-2 text-secondary" data-icon="support_agent">support_agent</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Get Support</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 bg-surface-container-high rounded-xl hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined mb-2 text-secondary" data-icon="assignment_return">assignment_return</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Return Items</span>
+</button>
+<button class="col-span-2 flex items-center justify-center gap-2 p-4 bg-primary text-white rounded-xl hover:opacity-90 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Download Invoice</span>
+</button>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/20">
+<div class="flex justify-around items-center h-20 w-full px-4">
+<div class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-700 scale-110 transition-transform active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</div>
+</div>
+</nav>
+</body></html>

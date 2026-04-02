@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Review Your Order | Nordic Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#565e74",
+              "primary": "#000000",
+              "surface-container-high": "#dce9ff",
+              "surface-variant": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "tertiary": "#000000",
+              "on-surface-variant": "#45464d",
+              "error": "#ba1a1a",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "secondary-container": "#316bf3",
+              "on-surface": "#0b1c30",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "tertiary-fixed-dim": "#ffb95f",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "outline-variant": "#c6c6cd",
+              "outline": "#76777d",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-container-low": "#eff4ff",
+              "on-primary-fixed": "#131b2e",
+              "inverse-on-surface": "#eaf1ff",
+              "tertiary-container": "#2a1700",
+              "surface-dim": "#cbdbf5",
+              "background": "#f8f9ff",
+              "primary-container": "#131b2e",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-fixed": "#2a1700",
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "secondary-fixed": "#dbe1ff",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "inverse-primary": "#bec6e0",
+              "on-primary-container": "#7c839b",
+              "primary-fixed": "#dae2fd"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8f9ff;
+      }
+      .headline-font { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<span class="text-xl font-bold tracking-tighter text-slate-900 headline-font">Nordic Atelier</span>
+<div class="flex items-center gap-6">
+<span class="text-slate-400 text-xs font-medium uppercase tracking-widest hidden md:block">Step 03 of 03 — Review</span>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-900">shopping_bag</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 px-6 max-w-screen-2xl mx-auto min-h-screen">
+<header class="mb-12">
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight headline-font text-on-surface mb-2">Review Your Order</h1>
+<p class="text-on-surface-variant font-body">Please confirm your selection and shipping details before final purchase.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Review Content -->
+<div class="lg:col-span-7 space-y-10">
+<!-- Shipping & Payment Bento -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between h-full">
+<div>
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary headline-font">Shipping Destination</h3>
+<button class="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors underline underline-offset-4">Edit</button>
+</div>
+<p class="font-semibold text-lg mb-1">Anders Hallberg</p>
+<p class="text-on-surface-variant leading-relaxed">
+                                Birger Jarlsgatan 18<br/>
+                                114 34 Stockholm<br/>
+                                Sweden
+                            </p>
+</div>
+<div class="mt-8 flex items-center gap-2 text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-sm">local_shipping</span>
+<span>Standard Express (2-4 business days)</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col justify-between h-full">
+<div>
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-xs font-bold uppercase tracking-widest text-secondary headline-font">Payment Method</h3>
+<button class="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors underline underline-offset-4">Edit</button>
+</div>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-6 bg-primary rounded-sm flex items-center justify-center">
+<div class="w-4 h-4 rounded-full bg-white/20"></div>
+</div>
+<p class="font-semibold">•••• 8829</p>
+</div>
+<p class="text-on-surface-variant leading-relaxed">
+                                Mastercard Corporate<br/>
+                                Expires 11/26
+                            </p>
+</div>
+<div class="mt-8 flex items-center gap-2 text-on-surface-variant text-xs">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span>Encrypted secure transaction</span>
+</div>
+</div>
+</section>
+<!-- Item Summary -->
+<section>
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-2xl font-bold headline-font">Order Summary <span class="text-on-surface-variant font-normal text-lg ml-2">(2 Items)</span></h2>
+</div>
+<div class="space-y-1">
+<!-- Item 1 -->
+<div class="group flex gap-6 p-6 bg-surface-container-lowest transition-all">
+<div class="w-24 h-32 flex-shrink-0 bg-surface-container overflow-hidden rounded-sm">
+<img alt="Item Image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="studio photography of a minimalist beige wool overcoat hanging against a soft grey background with clean shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOv1731fCTY7eQTXoL6JSPEjkTH64J_ngbv-nhmNnIEOwf-RncSpuwACeUJ-dfK-wQw4q4VsRRgedvYhtcbU8GkEr62D8CeqB7XvNU42WhrWHGwvpSc91G2ShuY7LD4BzDQ_eTLNbck6egDIUcrT_-oqf4ZkVGKr1-QcmWGecuT9mwDwNz3BSBBvLFflxFH5kRQGV9P1EVulCSxj-pexp4comd3J4vEkLwOiszxhxcys_f0ybi-JfvaITZTLM7pM1OYIbckkOlfb6s"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between">
+<h4 class="font-bold text-lg headline-font">Norden Wool Overcoat</h4>
+<p class="font-bold">€450.00</p>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">Color: Oat Milk • Size: Large</p>
+</div>
+<div class="flex justify-between items-center text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+<span>Qty: 1</span>
+<span class="text-secondary">In Stock</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="group flex gap-6 p-6 bg-surface-container-lowest transition-all">
+<div class="w-24 h-32 flex-shrink-0 bg-surface-container overflow-hidden rounded-sm">
+<img alt="Item Image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="close-up of a premium charcoal grey cashmere scarf folded on a white marble surface with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSIafne3RFq0OYEaJYt55VbGPseMIkaFox5yZvKmhqdMPokpSTdM3glrYZcq2jnDz9IL5x2n070CCmxODVgNpnXSxjlOweIpVeWsQDL17lxB--SLQkyz9DRFe6EC01g2R8aVa_Lbs0SrJW4xgPYN3blDDkMvBA5It-6gpVgr7bhNghbmxLsvQJkDR0MQAOOHkRZDF3f6dM4slJ0bF5zY33dxkC8_xtE8PQ1vyiBF2IWHR8EpMIxRPcD_VHa5G1lAaMeH-uQdcJRG-E"/>
+</div>
+<div class="flex-grow flex flex-col justify-between py-1">
+<div>
+<div class="flex justify-between">
+<h4 class="font-bold text-lg headline-font">Stockholm Cashmere Scarf</h4>
+<p class="font-bold">€120.00</p>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">Color: Anthracite • Size: OS</p>
+</div>
+<div class="flex justify-between items-center text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+<span>Qty: 1</span>
+<span class="text-secondary">In Stock</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sticky Sidebar -->
+<aside class="lg:col-span-5 sticky top-28">
+<div class="bg-surface-container-high p-10 rounded-2xl">
+<h3 class="text-xl font-bold headline-font mb-8">Order Total</h3>
+<div class="space-y-4 mb-8">
+<div class="flex justify-between text-on-surface-variant">
+<span>Subtotal</span>
+<span>€570.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Shipping (Standard Express)</span>
+<span>€15.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant pb-4 border-b border-outline-variant/30">
+<span>Tax (VAT 25%)</span>
+<span>€142.50</span>
+</div>
+<div class="flex justify-between text-2xl font-extrabold headline-font pt-2">
+<span>Total</span>
+<span>€727.50</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-5 rounded-lg font-bold text-lg hover:bg-on-surface transition-all active:scale-[0.98] mb-6 shadow-xl shadow-primary/10">
+                        Complete Purchase
+                    </button>
+<div class="flex items-center justify-center gap-2 text-on-surface-variant text-xs mb-8">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span>Secure Checkout powered by NordicPay</span>
+</div>
+<div class="space-y-6 pt-8 border-t border-outline-variant/30">
+<div class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-secondary">eco</span>
+<div>
+<h5 class="text-sm font-bold headline-font">Carbon Neutral Delivery</h5>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">We offset the carbon footprint of every delivery made to our customers.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-secondary">package_2</span>
+<div>
+<h5 class="text-sm font-bold headline-font">Extended 60-Day Returns</h5>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Shop with confidence with our atelier-exclusive return window.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-between px-2">
+<img alt="Trust Badge" class="h-8 opacity-40 grayscale" data-alt="monochrome minimal icon representing world-class security and data encryption" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdmggyIaJVU6RafEWGSRrhZIbHNcst5aFgcD7NBN6HXeWBqXODZgTqieLKdVIzcgAU49JpGxbB81ze9C0Yl9rZ6aqC8gGs_RCa2NCuigCi654UoIinJiogCL_VezMM4q_IktzI3WXoQ6_8Mx5GbJXzAyzKNpMIqjtQltpN9OSqYzQXp164Cmx4i_p9q5Ike4bO8hENufkuWntQ18Df-ueHOc_Z8MosTgRbm-8yrzD95vit_i4MlfaU_a93kmHh-mQuzzQTM9Tf7YW6"/>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-outline">credit_card</span>
+<span class="material-symbols-outlined text-outline">account_balance_wallet</span>
+<span class="material-symbols-outlined text-outline">shield</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<footer class="w-full border-t border-slate-200 bg-slate-100">
+<div class="w-full py-12 px-6 flex flex-col md:flex-row justify-between items-center max-w-screen-2xl mx-auto">
+<span class="font-manrope font-bold text-slate-900 headline-font mb-4 md:mb-0">Nordic Atelier</span>
+<div class="flex flex-wrap justify-center gap-8 mb-4 md:mb-0">
+<a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:text-slate-900 transition-colors" href="#">Privacy Policy</a>
+<a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:text-slate-900 transition-colors" href="#">Terms of Service</a>
+<a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:text-slate-900 transition-colors" href="#">Sustainability</a>
+<a class="font-inter text-xs tracking-wide uppercase text-slate-500 hover:text-slate-900 transition-colors" href="#">Contact</a>
+</div>
+<p class="font-inter text-xs tracking-wide uppercase text-slate-500 text-center md:text-right">
+                © 2024 Nordic Atelier. Crafted for the minimalist.
+            </p>
+</div>
+</footer>
+</body></html>

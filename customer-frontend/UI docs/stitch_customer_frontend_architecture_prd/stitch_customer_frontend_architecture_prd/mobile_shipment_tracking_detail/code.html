@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>NORDIC | Shipment Tracking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-xl font-black tracking-tighter text-slate-900 dark:text-white font-manrope font-bold tracking-tight">NORDIC</h1>
+<button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<main class="pt-16">
+<!-- Real-time Map Section -->
+<section class="relative h-[397px] w-full overflow-hidden">
+<img alt="Real-time delivery map" class="w-full h-full object-cover" data-alt="Minimalist top-down map view of a clean urban grid in soft blue and grey tones with a glowing blue delivery route line" data-location="Stockholm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1LxNdcF-R6Rk04dYrrhz0NBZCQ5EdMuJAzW-cYTEKPsRhOVEAIvWvGf6uf8MKCOP76hiaiUkFJyi9na2jWwoc6W7gHHmvBpjKmcNSX2UF5umv7OlEzahj-pkjFnIn01vgec-UapbiiPewgwTkio7uToZ2Bg4QZHKNR2dRFWV6l28WhRV5U1qdEcOnm0qvgWPWs6GJZhOa6pddH0Q4wpJvfxshWWLCZDMxbxBuFLRzqXLoMhjMCBqnYpqe4pXYwtP0Ps5Fr1HyPxvW"/>
+<!-- Map Overlay UI -->
+<div class="absolute bottom-6 left-6 right-6">
+<div class="bg-surface-container-lowest/90 backdrop-blur-md p-5 rounded-xl shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)] flex items-center justify-between">
+<div>
+<p class="text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant mb-1">Estimated Arrival</p>
+<h2 class="text-2xl font-extrabold text-primary tracking-tight">14:35 — 15:10</h2>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold">
+                        ON TIME
+                    </div>
+</div>
+</div>
+</section>
+<!-- Main Content Area -->
+<div class="px-6 -mt-4 relative z-10">
+<!-- Courier Details Section -->
+<section class="bg-surface-container-low rounded-xl p-6 mb-8">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full overflow-hidden bg-surface-container-high ring-4 ring-white">
+<img alt="Courier Profile" data-alt="Professional portrait of a friendly delivery courier in a clean dark blue uniform, bright studio lighting, neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWklHNgbBiNFoC8lywHlzyMUbxiNMSd9eAnV-GCV8hmftBJ9t6N6N36041K7QuUFRcAsuXgNwk1_9t8CS3q9wtHbiCitkcjhlamOWxS2Q38jtEiNnNfPjswN3dNSnqoPeDqOMwuu_4RkCBW6dDYkJh8CJziaMflI7iJZ0fHM2gxj88-UhjcMD_V0O3Bsg03wcBBc9QF91yRo4LfEedOhsyjW3huutiLuo8zVh44Ggt5hh5H_qgSiccGGf5o68z96aI6BmSjTesVFxy"/>
+</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface">Erik Larsson</h3>
+<div class="flex items-center gap-1 text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-on-tertiary-container">4.9 Courier Rating</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-11 h-11 flex items-center justify-center bg-white text-secondary rounded-full shadow-sm active:scale-90 transition-all">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+</button>
+<button class="w-11 h-11 flex items-center justify-center bg-secondary text-white rounded-full shadow-md active:scale-90 transition-all">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/50 p-4 rounded-lg">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Vehicle</p>
+<p class="font-bold text-on-surface">Electric Van</p>
+<p class="text-xs text-on-surface-variant">NRD-882-SE</p>
+</div>
+<div class="bg-white/50 p-4 rounded-lg">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Order ID</p>
+<p class="font-bold text-on-surface">#NC-88210</p>
+<p class="text-xs text-on-surface-variant">Express Delivery</p>
+</div>
+</div>
+</section>
+<!-- Vertical Timeline Section -->
+<section class="mb-12">
+<h4 class="font-headline font-bold text-xl text-on-surface mb-8 px-2">Delivery Progress</h4>
+<div class="relative space-y-10 pl-10 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-container-high">
+<!-- Item 1: Active -->
+<div class="relative">
+<div class="absolute -left-10 top-1 w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center ring-4 ring-surface">
+<span class="material-symbols-outlined text-white text-[14px]" style="font-variation-settings: 'FILL' 1;">radio_button_checked</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-start">
+<h5 class="font-bold text-on-surface">Out for delivery</h5>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest bg-secondary-fixed px-2 py-0.5 rounded">Current</span>
+</div>
+<p class="text-sm text-on-surface-variant">The courier is on the way to your destination in Stockholm.</p>
+<p class="text-[11px] font-medium text-outline mt-1">Today, 14:10</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative">
+<div class="absolute -left-10 top-1 w-6 h-6 rounded-full bg-secondary flex items-center justify-center ring-4 ring-surface">
+<span class="material-symbols-outlined text-white text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col gap-1 opacity-60">
+<h5 class="font-bold text-on-surface">Arrived at sorting center</h5>
+<p class="text-sm text-on-surface-variant">Package has been processed and ready for the final leg.</p>
+<p class="text-[11px] font-medium text-outline mt-1">Today, 09:30</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="relative">
+<div class="absolute -left-10 top-1 w-6 h-6 rounded-full bg-secondary flex items-center justify-center ring-4 ring-surface">
+<span class="material-symbols-outlined text-white text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col gap-1 opacity-60">
+<h5 class="font-bold text-on-surface">Shipped</h5>
+<p class="text-sm text-on-surface-variant">Package left the Nordic warehouse in Gothenburg.</p>
+<p class="text-[11px] font-medium text-outline mt-1">Yesterday, 18:45</p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="relative">
+<div class="absolute -left-10 top-1 w-6 h-6 rounded-full bg-secondary flex items-center justify-center ring-4 ring-surface">
+<span class="material-symbols-outlined text-white text-[14px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col gap-1 opacity-40">
+<h5 class="font-bold text-on-surface">Order Confirmed</h5>
+<p class="text-sm text-on-surface-variant">We've received your order and are preparing it.</p>
+<p class="text-[11px] font-medium text-outline mt-1">Oct 24, 12:20</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Delivery Address Card -->
+<section class="bg-white border-none rounded-xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] mb-12">
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-secondary flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Delivery Address</p>
+<h4 class="font-bold text-on-surface mb-1">Sveavägen 44, 4th Floor</h4>
+<p class="text-sm text-on-surface-variant">111 34 Stockholm, Sweden</p>
+<div class="mt-4 flex items-center gap-2 text-xs font-semibold text-secondary">
+<span class="material-symbols-outlined text-sm">edit</span>
+<span>Add delivery instructions</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] flex justify-around items-center h-20 w-full px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 transition-all duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

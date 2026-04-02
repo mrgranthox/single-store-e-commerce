@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "on-surface-variant": "#45464d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "background": "#f8f9ff",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed-dim": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#131b2e",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5eeff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "outline": "#76777d",
+              "inverse-primary": "#bec6e0",
+              "outline-variant": "#c6c6cd",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#ffddb8",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "secondary-container": "#316bf3",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#2a1700",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<nav class="flex justify-between items-center w-full px-8 py-4 max-w-none">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white">Nordic Commerce</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Shop</a>
+<a class="text-blue-700 dark:text-blue-400 font-semibold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">Editorial</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface">search</span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface">shopping_bag</span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-md transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface">person</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="pt-24 pb-32">
+<!-- Hero Section -->
+<section class="px-8 mb-16">
+<div class="relative w-full h-[409px] overflow-hidden rounded-xl">
+<img alt="Merino Wool Detail" class="w-full h-full object-cover" data-alt="Close-up of high-quality charcoal merino wool knit fabric showing fine texture and soft lighting in a minimalist studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2hmyICPHL0Kuq6p-QJSr9kLV7IhSYLF0_jZByg2tgwVxxVAnpOsGpltHP9LoIrRlZMnmM6aPw02I53WG9cd7cVIzmzrU-EwtpFkTpT5yU0rCJfX7TyA41-pSvC69iZgvs5C202NVCI0XyTp3gZSi7CsCBtZWHDPBlX7-XXgZ9cFS2SeKyu4Wr6TQ31O052tFFVD06uiyreJJDVp9JDPp47PlGyk8dgpkANCyoWFaekwB1Sn6RGyZi6_aF8p8dzkCLcb-HJb5x5oUw"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary-container/60 to-transparent flex items-center px-12">
+<div class="max-w-xl">
+<span class="font-label text-tertiary-fixed text-xs uppercase tracking-[0.2em] mb-4 block">Knitwear Series</span>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold text-white tracking-tighter mb-6">Merino Wool Collection</h1>
+<p class="text-white/90 text-lg font-light leading-relaxed max-w-md">Sourced from the finest altitudes, our extra-fine merino wool offers unparalleled breathability and a silk-like touch.</p>
+</div>
+</div>
+</div>
+</section>
+<div class="px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Sidebar Filter -->
+<aside class="lg:col-span-3 space-y-10">
+<div class="sticky top-28">
+<div class="mb-8">
+<h3 class="font-headline font-bold text-lg mb-6 border-b border-outline-variant/20 pb-2">Filter</h3>
+<!-- Price Range -->
+<div class="space-y-4 mb-8">
+<label class="font-label text-sm font-semibold uppercase tracking-wider text-outline">Price Range</label>
+<div class="flex items-center gap-2">
+<input class="w-full bg-surface-container-high border-none rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-secondary/20" placeholder="Min" type="number"/>
+<span class="text-outline-variant">—</span>
+<input class="w-full bg-surface-container-high border-none rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-secondary/20" placeholder="Max" type="number"/>
+</div>
+</div>
+<!-- Sizes -->
+<div class="space-y-4 mb-8">
+<label class="font-label text-sm font-semibold uppercase tracking-wider text-outline">Size</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 text-xs font-medium border border-outline-variant/30 rounded-md hover:border-secondary hover:text-secondary transition-all">XS</button>
+<button class="py-2 text-xs font-medium border border-secondary bg-secondary/5 text-secondary rounded-md">S</button>
+<button class="py-2 text-xs font-medium border border-outline-variant/30 rounded-md hover:border-secondary hover:text-secondary transition-all">M</button>
+<button class="py-2 text-xs font-medium border border-outline-variant/30 rounded-md hover:border-secondary hover:text-secondary transition-all">L</button>
+<button class="py-2 text-xs font-medium border border-outline-variant/30 rounded-md hover:border-secondary hover:text-secondary transition-all">XL</button>
+<button class="py-2 text-xs font-medium border border-outline-variant/30 rounded-md hover:border-secondary hover:text-secondary transition-all">XXL</button>
+</div>
+</div>
+<!-- Colors -->
+<div class="space-y-4 mb-8">
+<label class="font-label text-sm font-semibold uppercase tracking-wider text-outline">Color</label>
+<div class="flex flex-wrap gap-3">
+<button class="w-6 h-6 rounded-full bg-[#131b2e] ring-2 ring-offset-2 ring-secondary"></button>
+<button class="w-6 h-6 rounded-full bg-[#4a4a4a] ring-1 ring-outline-variant/30"></button>
+<button class="w-6 h-6 rounded-full bg-[#e5e5e5] ring-1 ring-outline-variant/30"></button>
+<button class="w-6 h-6 rounded-full bg-[#8b7e66] ring-1 ring-outline-variant/30"></button>
+<button class="w-6 h-6 rounded-full bg-[#2c3e50] ring-1 ring-outline-variant/30"></button>
+</div>
+</div>
+</div>
+<!-- Trust Badge -->
+<div class="bg-surface-container-low p-6 rounded-xl space-y-4 border border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-sm font-semibold">Certified Organic</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">Our merino wool is ethically sourced from farms with the highest animal welfare standards.</p>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="lg:col-span-9">
+<div class="flex justify-between items-end mb-10">
+<p class="text-on-surface-variant text-sm font-medium">Showing 12 of 48 items</p>
+<div class="flex items-center gap-4">
+<span class="text-xs uppercase tracking-widest font-bold text-outline">Sort by</span>
+<select class="bg-transparent border-none font-bold text-sm focus:ring-0 cursor-pointer">
+<option>Newest Arrival</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+</select>
+</div>
+</div>
+<!-- Editorial Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+<!-- Product Card 1 (Large Featured) -->
+<div class="md:col-span-2 group">
+<div class="relative aspect-[16/9] overflow-hidden rounded-xl bg-surface-container-low mb-6">
+<img alt="Merino Overcoat" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Male model wearing a structured navy merino wool overcoat walking through a modern architectural space with clean lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGBLM9YUQ47CAWtdcp-ghXx_E5n9PDtaUslz5oN2UGes4NFIjuCOMdcqbCw71YcDxKLJEAASgZB_SmnEyHGYftYHCNasBDBVx6RS0wpLA76tp4QinnZKD3etzpfW8bvUGDm2g1FGDeLcMkAlf-49tdrbS-mJYGMJBDFtyuTFRxNtaS9jFLOusnBgWHzHXpmEjlFuuCdGAKwXihImpxErzHg5LWlc5qb6OJy3ZEhicCUMVJ99Zp5FOgyLkqSov-Cl0ZQOkGTp6s75Di"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full">New Season</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-xl mb-1 group-hover:text-secondary transition-colors">Structured Merino Overcoat</h3>
+<p class="text-on-surface-variant text-sm">Deep Navy • 100% Virgin Wool</p>
+</div>
+<span class="font-bold text-lg">$450</span>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group">
+<div class="relative aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low mb-6">
+<img alt="Roll Neck Sweater" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Minimalist shot of a cream-colored merino wool roll-neck sweater folded on a light oak surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2AZjRpMrYaWQ5HQPZcs1j2-f4qp1VgAtyEMTCJSDL6KCF0bgF3i_AHmDC2NOLtsoZKU59N_VklTsf4pOzdOFenjVPXmAKq7-ZFsDa4zbKBlPlbAiqVLPxTQwYm2kL87qyyEV5fy30GxEzUntS3sgybPDl5C-M80MuZBRJfRqM-Qg21fTb8UKOoaizs1jPELccnAC6915IKiGZZCrAL3vn-1pR9oZgTaw5Uu8JfqGLRI2S7X9wHEU4RwleSFOFqbYJbaLODVpt30tJ"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg mb-1 group-hover:text-secondary transition-colors">Essential Roll Neck</h3>
+<p class="text-on-surface-variant text-sm">Oatmeal • Extra Fine</p>
+</div>
+<span class="font-bold">$185</span>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group">
+<div class="relative aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low mb-6">
+<img alt="Merino Cardigan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Detail shot of a grey merino wool cardigan with horn buttons, soft natural lighting highlighting the knit pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF8QgJXclnwGmT2lUJL14CtJdFNFEDFUHdkL9U9-eneVitAezYcp6z_5ISbaJ0lvylgp1zFVRfRxo1-iuDr-iwfk-_VgoHrqgd_0T7uArQ66QtVGUI7WsRp_wGGnj5a8zIxOWLFTOTyjI1KnGBz_x3ZXOTA08FAbhCDLMhOOkFF0SujQSOLfwRWkFccNuBxx6I72JglLVle4T8w9gLadQrfb1cuIpCiyK9xHpuo2zw9tsRKgFOwoIFdNHJwIb_G9SxvLoj7ljJEetA"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg mb-1 group-hover:text-secondary transition-colors">The Atelier Cardigan</h3>
+<p class="text-on-surface-variant text-sm">Slate Grey • Horn Buttons</p>
+</div>
+<span class="font-bold">$220</span>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group">
+<div class="relative aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low mb-6">
+<img alt="Fisherman Beanie" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A collection of three merino wool beanies in charcoal, olive, and navy arranged aesthetically on a concrete pedestal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpP0r8954tbex3UHFxHotQ9pIDIIwgDYXV3nNxdau-UAB5w9gSUMCsaZWbO8wt90prLIzea2rf5pyfuhiRqsJ5peTdP_3PJ6YX0mJ4fWQszujISVXrGFhbMuxPNwzxcbuxPemslNClB5WuSR0d2qfzy-gj6YaejdJqfMrwelDV5PEShrpgxsIh_00acuAkhvGBB_oxv8ebGF7xrkPBGNR6VTl-mhHbZB3HSfVktQhZjjJm9SQHP4bQwz-LaQytklDIkrKQwst_f2aX"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg mb-1 group-hover:text-secondary transition-colors">Fisherman Beanie</h3>
+<p class="text-on-surface-variant text-sm">Charcoal • Ribbed Knit</p>
+</div>
+<span class="font-bold">$65</span>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="group">
+<div class="relative aspect-[3/4] overflow-hidden rounded-xl bg-surface-container-low mb-6">
+<img alt="Lightweight Scarf" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close-up of a draped lightweight merino scarf in a soft taupe color against a neutral wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcpz0cnVsEiSHG-Qx59hWsjyYU5DxMipcLZE9LRACYnpo6fWtur5MOzoJ8yNgTxRlWHWwGx9Oucb1v7fqcEPjSoDUspjwUWlD6b2YzZYEedJxbZG1uvtUCEs4xECok7eznGgeJu0VKQ6S83lELS_3yE2ckCQkn3wiVaAyovUPioGYhKMnlZdLeMGYjj-ZO7pZIsIQh85AeI4NmKQCHwVXP3tPSzAO8ofk4edEMrzHxr6Tq71Z8_SzAMieWzbTx9J5fHENVw67GUNua"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg mb-1 group-hover:text-secondary transition-colors">Featherweight Scarf</h3>
+<p class="text-on-surface-variant text-sm">Taupe • Oversized</p>
+</div>
+<span class="font-bold">$110</span>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-24 flex justify-center items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white font-bold text-sm">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high font-medium text-sm transition-all">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high font-medium text-sm transition-all">3</button>
+<span class="px-2 text-outline-variant">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high font-medium text-sm transition-all">8</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-20 bg-slate-100 dark:bg-slate-900 w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center border-t border-slate-200 dark:border-slate-800">
+<div class="mb-8 md:mb-0 text-center md:text-left">
+<span class="font-['Manrope'] font-bold text-lg text-slate-900 dark:text-white">Nordic Commerce</span>
+<p class="font-['Inter'] text-sm tracking-normal text-slate-500 dark:text-slate-400 mt-2">© 2024 Nordic Commerce. An Editorial Atelier.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm" href="#">Sustainability</a>
+<a class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-['Inter'] text-sm" href="#">Contact</a>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 md:hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(11,28,48,0.04)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-3 py-1 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Collections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Editorial</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">person_outline</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Account</span>
+</a>
+</nav>
+</body></html>

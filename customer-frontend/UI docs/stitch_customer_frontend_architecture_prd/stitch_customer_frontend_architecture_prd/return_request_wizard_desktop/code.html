@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#dce9ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary-container": "#fefcff",
+              "surface-container-highest": "#d3e4fe",
+              "surface-bright": "#f8f9ff",
+              "primary": "#000000",
+              "on-tertiary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "outline": "#76777d",
+              "on-surface-variant": "#45464d",
+              "on-background": "#0b1c30",
+              "inverse-primary": "#bec6e0",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "tertiary": "#000000",
+              "error": "#ba1a1a",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "tertiary-fixed-dim": "#ffb95f",
+              "primary-fixed": "#dae2fd",
+              "on-tertiary-fixed-variant": "#653e00",
+              "secondary": "#0051d5",
+              "on-primary-container": "#7c839b",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-fixed-variant": "#003ea8",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-tertiary-container": "#b87500",
+              "outline-variant": "#c6c6cd",
+              "surface-container": "#e5eeff",
+              "secondary-container": "#316bf3",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed": "#ffddb8",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#00174b",
+              "background": "#f8f9ff",
+              "tertiary-container": "#2a1700",
+              "surface": "#f8f9ff",
+              "primary-container": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        .active-step-line { background: linear-gradient(90deg, #0051d5 0%, #316bf3 100%); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-8 py-6 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-slate-950 dark:text-white font-manrope">NORDIC ATELIER</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-manrope tracking-tight text-sm font-medium uppercase text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Collections</a>
+<a class="font-manrope tracking-tight text-sm font-medium uppercase text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Objects</a>
+<a class="font-manrope tracking-tight text-sm font-medium uppercase text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Editorial</a>
+<a class="font-manrope tracking-tight text-sm font-medium uppercase text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300" href="#">Archive</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="material-symbols-outlined text-slate-900 dark:text-slate-50 scale-95 duration-200 ease-in-out">shopping_bag</button>
+<button class="material-symbols-outlined text-slate-900 dark:text-slate-50 scale-95 duration-200 ease-in-out">person</button>
+</div>
+</div>
+</nav>
+<!-- Main Content: Return Wizard -->
+<main class="flex-grow pt-32 pb-24 px-6 md:px-12 max-w-6xl mx-auto w-full">
+<!-- Header & Breadcrumb -->
+<header class="mb-16">
+<div class="flex items-center gap-2 mb-4 text-outline font-label text-xs tracking-widest uppercase">
+<span>Account</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span>Orders</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-on-surface">Return Request</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-manrope font-bold tracking-tighter text-primary mb-2">Order #NA-88291</h1>
+<p class="text-on-surface-variant font-body">Manage your return with precision and ease.</p>
+</header>
+<div class="flex flex-col md:flex-row gap-12">
+<!-- Left Side: Stepper Navigation (Visual Guide) -->
+<aside class="w-full md:w-64 flex-shrink-0">
+<div class="sticky top-40 space-y-12">
+<div class="relative flex items-start gap-4">
+<div class="z-10 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">1</div>
+<div class="absolute left-4 top-8 w-[2px] h-12 bg-primary"></div>
+<div>
+<p class="font-manrope font-bold text-sm text-primary uppercase tracking-wider">Select Items</p>
+<p class="text-xs text-outline">What are you returning?</p>
+</div>
+</div>
+<div class="relative flex items-start gap-4">
+<div class="z-10 w-8 h-8 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center text-outline text-xs font-bold">2</div>
+<div class="absolute left-4 top-8 w-[2px] h-12 bg-outline-variant"></div>
+<div>
+<p class="font-manrope font-bold text-sm text-outline-variant uppercase tracking-wider">Reason</p>
+<p class="text-xs text-outline">Tell us what happened.</p>
+</div>
+</div>
+<div class="relative flex items-start gap-4">
+<div class="z-10 w-8 h-8 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center text-outline text-xs font-bold">3</div>
+<div>
+<p class="font-manrope font-bold text-sm text-outline-variant uppercase tracking-wider">Resolution</p>
+<p class="text-xs text-outline">Refund or exchange?</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Right Side: Interaction Area -->
+<section class="flex-grow">
+<!-- Step 1: Item Selection (Active State) -->
+<div class="space-y-8">
+<div class="bg-surface-container-low p-8 rounded-xl">
+<div class="flex justify-between items-end mb-8">
+<h2 class="text-2xl font-manrope font-bold tracking-tight">Step 1: Select Items</h2>
+<p class="text-sm font-label text-secondary font-medium">2 Items eligible for return</p>
+</div>
+<!-- Item Card 1 -->
+<div class="group relative flex items-center gap-6 p-4 mb-4 bg-surface-container-lowest transition-all hover:bg-white cursor-pointer rounded-lg border border-transparent hover:border-secondary/20">
+<div class="flex items-center">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+</div>
+<div class="w-24 h-32 bg-surface-container overflow-hidden rounded">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="minimalist ceramic vase with matte charcoal finish on a clean white plinth with dramatic side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi7oonM0qIuRBn0GO230emTL8-zD-3Ad-cYJq1Lq0-v3qRBG8d4laGbOD_8yGwCsBRWSJrAdp7Tcoesj6SauGs0Rsy-5Sodp8Zl0XzE0UVl-zyS2HpSidKpmEm0fwcb6Uz7RP53GyuoFc_9AEqhAfjWE9j2Zz4vcJCpTUHNfHt-FYHqt_crfxaqj_nqEDc1hk0yIwwEAyCk4Jh50OcI78PrMi_Hh310fR0Ix_budKd1w5HSDJKsDeAMuRlsszX1NkeMtd12ZcAFMoz"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-manrope font-bold text-lg">Observer Ceramic Vase</h3>
+<p class="text-sm text-on-surface-variant mb-4">Edition: Matte Charcoal / Large</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline">Quantity</span>
+<div class="flex items-center border border-outline-variant rounded px-2 py-1">
+<button class="material-symbols-outlined text-sm">remove</button>
+<span class="px-4 text-sm font-medium">1</span>
+<button class="material-symbols-outlined text-sm">add</button>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-manrope font-bold text-lg">$240.00</p>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="group relative flex items-center gap-6 p-4 bg-surface-container-lowest transition-all hover:bg-white cursor-pointer rounded-lg border border-transparent hover:border-secondary/20">
+<div class="flex items-center">
+<input class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+</div>
+<div class="w-24 h-32 bg-surface-container overflow-hidden rounded">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="heavyweight raw cotton oversized sweater in cream white hanging on a minimalist dark wood clothes rack" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2W-1oEewG8-HTPGPXln4AbOblZIkLxJOzpoTs1loSPEQ9ilAywQy-phjvEGSBeWtDsr2PXJiMJ3AURoukIzvOYHgheMYsM_2d7esTieiOW3AP6lvK5sKhTIgl1pWzlXcoCR7_nkxzot-E6I0p2Y9Hh8kwWDH2lnViFbZZUnjl2rBY-HMI6LcA06wseWILD1ufqWI2jwrqCzRycbr5w-H62ih-RX7w5iB1JPt3ix7CNOz2d_W_owyiyyMp-MpWbTfAs2qbCwmJSHIv"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-manrope font-bold text-lg">Studio Oversized Knit</h3>
+<p class="text-sm text-on-surface-variant mb-4">Color: Raw Cream / Size: XL</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-label uppercase tracking-widest text-outline">Quantity</span>
+<div class="flex items-center border border-outline-variant rounded px-2 py-1 opacity-50">
+<button class="material-symbols-outlined text-sm">remove</button>
+<span class="px-4 text-sm font-medium">1</span>
+<button class="material-symbols-outlined text-sm">add</button>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="font-manrope font-bold text-lg">$185.00</p>
+</div>
+</div>
+</div>
+<!-- Step 2: Hidden/Preview Reason -->
+<div class="bg-surface-container-low/50 p-8 rounded-xl opacity-60">
+<h2 class="text-2xl font-manrope font-bold tracking-tight mb-4">Step 2: Reason for Return</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<div class="p-4 border border-outline-variant rounded bg-white/50 text-outline text-sm font-medium">Incorrect size</div>
+<div class="p-4 border border-outline-variant rounded bg-white/50 text-outline text-sm font-medium">Arrived damaged</div>
+<div class="p-4 border border-outline-variant rounded bg-white/50 text-outline text-sm font-medium">Changed mind</div>
+</div>
+</div>
+<!-- Wizard Actions -->
+<div class="flex justify-between items-center pt-8 border-t border-outline-variant/30">
+<button class="flex items-center gap-2 text-sm font-label font-bold uppercase tracking-widest text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+                            Cancel Request
+                        </button>
+<button class="bg-secondary text-white px-12 py-4 font-manrope font-bold uppercase tracking-tighter text-sm rounded shadow-xl shadow-secondary/20 hover:bg-secondary-container transition-all flex items-center gap-3">
+                            Continue to Reason
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- SideNavBar (Visible on Mobile only as fallback or if relevant) - Logic: Suppressed for linear task flow -->
+<!-- Footer -->
+<footer class="w-full mt-24 bg-slate-100 dark:bg-slate-950">
+<div class="w-full px-12 py-16 grid grid-cols-1 md:grid-cols-4 gap-12 max-w-screen-2xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="text-xl font-black text-slate-900 dark:text-white font-manrope mb-6">NORDIC ATELIER</div>
+<p class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Sustainably crafted in Stockholm. Curated for the modern domestic space.
+                </p>
+</div>
+<div class="space-y-4">
+<p class="font-manrope font-bold text-xs uppercase tracking-widest text-slate-900 dark:text-white">Shop</p>
+<ul class="space-y-2">
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Collections</a></li>
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">New Arrivals</a></li>
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Archive</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<p class="font-manrope font-bold text-xs uppercase tracking-widest text-slate-900 dark:text-white">Assistance</p>
+<ul class="space-y-2">
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Shipping &amp; Returns</a></li>
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Contact</a></li>
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Sustainability Report</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<p class="font-manrope font-bold text-xs uppercase tracking-widest text-slate-900 dark:text-white">Legal</p>
+<ul class="space-y-2">
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Privacy Policy</a></li>
+<li><a class="font-inter text-xs tracking-widest uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-opacity" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="px-12 py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+<p class="font-inter text-[10px] tracking-[0.2em] uppercase text-slate-400">© 2024 NORDIC ATELIER. SUSTAINABLY CRAFTED.</p>
+</div>
+</footer>
+</body></html>

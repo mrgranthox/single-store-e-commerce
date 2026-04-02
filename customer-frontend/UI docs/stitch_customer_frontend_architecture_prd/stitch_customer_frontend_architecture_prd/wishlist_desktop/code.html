@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wishlist | NordicAtelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#213145",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-error": "#ffffff",
+              "background": "#f8f9ff",
+              "secondary-fixed": "#dbe1ff",
+              "outline-variant": "#c6c6cd",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-secondary": "#ffffff",
+              "on-surface": "#0b1c30",
+              "surface-dim": "#cbdbf5",
+              "on-tertiary-container": "#b87500",
+              "on-primary-container": "#7c839b",
+              "error": "#ba1a1a",
+              "surface-container-low": "#eff4ff",
+              "tertiary": "#000000",
+              "on-tertiary": "#ffffff",
+              "inverse-primary": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "outline": "#76777d",
+              "surface-bright": "#f8f9ff",
+              "on-background": "#0b1c30",
+              "surface": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-fixed-dim": "#bec6e0",
+              "primary-container": "#131b2e",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "surface-container-highest": "#d3e4fe",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed": "#00174b",
+              "error-container": "#ffdad6",
+              "tertiary-container": "#2a1700",
+              "primary": "#000000",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-surface-variant": "#45464d",
+              "surface-tint": "#565e74",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container": "#e5eeff",
+              "secondary": "#0051d5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-secondary-container": "#fefcff",
+              "on-primary-fixed": "#131b2e"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .font-manrope { font-family: 'Manrope', sans-serif; }
+      .font-inter { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen pb-24 md:pb-0">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl transition-all duration-300">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50 font-manrope">NordicAtelier</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 font-inter font-medium transition-opacity duration-300 hover:opacity-80" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 font-inter font-medium transition-opacity duration-300 hover:opacity-80" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 font-inter font-medium transition-opacity duration-300 hover:opacity-80" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-5 text-on-surface">
+<button class="scale-95 active:scale-90 transition-transform hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="scale-95 active:scale-90 transition-transform hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="scale-95 active:scale-90 transition-transform hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-28 pb-16 px-6 max-w-7xl mx-auto">
+<!-- Header Section: Editorial Style -->
+<header class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="max-w-2xl">
+<nav class="flex items-center space-x-2 text-on-primary-container text-xs font-label uppercase tracking-widest mb-4">
+<span>Account</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-secondary font-semibold">Wishlist</span>
+</nav>
+<h1 class="text-5xl md:text-6xl font-headline font-bold tracking-tight text-on-surface">Curated Collection</h1>
+<p class="mt-4 text-on-surface-variant font-body leading-relaxed max-w-lg">
+                    Your personal selection of Nordic design and minimalist essentials, gathered for a more intentional home.
+                </p>
+</div>
+<div class="flex flex-wrap gap-4">
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-low text-on-surface font-inter font-medium rounded-lg hover:opacity-80 transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined text-sm">share</span>
+                    Share Wishlist
+                </button>
+<button class="flex items-center gap-2 px-8 py-3 bg-secondary text-on-secondary font-inter font-semibold rounded-lg shadow-lg hover:opacity-90 transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined text-sm">shopping_cart</span>
+                    Move all to Bag
+                </button>
+</div>
+</header>
+<!-- Product Grid: Asymmetric Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-12">
+<!-- Card 1 -->
+<div class="group relative">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl">
+<img alt="Minimalist ceramic vase" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close-up of a textured matte white ceramic vase on a raw concrete surface with soft morning shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBaU-8RBts96IYW4lgP7KVdBpmd4b5jstNd5vnN-JUPd1_e8re53UukShW05vixNWUY1aZlstRTAxoD82Cep1QM90qAPIogtRTJt3Gx2PMI_WFGICj3Vawz_GxAHEHvwrZ7TB3koHYYnHsEZM0neZ6CbWyCMnjy8pNw9BErmayJWDWwr3-6iE65p47D5vrruK_lc50vOL8JYt3nh7W6bMIsKMzhlI4E3-k3hTpsoO1ND8Y8Li9zCG9D1OAHsE4YBfhojlLkSeC1ZkZ"/>
+<div class="absolute top-4 right-4">
+<button class="p-2 bg-white/90 backdrop-blur rounded-full text-error shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full">In Stock</span>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Komorebi Vessel</h3>
+<p class="text-on-surface-variant font-body text-sm mt-1">Hand-thrown Stoneware</p>
+<p class="mt-2 font-inter font-semibold text-secondary">$185.00</p>
+</div>
+<button class="p-3 bg-primary text-on-primary rounded-lg hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative lg:translate-y-12">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl">
+<img alt="Oak Lounge Chair" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Mid-century modern oak lounge chair with cream wool upholstery in a sun-drenched minimalist living room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvirTbBKKYgZjqOQsZAsh4y0vvccI8KbJ8PhQ42TRgMzHDQWc3uIuVYKZLfwhhoGRQWN_Ac_9NctAbGpHS_1-vthxNoyqxCP3FwgxuQWf2Jq8mnHdPw89TbLGo2ebDCuUYLK_AIxKShlemzielzYF7cd6PgvddvqW5IMA9qo4dN3kYFdNZmQaHXVaVfcneaceJQJYjTAbuDRyifC5mvspCUNO2ncY2U1mKUXRzEpV3kkyjvOUwQfP6kQ5D2ORljfQJ3u7EIY5x46XC"/>
+<div class="absolute top-4 right-4">
+<button class="p-2 bg-white/90 backdrop-blur rounded-full text-error shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">FJORD Lounge Chair</h3>
+<p class="text-on-surface-variant font-body text-sm mt-1">Sustainable Solid Oak</p>
+<p class="mt-2 font-inter font-semibold text-secondary">$1,240.00</p>
+</div>
+<button class="p-3 bg-primary text-on-primary rounded-lg hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl">
+<img alt="Linen Bedding" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Tumbled organic linen bedding in charcoal grey with soft fabric folds and natural light from a side window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5ocXz6A92M55wkxJ9y9SxsATiNjffFsG0XPiwKBdH5qKqVPFg7swrbOD9Fh2geAwuGEHqQytaK1o2T-BLyzv6CnjtrVM4SEUTnERaifWH2lQ7ZGqde5kSYrSbnAfxGkCMvfmv_8gyaY68qbnymOSVbWmyiyop74v0eu7FfhhlHYFfLx14H3q4o4u4K4rIhrjp9cjepOF8K1OKmELGAdN58CM0gTfM25ZAs2I8j5L1X82yBbOCR4C-GVtQxs-rRqc_ao-c7SCYeE3o"/>
+<div class="absolute top-4 right-4">
+<button class="p-2 bg-white/90 backdrop-blur rounded-full text-error shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full">Limited Edition</span>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Archi Linen Set</h3>
+<p class="text-on-surface-variant font-body text-sm mt-1">100% Belgian Flax</p>
+<p class="mt-2 font-inter font-semibold text-secondary">$320.00</p>
+</div>
+<button class="p-3 bg-primary text-on-primary rounded-lg hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl">
+<img alt="Abstract art print" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Large-scale abstract art print with monochromatic brushstrokes in a slim black frame leaning against a white wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB19J7Q8wXYjTIn0vuzfpZXHmbIMdXzC5cka8hITb8DG2On_9BCJQZFafhUM2aEfsFO4tKVlMx3efWYvSSpI3h2vhoW0VPqDKh-6XV6Q4b3MBrrK7LJWOnin2Zgl5aa1SPoWTNDad-H0kMkPg0bXnXi-0Msb67x6EnjpDuZejMIwSG40jDnE0ZGOwbHYXHCk4Vj8UeSvoS27yUo6tBV5DvA6q3Mc4dSnR2QFMrdWlDwbmxhoybgPzm19gi7KIkfN93PNgUYhcEIKJBL"/>
+<div class="absolute top-4 right-4">
+<button class="p-2 bg-white/90 backdrop-blur rounded-full text-error shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Structure 04 Art</h3>
+<p class="text-on-surface-variant font-body text-sm mt-1">Giclée Print on Cotton Paper</p>
+<p class="mt-2 font-inter font-semibold text-secondary">$210.00</p>
+</div>
+<button class="p-3 bg-primary text-on-primary rounded-lg hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group relative lg:translate-y-12">
+<div class="aspect-[3/4] overflow-hidden bg-surface-container-low rounded-xl">
+<img alt="Brass table lamp" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Brushed brass table lamp with a geometric silhouette on a dark wood desk with dramatic moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0h_aOTLMuXfe_rYpdyU7B_8506tIOG9tj0qGSXtEMd78OaA5BcYkoiRvNGM_Grz1t_EhNRK56sg27gFlJLlb6b_mgu5LT9GZBfsDqNz9RJQe8IIV967PIQ6EW6E-grg6YoLOup3A4gqWt5W3kdKsRmlkcwp7I4ls_It64U58s3DBoSUmkwTTaWqwKxCcIKSZDK8GzblYsrQjIBYtBIPUKwMI0xPiztNh04PrtZSEAo4UvlCgueOBe1ole7Swvss1S8tsqxhcTYgII"/>
+<div class="absolute top-4 right-4">
+<button class="p-2 bg-white/90 backdrop-blur rounded-full text-error shadow-sm hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<div class="mt-6 flex justify-between items-start">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Lumen Brass Task</h3>
+<p class="text-on-surface-variant font-body text-sm mt-1">Brushed Brass Finish</p>
+<p class="mt-2 font-inter font-semibold text-secondary">$445.00</p>
+</div>
+<button class="p-3 bg-primary text-on-primary rounded-lg hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Empty Slot / Suggestion Bento -->
+<div class="bg-surface-container text-center flex flex-col items-center justify-center p-8 rounded-xl lg:translate-y-0">
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-4">explore</span>
+<h3 class="font-headline text-lg font-bold">Discover More</h3>
+<p class="text-sm text-on-surface-variant mt-2 max-w-[200px] mx-auto">Explore our newest curated collections for more inspiration.</p>
+<a class="mt-6 text-secondary font-semibold font-inter underline underline-offset-4 hover:text-primary transition-colors" href="#">Browse Shop</a>
+</div>
+</div>
+<!-- Footer Section (Internal Main) -->
+<section class="mt-40 border-t border-outline-variant/20 pt-16 flex flex-col md:flex-row justify-between items-start gap-12">
+<div class="max-w-sm">
+<h4 class="font-headline font-bold text-lg mb-4">The Nordic Promise</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                    Every piece in our collection is vetted for sustainable production, ethical sourcing, and timeless aesthetic value. Design for generations, not seasons.
+                </p>
+</div>
+<div class="flex gap-16">
+<div class="flex flex-col gap-3">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-container">Service</span>
+<a class="text-sm hover:text-secondary" href="#">Free Shipping</a>
+<a class="text-sm hover:text-secondary" href="#">30-Day Returns</a>
+<a class="text-sm hover:text-secondary" href="#">Design Consult</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-primary-container">Social</span>
+<a class="text-sm hover:text-secondary" href="#">Instagram</a>
+<a class="text-sm hover:text-secondary" href="#">Pinterest</a>
+<a class="text-sm hover:text-secondary" href="#">Journal</a>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg z-50 flex justify-around items-center px-4 pb-6 pt-2 shadow-[0_-4px_20px_rgba(11,28,48,0.06)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 group transition-all" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-4 py-1 group transition-all" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Wishlist</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 group transition-all" href="#">
+<span class="material-symbols-outlined mb-1">receipt_long</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 group transition-all" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-inter text-[10px] font-medium tracking-wide uppercase">Profile</span>
+</a>
+</nav>
+</body></html>

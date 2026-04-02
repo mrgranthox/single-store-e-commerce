@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Nordic Atelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#000000",
+                        "surface-container-high": "#dce9ff",
+                        "surface-tint": "#565e74",
+                        "surface-variant": "#d3e4fe",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#000000",
+                        "on-surface-variant": "#45464d",
+                        "surface-bright": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed": "#00174b",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#ffddb8",
+                        "secondary-container": "#316bf3",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#0b1c30",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "outline-variant": "#c6c6cd",
+                        "outline": "#76777d",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-background": "#0b1c30",
+                        "primary-container": "#131b2e",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary-container": "#2a1700",
+                        "surface-dim": "#cbdbf5",
+                        "background": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f8f9ff",
+                        "on-secondary-container": "#fefcff",
+                        "secondary": "#0051d5",
+                        "on-tertiary-container": "#b87500",
+                        "inverse-primary": "#bec6e0",
+                        "primary-fixed": "#dae2fd",
+                        "on-primary-container": "#7c839b"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopNavBar Suppression: Page is Transactional/Focus-Task -->
+<main class="flex-grow flex items-center justify-center py-12 px-6">
+<div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 overflow-hidden bg-surface-container-lowest rounded-xl shadow-[0_20px_50px_rgba(11,28,48,0.08)]">
+<!-- Visual Editorial Side -->
+<div class="hidden lg:block relative min-h-[600px] overflow-hidden">
+<div class="absolute inset-0 bg-primary-container/20 mix-blend-multiply z-10"></div>
+<img alt="Nordic Interior" class="absolute inset-0 w-full h-full object-cover" data-alt="Minimalist Scandinavian interior with a designer chair, large window with soft natural morning light, and muted blue walls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu3-W9TBN4tmE0Yf9_E5vUepA0oiO7jJvjId8d2enoyBYXM3Ql70L-a7n65pgbUelQhTKJaAhVgRn9y-8ntg1xgzz7gVISLGw0z0lXFpmE6mDmo2EXS6V3CHTuPidT313QQo3GlgLwd2SvwUMZqNUsbDWPGoKBMvQJE3HFFauvqBI9RTS-XiahUUGwyDGUGdBECWZ3C25rN6EGtSRSoEwaj4CDaAt91Sy2aozMM4XBWto6THU4Jy4iT1iUrCyiVtuLDm3zr8sMUX4C"/>
+<div class="absolute bottom-12 left-12 right-12 z-20">
+<div class="text-surface-bright mb-4">
+<span class="font-headline font-bold text-4xl tracking-tighter block mb-2">Nordic Atelier</span>
+<p class="font-body text-surface-container-highest/90 max-w-sm leading-relaxed">Curated design for the modern home. Experience a seamless intersection of craftsmanship and digital ease.</p>
+</div>
+<div class="flex gap-4">
+<div class="h-[1px] w-12 bg-surface-bright/30 self-center"></div>
+<span class="text-surface-bright/60 text-xs font-label uppercase tracking-[0.2em]">Est. 2024</span>
+</div>
+</div>
+</div>
+<!-- Form Side -->
+<div class="p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-surface-container-lowest">
+<div class="mb-10 text-center lg:text-left">
+<h2 class="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-2">Welcome Back</h2>
+<p class="text-on-surface-variant font-body">Enter your details to access your atelier.</p>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+<button class="flex items-center justify-center gap-3 py-3 px-6 bg-surface-container-low text-on-surface rounded-md font-label font-medium transition-all hover:bg-surface-container-highest border border-transparent active:scale-[0.98]">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335"></path>
+</svg>
+                        Google
+                    </button>
+<button class="flex items-center justify-center gap-3 py-3 px-6 bg-surface-container-low text-on-surface rounded-md font-label font-medium transition-all hover:bg-surface-container-highest border border-transparent active:scale-[0.98]">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4-6.84-7.01-1.74-16.7 4.86-16.3 1.83.1 3.18 1.14 4.18 1.14 1 0 2.64-1.25 4.84-1 1.94.22 3.41 1.02 4.38 2.5-4.04 2.45-3.37 7.75.96 9.47-.94 2.37-2.23 4.67-4.84 5.19zm-3.05-18.91c-.13 2.56-2.13 4.63-4.53 4.41.13-2.52 2.29-4.7 4.53-4.41z" fill="currentColor"></path>
+</svg>
+                        Apple
+                    </button>
+</div>
+<div class="relative flex py-5 items-center">
+<div class="flex-grow border-t border-outline-variant/30"></div>
+<span class="flex-shrink mx-4 text-outline font-label text-xs uppercase tracking-widest">or email</span>
+<div class="flex-grow border-t border-outline-variant/30"></div>
+</div>
+<!-- Main Form -->
+<form class="space-y-5">
+<div>
+<label class="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2" for="email">Email Address</label>
+<input class="w-full px-5 py-4 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface font-body outline-none placeholder:text-outline/60" id="email" placeholder="name@example.com" type="email"/>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<label class="block text-xs font-label font-bold uppercase tracking-wider text-on-surface" for="password">Password</label>
+<a class="text-xs font-label text-secondary hover:underline transition-all" href="#">Forgot password?</a>
+</div>
+<input class="w-full px-5 py-4 bg-surface-container-high border-none rounded-md focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-on-surface font-body outline-none placeholder:text-outline/60" id="password" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex items-center gap-2 py-2">
+<input class="w-4 h-4 rounded-sm border-outline-variant bg-surface-container-high text-secondary focus:ring-secondary" id="remember" type="checkbox"/>
+<label class="text-sm font-body text-on-surface-variant" for="remember">Keep me signed in</label>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all active:scale-[0.99] shadow-lg shadow-primary/10 mt-2" type="submit">
+                        Sign In
+                    </button>
+</form>
+<p class="mt-8 text-center text-sm font-body text-on-surface-variant">
+                    Don't have an account? 
+                    <a class="text-secondary font-semibold hover:underline" href="#">Join the Atelier</a>
+</p>
+<!-- Trust Cues -->
+<div class="mt-12 flex justify-center items-center gap-6 opacity-60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="text-[10px] font-label uppercase tracking-widest">SSL Secure</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-[10px] font-label uppercase tracking-widest">Verified Merchant</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full mt-auto py-12 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-6 md:gap-0">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="font-bold text-slate-900 dark:text-slate-50 font-headline tracking-tighter text-xl">Nordic Atelier</span>
+<p class="text-sm font-manrope text-slate-500 dark:text-slate-400">© 2024 Nordic Atelier. All rights reserved.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="text-sm font-manrope text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200" href="#">Privacy Policy</a>
+<a class="text-sm font-manrope text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200" href="#">Terms of Service</a>
+<a class="text-sm font-manrope text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200" href="#">Shipping Info</a>
+<a class="text-sm font-manrope text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all duration-200" href="#">Returns</a>
+</nav>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400" data-icon="credit_card">credit_card</span>
+<span class="material-symbols-outlined text-slate-400" data-icon="shield">shield</span>
+</div>
+</div>
+</footer>
+</body></html>

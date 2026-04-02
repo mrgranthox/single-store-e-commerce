@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#000000",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#3f465c",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "surface-container-high": "#dce9ff",
+              "secondary-container": "#316bf3",
+              "surface-container-lowest": "#ffffff",
+              "on-error-container": "#93000a",
+              "primary": "#000000",
+              "error": "#ba1a1a",
+              "on-secondary-fixed-variant": "#003ea8",
+              "primary-container": "#131b2e",
+              "outline-variant": "#c6c6cd",
+              "on-surface-variant": "#45464d",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-tertiary-fixed": "#2a1700",
+              "surface-bright": "#f8f9ff",
+              "on-primary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#dbe1ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-secondary-container": "#fefcff",
+              "inverse-primary": "#bec6e0",
+              "on-primary-fixed": "#131b2e",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface": "#f8f9ff",
+              "tertiary-container": "#2a1700",
+              "surface-container-low": "#eff4ff",
+              "surface-container-highest": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "background": "#f8f9ff",
+              "tertiary-fixed": "#ffddb8",
+              "inverse-on-surface": "#eaf1ff",
+              "outline": "#76777d",
+              "surface-tint": "#565e74",
+              "primary-fixed": "#dae2fd",
+              "on-background": "#0b1c30",
+              "secondary": "#0051d5",
+              "on-primary-container": "#7c839b",
+              "surface-container": "#e5eeff",
+              "on-tertiary-container": "#b87500",
+              "on-surface": "#0b1c30",
+              "surface-dim": "#cbdbf5"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-secondary-container">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-between items-center w-full px-8 py-4 max-w-none">
+<div class="text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50">Nordic Atelier</div>
+<div class="hidden md:flex gap-10 font-manrope tracking-tight font-medium text-sm items-center">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Shop</a>
+<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors" href="#">Journal</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:block relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-high border-none rounded-lg pl-10 pr-4 py-2 text-xs focus:ring-2 focus:ring-secondary w-64" placeholder="Search objects..." type="text"/>
+</div>
+<div class="flex gap-4">
+<button class="hover:opacity-70 transition-opacity duration-300 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="px-8 md:px-24 py-12 md:py-20 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+<div class="md:col-span-7 space-y-8">
+<span class="label-md uppercase tracking-[0.2em] text-secondary font-semibold text-xs">Holiday MMXXIV</span>
+<h1 class="text-7xl font-extrabold tracking-tighter leading-[0.9] text-primary-container">
+                    The Art of <br/>Curated Giving.
+                </h1>
+<p class="text-on-surface-variant text-lg max-w-md font-light leading-relaxed">
+                    Discover a collection of timeless objects, selected for those who appreciate the subtle intersection of form, function, and seasonal warmth.
+                </p>
+<div class="flex gap-4">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-md font-medium text-sm hover:opacity-90 transition-all">Explore the Guide</button>
+<button class="bg-surface-container-low text-on-surface px-8 py-3 rounded-md font-medium text-sm hover:bg-surface-container transition-all">Wrapping Service</button>
+</div>
+</div>
+<div class="md:col-span-5 relative">
+<div class="aspect-[4/5] bg-surface-container overflow-hidden rounded-xl">
+<img class="w-full h-full object-cover" data-alt="minimalist aesthetic gift box with textured paper and black ribbon on a clean white surface with soft dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYyzKPPFbTT_EI-LOsjvoss2BlLuHmzBzYkI_dObGS6zQG_jp0IzC-BXk-ptBwkR8_txsqtP1yOfY14Lfx94R7h_39A_D7yI4iaVpB6T9FHN8yXOXVHZzRydrREAhzUEaySVZJ7ZksQ89tDORBWa48obH-mt2_TFbqif-FJ_tEpkEq7CDLxF7sNMxHvXBKMP9klH-3Idq09aibNv36MfethOtESwZs9dDA2NL1hRrByiBeLeA_3GY3XaKWKtpzPVWvsKHFh1yEF7B8"/>
+</div>
+<div class="absolute -bottom-6 -left-12 hidden md:block w-48 h-48 bg-tertiary-fixed rounded-xl p-6 shadow-2xl">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-4xl mb-4" data-weight="fill">featured_seasonal_and_gifts</span>
+<p class="font-headline font-bold text-on-tertiary-fixed leading-tight">Handcrafted selection for the minimalist home.</p>
+</div>
+</div>
+</section>
+<!-- Filter & Price Chips -->
+<section class="px-8 md:px-24 py-12 flex flex-wrap items-center justify-between gap-6">
+<div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap">All Collections</button>
+<button class="bg-surface-container-low text-on-surface px-6 py-2 rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors whitespace-nowrap">The Minimalist</button>
+<button class="bg-surface-container-low text-on-surface px-6 py-2 rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors whitespace-nowrap">The Host</button>
+<button class="bg-surface-container-low text-on-surface px-6 py-2 rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors whitespace-nowrap">The Architect</button>
+<button class="bg-surface-container-low text-on-surface px-6 py-2 rounded-full text-sm font-medium hover:bg-surface-container-high transition-colors whitespace-nowrap">The Culinary Artist</button>
+</div>
+<div class="flex items-center gap-4 text-sm font-medium text-on-surface-variant">
+<span>Filter by Price:</span>
+<div class="flex bg-surface-container-low rounded-lg p-1">
+<button class="px-4 py-1 rounded hover:bg-white transition-all">Under $50</button>
+<button class="px-4 py-1 rounded hover:bg-white transition-all">$50 - $200</button>
+<button class="px-4 py-1 rounded hover:bg-white transition-all">$200+</button>
+</div>
+</div>
+</section>
+<!-- Featured Collections (Bento Grid) -->
+<section class="px-8 md:px-24 py-12">
+<div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 h-auto md:h-[800px]">
+<!-- Large Feature: The Minimalist -->
+<div class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="monochromatic minimalist interior with sleek designer objects, sculptural vase, and neutral tones in soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMRkIQab7xFV9G7FeuTHkQbvM2pVy43QraYZRaX-8pWr68nLVGAgOIw7i-oJqhFEAfA66hz_-fZJsFzoPNguZnmEBcJCen9cMqx3TD9mtOuztfgqVvIuOOak8dNiK9DeJ9gAxb2dpekV6h0zTcd0MaxnSPJEYLnomNnNOxF--eRX8SaNGgS3TBrO06PQcYEj-L5t8zPegtpQn4ti2RDTUdSAnr86DHwX4cTUc9iZIRCrUZshkz4WwJdz2TREjFyFOB7qzAhTrpBcs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/80 via-transparent to-transparent flex flex-col justify-end p-10">
+<span class="text-tertiary-fixed text-xs tracking-widest uppercase mb-2 font-bold">Featured Guide</span>
+<h3 class="text-4xl font-extrabold text-white mb-4">The Minimalist</h3>
+<p class="text-slate-200 max-w-sm mb-6 font-light">Essential forms and honest materials for those who believe less is significantly more.</p>
+<a class="text-white border-b border-white w-fit pb-1 font-medium hover:opacity-70 transition-opacity" href="#">Explore Collection</a>
+</div>
+</div>
+<!-- Feature: The Host -->
+<div class="md:col-span-2 md:row-span-1 group relative overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="elegantly set dinner table with artisanal glassware, linen napkins, and flickering candles in a moody atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa5hMXB5Cw7oA2r622EOufJ0kY-z3er1u8kLAPRc54eM6Jy8_ND4kjRhYL7AKG6rT3i50pQ4-HDqiOGBkHS4AmClBX9mbJTqZ8rJ7v12kL6AxU0ozWTWpHdgh_D-q4hdwu1wcNfYJA_mnMfP5eoS26Of85VNstig7sxUQNpwqrMI0rpo3-oJPr0iijYHLo2Z6HKae0DG8vfJ06m9p8QSpSFdJO5CUMuygkW4I98B3L8KvHTRkv4UnCcGuR3nBrqpsjZ5my7b7NYKzn"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/60 via-transparent to-transparent flex flex-col justify-end p-8">
+<h3 class="text-2xl font-bold text-white mb-2">The Host</h3>
+<a class="text-white text-sm border-b border-white w-fit pb-1 hover:opacity-70 transition-opacity" href="#">Discover Essentials</a>
+</div>
+</div>
+<!-- Feature: The Architect -->
+<div class="md:col-span-1 md:row-span-1 group relative overflow-hidden rounded-xl bg-surface-container-low">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="set of high-end drafting tools, geometric sculptural bookends and architectural models on a dark desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQudw-PTIi9u_Cqzkp9OQS9Qa-YuTAEwGAlQQnbDvVjXJsQWGsq2u0f_IJMNdk0PYm_Zfs22e2naVtw2NhNYpCkrETdP7CSP18wQot_zXjz2I9aZQfHr5SqMjuONFiLnuGnx3HGWQxMa0JdYrke9CQH4zPbEsashNOfGJIbBr-ByeCCT23F_xXX_8rkQXKaAqnNJ1ciZI9i-BudQ77NSLFp-MVN9k0i81fu_VRZvCT4qg-EQ1l_FMzOg7l6ECfcb2cZqsWf15xz7DJ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/60 via-transparent to-transparent flex flex-col justify-end p-6">
+<h3 class="text-xl font-bold text-white">The Architect</h3>
+</div>
+</div>
+<!-- Feature: Small Accents -->
+<div class="md:col-span-1 md:row-span-1 group relative overflow-hidden rounded-xl bg-surface-dim">
+<div class="p-8 h-full flex flex-col justify-center items-center text-center space-y-4">
+<span class="material-symbols-outlined text-4xl text-primary-container">auto_awesome</span>
+<h3 class="text-lg font-bold text-primary-container">Small Tokens</h3>
+<p class="text-on-surface-variant text-xs font-light">Thoughtful gestures that make a lasting impression.</p>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-md text-[10px] font-bold tracking-widest uppercase">Shop Under $50</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Carousel Section -->
+<section class="bg-surface-container-low py-24 px-8 md:px-24 overflow-hidden">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="label-md uppercase tracking-[0.2em] text-secondary font-semibold text-xs">Curated Selection</span>
+<h2 class="text-4xl font-extrabold tracking-tight mt-2">Objects of Desire</h2>
+</div>
+<div class="flex gap-2">
+<button class="w-12 h-12 rounded-full bg-white flex items-center justify-center hover:bg-secondary hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-white flex items-center justify-center hover:bg-secondary hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<!-- Product Card 1 -->
+<div class="space-y-4 group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg relative bg-white">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="sculptural ceramic pitcher with organic curves in a matte sand finish against a soft blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqIJvAYvxVZAdtkWzXTTMC7ck3dBNP0k_bpuWCCnIiMmmsh-YuwAgCn2e-kDrpWURgWIJ7-v03x4S60XeTJZPoYXMRGbDfdmIleFak9Y2z5uMW4yZcumlMSHjH0i-asAa2m7czImLPyY-J7XHJ3ZEVcB7-dhchXd2sxzeo1I_Q7RPB-omVsekt5MWoWNl9I-1_0cYnOLjytjfSLQlxWbqXFONUsgdcCr5zUQ9DH9KchBroEmONLv4A-47T8fymPB3L6RvZ4JSso0-d"/>
+<span class="absolute top-4 left-4 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold px-3 py-1 uppercase tracking-widest rounded-full">New Arrival</span>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur w-10 h-10 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline font-bold text-lg text-primary-container">Kōbe Ceramic Carafe</h4>
+<p class="text-on-surface-variant text-sm">Sand-cast stoneware</p>
+</div>
+<span class="font-bold text-secondary">$145</span>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="space-y-4 group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg relative bg-white">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="luxury scented candle in a dark glass jar with a minimalist label on a wooden surface with smoke wisps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbzQ1CwzSLWKlq-ACuDXUrs2n_-hEV1kgUcXDAXBw3oP0ffRKlpYeS4A_PFmojOicoc03S1yu5LSDzaVhoZ5LdN4y85HxKdBLXH4BnsmStaknJCyVGMwdNwsjW9z6bXBCoXS0YESG-EjqQMiAJ3IyQaA2FxNdXlVyMPnDVDhZ3r0C3l3oKISra3cwcab7hkBSo2iAQ7PjeC034gPckDqjH8nAyD8pbcKJfdDWc-sy_kDDb6RpUCr3eZKLd9Nw8D_BlJqujCPLGwZEZ"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur w-10 h-10 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline font-bold text-lg text-primary-container">Midnight Spruce Candle</h4>
+<p class="text-on-surface-variant text-sm">Hand-poured soy wax</p>
+</div>
+<span class="font-bold text-secondary">$62</span>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="space-y-4 group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg relative bg-white">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="minimalist brushed aluminum watch with a black leather strap on a clean designer workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2bbCeKFzPnOtYDCfutV_4H1D62AsC6dzPiiCUfP2qdvtbYpXiOjF5l4n1LX6yT-zJzTLBjIxtPUy17V4StJaFOwbpqLw6L-KZ0bgxKa3Y18fCBjVdoMsoFRIOcACMkbullVfAQtm1PD0smsswBM1HhMZdGuCjsyd9p0QCIW-vYMO14qB5LDP0aNxaS0Io85ZMVT1qfst_k03eu7nskfs1TQ8_bQYpXDHQpGqcWmlmZSodNro-0WLYrd6IvYTeewIzhiM35kMTsCIh"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur w-10 h-10 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline font-bold text-lg text-primary-container">Horizon No. 4 Watch</h4>
+<p class="text-on-surface-variant text-sm">Brushed titanium shell</p>
+</div>
+<span class="font-bold text-secondary">$420</span>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="space-y-4 group">
+<div class="aspect-[3/4] overflow-hidden rounded-lg relative bg-white">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="high-quality merino wool throw blanket in slate grey folded on a designer lounge chair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO4hkTg5fvtKObwFXzF4k-auUVrbu-2BreOa-AaTC6Zaf2OlAVTqEInkpspbokvPxLecsklFZqd0301u0anZnnpo4kH8JlaLKz9RaeBGFkfr19rcnETqa0zzz39gSeKH1YAFg4SYMafgaDnKFyB6AiYlhh0DpEijblTX74Cx8Qx9NBGcW4zHK5JYp3L-QrFgZG2uvRUIAO5ZW8Px8ctpBefSu6v55m-l1VB1_S6WK88XzTX8vI5quuRThLVJA6kr2eOOOq_7Z7BuU4"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur w-10 h-10 rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline font-bold text-lg text-primary-container">Merino Haven Throw</h4>
+<p class="text-on-surface-variant text-sm">Ultra-fine nordic wool</p>
+</div>
+<span class="font-bold text-secondary">$185</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Gift Wrapping Highlight -->
+<section class="px-8 md:px-24 py-24 bg-white">
+<div class="rounded-2xl bg-primary-container text-white overflow-hidden grid grid-cols-1 md:grid-cols-2">
+<div class="p-12 md:p-20 flex flex-col justify-center space-y-6">
+<span class="text-secondary-fixed text-xs tracking-[0.3em] font-bold uppercase">Nordic Service</span>
+<h2 class="text-5xl font-extrabold tracking-tight leading-tight">Elevated Presentation, Effortless Delivery.</h2>
+<p class="text-slate-300 font-light leading-relaxed max-w-md">
+                        Our signature gift wrapping features sustainable textured paper, hand-pressed wax seals, and custom calligraphy notes. Because the unveiling is part of the story.
+                    </p>
+<div class="space-y-4 pt-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary">verified</span>
+<span class="text-sm">Premium recycled packaging materials</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary">verified</span>
+<span class="text-sm">Personalized handwritten note card</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary">verified</span>
+<span class="text-sm">Direct insured global shipping</span>
+</div>
+</div>
+<button class="bg-secondary text-white w-fit px-10 py-4 rounded-md mt-6 font-bold hover:scale-105 transition-transform">Add Gift Wrapping - $15</button>
+</div>
+<div class="h-64 md:h-full relative">
+<img class="w-full h-full object-cover" data-alt="close up of hands meticulously tying a dark silk ribbon around a textured cream gift box with a wax seal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl3CKfu87FB_I1in8CHBgLkspcHMAsANddZ7Q_g7yddM2YClQjF-robj38s3-R_RaR6Sds35BP9gagBvaqtUM6MWmdJSgB058YiQuL6IzNRHdFM8xdJEFIjurbrihqfs8sD_1RSF1VfFmbumgBiR4bJ7wKaIp1MpMVzcVp1oXO4GYyTIhSf3VXMXExbjQMDQYLgnBwiyEO527FmI-HYuXtsJD-AOfTsEKUhfP53msUOm3HyNK-gzKU1FO6xIrrYxts75kLtu716wN9"/>
+</div>
+</div>
+</section>
+<!-- Newsletter / CTA -->
+<section class="py-24 px-8 text-center max-w-2xl mx-auto space-y-8">
+<h2 class="text-3xl font-extrabold text-primary-container">Don't Miss the Season's Best.</h2>
+<p class="text-on-surface-variant font-light">Join our atelier community for early access to holiday releases and exclusive editorial guides.</p>
+<div class="flex flex-col md:flex-row gap-4">
+<input class="flex-1 bg-surface-container-high border-none px-6 py-4 rounded-md focus:ring-2 focus:ring-secondary" placeholder="Email address" type="email"/>
+<button class="bg-primary text-on-primary px-10 py-4 rounded-md font-bold hover:opacity-90">Subscribe</button>
+</div>
+<p class="text-[10px] text-outline uppercase tracking-widest font-bold">Privacy guaranteed. Unsubscribe anytime.</p>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-100 dark:bg-slate-950 w-full border-t border-transparent grid grid-cols-2 md:grid-cols-4 gap-8 px-12 py-20 w-full">
+<div class="col-span-2 md:col-span-1 space-y-6">
+<div class="text-lg font-black text-slate-900 dark:text-slate-100">Nordic Atelier</div>
+<p class="font-inter text-xs tracking-wide text-slate-500 dark:text-slate-400 leading-loose uppercase">
+                Curating the world's finest objects <br/>for the contemporary home.
+            </p>
+</div>
+<div class="space-y-4">
+<h4 class="font-inter text-xs tracking-widest uppercase font-bold text-slate-900 dark:text-slate-50">Support</h4>
+<ul class="space-y-2">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Shipping</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Returns</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-inter text-xs tracking-widest uppercase font-bold text-slate-900 dark:text-slate-50">Company</h4>
+<ul class="space-y-2">
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Sustainability</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-inter text-xs tracking-wide uppercase text-slate-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-inter text-xs tracking-widest uppercase font-bold text-slate-900 dark:text-slate-50">Follow</h4>
+<div class="flex gap-4">
+<a class="text-slate-500 hover:text-secondary" href="#"><span class="material-symbols-outlined">camera</span></a>
+<a class="text-slate-500 hover:text-secondary" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="text-slate-500 hover:text-secondary" href="#"><span class="material-symbols-outlined">mail</span></a>
+</div>
+<div class="pt-4">
+<p class="font-inter text-[10px] tracking-wide uppercase text-slate-400">© 2024 Nordic Atelier. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</body></html>

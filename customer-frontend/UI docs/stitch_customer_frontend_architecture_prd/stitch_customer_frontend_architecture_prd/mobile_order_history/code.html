@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Order History | NORDIC</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .headline-font {
+            font-family: 'Manrope', sans-serif;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+
+    <!-- TopAppBar -->
+    <header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+        <button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <h1 class="text-xl font-black tracking-tighter text-slate-900 dark:text-white headline-font">NORDIC</h1>
+        <button class="text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity active:scale-95 duration-200">
+            <span class="material-symbols-outlined">search</span>
+        </button>
+    </header>
+
+    <!-- Main Content Canvas -->
+    <main class="pt-20 px-6 max-w-2xl mx-auto">
+        
+        <!-- Editorial Header Section -->
+        <section class="mb-10 pt-4">
+            <span class="text-[10px] font-semibold uppercase tracking-widest text-secondary mb-2 block">Account Dashboard</span>
+            <h2 class="text-4xl font-extrabold tracking-tight headline-font text-on-surface">Order History</h2>
+            <p class="text-on-surface-variant text-sm mt-2 font-medium">Review your recent atelier acquisitions and track current shipments.</p>
+        </section>
+
+        <!-- Active Filter Chips (Simplified Editorial Pattern) -->
+        <div class="flex gap-2 mb-8 overflow-x-auto no-scrollbar pb-2">
+            <button class="px-5 py-2 bg-primary text-on-primary rounded-full text-xs font-bold whitespace-nowrap">All Orders</button>
+            <button class="px-5 py-2 bg-surface-container-low text-on-surface rounded-full text-xs font-bold whitespace-nowrap">Processing</button>
+            <button class="px-5 py-2 bg-surface-container-low text-on-surface rounded-full text-xs font-bold whitespace-nowrap">Shipped</button>
+            <button class="px-5 py-2 bg-surface-container-low text-on-surface rounded-full text-xs font-bold whitespace-nowrap">Delivered</button>
+        </div>
+
+        <!-- Orders List -->
+        <div class="space-y-6">
+            
+            <!-- Order Card 1: Processing (Hero Style) -->
+            <article class="bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_20px_rgba(11,28,48,0.04)] relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-[10px] font-bold text-secondary-container tracking-widest uppercase block mb-1">In Progress</span>
+                        <h3 class="headline-font font-bold text-lg text-on-surface">#NOR-882910</h3>
+                    </div>
+                    <div class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-[10px] font-black uppercase">Processing</div>
+                </div>
+                
+                <div class="flex gap-4 items-center mb-6">
+                    <div class="w-20 h-24 bg-surface-container-low rounded-lg overflow-hidden flex-shrink-0">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&q=80&w=400" 
+                             alt="Premium Jacket" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                             data-alt="Minimalist studio shot of a high-end navy wool overcoat on a sculptural wooden hanger against a cool gray background">
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-on-surface">Premium Merino Overcoat</p>
+                        <p class="text-xs text-on-surface-variant mt-1">Size: Large • Color: Midnight</p>
+                        <p class="text-sm font-black text-on-surface mt-3">$420.00</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+                    <span class="text-[10px] font-medium text-outline uppercase tracking-wider">Ordered Oct 24, 2023</span>
+                    <button class="text-secondary text-xs font-bold hover:underline">View Details</button>
+                </div>
+            </article>
+
+            <!-- Order Card 2: Shipped -->
+            <article class="bg-surface-container-low rounded-xl p-5 relative group">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase block mb-1">On the way</span>
+                        <h3 class="headline-font font-bold text-lg text-on-surface">#NOR-881552</h3>
+                    </div>
+                    <div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-black uppercase">Shipped</div>
+                </div>
+                
+                <div class="flex gap-4 items-center mb-6">
+                    <div class="flex -space-x-4">
+                        <div class="w-16 h-16 bg-white rounded-lg overflow-hidden border-2 border-surface-container-low z-10">
+                            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400" 
+                                 alt="Watch" 
+                                 class="w-full h-full object-cover"
+                                 data-alt="Close up of a minimalist silver wristwatch with a white face and black leather strap on a clean marble surface">
+                        </div>
+                        <div class="w-16 h-16 bg-white rounded-lg overflow-hidden border-2 border-surface-container-low">
+                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=400" 
+                                 alt="Headphones" 
+                                 class="w-full h-full object-cover"
+                                 data-alt="Sleek black over-ear headphones sitting on a minimal wooden desk with soft cinematic lighting">
+                        </div>
+                    </div>
+                    <div class="flex-1 ml-4">
+                        <p class="text-sm font-bold text-on-surface">Architect Series + 1 other</p>
+                        <p class="text-sm font-black text-on-surface mt-1">$895.00</p>
+                    </div>
+                </div>
+
+                <div class="bg-white/50 rounded-lg p-3 mb-4 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-secondary scale-90">local_shipping</span>
+                    <p class="text-[11px] font-semibold text-on-surface">Arriving by Thursday, Oct 26</p>
+                </div>
+
+                <div class="pt-2 flex justify-between items-center">
+                    <span class="text-[10px] font-medium text-outline uppercase tracking-wider">Ordered Oct 21, 2023</span>
+                    <button class="bg-on-surface text-white px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-transform">Track Order</button>
+                </div>
+            </article>
+
+            <!-- Order Card 3: Delivered -->
+            <article class="bg-surface-container-lowest rounded-xl p-5 shadow-[0_2px_10px_rgba(11,28,48,0.02)] border border-outline-variant/10">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase block mb-1">Archived</span>
+                        <h3 class="headline-font font-bold text-lg text-on-surface">#NOR-879001</h3>
+                    </div>
+                    <div class="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-black uppercase">Delivered</div>
+                </div>
+                
+                <div class="flex gap-4 items-center">
+                    <div class="w-16 h-16 bg-surface-container-low rounded-lg overflow-hidden flex-shrink-0 grayscale opacity-80">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400" 
+                             alt="Sneakers" 
+                             class="w-full h-full object-cover"
+                             data-alt="Profile view of a classic red and white athletic sneaker in a bright, high-contrast studio setting">
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-baseline">
+                            <p class="text-sm font-bold text-on-surface">Performance Mesh Runner</p>
+                            <p class="text-sm font-black text-on-surface">$160.00</p>
+                        </div>
+                        <p class="text-[10px] text-outline mt-2 uppercase tracking-wide">Delivered on Oct 15, 2023</p>
+                    </div>
+                </div>
+
+                <div class="mt-5 flex gap-2">
+                    <button class="flex-1 border border-outline-variant py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-surface-container-low transition-colors">Reorder</button>
+                    <button class="flex-1 border border-outline-variant py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-surface-container-low transition-colors">Support</button>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Pagination / Load More -->
+        <div class="mt-12 mb-8 text-center">
+            <button class="text-on-surface-variant text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 mx-auto group">
+                Show Older Orders
+                <span class="material-symbols-outlined text-sm group-hover:translate-y-1 transition-transform">expand_more</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- BottomNavBar -->
+    <nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] flex justify-around items-center h-20 w-full px-4">
+        <a href="#" class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out">
+            <span class="material-symbols-outlined">storefront</span>
+            <span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out">
+            <span class="material-symbols-outlined">search</span>
+            <span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 active:scale-90 transition-all duration-300 ease-out">
+            <span class="material-symbols-outlined">shopping_bag</span>
+            <span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform active:scale-90 duration-300 ease-out">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+            <span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+        </a>
+    </nav>
+
+</body>
+</html></style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body></body></html>

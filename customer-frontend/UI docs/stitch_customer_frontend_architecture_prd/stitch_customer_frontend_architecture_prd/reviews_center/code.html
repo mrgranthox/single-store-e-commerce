@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-container": "#2a1700",
+              "outline-variant": "#c6c6cd",
+              "surface": "#f8f9ff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-tertiary-fixed-variant": "#653e00",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "on-primary": "#ffffff",
+              "surface-dim": "#cbdbf5",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface-tint": "#565e74",
+              "secondary": "#0051d5",
+              "primary-fixed": "#dae2fd",
+              "on-primary-fixed": "#131b2e",
+              "secondary-container": "#316bf3",
+              "primary": "#000000",
+              "surface-container-highest": "#d3e4fe",
+              "secondary-fixed": "#dbe1ff",
+              "surface-bright": "#f8f9ff",
+              "on-surface-variant": "#45464d",
+              "on-surface": "#0b1c30",
+              "inverse-surface": "#213145",
+              "tertiary": "#000000",
+              "on-tertiary-fixed": "#2a1700",
+              "error": "#ba1a1a",
+              "surface-container": "#e5eeff",
+              "on-error": "#ffffff",
+              "background": "#f8f9ff",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-primary-container": "#7c839b",
+              "on-tertiary-container": "#b87500",
+              "on-secondary": "#ffffff",
+              "surface-container-low": "#eff4ff",
+              "outline": "#76777d",
+              "on-tertiary": "#ffffff",
+              "on-background": "#0b1c30",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-secondary-container": "#fefcff",
+              "primary-container": "#131b2e",
+              "on-secondary-fixed": "#00174b",
+              "on-error-container": "#93000a",
+              "on-primary-fixed-variant": "#3f465c",
+              "surface-variant": "#d3e4fe",
+              "surface-container-high": "#dce9ff",
+              "inverse-primary": "#bec6e0",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased">
+<header class="bg-slate-50 dark:bg-slate-900 w-full border-none">
+<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold text-slate-900 dark:text-white font-headline tracking-tight">Nordic Commerce</div>
+<nav class="hidden md:flex gap-8 font-manrope tracking-tight font-semibold">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Support</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Orders</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Returns</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Reviews</a>
+</nav>
+<div class="flex items-center gap-4 text-blue-700 dark:text-blue-400">
+<button class="material-symbols-outlined scale-95 duration-200">account_circle</button>
+<button class="material-symbols-outlined scale-95 duration-200">shopping_bag</button>
+</div>
+</div>
+</header>
+<aside class="hidden md:flex flex-col fixed left-0 top-0 h-full p-4 bg-white dark:bg-slate-950 font-inter text-sm font-medium h-screen w-64 border-r-0">
+<div class="mb-10 mt-4 px-4">
+<h1 class="text-lg font-black text-slate-900 dark:text-white font-headline">Support Hub</h1>
+<p class="text-xs text-slate-500">Manage your inquiries</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+                Help Center
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+                My Tickets
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">assignment_return</span>
+                Return Status
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-lg transition-all active:opacity-80" href="#">
+<span class="material-symbols-outlined">rate_review</span>
+                My Reviews
+            </a>
+</nav>
+</aside>
+<main class="md:ml-64 min-h-screen pb-32">
+<div class="max-w-6xl mx-auto px-6 py-12">
+<div class="mb-12">
+<h2 class="text-4xl font-extrabold font-headline tracking-tighter text-on-surface mb-2">Reviews Center</h2>
+<p class="text-on-surface-variant max-w-2xl">Share your thoughts on recent purchases and help our community make better choices. Track your feedback and earn loyalty points for each published review.</p>
+</div>
+<section class="mb-16">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold font-headline">Awaiting Your Feedback</h3>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold rounded-full">3 PENDING</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-5 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-[0_20px_40px_rgba(11,28,48,0.04)]">
+<div class="aspect-square bg-surface-container-low rounded-lg mb-4 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Modern minimalist watch with white face and tan leather strap on a clean light gray background with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgrkPys_4MiqLyZ7b_rmJaPLP8Na8lsl_RmSZ4xi9lCxDTaFfhFMnSClIlj36cwTBZy3wMUfc9iUL3J9V2cRDoZ6Pgbzmi0xGS7YlAbGZehy9iP0KxvIQhQRBvqzDWh0V1L5zbjPYcyNX8l6QDgNNQ8YNNWUeY9QPOSrjeBFGtmHHnTPVQkm0f1RZFWBjaHN-Zzh6X7skdpEa7bmuNLET9yKou8nESR9al7FD214TF28TDhEa7wRb2Xnx4j_STMIRRLpsBP5d9I6K9"/>
+</div>
+<h4 class="font-bold text-lg mb-1 truncate">Nordic Chrono v2</h4>
+<p class="text-sm text-on-surface-variant mb-4">Delivered on Oct 12, 2023</p>
+<button class="w-full bg-secondary text-on-secondary py-3 rounded-md font-bold text-sm tracking-wide hover:bg-secondary-container transition-colors">Write Review</button>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-[0_20px_40px_rgba(11,28,48,0.04)]">
+<div class="aspect-square bg-surface-container-low rounded-lg mb-4 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Vibrant red athletic running shoe with white sole in a dynamic diagonal composition against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA58_si4l7rP4XFz3MNhhWdfIG9Cx3ZMpIK8Y92yO1C-ocYVua4iu47UY4WUw3V3_RmpVuSFgmBoWu-eOI-k88e77Ro7nxKzNRSWJ96oSeN5uAfVtsOWuu__IFb--7j7d8Vs4qKx66rBJcPgolPsFt47EI_zHFUKPZx9xIh5TSG6ftc3llueTLKfDJSZhQo3u08ogkAVP_lIY_NlNDcft763bI3w9nPcyMu9C6C_W-_M3DDIGNqYZuhl9UQiGV0nKGEV05NMsjJFdTH"/>
+</div>
+<h4 class="font-bold text-lg mb-1 truncate">Ultrafly Runners</h4>
+<p class="text-sm text-on-surface-variant mb-4">Delivered on Oct 08, 2023</p>
+<button class="w-full bg-secondary text-on-secondary py-3 rounded-md font-bold text-sm tracking-wide hover:bg-secondary-container transition-colors">Write Review</button>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-[0_20px_40px_rgba(11,28,48,0.04)]">
+<div class="aspect-square bg-surface-container-low rounded-lg mb-4 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Premium black over-ear headphones with metallic details sitting on a dark wooden surface with warm ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOG8AmhAlZOl_4Gasu_wgVK_Tod8ZSc3s2CBCm9sigTd5SiqjpN02p8okhcixFucBUbZzZXkQx2UbeCRuN6gmZ-fVmyz5GWI8LdwK5BAADON_ssfWbmGcIaf_i9Po_hxRgC2BA6JvRbI8uFnhZ0QgkTX2FeIlTJQzLBFdGsI92JknAWM5Xc3zBKc6HQqSFRrrei1QF81b16otGCPuKMakbQ0fL4_EJLCtpA76GQW1x5gqHsA6UdeUMJ-7l0fFqJN8ilc4nXGHqt5Ro"/>
+</div>
+<h4 class="font-bold text-lg mb-1 truncate">Studio Sound H1</h4>
+<p class="text-sm text-on-surface-variant mb-4">Delivered on Sep 24, 2023</p>
+<button class="w-full bg-secondary text-on-secondary py-3 rounded-md font-bold text-sm tracking-wide hover:bg-secondary-container transition-colors">Write Review</button>
+</div>
+</div>
+</section>
+<section class="bg-surface-container-low rounded-3xl p-8 mb-16">
+<div class="max-w-3xl">
+<h3 class="text-2xl font-bold font-headline mb-6">Draft a New Review</h3>
+<div class="space-y-6">
+<div>
+<label class="block text-xs font-bold tracking-widest uppercase text-on-surface-variant mb-2">Overall Rating</label>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-tertiary text-3xl cursor-pointer" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-3xl cursor-pointer" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-3xl cursor-pointer" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-3xl cursor-pointer" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-outline text-3xl cursor-pointer">star</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-bold tracking-widest uppercase text-on-surface-variant mb-2">Review Title</label>
+<input class="w-full bg-surface-container-high border-none rounded-md p-4 focus:ring-2 focus:ring-secondary/20 transition-all text-on-surface" placeholder="Summarize your experience" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold tracking-widest uppercase text-on-surface-variant mb-2">Purchase Date</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md p-4 opacity-70 text-on-surface cursor-not-allowed" disabled="" type="text" value="October 12, 2023"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold tracking-widest uppercase text-on-surface-variant mb-2">Detailed Feedback</label>
+<textarea class="w-full bg-surface-container-high border-none rounded-md p-4 focus:ring-2 focus:ring-secondary/20 transition-all text-on-surface" placeholder="What did you like or dislike? How was the quality?" rows="4"></textarea>
+</div>
+<div>
+<label class="block text-xs font-bold tracking-widest uppercase text-on-surface-variant mb-2">Upload Photos</label>
+<div class="flex gap-4">
+<div class="w-24 h-24 border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center cursor-pointer hover:border-secondary transition-colors group">
+<span class="material-symbols-outlined text-outline group-hover:text-secondary">add_a_photo</span>
+</div>
+<div class="w-24 h-24 rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close-up of a high-quality leather watch strap texture with fine stitching in soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC3qWykFEHR0qXBm_Fq4IXd7heh1qW2KrhNlEl2MHXaFzoaWrHivsQeEz-Ukky70cWe7inV6Pa12Tz1q-gWL_D84jmm69MnwOySjk_atZ2A2X5s0BjaDxYAEYFnnRqz9Ebzh0Z8eGfmO46Qa5opW6lrV1L7VRyGMPYFCHx1i9cHfKrxv9Yx1K2SXdjEsBJAuSTlzNDN8Y2RdaTf66JejXeHZGWeR-bt7hW8v53VH42AkE0NWatAlkiV-Tu9a5CQmHRL5H2FbOkA1qM"/>
+<button class="absolute top-1 right-1 bg-primary/80 text-white rounded-full p-1 leading-none">
+<span class="material-symbols-outlined text-xs">close</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex justify-end gap-4 pt-4">
+<button class="px-6 py-3 font-bold text-sm text-on-surface hover:bg-surface-container-highest transition-colors rounded-md">Save Draft</button>
+<button class="px-10 py-3 bg-primary text-on-primary font-bold text-sm rounded-md tracking-wider hover:opacity-90 transition-opacity">PUBLISH REVIEW</button>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-2xl font-bold font-headline mb-8">Published History</h3>
+<div class="space-y-6">
+<div class="flex flex-col md:flex-row gap-8 items-start bg-surface-container-lowest p-8 rounded-2xl shadow-[0_10px_30px_rgba(11,28,48,0.03)]">
+<div class="w-full md:w-32 flex-shrink-0">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-low mb-3">
+<img class="w-full h-full object-cover" data-alt="Modern round sunglasses with gold frames on a white marble surface with sharp artistic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJbu1iUdjeuj-paSP2EI0nyBjZjG_bIPfK2VTB7mXDBOFSkM_AjEgiTVlJ98XI5UmEgJOLcEsJITBKCon2_NvYxyDI9iZquuY-F3wZ6m6DU9rEB_A-OCoxMvaYPfkp1vAaW_recMcpXhE7r6JvW8x28oZTYc4tbKqB4JpWGv8UuNj2EldeyT2XdQWENfvRdsMLAW67vo0l5B-tb5dixWOHqIDi_-EyM-r5GnwD3ssceZsWmSV6s3nl-glS2_LohtqQ6YRuE-TpVjb1"/>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline text-center">Reviewed Aug 15</p>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-xl">Minimalist Shade Pro</h4>
+<div class="flex text-on-tertiary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-on-surface mb-4 leading-relaxed">The build quality is exceptional. I've used these daily for two months and the hinges are still tight and the lenses haven't scratched at all. Fits perfectly on a medium-sized face.</p>
+<div class="flex gap-6 items-center">
+<span class="flex items-center gap-1 text-xs font-bold text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">thumb_up</span> 24 Helpful
+                                </span>
+<button class="text-xs font-bold text-secondary uppercase tracking-widest hover:underline">Edit Review</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-8 items-start bg-surface-container-lowest p-8 rounded-2xl shadow-[0_10px_30px_rgba(11,28,48,0.03)]">
+<div class="w-full md:w-32 flex-shrink-0">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container-low mb-3">
+<img class="w-full h-full object-cover" data-alt="Classic white leather low-top sneakers on a textured concrete background with dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3fD5OdCGp4V7lYXf_P09O_-WZ9Ata8HF3wkPhyoqTMgPNFzexfkEy4pnE-gWHd_hRAR8l7UzeP9D_zH0_onW3OTbSm29M0V80odjA2le2eVEtcVgl8UDWzRzk4HiF16ItwnqqBNXQc_tS12B3Jqh2rBJUDHgEkgMcO5KieZPaPlY4THRy1bVqZSJ60ftAwe5Qoj1KViVA3O3RHkoHmig70FQ1UlUJ9tDnaJYDREs0P7yIF5eIQmtxFYx1N2Vb5q1jOXsZ0AFuk9pG"/>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline text-center">Reviewed July 22</p>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-xl">Essential White Sneakers</h4>
+<div class="flex text-on-tertiary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+</div>
+<p class="text-on-surface mb-4 leading-relaxed">Solid basic sneakers. They take about a week to break in properly as the leather is quite stiff initially. After that, they are very comfortable for all-day wear.</p>
+<div class="flex gap-6 items-center">
+<span class="flex items-center gap-1 text-xs font-bold text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">thumb_up</span> 12 Helpful
+                                </span>
+<button class="text-xs font-bold text-secondary uppercase tracking-widest hover:underline">Edit Review</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-8 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-t-3xl shadow-[0_-10px_40px_rgba(11,28,48,0.06)]">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 pt-2 scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="text-[10px] font-bold font-inter uppercase tracking-widest">Support</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 pt-2 scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-bold font-inter uppercase tracking-widest">Tickets</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 pt-2 scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">rebase_edit</span>
+<span class="text-[10px] font-bold font-inter uppercase tracking-widest">Returns</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 pt-2 scale-90 duration-300" href="#">
+<span class="material-symbols-outlined">star_outline</span>
+<span class="text-[10px] font-bold font-inter uppercase tracking-widest">Reviews</span>
+</a>
+</footer>
+</body></html>

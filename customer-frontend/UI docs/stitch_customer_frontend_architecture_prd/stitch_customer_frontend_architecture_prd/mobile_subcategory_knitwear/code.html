@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary-container": "#fefcff",
+              "error": "#ba1a1a",
+              "on-tertiary-container": "#b87500",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#131b2e",
+              "secondary": "#0051d5",
+              "secondary-fixed": "#dbe1ff",
+              "on-primary-container": "#7c839b",
+              "on-surface": "#0b1c30",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface": "#f8f9ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#3f465c",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffddb8",
+              "primary-container": "#131b2e",
+              "outline": "#76777d",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#bec6e0",
+              "on-background": "#0b1c30",
+              "surface-container-low": "#eff4ff",
+              "surface-variant": "#d3e4fe",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-surface": "#213145",
+              "surface-container-highest": "#d3e4fe",
+              "surface-tint": "#565e74",
+              "surface-container-high": "#dce9ff",
+              "secondary-fixed-dim": "#b4c5ff",
+              "surface-bright": "#f8f9ff",
+              "on-error": "#ffffff",
+              "secondary-container": "#316bf3",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#00174b",
+              "on-surface-variant": "#45464d",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#bec6e0",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "tertiary-container": "#2a1700",
+              "on-secondary-fixed-variant": "#003ea8",
+              "tertiary": "#000000",
+              "background": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed": "#dae2fd",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white font-manrope font-bold tracking-tight">NORDIC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-50 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</header>
+<main class="pt-20 pb-24 px-4">
+<!-- Editorial Header -->
+<section class="mb-10 mt-4">
+<div class="flex items-baseline justify-between mb-2">
+<h1 class="text-4xl font-extrabold tracking-tight text-primary leading-none">Knitwear</h1>
+<span class="text-on-primary-container font-label text-xs font-semibold uppercase tracking-widest">24 Items</span>
+</div>
+<p class="text-on-surface-variant leading-relaxed max-w-[85%] text-sm">
+                Curated textures and architectural silhouettes. Sustainably sourced cashmere, merino, and organic cotton for the modern atelier.
+            </p>
+</section>
+<!-- Contextual Filters & Sorting (Bento-style horizontal) -->
+<section class="mb-8 overflow-x-auto no-scrollbar -mx-4 px-4 flex gap-3">
+<button class="flex items-center gap-2 bg-surface-container-low px-5 py-3 rounded-full text-sm font-semibold whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="tune">tune</span>
+                Filter
+            </button>
+<div class="flex gap-2">
+<button class="bg-surface-container-highest/50 px-5 py-3 rounded-full text-sm font-medium border border-outline-variant/20 whitespace-nowrap">Material: Cashmere</button>
+<button class="bg-surface-container-low px-5 py-3 rounded-full text-sm font-medium border border-outline-variant/10 whitespace-nowrap">Size: OS</button>
+<button class="bg-surface-container-low px-5 py-3 rounded-full text-sm font-medium border border-outline-variant/10 whitespace-nowrap">Color: Stone</button>
+</div>
+</section>
+<!-- Product Grid (Asymmetrical Layout) -->
+<div class="grid grid-cols-2 gap-x-4 gap-y-10">
+<!-- Product 1: Larger Visual -->
+<div class="col-span-2 space-y-4">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-container-low rounded-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Close-up of a high-quality cream oversized cashmere turtleneck sweater with thick ribbed texture in minimalist studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuwiftybui1pCdKU_yrliOAcIP_NfLRm1961T6fYOY_0YjM-Y859a1AG1TBamLcxQnE6baxYqDD6AMH1BuM5tFz8gnLjmB2iDNc4nejRxWp_gbCLkS_MARAPNj3LaGW0R66qEt4vE2aeW-Cqkktev6mCs7VaMR7gC2k3IFMT0KnK7qvPB65HMSms-Zs_lW_jEOd1dtzj6PDuHPG-k9Y-GgHZhmRThfOJ7lo0Te0M_1vSDY3qUstlcbZa8Kjcm6L5F-yBTffPXpYGkh"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full">New Arrival</span>
+</div>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-3 rounded-full shadow-lg active:scale-90 transition-all">
+<span class="material-symbols-outlined text-primary" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold text-on-surface leading-tight">Oversized Cashmere Rollneck</h3>
+<p class="text-sm text-on-surface-variant">Loro Piana Cashmere</p>
+</div>
+<span class="font-bold text-secondary">$420</span>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="space-y-3">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A man wearing a charcoal grey merino wool cardigan in a clean Scandinavian interior setting with soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPfJh6tlgAGbL2sb6GXEFFssiZIuXFyncAn4fuClAYVLiqRFHrHDMvkca8CB3A_sPa6E6KDbAAcLa-44hutZPxnRlpkYGtSRdrjAgn-3yUtV77p35NuR_C9jbRweb-SccVOtgY1Vxy3rxDDuut7ckr_Q1Il9MLTrn3_2OtqWW1AevbU_7mJQFKZLrdTlUHMEXq82esc-mobYdGIpux7pB4rqwUoxPxYI5ptHCkAWtxSiGgbJvQZi5a0BCMqcwvzQprEViAvPHxJt9O"/>
+<button class="absolute top-3 right-3 text-white/80">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div>
+<h3 class="text-sm font-bold text-on-surface truncate">Structured Cardigan</h3>
+<p class="text-xs text-on-surface-variant">Fine Merino Wool</p>
+<div class="mt-2 flex items-center justify-between">
+<span class="text-sm font-bold text-primary">$185</span>
+<div class="flex gap-1">
+<div class="w-2.5 h-2.5 rounded-full bg-[#3d3d3d]"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-[#d2b48c]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="space-y-3 mt-6"> <!-- Asymmetric Offset -->
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Minimalist flatlay of a chunky knit cotton sweater in ivory on a pale blue background with clean shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEAS7xmlSSxs4uZ56x0NMnx5UoeIgzyD3h37Lllse3_OpESd5eT9hCuQFtyN-PHHVNvEocNplWDb0ijnojz_EvuWjGHMpaE5s0WGtzx4sVMi0-YHybF8stLZ2dJlz2W6NXGMToZbkb_ZCZp-GmxueVaEtHTbNXc5YduHaph09y1saTU0Yqup8ZEWGO_OJMwBkuh1aI1RpYZuXKhFoVZiXFemNcMds6P98A8ThjDcQZDhqAaav6FhsvgYHveQ6OYN_b15br4D2ojBeO"/>
+</div>
+<div>
+<h3 class="text-sm font-bold text-on-surface truncate">Chunky Organic Cotton Crew</h3>
+<p class="text-xs text-on-surface-variant">Winter White</p>
+<div class="mt-2 flex items-center justify-between">
+<span class="text-sm font-bold text-primary">$140</span>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[14px] text-tertiary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] ml-0.5 font-bold">4.8</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Product 4: Landscape bleeding slightly (Editorial vibe) -->
+<div class="col-span-2 space-y-4 pt-6">
+<div class="relative aspect-[16/9] overflow-hidden bg-surface-container-low rounded-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Close up detail of knitted wool fabric showing intricate cable patterns in soft neutral beige tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTKrqbh0As1q8OIzgNuPube9i3qXJSvMQdQ4sgEdmTXyn3XHUj2g1sDo1hT3cfB-gOfq5HIyLTzevTL3hchdn6POBO8tqsCGqxo-kADELIh8OJkOQYolxFgmId768XgzzvF7PU-2bQP66XHWvDK34KWH_DEJ-YkS6sR-JkFFHFh6wvl-R3NhG276Z2Qsv_r8vgl9yOzqcV5m-xS8SFd2V-Pmk0L01OqItE6cO4W8ocZnHA1eImBrcVCKHb9uJrrzJYrfzdFtWFA7Pg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent flex items-end p-6">
+<p class="text-white font-headline text-lg font-bold leading-tight">The Heritage Collection<br/><span class="text-sm font-normal opacity-90">Hand-finished in Norway</span></p>
+</div>
+</div>
+</div>
+<!-- Product 5 -->
+<div class="space-y-3">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A woman wearing a lightweight taupe knit vest layered over a crisp white shirt in an architectural space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD27FOmZ3AX-oXfMWdPN8CFtXXNT_-ZqZfH0bPQId3K0enXhY5g6BLshSDiW5vSPGFVFbwgFCrVgxHWBym1uuAVV_Xq9A7Bs6JrJmgT_gnSfvYQVLA5nIFCih3T49775csBwtt0xYa8YI78dkacE2ZBb5Yr0HsFDYOs-xI-kO7MPJeGKXhqamqBMJ1Ur2jxJUrKFbgNeyhvUHH2FoQXaHGberKpoPgWciknN1PzcHW3agjBhL1-zAI613q5sDmqnAUyWi2VQuLNQrL0"/>
+</div>
+<div>
+<h3 class="text-sm font-bold text-on-surface truncate">Merino Knit Vest</h3>
+<p class="text-xs text-on-surface-variant">Layering Essential</p>
+<div class="mt-2">
+<span class="text-sm font-bold text-primary">$110</span>
+</div>
+</div>
+</div>
+<!-- Product 6 -->
+<div class="space-y-3">
+<div class="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-lg group">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A navy blue v-neck knitted sweater neatly folded on a stone surface with dramatic shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-61PkOF-Ew3mWRV2HB8Qd7jK2qpl8mXXUgqORzvCZ0WPfOXkdDiFIRwyNd54CEYhoL3nrZkR7WhRgk-vyZoGgc7J_k5qWz0XvhdklCUxZ4PF8E1IMM_RhISyWcDAcNG4aAyiIWo_IGuQJ6qLceczVT3LSQHejrHL6dhcEHjK0FTpcKbVCBG4vet4WHT8HElrV7tvKrUzUVgd43rvxhfqWpVLzkZY2zYGNqfco81WiA0JKzqEJbvZTmPQNTGlFiqvBt0MoT7faaYdg"/>
+</div>
+<div>
+<h3 class="text-sm font-bold text-on-surface truncate">V-Neck Heritage Knit</h3>
+<p class="text-xs text-on-surface-variant">Lambswool Blend</p>
+<div class="mt-2">
+<span class="text-sm font-bold text-primary">$165</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/20 dark:border-slate-800/20">
+<div class="flex justify-around items-center h-20 w-full px-4">
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-manrope text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

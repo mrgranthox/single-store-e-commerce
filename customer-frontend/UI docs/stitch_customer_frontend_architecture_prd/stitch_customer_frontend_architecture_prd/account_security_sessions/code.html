@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Security &amp; Sessions | Nordic Commerce</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "on-surface-variant": "#45464d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "background": "#f8f9ff",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed-dim": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#131b2e",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5eeff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "outline": "#76777d",
+              "inverse-primary": "#bec6e0",
+              "outline-variant": "#c6c6cd",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#ffddb8",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "secondary-container": "#316bf3",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#2a1700",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Navigation Bar -->
+<nav class="bg-slate-50/80 backdrop-blur-xl fixed top-0 w-full z-50 flex justify-between items-center px-8 py-4 max-w-none">
+<div class="text-2xl font-bold tracking-tighter text-slate-900">Nordic Commerce</div>
+<div class="hidden md:flex items-center gap-8 font-['Manrope'] tracking-tight text-slate-900">
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">Collections</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors" href="#">Editorial</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex bg-slate-100 items-center px-3 py-1.5 rounded-md">
+<span class="material-symbols-outlined text-outline text-sm">search</span>
+<span class="ml-2 text-sm text-outline">Search editorial...</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-200/50 rounded-md transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="p-2 bg-blue-50 text-blue-700 rounded-md transition-all active:scale-95 duration-200 border-b-2 border-blue-700 pb-1">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-32 px-4 md:px-8 max-w-7xl mx-auto">
+<!-- Header Section -->
+<header class="mb-12 md:mb-20">
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Security &amp; Sessions</h1>
+<p class="text-on-surface-variant max-w-2xl font-body">Manage your account protection, active logins, and authentication methods. We prioritize your privacy through high-level encryption and real-time monitoring.</p>
+</header>
+<!-- Bento Layout Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Two-Factor Authentication Card -->
+<section class="md:col-span-7 bg-surface-container-lowest p-8 rounded-xl shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)] flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between mb-8">
+<div class="h-12 w-12 bg-secondary-container text-white flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-widest rounded-full">Secure</span>
+</div>
+<h2 class="text-2xl font-bold mb-3">Two-Factor Authentication</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-8">Add an extra layer of security to your account by requiring more than just a password to log in. We recommend using an authenticator app for the highest level of protection.</p>
+</div>
+<div class="flex items-center justify-between p-6 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-white rounded shadow-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="phonelink_ring">phonelink_ring</span>
+</div>
+<div>
+<p class="font-semibold text-sm">Authenticator App</p>
+<p class="text-xs text-on-surface-variant">Active since Oct 2023</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</section>
+<!-- Quick Stats Card -->
+<section class="md:col-span-5 bg-primary-container text-white p-8 rounded-xl relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="text-on-primary-container text-xs font-bold uppercase tracking-widest mb-6">Security Health</h3>
+<div class="space-y-6">
+<div class="flex justify-between items-end">
+<span class="text-3xl font-bold">98%</span>
+<span class="text-blue-400 text-sm font-medium">Excellent</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-blue-400 h-full w-[98%]"></div>
+</div>
+<ul class="space-y-3 text-sm text-slate-300">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-green-400" data-icon="check_circle">check_circle</span>
+                                Strong password detected
+                            </li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-green-400" data-icon="check_circle">check_circle</span>
+                                2FA enabled
+                            </li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-blue-400" data-icon="info">info</span>
+                                3 active devices verified
+                            </li>
+</ul>
+</div>
+</div>
+<!-- Abstract visual element -->
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary blur-3xl opacity-20"></div>
+</section>
+<!-- Password Change Form -->
+<section class="md:col-span-5 bg-surface-container-low p-8 rounded-xl">
+<h2 class="text-xl font-bold mb-6">Update Password</h2>
+<form class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Current Password</label>
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-sm" placeholder="••••••••" type="password"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">New Password</label>
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-sm" placeholder="Min. 12 characters" type="password"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Confirm New Password</label>
+<input class="w-full bg-surface-container-high border-none rounded-md px-4 py-3 focus:ring-2 focus:ring-secondary/20 focus:bg-surface-container-lowest transition-all text-sm" placeholder="Repeat new password" type="password"/>
+</div>
+<button class="w-full mt-4 bg-primary text-white py-3 rounded-md font-semibold text-sm hover:opacity-90 transition-all active:scale-95" type="submit">Update Credentials</button>
+</form>
+</section>
+<!-- Active Sessions List -->
+<section class="md:col-span-7 bg-white p-8 rounded-xl shadow-[0_4px_20px_rgba(11,28,48,0.04)]">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-xl font-bold">Active Sessions</h2>
+<button class="text-secondary text-sm font-semibold hover:underline">Log out all other devices</button>
+</div>
+<div class="space-y-0">
+<!-- Current Device -->
+<div class="flex items-center justify-between py-5 border-b border-outline-variant/10">
+<div class="flex items-center gap-5">
+<div class="h-10 w-10 flex items-center justify-center bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="laptop_mac">laptop_mac</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="font-semibold text-sm">MacBook Pro 16"</p>
+<span class="text-[9px] px-1.5 py-0.5 bg-green-100 text-green-700 font-bold uppercase rounded tracking-tighter">Current</span>
+</div>
+<p class="text-xs text-on-surface-variant">Stockholm, SE • Chrome • 192.168.1.1</p>
+</div>
+</div>
+<span class="text-xs text-outline italic">Online</span>
+</div>
+<!-- Mobile Device -->
+<div class="flex items-center justify-between py-5 border-b border-outline-variant/10">
+<div class="flex items-center gap-5">
+<div class="h-10 w-10 flex items-center justify-center bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="smartphone">smartphone</span>
+</div>
+<div>
+<p class="font-semibold text-sm">iPhone 15 Pro</p>
+<p class="text-xs text-on-surface-variant">Copenhagen, DK • Nordic App • 4G Network</p>
+</div>
+</div>
+<button class="text-xs font-bold text-error uppercase tracking-widest hover:bg-error-container px-3 py-1 rounded transition-colors">Revoke</button>
+</div>
+<!-- Desktop Device -->
+<div class="flex items-center justify-between py-5">
+<div class="flex items-center gap-5">
+<div class="h-10 w-10 flex items-center justify-center bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="desktop_windows">desktop_windows</span>
+</div>
+<div>
+<p class="font-semibold text-sm">iMac 24"</p>
+<p class="text-xs text-on-surface-variant">Oslo, NO • Safari • 3 days ago</p>
+</div>
+</div>
+<button class="text-xs font-bold text-error uppercase tracking-widest hover:bg-error-container px-3 py-1 rounded transition-colors">Revoke</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Security Log Section -->
+<section class="mt-12 bg-surface-dim/30 rounded-2xl p-8 border border-white/50 backdrop-blur-sm">
+<h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-outline" data-icon="history">history</span>
+                Security Log
+            </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="space-y-1">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Oct 24, 2023</p>
+<p class="text-sm font-semibold">Password changed successfully</p>
+<p class="text-xs text-outline">Action performed from Stockholm, SE</p>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Oct 12, 2023</p>
+<p class="text-sm font-semibold">New device login: iPhone 15 Pro</p>
+<p class="text-xs text-outline">Verified via Authenticator App</p>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Sep 28, 2023</p>
+<p class="text-sm font-semibold text-error">Failed login attempt</p>
+<p class="text-xs text-outline">IP: 104.22.3.11 (Blocked)</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-20 bg-slate-100 px-8 py-12 flex flex-col md:flex-row justify-between items-center border-t border-slate-200">
+<div class="font-['Manrope'] font-bold text-lg text-slate-900 mb-6 md:mb-0">Nordic Commerce.</div>
+<div class="flex flex-wrap justify-center gap-8 mb-6 md:mb-0 font-['Inter'] text-sm">
+<a class="text-slate-500 hover:text-slate-800 transition-all" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-slate-800 transition-all" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-slate-800 transition-all" href="#">Sustainability</a>
+<a class="text-slate-500 hover:text-slate-800 transition-all" href="#">Contact</a>
+</div>
+<p class="text-slate-500 text-sm font-['Inter']">© 2024 Nordic Commerce. An Editorial Atelier.</p>
+</footer>
+<!-- Mobile Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 md:hidden bg-white/90 backdrop-blur-lg border-t border-slate-100 shadow-[0_-4px_20px_rgba(11,28,48,0.04)]">
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard_customize">dashboard_customize</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Collections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Editorial</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 bg-blue-50 rounded-xl px-3 py-1 scale-90 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person_outline" style="font-variation-settings: 'FILL' 1;">person_outline</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest">Account</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Addresses | Atelier Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-container-high": "#dce9ff",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#bec6e0",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-surface-variant": "#45464d",
+                        "on-background": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#d3e4fe",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#131b2e",
+                        "tertiary": "#000000",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#565e74",
+                        "error-container": "#ffdad6",
+                        "secondary": "#0051d5",
+                        "on-primary-container": "#7c839b",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "primary-fixed": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "secondary-fixed": "#dbe1ff",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c6c6cd",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-tertiary-container": "#b87500",
+                        "surface-container": "#e5eeff",
+                        "secondary-container": "#316bf3",
+                        "on-surface": "#0b1c30",
+                        "on-secondary-fixed": "#00174b",
+                        "tertiary-fixed": "#ffddb8",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "primary-container": "#131b2e",
+                        "background": "#f8f9ff",
+                        "tertiary-container": "#2a1700"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto border-none left-1/2 -translate-x-1/2">
+<div class="text-2xl font-bold tracking-tighter text-slate-900 dark:text-slate-50">Atelier Account</div>
+<div class="hidden md:flex items-center space-x-8 font-manrope tracking-tight font-bold">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Collections</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Journal</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="material-symbols-outlined text-slate-600 dark:text-slate-400 hover:text-blue-700">shopping_bag</button>
+<button class="material-symbols-outlined text-blue-700 dark:text-blue-400">account_circle</button>
+</div>
+</nav>
+<div class="flex pt-20 min-h-screen max-w-screen-2xl mx-auto">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-[calc(100vh-5rem)] w-64 p-6 space-y-8 bg-slate-50 dark:bg-slate-950 sticky top-20 font-manrope font-medium text-sm">
+<div class="space-y-1">
+<p class="text-xl font-black text-slate-900 dark:text-slate-100">Welcome back, Julian</p>
+<p class="text-slate-500 text-xs">Premium Member since 2023</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">person_edit</span>
+<span>Profile</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-blue-700 dark:text-blue-400 font-bold bg-blue-50/50 dark:bg-blue-900/20 rounded-lg translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">home_pin</span>
+<span>Addresses</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span>Orders</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-2">
+<button class="w-full py-3 px-4 bg-primary text-on-primary text-xs uppercase tracking-widest font-bold rounded-md hover:opacity-90 transition-opacity mb-4">
+                    Contact Concierge
+                </button>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-6 md:px-12 py-10 bg-surface">
+<!-- Editorial Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div class="max-w-2xl">
+<span class="text-secondary font-label text-[10px] uppercase tracking-[0.2em] font-bold">Directory</span>
+<h1 class="text-display-lg text-5xl md:text-6xl font-headline font-extrabold tracking-tighter text-on-background mt-2">
+                        Your Atelier <br/>Locations
+                    </h1>
+<p class="text-on-surface-variant mt-6 text-lg font-body leading-relaxed">
+                        Manage your curated shipping destinations. Ensure your bespoke orders arrive at the correct sanctuary.
+                    </p>
+</div>
+<button class="flex items-center gap-2 px-8 py-4 bg-secondary text-on-secondary rounded-md font-bold font-manrope hover:bg-secondary-container transition-all active:scale-95">
+<span class="material-symbols-outlined">add</span>
+<span>Add New Address</span>
+</button>
+</div>
+<!-- Bento-Inspired Address Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Address Card 1: Default/Home -->
+<div class="group relative bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between min-h-[320px] shadow-[0_20px_40px_rgba(11,28,48,0.03)] hover:shadow-[0_20px_40px_rgba(11,28,48,0.06)] transition-all duration-500">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider w-fit">Default</span>
+<h3 class="text-2xl font-headline font-bold text-on-background mt-2">Home Sanctuary</h3>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors" data-weight="fill">home</span>
+</div>
+<div class="mt-8 space-y-1">
+<p class="text-on-surface font-semibold">Julian Sterling</p>
+<p class="text-on-surface-variant font-body leading-relaxed">
+                            742 Evergreen Terrace<br/>
+                            Apt 4B, The Glass Pavilion<br/>
+                            Seattle, WA 98101<br/>
+                            United States
+                        </p>
+<p class="text-on-surface-variant text-sm mt-4">+1 (206) 555-0192</p>
+</div>
+<div class="mt-10 pt-6 border-t border-outline-variant/20 flex gap-6">
+<button class="text-sm font-bold text-on-surface-variant hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-4">Edit</button>
+<button class="text-sm font-bold text-error/70 hover:text-error transition-colors underline decoration-error/20 underline-offset-4">Remove</button>
+</div>
+</div>
+<!-- Address Card 2: Work -->
+<div class="group relative bg-surface-container-low p-8 rounded-xl flex flex-col justify-between min-h-[320px] transition-all duration-500">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="bg-surface-container-highest text-on-secondary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider w-fit">Work</span>
+<h3 class="text-2xl font-headline font-bold text-on-background mt-2">The Studio</h3>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors">work</span>
+</div>
+<div class="mt-8 space-y-1">
+<p class="text-on-surface font-semibold">Julian Sterling</p>
+<p class="text-on-surface-variant font-body leading-relaxed">
+                            Metropolitan Center<br/>
+                            Suite 1200, Atelier West<br/>
+                            Los Angeles, CA 90012<br/>
+                            United States
+                        </p>
+<p class="text-on-surface-variant text-sm mt-4">+1 (213) 555-0844</p>
+</div>
+<div class="mt-10 pt-6 border-t border-outline-variant/20 flex gap-6">
+<button class="text-sm font-bold text-on-surface-variant hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-4">Edit</button>
+<button class="text-sm font-bold text-error/70 hover:text-error transition-colors underline decoration-error/20 underline-offset-4">Remove</button>
+</div>
+</div>
+<!-- Address Card 3: Seasonal/Other -->
+<div class="group relative bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between min-h-[320px] shadow-[0_20px_40px_rgba(11,28,48,0.03)] hover:shadow-[0_20px_40px_rgba(11,28,48,0.06)] transition-all duration-500">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="bg-surface-container text-on-primary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider w-fit">Vacation</span>
+<h3 class="text-2xl font-headline font-bold text-on-background mt-2">Aspen Chalet</h3>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors">ac_unit</span>
+</div>
+<div class="mt-8 space-y-1">
+<p class="text-on-surface font-semibold">Julian Sterling</p>
+<p class="text-on-surface-variant font-body leading-relaxed">
+                            890 Snow Peak Trail<br/>
+                            Lower Lodge<br/>
+                            Aspen, CO 81611<br/>
+                            United States
+                        </p>
+<p class="text-on-surface-variant text-sm mt-4">+1 (970) 555-0122</p>
+</div>
+<div class="mt-10 pt-6 border-t border-outline-variant/20 flex gap-6">
+<button class="text-sm font-bold text-on-surface-variant hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-4">Edit</button>
+<button class="text-sm font-bold text-error/70 hover:text-error transition-colors underline decoration-error/20 underline-offset-4">Remove</button>
+</div>
+</div>
+<!-- Add New Placeholder -->
+<button class="group border-2 border-dashed border-outline-variant/30 p-8 rounded-xl flex flex-col items-center justify-center min-h-[320px] hover:border-secondary/40 hover:bg-surface-container-low transition-all duration-300">
+<div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-secondary text-3xl">add_location</span>
+</div>
+<span class="mt-6 text-on-surface-variant font-headline font-bold text-lg">Add New Destination</span>
+<span class="mt-2 text-outline text-sm font-body max-w-[180px] text-center">Save a new address for faster, effortless checkout.</span>
+</button>
+</div>
+<!-- Map Context Section (Editorial Detail) -->
+<section class="mt-24 rounded-3xl overflow-hidden relative h-[400px] group">
+<img alt="Topographic map detail" class="w-full h-full object-cover grayscale opacity-50 group-hover:scale-105 transition-transform duration-1000" data-alt="abstract monochromatic topographic map lines in deep navy and cool gray tones, minimalist and sophisticated editorial background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6_X555eaT-NTQEMCsSFAwgTwKOpnjyI9k2LFUk4pJX-l3JjMukYY3ntFvlilSPE1EzqV9P0PWXARqpJA-E4Fk4wM-_COPBMT7SBbEbnf1uuJTviShgp-NtlTSE6qXHprPHjAcyZ4hl955RVygQBMU7-VKOpyrS7m7tkSSQhruE2ohE_PowfmKU6CX5MQHVIT8jlt-mONp2aiSR7eLuh7g6Z4K8swL5WP4XR5DKqzhxKl4l5uIGN_NgzcpnwUme7VXdXLTX8daNEab"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute bottom-12 left-12 max-w-lg">
+<h2 class="text-3xl font-headline font-extrabold text-on-background tracking-tight">Global Logistics</h2>
+<p class="text-on-surface-variant mt-4 font-body leading-relaxed">
+                        Atelier Account utilizes precision routing to ensure your seasonal collections arrive exactly where you are, anywhere in the world.
+                    </p>
+</div>
+</section>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-8 pt-4 md:hidden bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-lg border-t border-slate-200/20 dark:border-slate-800/20 shadow-[0_-10px_40px_rgba(11,28,48,0.06)] rounded-t-3xl">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-300" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-300" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-300" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-100/50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-100 rounded-xl px-4 py-1 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-manrope text-[10px] uppercase tracking-widest mt-1">Account</span>
+</a>
+</nav>
+</body></html>

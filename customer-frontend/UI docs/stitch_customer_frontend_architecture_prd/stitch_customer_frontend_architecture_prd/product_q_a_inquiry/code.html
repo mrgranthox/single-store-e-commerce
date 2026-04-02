@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8f9ff",
+              "on-secondary-container": "#fefcff",
+              "on-surface-variant": "#45464d",
+              "on-tertiary-fixed-variant": "#653e00",
+              "background": "#f8f9ff",
+              "surface-container-low": "#eff4ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "on-primary-fixed": "#131b2e",
+              "surface-dim": "#cbdbf5",
+              "primary-fixed-dim": "#bec6e0",
+              "surface-container-high": "#dce9ff",
+              "tertiary": "#000000",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-highest": "#d3e4fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "primary": "#000000",
+              "error-container": "#ffdad6",
+              "surface-tint": "#565e74",
+              "on-tertiary": "#ffffff",
+              "primary-container": "#131b2e",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5eeff",
+              "inverse-surface": "#213145",
+              "on-secondary-fixed": "#00174b",
+              "outline": "#76777d",
+              "inverse-primary": "#bec6e0",
+              "outline-variant": "#c6c6cd",
+              "on-surface": "#0b1c30",
+              "tertiary-fixed-dim": "#ffb95f",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#ffddb8",
+              "surface-variant": "#d3e4fe",
+              "on-secondary-fixed-variant": "#003ea8",
+              "on-tertiary-container": "#b87500",
+              "secondary": "#0051d5",
+              "secondary-container": "#316bf3",
+              "primary-fixed": "#dae2fd",
+              "secondary-fixed-dim": "#b4c5ff",
+              "on-background": "#0b1c30",
+              "tertiary-container": "#2a1700",
+              "on-primary-container": "#7c839b"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-8 py-4 max-w-none">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tighter text-slate-900 font-headline">Nordic Commerce</span>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-slate-600 hover:text-slate-900 transition-colors font-body" href="#">Shop</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors font-body" href="#">Collections</a>
+<a class="text-slate-600 hover:text-slate-900 transition-colors font-body" href="#">Editorial</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-high px-4 py-2 rounded-lg">
+<span class="material-symbols-outlined text-outline text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-body w-64" placeholder="Search product Q&amp;A..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-200/50 rounded-md transition-all active:scale-95">
+<span class="material-symbols-outlined text-slate-900" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="p-2 hover:bg-slate-200/50 rounded-md transition-all active:scale-95">
+<span class="material-symbols-outlined text-slate-900" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto">
+<!-- Hero Section -->
+<header class="mb-20">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+<div class="lg:col-span-8">
+<span class="text-secondary font-label font-medium uppercase tracking-widest text-xs mb-4 block">Community Atelier</span>
+<h1 class="text-6xl md:text-7xl font-extrabold font-headline tracking-tighter text-on-surface leading-[1.1]">
+                        Knowledge <br/>
+<span class="text-secondary">&amp; Expertise.</span>
+</h1>
+</div>
+<div class="lg:col-span-4 pb-2">
+<p class="text-on-surface-variant text-lg leading-relaxed font-body">
+                        Direct answers from our product designers and a global community of Nordic enthusiasts. Curated for clarity.
+                    </p>
+</div>
+</div>
+</header>
+<!-- Bento Grid Layout for Q&A -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Left Column: Search & Categories -->
+<div class="md:col-span-4 space-y-8">
+<!-- Search & Filter Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)]">
+<h3 class="font-headline font-bold text-xl mb-6">Filter Knowledge</h3>
+<div class="space-y-4">
+<button class="w-full flex justify-between items-center p-4 bg-primary text-on-primary rounded-lg transition-all active:scale-95">
+<span class="font-medium">All Questions</span>
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-low text-on-surface hover:bg-surface-container-high rounded-lg transition-all">
+<span class="font-medium">Shipping &amp; Logistics</span>
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+</button>
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-low text-on-surface hover:bg-surface-container-high rounded-lg transition-all">
+<span class="font-medium">Sustainability &amp; Origin</span>
+<span class="material-symbols-outlined" data-icon="eco">eco</span>
+</button>
+<button class="w-full flex justify-between items-center p-4 bg-surface-container-low text-on-surface hover:bg-surface-container-high rounded-lg transition-all">
+<span class="font-medium">Material Care</span>
+<span class="material-symbols-outlined" data-icon="dry_cleaning">dry_cleaning</span>
+</button>
+</div>
+</div>
+<!-- Expertise Banner -->
+<div class="bg-primary-container p-8 rounded-xl text-on-primary relative overflow-hidden">
+<div class="relative z-10">
+<span class="text-primary-fixed-dim font-label text-[10px] uppercase tracking-widest block mb-2">Verified Expert</span>
+<h4 class="font-headline font-bold text-2xl mb-4">Talk to an Artisan.</h4>
+<p class="text-on-primary-container text-sm mb-6 leading-relaxed">Our designers respond within 24 hours to technical product queries.</p>
+<button class="text-secondary-fixed font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                            Message Studio <span class="material-symbols-outlined" data-icon="arrow_right_alt">arrow_right_alt</span>
+</button>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="architecture">architecture</span>
+</div>
+</div>
+</div>
+<!-- Main Q&A Content -->
+<div class="md:col-span-8 space-y-6">
+<!-- Q&A Item 1: Featured -->
+<article class="bg-surface-container-lowest p-8 rounded-xl border-l-4 border-secondary">
+<div class="flex items-start justify-between gap-4 mb-4">
+<div class="flex items-center gap-2">
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed font-label text-[10px] uppercase tracking-widest rounded-full">Popular</span>
+<span class="text-outline text-xs">Asked 2 days ago</span>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="share">share</span>
+</div>
+<h2 class="font-headline font-bold text-2xl mb-4 text-on-surface">"How does the Stockholm Oak finish age over time with direct sunlight exposure?"</h2>
+<div class="bg-surface-container-low p-6 rounded-lg relative">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-sm" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<p class="text-sm font-bold">Erik V., Product Design Head</p>
+<p class="text-[10px] uppercase tracking-widest text-secondary font-label">Official Studio Response</p>
+</div>
+</div>
+<p class="text-on-surface-variant leading-relaxed">
+                            Our Stockholm Oak is treated with a UV-resistant natural oil. Over 5-7 years, you will notice the honey tones deepen into a richer, warmer amber. We recommend a light re-oiling once every two years to maintain the structural moisture balance.
+                        </p>
+</div>
+<div class="mt-6 flex items-center gap-6">
+<button class="flex items-center gap-2 text-sm text-outline hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="thumb_up">thumb_up</span> 124 Helpful
+                        </button>
+<button class="flex items-center gap-2 text-sm text-outline hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chat_bubble">chat_bubble</span> 3 Community Replies
+                        </button>
+</div>
+</article>
+<!-- Q&A Item 2 -->
+<article class="bg-surface-container-lowest p-8 rounded-xl transition-all hover:bg-surface-container-high/50">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant font-label text-[10px] uppercase tracking-widest rounded-full">Materials</span>
+<span class="text-outline text-xs">Asked 1 week ago</span>
+</div>
+<h2 class="font-headline font-bold text-xl mb-4 text-on-surface">"Are the upholstery fabrics OEKO-TEX certified for chemical safety?"</h2>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline" data-icon="person">person</span>
+</div>
+<div>
+<p class="text-on-surface-variant leading-relaxed mb-4">
+                                Yes, 100% of our textile catalog—including the recycled wool blends—is OEKO-TEX Standard 100 certified. We prioritize non-toxic dyes and sustainable weaving processes in our Belgian mills.
+                            </p>
+<button class="text-secondary font-semibold text-sm">View Certification Docs</button>
+</div>
+</div>
+</article>
+<!-- Q&A Item 3 -->
+<article class="bg-surface-container-lowest p-8 rounded-xl transition-all hover:bg-surface-container-high/50">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant font-label text-[10px] uppercase tracking-widest rounded-full">Assembly</span>
+<span class="text-outline text-xs">Asked 2 weeks ago</span>
+</div>
+<h2 class="font-headline font-bold text-xl mb-4 text-on-surface">"Does the Fjord Modular Sofa require specialized tools for assembly?"</h2>
+<div class="flex items-start gap-4">
+<div class="flex-shrink-0 w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline" data-icon="person">person</span>
+</div>
+<p class="text-on-surface-variant leading-relaxed">
+                            No tools required. The Fjord system uses our proprietary click-lock mechanism. You can assemble a 3-seater configuration in under 15 minutes by yourself.
+                        </p>
+</div>
+</article>
+<!-- Load More / CTA -->
+<div class="pt-8 flex justify-center">
+<button class="bg-surface-container-low px-12 py-4 rounded-lg font-bold text-on-surface hover:bg-surface-container-high transition-all">
+                        Load More Questions
+                    </button>
+</div>
+</div>
+</div>
+<!-- Ask a Question Section -->
+<section class="mt-32">
+<div class="bg-surface-container-low rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+<div class="p-12 md:p-16">
+<h2 class="font-headline font-extrabold text-4xl mb-6">Didn't find your answer?</h2>
+<p class="text-on-surface-variant text-lg mb-10 leading-relaxed">
+                        Submit your question to our design atelier. We believe transparency is the foundation of quality.
+                    </p>
+<form class="space-y-6">
+<div>
+<label class="block text-[10px] uppercase tracking-[0.2em] font-label font-bold text-outline mb-2">Subject Category</label>
+<select class="w-full bg-surface-container-lowest border-none focus:ring-2 focus:ring-secondary rounded-lg p-4 font-body">
+<option>Product Specifications</option>
+<option>Shipping &amp; Delivery</option>
+<option>Material Sourcing</option>
+<option>Design Customization</option>
+</select>
+</div>
+<div>
+<label class="block text-[10px] uppercase tracking-[0.2em] font-label font-bold text-outline mb-2">Your Question</label>
+<textarea class="w-full bg-surface-container-lowest border-none focus:ring-2 focus:ring-secondary rounded-lg p-4 font-body" placeholder="What would you like to know about our craftsmanship?" rows="4"></textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-[10px] uppercase tracking-[0.2em] font-label font-bold text-outline mb-2">Full Name</label>
+<input class="w-full bg-surface-container-lowest border-none focus:ring-2 focus:ring-secondary rounded-lg p-4 font-body" placeholder="Arne Jacobsen" type="text"/>
+</div>
+<div>
+<label class="block text-[10px] uppercase tracking-[0.2em] font-label font-bold text-outline mb-2">Email Address</label>
+<input class="w-full bg-surface-container-lowest border-none focus:ring-2 focus:ring-secondary rounded-lg p-4 font-body" placeholder="arne@design.dk" type="email"/>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-10 py-5 rounded-lg font-bold w-full md:w-auto hover:bg-secondary-container transition-all active:scale-95 shadow-xl shadow-primary/10" type="submit">
+                            Submit Inquiry
+                        </button>
+</form>
+</div>
+<div class="hidden lg:block relative min-h-[600px]">
+<img class="absolute inset-0 w-full h-full object-cover grayscale-[20%] contrast-[1.1]" data-alt="Modern minimalist living room with sage green sofa and oak coffee table, warm morning sunlight creating soft shadows on textured walls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFuiWoQUzDGLldM1Hs-Z2mxcsGtpIiCKHYVccwZmtBj1aioug1SgONwJCxJlHQCJDioXqBMk7uWlXINreT3qJpfyYAnMQuQsOccbKygw1QKq-L2s3PdgejK9WjjFtr1TggkdpLuc2NIPOsjHJAMhOUJYZSSKZyaAlP_toWrJPjLbCs4eiDs_5iod_ifRUmYmWQ_uQvWJLymz99bkfJkBvP3NPZ4WeJ74P6hlCM9RbRHnRhBZfHEn4yr1rhkrte5OY_cCeMiLrjvhjD"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+<div class="absolute bottom-12 left-12 right-12 p-8 glass-nav bg-white/10 rounded-xl border border-white/20">
+<p class="text-white font-headline text-xl italic mb-4">"We don't just build furniture; we curate the silent background of your life."</p>
+<span class="text-white/80 font-label text-xs uppercase tracking-widest">— Nordic Commerce Design Philosophy</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-slate-100 px-8 py-12 flex flex-col md:flex-row justify-between items-center border-t border-slate-200">
+<div class="flex flex-col items-center md:items-start gap-4 mb-8 md:mb-0">
+<span class="font-['Manrope'] font-bold text-lg text-slate-900">Nordic Commerce</span>
+<p class="font-['Inter'] text-sm tracking-normal text-slate-500">© 2024 Nordic Commerce. An Editorial Atelier.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-['Inter'] text-sm text-slate-500 hover:text-slate-800 transition-opacity" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-sm text-slate-500 hover:text-slate-800 transition-opacity" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-sm text-slate-500 hover:text-slate-800 transition-opacity" href="#">Sustainability</a>
+<a class="font-['Inter'] text-sm text-slate-500 hover:text-slate-800 transition-opacity" href="#">Contact</a>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 md:hidden bg-white/90 backdrop-blur-lg border-t border-slate-100 shadow-[0_-4px_20px_rgba(11,28,48,0.04)]">
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard_customize">dashboard_customize</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Collections</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-700 bg-blue-50 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Editorial</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="person_outline">person_outline</span>
+<span class="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Account</span>
+</a>
+</nav>
+</body></html>
