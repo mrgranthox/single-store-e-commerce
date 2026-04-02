@@ -112,8 +112,8 @@ const MOCK_REVIEWS = [
 export const ProductReviewsPage = () => {
   const { productSlug } = useParams();
   const product = productSlug ? productsBySlug[productSlug] : undefined;
-  if (!product) return <ProductSubpageMissing />;
   const [filter, setFilter] = useState<"all" | "5" | "4">("all");
+  if (!product) return <ProductSubpageMissing />;
   const reviews = MOCK_REVIEWS.filter((r) => (filter === "all" ? true : String(r.rating) === filter));
 
   return (
@@ -169,8 +169,8 @@ export const ProductReviewsPage = () => {
 export const ProductQuestionsPage = () => {
   const { productSlug } = useParams();
   const product = productSlug ? productsBySlug[productSlug] : undefined;
-  if (!product) return <ProductSubpageMissing />;
   const [q, setQ] = useState("");
+  if (!product) return <ProductSubpageMissing />;
 
   return (
     <StorefrontShell>
