@@ -1,0 +1,13 @@
+# Netlify: set this site’s “Base directory” to `customer-frontend` (repo root stays the Git root).
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Vite inlines VITE_* at build time (public client config).
+  SECRETS_SCAN_OMIT_KEYS = "VITE_BACKEND_BASE_URL,VITE_DEV_PROXY_TARGET"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
