@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Icon } from "@/components/Icon";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
+import { neutralFieldClass } from "@/lib/data/mock-images";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const topNavIconBtn =
@@ -162,7 +163,7 @@ export const TopNavBar = () => {
                   className="pointer-events-none absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-outline text-sm sm:text-base"
                 />
                 <input
-                  className="w-full bg-surface-container-high/90 border border-outline-variant/20 rounded-full pl-8 sm:pl-9 pr-2.5 sm:pr-3 py-1.5 sm:py-2.5 text-xs sm:text-sm text-on-surface placeholder:text-outline/75 focus:outline-none focus:ring-2 focus:ring-secondary/25 focus:border-secondary/30 focus:bg-white transition-all"
+                  className={`w-full rounded-full pl-8 sm:pl-9 pr-2.5 sm:pr-3 py-1.5 sm:py-2.5 text-xs sm:text-sm transition-colors ${neutralFieldClass}`}
                   placeholder="Search…"
                   type="search"
                   aria-label="Search catalogue"

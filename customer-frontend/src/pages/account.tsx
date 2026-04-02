@@ -4,6 +4,7 @@ import { AccountLayout } from "@/components/layout";
 import { OrderStatusBadge } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { orders, tickets } from "@/lib/data/customer-mock";
+import { neutralFieldClass } from "@/lib/data/mock-images";
 import { STORE_NAME_FULL, STORE_NAME_SHORT, SUPPORT_SENDER_LABEL } from "@/lib/brand";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
@@ -160,14 +161,14 @@ export const OrdersListPage = () => {
       </header>
 
       {/* Search & Filters */}
-      <section className="bg-surface-container-low p-6 rounded-xl mb-12 flex flex-col md:flex-row gap-6 items-end">
+      <section className="bg-white border border-outline-variant/20 p-6 rounded-xl mb-12 flex flex-col md:flex-row gap-6 items-end shadow-sm">
         <div className="w-full md:w-1/3">
           <label className="block text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-2">Search Orders</label>
           <div className="relative">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-surface-container-high border-none rounded-lg py-3 pl-12 focus:ring-2 focus:ring-secondary transition-all font-body text-sm outline-none"
+              className={`w-full rounded-lg py-3 pl-12 pr-3 font-body text-sm ${neutralFieldClass}`}
               placeholder="Order #, Product, or Date"
               type="text"
             />
@@ -179,7 +180,7 @@ export const OrdersListPage = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary transition-all font-body text-sm outline-none"
+            className={`w-full rounded-lg py-3 px-4 font-body text-sm outline-none ${neutralFieldClass}`}
           >
             <option>All Statuses</option>
             <option>Processing</option>
@@ -190,7 +191,7 @@ export const OrdersListPage = () => {
         </div>
         <div className="w-full md:w-1/4">
           <label className="block text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-2">Date Range</label>
-          <select className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary transition-all font-body text-sm outline-none">
+          <select className={`w-full rounded-lg py-3 px-4 font-body text-sm outline-none ${neutralFieldClass}`}>
             <option>Last 30 Days</option>
             <option>Last 6 Months</option>
             <option>Year 2023</option>

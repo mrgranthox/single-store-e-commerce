@@ -140,6 +140,32 @@ p {
   }
 }
 
+/* Home hero CTA — compact pill + animated multi-colour glow */
+@keyframes hero-cta-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 14px rgba(236, 72, 153, 0.55)) drop-shadow(0 0 28px rgba(168, 85, 247, 0.38));
+  }
+  35% {
+    filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.45)) drop-shadow(0 0 32px rgba(244, 114, 182, 0.42));
+  }
+  70% {
+    filter: drop-shadow(0 0 16px rgba(192, 132, 252, 0.5)) drop-shadow(0 0 30px rgba(236, 72, 153, 0.35));
+  }
+}
+
+.hero-cta-glow {
+  animation: hero-cta-glow 3s ease-in-out infinite;
+  will-change: filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-glow {
+    animation: none;
+    filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.4));
+  }
+}
+
 ::selection {
   background: #fbcfe8;
   color: #3a0a2e;

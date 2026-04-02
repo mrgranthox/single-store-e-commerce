@@ -20,7 +20,7 @@ import {
   campaignBySlug,
 } from "@/lib/data/customer-mock";
 import { STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
-import { mockImages } from "@/lib/data/mock-images";
+import { mockImages, neutralFieldClass } from "@/lib/data/mock-images";
 import { searchCatalog } from "@/lib/catalog-search";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
@@ -47,13 +47,13 @@ export const HomePage = () => {
       <main
         className={`${storefrontScrollRegionClasses} bg-surface text-on-background font-body overflow-x-hidden w-full max-w-full min-w-0`}
       >
-        <section className="relative min-h-[min(72dvh,540px)] md:min-h-0 md:h-[min(92dvh,920px)] w-full overflow-hidden bg-primary-container">
+        <section className="relative min-h-[min(72dvh,540px)] md:min-h-0 md:h-[min(92dvh,920px)] w-full overflow-hidden bg-neutral-950">
           <img
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-75 md:opacity-70"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-95 md:opacity-92"
             src={mockImages.heroHome}
             alt=""
           />
-          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/88 md:from-primary-container/78 via-fuchsia-950/40 md:via-fuchsia-950/25 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/72 md:from-black/58 via-black/28 md:via-black/15 to-transparent" />
           <div className="relative z-[1] min-h-[min(72dvh,540px)] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-stretch sm:items-start pb-16 md:pb-0 pt-24 md:pt-0 w-full min-w-0">
             <span className="font-label text-tertiary-fixed tracking-[0.2em] sm:tracking-[0.28em] uppercase text-[10px] sm:text-xs mb-3 md:mb-5 font-bold">
               {STORE_NAME_SHORT} · Vibrant beauty &amp; care
@@ -64,14 +64,14 @@ export const HomePage = () => {
             <p className="text-primary-fixed text-sm sm:text-base md:text-lg max-w-full sm:max-w-md md:max-w-lg mb-6 md:mb-10 font-light leading-relaxed">
               Pigment-rich makeup, skin-first essentials, and drops you will actually use — checkout with card or mobile money (MTN, Telecel, AirtelTigo) via Paystack.
             </p>
-            <div className="w-full sm:w-auto min-w-0">
+            <div className="hero-cta-glow w-fit max-w-full self-start">
               <Link
                 to="/shop"
-                className="bg-secondary text-on-secondary px-7 sm:px-10 py-3.5 rounded-xl font-semibold hover:opacity-95 transition-all inline-flex items-center justify-center gap-2 group shadow-lg shadow-secondary/30 text-center w-full sm:w-auto"
+                className="bg-secondary text-on-secondary px-5 sm:px-7 py-2.5 sm:py-3 rounded-full text-sm sm:text-[0.9375rem] font-semibold hover:brightness-110 active:scale-[0.98] transition-[transform,filter] duration-200 inline-flex items-center justify-center gap-1.5 sm:gap-2 group shadow-md shadow-secondary/25"
                 aria-label="Shop the full catalogue"
               >
                 Shop the edit
-                <Icon name="arrow_forward" className="text-lg group-hover:translate-x-0.5 transition-transform" />
+                <Icon name="arrow_forward" className="text-base sm:text-lg group-hover:translate-x-0.5 transition-transform duration-200" />
               </Link>
             </div>
           </div>
@@ -498,12 +498,12 @@ export const ShopAllPage = () => {
           </p>
         </header>
         {/* Filter Bar */}
-        <div className="bg-surface-container-low p-6 rounded-xl mb-12 flex flex-col md:flex-row gap-6 items-end">
+        <div className="bg-white border border-outline-variant/20 p-6 rounded-xl mb-12 flex flex-col md:flex-row gap-6 items-end shadow-sm">
           <div className="w-full md:w-1/3">
             <label className="block text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-2">
               Category
             </label>
-            <select className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary transition-all text-sm outline-none">
+            <select className={`w-full rounded-lg py-3 px-4 text-sm outline-none ${neutralFieldClass}`}>
               <option>All Categories</option>
               <option>Outerwear</option>
               <option>Basics</option>
@@ -519,7 +519,7 @@ export const ShopAllPage = () => {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary transition-all text-sm outline-none"
+              className={`w-full rounded-lg py-3 px-4 text-sm outline-none ${neutralFieldClass}`}
             >
               <option value="featured">Featured</option>
               <option value="price_asc">Price: Low to High</option>
@@ -531,7 +531,7 @@ export const ShopAllPage = () => {
             <label className="block text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-2">
               Price Range
             </label>
-            <select className="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-secondary transition-all text-sm outline-none">
+            <select className={`w-full rounded-lg py-3 px-4 text-sm outline-none ${neutralFieldClass}`}>
               <option>All Prices</option>
               <option>Under $100</option>
               <option>$100 – $500</option>
@@ -962,7 +962,7 @@ export const SearchPage = () => {
                   id="catalog-search"
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
-                  className="w-full bg-surface-container-high/90 border border-outline-variant/25 rounded-2xl pl-12 pr-4 py-3.5 sm:py-4 text-base text-on-surface placeholder:text-outline/70 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary/30 focus:bg-white transition-all"
+                  className={`w-full rounded-2xl pl-12 pr-4 py-3.5 sm:py-4 text-base transition-colors ${neutralFieldClass}`}
                   placeholder="Graphic tee, hoodie, oversized, cotton…"
                   type="search"
                   autoComplete="off"

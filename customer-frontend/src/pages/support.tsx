@@ -4,6 +4,7 @@ import { SupportLayout, Footer, TopNavBar, BottomNavBar } from "@/components/lay
 import { Icon } from "@/components/Icon";
 import { faqItems, tickets } from "@/lib/data/customer-mock";
 import { SUPPORT_SENDER_LABEL } from "@/lib/brand";
+import { neutralFieldClass } from "@/lib/data/mock-images";
 
 /* ─────────────────────────────────────────────
    SUPPORT CENTER — Help/FAQ
@@ -34,7 +35,7 @@ export const SupportCenterPage = () => {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-surface-container-high border-none rounded-full py-4 pl-14 pr-6 focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all outline-none"
+              className={`w-full rounded-full py-4 pl-14 pr-6 transition-colors ${neutralFieldClass}`}
               placeholder="Search for answers..."
               type="text"
             />
