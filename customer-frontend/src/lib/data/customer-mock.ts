@@ -372,7 +372,7 @@ export const campaigns = [
     title: "The Winter Edit",
     subtitle: "Cold-weather layers and footwear — up to 40% off selected lines while supplies last.",
     heroImageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuB-drtBa_pDpRTNgKXVCHXglWW9cR8ERdSjwhMxynBnCNEBtkZvA5EHspXnQTmIxf2f3HcwyoH7QqVYvmA5LN_bTkkz1PQdKlb0Gmkz4Id2LDBMDLO-wN3wn8oob43i1TnRgyKYQN_E3PY50JBuwfgoGnVZq5sWhcqPw6DRpmAt8O35txf4C9tZfJ3yj120xPJndZHA3YTsvBPUvGjME1kUJPx9r54saup-0ksxRm30qhfGWbOWKH63CJ3x8DBtNR4fMR_ipgs64qRX",
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=85&w=2000",
     products: ["heritage-wool-overcoat", "the-sculpted-trench", "nordic-parka-v2", "the-summit-boot"],
   },
   {
@@ -380,7 +380,7 @@ export const campaigns = [
     title: "The Summer Edit",
     subtitle: "Refined essentials for warm-weather living.",
     heroImageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAd9OZgJzQcF1i4XkuFSLINMyli6B8NHK8RLDLp2pqIHFXzVKoooKWtKRqQpDIqq397qa3W2EipH-d8FNidqSItkShSHMxGduqulenCFgekYlxUPVpHJZE8GoZE3imqIwIwrT5VmrZsrd41lfjVOKDVVU3c7y21bCG1iCgyAcLKD-cLAiw7cLsyv-cxt2R6lqCmxGUsJhzEWz841kyWvOARLPNWn0X4h_PvOxGtu4U0vrCqhv_htPtY-3UNybpn-OZrJas-TKoC24Zb",
+      "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=85&w=2000",
     products: ["organic-cotton-tee", "merino-shell-layer", "velocity-trainer"],
   },
   {
@@ -388,7 +388,7 @@ export const campaigns = [
     title: "New Arrivals",
     subtitle: "Just landed — the latest pieces from our winter collection.",
     heroImageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuC_iajTZFt8CfKLC0CEj0DCTfn2t9bLeOeynsXBqG3X1tccZeKG6HiuGl6-iCCdn8u8-Kx-SnMeurLhB-wYU0uc7ic5A08spkd8ZV0nHuwXYmtZ7gPDb1lwFAT_vSqjgsRUNGjb9BWeMEwx_a9xNKcby4qNIdjigOKo7tisK4YaKuWhrAAW2Ziu9G67OAYz2xsqPeryDBmU6M1PO5VwLojKCjqTBFNP__FD0GeTya-yORyXd0VBDhIFSaTOwY8wiQ1F1C_4X9Xtei4q",
+      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=85&w=2000",
     products: ["heritage-wool-overcoat", "the-sculpted-trench", "nordic-parka-v2"],
   },
 ];
@@ -420,35 +420,35 @@ export const homeCategoryTiles = [
     title: "Outerwear",
     description: "Coats, trenches & parkas",
     imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDuuuDIySbL4ypJCvc7MZIqA3ioL2CfWo8tKl84kj8rpJni0cJlH3hKNCzzUMNHksAC0fSDaJ4VMxxCKtzNyqiZuXwehJ9YN7uTNnqoJTF5y138IDllKKoxrWTQu7LiRMBI5vREyMYn2DDIhjy9wgnQza16wdMMgpyHQaK3T3pp5KeQ4L7ZwZ1gJi8JZxbax6bp5IQfj8quYBWp538SvLTIL0d_HKx7k5lICLLnagKRBWX9kj7J2_ObUn7OMTy0T8shQoehvrvN3PYS",
+      "https://images.unsplash.com/photo-1571875257727-256c39da42af?auto=format&fit=crop&q=80&w=1200",
   },
   {
     slug: "footwear",
     title: "Footwear",
     description: "Leather, boots & trainers",
     imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAaKT6KYgfwweT0KNTOCOiJFc8-zP_E_vLde9aTwW7DFdk1zzFzG-yxgk661tRVHx_a84vNhAorM1PoqhTMqK5FOL0IwDSeXy1HBHjRnWBXNYDaRnJbvcLysCoUJQEXGnLjGdbMka_7WltfFfzpN4aJI3JanMqRPednF6G8Nf3ovFmcUqfbsWd1jVlhDlnpYY_Vi9g1dfp1Wdrjj4F4b4YwwD3zD726A2vWF5Ef08VkdcFBPplH5pzcNzKGLnQfTkddWUpJ-YVcqCyL",
+      "https://images.unsplash.com/photo-1583241803100-ec28d1801aec?auto=format&fit=crop&q=80&w=1200",
   },
   {
     slug: "basics",
     title: "Basics",
     description: "Organic cotton & tees",
     imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCUJR0Z0ZEFP36kCnnS1zxqhwsgvZte39y3Qz9BPu18OYIBzxSwMvNi4n_IK6TGQ4bLauguYTRLnfdMr1taqQ3FSlxHUS_2ZI6Uvu4oOGGfIM2ft78fzIAnUIjXYzf15LMPcacYyGcnhdDHy7SHyHooBk8mfanZJmEhUI7FrrS-_igqJxf_7DsHrJh3IgM0WjVjO3PyKbAtrSEPrQf2S3FtZuwdNOM5RMuJDu1QXj4tzGYPjga2a8s-K8xCpbuuKuEareicQA1MH1E-",
+      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=1200",
   },
   {
     slug: "knitwear",
     title: "Knitwear",
     description: "Merino & shell layers",
     imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCtSiXfjq5GB23pu2s_CBb_UYFEYudAo_Jo6jBoR3l4qe0En6ZFmkBsePxIfwVK3aW7EMJRigyyRs5gEK04HEJAxkW7tlq68x3Tsfsp9WhqtnKVbehlZaBbF81CSbhhYD5n5d-4JzjsdkrXxRdZGag4UUf9JPLqG22MLDmcCMFZ6u-DynAf3RUDKeH7zE3Uab4_gjEroIGRye_FRUY2_a49lOALK_0rR8y7KxaM9UVpiG3u4lFzBF0mWh6HqvGjGxW7mv2tdCztt_2F",
+      "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=1200",
   },
   {
     slug: "eyewear",
     title: "Eyewear",
     description: "Optical & editorial sun",
     imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAVzrV-UVmJVNz7ptoMDAQ7m7DugQGOuqs0lO83AEu5Ct5TP_Mjo8nQ-ty_Mo4X_Cu1nMOnMI2AgiUEu7Z8wFExs5WqSocxD8G0EHhjs0w4v1Lknys2jmwwoBplvXWfjUqpl81LHDIhRQUOzgzT5GEX65YCCgrKL1XYWNsDmRkMueDrge07quHe-IY5XuAsnZJlbiy8sJchTPv6sCjiQswUErzvTlLqZxGKPcCljlvcgnnJ14ZbuIvWaPZbKNzYdM_mMHQprCzT4Da-",
+      "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&q=80&w=1200",
   },
 ];
 
@@ -474,7 +474,7 @@ export const homeCouponPromos: HomeCouponPromo[] = [
     body: "Authentic materials, insured delivery, and 30-day returns — the same standard on every order.",
     terms: "Applies to orders over $150. Excludes sale and campaign SKUs. One use per customer.",
     bannerImageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuD_hcc82H9gNhpAxZ-TofQGXOkMdTid-d1NhkQkUWjMdSjkkQgD5iKD1pIPRDfARutQlOC-dlMWGA29z-U5SYtKE7ZOkl1x4B3r0f633Ng7miUjoOpR7YlyxIiJ6fyE7p2tF-dIvnjJYZVDiBiCEvNqjjRWOeaVTcPqSBhmdx6yTeRRoDmK4dCmI2GaRAHtAj3z8Znc6IdK01gVgRT3BfvWxttpLmHdptUbURhMGhZFVkhKmWcXbB6Yl_1ihTgTEW5wetOGYVngXNpv",
+      "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=85&w=2000",
     productSlugs: ["organic-cotton-tee", "heritage-wool-overcoat", "horizon-spectacles"],
     ctaLabel: "Browse eligible edit",
     ctaTo: "/shop",
@@ -487,7 +487,7 @@ export const homeCouponPromos: HomeCouponPromo[] = [
     body: "Build a considered kit: one knit layer and one outer piece — shipped in our archival packaging.",
     terms: "Mock storefront: code shown for UX preview; applied at checkout when both categories are in cart.",
     bannerImageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuC_iajTZFt8CfKLC0CEj0DCTfn2t9bLeOeynsXBqG3X1tccZeKG6HiuGl6-iCCdn8u8-Kx-SnMeurLhB-wYU0uc7ic5A08spkd8ZV0nHuwXYmtZ7gPDb1lwFAT_vSqjgsRUNGjb9BWeMEwx_a9xNKcby4qNIdjigOKo7tisK4YaKuWhrAAW2Ziu9G67OAYz2xsqPeryDBmU6M1PO5VwLojKCjqTBFNP__FD0GeTya-yORyXd0VBDhIFSaTOwY8wiQ1F1C_4X9Xtei4q",
+      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=85&w=2000",
     productSlugs: ["merino-shell-layer", "heritage-wool-overcoat", "the-sculpted-trench"],
     ctaLabel: "Shop the pairing",
     ctaTo: "/shop",

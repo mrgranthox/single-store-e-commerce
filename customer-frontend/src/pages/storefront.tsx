@@ -445,22 +445,19 @@ export const HomePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {[
                 {
-                  quote: `"The quality of the wool overcoat surpassed all my expectations. It's a true investment piece that feels incredible to wear."`,
+                  quote: `"The pigment payoff is unreal — one swipe and it stays put through dinner. My vanity finally feels curated, not cluttered."`,
                   name: "Eleanor Vance",
-                  image:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuCWZ-8rBCI1vPsb1mrAskcVEJHUbp0imyETA4oxWvYmkewlyHvbAm8_QHDTEWy0QP9l5p9aPUYgAk8gIh5hmNRYf_-qHjT70uDWNdphkUwI3PwgYIJLNeQMNkpV2CBc0eLWL2hR8DDjvjWwVL6NfgYVZOBITavbSM9to9iktNf1nRwLZedvg6LZVYFao9PkyrSR16xxYz_aOSoW_lzO-fczaPrTO5DiomYemqevBsZb2XL2DypNfminEqeKGZ6Du_OAhKDG4Pi8I4dq",
+                  image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=256&h=256",
                 },
                 {
-                  quote: `"The fit and fabric from ${STORE_NAME_FULL} are exactly what I wanted. Every tee feels intentional."`,
+                  quote: `"Finally a routine that looks as good on my shelf as it does on my skin. ${STORE_NAME_FULL} ships fast and packs like a luxury house."`,
                   name: "Julian Archer",
-                  image:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuC2m9UbMKXTKo3dAxXArb6SBnt6UkdXsm3EGLvv5ayiWkHPH8KjKB22gmZGp30RPF6nqZFkcxnVIeq0LPisdBLVb20yEFgJ7xrsjLujs_TYepEI7Xhnk8CPQ7coLwcyFI_PkDAsjY1TKjFFKLZ_-PyJNgky4yO5PEWPjv3wuQKAgyMt3DOvO1TrOA13Ofs8LRiFksH4Z7qNqBSNmce9l8ojUqtr06B0rhaYSkB89dN1LRcg5vUSHk-QVk4D4yiocyJqrAUayjXeP5gD",
+                  image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256",
                 },
                 {
-                  quote: `"Excellent customer service and lightning-fast shipping. The packaging itself was a work of art. 10/10 recommendation!"`,
+                  quote: `"Customer care helped me shade-match over chat. The box arrived in two days — everything smelled amazing. Already reordering."`,
                   name: "Sasha Grey",
-                  image:
-                    "https://lh3.googleusercontent.com/aida-public/AB6AXuA1UhrXdxch1gysV32QdU-6XEFRuMMAyRTVxy9RG6pc0RDyf5TgPOTWy3Y0OyGnQWv0WfPaA8h6RHWnLeMlSupXrR1Tvwu-LNWQv8VmSal38JSVGrD6x7va1YasY6TmfiloHw8hCrNCtID5i7g0G6ma8wOAQplPQ3D3zAAfG3QN74iIBC3AX8HF1hQHBcdVzo9ZIlx_7XC46BsPEMMZGq6oRWaNq4e8KLSPhN7HMcvMZIbd-kny9_fGMInryx4jVyulkm6HUHAJG0ZP",
+                  image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=256&h=256",
                 },
               ].map((r, i) => (
                 <div

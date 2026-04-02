@@ -114,14 +114,14 @@ export const AboutPage = () => (
       <section className="relative min-h-[50dvh] md:h-[600px] md:min-h-0 overflow-hidden bg-primary-container">
         <img
           className="absolute inset-0 w-full h-full object-cover opacity-60"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_hcc82H9gNhpAxZ-TofQGXOkMdTid-d1NhkQkUWjMdSjkkQgD5iKD1pIPRDfARutQlOC-dlMWGA29z-U5SYtKE7ZOkl1x4B3r0f633Ng7miUjoOpR7YlyxIiJ6fyE7p2tF-dIvnjJYZVDiBiCEvNqjjRWOeaVTcPqSBhmdx6yTeRRoDmK4dCmI2GaRAHtAj3z8Znc6IdK01gVgRT3BfvWxttpLmHdptUbURhMGhZFVkhKmWcXbB6Yl_1ihTgTEW5wetOGYVngXNpv"
+          src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=85&w=2000"
           alt=""
         />
         <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/85 md:from-primary-container/80 via-transparent to-transparent" />
         <div className="relative min-h-[50dvh] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center py-12 md:py-0">
           <span className="font-label text-tertiary-fixed tracking-[0.3em] uppercase text-xs mb-4 font-bold block">Our Story</span>
           <h1 className="font-headline text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tighter max-w-2xl leading-tight">
-            Tees you will live in.
+            Beauty you will reach for daily.
           </h1>
         </div>
       </section>
@@ -139,8 +139,8 @@ export const AboutPage = () => (
           <div className="aspect-[4/3] bg-surface-container-low rounded-2xl overflow-hidden">
             <img
               className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2851r1etCiu6QgEnhSIdFq9P380onbxdDw158-z5_uEoScdRnO5GKnnkYVwdtLgYvas6d5wc5M_PNYI5oRvAuzc9k8vS7VwLAKgi3BQOERzOaA7yChJhX2u-Hne8o8tbnLjzT-0-tBErjLnyguxVK86Xvp3u4ERGPFIAxWuKOGo4l-aHo39hSncPabdxCZc3JbA-m_v4CCq5U8k_Verjh1bIMd2Ttiu32R7Dn4439Z1Uj2akfhsCjvtsgpALo4h"
-              alt="Craftsmanship"
+              src="https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=85&w=1600"
+              alt="Product craftsmanship"
             />
           </div>
         </div>
