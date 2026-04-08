@@ -70,6 +70,20 @@ const assertCheckoutIdentity = (
   }
 };
 
+const assertShippingMethodCodeIsAvailable = (
+  evaluation: CheckoutEvaluation,
+  shippingMethodCode: string
+) => {
+  const normalizedCode = shippingMethodCode.trim().toUpperCase();
+  const shippingOptionExists = evaluation.shippingOptions.some(
+    (option) => option.code.trim().toUpperCase() === normalizedCode
+  );
+
+  if (!shippingOptionExists) {
+    throw invalidInputError("The selected shipping method is not available for this cart.");
+  }
+};
+
 const serializeOrderEntity = (order: {
   id: string;
   orderNumber: string;
@@ -188,6 +202,7 @@ export const validateCheckout = async (
   }
 ) => {
   const { evaluation } = await getCartState(prisma, context);
+  assertShippingMethodCodeIsAvailable(evaluation, input.shippingMethodCode);
 
   return {
     normalizedTotals: evaluation.normalizedTotals,
@@ -235,6 +250,7 @@ export const createOrderFromCheckout = async (
 
     assertCheckoutIdentity(context, evaluation, input.address);
     assertCartCanCheckout(evaluation);
+    assertShippingMethodCodeIsAvailable(evaluation, input.shippingMethodCode);
 
     const existingSession = await transaction.checkoutSession.findUnique({
       where: {
@@ -318,22 +334,44 @@ export const createOrderFromCheckout = async (
       }
     });
 
-    const order = await transaction.order.create({
-      data: {
-        orderNumber: buildOrderNumber(),
-        userId: identity.userId,
-        guestTrackingKey: identity.guestTrackingKey,
-        status: "PENDING_PAYMENT",
-        campaignId: input.campaignId ?? null,
-        addressSnapshot: toPrismaJsonValue({
-          ...input.address,
-          contactEmail: identity.contactEmail,
-          shippingMethodCode: input.shippingMethodCode,
-          normalizedTotals: evaluation.normalizedTotals,
-          couponOutcome: evaluation.couponOutcome
-        })!
+    let order: Awaited<ReturnType<typeof transaction.order.create>> | null = null;
+    const ORDER_NUMBER_ATTEMPTS = 5;
+
+    for (let attempt = 1; attempt <= ORDER_NUMBER_ATTEMPTS; attempt += 1) {
+      try {
+        order = await transaction.order.create({
+          data: {
+            orderNumber: buildOrderNumber(),
+            userId: identity.userId,
+            guestTrackingKey: identity.guestTrackingKey,
+            status: "PENDING_PAYMENT",
+            campaignId: input.campaignId ?? null,
+            addressSnapshot: toPrismaJsonValue({
+              ...input.address,
+              contactEmail: identity.contactEmail,
+              shippingMethodCode: input.shippingMethodCode,
+              normalizedTotals: evaluation.normalizedTotals,
+              couponOutcome: evaluation.couponOutcome
+            })!
+          }
+        });
+        break;
+      } catch (error) {
+        const uniqueOrderNumberConflict =
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002" &&
+          ((Array.isArray(error.meta?.target) && error.meta.target.includes("orderNumber")) ||
+            error.meta?.target === "orderNumber");
+
+        if (!uniqueOrderNumberConflict || attempt === ORDER_NUMBER_ATTEMPTS) {
+          throw error;
+        }
       }
-    });
+    }
+
+    if (!order) {
+      throw invalidInputError("The order could not be created at this time. Please retry checkout.");
+    }
 
     await transaction.orderItem.createMany({
       data: evaluation.items.map((item) => ({
