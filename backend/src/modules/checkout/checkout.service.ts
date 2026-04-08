@@ -1,16 +1,12 @@
 import { randomInt } from "node:crypto";
 
-import {
-  InventoryMovementType,
-  PaymentState,
-  Prisma
-} from "@prisma/client";
+import { InventoryMovementType, PaymentState, Prisma } from "@prisma/client";
 
 import {
   invalidInputError,
   invalidStateTransitionError,
   notFoundError,
-  orderNotEligibleError
+  orderNotEligibleError,
 } from "../../common/errors/app-error";
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { runInTransaction } from "../../common/database/prisma-transaction";
@@ -23,7 +19,7 @@ import {
   getCartState,
   getReservationWindowMinutes,
   type CartActorContext,
-  type CheckoutEvaluation
+  type CheckoutEvaluation,
 } from "../cart/cart.shared";
 
 const buildOrderNumber = () => {
@@ -33,19 +29,22 @@ const buildOrderNumber = () => {
   return `ORD-${dateSegment}-${randomSegment}`;
 };
 
-const buildCheckoutIdentity = (context: CartActorContext, address: { email?: string }) => {
+const buildCheckoutIdentity = (
+  context: CartActorContext,
+  address: { email?: string },
+) => {
   if (context.actor.kind === "customer") {
     return {
       userId: context.actor.userId ?? null,
       guestTrackingKey: null,
-      contactEmail: context.actor.email ?? address.email ?? null
+      contactEmail: context.actor.email ?? address.email ?? null,
     };
   }
 
   return {
     userId: null,
     guestTrackingKey: context.sessionId,
-    contactEmail: address.email ?? null
+    contactEmail: address.email ?? null,
   };
 };
 
@@ -55,28 +54,39 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 const assertCheckoutIdentity = (
   context: CartActorContext,
   evaluation: CheckoutEvaluation,
-  address: { email?: string }
+  address: { email?: string },
 ) => {
-  if (!evaluation.eligibilityFlags.guestCheckoutAllowed && context.actor.kind === "anonymous") {
+  if (
+    !evaluation.eligibilityFlags.guestCheckoutAllowed &&
+    context.actor.kind === "anonymous"
+  ) {
     throw orderNotEligibleError("Guest checkout is disabled for this store.");
   }
 
   if (context.actor.kind === "anonymous" && !context.sessionId) {
-    throw orderNotEligibleError("Guest checkout requires an x-session-id header.");
+    throw orderNotEligibleError(
+      "Guest checkout requires an x-session-id header.",
+    );
   }
 
   if (context.actor.kind === "anonymous" && !address.email) {
-    throw invalidInputError("Guest checkout requires an email address in the checkout address.");
+    throw invalidInputError(
+      "Guest checkout requires an email address in the checkout address.",
+    );
   }
 };
 
-const serializeOrderEntity = (order: {
-  id: string;
-  orderNumber: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
-}, evaluation: CheckoutEvaluation, checkoutSessionId: string) => ({
+const serializeOrderEntity = (
+  order: {
+    id: string;
+    orderNumber: string;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
+  },
+  evaluation: CheckoutEvaluation,
+  checkoutSessionId: string,
+) => ({
   id: order.id,
   orderNumber: order.orderNumber,
   status: order.status,
@@ -84,7 +94,7 @@ const serializeOrderEntity = (order: {
   totals: evaluation.normalizedTotals,
   paymentState: PaymentState.PENDING_INITIALIZATION,
   createdAt: order.createdAt,
-  updatedAt: order.updatedAt
+  updatedAt: order.updatedAt,
 });
 
 const readGrandTotalFromSnapshot = (value: Prisma.JsonValue) => {
@@ -99,12 +109,14 @@ const readGrandTotalFromSnapshot = (value: Prisma.JsonValue) => {
     !Number.isFinite(record.grandTotalCents) ||
     (record.currency !== null && typeof record.currency !== "string")
   ) {
-    throw invalidInputError("The checkout validation snapshot is missing totals.");
+    throw invalidInputError(
+      "The checkout validation snapshot is missing totals.",
+    );
   }
 
   return {
     grandTotalCents: Math.trunc(record.grandTotalCents),
-    currency: typeof record.currency === "string" ? record.currency : "GHS"
+    currency: typeof record.currency === "string" ? record.currency : "GHS",
   };
 };
 
@@ -126,34 +138,40 @@ const readContactEmailFromAddressSnapshot = (value: Prisma.JsonValue) => {
   return null;
 };
 
-const buildPaymentReference = (paymentId: string) => `pay_${paymentId.replaceAll("-", "")}`;
+const buildPaymentReference = (paymentId: string) =>
+  `pay_${paymentId.replaceAll("-", "")}`;
 
 const buildPaymentCallbackUrl = (orderId: string, paymentId: string) => {
-  const baseUrl = env.PAYSTACK_CALLBACK_URL || `${env.CUSTOMER_APP_URL}/checkout/payment/result`;
+  const baseUrl =
+    env.PAYSTACK_CALLBACK_URL ||
+    `${env.CUSTOMER_APP_URL}/checkout/payment/result`;
   const separator = baseUrl.includes("?") ? "&" : "?";
   return `${baseUrl}${separator}orderId=${encodeURIComponent(orderId)}&paymentId=${encodeURIComponent(paymentId)}`;
 };
 
 const readInitializationDetails = async (
   transaction: Prisma.TransactionClient,
-  paymentId: string
+  paymentId: string,
 ) => {
   const initialization = await transaction.paymentTransaction.findFirst({
     where: {
       paymentId,
-      providerEventType: "INITIALIZE"
+      providerEventType: "INITIALIZE",
     },
     orderBy: {
-      createdAt: "desc"
-    }
+      createdAt: "desc",
+    },
   });
 
-  const payload = isRecord(initialization?.payload) ? initialization.payload : null;
+  const payload = isRecord(initialization?.payload)
+    ? initialization.payload
+    : null;
 
   return {
     providerPayload: payload?.providerPayload,
     requiresRedirect: Boolean(payload?.requiresRedirect),
-    redirectUrl: typeof payload?.redirectUrl === "string" ? payload.redirectUrl : null
+    redirectUrl:
+      typeof payload?.redirectUrl === "string" ? payload.redirectUrl : null,
   };
 };
 
@@ -164,9 +182,10 @@ export const getCheckoutEligibility = async (context: CartActorContext) => {
     canCheckout: evaluation.eligibilityFlags.canCheckout,
     guestCheckoutAllowed: evaluation.eligibilityFlags.guestCheckoutAllowed,
     requiresGuestSession: evaluation.eligibilityFlags.requiresGuestSession,
-    requiresAuthenticatedCustomer: evaluation.eligibilityFlags.requiresAuthenticatedCustomer,
+    requiresAuthenticatedCustomer:
+      evaluation.eligibilityFlags.requiresAuthenticatedCustomer,
     cartEmpty: evaluation.eligibilityFlags.cartEmpty,
-    blockingIssues: evaluation.blockingIssues
+    blockingIssues: evaluation.blockingIssues,
   };
 };
 
@@ -185,7 +204,7 @@ export const validateCheckout = async (
       postalCode: string;
     };
     shippingMethodCode: string;
-  }
+  },
 ) => {
   const { evaluation } = await getCartState(prisma, context);
 
@@ -193,7 +212,7 @@ export const validateCheckout = async (
     normalizedTotals: evaluation.normalizedTotals,
     shippingOptions: evaluation.shippingOptions.map((option) => ({
       ...option,
-      selected: option.code === input.shippingMethodCode
+      selected: option.code === input.shippingMethodCode,
     })),
     couponOutcome: evaluation.couponOutcome,
     warnings: evaluation.warnings,
@@ -201,9 +220,17 @@ export const validateCheckout = async (
     eligibilityFlags: evaluation.eligibilityFlags,
     priceChanges: evaluation.priceChanges,
     stockIssues: evaluation.stockIssues,
-    blockingIssues: evaluation.blockingIssues
+    blockingIssues: evaluation.blockingIssues,
   };
 };
+
+const ORDER_NUMBER_RETRY_ATTEMPTS = 5;
+
+const isOrderNumberConflictError = (error: unknown) =>
+  error instanceof Prisma.PrismaClientKnownRequestError &&
+  error.code === "P2002" &&
+  Array.isArray(error.meta?.target) &&
+  error.meta.target.includes("orderNumber");
 
 export const createOrderFromCheckout = async (
   context: CartActorContext,
@@ -222,176 +249,214 @@ export const createOrderFromCheckout = async (
     };
     shippingMethodCode: string;
     campaignId?: string;
-  }
-) =>
-  runInTransaction(async (transaction) => {
-    const { cart, evaluation } = await getCartState(transaction, context, {
-      requireGuestSession: false
-    });
+  },
+) => {
+  let attempt = 0;
 
-    if (!cart) {
-      throw orderNotEligibleError("The current cart could not be found.");
-    }
+  while (attempt < ORDER_NUMBER_RETRY_ATTEMPTS) {
+    try {
+      return await runInTransaction(async (transaction) => {
+        const { cart, evaluation } = await getCartState(transaction, context, {
+          requireGuestSession: false,
+        });
 
-    assertCheckoutIdentity(context, evaluation, input.address);
-    assertCartCanCheckout(evaluation);
+        if (!cart) {
+          throw orderNotEligibleError("The current cart could not be found.");
+        }
 
-    const existingSession = await transaction.checkoutSession.findUnique({
-      where: {
-        checkoutIdempotencyKey: input.checkoutIdempotencyKey
-      },
-      include: {
-        order: true
-      }
-    });
+        assertCheckoutIdentity(context, evaluation, input.address);
+        assertCartCanCheckout(evaluation);
 
-    if (existingSession?.order) {
-      return serializeOrderEntity(existingSession.order, evaluation, existingSession.id);
-    }
+        const existingSession = await transaction.checkoutSession.findUnique({
+          where: {
+            checkoutIdempotencyKey: input.checkoutIdempotencyKey,
+          },
+          include: {
+            order: true,
+          },
+        });
 
-    if (existingSession && existingSession.cartId !== cart.id) {
-      throw invalidInputError("This checkout idempotency key is already bound to a different cart.");
-    }
+        if (existingSession?.order) {
+          return serializeOrderEntity(
+            existingSession.order,
+            evaluation,
+            existingSession.id,
+          );
+        }
 
-    if (input.campaignId) {
-      const campaign = await transaction.campaign.findUnique({
-        where: { id: input.campaignId },
-        select: {
-          id: true,
-          status: true,
-          promotion: {
+        if (existingSession && existingSession.cartId !== cart.id) {
+          throw invalidInputError(
+            "This checkout idempotency key is already bound to a different cart.",
+          );
+        }
+
+        if (input.campaignId) {
+          const campaign = await transaction.campaign.findUnique({
+            where: { id: input.campaignId },
             select: {
+              id: true,
               status: true,
-              activeFrom: true,
-              activeTo: true
-            }
+              promotion: {
+                select: {
+                  status: true,
+                  activeFrom: true,
+                  activeTo: true,
+                },
+              },
+            },
+          });
+          if (!campaign) {
+            throw invalidInputError(
+              "The referenced marketing campaign was not found.",
+            );
+          }
+
+          if (campaign.status !== "ACTIVE") {
+            throw orderNotEligibleError(
+              "The selected campaign is not currently active.",
+            );
+          }
+
+          const promotion = campaign.promotion;
+          const now = new Date();
+          if (
+            promotion &&
+            (promotion.status !== "ACTIVE" ||
+              (promotion.activeFrom && promotion.activeFrom > now) ||
+              (promotion.activeTo && promotion.activeTo < now))
+          ) {
+            throw orderNotEligibleError(
+              "The selected campaign is not currently eligible for checkout.",
+            );
           }
         }
+
+        const identity = buildCheckoutIdentity(context, input.address);
+
+        const checkoutSession =
+          existingSession ??
+          (await transaction.checkoutSession.create({
+            data: {
+              cartId: cart.id,
+              userId: identity.userId,
+              guestTrackingKey: identity.guestTrackingKey,
+              checkoutIdempotencyKey: input.checkoutIdempotencyKey,
+            },
+          }));
+
+        await transaction.checkoutValidationSnapshot.create({
+          data: {
+            checkoutSessionId: checkoutSession.id,
+            normalizedTotals: toPrismaJsonValue(evaluation.normalizedTotals)!,
+            shippingOptions: toPrismaJsonValue(
+              evaluation.shippingOptions.map((option) => ({
+                ...option,
+                selected: option.code === input.shippingMethodCode,
+              })),
+            )!,
+            couponOutcome: toPrismaJsonValue(evaluation.couponOutcome),
+            warnings: toPrismaJsonValue(evaluation.warnings),
+            blockedItems: toPrismaJsonValue(evaluation.blockedItems),
+            eligibilityFlags: toPrismaJsonValue(evaluation.eligibilityFlags),
+          },
+        });
+
+        const order = await transaction.order.create({
+          data: {
+            orderNumber: buildOrderNumber(),
+            userId: identity.userId,
+            guestTrackingKey: identity.guestTrackingKey,
+            status: "PENDING_PAYMENT",
+            campaignId: input.campaignId ?? null,
+            addressSnapshot: toPrismaJsonValue({
+              ...input.address,
+              contactEmail: identity.contactEmail,
+              shippingMethodCode: input.shippingMethodCode,
+              normalizedTotals: evaluation.normalizedTotals,
+              couponOutcome: evaluation.couponOutcome,
+            })!,
+          },
+        });
+
+        await transaction.orderItem.createMany({
+          data: evaluation.items.map((item) => ({
+            orderId: order.id,
+            variantId: item.variantId,
+            productTitleSnapshot: item.product.title,
+            unitPriceAmountCents: item.pricing.current!.amountCents,
+            unitPriceCurrency: item.pricing.current!.currency,
+            quantity: item.quantity,
+          })),
+        });
+
+        await transaction.orderStatusHistory.create({
+          data: {
+            orderId: order.id,
+            fromStatus: null,
+            toStatus: "PENDING_PAYMENT",
+            metadata: toPrismaJsonValue({
+              checkoutSessionId: checkoutSession.id,
+            }),
+          },
+        });
+
+        await transaction.timelineEvent.create({
+          data: {
+            entityType: "ORDER",
+            entityId: order.id,
+            eventType: "ORDER_CREATED",
+            actorType:
+              context.actor.kind === "customer" ? "CUSTOMER" : "SYSTEM",
+            payload: toPrismaJsonValue({
+              checkoutSessionId: checkoutSession.id,
+              totals: evaluation.normalizedTotals,
+            }),
+          },
+        });
+
+        if (
+          evaluation.couponOutcome?.valid &&
+          evaluation.couponOutcome.couponId
+        ) {
+          await transaction.couponRedemption.create({
+            data: {
+              couponId: evaluation.couponOutcome.couponId,
+              orderId: order.id,
+              userId: identity.userId,
+              guestTrackingKey: identity.guestTrackingKey,
+            },
+          });
+        }
+
+        await transaction.checkoutSession.update({
+          where: {
+            id: checkoutSession.id,
+          },
+          data: {
+            orderId: order.id,
+          },
+        });
+
+        return serializeOrderEntity(order, evaluation, checkoutSession.id);
       });
-      if (!campaign) {
-        throw invalidInputError("The referenced marketing campaign was not found.");
-      }
+    } catch (error) {
+      attempt += 1;
 
-      if (campaign.status !== "ACTIVE") {
-        throw orderNotEligibleError("The selected campaign is not currently active.");
-      }
-
-      const promotion = campaign.promotion;
-      const now = new Date();
       if (
-        promotion &&
-        (promotion.status !== "ACTIVE" ||
-          (promotion.activeFrom && promotion.activeFrom > now) ||
-          (promotion.activeTo && promotion.activeTo < now))
+        isOrderNumberConflictError(error) &&
+        attempt < ORDER_NUMBER_RETRY_ATTEMPTS
       ) {
-        throw orderNotEligibleError("The selected campaign is not currently eligible for checkout.");
+        continue;
       }
+
+      throw error;
     }
+  }
 
-    const identity = buildCheckoutIdentity(context, input.address);
-
-    const checkoutSession =
-      existingSession ??
-      (await transaction.checkoutSession.create({
-        data: {
-          cartId: cart.id,
-          userId: identity.userId,
-          guestTrackingKey: identity.guestTrackingKey,
-          checkoutIdempotencyKey: input.checkoutIdempotencyKey
-        }
-      }));
-
-    await transaction.checkoutValidationSnapshot.create({
-      data: {
-        checkoutSessionId: checkoutSession.id,
-        normalizedTotals: toPrismaJsonValue(evaluation.normalizedTotals)!,
-        shippingOptions: toPrismaJsonValue(
-          evaluation.shippingOptions.map((option) => ({
-            ...option,
-            selected: option.code === input.shippingMethodCode
-          }))
-        )!,
-        couponOutcome: toPrismaJsonValue(evaluation.couponOutcome),
-        warnings: toPrismaJsonValue(evaluation.warnings),
-        blockedItems: toPrismaJsonValue(evaluation.blockedItems),
-        eligibilityFlags: toPrismaJsonValue(evaluation.eligibilityFlags)
-      }
-    });
-
-    const order = await transaction.order.create({
-      data: {
-        orderNumber: buildOrderNumber(),
-        userId: identity.userId,
-        guestTrackingKey: identity.guestTrackingKey,
-        status: "PENDING_PAYMENT",
-        campaignId: input.campaignId ?? null,
-        addressSnapshot: toPrismaJsonValue({
-          ...input.address,
-          contactEmail: identity.contactEmail,
-          shippingMethodCode: input.shippingMethodCode,
-          normalizedTotals: evaluation.normalizedTotals,
-          couponOutcome: evaluation.couponOutcome
-        })!
-      }
-    });
-
-    await transaction.orderItem.createMany({
-      data: evaluation.items.map((item) => ({
-        orderId: order.id,
-        variantId: item.variantId,
-        productTitleSnapshot: item.product.title,
-        unitPriceAmountCents: item.pricing.current!.amountCents,
-        unitPriceCurrency: item.pricing.current!.currency,
-        quantity: item.quantity
-      }))
-    });
-
-    await transaction.orderStatusHistory.create({
-      data: {
-        orderId: order.id,
-        fromStatus: null,
-        toStatus: "PENDING_PAYMENT",
-        metadata: toPrismaJsonValue({
-          checkoutSessionId: checkoutSession.id
-        })
-      }
-    });
-
-    await transaction.timelineEvent.create({
-      data: {
-        entityType: "ORDER",
-        entityId: order.id,
-        eventType: "ORDER_CREATED",
-        actorType: context.actor.kind === "customer" ? "CUSTOMER" : "SYSTEM",
-        payload: toPrismaJsonValue({
-          checkoutSessionId: checkoutSession.id,
-          totals: evaluation.normalizedTotals
-        })
-      }
-    });
-
-    if (evaluation.couponOutcome?.valid && evaluation.couponOutcome.couponId) {
-      await transaction.couponRedemption.create({
-        data: {
-          couponId: evaluation.couponOutcome.couponId,
-          orderId: order.id,
-          userId: identity.userId,
-          guestTrackingKey: identity.guestTrackingKey
-        }
-      });
-    }
-
-    await transaction.checkoutSession.update({
-      where: {
-        id: checkoutSession.id
-      },
-      data: {
-        orderId: order.id
-      }
-    });
-
-    return serializeOrderEntity(order, evaluation, checkoutSession.id);
-  });
+  throw new Error(
+    "Unable to create order after retrying order number generation.",
+  );
+};
 
 export const initializeCheckoutPayment = async (
   context: CartActorContext,
@@ -404,17 +469,17 @@ export const initializeCheckoutPayment = async (
       phone: string;
       provider: string;
     };
-  }
+  },
 ) =>
   runInTransaction(async (transaction) => {
     const order = await transaction.order.findUnique({
       where: {
-        id: input.orderId
+        id: input.orderId,
       },
       include: {
         items: true,
-        checkoutSession: true
-      }
+        checkoutSession: true,
+      },
     });
 
     if (!order) {
@@ -422,8 +487,10 @@ export const initializeCheckoutPayment = async (
     }
 
     if (
-      (context.actor.kind === "customer" && order.userId !== context.actor.userId) ||
-      (context.actor.kind === "anonymous" && order.guestTrackingKey !== context.sessionId) ||
+      (context.actor.kind === "customer" &&
+        order.userId !== context.actor.userId) ||
+      (context.actor.kind === "anonymous" &&
+        order.guestTrackingKey !== context.sessionId) ||
       context.actor.kind === "admin" ||
       context.actor.kind === "system"
     ) {
@@ -431,24 +498,31 @@ export const initializeCheckoutPayment = async (
     }
 
     if (order.status !== "PENDING_PAYMENT") {
-      throw invalidStateTransitionError("Payment can only be initialized for orders pending payment.");
+      throw invalidStateTransitionError(
+        "Payment can only be initialized for orders pending payment.",
+      );
     }
 
     if (!order.checkoutSession) {
-      throw invalidInputError("The order does not have a checkout session for payment initialization.");
+      throw invalidInputError(
+        "The order does not have a checkout session for payment initialization.",
+      );
     }
 
     const existingPayment = await transaction.payment.findUnique({
       where: {
         orderId_idempotencyKey: {
           orderId: order.id,
-          idempotencyKey: input.paymentIdempotencyKey
-        }
-      }
+          idempotencyKey: input.paymentIdempotencyKey,
+        },
+      },
     });
 
     if (existingPayment) {
-      const initialization = await readInitializationDetails(transaction, existingPayment.id);
+      const initialization = await readInitializationDetails(
+        transaction,
+        existingPayment.id,
+      );
 
       return {
         response: {
@@ -461,9 +535,9 @@ export const initializeCheckoutPayment = async (
           checkoutSessionId: order.checkoutSession.id,
           requiresRedirect: initialization.requiresRedirect,
           redirectUrl: initialization.redirectUrl,
-          providerPayload: initialization.providerPayload ?? null
+          providerPayload: initialization.providerPayload ?? null,
         },
-        notificationContext: null
+        notificationContext: null,
       };
     }
 
@@ -471,16 +545,23 @@ export const initializeCheckoutPayment = async (
       where: {
         orderId: order.id,
         paymentState: {
-          in: [PaymentState.PENDING_INITIALIZATION, PaymentState.INITIALIZED, PaymentState.AWAITING_CUSTOMER_ACTION]
-        }
+          in: [
+            PaymentState.PENDING_INITIALIZATION,
+            PaymentState.INITIALIZED,
+            PaymentState.AWAITING_CUSTOMER_ACTION,
+          ],
+        },
       },
       orderBy: {
-        createdAt: "desc"
-      }
+        createdAt: "desc",
+      },
     });
 
     if (activePayment) {
-      const initialization = await readInitializationDetails(transaction, activePayment.id);
+      const initialization = await readInitializationDetails(
+        transaction,
+        activePayment.id,
+      );
 
       return {
         response: {
@@ -493,31 +574,40 @@ export const initializeCheckoutPayment = async (
           checkoutSessionId: order.checkoutSession.id,
           requiresRedirect: initialization.requiresRedirect,
           redirectUrl: initialization.redirectUrl,
-          providerPayload: initialization.providerPayload ?? null
+          providerPayload: initialization.providerPayload ?? null,
         },
-        notificationContext: null
+        notificationContext: null,
       };
     }
 
-    const latestValidationSnapshot = await transaction.checkoutValidationSnapshot.findFirst({
-      where: {
-        checkoutSessionId: order.checkoutSession.id
-      },
-      orderBy: {
-        createdAt: "desc"
-      }
-    });
+    const latestValidationSnapshot =
+      await transaction.checkoutValidationSnapshot.findFirst({
+        where: {
+          checkoutSessionId: order.checkoutSession.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
 
     if (!latestValidationSnapshot) {
-      throw invalidInputError("The order does not have a validation snapshot for payment initialization.");
+      throw invalidInputError(
+        "The order does not have a validation snapshot for payment initialization.",
+      );
     }
 
-    const totals = readGrandTotalFromSnapshot(latestValidationSnapshot.normalizedTotals);
+    const totals = readGrandTotalFromSnapshot(
+      latestValidationSnapshot.normalizedTotals,
+    );
     const provider = getPaymentProvider(input.provider ?? env.PAYMENT_PROVIDER);
-    const customerEmail = readContactEmailFromAddressSnapshot(order.addressSnapshot);
+    const customerEmail = readContactEmailFromAddressSnapshot(
+      order.addressSnapshot,
+    );
 
     if (!customerEmail) {
-      throw invalidInputError("A contact email is required before a Paystack payment can be initialized.");
+      throw invalidInputError(
+        "A contact email is required before a Paystack payment can be initialized.",
+      );
     }
 
     const payment = await transaction.payment.create({
@@ -529,16 +619,16 @@ export const initializeCheckoutPayment = async (
         paymentState: PaymentState.PENDING_INITIALIZATION,
         amountCents: totals.grandTotalCents,
         currency: totals.currency,
-        idempotencyKey: input.paymentIdempotencyKey
-      }
+        idempotencyKey: input.paymentIdempotencyKey,
+      },
     });
 
     const paymentAttempt = await transaction.paymentAttempt.create({
       data: {
         paymentId: payment.id,
         attemptNo: 1,
-        provider: payment.provider
-      }
+        provider: payment.provider,
+      },
     });
 
     await transaction.paymentTransaction.create({
@@ -556,37 +646,44 @@ export const initializeCheckoutPayment = async (
           mobileMoneyPhone: input.mobileMoney?.phone ?? null,
           checkoutSessionId: order.checkoutSession.id,
           paymentIdempotencyKey: input.paymentIdempotencyKey,
-          orderNumber: order.orderNumber
-        })
-      }
+          orderNumber: order.orderNumber,
+        }),
+      },
     });
 
-    const reservationWindowMinutes = await getReservationWindowMinutes(transaction);
+    const reservationWindowMinutes =
+      await getReservationWindowMinutes(transaction);
     const expiresAt = new Date(Date.now() + reservationWindowMinutes * 60_000);
 
     for (const item of order.items) {
       const stocks = await transaction.inventoryStock.findMany({
         where: {
-          variantId: item.variantId
+          variantId: item.variantId,
         },
         orderBy: [
           {
-            onHand: "desc"
+            onHand: "desc",
           },
           {
-            updatedAt: "asc"
-          }
-        ]
+            updatedAt: "asc",
+          },
+        ],
       });
 
-      const totalAvailable = stocks.reduce((sum, stock) => sum + (stock.onHand - stock.reserved), 0);
+      const totalAvailable = stocks.reduce(
+        (sum, stock) => sum + (stock.onHand - stock.reserved),
+        0,
+      );
 
       if (totalAvailable < item.quantity) {
-        throw orderNotEligibleError("The order is no longer fully in stock for payment initialization.", {
-          variantId: item.variantId,
-          requestedQuantity: item.quantity,
-          availableQuantity: totalAvailable
-        });
+        throw orderNotEligibleError(
+          "The order is no longer fully in stock for payment initialization.",
+          {
+            variantId: item.variantId,
+            requestedQuantity: item.quantity,
+            availableQuantity: totalAvailable,
+          },
+        );
       }
 
       let remainingQuantity = item.quantity;
@@ -606,11 +703,11 @@ export const initializeCheckoutPayment = async (
 
         await transaction.inventoryStock.update({
           where: {
-            id: stock.id
+            id: stock.id,
           },
           data: {
-            reserved: nextReserved
-          }
+            reserved: nextReserved,
+          },
         });
 
         const reservation = await transaction.stockReservation.create({
@@ -620,8 +717,8 @@ export const initializeCheckoutPayment = async (
             expiresAt,
             paymentId: payment.id,
             orderId: order.id,
-            reason: "checkout_payment_initialization"
-          }
+            reason: "checkout_payment_initialization",
+          },
         });
 
         await transaction.inventoryMovement.create({
@@ -633,8 +730,8 @@ export const initializeCheckoutPayment = async (
             deltaReserved: reservedQuantity,
             resultingOnHand: stock.onHand,
             resultingReserved: nextReserved,
-            reason: "checkout_payment_initialization"
-          }
+            reason: "checkout_payment_initialization",
+          },
         });
 
         remainingQuantity -= reservedQuantity;
@@ -643,27 +740,27 @@ export const initializeCheckoutPayment = async (
 
     const initialization = await provider.initializePayment({
       orderId: order.id,
-        paymentId: payment.id,
-        reference: buildPaymentReference(payment.id),
-        amountCents: payment.amountCents,
-        currency: payment.currency,
-        customerEmail,
-        callbackUrl: buildPaymentCallbackUrl(order.id, payment.id),
-        channel: input.channel,
-        mobileMoney: input.mobileMoney ?? null,
-        metadata: {
-          checkoutSessionId: order.checkoutSession.id
-        }
-      });
+      paymentId: payment.id,
+      reference: buildPaymentReference(payment.id),
+      amountCents: payment.amountCents,
+      currency: payment.currency,
+      customerEmail,
+      callbackUrl: buildPaymentCallbackUrl(order.id, payment.id),
+      channel: input.channel,
+      mobileMoney: input.mobileMoney ?? null,
+      metadata: {
+        checkoutSessionId: order.checkoutSession.id,
+      },
+    });
 
     const updatedPayment = await transaction.payment.update({
       where: {
-        id: payment.id
+        id: payment.id,
       },
       data: {
         providerPaymentRef: initialization.providerPaymentRef,
-        paymentState: initialization.paymentState
-      }
+        paymentState: initialization.paymentState,
+      },
     });
 
     await transaction.paymentTransaction.create({
@@ -675,15 +772,15 @@ export const initializeCheckoutPayment = async (
         amountCents: payment.amountCents,
         currency: payment.currency,
         status: initialization.paymentState,
-        payload: toPrismaJsonValue(initialization.providerPayload)
-      }
+        payload: toPrismaJsonValue(initialization.providerPayload),
+      },
     });
 
     await transaction.paymentTransaction.updateMany({
       where: {
         paymentId: payment.id,
         paymentAttemptId: paymentAttempt.id,
-        providerEventType: "INITIALIZE"
+        providerEventType: "INITIALIZE",
       },
       data: {
         providerRef: initialization.providerPaymentRef,
@@ -692,9 +789,9 @@ export const initializeCheckoutPayment = async (
           channel: input.channel,
           requiresRedirect: initialization.requiresRedirect,
           redirectUrl: initialization.redirectUrl,
-          providerPayload: initialization.providerPayload
-        })
-      }
+          providerPayload: initialization.providerPayload,
+        }),
+      },
     });
 
     await transaction.timelineEvent.create({
@@ -708,9 +805,9 @@ export const initializeCheckoutPayment = async (
           amountCents: payment.amountCents,
           currency: payment.currency,
           provider: provider.name,
-          requiresRedirect: initialization.requiresRedirect
-        })
-      }
+          requiresRedirect: initialization.requiresRedirect,
+        }),
+      },
     });
 
     return {
@@ -724,7 +821,7 @@ export const initializeCheckoutPayment = async (
         checkoutSessionId: order.checkoutSession.id,
         requiresRedirect: initialization.requiresRedirect,
         redirectUrl: initialization.redirectUrl,
-        providerPayload: initialization.providerPayload ?? null
+        providerPayload: initialization.providerPayload ?? null,
       },
       notificationContext: {
         paymentId: updatedPayment.id,
@@ -734,8 +831,8 @@ export const initializeCheckoutPayment = async (
         amountCents: updatedPayment.amountCents,
         currency: updatedPayment.currency,
         channel: input.channel,
-        providerPayload: initialization.providerPayload
-      }
+        providerPayload: initialization.providerPayload,
+      },
     };
   }).then(async (result) => {
     if (result.notificationContext) {
@@ -750,8 +847,8 @@ export const initializeCheckoutPayment = async (
           amountCents: result.notificationContext.amountCents,
           currency: result.notificationContext.currency,
           paymentChannel: result.notificationContext.channel,
-          providerPayload: result.notificationContext.providerPayload
-        }
+          providerPayload: result.notificationContext.providerPayload,
+        },
       }).catch(() => {
         return null;
       });
