@@ -1,0 +1,2 @@
+-- RenameIndex
+ALTER INDEX "PaymentTransaction_paymentId_providerEventType_providerRef_sta_" RENAME TO "PaymentTransaction_paymentId_providerEventType_providerRef__key";
