@@ -274,4 +274,192 @@ export const deleteAdminContentPagePermanent = async (
     accessToken
   });
 
+export type HomepageSectionHeader = {
+  isVisible: boolean;
+  eyebrow: string;
+  title: string;
+  description: string;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
+};
+
+export type HomepageHeroDraft = {
+  eyebrow: string;
+  titlePrefix: string;
+  titleAccent?: string | null;
+  titleSuffix?: string | null;
+  body: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  backgroundImageUrl: string;
+  backgroundImageAlt?: string | null;
+};
+
+export type HomepageTrustBadgeDraft = {
+  iconName: string;
+  title: string;
+  subtitle: string;
+  href?: string | null;
+  ariaLabel?: string | null;
+};
+
+export type HomepageCategoryTileDraft = {
+  categoryId?: string | null;
+  slug: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+};
+
+export type HomepageFeaturedProductDraft = {
+  productId: string;
+};
+
+export type HomepageBrandSpotlightDraft = {
+  brandId?: string | null;
+  slug: string;
+  title: string;
+  tagline: string;
+  heroImageUrl: string;
+  ctaLabel: string;
+  productIds: string[];
+};
+
+export type HomepageCampaignSpotlightDraft = {
+  campaignId?: string | null;
+  slug: string;
+  title: string;
+  subtitle: string;
+  heroImageUrl: string;
+  label: string;
+  ctaLabel: string;
+  layout: "FEATURE" | "SPLIT";
+  productIds: string[];
+};
+
+export type HomepagePromoOfferDraft = {
+  badge: string;
+  code: string;
+  headline: string;
+  body: string;
+  terms: string;
+  bannerImageUrl: string;
+  ctaLabel: string;
+  ctaHref: string;
+  productIds: string[];
+};
+
+export type HomepageTestimonialDraft = {
+  quote: string;
+  customerName: string;
+  imageUrl: string;
+  statusLabel?: string | null;
+};
+
+export type AdminHomepageDraftEntity = {
+  status: {
+    hasPublishedVersion: boolean;
+    draftUpdatedAt: string;
+    publishedAt: string | null;
+  };
+  hero: HomepageHeroDraft;
+  sectionHeaders: {
+    category: HomepageSectionHeader;
+    featured: HomepageSectionHeader;
+    brand: HomepageSectionHeader;
+    campaign: HomepageSectionHeader;
+    promo: HomepageSectionHeader;
+    testimonial: HomepageSectionHeader;
+  };
+  trustBadges: HomepageTrustBadgeDraft[];
+  categoryTiles: HomepageCategoryTileDraft[];
+  featuredProducts: HomepageFeaturedProductDraft[];
+  brandSpotlights: HomepageBrandSpotlightDraft[];
+  campaignSpotlights: HomepageCampaignSpotlightDraft[];
+  promoOffers: HomepagePromoOfferDraft[];
+  testimonials: HomepageTestimonialDraft[];
+};
+
+export type HomepageOptionCategory = {
+  id: string;
+  slug: string;
+  name: string;
+  productCount: number;
+};
+
+export type HomepageOptionProduct = {
+  id: string;
+  slug: string;
+  title: string;
+  brandName: string | null;
+};
+
+export type HomepageOptionBrand = {
+  id: string;
+  slug: string;
+  name: string;
+  status: string;
+};
+
+export type HomepageOptionCampaign = {
+  id: string;
+  slug: string;
+  name: string;
+  status: string;
+};
+
+export type AdminHomepageDraftResponse = {
+  success: true;
+  data: {
+    entity: AdminHomepageDraftEntity;
+    options: {
+      categories: HomepageOptionCategory[];
+      products: HomepageOptionProduct[];
+      brands: HomepageOptionBrand[];
+      campaigns: HomepageOptionCampaign[];
+    };
+  };
+};
+
+export type UpdateHomepageDraftBody = Omit<AdminHomepageDraftEntity, "status">;
+
+export const getAdminHomepageDraft = async (
+  accessToken: string
+): Promise<AdminHomepageDraftResponse> =>
+  apiRequest<AdminHomepageDraftResponse>({
+    path: "/api/admin/content/homepage",
+    accessToken
+  });
+
+export const updateAdminHomepageDraft = async (
+  accessToken: string,
+  body: UpdateHomepageDraftBody
+): Promise<AdminHomepageDraftResponse> =>
+  apiRequest<AdminHomepageDraftResponse>({
+    method: "PUT",
+    path: "/api/admin/content/homepage",
+    accessToken,
+    body
+  });
+
+export const publishAdminHomepage = async (
+  accessToken: string
+): Promise<AdminHomepageDraftResponse> =>
+  apiRequest<AdminHomepageDraftResponse>({
+    method: "POST",
+    path: "/api/admin/content/homepage/publish",
+    accessToken,
+    body: {}
+  });
+
+export const unpublishAdminHomepage = async (
+  accessToken: string
+): Promise<AdminHomepageDraftResponse> =>
+  apiRequest<AdminHomepageDraftResponse>({
+    method: "POST",
+    path: "/api/admin/content/homepage/unpublish",
+    accessToken,
+    body: {}
+  });
+
 export { ApiError };

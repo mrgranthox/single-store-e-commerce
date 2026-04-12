@@ -14,7 +14,7 @@ export class ApiError extends Error {
 
 type ApiRequestInput = {
   path: string;
-  method?: "GET" | "POST" | "PATCH" | "DELETE";
+  method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   accessToken?: string | null;
   body?: unknown;
   headers?: Record<string, string>;

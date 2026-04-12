@@ -1,5 +1,6 @@
 import type { FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { StorefrontMain, StorefrontShell, storefrontScrollRegionClasses } from "@/components/layout";
 import { ProductCard, StarRating, TrustBadge } from "@/components/ui";
@@ -9,17 +10,13 @@ import {
   brandDirectoryBySlug,
   brandSlugFromName,
   campaigns,
-  countProductsInCategoryKeyword,
   featuredProducts,
   allProducts,
-  homeCategoryTiles,
-  homeCouponPromos,
   productsBySlug,
-  productsForBrandSlug,
   productsFromSlugs,
   campaignBySlug,
 } from "@/lib/data/customer-mock";
-import { STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
+import { customerApi } from "@/lib/api/customer";
 import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
 import { neutralFieldClass } from "@/lib/form-field-styles";
@@ -36,13 +33,82 @@ const ShellMain = ({ children, className = "" }: { children: ReactNode; classNam
    HOME PAGE — commerce hub (categories, brands, campaigns, offers)
 ───────────────────────────────────────────── */
 export const HomePage = () => {
-  const primaryCampaign = campaigns[0];
-  const secondaryCampaign = campaigns[1];
-  const campaignProductsPrimary = productsFromSlugs(primaryCampaign?.products ?? []).slice(0, 4);
-  const campaignProductsSecondary = productsFromSlugs(secondaryCampaign?.products ?? []).slice(0, 4);
+  const homepageQuery = useQuery({
+    queryKey: ["customer-homepage"],
+    queryFn: async () => (await customerApi.getHomepage()).entity
+  });
 
-  const promoCtaHref = (promo: (typeof homeCouponPromos)[0]) =>
-    `${promo.ctaTo}${promo.ctaTo.includes("?") ? "&" : "?"}promo=${encodeURIComponent(promo.code)}`;
+  const promoCtaHref = (href: string, code: string) =>
+    href.includes("promo=") ? href : `${href}${href.includes("?") ? "&" : "?"}promo=${encodeURIComponent(code)}`;
+
+  if (homepageQuery.isPending) {
+    return (
+      <StorefrontShell>
+        <main
+          className={`${storefrontScrollRegionClasses} bg-surface text-on-background font-body overflow-x-hidden w-full max-w-full min-w-0`}
+        >
+          <section className="relative min-h-[min(72dvh,540px)] md:min-h-0 md:h-[min(92dvh,920px)] w-full overflow-hidden bg-neutral-950">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-container via-surface-container-high to-surface-container-low animate-pulse" />
+            <div className="relative z-[1] min-h-[min(72dvh,540px)] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-stretch sm:items-start pb-16 md:pb-0 pt-24 md:pt-0 w-full min-w-0">
+              <div className="h-3 w-40 rounded-full bg-white/20 mb-5" />
+              <div className="h-14 sm:h-20 md:h-24 w-full max-w-3xl rounded-[2rem] bg-white/15 mb-5" />
+              <div className="h-4 w-full max-w-xl rounded-full bg-white/15 mb-3" />
+              <div className="h-4 w-[88%] max-w-lg rounded-full bg-white/15 mb-8" />
+              <div className="h-12 w-40 rounded-full bg-white/20" />
+            </div>
+          </section>
+
+          <section className="border-y border-outline-variant/15 bg-surface-container-lowest/80">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="flex items-start gap-4 animate-pulse">
+                  <div className="w-12 h-12 rounded-full bg-surface-container-high shrink-0" />
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <div className="h-4 w-28 rounded-full bg-surface-container-high" />
+                    <div className="h-3 w-40 rounded-full bg-surface-container-high mt-2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </main>
+      </StorefrontShell>
+    );
+  }
+
+  if (homepageQuery.isError) {
+    return (
+      <StorefrontShell>
+        <main
+          className={`${storefrontScrollRegionClasses} bg-surface text-on-background font-body overflow-x-hidden w-full max-w-full min-w-0`}
+        >
+          <section className="max-w-screen-md mx-auto px-4 sm:px-6 md:px-8 py-24 sm:py-28 md:py-32">
+            <div className="rounded-[2rem] border border-outline-variant/15 bg-surface-container-lowest p-8 sm:p-10 shadow-sm text-center">
+              <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-3">
+                Homepage unavailable
+              </p>
+              <h1 className="font-headline text-2xl sm:text-4xl font-extrabold tracking-tight text-on-background mb-3">
+                The published homepage could not be loaded.
+              </h1>
+              <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed max-w-lg mx-auto">
+                Check the homepage publish state in admin or retry once the backend content endpoint is available.
+              </p>
+              <button
+                type="button"
+                onClick={() => void homepageQuery.refetch()}
+                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-6 py-3 text-xs font-label font-bold uppercase tracking-[0.18em] text-on-secondary hover:brightness-110 transition-[filter]"
+              >
+                Retry
+                <Icon name="refresh" className="text-base" />
+              </button>
+            </div>
+          </section>
+        </main>
+      </StorefrontShell>
+    );
+  }
+
+  const homepage = homepageQuery.data;
 
   return (
     <StorefrontShell>
@@ -52,438 +118,498 @@ export const HomePage = () => {
         <section className="relative min-h-[min(72dvh,540px)] md:min-h-0 md:h-[min(92dvh,920px)] w-full overflow-hidden bg-neutral-950">
           <img
             className="absolute inset-0 w-full h-full object-cover object-center opacity-95 md:opacity-92"
-            src={mockImages.heroHome}
-            alt=""
+            src={homepage.hero.backgroundImageUrl}
+            alt={homepage.hero.backgroundImageAlt}
           />
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/72 md:from-black/58 via-black/28 md:via-black/15 to-transparent" />
           <div className="relative z-[1] min-h-[min(72dvh,540px)] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-stretch sm:items-start pb-16 md:pb-0 pt-24 md:pt-0 w-full min-w-0">
-            <span className="font-label text-tertiary-fixed tracking-[0.2em] sm:tracking-[0.28em] uppercase text-[10px] sm:text-xs mb-3 md:mb-5 font-bold">
-              {STORE_NAME_SHORT} · Vibrant beauty &amp; care
-            </span>
-            <h1 className="font-headline text-3xl leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white tracking-tighter max-w-full sm:max-w-3xl md:leading-[0.92] mb-4 md:mb-7 break-words text-balance">
-              Color that{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-emerald-200 to-amber-200">
-                performs
+            {homepage.hero.eyebrow ? (
+              <span className="font-label text-tertiary-fixed tracking-[0.2em] sm:tracking-[0.28em] uppercase text-[10px] sm:text-xs mb-3 md:mb-5 font-bold">
+                {homepage.hero.eyebrow}
               </span>
-              .
+            ) : null}
+            <h1 className="font-headline text-3xl leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white tracking-tighter max-w-full sm:max-w-3xl md:leading-[0.92] mb-4 md:mb-7 break-words text-balance">
+              {homepage.hero.titlePrefix}
+              {homepage.hero.titleAccent ? (
+                <>
+                  {" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-emerald-200 to-amber-200">
+                    {homepage.hero.titleAccent}
+                  </span>
+                </>
+              ) : null}
+              {homepage.hero.titleSuffix ?? null}
             </h1>
             <p className="text-primary-fixed text-sm sm:text-base md:text-lg max-w-full sm:max-w-md md:max-w-lg mb-6 md:mb-10 font-light leading-relaxed">
-              Pigment-rich makeup, skin-first essentials, and drops you will actually use — checkout with card or mobile money (MTN, Telecel, AirtelTigo) via Paystack.
+              {homepage.hero.body}
             </p>
             <div className="hero-cta-glow w-fit max-w-full self-start">
               <Link
-                to="/shop"
+                to={homepage.hero.primaryCtaHref}
                 className="bg-secondary text-on-secondary px-5 sm:px-7 py-2.5 sm:py-3 rounded-full text-sm sm:text-[0.9375rem] font-semibold hover:brightness-110 active:scale-[0.98] transition-[transform,filter] duration-200 inline-flex items-center justify-center gap-1.5 sm:gap-2 group shadow-md shadow-secondary/25"
-                aria-label="Shop the full catalogue"
+                aria-label={homepage.hero.primaryCtaLabel}
               >
-                Shop the edit
+                {homepage.hero.primaryCtaLabel}
                 <Icon name="arrow_forward" className="text-base sm:text-lg group-hover:translate-x-0.5 transition-transform duration-200" />
               </Link>
             </div>
           </div>
         </section>
 
-        <section className="border-y border-outline-variant/15 bg-surface-container-lowest/80">
-          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
-            <TrustBadge
-              icon="verified_user"
-              title="Authenticated edit"
-              sub="Vetted partners & materials"
-              to="/about"
-              ariaLabel={`Learn about ${STORE_NAME_FULL} — our standards and quality`}
-            />
-            <TrustBadge
-              icon="local_shipping"
-              title="Insured delivery"
-              sub={`Complimentary over ${formatGhs(FREE_SHIPPING_THRESHOLD_GHS, 0)}`}
-              to="/pages/shipping-policy"
-              ariaLabel="Read shipping policy — insured delivery and free shipping thresholds"
-            />
-            <TrustBadge
-              icon="assignment_return"
-              title="30-day returns"
-              sub="Prepaid labels · no hassle"
-              to="/pages/returns-policy"
-              ariaLabel="Read returns policy — 30-day returns and prepaid labels"
-            />
-            <TrustBadge
-              icon="support_agent"
-              title="Concierge care"
-              sub="Styling & order help"
-              to="/support"
-              ariaLabel="Open help center and customer support"
-            />
-          </div>
-        </section>
-
-        <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
-            <div className="max-w-2xl min-w-0">
-              <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">Shop by category</p>
-              <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-on-background break-words text-balance">
-                Find your lane — every link opens the full aisle
-              </h2>
-              <p className="text-on-surface-variant text-sm sm:text-base mt-2 leading-relaxed">
-                Jump into outerwear, footwear, knitwear, and more. Counts reflect pieces in this preview catalogue.
-              </p>
+        {homepage.trustBadges.length > 0 ? (
+          <section className="border-y border-outline-variant/15 bg-surface-container-lowest/80">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
+              {homepage.trustBadges.map((badge) => (
+                <TrustBadge
+                  key={`${badge.iconName}-${badge.title}`}
+                  icon={badge.iconName}
+                  title={badge.title}
+                  sub={badge.subtitle}
+                  to={badge.href ?? undefined}
+                  ariaLabel={badge.ariaLabel ?? undefined}
+                />
+              ))}
             </div>
-            <Link
-              to="/shop"
-              className="inline-flex items-center gap-2 shrink-0 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 py-1"
-              aria-label="View full product catalogue"
-            >
-              Full catalogue
-              <Icon name="arrow_forward" className="text-base" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 min-[380px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-4 w-full min-w-0">
-            {homeCategoryTiles.map((cat) => {
-              const n = countProductsInCategoryKeyword(cat.slug);
-              return (
+          </section>
+        ) : null}
+
+        {homepage.categorySection.isVisible && homepage.categorySection.items.length > 0 ? (
+          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
+              <div className="max-w-2xl min-w-0">
+                {homepage.categorySection.eyebrow ? (
+                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                    {homepage.categorySection.eyebrow}
+                  </p>
+                ) : null}
+                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-on-background break-words text-balance">
+                  {homepage.categorySection.title}
+                </h2>
+                <p className="text-on-surface-variant text-sm sm:text-base mt-2 leading-relaxed">
+                  {homepage.categorySection.description}
+                </p>
+              </div>
+              {homepage.categorySection.ctaLabel && homepage.categorySection.ctaHref ? (
                 <Link
-                  key={cat.slug}
-                  to={`/categories/${cat.slug}`}
+                  to={homepage.categorySection.ctaHref}
+                  className="inline-flex items-center gap-2 shrink-0 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 py-1"
+                  aria-label={homepage.categorySection.ctaLabel}
+                >
+                  {homepage.categorySection.ctaLabel}
+                  <Icon name="arrow_forward" className="text-base" />
+                </Link>
+              ) : null}
+            </div>
+            <div className="grid grid-cols-1 min-[380px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-4 w-full min-w-0">
+              {homepage.categorySection.items.map((category) => (
+                <Link
+                  key={category.slug}
+                  to={category.href}
                   className="group relative flex flex-col overflow-hidden rounded-2xl border border-outline-variant/18 bg-surface-container-lowest shadow-sm hover:border-secondary/30 hover:shadow-[0_16px_40px_rgba(11,28,48,0.08)] transition-all min-w-0 max-w-full"
-                  aria-label={`Shop ${cat.title}: ${cat.description}. ${n} product${n === 1 ? "" : "s"} in this category.`}
+                  aria-label={`Shop ${category.title}: ${category.description}. ${category.productCount} product${category.productCount === 1 ? "" : "s"} in this category.`}
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-surface-container-low w-full">
                     <img
-                      src={cat.imageUrl}
-                      alt={`${cat.title} — ${cat.description}`}
+                      src={category.imageUrl}
+                      alt={`${category.title} — ${category.description}`}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary-container/75 via-primary-container/10 to-transparent" />
                   </div>
                   <div className="p-3 sm:p-4 flex flex-col flex-1">
-                    <h3 className="font-headline font-bold text-sm sm:text-base text-on-background group-hover:text-secondary transition-colors">{cat.title}</h3>
-                    <p className="text-on-surface-variant text-[11px] sm:text-xs mt-1 leading-snug line-clamp-2">{cat.description}</p>
+                    <h3 className="font-headline font-bold text-sm sm:text-base text-on-background group-hover:text-secondary transition-colors">
+                      {category.title}
+                    </h3>
+                    <p className="text-on-surface-variant text-[11px] sm:text-xs mt-1 leading-snug line-clamp-2">
+                      {category.description}
+                    </p>
                     <span className="mt-3 font-label text-[10px] uppercase tracking-widest text-outline font-bold">
-                      {n} piece{n === 1 ? "" : "s"}
+                      {category.productCount} piece{category.productCount === 1 ? "" : "s"}
                     </span>
                   </div>
                 </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="bg-surface-container-low/50 border-y border-outline-variant/10 w-full min-w-0">
-          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
-              <div className="min-w-0">
-                <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">Featured now</p>
-                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">Editor&apos;s selection</h2>
-                <p className="text-on-surface-variant text-sm sm:text-base mt-2 max-w-xl">
-                  New arrivals, proven sellers, and pieces with exceptional craft stories.
-                </p>
-              </div>
-              <Link
-                to="/shop"
-                className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 shrink-0 py-1"
-                aria-label="View all featured products in the catalogue"
-              >
-                View all
-                <Icon name="arrow_forward" className="text-base" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 lg:gap-x-8 lg:gap-y-14 w-full min-w-0 [&>*]:min-w-0">
-              {featuredProducts.slice(0, 4).map((p) => (
-                <ProductCard key={p.id} product={p} />
               ))}
             </div>
-          </div>
-        </section>
+          </section>
+        ) : null}
 
-        <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
-            <div className="max-w-2xl min-w-0">
-              <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">The houses</p>
-              <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">Brands with a point of view</h2>
-              <p className="text-on-surface-variant text-sm sm:text-base mt-2 leading-relaxed">
-                Open a house for the full story, or tap a product to go straight to the piece.
-              </p>
+        {homepage.featuredSection.isVisible && homepage.featuredSection.items.length > 0 ? (
+          <section className="bg-surface-container-low/50 border-y border-outline-variant/10 w-full min-w-0">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
+                <div className="min-w-0">
+                  {homepage.featuredSection.eyebrow ? (
+                    <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                      {homepage.featuredSection.eyebrow}
+                    </p>
+                  ) : null}
+                  <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
+                    {homepage.featuredSection.title}
+                  </h2>
+                  <p className="text-on-surface-variant text-sm sm:text-base mt-2 max-w-xl">
+                    {homepage.featuredSection.description}
+                  </p>
+                </div>
+                {homepage.featuredSection.ctaLabel && homepage.featuredSection.ctaHref ? (
+                  <Link
+                    to={homepage.featuredSection.ctaHref}
+                    className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 shrink-0 py-1"
+                    aria-label={homepage.featuredSection.ctaLabel}
+                  >
+                    {homepage.featuredSection.ctaLabel}
+                    <Icon name="arrow_forward" className="text-base" />
+                  </Link>
+                ) : null}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 lg:gap-x-8 lg:gap-y-14 w-full min-w-0 [&>*]:min-w-0">
+                {homepage.featuredSection.items.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
             </div>
-            <Link
-              to="/brands"
-              className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 shrink-0 py-1"
-              aria-label="View directory of all brands"
-            >
-              All brands
-              <Icon name="arrow_forward" className="text-base" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 w-full min-w-0">
-            {brandDirectory.map((b) => {
-              const picks = productsForBrandSlug(b.slug, 3);
-              return (
+          </section>
+        ) : null}
+
+        {homepage.brandSection.isVisible && homepage.brandSection.items.length > 0 ? (
+          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
+              <div className="max-w-2xl min-w-0">
+                {homepage.brandSection.eyebrow ? (
+                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                    {homepage.brandSection.eyebrow}
+                  </p>
+                ) : null}
+                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
+                  {homepage.brandSection.title}
+                </h2>
+                <p className="text-on-surface-variant text-sm sm:text-base mt-2 leading-relaxed">
+                  {homepage.brandSection.description}
+                </p>
+              </div>
+              {homepage.brandSection.ctaLabel && homepage.brandSection.ctaHref ? (
+                <Link
+                  to={homepage.brandSection.ctaHref}
+                  className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 shrink-0 py-1"
+                  aria-label={homepage.brandSection.ctaLabel}
+                >
+                  {homepage.brandSection.ctaLabel}
+                  <Icon name="arrow_forward" className="text-base" />
+                </Link>
+              ) : null}
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 w-full min-w-0">
+              {homepage.brandSection.items.map((brand) => (
                 <div
-                  key={b.slug}
+                  key={brand.slug}
                   className="rounded-2xl border border-outline-variant/18 bg-surface-container-lowest overflow-hidden shadow-sm flex flex-col min-w-0 max-w-full"
                 >
                   <Link
-                    to={`/brands/${b.slug}`}
+                    to={brand.href}
                     className="group relative block aspect-[16/9] overflow-hidden bg-surface-container-low shrink-0"
-                    aria-label={`${b.name} brand — ${b.tagline}. View full collection.`}
+                    aria-label={`${brand.title} brand — ${brand.tagline}. View full collection.`}
                   >
                     <img
-                      src={b.heroImage}
-                      alt={`${b.name}: ${b.tagline}`}
+                      src={brand.heroImageUrl}
+                      alt={`${brand.title}: ${brand.tagline}`}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary-container/80 via-transparent to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-2">
                       <div>
-                        <p className="font-label text-[10px] uppercase tracking-[0.2em] text-white/85 font-bold">House</p>
-                        <h3 className="font-headline text-xl sm:text-2xl font-extrabold text-white">{b.name}</h3>
+                        <p className="font-label text-[10px] uppercase tracking-[0.2em] text-white/85 font-bold">
+                          House
+                        </p>
+                        <h3 className="font-headline text-xl sm:text-2xl font-extrabold text-white">
+                          {brand.title}
+                        </h3>
                       </div>
-                      <Icon name="arrow_forward" className="text-white text-2xl shrink-0 opacity-90 group-hover:translate-x-0.5 transition-transform" />
+                      <Icon
+                        name="arrow_forward"
+                        className="text-white text-2xl shrink-0 opacity-90 group-hover:translate-x-0.5 transition-transform"
+                      />
                     </div>
                   </Link>
                   <div className="p-4 sm:p-5 flex flex-col flex-1">
-                    <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2">{b.tagline}</p>
-                    <p className="font-label text-[10px] uppercase tracking-widest text-outline font-bold mt-4 mb-2">Shop directly</p>
-                    <div className="grid grid-cols-3 gap-2 w-full min-w-0">
-                      {picks.map((p) => (
-                        <Link
-                          key={p.id}
-                          to={`/products/${p.slug}`}
-                          className="group/p flex min-w-0 flex-col gap-1.5"
-                          aria-label={`${p.name} by ${b.name} — ${p.category}, ${formatGhs(p.price)}. View product.`}
-                        >
-                          <div className="aspect-[3/4] rounded-lg overflow-hidden border border-outline-variant/15 bg-surface-container-low w-full">
-                            <img
-                              src={p.imageUrl}
-                              alt={`${p.name} — ${b.name}`}
-                              className="h-full w-full object-cover group-hover/p:scale-105 transition-transform duration-500"
-                            />
-                          </div>
-                          <span className="text-[10px] font-headline font-semibold text-on-background line-clamp-2 leading-tight group-hover/p:text-secondary transition-colors break-words">
-                            {p.name}
-                          </span>
-                        </Link>
-                      ))}
-                    </div>
+                    <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2">{brand.tagline}</p>
+                    {brand.products.length > 0 ? (
+                      <>
+                        <p className="font-label text-[10px] uppercase tracking-widest text-outline font-bold mt-4 mb-2">
+                          Shop directly
+                        </p>
+                        <div className="grid grid-cols-3 gap-2 w-full min-w-0">
+                          {brand.products.map((product) => (
+                            <Link
+                              key={product.id}
+                              to={`/products/${product.slug}`}
+                              className="group/p flex min-w-0 flex-col gap-1.5"
+                              aria-label={`${product.name} by ${brand.title} — ${product.category}, ${formatGhs(product.price)}. View product.`}
+                            >
+                              <div className="aspect-[3/4] rounded-lg overflow-hidden border border-outline-variant/15 bg-surface-container-low w-full">
+                                <img
+                                  src={product.imageUrl}
+                                  alt={`${product.name} — ${brand.title}`}
+                                  className="h-full w-full object-cover group-hover/p:scale-105 transition-transform duration-500"
+                                />
+                              </div>
+                              <span className="text-[10px] font-headline font-semibold text-on-background line-clamp-2 leading-tight group-hover/p:text-secondary transition-colors break-words">
+                                {product.name}
+                              </span>
+                            </Link>
+                          ))}
+                        </div>
+                      </>
+                    ) : null}
                     <Link
-                      to={`/brands/${b.slug}`}
+                      to={brand.href}
                       className="mt-4 inline-flex items-center gap-1 text-secondary font-label font-bold text-[10px] uppercase tracking-widest hover:underline underline-offset-4"
-                      aria-label={`View complete ${b.name} collection`}
+                      aria-label={brand.ctaLabel}
                     >
-                      Full {b.name} collection
+                      {brand.ctaLabel}
                       <Icon name="chevron_right" className="text-sm" />
                     </Link>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="bg-surface-container-low/40 border-t border-outline-variant/10 w-full min-w-0">
-          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-            <div className="mb-10 md:mb-14 max-w-2xl min-w-0">
-              <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">Campaigns</p>
-              <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">Seasonal edits & limited runs</h2>
-              <p className="text-on-surface-variant text-sm sm:text-base mt-2">
-                Each banner opens a dedicated campaign page with the curated set for that story.
-              </p>
-              {campaigns[2] && (
-                <Link
-                  to={`/campaigns/${campaigns[2].slug}`}
-                  className="inline-flex items-center gap-2 mt-4 text-secondary font-label font-bold text-xs uppercase tracking-widest hover:underline underline-offset-4"
-                  aria-label={`Open ${campaigns[2].title} campaign`}
-                >
-                  {campaigns[2].title}
-                  <Icon name="arrow_forward" className="text-base" />
-                </Link>
-              )}
+              ))}
             </div>
-            <div className="flex flex-col gap-12 md:gap-16 min-w-0">
-              {primaryCampaign && (
-                <div className="min-w-0">
-                  <Link
-                    to={`/campaigns/${primaryCampaign.slug}`}
-                    className="group relative block overflow-hidden rounded-2xl border border-outline-variant/15 bg-primary-container min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] w-full max-w-full"
-                    aria-label={`${primaryCampaign.title}: ${primaryCampaign.subtitle}. Open campaign.`}
-                  >
-                    <img
-                      src={primaryCampaign.heroImageUrl}
-                      alt={`${primaryCampaign.title} campaign`}
-                      className="absolute inset-0 h-full w-full object-cover object-center opacity-55 transition-transform duration-[2.2s] group-hover:scale-[1.04]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary-container/95 via-primary-container/55 to-transparent" />
-                    <div className="relative z-[1] h-full min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] flex flex-col justify-end md:justify-center p-5 sm:p-10 md:p-14 w-full max-w-full md:max-w-lg min-w-0">
-                      <span className="font-label text-tertiary-fixed tracking-[0.3em] uppercase text-[10px] font-bold mb-2">Featured campaign</span>
-                      <h3 className="text-white font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tighter mb-3 break-words">
-                        {primaryCampaign.title}
-                      </h3>
-                      <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-5 break-words">{primaryCampaign.subtitle}</p>
-                      <span className="inline-flex items-center gap-2 bg-white text-on-background px-5 py-2.5 rounded-xl font-label font-bold text-xs uppercase tracking-widest group-hover:bg-secondary group-hover:text-on-secondary transition-colors w-fit">
-                        Open edit
-                        <Icon name="arrow_forward" className="text-base" />
-                      </span>
-                    </div>
-                  </Link>
-                  {campaignProductsPrimary.length > 0 && (
-                    <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 w-full min-w-0 [&>*]:min-w-0">
-                      {campaignProductsPrimary.map((p) => (
-                        <ProductCard key={p.id} product={p} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-              {secondaryCampaign && (
-                <div className="min-w-0">
-                  <Link
-                    to={`/campaigns/${secondaryCampaign.slug}`}
-                    className="group relative flex flex-col md:flex-row overflow-hidden rounded-2xl border border-outline-variant/15 bg-surface-container-lowest min-h-[200px] w-full max-w-full"
-                    aria-label={`${secondaryCampaign.title}: ${secondaryCampaign.subtitle}. View campaign.`}
-                  >
-                    <div className="relative w-full md:w-1/2 min-h-[180px] sm:min-h-[220px] md:min-h-[280px] shrink-0">
-                      <img
-                        src={secondaryCampaign.heroImageUrl}
-                        alt={`${secondaryCampaign.title} campaign`}
-                        className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/50 to-transparent" />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center p-5 sm:p-8 md:p-10 min-w-0">
-                      <span className="font-label text-secondary tracking-[0.22em] uppercase text-[10px] font-bold mb-2">Second story</span>
-                      <h3 className="font-headline text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-2 break-words">
-                        {secondaryCampaign.title}
-                      </h3>
-                      <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed mb-5 break-words">{secondaryCampaign.subtitle}</p>
-                      <span className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-widest group-hover:underline underline-offset-4 w-fit">
-                        View campaign
-                        <Icon name="arrow_forward" className="text-base" />
-                      </span>
-                    </div>
-                  </Link>
-                  {campaignProductsSecondary.length > 0 && (
-                    <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 w-full min-w-0 [&>*]:min-w-0">
-                      {campaignProductsSecondary.map((p) => (
-                        <ProductCard key={p.id} product={p} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
+          </section>
+        ) : null}
 
-        <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-          <div className="mb-8 md:mb-12 max-w-2xl min-w-0">
-            <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">Member offers</p>
-            <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">Codes & curated picks</h2>
-            <p className="text-on-surface-variant text-sm sm:text-base mt-2">
-              Transparent terms — preview pieces that pair with each offer before checkout.
-            </p>
-          </div>
-          <div className="flex flex-col gap-10 md:gap-14 min-w-0">
-            {homeCouponPromos.map((promo, idx) => (
-              <div
-                key={promo.id}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 rounded-2xl border border-outline-variant/15 overflow-hidden bg-surface-container-lowest shadow-sm w-full min-w-0 max-w-full"
-              >
-                <div className={`relative lg:col-span-5 min-h-[200px] sm:min-h-[240px] ${idx % 2 === 1 ? "lg:order-2" : ""}`}>
-                  <img
-                    src={promo.bannerImageUrl}
-                    alt={`${promo.headline} — promotional banner, code ${promo.code}`}
-                    className="absolute inset-0 h-full w-full object-cover object-center"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-primary-container/88 via-primary-container/35 to-transparent" />
-                  <div className="relative h-full min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-6 sm:p-8">
-                    <span className="inline-flex w-fit rounded-full bg-white/15 backdrop-blur-md px-3 py-1 font-label text-[10px] uppercase tracking-widest text-white font-bold border border-white/20">
-                      {promo.badge}
-                    </span>
-                    <p className="mt-4 font-mono text-white text-2xl sm:text-3xl font-bold tracking-widest">{promo.code}</p>
-                  </div>
-                </div>
-                <div className={`lg:col-span-7 p-5 sm:p-8 md:p-10 flex flex-col min-w-0 ${idx % 2 === 1 ? "lg:order-1" : ""}`}>
-                  <h3 className="font-headline text-lg sm:text-2xl font-extrabold tracking-tight text-on-background break-words">{promo.headline}</h3>
-                  <p className="text-on-surface-variant text-sm sm:text-base mt-3 leading-relaxed break-words">{promo.body}</p>
-                  <p className="text-outline text-xs mt-4 leading-relaxed border-l-2 border-secondary/40 pl-3 break-words">{promo.terms}</p>
-                  <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
-                    <Link
-                      to={promoCtaHref(promo)}
-                      className="inline-flex w-full sm:w-fit justify-center items-center gap-2 bg-secondary text-on-secondary px-6 py-3 rounded-xl font-label font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-opacity"
-                      aria-label={`${promo.ctaLabel} — use offer code ${promo.code} at checkout`}
-                    >
-                      {promo.ctaLabel}
-                      <Icon name="arrow_forward" className="text-base" />
-                    </Link>
-                    <Link
-                      to="/cart"
-                      className="inline-flex w-full sm:w-fit justify-center items-center gap-2 border-2 border-outline-variant/30 text-on-background px-6 py-3 rounded-xl font-label font-bold text-xs uppercase tracking-widest hover:border-secondary/40 transition-colors"
-                      aria-label={`Go to bag to apply code ${promo.code}`}
-                    >
-                      View bag
-                    </Link>
-                  </div>
-                  <p className="font-label text-[10px] uppercase tracking-widest text-outline font-bold mt-8 mb-3">Featured with this offer</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 w-full min-w-0 [&>*]:min-w-0">
-                    {productsFromSlugs(promo.productSlugs).map((p) => (
-                      <ProductCard key={p.id} product={p} />
-                    ))}
-                  </div>
-                </div>
+        {homepage.campaignSection.isVisible && homepage.campaignSection.items.length > 0 ? (
+          <section className="bg-surface-container-low/40 border-t border-outline-variant/10 w-full min-w-0">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
+              <div className="mb-10 md:mb-14 max-w-2xl min-w-0">
+                {homepage.campaignSection.eyebrow ? (
+                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                    {homepage.campaignSection.eyebrow}
+                  </p>
+                ) : null}
+                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
+                  {homepage.campaignSection.title}
+                </h2>
+                <p className="text-on-surface-variant text-sm sm:text-base mt-2">
+                  {homepage.campaignSection.description}
+                </p>
+                {homepage.campaignSection.ctaLabel && homepage.campaignSection.ctaHref ? (
+                  <Link
+                    to={homepage.campaignSection.ctaHref}
+                    className="inline-flex items-center gap-2 mt-4 text-secondary font-label font-bold text-xs uppercase tracking-widest hover:underline underline-offset-4"
+                    aria-label={homepage.campaignSection.ctaLabel}
+                  >
+                    {homepage.campaignSection.ctaLabel}
+                    <Icon name="arrow_forward" className="text-base" />
+                  </Link>
+                ) : null}
               </div>
-            ))}
-          </div>
-        </section>
+              <div className="flex flex-col gap-12 md:gap-16 min-w-0">
+                {homepage.campaignSection.items.map((campaign) => (
+                  <div key={campaign.slug} className="min-w-0">
+                    {campaign.layout === "FEATURE" ? (
+                      <Link
+                        to={campaign.href}
+                        className="group relative block overflow-hidden rounded-2xl border border-outline-variant/15 bg-primary-container min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] w-full max-w-full"
+                        aria-label={`${campaign.title}: ${campaign.subtitle}. ${campaign.ctaLabel}.`}
+                      >
+                        <img
+                          src={campaign.heroImageUrl}
+                          alt={`${campaign.title} campaign`}
+                          className="absolute inset-0 h-full w-full object-cover object-center opacity-55 transition-transform duration-[2.2s] group-hover:scale-[1.04]"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary-container/95 via-primary-container/55 to-transparent" />
+                        <div className="relative z-[1] h-full min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] flex flex-col justify-end md:justify-center p-5 sm:p-10 md:p-14 w-full max-w-full md:max-w-lg min-w-0">
+                          <span className="font-label text-tertiary-fixed tracking-[0.3em] uppercase text-[10px] font-bold mb-2">
+                            {campaign.label}
+                          </span>
+                          <h3 className="text-white font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tighter mb-3 break-words">
+                            {campaign.title}
+                          </h3>
+                          <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-5 break-words">
+                            {campaign.subtitle}
+                          </p>
+                          <span className="inline-flex items-center gap-2 bg-white text-on-background px-5 py-2.5 rounded-xl font-label font-bold text-xs uppercase tracking-widest group-hover:bg-secondary group-hover:text-on-secondary transition-colors w-fit">
+                            {campaign.ctaLabel}
+                            <Icon name="arrow_forward" className="text-base" />
+                          </span>
+                        </div>
+                      </Link>
+                    ) : (
+                      <Link
+                        to={campaign.href}
+                        className="group relative flex flex-col md:flex-row overflow-hidden rounded-2xl border border-outline-variant/15 bg-surface-container-lowest min-h-[200px] w-full max-w-full"
+                        aria-label={`${campaign.title}: ${campaign.subtitle}. ${campaign.ctaLabel}.`}
+                      >
+                        <div className="relative w-full md:w-1/2 min-h-[180px] sm:min-h-[220px] md:min-h-[280px] shrink-0">
+                          <img
+                            src={campaign.heroImageUrl}
+                            alt={`${campaign.title} campaign`}
+                            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/50 to-transparent" />
+                        </div>
+                        <div className="flex flex-1 flex-col justify-center p-5 sm:p-8 md:p-10 min-w-0">
+                          <span className="font-label text-secondary tracking-[0.22em] uppercase text-[10px] font-bold mb-2">
+                            {campaign.label}
+                          </span>
+                          <h3 className="font-headline text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-2 break-words">
+                            {campaign.title}
+                          </h3>
+                          <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed mb-5 break-words">
+                            {campaign.subtitle}
+                          </p>
+                          <span className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-widest group-hover:underline underline-offset-4 w-fit">
+                            {campaign.ctaLabel}
+                            <Icon name="arrow_forward" className="text-base" />
+                          </span>
+                        </div>
+                      </Link>
+                    )}
+                    {campaign.products.length > 0 ? (
+                      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 w-full min-w-0 [&>*]:min-w-0">
+                        {campaign.products.map((product) => (
+                          <ProductCard key={product.id} product={product} />
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
-        <section className="bg-surface-container-low py-12 sm:py-16 md:py-24 border-t border-outline-variant/10 w-full min-w-0">
-          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
-            <div className="text-center mb-10 md:mb-14 px-1">
-              <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">Trust</p>
-              <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3">Loved by the community</h2>
-              <p className="text-on-surface-variant max-w-xl mx-auto text-sm sm:text-base">
-                Verified customers on quality, service, and packaging that match the promise.
+        {homepage.promoSection.isVisible && homepage.promoSection.items.length > 0 ? (
+          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
+            <div className="mb-8 md:mb-12 max-w-2xl min-w-0">
+              {homepage.promoSection.eyebrow ? (
+                <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                  {homepage.promoSection.eyebrow}
+                </p>
+              ) : null}
+              <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
+                {homepage.promoSection.title}
+              </h2>
+              <p className="text-on-surface-variant text-sm sm:text-base mt-2">
+                {homepage.promoSection.description}
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {[
-                {
-                  quote: `"The pigment payoff is unreal — one swipe and it stays put through dinner. My vanity finally feels curated, not cluttered."`,
-                  name: "Eleanor Vance",
-                  image: mockImages.testimonial1,
-                },
-                {
-                  quote: `"Finally a routine that looks as good on my shelf as it does on my skin. ${STORE_NAME_FULL} ships fast and packs like a luxury house."`,
-                  name: "Julian Archer",
-                  image: mockImages.testimonial2,
-                },
-                {
-                  quote: `"Customer care helped me shade-match over chat. The box arrived in two days — everything smelled amazing. Already reordering."`,
-                  name: "Sasha Grey",
-                  image: mockImages.testimonial3,
-                },
-              ].map((r, i) => (
+            <div className="flex flex-col gap-10 md:gap-14 min-w-0">
+              {homepage.promoSection.items.map((promo, index) => (
                 <div
-                  key={i}
-                  className="bg-surface-container-lowest p-6 sm:p-8 rounded-2xl border border-outline-variant/12 shadow-sm hover:shadow-md transition-shadow"
+                  key={`${promo.code}-${index}`}
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 rounded-2xl border border-outline-variant/15 overflow-hidden bg-surface-container-lowest shadow-sm w-full min-w-0 max-w-full"
                 >
-                  <div className="flex items-center gap-1 mb-4 text-tertiary">
-                    {Array.from({ length: 5 }).map((_, j) => (
-                      <Icon key={j} name="star" filled className="text-tertiary text-lg" />
-                    ))}
+                  <div className={`relative lg:col-span-5 min-h-[200px] sm:min-h-[240px] ${index % 2 === 1 ? "lg:order-2" : ""}`}>
+                    <img
+                      src={promo.bannerImageUrl}
+                      alt={`${promo.headline} — promotional banner, code ${promo.code}`}
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-primary-container/88 via-primary-container/35 to-transparent" />
+                    <div className="relative h-full min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-6 sm:p-8">
+                      <span className="inline-flex w-fit rounded-full bg-white/15 backdrop-blur-md px-3 py-1 font-label text-[10px] uppercase tracking-widest text-white font-bold border border-white/20">
+                        {promo.badge}
+                      </span>
+                      <p className="mt-4 font-mono text-white text-2xl sm:text-3xl font-bold tracking-widest">
+                        {promo.code}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-on-surface mb-6 italic leading-relaxed text-sm sm:text-base">{r.quote}</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-full overflow-hidden bg-surface-container-high ring-2 ring-white shadow-sm">
-                      <img className="w-full h-full object-cover" src={r.image} alt={`Portrait of ${r.name}`} />
+                  <div className={`lg:col-span-7 p-5 sm:p-8 md:p-10 flex flex-col min-w-0 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
+                    <h3 className="font-headline text-lg sm:text-2xl font-extrabold tracking-tight text-on-background break-words">
+                      {promo.headline}
+                    </h3>
+                    <p className="text-on-surface-variant text-sm sm:text-base mt-3 leading-relaxed break-words">
+                      {promo.body}
+                    </p>
+                    <p className="text-outline text-xs mt-4 leading-relaxed border-l-2 border-secondary/40 pl-3 break-words">
+                      {promo.terms}
+                    </p>
+                    <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
+                      <Link
+                        to={promoCtaHref(promo.ctaHref, promo.code)}
+                        className="inline-flex w-full sm:w-fit justify-center items-center gap-2 bg-secondary text-on-secondary px-6 py-3 rounded-xl font-label font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-opacity"
+                        aria-label={`${promo.ctaLabel} — use offer code ${promo.code} at checkout`}
+                      >
+                        {promo.ctaLabel}
+                        <Icon name="arrow_forward" className="text-base" />
+                      </Link>
+                      <Link
+                        to="/cart"
+                        className="inline-flex w-full sm:w-fit justify-center items-center gap-2 border-2 border-outline-variant/30 text-on-background px-6 py-3 rounded-xl font-label font-bold text-xs uppercase tracking-widest hover:border-secondary/40 transition-colors"
+                        aria-label={`Go to bag to apply code ${promo.code}`}
+                      >
+                        View bag
+                      </Link>
                     </div>
-                    <div>
-                      <p className="font-headline font-bold text-sm">{r.name}</p>
-                      <p className="text-outline text-xs font-medium">Verified purchase</p>
-                    </div>
+                    {promo.products.length > 0 ? (
+                      <>
+                        <p className="font-label text-[10px] uppercase tracking-widest text-outline font-bold mt-8 mb-3">
+                          Featured with this offer
+                        </p>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 w-full min-w-0 [&>*]:min-w-0">
+                          {promo.products.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                          ))}
+                        </div>
+                      </>
+                    ) : null}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
+        ) : null}
+
+        {homepage.testimonialSection.isVisible && homepage.testimonialSection.items.length > 0 ? (
+          <section className="bg-surface-container-low py-12 sm:py-16 md:py-24 border-t border-outline-variant/10 w-full min-w-0">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
+              <div className="text-center mb-10 md:mb-14 px-1">
+                {homepage.testimonialSection.eyebrow ? (
+                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                    {homepage.testimonialSection.eyebrow}
+                  </p>
+                ) : null}
+                <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
+                  {homepage.testimonialSection.title}
+                </h2>
+                <p className="text-on-surface-variant max-w-xl mx-auto text-sm sm:text-base">
+                  {homepage.testimonialSection.description}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                {homepage.testimonialSection.items.map((testimonial, index) => (
+                  <div
+                    key={`${testimonial.customerName}-${index}`}
+                    className="bg-surface-container-lowest p-6 sm:p-8 rounded-2xl border border-outline-variant/12 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center gap-1 mb-4 text-tertiary">
+                      {Array.from({ length: 5 }).map((_, starIndex) => (
+                        <Icon key={starIndex} name="star" filled className="text-tertiary text-lg" />
+                      ))}
+                    </div>
+                    <p className="text-on-surface mb-6 italic leading-relaxed text-sm sm:text-base">
+                      {testimonial.quote}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-full overflow-hidden bg-surface-container-high ring-2 ring-white shadow-sm">
+                        <img
+                          className="w-full h-full object-cover"
+                          src={testimonial.imageUrl}
+                          alt={`Portrait of ${testimonial.customerName}`}
+                        />
+                      </div>
+                      <div>
+                        <p className="font-headline font-bold text-sm">{testimonial.customerName}</p>
+                        <p className="text-outline text-xs font-medium">
+                          {testimonial.statusLabel ?? "Verified purchase"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
       </main>
     </StorefrontShell>
   );

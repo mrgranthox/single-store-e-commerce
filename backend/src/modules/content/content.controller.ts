@@ -17,6 +17,7 @@ import {
   pageIdParamsSchema,
   pageSlugParamsSchema,
   publicBannersQuerySchema,
+  updateHomepageDraftBodySchema,
   updateBannerBodySchema,
   updatePageBodySchema
 } from "./content.schemas";
@@ -40,6 +41,13 @@ import {
   updateAdminBanner,
   updateAdminPage
 } from "./content.service";
+import {
+  getAdminHomepageDraft,
+  getPublicHomepage,
+  publishAdminHomepageDraft,
+  saveAdminHomepageDraft,
+  unpublishAdminHomepage
+} from "./homepage.service";
 
 export const getPagePublic = asyncHandler(async (request, response) => {
   const params = readValidatedParams<z.infer<typeof pageSlugParamsSchema>>(request);
@@ -63,8 +71,43 @@ export const getContactPagePublic = asyncHandler(async (_request, response) => {
   return sendSuccess(response, { data });
 });
 
+export const getHomepagePublic = asyncHandler(async (_request, response) => {
+  const data = await getPublicHomepage();
+  return sendSuccess(response, { data });
+});
+
 export const listPagesAdmin = asyncHandler(async (_request, response) => {
   const data = await listAdminPages();
+  return sendSuccess(response, { data });
+});
+
+export const getHomepageAdmin = asyncHandler(async (_request, response) => {
+  const data = await getAdminHomepageDraft();
+  return sendSuccess(response, { data });
+});
+
+export const updateHomepageAdmin = asyncHandler(async (request, response) => {
+  const body = readValidatedBody<z.infer<typeof updateHomepageDraftBodySchema>>(request);
+  const data = await saveAdminHomepageDraft({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
+    draft: body
+  });
+  return sendSuccess(response, { data });
+});
+
+export const publishHomepageAdmin = asyncHandler(async (request, response) => {
+  readValidatedBody<z.infer<typeof contentMutationBodySchema>>(request);
+  const data = await publishAdminHomepageDraft({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId)
+  });
+  return sendSuccess(response, { data });
+});
+
+export const unpublishHomepageAdmin = asyncHandler(async (request, response) => {
+  readValidatedBody<z.infer<typeof contentMutationBodySchema>>(request);
+  const data = await unpublishAdminHomepage({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId)
+  });
   return sendSuccess(response, { data });
 });
 

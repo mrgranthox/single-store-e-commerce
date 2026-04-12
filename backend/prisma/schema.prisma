@@ -153,6 +153,25 @@ enum PromotionStatus {
   ARCHIVED
 }
 
+enum HomePageVersionState {
+  DRAFT
+  PUBLISHED
+}
+
+enum HomePageSectionHeaderKind {
+  CATEGORY
+  FEATURED
+  BRAND
+  CAMPAIGN
+  PROMO
+  TESTIMONIAL
+}
+
+enum HomePageCampaignLayout {
+  FEATURE
+  SPLIT
+}
+
 enum NotificationStatus {
   PENDING
   SENT
@@ -500,6 +519,10 @@ model Product {
   categories  ProductCategory[]
   reviews     Review[]
   wishlistItems WishlistItem[]
+  homepageFeaturedProducts HomePageFeaturedProduct[]
+  homepageBrandSpotlightProducts HomePageBrandSpotlightProduct[]
+  homepageCampaignSpotlightProducts HomePageCampaignSpotlightProduct[]
+  homepagePromoOfferProducts HomePagePromoOfferProduct[]
 }
 
 model ProductVariant {
@@ -561,6 +584,7 @@ model Category {
   updatedAt DateTime @updatedAt
 
   products ProductCategory[]
+  homepageCategoryTiles HomePageCategoryTile[]
 }
 
 model Brand {
@@ -578,6 +602,7 @@ model Brand {
   updatedAt DateTime @updatedAt
 
   products Product[]
+  homepageBrandSpotlights HomePageBrandSpotlight[]
 }
 
 model ProductCategory {
@@ -1300,6 +1325,7 @@ model Campaign {
   promotion Promotion? @relation(fields: [promotionId], references: [id])
   banners     Banner[]
   orders      Order[]
+  homepageCampaignSpotlights HomePageCampaignSpotlight[]
 }
 
 model Banner {
@@ -1343,6 +1369,228 @@ model CmsPage {
   status      String @default("PUBLISHED") // DRAFT/PUBLISHED
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model HomePageVersion {
+  id                String @id @default(uuid())
+  storeId           String?
+  state             HomePageVersionState @unique
+  publishedAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  hero              HomePageHero?
+  sectionHeaders    HomePageSectionHeader[]
+  trustBadges       HomePageTrustBadge[]
+  categoryTiles     HomePageCategoryTile[]
+  featuredProducts  HomePageFeaturedProduct[]
+  brandSpotlights   HomePageBrandSpotlight[]
+  campaignSpotlights HomePageCampaignSpotlight[]
+  promoOffers       HomePagePromoOffer[]
+  testimonials      HomePageTestimonial[]
+}
+
+model HomePageHero {
+  id                 String @id @default(uuid())
+  versionId          String @unique
+  eyebrow            String
+  titlePrefix        String
+  titleAccent        String?
+  titleSuffix        String?
+  body               String
+  primaryCtaLabel    String
+  primaryCtaHref     String
+  backgroundImageUrl String
+  backgroundImageAlt String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  version HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+}
+
+model HomePageSectionHeader {
+  id          String @id @default(uuid())
+  versionId   String
+  kind        HomePageSectionHeaderKind
+  isVisible   Boolean @default(true)
+  eyebrow     String
+  title       String
+  description String
+  ctaLabel    String?
+  ctaHref     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  version HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@unique([versionId, kind])
+}
+
+model HomePageTrustBadge {
+  id        String @id @default(uuid())
+  versionId String
+  sortOrder Int @default(0)
+  iconName  String
+  title     String
+  subtitle  String
+  href      String?
+  ariaLabel String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  version HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@index([versionId, sortOrder])
+}
+
+model HomePageCategoryTile {
+  id          String @id @default(uuid())
+  versionId   String
+  categoryId  String?
+  sortOrder   Int @default(0)
+  slug        String
+  title       String
+  description String
+  imageUrl    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  version  HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([versionId, sortOrder])
+}
+
+model HomePageFeaturedProduct {
+  id        String @id @default(uuid())
+  versionId String
+  productId String
+  sortOrder Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  version HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([versionId, sortOrder])
+}
+
+model HomePageBrandSpotlight {
+  id           String @id @default(uuid())
+  versionId    String
+  brandId      String?
+  sortOrder    Int @default(0)
+  slug         String
+  title        String
+  tagline      String
+  heroImageUrl String
+  ctaLabel     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  version  HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  brand    Brand? @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  products HomePageBrandSpotlightProduct[]
+
+  @@index([versionId, sortOrder])
+}
+
+model HomePageBrandSpotlightProduct {
+  id               String @id @default(uuid())
+  brandSpotlightId String
+  productId        String
+  sortOrder        Int @default(0)
+  createdAt        DateTime @default(now())
+
+  brandSpotlight HomePageBrandSpotlight @relation(fields: [brandSpotlightId], references: [id], onDelete: Cascade)
+  product        Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([brandSpotlightId, sortOrder])
+}
+
+model HomePageCampaignSpotlight {
+  id           String @id @default(uuid())
+  versionId    String
+  campaignId   String?
+  sortOrder    Int @default(0)
+  slug         String
+  title        String
+  subtitle     String
+  heroImageUrl String
+  label        String
+  ctaLabel     String
+  layout       HomePageCampaignLayout
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  version  HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  campaign Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  products HomePageCampaignSpotlightProduct[]
+
+  @@index([versionId, sortOrder])
+}
+
+model HomePageCampaignSpotlightProduct {
+  id                  String @id @default(uuid())
+  campaignSpotlightId String
+  productId           String
+  sortOrder           Int @default(0)
+  createdAt           DateTime @default(now())
+
+  campaignSpotlight HomePageCampaignSpotlight @relation(fields: [campaignSpotlightId], references: [id], onDelete: Cascade)
+  product           Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([campaignSpotlightId, sortOrder])
+}
+
+model HomePagePromoOffer {
+  id             String @id @default(uuid())
+  versionId      String
+  sortOrder      Int @default(0)
+  badge          String
+  code           String
+  headline       String
+  body           String
+  terms          String
+  bannerImageUrl String
+  ctaLabel       String
+  ctaHref        String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  version  HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  products HomePagePromoOfferProduct[]
+
+  @@index([versionId, sortOrder])
+}
+
+model HomePagePromoOfferProduct {
+  id           String @id @default(uuid())
+  promoOfferId String
+  productId    String
+  sortOrder    Int @default(0)
+  createdAt    DateTime @default(now())
+
+  promoOffer HomePagePromoOffer @relation(fields: [promoOfferId], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([promoOfferId, sortOrder])
+}
+
+model HomePageTestimonial {
+  id           String @id @default(uuid())
+  versionId    String
+  sortOrder    Int @default(0)
+  quote        String
+  customerName String
+  imageUrl     String
+  statusLabel  String @default("Verified purchase")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  version HomePageVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+
+  @@index([versionId, sortOrder])
 }
 
 // -----------------------------

@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 
 const tabs = [
+  { to: "/admin/content/homepage", label: "Homepage", end: true },
   { to: "/admin/content/banners", label: "Banners", end: true },
   { to: "/admin/content/pages", label: "CMS pages", end: true }
 ] as const;

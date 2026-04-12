@@ -2,6 +2,8 @@ import { z } from "zod";
 
 const optionalResourceTypeSchema = z.enum(["image", "video", "raw"]).optional();
 const optionalDeliveryTypeSchema = z.enum(["upload", "private"]).optional();
+const internalHrefSchema = z.string().trim().min(1).max(255);
+const imageUrlSchema = z.string().trim().url().max(2_000);
 
 export const pageIdParamsSchema = z.object({
   pageId: z.string().uuid()
@@ -88,4 +90,105 @@ export const contentMediaUploadIntentBodySchema = z.object({
   contentType: z.string().trim().min(1).max(120),
   fileSizeBytes: z.coerce.number().int().min(1).optional(),
   resourceType: optionalResourceTypeSchema
+});
+
+const sectionHeaderInputSchema = z.object({
+  isVisible: z.boolean(),
+  eyebrow: z.string().trim().min(1).max(80),
+  title: z.string().trim().min(1).max(160),
+  description: z.string().trim().min(1).max(600),
+  ctaLabel: z.union([z.string().trim().min(1).max(80), z.null()]).optional(),
+  ctaHref: z.union([internalHrefSchema, z.null()]).optional()
+});
+
+const homepageTrustBadgeInputSchema = z.object({
+  iconName: z.string().trim().min(1).max(80),
+  title: z.string().trim().min(1).max(120),
+  subtitle: z.string().trim().min(1).max(160),
+  href: z.union([internalHrefSchema, z.null()]).optional(),
+  ariaLabel: z.union([z.string().trim().min(1).max(255), z.null()]).optional()
+});
+
+const homepageCategoryTileInputSchema = z.object({
+  categoryId: z.union([z.string().uuid(), z.null()]).optional(),
+  slug: z.string().trim().min(1).max(120),
+  title: z.string().trim().min(1).max(120),
+  description: z.string().trim().min(1).max(200),
+  imageUrl: imageUrlSchema
+});
+
+const homepageFeaturedProductInputSchema = z.object({
+  productId: z.string().uuid()
+});
+
+const productIdsSchema = z.array(z.string().uuid()).max(6);
+
+const homepageBrandSpotlightInputSchema = z.object({
+  brandId: z.union([z.string().uuid(), z.null()]).optional(),
+  slug: z.string().trim().min(1).max(120),
+  title: z.string().trim().min(1).max(120),
+  tagline: z.string().trim().min(1).max(255),
+  heroImageUrl: imageUrlSchema,
+  ctaLabel: z.string().trim().min(1).max(80),
+  productIds: productIdsSchema
+});
+
+const homepageCampaignSpotlightInputSchema = z.object({
+  campaignId: z.union([z.string().uuid(), z.null()]).optional(),
+  slug: z.string().trim().min(1).max(120),
+  title: z.string().trim().min(1).max(120),
+  subtitle: z.string().trim().min(1).max(255),
+  heroImageUrl: imageUrlSchema,
+  label: z.string().trim().min(1).max(80),
+  ctaLabel: z.string().trim().min(1).max(80),
+  layout: z.enum(["FEATURE", "SPLIT"]),
+  productIds: productIdsSchema
+});
+
+const homepagePromoOfferInputSchema = z.object({
+  badge: z.string().trim().min(1).max(80),
+  code: z.string().trim().min(1).max(40),
+  headline: z.string().trim().min(1).max(160),
+  body: z.string().trim().min(1).max(400),
+  terms: z.string().trim().min(1).max(400),
+  bannerImageUrl: imageUrlSchema,
+  ctaLabel: z.string().trim().min(1).max(80),
+  ctaHref: internalHrefSchema,
+  productIds: productIdsSchema
+});
+
+const homepageTestimonialInputSchema = z.object({
+  quote: z.string().trim().min(1).max(600),
+  customerName: z.string().trim().min(1).max(120),
+  imageUrl: imageUrlSchema,
+  statusLabel: z.union([z.string().trim().min(1).max(80), z.null()]).optional()
+});
+
+export const updateHomepageDraftBodySchema = z.object({
+  hero: z.object({
+    eyebrow: z.string().trim().min(1).max(80),
+    titlePrefix: z.string().trim().min(1).max(120),
+    titleAccent: z.union([z.string().trim().min(1).max(120), z.null()]).optional(),
+    titleSuffix: z.union([z.string().trim().min(1).max(40), z.null()]).optional(),
+    body: z.string().trim().min(1).max(500),
+    primaryCtaLabel: z.string().trim().min(1).max(80),
+    primaryCtaHref: internalHrefSchema,
+    backgroundImageUrl: imageUrlSchema,
+    backgroundImageAlt: z.union([z.string().trim().min(1).max(255), z.null()]).optional()
+  }),
+  sectionHeaders: z.object({
+    category: sectionHeaderInputSchema,
+    featured: sectionHeaderInputSchema,
+    brand: sectionHeaderInputSchema,
+    campaign: sectionHeaderInputSchema,
+    promo: sectionHeaderInputSchema,
+    testimonial: sectionHeaderInputSchema
+  }),
+  trustBadges: z.array(homepageTrustBadgeInputSchema).max(8),
+  categoryTiles: z.array(homepageCategoryTileInputSchema).max(8),
+  featuredProducts: z.array(homepageFeaturedProductInputSchema).max(12),
+  brandSpotlights: z.array(homepageBrandSpotlightInputSchema).max(6),
+  campaignSpotlights: z.array(homepageCampaignSpotlightInputSchema).max(4),
+  promoOffers: z.array(homepagePromoOfferInputSchema).max(6),
+  testimonials: z.array(homepageTestimonialInputSchema).max(6)
 });

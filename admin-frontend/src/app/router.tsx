@@ -483,6 +483,13 @@ const router = createBrowserRouter([
         index: true,
         element: <Navigate to="dashboard" replace />
       },
+      {
+        path: "content/homepage",
+        element: renderLazyRoute(
+          "../features/content/pages/HomepageManagementPage.tsx",
+          "HomepageManagementPage"
+        )
+      },
       ...protectedAdminScreens.map((screenItem) => ({
         path: stripAdminPrefix(screenItem.path),
         element: screenRouteElement(screenItem.id)
