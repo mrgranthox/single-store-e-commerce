@@ -969,6 +969,28 @@ export const listPublicProducts = async (
   };
 };
 
+export const listPublicProductCardsByIds = async (productIds: string[]) => {
+  if (productIds.length === 0) {
+    return [];
+  }
+
+  const products = (await prisma.product.findMany({
+    where: {
+      id: {
+        in: productIds
+      },
+      status: ProductStatus.PUBLISHED
+    },
+    include: productListInclude
+  })) as ProductShape[];
+
+  const byId = new Map(products.map((product) => [product.id, serializePublicProductCard(product)]));
+
+  return productIds
+    .map((productId) => byId.get(productId))
+    .filter((product): product is NonNullable<typeof product> => Boolean(product));
+};
+
 export const getPublicProductDetail = async (productSlug: string) => {
   const product = await getProductBySlugOrThrow(productSlug);
   const categoryIds = product.categories.map((entry) => entry.category.id);

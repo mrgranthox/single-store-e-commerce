@@ -11,17 +11,22 @@ import {
   deleteBannerAdmin,
   deletePagePermanentAdmin,
   getContactPagePublic,
+  getHomepageAdmin,
+  getHomepagePublic,
   getHelpPagePublic,
   getPageAdmin,
   getPagePublic,
   listBannersAdmin,
   listBannersPublic,
   listPagesAdmin,
+  publishHomepageAdmin,
   publishBannerAdmin,
   publishPageAdmin,
   restorePageAdmin,
+  unpublishHomepageAdmin,
   unpublishBannerAdmin,
   unpublishPageAdmin,
+  updateHomepageAdmin,
   updateBannerAdmin,
   updatePageAdmin
 } from "./content.controller";
@@ -34,6 +39,7 @@ import {
   pageIdParamsSchema,
   pageSlugParamsSchema,
   publicBannersQuerySchema,
+  updateHomepageDraftBodySchema,
   updateBannerBodySchema,
   updatePageBodySchema
 } from "./content.schemas";
@@ -44,6 +50,35 @@ router.get("/content/pages/:slug", validateRequest({ params: pageSlugParamsSchem
 router.get("/content/banners", validateRequest({ query: publicBannersQuerySchema }), listBannersPublic);
 router.get("/content/help", getHelpPagePublic);
 router.get("/content/contact", getContactPagePublic);
+router.get("/content/homepage", getHomepagePublic);
+
+router.get(
+  "/admin/content/homepage",
+  requireAdminActor,
+  requirePermissions(["content.pages.read"]),
+  getHomepageAdmin
+);
+router.put(
+  "/admin/content/homepage",
+  requireAdminActor,
+  requirePermissions(["content.pages.write"]),
+  validateRequest({ body: updateHomepageDraftBodySchema }),
+  updateHomepageAdmin
+);
+router.post(
+  "/admin/content/homepage/publish",
+  requireAdminActor,
+  requirePermissions(["content.pages.write"]),
+  validateRequest({ body: contentMutationBodySchema }),
+  publishHomepageAdmin
+);
+router.post(
+  "/admin/content/homepage/unpublish",
+  requireAdminActor,
+  requirePermissions(["content.pages.write"]),
+  validateRequest({ body: contentMutationBodySchema }),
+  unpublishHomepageAdmin
+);
 
 router.get(
   "/admin/content/pages",
@@ -163,6 +198,11 @@ export const contentRouteModule: RouteModule = {
     { method: "GET", path: "/api/v1/content/banners", summary: "List published banners.", tags: ["content"], auth: "public" },
     { method: "GET", path: "/api/v1/content/help", summary: "Fetch the help page.", tags: ["content"], auth: "public" },
     { method: "GET", path: "/api/v1/content/contact", summary: "Fetch the contact page.", tags: ["content"], auth: "public" },
+    { method: "GET", path: "/api/v1/content/homepage", summary: "Fetch the published homepage composition payload.", tags: ["content"], auth: "public" },
+    { method: "GET", path: "/api/v1/admin/content/homepage", summary: "Load the homepage draft workspace for admin editing.", tags: ["content"], auth: "admin", permissions: ["content.pages.read"] },
+    { method: "PUT", path: "/api/v1/admin/content/homepage", summary: "Save the typed homepage draft workspace.", tags: ["content"], auth: "admin", permissions: ["content.pages.write"] },
+    { method: "POST", path: "/api/v1/admin/content/homepage/publish", summary: "Publish the current homepage draft.", tags: ["content"], auth: "admin", permissions: ["content.pages.write"] },
+    { method: "POST", path: "/api/v1/admin/content/homepage/unpublish", summary: "Remove the public homepage publication.", tags: ["content"], auth: "admin", permissions: ["content.pages.write"] },
     { method: "GET", path: "/api/v1/admin/content/pages", summary: "List admin CMS pages.", tags: ["content"], auth: "admin", permissions: ["content.pages.read"] },
     { method: "GET", path: "/api/v1/admin/content/pages/:pageId", summary: "Fetch admin CMS page detail.", tags: ["content"], auth: "admin", permissions: ["content.pages.read"] },
     { method: "POST", path: "/api/v1/admin/content/pages", summary: "Create a CMS page.", tags: ["content"], auth: "admin", permissions: ["content.pages.write"] },

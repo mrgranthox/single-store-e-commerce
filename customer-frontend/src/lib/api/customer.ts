@@ -25,7 +25,138 @@ const safeFetch = async <T>(input: RequestInfo | URL, fallback: T) => {
   }
 };
 
+export type HomepageProductCard = {
+  id: string;
+  slug: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice?: number;
+  imageUrl: string;
+  rating?: number;
+  reviewCount?: number;
+  description?: string;
+  brand?: string;
+};
+
+export type CustomerHomepagePayload = {
+  hero: {
+    eyebrow: string;
+    titlePrefix: string;
+    titleAccent: string | null;
+    titleSuffix: string | null;
+    body: string;
+    primaryCtaLabel: string;
+    primaryCtaHref: string;
+    backgroundImageUrl: string;
+    backgroundImageAlt: string;
+  };
+  trustBadges: Array<{
+    iconName: string;
+    title: string;
+    subtitle: string;
+    href: string | null;
+    ariaLabel: string | null;
+  }>;
+  categorySection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: Array<{
+      slug: string;
+      title: string;
+      description: string;
+      imageUrl: string;
+      productCount: number;
+      href: string;
+    }>;
+  };
+  featuredSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: HomepageProductCard[];
+  };
+  brandSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: Array<{
+      slug: string;
+      title: string;
+      tagline: string;
+      heroImageUrl: string;
+      ctaLabel: string;
+      href: string;
+      products: HomepageProductCard[];
+    }>;
+  };
+  campaignSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: Array<{
+      slug: string;
+      title: string;
+      subtitle: string;
+      heroImageUrl: string;
+      label: string;
+      ctaLabel: string;
+      href: string;
+      layout: "FEATURE" | "SPLIT";
+      products: HomepageProductCard[];
+    }>;
+  };
+  promoSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: Array<{
+      badge: string;
+      code: string;
+      headline: string;
+      body: string;
+      terms: string;
+      bannerImageUrl: string;
+      ctaLabel: string;
+      ctaHref: string;
+      products: HomepageProductCard[];
+    }>;
+  };
+  testimonialSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: Array<{
+      quote: string;
+      customerName: string;
+      imageUrl: string;
+      statusLabel: string;
+    }>;
+  };
+};
+
 export const customerApi = {
+  getHomepage: async () => {
+    const response = await fetch(new URL("/api/content/homepage", backendBaseUrl), {
+      headers: { accept: "application/json" }
+    });
+    return readJson<{ entity: CustomerHomepagePayload }>(response);
+  },
   getRuntimeConfig: async () => {
     try {
       return await fetchCustomerRuntimeConfig(backendBaseUrl);
