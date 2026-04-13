@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 
 import { createApp } from "../app/app";
+import { isCloudinaryConfigured } from "../config/cloudinary";
 import { prisma } from "../config/prisma";
 import { closeQueues } from "../config/queue";
 import { closeRedisConnection } from "../config/redis";
@@ -56,6 +57,7 @@ const issueAdminStepUpHeader = async (input: {
 
 export const runAdminOpsIntegrationSuite = async () => {
   const runId = randomUUID().slice(0, 8);
+  const shouldVerifyUploadIntents = isCloudinaryConfigured;
   const step = (label: string) => {
     console.error(`[ops-itest] ${label}`);
   };
@@ -450,20 +452,22 @@ export const runAdminOpsIntegrationSuite = async () => {
     assert.equal(publishProductResponse.statusCode, 200);
 
     step("create media upload intent and media metadata");
-    const uploadIntentResponse = await requestJson({
-      baseUrl,
-      method: "POST",
-      path: `/api/admin/catalog/products/${productId}/media/upload-intents`,
-      headers: fullAdminHeaders,
-      body: {
-        fileName: `ops-${runId}.jpg`,
-        contentType: "image/jpeg",
-        fileSizeBytes: 2048,
-        resourceType: "image"
-      }
-    });
+    if (shouldVerifyUploadIntents) {
+      const uploadIntentResponse = await requestJson({
+        baseUrl,
+        method: "POST",
+        path: `/api/admin/catalog/products/${productId}/media/upload-intents`,
+        headers: fullAdminHeaders,
+        body: {
+          fileName: `ops-${runId}.jpg`,
+          contentType: "image/jpeg",
+          fileSizeBytes: 2048,
+          resourceType: "image"
+        }
+      });
 
-    assert.equal(uploadIntentResponse.statusCode, 201);
+      assert.equal(uploadIntentResponse.statusCode, 201);
+    }
 
     const createMediaResponse = await requestJson<{
       success: true;
@@ -639,19 +643,21 @@ export const runAdminOpsIntegrationSuite = async () => {
     assert.equal(publicPageResponse.statusCode, 200);
 
     step("create banner upload intent, banner, publish, and fetch publicly");
-    const contentUploadIntentResponse = await requestJson({
-      baseUrl,
-      method: "POST",
-      path: "/api/admin/content/media/upload-intents",
-      headers: fullAdminHeaders,
-      body: {
-        fileName: `banner-${runId}.jpg`,
-        contentType: "image/jpeg",
-        fileSizeBytes: 2048,
-        resourceType: "image"
-      }
-    });
-    assert.equal(contentUploadIntentResponse.statusCode, 201);
+    if (shouldVerifyUploadIntents) {
+      const contentUploadIntentResponse = await requestJson({
+        baseUrl,
+        method: "POST",
+        path: "/api/admin/content/media/upload-intents",
+        headers: fullAdminHeaders,
+        body: {
+          fileName: `banner-${runId}.jpg`,
+          contentType: "image/jpeg",
+          fileSizeBytes: 2048,
+          resourceType: "image"
+        }
+      });
+      assert.equal(contentUploadIntentResponse.statusCode, 201);
+    }
 
     const createBannerResponse = await requestJson<{
       success: true;

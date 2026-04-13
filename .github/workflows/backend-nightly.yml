@@ -49,7 +49,10 @@ jobs:
       REDIS_URL: redis://127.0.0.1:6379
       SESSION_SECRET: nightly-session-secret-at-least-32-characters
       EMAIL_PROVIDER: none
-      STORAGE_PROVIDER: none
+      STORAGE_PROVIDER: ${{ secrets.CLOUDINARY_CLOUD_NAME != '' && secrets.CLOUDINARY_API_KEY != '' && secrets.CLOUDINARY_API_SECRET != '' && 'cloudinary' || 'none' }}
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
       ALLOW_DEV_AUTH_BYPASS: "true"
       PAYSTACK_SECRET_KEY: test-secret
       PAYSTACK_WEBHOOK_SECRET: test-secret
