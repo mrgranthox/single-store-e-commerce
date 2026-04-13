@@ -16,7 +16,6 @@ const defaultClerkRequestMiddleware: RequestHandler = isClerkConfigured
   ? clerkMiddleware({
       publishableKey: env.CLERK_PUBLISHABLE_KEY,
       secretKey: env.CLERK_SECRET_KEY,
-      enableHandshake: false,
       authorizedParties: allowedAuthorizedParties.length > 0 ? allowedAuthorizedParties : undefined
     })
   : (_request, _response, next) => next();

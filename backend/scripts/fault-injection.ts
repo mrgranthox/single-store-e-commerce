@@ -1,3 +1,4 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import Redis from "ioredis";
 
@@ -11,8 +12,12 @@ const scenario = process.argv[2] ?? "all";
 const isChildProcess = process.argv[3] === "--child";
 
 const runPostgresScenario = async (): Promise<ScenarioResult> => {
+  const adapter = new PrismaPg({
+    connectionString: "postgresql://fault:fault@127.0.0.1:1/fault?connect_timeout=2"
+  });
+
   const prisma = new PrismaClient({
-    datasourceUrl: "postgresql://fault:fault@127.0.0.1:1/fault?connect_timeout=2"
+    adapter
   });
 
   try {
