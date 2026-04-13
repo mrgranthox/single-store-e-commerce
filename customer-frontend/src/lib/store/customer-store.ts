@@ -11,6 +11,7 @@ export interface CartItem {
 }
 
 const MAX_RECENT = 16;
+const normalizeQuantity = (quantity: number) => Math.max(0, Math.floor(Number.isFinite(quantity) ? quantity : 0));
 
 interface CustomerStore {
   cart: CartItem[];
@@ -38,24 +39,32 @@ export const useCustomerStore = create<CustomerStore>()(
 
       addToCart: (item) =>
         set((state) => {
+          const quantityToAdd = normalizeQuantity(item.quantity);
+          if (quantityToAdd <= 0) {
+            return state;
+          }
+
           const existing = state.cart.find((c) => c.variantId === item.variantId);
           if (existing) {
             return {
               cart: state.cart.map((c) =>
-                c.variantId === item.variantId ? { ...c, quantity: c.quantity + item.quantity } : c
+                c.variantId === item.variantId ? { ...c, quantity: c.quantity + quantityToAdd } : c
               ),
             };
           }
-          return { cart: [...state.cart, item] };
+          return { cart: [...state.cart, { ...item, quantity: quantityToAdd }] };
         }),
 
       updateQuantity: (variantId, quantity) =>
-        set((state) => ({
-          cart:
-            quantity <= 0
-              ? state.cart.filter((c) => c.variantId !== variantId)
-              : state.cart.map((c) => (c.variantId === variantId ? { ...c, quantity } : c)),
-        })),
+        set((state) => {
+          const normalizedQuantity = normalizeQuantity(quantity);
+          return {
+            cart:
+              normalizedQuantity <= 0
+                ? state.cart.filter((c) => c.variantId !== variantId)
+                : state.cart.map((c) => (c.variantId === variantId ? { ...c, quantity: normalizedQuantity } : c)),
+          };
+        }),
 
       clearCart: () => set({ cart: [] }),
 
