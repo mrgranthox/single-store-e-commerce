@@ -503,11 +503,4 @@ const router = createBrowserRouter([
   }
 ]);
 
-export const AppRouter = () => (
-  <RouterProvider
-    router={router}
-    future={{
-      v7_startTransition: true
-    }}
-  />
-);
+export const AppRouter = () => <RouterProvider router={router} />;
