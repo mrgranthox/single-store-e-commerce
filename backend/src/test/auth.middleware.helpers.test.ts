@@ -1,7 +1,32 @@
-import test from "node:test";
+import test, { before } from "node:test";
 import assert from "node:assert/strict";
 
-import { canUseDevAuthBypass } from "../modules/auth/auth.middleware";
+const REQUIRED_ENV_DEFAULTS: Record<string, string> = {
+  APP_BASE_URL: "http://localhost:3000",
+  ADMIN_APP_URL: "http://localhost:3001",
+  CUSTOMER_APP_URL: "http://localhost:3002",
+  MOBILE_APP_URL: "http://localhost:3003",
+  CORS_ALLOWED_ORIGINS: "http://localhost:3000",
+  DATABASE_URL: "postgresql://test:test@localhost:5432/test",
+  PAYSTACK_API_BASE_URL: "https://api.paystack.co",
+  SESSION_SECRET: "test-session-secret-with-32-plus-chars"
+};
+
+for (const [key, value] of Object.entries(REQUIRED_ENV_DEFAULTS)) {
+  process.env[key] ??= value;
+}
+
+type CanUseDevAuthBypass = (input: {
+  allowBypass: boolean;
+  nodeEnv: string;
+  ipAddress?: string | null;
+}) => boolean;
+
+let canUseDevAuthBypass: CanUseDevAuthBypass;
+
+before(async () => {
+  ({ canUseDevAuthBypass } = await import("../modules/auth/auth.middleware"));
+});
 
 test("dev auth bypass is always allowed in test mode when enabled", () => {
   assert.equal(
