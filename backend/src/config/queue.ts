@@ -42,10 +42,14 @@ declare global {
 export const createBullMqConnection = (connectionName: string) =>
   createRedisConnection(`bullmq:${connectionName}`);
 
-const queueDefaults = {
+const queueBaseDefaults = {
   prefix: env.QUEUE_PREFIX,
+};
+
+const queueDefaultsFor = (queue: keyof typeof queueOperationalContracts) => ({
+  ...queueBaseDefaults,
   defaultJobOptions: {
-    attempts: queueOperationalContracts.payments.maxAttempts,
+    attempts: queueOperationalContracts[queue].maxAttempts,
     removeOnComplete: 100,
     removeOnFail: {
       count: 2000,
@@ -53,26 +57,26 @@ const queueDefaults = {
     },
     backoff: {
       type: "exponential" as const,
-      delay: queueOperationalContracts.payments.backoffDelayMs
+      delay: queueOperationalContracts[queue].backoffDelayMs
     }
   }
-};
+});
 
 const buildQueues = (): QueueMap => ({
   payments: new Queue(queueNames.payments, {
-    ...queueDefaults,
+    ...queueDefaultsFor("payments"),
     connection: createBullMqConnection(queueNames.payments)
   }),
   webhooks: new Queue(queueNames.webhooks, {
-    ...queueDefaults,
+    ...queueDefaultsFor("webhooks"),
     connection: createBullMqConnection(queueNames.webhooks)
   }),
   notifications: new Queue(queueNames.notifications, {
-    ...queueDefaults,
+    ...queueDefaultsFor("notifications"),
     connection: createBullMqConnection(queueNames.notifications)
   }),
   reconciliation: new Queue(queueNames.reconciliation, {
-    ...queueDefaults,
+    ...queueDefaultsFor("reconciliation"),
     connection: createBullMqConnection(queueNames.reconciliation)
   })
 });
