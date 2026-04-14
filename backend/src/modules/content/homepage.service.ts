@@ -201,6 +201,11 @@ const defaultImages = {
   testimonial3: homepageImage("1438761681033-6461ffad8d80", 256)
 } as const;
 
+const HOMEPAGE_TRANSACTION_OPTIONS = {
+  maxWait: 15_000,
+  timeout: 20_000
+};
+
 const readSectionHeaders = (record: HomePageVersionRecord["sectionHeaders"]) => {
   const entries = Object.fromEntries(
     record.map((header) => [
@@ -858,7 +863,7 @@ const ensureHomepageSeeded = async () => {
     if (publishedCreateResult.count > 0) {
       await writeVersionContent(transaction, published.id, draftInput);
     }
-  });
+  }, HOMEPAGE_TRANSACTION_OPTIONS);
 
   const seededDraft = await getVersion(prisma, HomePageVersionState.DRAFT);
   if (!seededDraft) {
@@ -1261,7 +1266,7 @@ export const saveAdminHomepageDraft = async (input: {
         ? serializeDraftEntity(updatedDraft, beforePublished?.publishedAt?.toISOString() ?? null)
         : null
     });
-  });
+  }, HOMEPAGE_TRANSACTION_OPTIONS);
 
   return getAdminHomepageDraft();
 };
@@ -1308,7 +1313,7 @@ export const publishAdminHomepageDraft = async (input: {
         ? serializeDraftEntity(draft, updatedPublished.publishedAt?.toISOString() ?? null)
         : snapshot
     });
-  });
+  }, HOMEPAGE_TRANSACTION_OPTIONS);
 
   return getAdminHomepageDraft();
 };
@@ -1336,7 +1341,7 @@ export const unpublishAdminHomepage = async (input: {
       before: serializeDraftEntity(draft, published.publishedAt?.toISOString() ?? null),
       after: serializeDraftEntity(draft, null)
     });
-  });
+  }, HOMEPAGE_TRANSACTION_OPTIONS);
 
   return getAdminHomepageDraft();
 };

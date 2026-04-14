@@ -7,8 +7,39 @@ declare global {
   var __ecommercePrisma: PrismaClient | undefined;
 }
 
+const buildAdapterConnectionString = (rawConnectionString: string) => {
+  const trimmed = rawConnectionString.trim();
+
+  try {
+    const url = new URL(trimmed);
+    const hostname = url.hostname.toLowerCase();
+    const isLocalHost =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "::1" ||
+      hostname.endsWith(".local");
+    const hasExplicitSsl =
+      url.searchParams.has("sslmode") ||
+      url.searchParams.has("ssl") ||
+      url.searchParams.has("sslcert") ||
+      url.searchParams.has("sslrootcert");
+
+    if (!isLocalHost && !hasExplicitSsl) {
+      // Hosted Postgres providers such as Render require TLS, while local development often does not.
+      url.searchParams.set("sslmode", "verify-full");
+      return url.toString();
+    }
+
+    return trimmed;
+  } catch {
+    return trimmed;
+  }
+};
+
 const buildPrismaClient = () => {
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+  const adapter = new PrismaPg({
+    connectionString: buildAdapterConnectionString(env.DATABASE_URL)
+  });
 
   return new PrismaClient({
     adapter,
