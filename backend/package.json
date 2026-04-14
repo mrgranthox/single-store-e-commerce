@@ -68,5 +68,9 @@
   },
   "devDependencies": {
     "tsx": "^4.21.0"
+  },
+  "overrides": {
+    "@hono/node-server": "1.19.14",
+    "lodash": "4.18.1"
   }
 }
