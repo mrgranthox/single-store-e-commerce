@@ -1,6 +1,8 @@
 import test, { before } from "node:test";
 import assert from "node:assert/strict";
 
+<<<<<<< ours
+<<<<<<< ours
 const REQUIRED_ENV_DEFAULTS: Record<string, string> = {
   APP_BASE_URL: "http://localhost:3000",
   ADMIN_APP_URL: "http://localhost:3001",
@@ -27,6 +29,12 @@ let canUseDevAuthBypass: CanUseDevAuthBypass;
 before(async () => {
   ({ canUseDevAuthBypass } = await import("../modules/auth/auth.middleware"));
 });
+=======
+import { canUseDevAuthBypass } from "../modules/auth/dev-auth-bypass";
+>>>>>>> theirs
+=======
+import { canUseDevAuthBypass } from "../modules/auth/dev-auth-bypass";
+>>>>>>> theirs
 
 test("dev auth bypass is always allowed in test mode when enabled", () => {
   assert.equal(

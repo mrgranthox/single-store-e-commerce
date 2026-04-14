@@ -29,10 +29,36 @@ const buildOrderNumber = () => {
   return `ORD-${dateSegment}-${randomSegment}`;
 };
 
+<<<<<<< ours
+<<<<<<< ours
+=======
+>>>>>>> theirs
 const buildCheckoutIdentity = (
   context: CartActorContext,
   address: { email?: string },
 ) => {
+<<<<<<< ours
+=======
+const CREATE_ORDER_MAX_ATTEMPTS = 5;
+
+const isOrderNumberConflictError = (error: unknown) => {
+  if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== "P2002") {
+    return false;
+  }
+
+  const target = Array.isArray(error.meta?.target)
+    ? error.meta.target
+    : typeof error.meta?.target === "string"
+      ? [error.meta.target]
+      : [];
+
+  return target.includes("orderNumber");
+};
+
+const buildCheckoutIdentity = (context: CartActorContext, address: { email?: string }) => {
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   if (context.actor.kind === "customer") {
     return {
       userId: context.actor.userId ?? null,
@@ -76,6 +102,8 @@ const assertCheckoutIdentity = (
   }
 };
 
+<<<<<<< ours
+<<<<<<< ours
 const assertShippingMethodCodeIsAvailable = (
   evaluation: CheckoutEvaluation,
   shippingMethodCode: string,
@@ -92,6 +120,8 @@ const assertShippingMethodCodeIsAvailable = (
   }
 };
 
+=======
+>>>>>>> theirs
 const serializeOrderEntity = (
   order: {
     id: string;
@@ -103,6 +133,29 @@ const serializeOrderEntity = (
   evaluation: CheckoutEvaluation,
   checkoutSessionId: string,
 ) => ({
+=======
+const assertShippingMethodCodeIsAvailable = (
+  evaluation: CheckoutEvaluation,
+  shippingMethodCode: string
+) => {
+  const normalizedCode = shippingMethodCode.trim().toUpperCase();
+  const shippingOptionExists = evaluation.shippingOptions.some(
+    (option) => option.code.trim().toUpperCase() === normalizedCode
+  );
+
+  if (!shippingOptionExists) {
+    throw invalidInputError("The selected shipping method is not available for this cart.");
+  }
+};
+
+const serializeOrderEntity = (order: {
+  id: string;
+  orderNumber: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}, evaluation: CheckoutEvaluation, checkoutSessionId: string) => ({
+>>>>>>> theirs
   id: order.id,
   orderNumber: order.orderNumber,
   status: order.status,
@@ -246,9 +299,14 @@ const ORDER_NUMBER_RETRY_ATTEMPTS = 5;
 const isOrderNumberConflictError = (error: unknown) =>
   error instanceof Prisma.PrismaClientKnownRequestError &&
   error.code === "P2002" &&
+<<<<<<< ours
   ((Array.isArray(error.meta?.target) &&
     error.meta.target.includes("orderNumber")) ||
     error.meta?.target === "orderNumber");
+=======
+  Array.isArray(error.meta?.target) &&
+  error.meta.target.includes("orderNumber");
+>>>>>>> theirs
 
 export const createOrderFromCheckout = async (
   context: CartActorContext,
@@ -267,6 +325,8 @@ export const createOrderFromCheckout = async (
     };
     shippingMethodCode: string;
     campaignId?: string;
+<<<<<<< ours
+<<<<<<< ours
   },
 ) => {
   for (let attempt = 1; attempt <= ORDER_NUMBER_RETRY_ATTEMPTS; attempt += 1) {
@@ -308,6 +368,80 @@ export const createOrderFromCheckout = async (
           throw invalidInputError(
             "This checkout idempotency key is already bound to a different cart.",
           );
+=======
+  }
+) => {
+  let orderNumberConflictError: unknown;
+
+  for (let attempt = 1; attempt <= CREATE_ORDER_MAX_ATTEMPTS; attempt += 1) {
+    try {
+      return await runInTransaction(async (transaction) => {
+        const { cart, evaluation } = await getCartState(transaction, context, {
+          requireGuestSession: false
+=======
+  },
+) => {
+  let attempt = 0;
+
+  while (attempt < ORDER_NUMBER_RETRY_ATTEMPTS) {
+    try {
+      return await runInTransaction(async (transaction) => {
+        const { cart, evaluation } = await getCartState(transaction, context, {
+          requireGuestSession: false,
+>>>>>>> theirs
+        });
+
+        if (!cart) {
+          throw orderNotEligibleError("The current cart could not be found.");
+        }
+
+<<<<<<< ours
+        assertCheckoutIdentity(context, evaluation, input.address);
+        assertCartCanCheckout(evaluation);
+=======
+    assertCheckoutIdentity(context, evaluation, input.address);
+    assertCartCanCheckout(evaluation);
+    assertShippingMethodCodeIsAvailable(evaluation, input.shippingMethodCode);
+>>>>>>> theirs
+
+        const existingSession = await transaction.checkoutSession.findUnique({
+          where: {
+<<<<<<< ours
+            checkoutIdempotencyKey: input.checkoutIdempotencyKey
+          },
+          include: {
+            order: true
+          }
+        });
+
+        if (existingSession?.order) {
+          return serializeOrderEntity(existingSession.order, evaluation, existingSession.id);
+        }
+
+        if (existingSession && existingSession.cartId !== cart.id) {
+          throw invalidInputError("This checkout idempotency key is already bound to a different cart.");
+>>>>>>> theirs
+=======
+            checkoutIdempotencyKey: input.checkoutIdempotencyKey,
+          },
+          include: {
+            order: true,
+          },
+        });
+
+        if (existingSession?.order) {
+          return serializeOrderEntity(
+            existingSession.order,
+            evaluation,
+            existingSession.id,
+          );
+        }
+
+        if (existingSession && existingSession.cartId !== cart.id) {
+          throw invalidInputError(
+            "This checkout idempotency key is already bound to a different cart.",
+          );
+>>>>>>> theirs
         }
 
         if (input.campaignId) {
@@ -320,6 +454,10 @@ export const createOrderFromCheckout = async (
                 select: {
                   status: true,
                   activeFrom: true,
+<<<<<<< ours
+<<<<<<< ours
+=======
+>>>>>>> theirs
                   activeTo: true,
                 },
               },
@@ -329,6 +467,7 @@ export const createOrderFromCheckout = async (
             throw invalidInputError(
               "The referenced marketing campaign was not found.",
             );
+<<<<<<< ours
           }
 
           if (campaign.status !== "ACTIVE") {
@@ -471,6 +610,335 @@ export const createOrderFromCheckout = async (
   throw invalidInputError(
     "The order could not be created at this time. Please retry checkout.",
   );
+=======
+                  activeTo: true
+                }
+              }
+            }
+          });
+          if (!campaign) {
+            throw invalidInputError("The referenced marketing campaign was not found.");
+          }
+
+          if (campaign.status !== "ACTIVE") {
+            throw orderNotEligibleError("The selected campaign is not currently active.");
+          }
+
+          const promotion = campaign.promotion;
+          const now = new Date();
+          if (
+            promotion &&
+            (promotion.status !== "ACTIVE" ||
+              (promotion.activeFrom && promotion.activeFrom > now) ||
+              (promotion.activeTo && promotion.activeTo < now))
+          ) {
+            throw orderNotEligibleError("The selected campaign is not currently eligible for checkout.");
+          }
+        }
+
+        const identity = buildCheckoutIdentity(context, input.address);
+
+        const checkoutSession =
+          existingSession ??
+          (await transaction.checkoutSession.create({
+            data: {
+              cartId: cart.id,
+              userId: identity.userId,
+              guestTrackingKey: identity.guestTrackingKey,
+              checkoutIdempotencyKey: input.checkoutIdempotencyKey
+            }
+          }));
+
+        await transaction.checkoutValidationSnapshot.create({
+          data: {
+            checkoutSessionId: checkoutSession.id,
+            normalizedTotals: toPrismaJsonValue(evaluation.normalizedTotals)!,
+            shippingOptions: toPrismaJsonValue(
+              evaluation.shippingOptions.map((option) => ({
+                ...option,
+                selected: option.code === input.shippingMethodCode
+              }))
+            )!,
+            couponOutcome: toPrismaJsonValue(evaluation.couponOutcome),
+            warnings: toPrismaJsonValue(evaluation.warnings),
+            blockedItems: toPrismaJsonValue(evaluation.blockedItems),
+            eligibilityFlags: toPrismaJsonValue(evaluation.eligibilityFlags)
+          }
+        });
+
+        const order = await transaction.order.create({
+          data: {
+            orderNumber: buildOrderNumber(),
+            userId: identity.userId,
+            guestTrackingKey: identity.guestTrackingKey,
+            status: "PENDING_PAYMENT",
+            campaignId: input.campaignId ?? null,
+            addressSnapshot: toPrismaJsonValue({
+              ...input.address,
+              contactEmail: identity.contactEmail,
+              shippingMethodCode: input.shippingMethodCode,
+              normalizedTotals: evaluation.normalizedTotals,
+              couponOutcome: evaluation.couponOutcome
+            })!
+          }
+        });
+
+        await transaction.orderItem.createMany({
+          data: evaluation.items.map((item) => ({
+            orderId: order.id,
+            variantId: item.variantId,
+            productTitleSnapshot: item.product.title,
+            unitPriceAmountCents: item.pricing.current!.amountCents,
+            unitPriceCurrency: item.pricing.current!.currency,
+            quantity: item.quantity
+          }))
+        });
+
+<<<<<<< ours
+        await transaction.orderStatusHistory.create({
+          data: {
+            orderId: order.id,
+            fromStatus: null,
+            toStatus: "PENDING_PAYMENT",
+            metadata: toPrismaJsonValue({
+              checkoutSessionId: checkoutSession.id
+            })
+          }
+        });
+=======
+    let order: Awaited<ReturnType<typeof transaction.order.create>> | null = null;
+    const ORDER_NUMBER_ATTEMPTS = 5;
+
+    for (let attempt = 1; attempt <= ORDER_NUMBER_ATTEMPTS; attempt += 1) {
+      try {
+        order = await transaction.order.create({
+          data: {
+            orderNumber: buildOrderNumber(),
+            userId: identity.userId,
+            guestTrackingKey: identity.guestTrackingKey,
+            status: "PENDING_PAYMENT",
+            campaignId: input.campaignId ?? null,
+            addressSnapshot: toPrismaJsonValue({
+              ...input.address,
+              contactEmail: identity.contactEmail,
+              shippingMethodCode: input.shippingMethodCode,
+              normalizedTotals: evaluation.normalizedTotals,
+              couponOutcome: evaluation.couponOutcome
+            })!
+          }
+        });
+        break;
+      } catch (error) {
+        const uniqueOrderNumberConflict =
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002" &&
+          ((Array.isArray(error.meta?.target) && error.meta.target.includes("orderNumber")) ||
+            error.meta?.target === "orderNumber");
+
+        if (!uniqueOrderNumberConflict || attempt === ORDER_NUMBER_ATTEMPTS) {
+          throw error;
+        }
+      }
+    }
+
+    if (!order) {
+      throw invalidInputError("The order could not be created at this time. Please retry checkout.");
+    }
+>>>>>>> theirs
+
+        await transaction.timelineEvent.create({
+          data: {
+            entityType: "ORDER",
+            entityId: order.id,
+            eventType: "ORDER_CREATED",
+            actorType: context.actor.kind === "customer" ? "CUSTOMER" : "SYSTEM",
+            payload: toPrismaJsonValue({
+              checkoutSessionId: checkoutSession.id,
+              totals: evaluation.normalizedTotals
+            })
+          }
+        });
+
+        if (evaluation.couponOutcome?.valid && evaluation.couponOutcome.couponId) {
+=======
+          }
+
+          if (campaign.status !== "ACTIVE") {
+            throw orderNotEligibleError(
+              "The selected campaign is not currently active.",
+            );
+          }
+
+          const promotion = campaign.promotion;
+          const now = new Date();
+          if (
+            promotion &&
+            (promotion.status !== "ACTIVE" ||
+              (promotion.activeFrom && promotion.activeFrom > now) ||
+              (promotion.activeTo && promotion.activeTo < now))
+          ) {
+            throw orderNotEligibleError(
+              "The selected campaign is not currently eligible for checkout.",
+            );
+          }
+        }
+
+        const identity = buildCheckoutIdentity(context, input.address);
+
+        const checkoutSession =
+          existingSession ??
+          (await transaction.checkoutSession.create({
+            data: {
+              cartId: cart.id,
+              userId: identity.userId,
+              guestTrackingKey: identity.guestTrackingKey,
+              checkoutIdempotencyKey: input.checkoutIdempotencyKey,
+            },
+          }));
+
+        await transaction.checkoutValidationSnapshot.create({
+          data: {
+            checkoutSessionId: checkoutSession.id,
+            normalizedTotals: toPrismaJsonValue(evaluation.normalizedTotals)!,
+            shippingOptions: toPrismaJsonValue(
+              evaluation.shippingOptions.map((option) => ({
+                ...option,
+                selected: option.code === input.shippingMethodCode,
+              })),
+            )!,
+            couponOutcome: toPrismaJsonValue(evaluation.couponOutcome),
+            warnings: toPrismaJsonValue(evaluation.warnings),
+            blockedItems: toPrismaJsonValue(evaluation.blockedItems),
+            eligibilityFlags: toPrismaJsonValue(evaluation.eligibilityFlags),
+          },
+        });
+
+        const order = await transaction.order.create({
+          data: {
+            orderNumber: buildOrderNumber(),
+            userId: identity.userId,
+            guestTrackingKey: identity.guestTrackingKey,
+            status: "PENDING_PAYMENT",
+            campaignId: input.campaignId ?? null,
+            addressSnapshot: toPrismaJsonValue({
+              ...input.address,
+              contactEmail: identity.contactEmail,
+              shippingMethodCode: input.shippingMethodCode,
+              normalizedTotals: evaluation.normalizedTotals,
+              couponOutcome: evaluation.couponOutcome,
+            })!,
+          },
+        });
+
+        await transaction.orderItem.createMany({
+          data: evaluation.items.map((item) => ({
+            orderId: order.id,
+            variantId: item.variantId,
+            productTitleSnapshot: item.product.title,
+            unitPriceAmountCents: item.pricing.current!.amountCents,
+            unitPriceCurrency: item.pricing.current!.currency,
+            quantity: item.quantity,
+          })),
+        });
+
+        await transaction.orderStatusHistory.create({
+          data: {
+            orderId: order.id,
+            fromStatus: null,
+            toStatus: "PENDING_PAYMENT",
+            metadata: toPrismaJsonValue({
+              checkoutSessionId: checkoutSession.id,
+            }),
+          },
+        });
+
+        await transaction.timelineEvent.create({
+          data: {
+            entityType: "ORDER",
+            entityId: order.id,
+            eventType: "ORDER_CREATED",
+            actorType:
+              context.actor.kind === "customer" ? "CUSTOMER" : "SYSTEM",
+            payload: toPrismaJsonValue({
+              checkoutSessionId: checkoutSession.id,
+              totals: evaluation.normalizedTotals,
+            }),
+          },
+        });
+
+        if (
+          evaluation.couponOutcome?.valid &&
+          evaluation.couponOutcome.couponId
+        ) {
+>>>>>>> theirs
+          await transaction.couponRedemption.create({
+            data: {
+              couponId: evaluation.couponOutcome.couponId,
+              orderId: order.id,
+              userId: identity.userId,
+<<<<<<< ours
+              guestTrackingKey: identity.guestTrackingKey
+            }
+          });
+        }
+
+        await transaction.checkoutSession.update({
+          where: {
+            id: checkoutSession.id
+          },
+          data: {
+            orderId: order.id
+          }
+        });
+
+        return serializeOrderEntity(order, evaluation, checkoutSession.id);
+      });
+    } catch (error) {
+      if (!isOrderNumberConflictError(error)) {
+        throw error;
+      }
+
+      orderNumberConflictError = error;
+    }
+  }
+
+  throw orderNumberConflictError;
+>>>>>>> theirs
+=======
+              guestTrackingKey: identity.guestTrackingKey,
+            },
+          });
+        }
+
+        await transaction.checkoutSession.update({
+          where: {
+            id: checkoutSession.id,
+          },
+          data: {
+            orderId: order.id,
+          },
+        });
+
+        return serializeOrderEntity(order, evaluation, checkoutSession.id);
+      });
+    } catch (error) {
+      attempt += 1;
+
+      if (
+        isOrderNumberConflictError(error) &&
+        attempt < ORDER_NUMBER_RETRY_ATTEMPTS
+      ) {
+        continue;
+      }
+
+      throw error;
+    }
+  }
+
+  throw new Error(
+    "Unable to create order after retrying order number generation.",
+  );
+>>>>>>> theirs
 };
 
 export const initializeCheckoutPayment = async (

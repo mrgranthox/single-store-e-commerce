@@ -8,9 +8,9 @@ import { SUPPORT_SENDER_LABEL } from "@/lib/brand";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 
 const SupportPageShell = ({ children }: { children: ReactNode }) => (
-  <div className="bg-surface text-on-background font-body">
+  <div className="min-h-dvh flex flex-col bg-surface text-on-background font-body">
     <TopNavBar />
-    <main className="pt-[calc(5rem+env(safe-area-inset-top,0px))] md:pt-24 pb-24 md:pb-20 max-w-4xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
+    <main className="flex-1 pt-[calc(5rem+env(safe-area-inset-top,0px))] md:pt-24 pb-24 md:pb-20 max-w-4xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
       {children}
     </main>
     <Footer />

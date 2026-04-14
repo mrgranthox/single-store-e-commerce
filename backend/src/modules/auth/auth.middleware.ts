@@ -17,37 +17,13 @@ import { findCustomerApiSessionByAccessToken, touchCustomerApiSession } from "./
 import { findAdminApiSessionByAccessToken, touchAdminApiSession } from "./admin-api-session.service";
 import { touchSession, upsertSessionForActor, validateSessionForActor } from "./session.service";
 import { syncCustomerUserFromClerkUserId } from "./clerk-sync.service";
+import { canUseDevAuthBypass } from "./dev-auth-bypass";
 
 const parseCsvHeader = (value?: string | null) =>
   value
     ?.split(",")
     .map((entry) => entry.trim())
     .filter(Boolean) ?? [];
-
-const isLoopbackAddress = (value?: string | null) => {
-  if (!value) {
-    return false;
-  }
-
-  const normalized = value.replace(/^::ffff:/, "").trim().toLowerCase();
-  return normalized === "127.0.0.1" || normalized === "::1" || normalized === "localhost";
-};
-
-export const canUseDevAuthBypass = (input: {
-  allowBypass: boolean;
-  nodeEnv: string;
-  ipAddress?: string | null;
-}) => {
-  if (!input.allowBypass) {
-    return false;
-  }
-
-  if (input.nodeEnv === "test") {
-    return true;
-  }
-
-  return input.nodeEnv === "development" && isLoopbackAddress(input.ipAddress);
-};
 
 const parseBearerToken = (request: Parameters<RequestHandler>[0]) => {
   const authorization = request.header("authorization");

@@ -6,7 +6,9 @@ import { z } from "zod";
 
 const loadFileEnv = () => {
   const nodeEnv = process.env.NODE_ENV?.trim() || "development";
+  const includeExampleDefaults = nodeEnv === "test";
   const dotenvFiles = [
+    includeExampleDefaults ? ".env.example" : null,
     ".env",
     `.env.${nodeEnv}`,
     nodeEnv === "test" ? null : ".env.local",

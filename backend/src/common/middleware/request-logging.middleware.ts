@@ -1,28 +1,13 @@
-import { createHash } from "node:crypto";
-
 import type { RequestHandler } from "express";
 
 import { env } from "../../config/env";
 import { logger } from "../../config/logger";
-
-const hashLogIdentifier = (value?: string | null) => {
-  if (!value) {
-    return null;
-  }
-
-  return createHash("sha256")
-    .update(`${env.SESSION_SECRET}:${value}`)
-    .digest("hex")
-    .slice(0, 12);
-};
+import { sanitizeRequestLogContext as sanitizeRequestLogContextWithSalt } from "./request-logging.utils";
 
 export const sanitizeRequestLogContext = (input: {
   actorId?: string | null;
   ipAddress?: string | null;
-}) => ({
-  actorFingerprint: hashLogIdentifier(input.actorId),
-  ipFingerprint: hashLogIdentifier(input.ipAddress)
-});
+}) => sanitizeRequestLogContextWithSalt(input, env.SESSION_SECRET);
 
 export const requestLoggingMiddleware: RequestHandler = (request, response, next) => {
   response.on("finish", () => {

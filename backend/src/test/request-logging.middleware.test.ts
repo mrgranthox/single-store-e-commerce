@@ -1,6 +1,8 @@
 import test, { before } from "node:test";
 import assert from "node:assert/strict";
 
+<<<<<<< ours
+<<<<<<< ours
 const REQUIRED_ENV_DEFAULTS: Record<string, string> = {
   APP_BASE_URL: "http://localhost:3000",
   ADMIN_APP_URL: "http://localhost:3001",
@@ -29,12 +31,21 @@ let sanitizeRequestLogContext: SanitizeRequestLogContext;
 before(async () => {
   ({ sanitizeRequestLogContext } = await import("../common/middleware/request-logging.middleware"));
 });
+=======
+import { sanitizeRequestLogContext } from "../common/middleware/request-logging.utils";
+>>>>>>> theirs
+=======
+import { sanitizeRequestLogContext } from "../common/middleware/request-logging.utils";
+>>>>>>> theirs
 
 test("sanitizeRequestLogContext removes raw actor and ip values", () => {
-  const sanitized = sanitizeRequestLogContext({
-    actorId: "admin-user-123",
-    ipAddress: "203.0.113.20"
-  });
+  const sanitized = sanitizeRequestLogContext(
+    {
+      actorId: "admin-user-123",
+      ipAddress: "203.0.113.20"
+    },
+    "test-session-secret-with-minimum-length"
+  );
 
   assert.equal(typeof sanitized.actorFingerprint, "string");
   assert.equal(typeof sanitized.ipFingerprint, "string");
