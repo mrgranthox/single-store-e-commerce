@@ -163,4 +163,105 @@ export const getIntegrationsHealth = async (
     accessToken
   });
 
+export type NotificationRow = {
+  id: string;
+  type: string;
+  channel: string;
+  status: string;
+  recipientUser: { id: string; email: string; name: string | null } | null;
+  recipientEmail: string | null;
+  recipientType: string | null;
+  payload: unknown;
+  createdAt: string;
+  updatedAt: string;
+  deliveries: Array<{
+    id: string;
+    providerMessageId: string | null;
+    status: string;
+    error: unknown;
+    sentAt: string | null;
+    createdAt: string;
+  }>;
+};
+
+export type AdminNotificationsResponse = {
+  success: true;
+  data: { items: NotificationRow[] };
+  meta: { page: number; limit: number; totalItems: number; totalPages: number };
+};
+
+export type AdminNotificationDetailResponse = {
+  success: true;
+  data: { entity: NotificationRow };
+};
+
+export type ListAdminNotificationsQuery = {
+  page?: number;
+  page_size?: number;
+  status?: string;
+  type?: string;
+  channel?: string;
+  recipientUserId?: string;
+  recipientEmail?: string;
+};
+
+const notificationsQueryString = (query: ListAdminNotificationsQuery) => {
+  const params = new URLSearchParams();
+  params.set("page", String(query.page ?? 1));
+  params.set("page_size", String(query.page_size ?? 20));
+  if (query.status?.trim()) params.set("status", query.status.trim());
+  if (query.type?.trim()) params.set("type", query.type.trim());
+  if (query.channel?.trim()) params.set("channel", query.channel.trim());
+  if (query.recipientUserId?.trim()) params.set("recipientUserId", query.recipientUserId.trim());
+  if (query.recipientEmail?.trim()) params.set("recipientEmail", query.recipientEmail.trim());
+  return `?${params.toString()}`;
+};
+
+export const listAdminNotifications = async (
+  accessToken: string,
+  query: ListAdminNotificationsQuery = {}
+): Promise<AdminNotificationsResponse> =>
+  apiRequest<AdminNotificationsResponse>({
+    path: `/api/admin/notifications${notificationsQueryString(query)}`,
+    accessToken
+  });
+
+export const getAdminNotification = async (
+  accessToken: string,
+  notificationId: string
+): Promise<AdminNotificationDetailResponse> =>
+  apiRequest<AdminNotificationDetailResponse>({
+    path: `/api/admin/notifications/${encodeURIComponent(notificationId)}`,
+    accessToken
+  });
+
+export const retryAdminNotification = async (
+  accessToken: string,
+  notificationId: string
+): Promise<AdminNotificationDetailResponse> =>
+  apiRequest<AdminNotificationDetailResponse>({
+    method: "POST",
+    path: `/api/admin/notifications/${encodeURIComponent(notificationId)}/retry`,
+    accessToken,
+    body: {}
+  });
+
+export const createAdminNotification = async (
+  accessToken: string,
+  body: {
+    type: string;
+    channel?: string;
+    recipientUserId?: string;
+    recipientEmail?: string;
+    recipientType?: string;
+    payload?: Record<string, unknown>;
+  }
+): Promise<AdminNotificationDetailResponse> =>
+  apiRequest<AdminNotificationDetailResponse>({
+    method: "POST",
+    path: "/api/admin/notifications",
+    accessToken,
+    body
+  });
+
 export { ApiError };

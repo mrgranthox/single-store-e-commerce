@@ -361,6 +361,9 @@ export const adminCompatRouteModule: RouteModule = {
     { method: "GET", path: "/api/v1/admin/dashboard/system-health", summary: "Compatibility alias for the admin system-health dashboard contract.", tags: ["admin-compat", "dashboard"], auth: "admin" },
     { method: "GET", path: "/api/v1/admin/dashboard/recent-activity", summary: "Compatibility alias for the admin recent-activity dashboard contract.", tags: ["admin-compat", "dashboard"], auth: "admin" },
     { method: "GET", path: "/api/v1/admin/settings/reviews", summary: "Compatibility alias for admin review settings.", tags: ["admin-compat", "settings"], auth: "admin" },
+    { method: "PATCH", path: "/api/v1/admin/settings/reviews", summary: "Compatibility alias for updating admin review settings.", tags: ["admin-compat", "settings"], auth: "admin" },
     { method: "GET", path: "/api/v1/admin/settings/support", summary: "Compatibility alias for admin support settings.", tags: ["admin-compat", "settings"], auth: "admin" }
+    ,
+    { method: "PATCH", path: "/api/v1/admin/settings/support", summary: "Compatibility alias for updating admin support settings.", tags: ["admin-compat", "settings"], auth: "admin" }
   ]
 };

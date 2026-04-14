@@ -4,8 +4,14 @@ export type AdminActor = {
   id: string;
   email: string | null;
   fullName: string | null;
+  status?: string | null;
   roles: string[];
   permissions: string[];
+  sessionSummary?: {
+    sessionId: string | null;
+    totalSessions?: number | null;
+    activeSessions?: number | null;
+  } | null;
 };
 
 type AdminSessionState = {

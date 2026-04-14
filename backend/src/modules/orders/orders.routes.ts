@@ -242,6 +242,14 @@ export const ordersRouteModule: RouteModule = {
     },
     {
       method: "POST",
+      path: "/api/v1/admin/orders/:orderId/campaign-attribution",
+      summary: "Assign or clear campaign attribution for an order.",
+      tags: ["orders"],
+      auth: "admin",
+      permissions: ["orders.update"]
+    },
+    {
+      method: "POST",
       path: "/api/v1/admin/orders/:orderId/cancel",
       summary: "Cancel an eligible order as an admin-sensitive action.",
       tags: ["orders"],

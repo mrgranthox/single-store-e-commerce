@@ -1,4 +1,4 @@
-export type AdminHttpMethod = "GET" | "POST" | "PATCH" | "DELETE";
+export type AdminHttpMethod = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
 export type AdminEndpointModule =
   | "platform"
@@ -50,6 +50,7 @@ export const adminEndpointCatalog = [
   endpoint("auth.sessions", "auth", "GET", "/api/admin/auth/sessions", "List visible admin sessions."),
   endpoint("auth.revokeAll", "auth", "POST", "/api/admin/auth/sessions/revoke-all", "Revoke all other admin sessions."),
   endpoint("auth.revokeSession", "auth", "POST", "/api/admin/auth/sessions/:sessionId/revoke", "Revoke a single admin session."),
+  endpoint("auth.stepUp", "auth", "POST", "/api/admin/auth/step-up", "Create a step-up token for sensitive mutations."),
 
   endpoint("dashboard.overview", "dashboard", "GET", "/api/admin/dashboard/overview", "Load the executive dashboard overview."),
   endpoint("dashboard.sales", "dashboard", "GET", "/api/admin/reports/sales", "Load the sales dashboard."),
@@ -98,12 +99,12 @@ export const adminEndpointCatalog = [
   endpoint("inventory.lowStock", "inventory", "GET", "/api/admin/inventory/low-stock", "Load low-stock queue."),
   endpoint("inventory.outOfStock", "inventory", "GET", "/api/admin/inventory/out-of-stock", "Load out-of-stock queue."),
   endpoint("inventory.movements", "inventory", "GET", "/api/admin/inventory/movements", "Load inventory movement history."),
+  endpoint("inventory.stocks.list", "inventory", "GET", "/api/admin/inventory/stocks", "List inventory stock rows with optional warehouse filters."),
   endpoint("inventory.adjustments.create", "inventory", "POST", "/api/admin/inventory/adjustments", "Create a manual inventory adjustment."),
   endpoint("inventory.warehouses.list", "inventory", "GET", "/api/admin/inventory/warehouses", "List warehouses."),
   endpoint("inventory.warehouses.create", "inventory", "POST", "/api/admin/inventory/warehouses", "Create a warehouse."),
   endpoint("inventory.warehouses.detail", "inventory", "GET", "/api/admin/inventory/warehouses/:warehouseId", "Load warehouse detail."),
   endpoint("inventory.warehouses.update", "inventory", "PATCH", "/api/admin/inventory/warehouses/:warehouseId", "Update a warehouse."),
-  endpoint("inventory.warehouses.inventory", "inventory", "GET", "/api/admin/inventory/warehouses/:warehouseId/inventory", "Load warehouse inventory detail."),
 
   endpoint("orders.list", "orders", "GET", "/api/admin/orders", "List orders."),
   endpoint("orders.fulfillmentQueue", "orders", "GET", "/api/admin/orders/fulfillment-queue", "Load orders awaiting fulfillment."),
@@ -112,6 +113,7 @@ export const adminEndpointCatalog = [
   endpoint("orders.timeline", "orders", "GET", "/api/admin/orders/:orderId/timeline", "Load order timeline."),
   endpoint("orders.updateStatus", "orders", "POST", "/api/admin/orders/:orderId/status", "Update order status."),
   endpoint("orders.assignWarehouse", "orders", "POST", "/api/admin/orders/:orderId/assign-warehouse", "Assign a warehouse to an order."),
+  endpoint("orders.campaignAttribution", "orders", "POST", "/api/admin/orders/:orderId/campaign-attribution", "Update campaign attribution on an order."),
   endpoint("orders.cancel", "orders", "POST", "/api/admin/orders/:orderId/cancel", "Cancel an order."),
   endpoint("orders.cancellationRequests", "orders", "GET", "/api/admin/orders/cancellation-requests", "Load the order cancellation request queue."),
   endpoint("orders.cancellationApprove", "orders", "POST", "/api/admin/orders/cancellation-requests/:cancellationId/approve", "Approve an order cancellation request."),
@@ -161,6 +163,7 @@ export const adminEndpointCatalog = [
   endpoint("support.tickets.status", "support", "POST", "/api/admin/support/tickets/:ticketId/status", "Update support ticket status."),
   endpoint("support.tickets.reply", "support", "POST", "/api/admin/support/tickets/:ticketId/messages", "Reply to a support ticket."),
   endpoint("support.tickets.internalNote", "support", "POST", "/api/admin/support/tickets/:ticketId/internal-notes", "Add an internal note to a support ticket."),
+  endpoint("support.tickets.csat", "support", "POST", "/api/admin/support/tickets/:ticketId/csat", "Record a support CSAT score."),
   endpoint("support.queues.sla", "support", "GET", "/api/admin/support/queues/sla", "Load the SLA-priority support queue."),
   endpoint("support.queues.prePurchase", "support", "GET", "/api/admin/support/queues/pre-purchase", "Load the pre-purchase support queue."),
   endpoint("support.queues.complaints", "support", "GET", "/api/admin/support/queues/complaints", "Load the complaints queue."),
@@ -171,6 +174,10 @@ export const adminEndpointCatalog = [
   endpoint("content.pages.detail", "content", "GET", "/api/admin/content/pages/:pageId", "Load CMS page detail."),
   endpoint("content.pages.update", "content", "PATCH", "/api/admin/content/pages/:pageId", "Update a CMS page."),
   endpoint("content.pages.publish", "content", "POST", "/api/admin/content/pages/:pageId/publish", "Publish a CMS page."),
+  endpoint("content.pages.unpublish", "content", "POST", "/api/admin/content/pages/:pageId/unpublish", "Unpublish a CMS page."),
+  endpoint("content.pages.archive", "content", "POST", "/api/admin/content/pages/:pageId/archive", "Archive a CMS page."),
+  endpoint("content.pages.restore", "content", "POST", "/api/admin/content/pages/:pageId/restore", "Restore an archived CMS page."),
+  endpoint("content.pages.delete", "content", "DELETE", "/api/admin/content/pages/:pageId", "Delete a CMS page."),
   endpoint("content.banners.list", "content", "GET", "/api/admin/content/banners", "Load banners."),
   endpoint("content.media.uploadIntent", "content", "POST", "/api/admin/content/media/upload-intents", "Create a signed upload intent for content media."),
   endpoint("content.banners.create", "content", "POST", "/api/admin/content/banners", "Create a banner."),
@@ -178,17 +185,22 @@ export const adminEndpointCatalog = [
   endpoint("content.banners.publish", "content", "POST", "/api/admin/content/banners/:bannerId/publish", "Publish a banner."),
   endpoint("content.banners.unpublish", "content", "POST", "/api/admin/content/banners/:bannerId/unpublish", "Unpublish a banner."),
   endpoint("content.banners.delete", "content", "DELETE", "/api/admin/content/banners/:bannerId", "Delete a banner."),
+  endpoint("content.homepage.detail", "content", "GET", "/api/admin/content/homepage", "Load homepage draft and publishing options."),
+  endpoint("content.homepage.update", "content", "PUT", "/api/admin/content/homepage", "Save the homepage draft."),
+  endpoint("content.homepage.publish", "content", "POST", "/api/admin/content/homepage/publish", "Publish the homepage draft."),
+  endpoint("content.homepage.unpublish", "content", "POST", "/api/admin/content/homepage/unpublish", "Unpublish the homepage."),
 
   endpoint("marketing.coupons.list", "marketing", "GET", "/api/admin/marketing/coupons", "Load coupons."),
   endpoint("marketing.coupons.create", "marketing", "POST", "/api/admin/marketing/coupons", "Create a coupon."),
   endpoint("marketing.coupons.update", "marketing", "PATCH", "/api/admin/marketing/coupons/:couponId", "Update a coupon."),
+  endpoint("marketing.coupons.disable", "marketing", "POST", "/api/admin/marketing/coupons/:couponId/disable", "Disable a coupon."),
+  endpoint("marketing.coupons.delete", "marketing", "DELETE", "/api/admin/marketing/coupons/:couponId", "Delete a coupon."),
   endpoint("marketing.promotions.list", "marketing", "GET", "/api/admin/marketing/promotions", "Load promotions."),
   endpoint("marketing.promotions.create", "marketing", "POST", "/api/admin/marketing/promotions", "Create a promotion."),
-  endpoint("marketing.promotions.detail", "marketing", "GET", "/api/admin/marketing/promotions/:promotionId", "Load promotion detail."),
   endpoint("marketing.promotions.update", "marketing", "PATCH", "/api/admin/marketing/promotions/:promotionId", "Update a promotion."),
+  endpoint("marketing.promotions.delete", "marketing", "DELETE", "/api/admin/promotions/:promotionId", "Delete a promotion."),
   endpoint("marketing.campaigns.list", "marketing", "GET", "/api/admin/marketing/campaigns", "Load campaigns."),
   endpoint("marketing.campaigns.create", "marketing", "POST", "/api/admin/marketing/campaigns", "Create a campaign."),
-  endpoint("marketing.campaigns.detail", "marketing", "GET", "/api/admin/marketing/campaigns/:campaignId", "Load campaign detail."),
   endpoint("marketing.campaigns.update", "marketing", "PATCH", "/api/admin/marketing/campaigns/:campaignId", "Update a campaign."),
   endpoint("marketing.contract.coupons.list", "marketing", "GET", "/api/admin/coupons", "Load coupon compatibility contract endpoints."),
   endpoint("marketing.contract.coupons.create", "marketing", "POST", "/api/admin/coupons", "Create a coupon via compatibility endpoint."),
@@ -202,6 +214,7 @@ export const adminEndpointCatalog = [
   endpoint("marketing.contract.promotions.rules.list", "marketing", "GET", "/api/admin/promotions/:promotionId/rules", "Load promotion rules."),
   endpoint("marketing.contract.promotions.rules.create", "marketing", "POST", "/api/admin/promotions/:promotionId/rules", "Create a promotion rule."),
   endpoint("marketing.contract.promotions.rules.update", "marketing", "PATCH", "/api/admin/promotions/:promotionId/rules/:ruleId", "Update a promotion rule."),
+  endpoint("marketing.contract.promotions.rules.delete", "marketing", "DELETE", "/api/admin/promotions/:promotionId/rules/:ruleId", "Delete a promotion rule."),
   endpoint("marketing.contract.campaignPerformance", "marketing", "GET", "/api/admin/campaigns/performance", "Load campaign performance analytics."),
 
   endpoint("reports.overview", "reports", "GET", "/api/admin/reports/overview", "Load reports overview."),
@@ -240,13 +253,16 @@ export const adminEndpointCatalog = [
   endpoint("security.riskSignals.review", "security", "POST", "/api/admin/security/risk-signals/:riskSignalId/review", "Review a risk signal."),
   endpoint("security.riskSignals.reviewPlain", "security", "POST", "/api/admin/risk-signals/:riskSignalId/review", "Review or escalate a risk signal (plain contract)."),
   endpoint("security.loginEvents", "security", "GET", "/api/admin/security/login-events", "Load login and access security events."),
+  endpoint("security.entityTimeline", "security", "GET", "/api/admin/audit/entities/:entityType/:entityId/timeline", "Load an entity-scoped audit timeline."),
 
   endpoint("system.settings.detail", "system", "GET", "/api/admin/settings", "Load system settings overview."),
   endpoint("system.settings.update", "system", "PATCH", "/api/admin/settings", "Update system settings overview."),
   endpoint("system.settings.checkoutDetail", "system", "GET", "/api/admin/settings/checkout", "Load checkout settings."),
   endpoint("system.settings.checkoutUpdate", "system", "PATCH", "/api/admin/settings/checkout", "Update checkout settings."),
   endpoint("system.settings.reviewDetail", "system", "GET", "/api/admin/settings/reviews", "Load review settings."),
+  endpoint("system.settings.reviewUpdate", "system", "PATCH", "/api/admin/settings/reviews", "Update review settings."),
   endpoint("system.settings.supportDetail", "system", "GET", "/api/admin/settings/support", "Load support settings."),
+  endpoint("system.settings.supportUpdate", "system", "PATCH", "/api/admin/settings/support", "Update support settings."),
   endpoint("system.webhooks.list", "system", "GET", "/api/admin/webhooks", "Load webhook events."),
   endpoint("system.webhooks.detail", "system", "GET", "/api/admin/webhooks/:webhookEventId", "Load webhook event detail."),
   endpoint("system.webhooks.retry", "system", "POST", "/api/admin/webhooks/:webhookEventId/retry", "Retry webhook processing."),
@@ -259,7 +275,20 @@ export const adminEndpointCatalog = [
   endpoint("system.notifications.list", "system", "GET", "/api/admin/notifications", "Load notification delivery records."),
   endpoint("system.notifications.detail", "system", "GET", "/api/admin/notifications/:notificationId", "Load notification detail."),
   endpoint("system.notifications.create", "system", "POST", "/api/admin/notifications", "Create a manual admin notification."),
-  endpoint("system.notifications.retry", "system", "POST", "/api/admin/notifications/:notificationId/retry", "Retry a notification delivery.")
+  endpoint("system.notifications.retry", "system", "POST", "/api/admin/notifications/:notificationId/retry", "Retry a notification delivery."),
+  endpoint("system.adminUsers.list", "system", "GET", "/api/admin/admin-users", "List admin operators."),
+  endpoint("system.adminUsers.create", "system", "POST", "/api/admin/admin-users", "Create an admin operator."),
+  endpoint("system.adminUsers.detail", "system", "GET", "/api/admin/admin-users/:adminUserId", "Load admin operator detail."),
+  endpoint("system.adminUsers.update", "system", "PATCH", "/api/admin/admin-users/:adminUserId", "Update admin operator profile metadata."),
+  endpoint("system.adminUsers.roles", "system", "PATCH", "/api/admin/admin-users/:adminUserId/roles", "Update admin operator roles."),
+  endpoint("system.adminUsers.suspend", "system", "POST", "/api/admin/admin-users/:adminUserId/suspend", "Suspend an admin operator."),
+  endpoint("system.adminUsers.reactivate", "system", "POST", "/api/admin/admin-users/:adminUserId/reactivate", "Reactivate an admin operator."),
+  endpoint("system.adminUsers.sessions", "system", "GET", "/api/admin/admin-users/:adminUserId/sessions", "List sessions for an admin operator."),
+  endpoint("system.adminUsers.sessions.revoke", "system", "POST", "/api/admin/admin-users/:adminUserId/sessions/:sessionId/revoke", "Revoke an admin operator session."),
+  endpoint("system.adminUsers.invitations.list", "system", "GET", "/api/admin/admin-users/invitations", "List admin invitations."),
+  endpoint("system.adminUsers.invitations.create", "system", "POST", "/api/admin/admin-users/invitations", "Create an admin invitation."),
+  endpoint("system.adminUsers.invitations.resend", "system", "POST", "/api/admin/admin-users/invitations/:invitationId/resend", "Resend an admin invitation."),
+  endpoint("system.adminUsers.invitations.revoke", "system", "POST", "/api/admin/admin-users/invitations/:invitationId/revoke", "Revoke an admin invitation.")
 ] as const satisfies readonly AdminEndpointDefinition[];
 
 export const adminEndpointLookup = Object.fromEntries(

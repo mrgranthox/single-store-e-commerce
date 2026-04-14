@@ -355,7 +355,7 @@ const catalogScreens = [
     navLabel: "Reviews",
     showInSidebar: true,
     purpose: "Moderate customer reviews with queue filters and detail inspection.",
-    endpointIds: ["catalog.reviews.list", "catalog.reviews.detail", "catalog.reviews.moderate"],
+    endpointIds: ["catalog.reviews.list", "catalog.reviews.moderate"],
     actions: ["Open review detail", "Publish review", "Hide review", "Reject review"],
     permissionHints: ["catalog.reviews.read", "catalog.reviews.moderate"]
   })
@@ -447,7 +447,7 @@ const inventoryScreens = [
     group: "inventory",
     path: "/admin/inventory/warehouses/:warehouseId",
     purpose: "Warehouse summary, stock health, and movement-adjacent detail.",
-    endpointIds: ["inventory.warehouses.detail", "inventory.warehouses.update"],
+    endpointIds: ["inventory.warehouses.detail"],
     actions: ["Edit warehouse", "Open warehouse inventory", "Review linked operations"],
     permissionHints: ["inventory.warehouses.read", "inventory.warehouses.mutate"]
   }),
@@ -458,7 +458,7 @@ const inventoryScreens = [
     group: "inventory",
     path: "/admin/inventory/warehouses/:warehouseId/inventory",
     purpose: "Warehouse-scoped stock grid with drill-down actions.",
-    endpointIds: ["inventory.warehouses.inventory", "inventory.movements"],
+    endpointIds: ["inventory.stocks.list", "inventory.warehouses.detail", "inventory.movements"],
     actions: ["Inspect stock rows", "Open movement history", "Open product inventory summary"],
     permissionHints: ["inventory.read"]
   })
@@ -807,9 +807,10 @@ const supportScreens = [
       "support.tickets.reply",
       "support.tickets.internalNote",
       "support.tickets.assign",
-      "support.tickets.status"
+      "support.tickets.status",
+      "support.tickets.csat"
     ],
-    actions: ["Reply to customer", "Add internal note", "Assign ticket", "Change status"],
+    actions: ["Reply to customer", "Add internal note", "Assign ticket", "Change status", "Record CSAT"],
     permissionHints: ["support.read", "support.reply", "support.assign"]
   }),
   screen({
@@ -897,8 +898,36 @@ const contentScreens = [
     navLabel: "CMS pages",
     showInSidebar: true,
     purpose: "CMS page list, edit, and publish workflow.",
-    endpointIds: ["content.pages.list", "content.pages.create", "content.pages.detail", "content.pages.update", "content.pages.publish"],
-    actions: ["Create page", "Edit page", "Publish page"],
+    endpointIds: [
+      "content.pages.list",
+      "content.pages.create",
+      "content.pages.detail",
+      "content.pages.update",
+      "content.pages.publish",
+      "content.pages.unpublish",
+      "content.pages.archive",
+      "content.pages.restore",
+      "content.pages.delete"
+    ],
+    actions: ["Create page", "Edit page", "Publish page", "Unpublish page", "Archive page", "Restore page", "Delete page"],
+    permissionHints: ["content.pages.read", "content.pages.mutate"]
+  }),
+  screen({
+    sequence: 64.5,
+    id: "content-homepage",
+    title: "Homepage Management",
+    group: "content",
+    path: "/admin/content/homepage",
+    navLabel: "Homepage",
+    showInSidebar: true,
+    purpose: "Draft, publish, and orchestrate the storefront homepage.",
+    endpointIds: [
+      "content.homepage.detail",
+      "content.homepage.update",
+      "content.homepage.publish",
+      "content.homepage.unpublish"
+    ],
+    actions: ["Edit homepage draft", "Publish homepage", "Unpublish homepage"],
     permissionHints: ["content.pages.read", "content.pages.mutate"]
   })
 ] as const;
@@ -914,10 +943,11 @@ const marketingScreens = [
     showInSidebar: true,
     purpose: "Create, update, and disable coupons.",
     endpointIds: [
-      "marketing.contract.coupons.list",
-      "marketing.contract.coupons.create",
-      "marketing.contract.coupons.update",
-      "marketing.contract.coupons.disable"
+      "marketing.coupons.list",
+      "marketing.coupons.create",
+      "marketing.coupons.update",
+      "marketing.coupons.disable",
+      "marketing.coupons.delete"
     ],
     actions: ["Create coupon", "Edit coupon", "Disable coupon", "Restore coupon", "Delete unused coupon"],
     permissionHints: ["marketing.coupons.read", "marketing.coupons.mutate"]
@@ -944,8 +974,13 @@ const marketingScreens = [
     navLabel: "Promotions",
     showInSidebar: true,
     purpose: "Promotion list and campaign-readiness management.",
-    endpointIds: ["marketing.contract.promotions.list", "marketing.contract.promotions.create", "marketing.contract.promotions.update"],
-    actions: ["Create promotion", "Edit promotion", "Open rules detail"],
+    endpointIds: [
+      "marketing.contract.promotions.list",
+      "marketing.contract.promotions.create",
+      "marketing.contract.promotions.update",
+      "marketing.promotions.delete"
+    ],
+    actions: ["Create promotion", "Edit promotion", "Open rules detail", "Delete promotion"],
     permissionHints: ["marketing.promotions.read", "marketing.promotions.mutate"]
   }),
   screen({
@@ -957,7 +992,7 @@ const marketingScreens = [
     navLabel: "Promotion rules",
     showInSidebar: true,
     purpose: "Pick a promotion and open its rule workspace.",
-    endpointIds: ["marketing.contract.promotions.list", "marketing.contract.promotions.detail", "marketing.contract.promotions.rules.list", "marketing.contract.promotions.rules.create", "marketing.contract.promotions.rules.update"],
+    endpointIds: ["marketing.contract.promotions.list", "marketing.contract.promotions.rules.list", "marketing.contract.promotions.rules.create", "marketing.contract.promotions.rules.update"],
     actions: ["Open promotion rules"],
     permissionHints: ["marketing.promotions.read", "marketing.promotions.rules.mutate"]
   }),
@@ -968,8 +1003,13 @@ const marketingScreens = [
     group: "marketing",
     path: "/admin/marketing/promotions/:promotionId/rules",
     purpose: "Rule definition and mutation workspace for a promotion.",
-    endpointIds: ["marketing.contract.promotions.detail", "marketing.contract.promotions.rules.list", "marketing.contract.promotions.rules.create", "marketing.contract.promotions.rules.update"],
-    actions: ["Review promotion", "Create rule", "Edit rule"],
+    endpointIds: [
+      "marketing.contract.promotions.rules.list",
+      "marketing.contract.promotions.rules.create",
+      "marketing.contract.promotions.rules.update",
+      "marketing.contract.promotions.rules.delete"
+    ],
+    actions: ["Review promotion", "Create rule", "Edit rule", "Delete rule"],
     permissionHints: ["marketing.promotions.read", "marketing.promotions.rules.mutate"]
   }),
   screen({
@@ -981,8 +1021,8 @@ const marketingScreens = [
     navLabel: "Campaign performance",
     showInSidebar: true,
     purpose: "Campaign, promotion, and growth-performance analytics.",
-    endpointIds: ["marketing.contract.campaignPerformance", "marketing.campaigns.list", "marketing.campaigns.detail"],
-    actions: ["Inspect campaign performance", "Open campaign detail", "Compare marketing periods"],
+    endpointIds: ["marketing.contract.campaignPerformance"],
+    actions: ["Inspect campaign performance", "Compare marketing periods"],
     permissionHints: ["marketing.analytics.read"]
   })
 ] as const;
@@ -997,7 +1037,7 @@ const reportScreens = [
     navLabel: "Reports",
     showInSidebar: true,
     purpose: "Aggregated reporting entry point.",
-    endpointIds: ["reports.overview", "reports.dashboard"],
+    endpointIds: ["reports.overview"],
     actions: ["Open report family", "Change reporting range"],
     permissionHints: ["reports.read"]
   }),
@@ -1063,7 +1103,7 @@ const reportScreens = [
     group: "reports",
     path: "/admin/reports/refunds-returns",
     purpose: "Post-purchase quality and policy analytics.",
-    endpointIds: ["reports.refundsReturns", "reports.postPurchase"],
+    endpointIds: ["reports.refundsReturns"],
     actions: ["Inspect return reasons", "Inspect refund trends"],
     permissionHints: ["reports.post_purchase.read"]
   }),
@@ -1189,8 +1229,8 @@ const securityScreens = [
     group: "security",
     path: "/admin/security/risk-signals",
     purpose: "Fraud-review and risk-signal investigation surface.",
-    endpointIds: ["security.riskSignals", "security.riskSignals.review", "security.loginEvents"],
-    actions: ["Inspect risk signal", "Mark reviewed", "Cross-check login events"],
+    endpointIds: ["security.riskSignals", "security.riskSignals.reviewPlain"],
+    actions: ["Inspect risk signal", "Mark reviewed"],
     permissionHints: ["security.risk.read", "security.risk.review"]
   })
 ] as const;
@@ -1227,7 +1267,7 @@ const systemScreens = [
     group: "system",
     path: "/admin/system/settings/reviews",
     purpose: "Review moderation-related configuration surface.",
-    endpointIds: ["system.settings.reviewDetail", "system.settings.update"],
+    endpointIds: ["system.settings.reviewDetail", "system.settings.reviewUpdate"],
     actions: ["Review moderation settings", "Update moderation settings through settings editor"],
     permissionHints: ["settings.read", "settings.write"]
   }),
@@ -1238,7 +1278,7 @@ const systemScreens = [
     group: "system",
     path: "/admin/system/settings/support",
     purpose: "Support operational settings workspace.",
-    endpointIds: ["system.settings.supportDetail", "system.settings.update"],
+    endpointIds: ["system.settings.supportDetail", "system.settings.supportUpdate"],
     actions: ["Review support settings", "Update support settings through settings editor"],
     permissionHints: ["settings.read", "settings.write"]
   }),
@@ -1293,16 +1333,93 @@ const systemScreens = [
     group: "system",
     path: "/admin/system/integrations-health",
     purpose: "Integration health, provider status, notification failures, and exception overview.",
+    endpointIds: ["system.integrations.health", "system.integrations.providers", "system.integrations.exceptions"],
+    actions: ["Inspect provider health", "Review integration exceptions"],
+    permissionHints: ["system.integrations.read"]
+  }),
+  screen({
+    sequence: 96.2,
+    id: "system-notifications",
+    title: "Notifications Workspace",
+    group: "system",
+    path: "/admin/system/notifications",
+    navLabel: "Notifications",
+    showInSidebar: true,
+    purpose: "Notification outbox, replay surface, and manual notification authoring.",
     endpointIds: [
-      "system.integrations.health",
-      "system.integrations.providers",
-      "system.integrations.exceptions",
       "system.notifications.list",
       "system.notifications.detail",
+      "system.notifications.create",
       "system.notifications.retry"
     ],
-    actions: ["Inspect provider health", "Review integration exceptions", "Retry failed notification"],
-    permissionHints: ["system.integrations.read", "system.notifications.retry"]
+    actions: ["Inspect notification detail", "Retry failed notification", "Create manual notification"],
+    permissionHints: ["notifications.read", "notifications.write"]
+  }),
+  screen({
+    sequence: 96.3,
+    id: "system-notification-detail",
+    title: "Notification Detail",
+    group: "system",
+    path: "/admin/system/notifications/:notificationId",
+    purpose: "Inspect one notification and replay delivery when permitted.",
+    endpointIds: ["system.notifications.detail", "system.notifications.retry"],
+    actions: ["Inspect notification delivery", "Retry notification"],
+    permissionHints: ["notifications.read", "notifications.write"]
+  }),
+  screen({
+    sequence: 96.4,
+    id: "system-admin-users",
+    title: "Admin Users Directory",
+    group: "system",
+    path: "/admin/system/admin-users",
+    navLabel: "Admin users",
+    showInSidebar: true,
+    purpose: "Manage admin operators, statuses, and role assignments.",
+    endpointIds: ["system.adminUsers.list", "system.adminUsers.create"],
+    actions: ["Create admin user", "Open admin user detail"],
+    permissionHints: ["admin.users.read", "admin.users.create"]
+  }),
+  screen({
+    sequence: 96.5,
+    id: "system-admin-user-detail",
+    title: "Admin User Detail",
+    group: "system",
+    path: "/admin/system/admin-users/:adminUserId",
+    purpose: "Review one admin operator, mutate roles and status, and manage sessions.",
+    endpointIds: [
+      "system.adminUsers.detail",
+      "system.adminUsers.update",
+      "system.adminUsers.roles",
+      "system.adminUsers.suspend",
+      "system.adminUsers.reactivate",
+      "system.adminUsers.sessions",
+      "system.adminUsers.sessions.revoke"
+    ],
+    actions: ["Update admin profile", "Change roles", "Suspend/reactivate admin", "Revoke admin session"],
+    permissionHints: [
+      "admin.users.read",
+      "admin.users.update",
+      "admin.users.manage_roles",
+      "admin.users.update_status",
+      "admin.users.sessions.read",
+      "admin.users.sessions.revoke"
+    ]
+  }),
+  screen({
+    sequence: 96.6,
+    id: "system-admin-user-invitations",
+    title: "Admin Invitations",
+    group: "system",
+    path: "/admin/system/admin-users/invitations",
+    purpose: "Send, resend, and revoke admin invitations.",
+    endpointIds: [
+      "system.adminUsers.invitations.list",
+      "system.adminUsers.invitations.create",
+      "system.adminUsers.invitations.resend",
+      "system.adminUsers.invitations.revoke"
+    ],
+    actions: ["Create invitation", "Resend invitation", "Revoke invitation"],
+    permissionHints: ["admin.users.invitations.manage"]
   })
 ] as const;
 

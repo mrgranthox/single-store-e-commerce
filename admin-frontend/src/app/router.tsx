@@ -405,6 +405,16 @@ const screenRouteElement = (screenId: string) => {
         "../features/system/pages/IntegrationsHealthPage.tsx",
         "IntegrationsHealthPage"
       );
+    case "system-notifications":
+      return renderLazyRoute("../features/system/pages/NotificationsWorkspacePage.tsx", "NotificationsWorkspacePage");
+    case "system-notification-detail":
+      return renderLazyRoute("../features/system/pages/NotificationDetailPage.tsx", "NotificationDetailPage");
+    case "system-admin-users":
+      return renderLazyRoute("../features/system/pages/AdminUsersPage.tsx", "AdminUsersPage");
+    case "system-admin-user-detail":
+      return renderLazyRoute("../features/system/pages/AdminUserDetailPage.tsx", "AdminUserDetailPage");
+    case "system-admin-user-invitations":
+      return renderLazyRoute("../features/system/pages/AdminUserInvitationsPage.tsx", "AdminUserInvitationsPage");
     case "marketing-coupons":
       return renderLazyRoute("../features/marketing/pages/CouponsListPage.tsx", "CouponsListPage");
     case "marketing-coupon-analytics":
@@ -433,6 +443,8 @@ const screenRouteElement = (screenId: string) => {
       return renderLazyRoute("../features/content/pages/BannersListPage.tsx", "BannersListPage");
     case "content-pages":
       return renderLazyRoute("../features/content/pages/ContentPagesListPage.tsx", "ContentPagesListPage");
+    case "content-homepage":
+      return renderLazyRoute("../features/content/pages/HomepageManagementPage.tsx", "HomepageManagementPage");
     default: {
       const screen = adminScreenCatalog.find((screenItem) => screenItem.id === screenId);
       return screen ? (
@@ -482,13 +494,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Navigate to="dashboard" replace />
-      },
-      {
-        path: "content/homepage",
-        element: renderLazyRoute(
-          "../features/content/pages/HomepageManagementPage.tsx",
-          "HomepageManagementPage"
-        )
       },
       ...protectedAdminScreens.map((screenItem) => ({
         path: stripAdminPrefix(screenItem.path),

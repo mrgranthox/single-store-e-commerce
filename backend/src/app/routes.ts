@@ -4,6 +4,7 @@ import { sendSuccess } from "../common/http/response";
 import { accountRouteModule } from "../modules/account/account.routes";
 import { adminCompatRouteModule } from "../modules/admin-compat/admin-compat.routes";
 import { adminAuthRouteModule } from "../modules/auth/admin-auth.routes";
+import { adminUsersRouteModule } from "../modules/admin-users/admin-users.routes";
 import { customerAuthRouteModule } from "../modules/auth/customer-auth.routes";
 import { alertsIncidentsRouteModule } from "../modules/alerts-incidents/alerts-incidents.routes";
 import { auditRouteModule } from "../modules/audit/audit.routes";
@@ -38,6 +39,7 @@ const routeModules = [
   accountRouteModule,
   adminCompatRouteModule,
   adminAuthRouteModule,
+  adminUsersRouteModule,
   alertsIncidentsRouteModule,
   auditRouteModule,
   catalogRouteModule,

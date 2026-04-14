@@ -8,6 +8,7 @@ import { TimeSeriesA11yTable } from "@/components/dashboard/TimeSeriesA11yTable"
 import { DashboardPartialBody, getDashboardPartialState } from "@/components/primitives/DashboardPartialBody";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { timelinePayloadLine } from "@/features/security/lib/securityUiHelpers";
 import { adminJsonGet } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
@@ -86,6 +87,17 @@ type TicketRow = {
   id: string;
   subject: string;
   priority: string;
+  createdAt: string;
+};
+
+type RecentActivityRow = {
+  id: string;
+  entityType: string;
+  entityId: string;
+  eventType: string;
+  actorType: string;
+  payload: unknown;
+  occurredAt: string;
   createdAt: string;
 };
 
@@ -184,13 +196,20 @@ const ticketPriorityClass = (priority: string) => {
   return "bg-slate-100 text-slate-600";
 };
 
+const humanizeToken = (value: string | null | undefined) =>
+  (value ?? "unknown")
+    .toLowerCase()
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+
 export const DashboardOverviewPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
 
   const rangeQs = useMemo(() => rangeQueryLastDays(30), []);
 
-  const [overviewQ, salesQ, healthQ, ordersQ, inventoryQ, ticketsQ] = useQueries({
+  const [overviewQ, salesQ, healthQ, ordersQ, inventoryQ, ticketsQ, activityQ] = useQueries({
     queries: [
       {
         queryKey: ["admin-dashboard", "overview", rangeQs],
@@ -240,6 +259,16 @@ export const DashboardOverviewPage = () => {
           ),
         enabled: Boolean(accessToken),
         staleTime: 25_000
+      },
+      {
+        queryKey: ["admin-dashboard", "recent-activity"],
+        queryFn: () =>
+          adminJsonGet<{ items: RecentActivityRow[] }>(
+            "/api/admin/dashboard/recent-activity?page=1&page_size=6",
+            accessToken
+          ),
+        enabled: Boolean(accessToken),
+        staleTime: 20_000
       }
     ]
   });
@@ -309,6 +338,7 @@ export const DashboardOverviewPage = () => {
     const score = (p: string) => (p.toUpperCase().includes("URGENT") ? 0 : p.toUpperCase().includes("HIGH") ? 1 : 2);
     return [...items].sort((a, b) => score(a.priority) - score(b.priority)).slice(0, 3);
   }, [ticketsQ.data?.data.items]);
+  const recentActivity = activityQ.data?.data.items ?? [];
   const healthData = healthQ.data?.data;
   const healthRuntime = healthData?.runtime;
   const failedJobs24h = healthData?.workload24h?.failedJobs24h ?? 0;
@@ -602,6 +632,51 @@ export const DashboardOverviewPage = () => {
                     </Link>
                   </div>
                 ))}
+              </div>
+            )}
+          </section>
+
+          <section className="space-y-4 rounded-[12px] bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-bold uppercase tracking-[0.05em] text-[#434654]">Recent Activity</h3>
+              <Link
+                to="/admin/security/user-activity"
+                className="text-[9px] font-bold uppercase tracking-tighter text-[var(--color-primary)] hover:underline"
+              >
+                Full timeline
+              </Link>
+            </div>
+            {activityQ.isLoading ? (
+              <p className="text-xs text-slate-500">Loading operational activity…</p>
+            ) : activityQ.isError ? (
+              <p className="text-xs text-amber-800">
+                {activityQ.error instanceof ApiError ? activityQ.error.message : "Recent activity unavailable."}
+              </p>
+            ) : recentActivity.length === 0 ? (
+              <p className="text-xs text-slate-500">No recent activity recorded yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {recentActivity.map((row) => {
+                  const summary = timelinePayloadLine(row.payload);
+                  return (
+                    <div key={row.id} className="rounded border border-slate-100 bg-slate-50 p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-[#181b25]">
+                            {humanizeToken(row.eventType)}
+                            <span className="ml-2 text-[10px] uppercase tracking-wider text-slate-400">
+                              {humanizeToken(row.entityType)}
+                            </span>
+                          </p>
+                          <p className="mt-1 line-clamp-2 text-[11px] text-[#434654]">
+                            {summary !== "—" ? summary : `${humanizeToken(row.actorType)} activity on ${row.entityId.slice(0, 8)}`}
+                          </p>
+                        </div>
+                        <span className="shrink-0 text-[10px] text-slate-400">{formatTimeAgo(row.occurredAt ?? row.createdAt)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </section>

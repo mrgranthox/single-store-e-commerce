@@ -1,11 +1,18 @@
 import { useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 
+import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
 import { PageActionsMenu } from "@/components/primitives/PageActionsMenu";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, getAdminShipmentDetail, type ShipmentTrackingEventApi } from "@/features/orders/api/admin-orders.api";
+import {
+  ApiError,
+  getAdminShipmentDetail,
+  updateAdminShipment,
+  type ShipmentTrackingEventApi
+} from "@/features/orders/api/admin-orders.api";
+import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
 const shipmentRef = (id: string) => `SHP-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -56,8 +63,15 @@ type Phase =
 export const ShipmentDetailPage = () => {
   const { shipmentId } = useParams<{ shipmentId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const queryClient = useQueryClient();
   const [copied, setCopied] = useState(false);
+  const [editWarehouseId, setEditWarehouseId] = useState("");
+  const [editStatus, setEditStatus] = useState("");
+  const [editCarrier, setEditCarrier] = useState("");
+  const [editTrackingNumber, setEditTrackingNumber] = useState("");
+  const [editNote, setEditNote] = useState("");
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   const q = useQuery({
     queryKey: ["admin-shipment-detail", shipmentId],
@@ -79,6 +93,30 @@ export const ShipmentDetailPage = () => {
   const shipTo = e ? recipientLines(e.recipient) : { name: "—", email: null as string | null, loc: "—" };
 
   const terminal = e ? ["DELIVERED", "CANCELLED"].includes(e.status.toUpperCase()) : true;
+  const canUpdateShipment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment"]);
+
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      if (!accessToken || !shipmentId || !e) {
+        throw new Error("Missing context.");
+      }
+      return updateAdminShipment(accessToken, shipmentId, {
+        warehouseId: editWarehouseId.trim() || e.warehouse?.id || undefined,
+        shipmentStatus: editStatus || e.status,
+        trackingNumber: editTrackingNumber.trim() || e.trackingNumber || undefined,
+        carrier: editCarrier.trim() || e.carrier || undefined,
+        note: editNote.trim() || undefined
+      });
+    },
+    onSuccess: () => {
+      setActionMessage("Shipment updated.");
+      void queryClient.invalidateQueries({ queryKey: ["admin-shipment-detail", shipmentId] });
+      void queryClient.invalidateQueries({ queryKey: ["admin-shipment-tracking", shipmentId] });
+    },
+    onError: (error: unknown) => {
+      setActionMessage(error instanceof ApiError ? error.message : "Shipment update failed.");
+    }
+  });
 
   const phases = useMemo((): Phase[] => {
     if (!e) {
@@ -266,6 +304,76 @@ export const ShipmentDetailPage = () => {
                         <MaterialIcon name="open_in_new" className="text-xs" />
                       </a>
                     ) : null}
+                  </div>
+                </div>
+
+                <div className="stitch-surface-card p-6 shadow-sm">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="font-headline text-sm font-bold uppercase tracking-wider text-slate-500">
+                      Update Shipment
+                    </h2>
+                    <MaterialIcon name="edit_square" className="text-slate-300" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="flex flex-col gap-1 text-xs text-slate-500">
+                      Warehouse ID
+                      <input
+                        value={editWarehouseId || e.warehouse?.id || ""}
+                        onChange={(event) => setEditWarehouseId(event.target.value)}
+                        className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
+                        placeholder="Warehouse UUID"
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1 text-xs text-slate-500">
+                      Shipment status
+                      <select
+                        value={editStatus || e.status}
+                        onChange={(event) => setEditStatus(event.target.value)}
+                        className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
+                      >
+                        {["CREATED", "PACKING", "DISPATCHED", "IN_TRANSIT", "DELIVERED", "CANCELLED"].map((status) => (
+                          <option key={status} value={status}>
+                            {status.replace(/_/g, " ")}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="flex flex-col gap-1 text-xs text-slate-500">
+                      Carrier
+                      <input
+                        value={editCarrier || e.carrier || ""}
+                        onChange={(event) => setEditCarrier(event.target.value)}
+                        className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
+                        placeholder="Carrier name"
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1 text-xs text-slate-500">
+                      Tracking number
+                      <input
+                        value={editTrackingNumber || e.trackingNumber || ""}
+                        onChange={(event) => setEditTrackingNumber(event.target.value)}
+                        className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
+                        placeholder="Tracking number"
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1 text-xs text-slate-500">
+                      Internal note
+                      <textarea
+                        value={editNote}
+                        onChange={(event) => setEditNote(event.target.value)}
+                        className="min-h-24 rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
+                        placeholder="Reason for this change"
+                      />
+                    </label>
+                    {actionMessage ? <p className="text-xs text-[#434654]">{actionMessage}</p> : null}
+                    <AsyncActionButton
+                      pending={updateMutation.isPending}
+                      blocked={!canUpdateShipment}
+                      onClick={() => updateMutation.mutate()}
+                      title={canUpdateShipment ? undefined : "Requires orders.override_fulfillment permission"}
+                    >
+                      Save shipment changes
+                    </AsyncActionButton>
                   </div>
                 </div>
               </div>

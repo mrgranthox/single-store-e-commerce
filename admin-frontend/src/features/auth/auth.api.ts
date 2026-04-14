@@ -29,8 +29,14 @@ export const adminLoginPayloadToActor = (payload: AdminLoginPayload): AdminActor
   id: payload.admin.id,
   email: payload.admin.email,
   fullName: null,
+  status: payload.admin.status,
   roles: payload.roles.map((role) => role.code),
-  permissions: payload.permissions
+  permissions: payload.permissions,
+  sessionSummary: {
+    sessionId: payload.session.sessionId,
+    totalSessions: null,
+    activeSessions: null
+  }
 });
 
 type AdminMeResponse = {
@@ -49,10 +55,23 @@ type AdminMeResponse = {
       sessionId: string;
       sessionType: string;
       deviceLabel: string | null;
+      ipAddress: string | null;
+      ipCountry: string | null;
+      ipRegion: string | null;
       createdAt: string;
       lastActiveAt: string;
       revokedAt: string | null;
     } | null;
+    security: {
+      accountStatus: string;
+      totalSessions: number;
+      activeSessions: number;
+      openSecurityEvents: number;
+      stepUpRequiredForSensitiveActions: boolean;
+    };
+    featureFlags: {
+      canAccessAdmin: boolean;
+    };
   };
 };
 

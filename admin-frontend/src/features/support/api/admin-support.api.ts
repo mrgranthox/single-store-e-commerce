@@ -266,7 +266,7 @@ export const replySupportTicket = async (
 ): Promise<{ success: true; data: unknown }> =>
   apiRequest({
     method: "POST",
-    path: `/api/admin/support/tickets/${encodeURIComponent(ticketId)}/reply`,
+    path: `/api/admin/support/tickets/${encodeURIComponent(ticketId)}/messages`,
     accessToken,
     body
   });
@@ -278,7 +278,7 @@ export const addSupportTicketInternalNote = async (
 ): Promise<{ success: true; data: unknown }> =>
   apiRequest({
     method: "POST",
-    path: `/api/admin/support/tickets/${encodeURIComponent(ticketId)}/internal-note`,
+    path: `/api/admin/support/tickets/${encodeURIComponent(ticketId)}/internal-notes`,
     accessToken,
     body
   });

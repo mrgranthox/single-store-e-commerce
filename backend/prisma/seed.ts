@@ -212,11 +212,15 @@ const seedDefaultAdminUser = async () => {
       clerkAdminUserId
     },
     update: {
-      email
+      email,
+      firstName: "Super",
+      lastName: "Admin"
     },
     create: {
       clerkAdminUserId,
-      email
+      email,
+      firstName: "Super",
+      lastName: "Admin"
     }
   });
 

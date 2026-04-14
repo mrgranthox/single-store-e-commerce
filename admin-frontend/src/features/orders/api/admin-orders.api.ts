@@ -84,6 +84,13 @@ export type AdminOrderDetailEntity = {
   status: string;
   createdAt: string;
   updatedAt: string;
+  campaignId?: string | null;
+  campaign?: {
+    id: string;
+    slug: string;
+    name: string;
+    status: string;
+  } | null;
   customer: {
     id: string | null;
     email: string | null;
@@ -197,6 +204,18 @@ export const assignAdminOrderWarehouse = async (
   apiRequest({
     method: "POST",
     path: `/api/admin/orders/${encodeURIComponent(orderId)}/assign-warehouse`,
+    accessToken,
+    body
+  });
+
+export const patchAdminOrderCampaignAttribution = async (
+  accessToken: string,
+  orderId: string,
+  body: { campaignId: string | null; note?: string }
+): Promise<{ success: true; data: unknown }> =>
+  apiRequest({
+    method: "POST",
+    path: `/api/admin/orders/${encodeURIComponent(orderId)}/campaign-attribution`,
     accessToken,
     body
   });
@@ -425,6 +444,24 @@ export const getAdminShipmentTracking = async (
   apiRequest<ShipmentTrackingResponse>({
     path: `/api/admin/shipments/${encodeURIComponent(shipmentId)}/tracking`,
     accessToken
+  });
+
+export const updateAdminShipment = async (
+  accessToken: string,
+  shipmentId: string,
+  body: {
+    warehouseId?: string;
+    shipmentStatus?: string;
+    trackingNumber?: string;
+    carrier?: string;
+    note?: string;
+  }
+): Promise<{ success: true; data: unknown }> =>
+  apiRequest({
+    method: "PATCH",
+    path: `/api/admin/shipments/${encodeURIComponent(shipmentId)}`,
+    accessToken,
+    body
   });
 
 export const createAdminShipmentTrackingEvent = async (

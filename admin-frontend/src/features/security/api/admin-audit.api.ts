@@ -121,4 +121,37 @@ export const listAdminActionLogs = async (
     accessToken
   });
 
+export type EntityTimelineItem = {
+  id: string;
+  entityType: string;
+  entityId: string;
+  eventType: string;
+  actorAdminUserId: string | null;
+  actorType: string;
+  payload: unknown;
+  occurredAt: string;
+  createdAt: string;
+};
+
+export type EntityTimelineResponse = {
+  success: true;
+  data: { items: EntityTimelineItem[] };
+  meta: { page: number; limit: number; totalItems: number; totalPages: number };
+};
+
+export const getEntityTimeline = async (
+  accessToken: string,
+  entityType: string,
+  entityId: string,
+  query: { page?: number; page_size?: number } = {}
+): Promise<EntityTimelineResponse> => {
+  const params = new URLSearchParams();
+  params.set("page", String(query.page ?? 1));
+  params.set("page_size", String(query.page_size ?? 20));
+  return apiRequest<EntityTimelineResponse>({
+    path: `/api/admin/audit/entities/${encodeURIComponent(entityType)}/${encodeURIComponent(entityId)}/timeline?${params.toString()}`,
+    accessToken
+  });
+};
+
 export { ApiError };

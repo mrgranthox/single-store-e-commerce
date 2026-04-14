@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CheckCheck,
   ChevronRight,
@@ -15,16 +15,19 @@ import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { timelinePayloadLine } from "@/features/security/lib/securityUiHelpers";
 import {
   ApiError,
   assignAdminOrderWarehouse,
   cancelAdminOrder,
   createAdminOrderShipment,
   getAdminOrderDetail,
+  patchAdminOrderCampaignAttribution,
   updateAdminOrderStatus,
   type AdminOrderDetailEntity,
   type AdminOrderStatus
 } from "@/features/orders/api/admin-orders.api";
+import { getEntityTimeline } from "@/features/security/api/admin-audit.api";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
@@ -155,6 +158,8 @@ export const OrderDetailPage = () => {
   const [shipCarrier, setShipCarrier] = useState("");
   const [shipTracking, setShipTracking] = useState("");
   const [shipNote, setShipNote] = useState("");
+  const [campaignId, setCampaignId] = useState("");
+  const [campaignNote, setCampaignNote] = useState("");
   const [confirmAction, setConfirmAction] = useState<PendingOrderAction>(null);
   const [actionMsg, setActionMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
@@ -174,6 +179,16 @@ export const OrderDetailPage = () => {
   });
 
   const entity = detailQ.data?.data.entity;
+  const entityTimelineQ = useQuery({
+    queryKey: ["admin-entity-timeline", "order", orderId],
+    queryFn: async () => {
+      if (!accessToken) {
+        throw new Error("Not signed in.");
+      }
+      return getEntityTimeline(accessToken, "order", orderId, { page: 1, page_size: 6 });
+    },
+    enabled: Boolean(accessToken && orderId)
+  });
 
   const latestShipment = useMemo(() => {
     const s = entity?.shipments ?? [];
@@ -288,6 +303,28 @@ export const OrderDetailPage = () => {
     }
   });
 
+  const campaignMut = useMutation({
+    mutationFn: () => {
+      if (!accessToken) {
+        throw new Error("Not signed in.");
+      }
+      return patchAdminOrderCampaignAttribution(accessToken, orderId, {
+        campaignId: campaignId.trim() || null,
+        ...(campaignNote.trim() ? { note: campaignNote.trim() } : {})
+      });
+    },
+    onSuccess: () => {
+      setActionMsg({ type: "ok", text: "Campaign attribution updated." });
+      invalidateOrder();
+    },
+    onError: (err: unknown) => {
+      setActionMsg({
+        type: "err",
+        text: err instanceof ApiError ? err.message : "Campaign attribution update failed."
+      });
+    }
+  });
+
   const itemRows = useMemo(
     () =>
       (entity?.items ?? []).map((line) => [
@@ -342,6 +379,7 @@ export const OrderDetailPage = () => {
   const canUpdateOrder = adminHasAnyPermission(actorPermissions, ["orders.update"]);
   const canOverrideFulfillment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment", "orders.update"]);
   const canCancelOrder = adminHasAnyPermission(actorPermissions, ["orders.cancel"]);
+  const canViewAudit = adminHasAnyPermission(actorPermissions, ["security.audit.read"]);
 
   const railBtn =
     "group relative flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-[#1653cc] hover:text-white";
@@ -635,6 +673,51 @@ export const OrderDetailPage = () => {
                   </div>
                 </div>
 
+                {canViewAudit ? (
+                  <div className="rounded-xl bg-white p-6 shadow-sm">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <h3 className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                        Entity timeline preview
+                      </h3>
+                      <Link
+                        to={`/admin/orders/${orderId}/timeline`}
+                        className="text-[10px] font-bold uppercase tracking-wider text-[#1653cc] hover:underline"
+                      >
+                        Full timeline
+                      </Link>
+                    </div>
+                    {entityTimelineQ.isLoading ? (
+                      <p className="text-sm text-slate-500">Loading audit events…</p>
+                    ) : entityTimelineQ.isError ? (
+                      <p className="text-sm text-amber-800">
+                        {entityTimelineQ.error instanceof ApiError ? entityTimelineQ.error.message : "Timeline unavailable."}
+                      </p>
+                    ) : (entityTimelineQ.data?.data.items ?? []).length === 0 ? (
+                      <p className="text-sm text-slate-500">No entity timeline events recorded yet.</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {(entityTimelineQ.data?.data.items ?? []).map((event) => (
+                          <div key={event.id} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <p className="text-xs font-bold uppercase tracking-wider text-[#181b25]">
+                                  {humanize(event.eventType)}
+                                </p>
+                                <p className="mt-1 text-sm text-[#434654]">
+                                  {timelinePayloadLine(event.payload)}
+                                </p>
+                              </div>
+                              <span className="shrink-0 text-[10px] text-slate-400">
+                                {formatWhenUtcLabel(event.occurredAt)}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+
                 <Link
                   to={`/admin/orders/${orderId}/timeline`}
                   className="group flex cursor-pointer items-center justify-between rounded-lg bg-[#f2f3ff] p-4 transition-colors hover:bg-[#e6e7f6]"
@@ -809,6 +892,37 @@ export const OrderDetailPage = () => {
                     title={canOverrideFulfillment ? undefined : "Requires orders.override_fulfillment permission"}
                   >
                     {shipMut.isPending ? "Creating…" : "Create shipment"}
+                  </button>
+                </div>
+
+                <div id="order-admin-campaign" className="scroll-mt-28 space-y-3">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Campaign attribution</h3>
+                  <label className="flex flex-col gap-1 text-xs text-slate-600">
+                    Campaign ID
+                    <input
+                      value={campaignId || entity.campaignId || ""}
+                      onChange={(ev) => setCampaignId(ev.target.value)}
+                      className="font-mono rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                      placeholder="Campaign id or leave blank to clear"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1 text-xs text-slate-600">
+                    Note (optional)
+                    <input
+                      value={campaignNote}
+                      onChange={(ev) => setCampaignNote(ev.target.value)}
+                      className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                      placeholder={entity.campaign?.name ? `Current: ${entity.campaign.name}` : "Explain attribution source"}
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    disabled={campaignMut.isPending || !canUpdateOrder}
+                    onClick={() => campaignMut.mutate()}
+                    className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
+                    title={canUpdateOrder ? undefined : "Requires orders.update permission"}
+                  >
+                    {campaignMut.isPending ? "Saving…" : "Update campaign"}
                   </button>
                 </div>
 

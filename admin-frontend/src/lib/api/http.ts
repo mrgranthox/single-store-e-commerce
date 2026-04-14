@@ -55,8 +55,10 @@ const payloadToActor = (payload: AdminRefreshPayload): AdminActor => ({
   id: payload.admin.id,
   email: payload.admin.email,
   fullName: null,
+  status: payload.admin.status,
   roles: payload.roles.map((role) => role.code),
-  permissions: payload.permissions
+  permissions: payload.permissions,
+  sessionSummary: null
 });
 
 const readResponsePayload = async (response: Response) =>

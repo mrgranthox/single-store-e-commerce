@@ -28,6 +28,13 @@ enum AdminStatus {
   DEACTIVATED
 }
 
+enum AdminInvitationStatus {
+  PENDING
+  REVOKED
+  ACCEPTED
+  EXPIRED
+}
+
 enum ProductStatus {
   DRAFT
   PUBLISHED
@@ -230,6 +237,8 @@ model AdminUser {
   storeId         String?    // reserved for multi-store later
   clerkAdminUserId String    @unique
   email           String     @unique
+  firstName       String?
+  lastName        String?
   status          AdminStatus @default(ACTIVE)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
@@ -252,6 +261,8 @@ model AdminUser {
   userStatusChanges UserStatusHistory[]
   createdIncidents Incident[]
   customerNotesAuthored CustomerNote[]
+  sentAdminInvitations AdminInvitation[] @relation("AdminInvitationSender")
+  revokedAdminInvitations AdminInvitation[] @relation("AdminInvitationRevoker")
 }
 
 model Role {
@@ -263,6 +274,7 @@ model Role {
 
   rolePermissions RolePermission[]
   adminUserRoles AdminUserRole[]
+  adminInvitationRoles AdminInvitationRole[]
 }
 
 model Permission {
@@ -294,6 +306,42 @@ model AdminUserRole {
   createdAt   DateTime  @default(now())
 
   @@id([adminUserId, roleId])
+}
+
+model AdminInvitation {
+  id                   String                @id @default(uuid())
+  storeId              String?
+  email                String
+  firstName            String?
+  lastName             String?
+  status               AdminInvitationStatus @default(PENDING)
+  tokenHash            String                @unique
+  expiresAt            DateTime
+  lastSentAt           DateTime?
+  acceptedAt           DateTime?
+  revokedAt            DateTime?
+  note                 String?
+  invitedByAdminUserId String
+  revokedByAdminUserId String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  invitedBy AdminUser @relation("AdminInvitationSender", fields: [invitedByAdminUserId], references: [id], onDelete: Cascade)
+  revokedBy AdminUser? @relation("AdminInvitationRevoker", fields: [revokedByAdminUserId], references: [id], onDelete: SetNull)
+  roles     AdminInvitationRole[]
+
+  @@unique([email, status])
+  @@index([status, createdAt])
+}
+
+model AdminInvitationRole {
+  invitationId String
+  roleId       String
+  invitation   AdminInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  role         Role            @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt    DateTime        @default(now())
+
+  @@id([invitationId, roleId])
 }
 
 model SessionMetadata {

@@ -73,6 +73,7 @@ export const stitchExportSlugByScreenId: Record<string, string> = {
   "support-analytics": "support_analytics",
   "content-banners": "banners_management",
   "content-pages": "cms_pages_management",
+  "content-homepage": "cms_pages_management",
   "marketing-coupons": "coupon_management",
   "marketing-coupon-analytics": "coupon_redemption_analytics",
   "marketing-promotions": "promotions_management",
@@ -106,7 +107,12 @@ export const stitchExportSlugByScreenId: Record<string, string> = {
   "system-jobs": "background_jobs_monitor",
   /** No separate Stitch folder; detail UI extends the jobs monitor pattern. */
   "system-job-detail": "background_jobs_monitor",
-  "system-integrations-health": "integration_health_exception_monitor"
+  "system-integrations-health": "integration_health_exception_monitor",
+  "system-notifications": "integration_health_exception_monitor",
+  "system-notification-detail": "integration_health_exception_monitor",
+  "system-admin-users": "profile_security",
+  "system-admin-user-detail": "profile_security",
+  "system-admin-user-invitations": "profile_security"
 };
 
 const STITCH_ROOT = "docs/admin frontend UI /stitch";
