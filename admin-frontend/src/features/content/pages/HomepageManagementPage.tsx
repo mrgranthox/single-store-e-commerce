@@ -54,6 +54,52 @@ const moveItem = <T,>(items: T[], fromIndex: number, direction: -1 | 1) => {
   return next;
 };
 
+const sectionHeaderKeys: Array<keyof UpdateHomepageDraftBody["sectionHeaders"]> = [
+  "category",
+  "featured",
+  "brand",
+  "campaign",
+  "promo",
+  "testimonial"
+];
+
+const normalizeNullableText = (value?: string | null) => {
+  if (value == null) {
+    return null;
+  }
+
+  return value.trim().length > 0 ? value : null;
+};
+
+const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDraftBody => ({
+  ...draft,
+  hero: {
+    ...draft.hero,
+    titleAccent: normalizeNullableText(draft.hero.titleAccent),
+    titleSuffix: normalizeNullableText(draft.hero.titleSuffix),
+    backgroundImageAlt: normalizeNullableText(draft.hero.backgroundImageAlt)
+  },
+  sectionHeaders: Object.fromEntries(
+    sectionHeaderKeys.map((key) => [
+      key,
+      {
+        ...draft.sectionHeaders[key],
+        ctaLabel: normalizeNullableText(draft.sectionHeaders[key].ctaLabel),
+        ctaHref: normalizeNullableText(draft.sectionHeaders[key].ctaHref)
+      }
+    ])
+  ) as UpdateHomepageDraftBody["sectionHeaders"],
+  trustBadges: draft.trustBadges.map((item) => ({
+    ...item,
+    href: normalizeNullableText(item.href),
+    ariaLabel: normalizeNullableText(item.ariaLabel)
+  })),
+  testimonials: draft.testimonials.map((item) => ({
+    ...item,
+    statusLabel: normalizeNullableText(item.statusLabel)
+  }))
+});
+
 const emptyDraft: UpdateHomepageDraftBody = {
   hero: {
     eyebrow: "Storefront homepage",
@@ -117,7 +163,7 @@ export const HomepageManagementPage = () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
-      return updateAdminHomepageDraft(accessToken, body);
+      return updateAdminHomepageDraft(accessToken, normalizeDraftForSave(body));
     },
     onSuccess: (response) => {
       setFeedback("Draft saved.");

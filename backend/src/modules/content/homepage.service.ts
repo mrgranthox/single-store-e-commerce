@@ -809,22 +809,55 @@ const ensureHomepageSeeded = async () => {
   const draftInput = await buildDefaultHomepageDraft(prisma);
 
   await prisma.$transaction(async (transaction) => {
-    const draft = await transaction.homePageVersion.create({
-      data: {
-        state: HomePageVersionState.DRAFT
-      }
+    const draftCreateResult = await transaction.homePageVersion.createMany({
+      data: [
+        {
+          state: HomePageVersionState.DRAFT
+        }
+      ],
+      skipDuplicates: true
     });
 
-    await writeVersionContent(transaction, draft.id, draftInput);
-
-    const published = await transaction.homePageVersion.create({
-      data: {
-        state: HomePageVersionState.PUBLISHED,
-        publishedAt: new Date()
-      }
+    const publishedCreateResult = await transaction.homePageVersion.createMany({
+      data: [
+        {
+          state: HomePageVersionState.PUBLISHED,
+          publishedAt: new Date()
+        }
+      ],
+      skipDuplicates: true
     });
 
-    await writeVersionContent(transaction, published.id, draftInput);
+    const [draft, published] = await Promise.all([
+      transaction.homePageVersion.findUnique({
+        where: {
+          state: HomePageVersionState.DRAFT
+        },
+        select: {
+          id: true
+        }
+      }),
+      transaction.homePageVersion.findUnique({
+        where: {
+          state: HomePageVersionState.PUBLISHED
+        },
+        select: {
+          id: true
+        }
+      })
+    ]);
+
+    if (!draft || !published) {
+      throw notFoundError("The homepage workspace could not be initialized.");
+    }
+
+    if (draftCreateResult.count > 0) {
+      await writeVersionContent(transaction, draft.id, draftInput);
+    }
+
+    if (publishedCreateResult.count > 0) {
+      await writeVersionContent(transaction, published.id, draftInput);
+    }
   });
 
   const seededDraft = await getVersion(prisma, HomePageVersionState.DRAFT);
