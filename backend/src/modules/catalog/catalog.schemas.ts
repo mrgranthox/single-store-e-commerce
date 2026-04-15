@@ -14,12 +14,26 @@ const slugSchema = z
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 
 /** Category and brand handles (product slugs keep `slugSchema` min 3 for storefront SEO). */
-const taxonomySlugSchema = z
-  .string()
-  .trim()
-  .min(1)
-  .max(150)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+const taxonomySlugSchema = z.preprocess(
+  (val) => {
+    if (typeof val !== "string") {
+      return val;
+    }
+    return val
+      .trim()
+      .toLowerCase()
+      .replace(/_/g, "-")
+      .replace(/\s+/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/^-+|-+$/g, "");
+  },
+  z
+    .string()
+    .trim()
+    .min(1)
+    .max(150)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+);
 
 const optionalUuidSchema = z.string().uuid().nullable().optional();
 const sortOrderSchema = z.enum(["asc", "desc"]).default("desc");
@@ -252,12 +266,27 @@ export const taxonomyMediaUploadIntentBodySchema = z.object({
 
 const createTaxonomyStatusSchema = z.enum(["DRAFT", "ACTIVE"]).optional();
 
-const optionalHttpUrlSchema = z
-  .string()
-  .trim()
-  .max(2048)
-  .refine((s) => s.length === 0 || /^https?:\/\//i.test(s), "Must be an http(s) URL.")
-  .optional();
+const optionalHttpUrlSchema = z.preprocess(
+  (val) => {
+    if (val === null || val === undefined) {
+      return undefined;
+    }
+    if (typeof val !== "string") {
+      return val;
+    }
+    const t = val.trim();
+    if (t.length === 0) {
+      return undefined;
+    }
+    return t.startsWith("//") ? `https:${t}` : t;
+  },
+  z
+    .string()
+    .trim()
+    .max(2048)
+    .refine((s) => /^https?:\/\//i.test(s), "Must be an http(s) URL.")
+    .optional()
+);
 
 export const createCategoryBodySchema = z.object({
   slug: taxonomySlugSchema,
@@ -283,25 +312,61 @@ export const updateCategoryBodySchema = z.object({
 });
 
 const optionalBrandBannerIdSchema = z.preprocess(
-  (val) => (val === "" ? null : val),
+  (val) => {
+    if (val === undefined) {
+      return undefined;
+    }
+    if (val === "" || val === null) {
+      return null;
+    }
+    if (typeof val === "string" && val.trim() === "") {
+      return null;
+    }
+    return typeof val === "string" ? val.trim() : val;
+  },
   z.union([z.string().uuid(), z.null()]).optional()
 );
 
 const optionalCreateBrandBannerIdSchema = z.preprocess(
-  (val) => (val === "" || val === null ? undefined : val),
+  (val) => {
+    if (val === "" || val === null || val === undefined) {
+      return undefined;
+    }
+    if (typeof val === "string" && val.trim() === "") {
+      return undefined;
+    }
+    return typeof val === "string" ? val.trim() : val;
+  },
   z.string().uuid().optional()
 );
 
-const galleryImageUrlsSchema = z
-  .array(
-    z
-      .string()
-      .trim()
-      .max(2048)
-      .refine((s) => /^https?:\/\//i.test(s), "Each image must be an http(s) URL.")
-  )
-  .max(30)
-  .optional();
+const galleryImageUrlsSchema = z.preprocess(
+  (val) => {
+    if (val === null || val === undefined) {
+      return undefined;
+    }
+    if (!Array.isArray(val)) {
+      return val;
+    }
+    return val.map((item) => {
+      if (typeof item !== "string") {
+        return item;
+      }
+      const t = item.trim();
+      return t.startsWith("//") ? `https:${t}` : t;
+    });
+  },
+  z
+    .array(
+      z
+        .string()
+        .trim()
+        .max(2048)
+        .refine((s) => /^https?:\/\//i.test(s), "Each image must be an http(s) URL.")
+    )
+    .max(30)
+    .optional()
+);
 
 export const createBrandBodySchema = z.object({
   slug: taxonomySlugSchema,

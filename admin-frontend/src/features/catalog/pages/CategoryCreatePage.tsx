@@ -8,11 +8,12 @@ import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { ApiError, formatAdminValidationMessage } from "@/lib/api/http";
 import {
-  ApiError,
   createAdminCatalogCategory,
   createCatalogCategoryMediaUploadIntent
 } from "@/features/catalog/api/admin-catalog.api";
+import { normalizeTaxonomySlugInput } from "@/features/catalog/lib/normalizeTaxonomySlug";
 
 const primarySaveClass =
   "inline-flex items-center justify-center gap-2 rounded-sm bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-5 py-2.5 font-headline text-sm font-semibold text-white shadow-lg shadow-[#1653cc]/20 transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100";
@@ -51,7 +52,8 @@ export const CategoryCreatePage = () => {
       navigate(`/admin/catalog/categories/${res.data.entity.id}/edit`, { replace: true });
     },
     onError: (e: unknown) => {
-      setMsg(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Save failed.");
+      const fallback = e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Save failed.";
+      setMsg(e instanceof ApiError ? formatAdminValidationMessage(e.payload, fallback) : fallback);
     }
   });
 
@@ -131,6 +133,7 @@ export const CategoryCreatePage = () => {
                 setSlug(
                   e.target.value
                     .toLowerCase()
+                    .replace(/_/g, "-")
                     .replace(/\s+/g, "-")
                     .replace(/-{2,}/g, "-")
                     .replace(/^-+|-+$/g, "")

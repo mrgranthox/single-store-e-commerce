@@ -12,8 +12,8 @@ import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
+import { ApiError, formatAdminValidationMessage } from "@/lib/api/http";
 import {
-  ApiError,
   archiveAdminCatalogCategory,
   getAdminCatalogCategory,
   publishAdminCatalogCategory,
@@ -22,6 +22,7 @@ import {
   createCatalogCategoryMediaUploadIntent,
   updateAdminCatalogCategory
 } from "@/features/catalog/api/admin-catalog.api";
+import { normalizeTaxonomySlugInput } from "@/features/catalog/lib/normalizeTaxonomySlug";
 
 export const CategoryEditPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -61,10 +62,11 @@ export const CategoryEditPage = () => {
       if (!accessToken || !categoryId) {
         throw new Error("Missing context.");
       }
+      const img = imageUrl?.trim();
       return updateAdminCatalogCategory(accessToken, categoryId, {
-        slug: slug.trim(),
+        slug: normalizeTaxonomySlugInput(slug),
         name: name.trim(),
-        imageUrl: imageUrl && imageUrl.trim() ? imageUrl.trim() : null
+        imageUrl: img ? (img.startsWith("//") ? `https:${img}` : img) : null
       });
     },
     onSuccess: () => {
@@ -77,7 +79,8 @@ export const CategoryEditPage = () => {
     },
     onError: (e: unknown) => {
       setSuccessMsg(null);
-      setMsg(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Update failed.");
+      const fallback = e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Update failed.";
+      setMsg(e instanceof ApiError ? formatAdminValidationMessage(e.payload, fallback) : fallback);
     }
   });
 
@@ -274,7 +277,16 @@ export const CategoryEditPage = () => {
                   required
                   className={clsx(stitchInputClass, "font-mono")}
                   value={slug}
-                  onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
+                  onChange={(e) =>
+                    setSlug(
+                      e.target.value
+                        .toLowerCase()
+                        .replace(/_/g, "-")
+                        .replace(/\s+/g, "-")
+                        .replace(/-{2,}/g, "-")
+                        .replace(/^-+|-+$/g, "")
+                    )
+                  }
                 />
               </label>
               <CatalogTaxonomyImageUpload

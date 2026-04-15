@@ -12,6 +12,33 @@ export class ApiError extends Error {
   }
 }
 
+type ZodLikeFieldErrors = Record<string, string[] | undefined> | undefined;
+
+/** Builds a readable message from API `error.details` (e.g. Zod flatten) when present. */
+export const formatAdminValidationMessage = (payload: unknown, fallback: string): string => {
+  const root = payload as {
+    error?: { details?: { fieldErrors?: ZodLikeFieldErrors; formErrors?: string[] } };
+  };
+  const details = root?.error?.details;
+  if (!details || typeof details !== "object") {
+    return fallback;
+  }
+  const fieldErrors = details.fieldErrors;
+  if (fieldErrors && typeof fieldErrors === "object") {
+    const lines = Object.entries(fieldErrors).flatMap(([key, messages]) =>
+      Array.isArray(messages) ? messages.map((m) => `${key}: ${m}`) : []
+    );
+    if (lines.length > 0) {
+      return lines.join("\n");
+    }
+  }
+  const formErrors = details.formErrors;
+  if (Array.isArray(formErrors) && formErrors.length > 0) {
+    return formErrors.join("\n");
+  }
+  return fallback;
+};
+
 type ApiRequestInput = {
   path: string;
   method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";

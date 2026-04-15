@@ -13,15 +13,24 @@ import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { ApiError, formatAdminValidationMessage } from "@/lib/api/http";
 import {
-  ApiError,
   createAdminCatalogBrand,
   createCatalogBrandMediaUploadIntent
 } from "@/features/catalog/api/admin-catalog.api";
+import { normalizeTaxonomySlugInput } from "@/features/catalog/lib/normalizeTaxonomySlug";
 import { listAdminBanners } from "@/features/content/api/admin-content.api";
 
 const primarySaveClass =
   "inline-flex items-center justify-center gap-2 rounded-sm bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-5 py-2.5 font-headline text-sm font-semibold text-white shadow-lg shadow-[#1653cc]/20 transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100";
+
+const BANNER_LINK_UUID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const normalizeHttpsMediaUrl = (raw: string) => {
+  const t = raw.trim();
+  return t.startsWith("//") ? `https:${t}` : t;
+};
 
 export const BrandCreatePage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
@@ -43,18 +52,16 @@ export const BrandCreatePage = () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
+      const trimmedBannerId = bannerId.trim();
       return createAdminCatalogBrand(accessToken, {
-        slug: slug
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/-{2,}/g, "-")
-          .replace(/^-+|-+$/g, ""),
+        slug: normalizeTaxonomySlugInput(slug),
         name: name.trim(),
         ...(publishImmediately ? { status: "ACTIVE" as const } : {}),
-        ...(bannerId.trim() ? { bannerId: bannerId.trim() } : {}),
-        ...(logoUrl?.trim() ? { logoUrl: logoUrl.trim() } : {}),
-        ...(galleryUrls.length > 0 ? { galleryImageUrls: galleryUrls } : {})
+        ...(BANNER_LINK_UUID.test(trimmedBannerId) ? { bannerId: trimmedBannerId } : {}),
+        ...(logoUrl?.trim() ? { logoUrl: normalizeHttpsMediaUrl(logoUrl) } : {}),
+        ...(galleryUrls.length > 0
+          ? { galleryImageUrls: galleryUrls.map((u) => normalizeHttpsMediaUrl(u)) }
+          : {})
       });
     },
     onSuccess: (res) => {
@@ -63,7 +70,8 @@ export const BrandCreatePage = () => {
       navigate(`/admin/catalog/brands/${res.data.entity.id}/edit`, { replace: true });
     },
     onError: (e: unknown) => {
-      setMsg(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Save failed.");
+      const fallback = e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Save failed.";
+      setMsg(e instanceof ApiError ? formatAdminValidationMessage(e.payload, fallback) : fallback);
     }
   });
 
@@ -140,6 +148,7 @@ export const BrandCreatePage = () => {
                 setSlug(
                   e.target.value
                     .toLowerCase()
+                    .replace(/_/g, "-")
                     .replace(/\s+/g, "-")
                     .replace(/-{2,}/g, "-")
                     .replace(/^-+|-+$/g, "")

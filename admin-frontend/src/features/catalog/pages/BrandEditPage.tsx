@@ -16,8 +16,8 @@ import { StatusBadge } from "@/components/primitives/StatusBadge";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { ApiError, formatAdminValidationMessage } from "@/lib/api/http";
 import {
-  ApiError,
   archiveAdminCatalogBrand,
   getAdminCatalogBrand,
   publishAdminCatalogBrand,
@@ -27,6 +27,15 @@ import {
   updateAdminCatalogBrand
 } from "@/features/catalog/api/admin-catalog.api";
 import { listAdminBanners } from "@/features/content/api/admin-content.api";
+import { normalizeTaxonomySlugInput } from "@/features/catalog/lib/normalizeTaxonomySlug";
+
+const BANNER_LINK_UUID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const normalizeHttpsMediaUrl = (raw: string) => {
+  const t = raw.trim();
+  return t.startsWith("//") ? `https:${t}` : t;
+};
 
 export const BrandEditPage = () => {
   const { brandId } = useParams<{ brandId: string }>();
@@ -74,12 +83,16 @@ export const BrandEditPage = () => {
       if (!accessToken || !brandId) {
         throw new Error("Missing context.");
       }
+      const trimmedBanner = bannerId.trim();
+      const nextBannerId =
+        trimmedBanner === "" ? null : BANNER_LINK_UUID.test(trimmedBanner) ? trimmedBanner : null;
+      const nextLogo = logoUrl?.trim();
       return updateAdminCatalogBrand(accessToken, brandId, {
-        slug: slug.trim(),
+        slug: normalizeTaxonomySlugInput(slug),
         name: name.trim(),
-        bannerId: bannerId.trim() === "" ? null : bannerId.trim(),
-        logoUrl: logoUrl && logoUrl.trim() ? logoUrl.trim() : null,
-        galleryImageUrls: galleryUrls
+        bannerId: nextBannerId,
+        logoUrl: nextLogo ? normalizeHttpsMediaUrl(nextLogo) : null,
+        galleryImageUrls: galleryUrls.map((u) => normalizeHttpsMediaUrl(u))
       });
     },
     onSuccess: () => {
@@ -92,7 +105,8 @@ export const BrandEditPage = () => {
     },
     onError: (e: unknown) => {
       setSuccessMsg(null);
-      setMsg(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Update failed.");
+      const fallback = e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Update failed.";
+      setMsg(e instanceof ApiError ? formatAdminValidationMessage(e.payload, fallback) : fallback);
     }
   });
 
@@ -286,7 +300,16 @@ export const BrandEditPage = () => {
                   required
                   className={clsx(stitchInputClass, "font-mono")}
                   value={slug}
-                  onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
+                  onChange={(e) =>
+                    setSlug(
+                      e.target.value
+                        .toLowerCase()
+                        .replace(/_/g, "-")
+                        .replace(/\s+/g, "-")
+                        .replace(/-{2,}/g, "-")
+                        .replace(/^-+|-+$/g, "")
+                    )
+                  }
                 />
               </label>
               <BannerLinkSelect
