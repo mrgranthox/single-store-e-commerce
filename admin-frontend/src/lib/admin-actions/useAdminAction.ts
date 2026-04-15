@@ -1,4 +1,6 @@
 import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
+import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { toast } from "@/lib/toast";
 
 export type AdminActionState =
   | "idle"
@@ -17,6 +19,18 @@ type AdminActionOptions<TVariables, TResult> = {
   /** When false, action is unavailable due to record status/input requirements. */
   isAvailable?: boolean;
   invalidate?: QueryKey[];
+  /**
+   * Declarative success toast message.
+   * When provided, a success toast fires automatically after mutation completes.
+   * The callback form receives the mutation result for dynamic messages.
+   */
+  successMessage?: string | ((result: TResult, variables: TVariables) => string);
+  /**
+   * Declarative error toast message.
+   * When provided, an error toast fires automatically on failure.
+   * The callback form receives the error for dynamic message extraction.
+   */
+  errorMessage?: string | ((error: unknown, variables: TVariables) => string);
   onSuccess?: (result: TResult, variables: TVariables) => void;
   onError?: (error: unknown, variables: TVariables) => void;
 };
@@ -28,22 +42,45 @@ export const useAdminAction = <TVariables, TResult>({
   isAllowed = true,
   isAvailable = true,
   invalidate = [],
+  successMessage,
+  errorMessage,
   onSuccess,
-  onError
+  onError,
 }: AdminActionOptions<TVariables, TResult>) => {
   const queryClient = useQueryClient();
+  const token = useAdminAuthStore((s) => s.accessToken);
 
   const mutation = useMutation({
     mutationKey,
-    mutationFn,
+    // Token guard centralised here — callers never need to duplicate this check.
+    mutationFn: (variables: TVariables) => {
+      if (!token) throw new Error("Session expired. Please sign in again.");
+      return mutationFn(variables);
+    },
     retry,
     onSuccess: (result, variables) => {
       invalidate.forEach((queryKey) => {
         void queryClient.invalidateQueries({ queryKey });
       });
+      if (successMessage) {
+        const msg =
+          typeof successMessage === "function"
+            ? successMessage(result, variables)
+            : successMessage;
+        toast.success(msg);
+      }
       onSuccess?.(result, variables);
     },
-    onError
+    onError: (error, variables) => {
+      if (errorMessage) {
+        const msg =
+          typeof errorMessage === "function"
+            ? errorMessage(error, variables)
+            : errorMessage;
+        toast.error(msg);
+      }
+      onError?.(error, variables);
+    },
   });
 
   const run = (variables: TVariables) => {
@@ -65,6 +102,6 @@ export const useAdminAction = <TVariables, TResult>({
     ...mutation,
     run,
     state,
-    blocked: state === "permission-blocked" || state === "unavailable"
+    blocked: state === "permission-blocked" || state === "unavailable",
   };
 };

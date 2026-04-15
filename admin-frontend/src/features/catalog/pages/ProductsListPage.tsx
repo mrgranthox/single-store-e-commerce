@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ChevronDown, MoreHorizontal, Search } from "lucide-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -22,8 +22,11 @@ import {
   type AdminProductListItem
 } from "@/features/catalog/api/admin-catalog.api";
 import { formatProductListPrice } from "@/features/catalog/lib/format-money";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { toast } from "@/lib/toast";
+import { catalogKeys } from "@/lib/query-keys";
 
 const PRODUCT_DETAIL_STALE_MS = 20_000;
 
@@ -192,8 +195,6 @@ export const ProductsListPage = () => {
   const [dateTo, setDateTo] = useState("");
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
-  const [bulkMessage, setBulkMessage] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
   const [pinnedExpandId, setPinnedExpandId] = useState<string | null>(null);
   const [bulkConfirmAction, setBulkConfirmAction] = useState<"publish" | "unpublish" | "archive" | null>(null);
   const [singleArchiveId, setSingleArchiveId] = useState<string | null>(null);
@@ -226,53 +227,28 @@ export const ProductsListPage = () => {
     setSearchParams(next, { replace: true });
   }, [brandId, categoryId, setSearchParams]);
 
-  const categoriesQuery = useQuery({
-    queryKey: ["admin-catalog-categories-options"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogCategories(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const categoriesQuery = useAuthedQuery(
+    catalogKeys.categories(),
+    (token) => listAdminCatalogCategories(token),
+  );
 
-  const brandsQuery = useQuery({
-    queryKey: ["admin-catalog-brands-options"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogBrands(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const brandsQuery = useAuthedQuery(
+    catalogKeys.brands(),
+    (token) => listAdminCatalogBrands(token),
+  );
 
   const categories = categoriesQuery.data?.data.items ?? [];
   const brands = brandsQuery.data?.data.items ?? [];
 
-  const queryKey = useMemo(
-    () =>
-      [
-        "admin-catalog-products",
-        page,
-        appliedSearch,
-        statusFilter,
-        categoryId,
-        brandId,
-        dateFrom,
-        dateTo
-      ] as const,
-    [page, appliedSearch, statusFilter, categoryId, brandId, dateFrom, dateTo]
+  const productListParams = useMemo(
+    () => ({ page, appliedSearch, statusFilter, categoryId, brandId, dateFrom, dateTo }),
+    [page, appliedSearch, statusFilter, categoryId, brandId, dateFrom, dateTo],
   );
 
-  const productsQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogProducts(accessToken, {
+  const productsQuery = useAuthedQuery(
+    catalogKeys.productList(productListParams),
+    (token) =>
+      listAdminCatalogProducts(token, {
         page,
         page_size: 25,
         sortBy: "updatedAt",
@@ -282,11 +258,9 @@ export const ProductsListPage = () => {
         ...(categoryId ? { categoryId } : {}),
         ...(brandId ? { brandId } : {}),
         ...(dateFrom ? { dateFrom } : {}),
-        ...(dateTo ? { dateTo } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(dateTo ? { dateTo } : {}),
+      }),
+  );
 
   const items = productsQuery.data?.data.items ?? [];
   const meta = productsQuery.data?.meta;
@@ -294,7 +268,7 @@ export const ProductsListPage = () => {
   const { prefetch: prefetchProductDetail, prefetchMany: prefetchProductDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
     staleTime: PRODUCT_DETAIL_STALE_MS,
-    queryKeyFor: (productId: string) => ["admin-catalog-product", productId],
+    queryKeyFor: (productId: string) => catalogKeys.product(productId),
     queryFnFor: (productId: string) => getAdminCatalogProduct(accessToken!, productId),
     onPrefetch: () =>
       preloadLazyNamedComponent("../features/catalog/pages/CatalogProductDetailPage.tsx", "CatalogProductDetailPage")
@@ -376,7 +350,6 @@ export const ProductsListPage = () => {
         return;
       }
       setBulkBusy(true);
-      setBulkMessage(null);
       const ids = [...selected];
       const fn =
         action === "publish"
@@ -387,29 +360,32 @@ export const ProductsListPage = () => {
       const results = await Promise.allSettled(ids.map((id) => fn(accessToken, id, {})));
       const failed = results.filter((r) => r.status === "rejected").length;
       setBulkBusy(false);
-      setBulkMessage(
-        failed
-          ? `${ids.length - failed} updated, ${failed} failed (check permissions or product state).`
-          : `${ids.length} product(s) updated.`
-      );
+      if (failed) {
+        toast.warning(
+          `${ids.length - failed} of ${ids.length} updated`,
+          `${failed} failed — check permissions or product state.`,
+        );
+      } else {
+        toast.success(`${ids.length} product(s) updated.`);
+      }
       setSelected(new Set());
-      await queryClient.invalidateQueries({ queryKey: ["admin-catalog-products"] });
+      await queryClient.invalidateQueries({ queryKey: catalogKeys.productLists() });
     },
-    [accessToken, queryClient, selected]
+    [accessToken, queryClient, selected],
   );
 
   const executeArchiveOne = useCallback(
     async (id: string) => {
       if (!accessToken) return;
-      setActionError(null);
       try {
         await archiveAdminCatalogProduct(accessToken, id, {});
-        await queryClient.invalidateQueries({ queryKey: ["admin-catalog-products"] });
+        await queryClient.invalidateQueries({ queryKey: catalogKeys.productLists() });
+        toast.success("Product archived.");
       } catch (e) {
-        setActionError(e instanceof ApiError ? e.message : "Archive failed.");
+        toast.error(e instanceof ApiError ? e.message : "Archive failed.");
       }
     },
-    [accessToken, queryClient]
+    [accessToken, queryClient],
   );
 
   return (
@@ -417,7 +393,7 @@ export const ProductsListPage = () => {
       <PageHeader
         title="Products"
         description="Search, filter, and manage catalog products, pricing signals, and stock at a glance."
-        actionMenuItems={[refreshDataMenuItem(queryClient, ["admin-catalog-products"])]}
+        actionMenuItems={[refreshDataMenuItem(queryClient, catalogKeys.productLists())]}
         actions={
           <Link
             to="/admin/catalog/products/new"
@@ -430,11 +406,6 @@ export const ProductsListPage = () => {
       />
 
       <div className="rounded-xl bg-white p-4 shadow-sm">
-        {actionError ? (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {actionError}
-          </div>
-        ) : null}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <label className="md:col-span-2">
             <span className="mb-1.5 block text-xs font-medium text-slate-400">Search</span>
@@ -555,10 +526,6 @@ export const ProductsListPage = () => {
           </button>
         </div>
       </div>
-
-      {bulkMessage ? (
-        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700">{bulkMessage}</div>
-      ) : null}
 
       {errorMessage ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">

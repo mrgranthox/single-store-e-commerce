@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   CheckCheck,
   ChevronRight,
@@ -29,8 +29,10 @@ import {
 } from "@/features/orders/api/admin-orders.api";
 import { getEntityTimeline } from "@/features/security/api/admin-audit.api";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { orderKeys } from "@/lib/query-keys";
 
 const ORDER_STATUSES: AdminOrderStatus[] = [
   "DRAFT",
@@ -162,34 +164,19 @@ export const OrderDetailPage = () => {
   const [campaignId, setCampaignId] = useState("");
   const [campaignNote, setCampaignNote] = useState("");
   const [confirmAction, setConfirmAction] = useState<PendingOrderAction>(null);
-  const [actionMsg, setActionMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
-  const [detailQ] = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-order-detail", orderId],
-        queryFn: async () => {
-          if (!accessToken) {
-            throw new Error("Not signed in.");
-          }
-          return getAdminOrderDetail(accessToken, orderId);
-        },
-        enabled: Boolean(accessToken) && Boolean(orderId)
-      }
-    ]
-  });
+  const detailQ = useAuthedQuery(
+    orderKeys.detail(orderId),
+    (token) => getAdminOrderDetail(token, orderId),
+    { enabled: Boolean(orderId) },
+  );
 
   const entity = detailQ.data?.data.entity;
-  const entityTimelineQ = useQuery({
-    queryKey: ["admin-entity-timeline", "order", orderId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getEntityTimeline(accessToken, "order", orderId, { page: 1, page_size: 6 });
-    },
-    enabled: Boolean(accessToken && orderId)
-  });
+  const entityTimelineQ = useAuthedQuery(
+    orderKeys.timeline(orderId),
+    (token) => getEntityTimeline(token, "order", orderId, { page: 1, page_size: 6 }),
+    { enabled: Boolean(orderId) },
+  );
 
   const latestShipment = useMemo(() => {
     const s = entity?.shipments ?? [];
@@ -207,7 +194,7 @@ export const OrderDetailPage = () => {
     typeof entity?.totals?.grandTotalCents === "number" ? entity.totals.grandTotalCents : linesSubtotalCents;
   const currency = entity?.totals?.currency ?? entity?.payment.currency ?? entity?.items[0]?.unitPriceCurrency;
 
-  const orderInvalidateKeys = [["admin-order-detail", orderId], ["admin-order-timeline", orderId], ["admin-orders"]] as const;
+  const orderInvalidateKeys = [orderKeys.detail(orderId), orderKeys.timeline(orderId), orderKeys.all()];
   const canUpdateOrder = adminHasAnyPermission(actorPermissions, ["orders.update"]);
   const canOverrideFulfillment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment", "orders.update"]);
   const canCancelOrder = adminHasAnyPermission(actorPermissions, ["orders.cancel"]);
@@ -230,125 +217,75 @@ export const OrderDetailPage = () => {
   }, [entity?.campaignId, entity?.id]);
 
   const statusMut = useAdminAction({
-    mutationFn: () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return updateAdminOrderStatus(accessToken, orderId, {
+    mutationFn: () =>
+      updateAdminOrderStatus(accessToken!, orderId, {
         status: nextStatus,
         ...(statusReason.trim() ? { reason: statusReason.trim() } : {}),
-        ...(statusNote.trim() ? { note: statusNote.trim() } : {})
-      });
-    },
-    onSuccess: () => {
-      setActionMsg({ type: "ok", text: "Order status updated." });
-    },
-    onError: (err: unknown) => {
-      setActionMsg({
-        type: "err",
-        text: err instanceof ApiError ? err.message : "Status update failed."
-      });
-    },
+        ...(statusNote.trim() ? { note: statusNote.trim() } : {}),
+      }),
+    successMessage: "Order status updated.",
+    errorMessage: (err) =>
+      err instanceof ApiError ? err.message : "Status update failed.",
     isAllowed: canUpdateOrder,
-    invalidate: [...orderInvalidateKeys]
+    invalidate: orderInvalidateKeys,
   });
 
   const assignMut = useAdminAction({
-    mutationFn: () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return assignAdminOrderWarehouse(accessToken, orderId, {
+    mutationFn: () =>
+      assignAdminOrderWarehouse(accessToken!, orderId, {
         warehouseId: normalizedWarehouseId,
-        ...(assignNote.trim() ? { note: assignNote.trim() } : {})
-      });
-    },
-    onSuccess: () => {
-      setActionMsg({ type: "ok", text: "Warehouse assigned." });
-    },
-    onError: (err: unknown) => {
-      setActionMsg({
-        type: "err",
-        text: err instanceof ApiError ? err.message : "Assign warehouse failed."
-      });
-    },
+        ...(assignNote.trim() ? { note: assignNote.trim() } : {}),
+      }),
+    successMessage: "Warehouse assigned.",
+    errorMessage: (err) =>
+      err instanceof ApiError ? err.message : "Assign warehouse failed.",
     isAllowed: canOverrideFulfillment,
     isAvailable: Boolean(normalizedWarehouseId),
-    invalidate: [...orderInvalidateKeys]
+    invalidate: orderInvalidateKeys,
   });
 
   const cancelMut = useAdminAction({
-    mutationFn: () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return cancelAdminOrder(accessToken, orderId, {
+    mutationFn: () =>
+      cancelAdminOrder(accessToken!, orderId, {
         reason: normalizedCancelReason,
-        ...(cancelNote.trim() ? { note: cancelNote.trim() } : {})
-      });
-    },
-    onSuccess: () => {
-      setActionMsg({ type: "ok", text: "Cancellation recorded." });
-    },
-    onError: (err: unknown) => {
-      setActionMsg({
-        type: "err",
-        text: err instanceof ApiError ? err.message : "Cancel order failed."
-      });
-    },
+        ...(cancelNote.trim() ? { note: cancelNote.trim() } : {}),
+      }),
+    successMessage: "Cancellation recorded.",
+    errorMessage: (err) =>
+      err instanceof ApiError ? err.message : "Cancel order failed.",
     isAllowed: canCancelOrder,
     isAvailable: Boolean(normalizedCancelReason),
-    invalidate: [...orderInvalidateKeys]
+    invalidate: orderInvalidateKeys,
   });
 
   const shipMut = useAdminAction({
-    mutationFn: () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return createAdminOrderShipment(accessToken, orderId, {
+    mutationFn: () =>
+      createAdminOrderShipment(accessToken!, orderId, {
         warehouseId: normalizedShipWarehouseId,
         ...(shipCarrier.trim() ? { carrier: shipCarrier.trim() } : {}),
         ...(shipTracking.trim() ? { trackingNumber: shipTracking.trim() } : {}),
-        ...(shipNote.trim() ? { note: shipNote.trim() } : {})
-      });
-    },
-    onSuccess: () => {
-      setActionMsg({ type: "ok", text: "Shipment created." });
-    },
-    onError: (err: unknown) => {
-      setActionMsg({
-        type: "err",
-        text: err instanceof ApiError ? err.message : "Create shipment failed."
-      });
-    },
+        ...(shipNote.trim() ? { note: shipNote.trim() } : {}),
+      }),
+    successMessage: "Shipment created.",
+    errorMessage: (err) =>
+      err instanceof ApiError ? err.message : "Create shipment failed.",
     isAllowed: canOverrideFulfillment,
     isAvailable: shipmentCreatable,
-    invalidate: [...orderInvalidateKeys]
+    invalidate: orderInvalidateKeys,
   });
 
   const campaignMut = useAdminAction({
-    mutationFn: () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return patchAdminOrderCampaignAttribution(accessToken, orderId, {
+    mutationFn: () =>
+      patchAdminOrderCampaignAttribution(accessToken!, orderId, {
         campaignId: normalizedCampaignId || null,
-        ...(normalizedCampaignNote ? { note: normalizedCampaignNote } : {})
-      });
-    },
-    onSuccess: () => {
-      setActionMsg({ type: "ok", text: "Campaign attribution updated." });
-    },
-    onError: (err: unknown) => {
-      setActionMsg({
-        type: "err",
-        text: err instanceof ApiError ? err.message : "Campaign attribution update failed."
-      });
-    },
+        ...(normalizedCampaignNote ? { note: normalizedCampaignNote } : {}),
+      }),
+    successMessage: "Campaign attribution updated.",
+    errorMessage: (err) =>
+      err instanceof ApiError ? err.message : "Campaign attribution update failed.",
     isAllowed: canUpdateOrder,
     isAvailable: campaignHasChanges,
-    invalidate: [...orderInvalidateKeys]
+    invalidate: orderInvalidateKeys,
   });
 
   const itemRows = useMemo(
@@ -477,7 +414,7 @@ export const OrderDetailPage = () => {
           titleSize="deck"
           description="Operational view — manifest, financials, fulfillment context, and allowed mutations."
           autoBreadcrumbs={false}
-          actionMenuItems={[refreshDataMenuItem(queryClient, ["admin-order-detail", orderId])]}
+          actionMenuItems={[refreshDataMenuItem(queryClient, orderKeys.detail(orderId))]}
         />
 
         {!orderId ? <p className="text-sm text-red-700">Missing order id in the URL.</p> : null}
@@ -488,19 +425,6 @@ export const OrderDetailPage = () => {
             {detailQ.error instanceof ApiError && detailQ.error.statusCode === 403 ? (
               <span className="mt-1 block text-xs">Requires orders.read.</span>
             ) : null}
-          </div>
-        ) : null}
-
-        {actionMsg ? (
-          <div
-            className={
-              actionMsg.type === "ok"
-                ? "rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900"
-                : "rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-            }
-            role="status"
-          >
-            {actionMsg.text}
           </div>
         ) : null}
 
