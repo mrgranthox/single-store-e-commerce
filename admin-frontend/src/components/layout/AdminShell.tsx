@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, ChevronLeft, ChevronRight, HelpCircle, LogOut, Menu, Search, Settings, User, X } from "lucide-react";
+import { Bell, ChevronLeft, ChevronRight, LogOut, Menu, Search, Settings, User, X } from "lucide-react";
 import clsx from "clsx";
 
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -263,37 +263,6 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
         </nav>
 
         <div className="shrink-0 space-y-0.5 border-t border-white/[0.08] px-2 py-4">
-          {adminMayAccessScreen(
-            effectiveActor?.permissions,
-            adminScreenLookup["system-settings"].permissionHints,
-            effectiveActor?.roles
-          ) ? (
-            <Link
-              to="/admin/system/settings"
-              className={clsx(
-                "flex items-center rounded-md text-[11px] font-semibold uppercase tracking-wider text-[#c5cee0] transition-colors hover:bg-white/[0.06] hover:text-white",
-                sidebarCollapsed ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5"
-              )}
-              title={sidebarCollapsed ? "Settings" : undefined}
-              onClick={() => setMobileNavOpen(false)}
-            >
-              <MaterialIcon name="settings" className="shrink-0 text-[20px] text-current opacity-90" />
-              {!sidebarCollapsed ? <span>Settings</span> : null}
-            </Link>
-          ) : null}
-          <a
-            href="https://support.example.com"
-            className={clsx(
-              "flex items-center rounded-md text-[11px] font-semibold uppercase tracking-wider text-[#c5cee0] transition-colors hover:bg-white/[0.06] hover:text-white",
-              sidebarCollapsed ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5"
-            )}
-            title={sidebarCollapsed ? "Help" : undefined}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <MaterialIcon name="help" className="shrink-0 text-[20px] text-current opacity-90" />
-            {!sidebarCollapsed ? <span>Help</span> : null}
-          </a>
           <div
             className={clsx(
               "mt-3 flex items-center border-t border-white/[0.08] pt-4",
@@ -373,7 +342,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
             >
               {sidebarCollapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
             </button>
-            <span className="font-headline text-xl font-bold text-slate-900">Command Deck</span>
+            <span className="hidden font-headline text-xl font-bold text-slate-900 sm:inline">Command Deck</span>
             <span className="hidden h-4 w-px bg-slate-200 sm:block" aria-hidden />
             <span className="hidden truncate text-xs text-slate-500 sm:block">
               {breadcrumbTrail.length > 0 ? breadcrumbTrail.join(" / ") : "Admin workspace"}
@@ -396,21 +365,14 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
               />
             </div>
             <div className="flex items-center gap-1 text-slate-500">
-              <button
-                type="button"
+              <Link
+                to="/admin/system/notifications"
                 className="relative rounded-full p-2 transition-colors hover:bg-slate-100 hover:text-[#1653cc]"
                 aria-label="Notifications"
               >
                 <Bell className="h-5 w-5" strokeWidth={2} />
                 <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-white bg-[#1653cc]" />
-              </button>
-              <button
-                type="button"
-                className="rounded-full p-2 transition-colors hover:bg-slate-100 hover:text-[#1653cc]"
-                aria-label="Help"
-              >
-                <HelpCircle className="h-5 w-5" strokeWidth={2} />
-              </button>
+              </Link>
               <Link
                 to="/admin/system/settings"
                 className="rounded-full p-2 transition-colors hover:bg-slate-100 hover:text-[#1653cc]"
