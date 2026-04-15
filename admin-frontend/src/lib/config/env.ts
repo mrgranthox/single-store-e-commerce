@@ -17,6 +17,8 @@ export const frontendEnv = {
   isDev: import.meta.env.DEV,
   backendBaseUrl: readTrimmed(import.meta.env.VITE_BACKEND_BASE_URL),
   sentryDsn: readTrimmed(import.meta.env.VITE_SENTRY_DSN),
+  /** When true, initialize Sentry in `import.meta.env.DEV` (default: off to avoid 403 when localhost is not an allowed origin). */
+  sentryEnableInDev: readTrimmed(import.meta.env.VITE_SENTRY_ENABLE_IN_DEV) === "true",
   sentryTracesSampleRate: readNumber(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE, 0),
   appRelease: readTrimmed(import.meta.env.VITE_APP_RELEASE),
   appEnvLabel: readTrimmed(import.meta.env.VITE_APP_ENV_LABEL),

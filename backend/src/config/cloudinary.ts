@@ -140,14 +140,6 @@ const buildFolder = (scope: CloudinaryScope, entityId?: string, secondaryId?: st
   return parts.join("/");
 };
 
-const buildPublicId = (input: CloudinaryIntentInput, resourceType: CloudinaryResourceType) => {
-  const baseName = sanitizePublicIdSegment(
-    input.fileName.replace(/\.[^.]+$/, "") || `${resourceType}-asset`
-  );
-  const folder = buildFolder(input.scope, input.entityId, input.secondaryId);
-  return `${folder}/${baseName}-${randomUUID()}`;
-};
-
 const assertFileWithinPolicy = (input: {
   resourceType: CloudinaryResourceType;
   scope: CloudinaryScope;
@@ -217,14 +209,22 @@ export const createSignedUploadIntent = (input: CloudinaryIntentInput) => {
   });
 
   const deliveryType = resolveExpectedDeliveryType(input.scope);
-  const publicId = buildPublicId(input, resourceType);
-  const folder = publicId.split("/").slice(0, -1).join("/");
+  /**
+   * Legacy fixed-folder mode: `folder` is prepended to `public_id`.
+   * `public_id` must be the basename only (no folder path), or Cloudinary duplicates the path and the signature fails (401).
+   */
+  const folderPath = buildFolder(input.scope, input.entityId, input.secondaryId);
+  const baseName = sanitizePublicIdSegment(
+    input.fileName.replace(/\.[^.]+$/, "") || `${resourceType}-asset`
+  );
+  const assetKey = `${baseName}-${randomUUID()}`;
+  const fullPublicId = `${folderPath}/${assetKey}`;
   const timestamp = Math.floor(Date.now() / 1000);
   const allowedFormats = buildAllowedFormats(resourceType, input.scope);
   const uploadParams: Record<string, string | number | boolean> = {
     timestamp,
-    folder,
-    public_id: publicId,
+    folder: folderPath,
+    public_id: assetKey,
     resource_type: resourceType,
     type: deliveryType,
     allowed_formats: allowedFormats.join(","),
@@ -258,8 +258,9 @@ export const createSignedUploadIntent = (input: CloudinaryIntentInput) => {
     uploadUrl: `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
     resourceType,
     deliveryType,
-    publicId,
-    folder,
+    /** Full public_id path (folder + asset key) for persistence and resolveCloudinaryAsset checks. */
+    publicId: fullPublicId,
+    folder: folderPath,
     allowedFormats,
     maxFileSizeBytes: resolveMaxBytes(resourceType),
     signed: env.CLOUDINARY_SIGNED_UPLOADS_ONLY

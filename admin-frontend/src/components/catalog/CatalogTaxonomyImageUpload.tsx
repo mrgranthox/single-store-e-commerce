@@ -18,6 +18,17 @@ type IntentFn = (
   }
 ) => Promise<{ success: true; data: { entity: CatalogMediaUploadIntentEntity } }>;
 
+const readCloudinaryUploadError = async (response: Response): Promise<string> => {
+  try {
+    const raw = await response.text();
+    const parsed = JSON.parse(raw) as { error?: { message?: string } };
+    const msg = parsed?.error?.message;
+    return msg && msg.trim().length > 0 ? msg : raw.slice(0, 200);
+  } catch {
+    return response.statusText || "Upload rejected.";
+  }
+};
+
 const postToCloudinary = async (intent: CatalogMediaUploadIntentEntity, file: File) => {
   const form = new FormData();
   for (const [key, value] of Object.entries(intent.signedFormFields ?? {})) {
@@ -28,7 +39,12 @@ const postToCloudinary = async (intent: CatalogMediaUploadIntentEntity, file: Fi
   form.append("file", file);
   const up = await fetch(intent.uploadUrl, { method: "POST", body: form });
   if (!up.ok) {
-    throw new Error("Upload to media provider failed.");
+    const detail = await readCloudinaryUploadError(up);
+    throw new Error(
+      up.status === 401
+        ? `Cloudinary rejected the upload (401). Usually invalid signature or API credentials — ${detail}`
+        : `Upload to media provider failed (${up.status}): ${detail}`
+    );
   }
   const json = (await up.json()) as { secure_url?: string; url?: string };
   const url = json.secure_url ?? json.url;

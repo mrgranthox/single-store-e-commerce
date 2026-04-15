@@ -4,10 +4,13 @@ import { frontendEnv } from "@/lib/config/env";
 
 let sentryInitialized = false;
 
-export const isFrontendObservabilityEnabled = () => Boolean(frontendEnv.sentryDsn);
+const shouldLoadSentry = () =>
+  Boolean(frontendEnv.sentryDsn) && (!frontendEnv.isDev || frontendEnv.sentryEnableInDev);
+
+export const isFrontendObservabilityEnabled = () => shouldLoadSentry();
 
 export const initializeFrontendObservability = () => {
-  if (sentryInitialized || !frontendEnv.sentryDsn) {
+  if (sentryInitialized || !shouldLoadSentry()) {
     return;
   }
 
@@ -29,7 +32,7 @@ export const initializeFrontendObservability = () => {
 };
 
 export const captureFrontendException = (error: unknown, context?: Record<string, unknown>) => {
-  if (!frontendEnv.sentryDsn) {
+  if (!shouldLoadSentry()) {
     return;
   }
 
