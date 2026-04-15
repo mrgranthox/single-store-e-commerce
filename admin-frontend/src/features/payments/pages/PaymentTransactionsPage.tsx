@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -90,16 +92,11 @@ export const PaymentTransactionsPage = () => {
   const queryClient = useQueryClient();
   const [logFilter, setLogFilter] = useState<"all" | "errors" | "webhooks">("all");
 
-  const q = useQuery({
-    queryKey: ["admin-payment-transactions", paymentId],
-    queryFn: async () => {
-      if (!accessToken || !paymentId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminPaymentTransactions(accessToken, paymentId);
-    },
-    enabled: Boolean(accessToken && paymentId)
-  });
+  const q = useAuthedQuery(
+    ["admin-payment-transactions", paymentId],
+    (token) => getAdminPaymentTransactions(token, paymentId),
+    { enabled: Boolean(paymentId) },
+  );
 
   const err =
     q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;

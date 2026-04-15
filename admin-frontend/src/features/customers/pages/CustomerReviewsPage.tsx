@@ -21,16 +21,11 @@ export const CustomerReviewsPage = () => {
 
   const queryKey = useMemo(() => ["admin-customer-reviews", customerId, page] as const, [customerId, page]);
 
-  const detailQ = useQuery({
-    queryKey: ["admin-customer-detail", customerId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCustomerDetail(accessToken, customerId);
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const detailQ = useAuthedQuery(
+    ["admin-customer-detail", customerId],
+    (token) => getAdminCustomerDetail(token, customerId),
+    { enabled: Boolean(Boolean(customerId)) }
+  );
 
   const listQuery = useAuthedQuery(
   queryKey,

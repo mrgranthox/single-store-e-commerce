@@ -73,17 +73,11 @@ export const SystemSettingsPage = () => {
   (token) => listAdminActionLogs(token, { page: 1, page_size: 8 })
 );
 
-  const healthQuery = useQuery({
-    queryKey: ["admin-settings-hub-health"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return adminJsonGet<SettingsHubHealthPayload>("/api/admin/dashboard/system-health", accessToken);
-    },
-    enabled: Boolean(accessToken),
-    retry: false,
-    ...CACHE.ANALYTICS});
+  const healthQuery = useAuthedQuery(
+    ["admin-settings-hub-health"],
+    (token) => adminJsonGet<SettingsHubHealthPayload>("/api/admin/dashboard/system-health", token),
+    { ...CACHE.ANALYTICS }
+  );
 
   const patchMut = useMutation({
     mutationFn: async (payload: { key: string; value: unknown }) => {

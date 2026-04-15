@@ -8,6 +8,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminWarehouseDetail, type InventoryMovementRow } from "@/features/inventory/api/admin-inventory.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { InventorySubNav } from "@/features/inventory/components/InventorySubNav";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 const movementTypeShort = (t: string) => t.replace(/_/g, " ");
 
@@ -62,16 +63,11 @@ export const WarehouseDetailPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
 
-  const q = useQuery({
-    queryKey: ["admin-warehouse-detail", warehouseId],
-    queryFn: async () => {
-      if (!accessToken || !warehouseId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminWarehouseDetail(accessToken, warehouseId);
-    },
-    enabled: Boolean(accessToken && warehouseId)
-  });
+  const q = useAuthedQuery(
+    ["admin-warehouse-detail", warehouseId],
+    (token) => getAdminWarehouseDetail(token, warehouseId!),
+    { enabled: Boolean(warehouseId) },
+  );
 
   const e = q.data?.data.entity;
   const err =

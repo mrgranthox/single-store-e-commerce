@@ -14,7 +14,6 @@ import {
 } from "@/features/payments/lib/paystackRails";
 import { StitchPaymentStatusPill, customerInitials } from "@/features/payments/ui/stitchPaymentsUi";
 import { formatDateTime, formatMoney } from "@/lib/format";
-import { useQuery } from "@tanstack/react-query";
 
 const paymentRefLabel = (id: string) => `PAY-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 const refundRefLabel = (id: string) => `REF-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -42,29 +41,20 @@ export const PaymentDetailPage = () => {
   const { paymentId = "" } = useParams<{ paymentId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-payment-detail", paymentId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminPaymentDetail(accessToken, paymentId);
-    },
-    enabled: Boolean(accessToken) && Boolean(paymentId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-payment-detail", paymentId],
+    (token) => getAdminPaymentDetail(token, paymentId),
+    { enabled: Boolean(paymentId) },
+  );
 
   const entity = detailQuery.data?.data.entity;
+  const orderNumber = entity?.orderNumber ?? "";
 
-  const refundsQuery = useQuery({
-    queryKey: ["admin-payment-refunds-for-order", entity?.orderNumber],
-    queryFn: async () => {
-      if (!accessToken || !entity?.orderNumber) {
-        throw new Error("Missing context.");
-      }
-      return listAdminRefunds(accessToken, { q: entity.orderNumber, page_size: 50, page: 1 });
-    },
-    enabled: Boolean(accessToken && entity?.orderNumber)
-  });
+  const refundsQuery = useAuthedQuery(
+    ["admin-payment-refunds-for-order", orderNumber],
+    (token) => listAdminRefunds(token, { q: orderNumber, page_size: 50, page: 1 }),
+    { enabled: Boolean(orderNumber) },
+  );
 
   const refundRows = useMemo(() => {
     const all = refundsQuery.data?.data.items ?? [];

@@ -75,29 +75,19 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
     setCompPage(1);
   }, [mode]);
 
-  const queueReportsQuery = useQuery({
-    queryKey: ["admin-support-reports", "queue-kpis", "weekly"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getSupportReports(accessToken, "weekly");
-    },
-    enabled: Boolean(accessToken) && (mode === "prePurchase" || mode === "complaints")
-  });
+  const queueReportsQuery = useAuthedQuery(
+    ["admin-support-reports", "queue-kpis", "weekly"],
+    (token) => getSupportReports(token, "weekly"),
+    { enabled: Boolean((mode === "prePurchase" || mode === "complaints")) }
+  );
 
   const rep = queueReportsQuery.data?.data;
 
-  const slaQuery = useQuery({
-    queryKey: ["admin-support-queue-sla"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listSupportSlaQueue(accessToken);
-    },
-    enabled: Boolean(accessToken) && mode === "sla"
-  });
+  const slaQuery = useAuthedQuery(
+    ["admin-support-queue-sla"],
+    (token) => listSupportSlaQueue(token),
+    { enabled: Boolean(mode === "sla") }
+  );
 
   const preExtra = useMemo(
     () => ({
@@ -121,27 +111,17 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
     [compStatus, compPriority, compSupportType, compAssignment, compQApplied]
   );
 
-  const preQuery = useQuery({
-    queryKey: ["admin-support-queue-pre", prePage, preExtra],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listSupportPrePurchaseQueue(accessToken, prePage, 20, preExtra);
-    },
-    enabled: Boolean(accessToken) && mode === "prePurchase"
-  });
+  const preQuery = useAuthedQuery(
+    ["admin-support-queue-pre", prePage, preExtra],
+    (token) => listSupportPrePurchaseQueue(token, prePage, 20, preExtra),
+    { enabled: Boolean(mode === "prePurchase") }
+  );
 
-  const compQuery = useQuery({
-    queryKey: ["admin-support-queue-complaints", compPage, compExtra],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listSupportComplaintsQueue(accessToken, compPage, 20, compExtra);
-    },
-    enabled: Boolean(accessToken) && mode === "complaints"
-  });
+  const compQuery = useAuthedQuery(
+    ["admin-support-queue-complaints", compPage, compExtra],
+    (token) => listSupportComplaintsQueue(token, compPage, 20, compExtra),
+    { enabled: Boolean(mode === "complaints") }
+  );
 
   const activeError = mode === "sla" ? slaQuery.error : mode === "prePurchase" ? preQuery.error : compQuery.error;
   const err =

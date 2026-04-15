@@ -132,29 +132,18 @@ export const PromotionRulesPage = () => {
 
   const isGlobalRoute = promotionIdParam === "global";
 
-  const containerQ = useQuery({
-    queryKey: ["admin-global-rules-container"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getGlobalRulesPromotionContainer(accessToken);
-    },
-    enabled: Boolean(accessToken && isGlobalRoute)
-  });
+  const containerQ = useAuthedQuery(
+    ["admin-global-rules-container"],
+    (token) => getGlobalRulesPromotionContainer(token)
+  );
 
   const resolvedPromotionId = isGlobalRoute ? containerQ.data?.data.entity.id : promotionIdParam;
 
-  const q = useQuery({
-    queryKey: ["admin-promotion-rules", resolvedPromotionId],
-    queryFn: async () => {
-      if (!accessToken || !resolvedPromotionId) {
-        throw new Error("Missing context.");
-      }
-      return listPromotionRules(accessToken, resolvedPromotionId);
-    },
-    enabled: Boolean(accessToken && resolvedPromotionId)
-  });
+  const q = useAuthedQuery(
+    ["admin-promotion-rules", resolvedPromotionId],
+    (token) => listPromotionRules(token, resolvedPromotionId!),
+    { enabled: Boolean(resolvedPromotionId) },
+  );
 
   const items = q.data?.data.items ?? [];
   const entity = q.data?.data.entity;

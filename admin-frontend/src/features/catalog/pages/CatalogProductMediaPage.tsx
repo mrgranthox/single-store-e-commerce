@@ -37,38 +37,23 @@ export const CatalogProductMediaPage = () => {
   const [mappingBusy, setMappingBusy] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
-  const productQ = useQuery({
-    queryKey: ["admin-catalog-product", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProduct(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const productQ = useAuthedQuery(
+    ["admin-catalog-product", productId],
+    (token) => getAdminCatalogProduct(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const variantsQ = useQuery({
-    queryKey: ["admin-catalog-product-variants", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductVariants(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const variantsQ = useAuthedQuery(
+    ["admin-catalog-product-variants", productId],
+    (token) => getAdminCatalogProductVariants(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-product-media", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductMedia(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const q = useAuthedQuery(
+    ["admin-catalog-product-media", productId],
+    (token) => getAdminCatalogProductMedia(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
   const items = useMemo(() => {
     const raw = q.data?.data.items ?? [];

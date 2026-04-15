@@ -24,19 +24,13 @@ export const CouponAnalyticsPage = () => {
   const [periodDays, setPeriodDays] = useState<(typeof PERIOD_OPTIONS)[number]>(30);
   const [abuseThreshold, setAbuseThreshold] = useState(10);
 
-  const q = useQuery({
-    queryKey: ["admin-marketing-coupon-analytics", periodDays, abuseThreshold],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCouponAnalytics(accessToken, {
-        period_days: periodDays,
-        abuse_threshold: abuseThreshold
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+    ["admin-marketing-coupon-analytics", periodDays, abuseThreshold],
+    (token) => getAdminCouponAnalytics(token, {
+      period_days: periodDays,
+      abuse_threshold: abuseThreshold
+      })
+  );
 
   const err =
     q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;

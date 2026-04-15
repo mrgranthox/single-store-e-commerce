@@ -55,16 +55,11 @@ export const JobDetailPage = () => {
   const queryClient = useQueryClient();
   const [retryOpen, setRetryOpen] = useState(false);
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-job-run", jobRunId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminJobRun(accessToken, jobRunId);
-    },
-    enabled: Boolean(accessToken) && Boolean(jobRunId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-job-run", jobRunId],
+    (token) => getAdminJobRun(token, jobRunId),
+    { enabled: Boolean(Boolean(jobRunId)) }
+  );
 
   const retryMut = useMutation({
     mutationFn: () => {

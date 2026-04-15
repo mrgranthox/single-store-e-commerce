@@ -40,27 +40,17 @@ export const CatalogProductVariantsPage = () => {
   const [bulkStatusInput, setBulkStatusInput] = useState<string>(variantStatuses[0]);
   const [archiveConfirmOpen, setArchiveConfirmOpen] = useState(false);
 
-  const productQ = useQuery({
-    queryKey: ["admin-catalog-product", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProduct(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const productQ = useAuthedQuery(
+    ["admin-catalog-product", productId],
+    (token) => getAdminCatalogProduct(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-product-variants", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductVariants(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const q = useAuthedQuery(
+    ["admin-catalog-product-variants", productId],
+    (token) => getAdminCatalogProductVariants(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
   const items = q.data?.data.items ?? [];
   const productTitle = productQ.data?.data.entity.title ?? "Product";

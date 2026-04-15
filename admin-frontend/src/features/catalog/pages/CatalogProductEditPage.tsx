@@ -103,26 +103,17 @@ export const CatalogProductEditPage = () => {
     mode: "onSubmit"
   });
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-product", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProduct(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const q = useAuthedQuery(
+    ["admin-catalog-product", productId],
+    (token) => getAdminCatalogProduct(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const categoriesQuery = useAuthedQuery(
-  ["admin-catalog-categories-options"],
-  (token) => listAdminCatalogCategories(token)
-);
+  const categoriesQuery = useAuthedQuery(["admin-catalog-categories-options"], (token) =>
+    listAdminCatalogCategories(token),
+  );
 
-  const brandsQuery = useAuthedQuery(
-  ["admin-catalog-brands-options"],
-  (token) => listAdminCatalogBrands(token)
-);
+  const brandsQuery = useAuthedQuery(["admin-catalog-brands-options"], (token) => listAdminCatalogBrands(token));
 
   const entity = q.data?.data.entity;
   const categories = categoriesQuery.data?.data.items ?? [];
@@ -139,21 +130,17 @@ export const CatalogProductEditPage = () => {
   );
   const isDirty = form.formState.isDirty;
 
-  const auditCountQuery = useQuery({
-    queryKey: ["admin-product-audit-count", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return listAdminAuditLogs(accessToken, {
+  const auditCountQuery = useAuthedQuery(
+    ["admin-product-audit-count", productId],
+    (token) =>
+      listAdminAuditLogs(token, {
         page: 1,
         page_size: 1,
         entityType: "PRODUCT",
-        entityId: productId
-      });
-    },
-    enabled: Boolean(accessToken && productId && entity)
-  });
+        entityId: productId!,
+      }),
+    { enabled: Boolean(productId) },
+  );
 
   const auditChangeCount = auditCountQuery.isSuccess ? auditCountQuery.data.meta.totalItems : null;
 

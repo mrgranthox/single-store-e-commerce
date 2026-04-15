@@ -62,16 +62,11 @@ export const RefundDetailPage = () => {
   const [providerRef, setProviderRef] = useState("");
   const [confirmAction, setConfirmAction] = useState<"approve" | "reject" | "complete" | null>(null);
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-refund-detail", refundId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminRefundDetail(accessToken, refundId);
-    },
-    enabled: Boolean(accessToken) && Boolean(refundId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-refund-detail", refundId],
+    (token) => getAdminRefundDetail(token, refundId),
+    { enabled: Boolean(Boolean(refundId)) }
+  );
 
   const e = detailQuery.data?.data.entity;
   const canManageRefund = adminHasAnyPermission(actorPermissions, ["refunds.approve"]);

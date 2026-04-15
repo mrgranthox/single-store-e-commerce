@@ -41,20 +41,14 @@ export const PaymentsFailedInvestigationsPage = () => {
   const [searchDraft, setSearchDraft] = useState("");
   const [search, setSearch] = useState("");
 
-  const q = useQuery({
-    queryKey: ["admin-payments-failed-investigations", page, providerApplied],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listFailedPaymentInvestigations(accessToken, {
-        page,
-        page_size: 20,
-        ...(providerApplied.trim() ? { provider: providerApplied.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+    ["admin-payments-failed-investigations", page, providerApplied],
+    (token) => listFailedPaymentInvestigations(token, {
+      page,
+      page_size: 20,
+      ...(providerApplied.trim() ? { provider: providerApplied.trim() } : {})
+      })
+  );
 
   const items = q.data?.data.items ?? [];
   const meta = q.data?.meta;

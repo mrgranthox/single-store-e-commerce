@@ -15,16 +15,10 @@ export const PromotionRulesHubPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const [page, setPage] = useState(1);
 
-  const q = useQuery({
-    queryKey: ["admin-promotion-rules-hub", page],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listContractPromotions(accessToken, { page, page_size: 50 });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+    ["admin-promotion-rules-hub", page],
+    (token) => listContractPromotions(token, { page, page_size: 50 })
+  );
 
   const items = q.data?.data.items ?? [];
   const meta = q.data?.meta;

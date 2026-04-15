@@ -59,43 +59,29 @@ export const CatalogProductInventoryPage = () => {
   const [stockReason, setStockReason] = useState("");
   const [stockMsg, setStockMsg] = useState<string | null>(null);
 
-  const productQ = useQuery({
-    queryKey: ["admin-catalog-product", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProduct(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const productQ = useAuthedQuery(
+    ["admin-catalog-product", productId],
+    (token) => getAdminCatalogProduct(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-product-inventory-summary", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductInventorySummary(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const q = useAuthedQuery(
+    ["admin-catalog-product-inventory-summary", productId],
+    (token) => getAdminCatalogProductInventorySummary(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const movQ = useQuery({
-    queryKey: ["admin-catalog-product-inventory-movements", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return listInventoryMovements(accessToken, {
-        productId,
+  const movQ = useAuthedQuery(
+    ["admin-catalog-product-inventory-movements", productId],
+    (token) =>
+      listInventoryMovements(token, {
+        productId: productId!,
         page: 1,
         page_size: 15,
-        sortOrder: "desc"
-      });
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+        sortOrder: "desc",
+      }),
+    { enabled: Boolean(productId) },
+  );
 
   const entity = q.data?.data.entity;
   const productTitle = productQ.data?.data.entity.title ?? "Product";
@@ -103,16 +89,10 @@ export const CatalogProductInventoryPage = () => {
 
   const needsWarehousesForForm = Boolean(accessToken && entity && entity.variants.length > 0);
 
-  const warehousesQ = useQuery({
-    queryKey: ["admin-warehouses-product-inventory"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Missing context.");
-      }
-      return listAdminWarehouses(accessToken);
-    },
-    enabled: needsWarehousesForForm
-  });
+  const warehousesQ = useAuthedQuery(
+    ["admin-warehouses-product-inventory"],
+    (token) => listAdminWarehouses(token)
+  );
 
   const warehouseItems = warehousesQ.data?.data.items ?? [];
 

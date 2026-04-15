@@ -19,14 +19,10 @@ export const NotificationDetailPage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
   const actorEmail = useAdminAuthStore((state) => state.actor?.email ?? null);
 
-  const query = useQuery({
-    queryKey: ["admin-notification", notificationId],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return getAdminNotification(accessToken, notificationId);
-    },
-    enabled: Boolean(accessToken && notificationId)
-  });
+  const query = useAuthedQuery(
+    ["admin-notification", notificationId],
+    (token) => getAdminNotification(token, notificationId)
+  );
 
   const retryMutation = useAdminAction({
     mutationFn: async () => {

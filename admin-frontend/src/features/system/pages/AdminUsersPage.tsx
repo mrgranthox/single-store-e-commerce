@@ -36,19 +36,15 @@ export const AdminUsersPage = () => {
   });
   const [flash, setFlash] = useState<string | null>(null);
 
-  const query = useQuery({
-    queryKey: ["admin-users", page, q, status],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return listAdminUsers(accessToken, {
-        page,
-        page_size: 20,
-        q: q || undefined,
-        status: status || undefined
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const query = useAuthedQuery(
+    ["admin-users", page, q, status],
+    (token) => listAdminUsers(token, {
+      page,
+      page_size: 20,
+      q: q || undefined,
+      status: status || undefined
+      })
+  );
 
   const createMutation = useAdminAction({
     mutationFn: async () => {

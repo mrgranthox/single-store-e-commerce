@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Plus, Search, Store, X } from "lucide-react";
 
@@ -15,6 +15,9 @@ import {
   type WarehouseListItem
 } from "@/features/inventory/api/admin-inventory.api";
 import { InventorySubNav } from "@/features/inventory/components/InventorySubNav";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const WAREHOUSE_LIST_DEFAULTS = { q: "" };
 
 const statusBadge = (status?: string) => {
   const s = (status ?? "ACTIVE").toUpperCase();
@@ -45,7 +48,7 @@ const statusBadge = (status?: string) => {
 export const WarehousesListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [filterQ, setFilterQ] = useState("");
+  const { filters, setDebounced } = useListFilters({ defaults: WAREHOUSE_LIST_DEFAULTS });
   const [addOpen, setAddOpen] = useState(false);
   const [newCode, setNewCode] = useState("");
   const [newName, setNewName] = useState("");
@@ -61,28 +64,24 @@ export const WarehousesListPage = () => {
   (token) => listAdminWarehouses(token)
 );
 
-  const overviewQuery = useQuery({
-    queryKey: ["admin-inventory-overview"],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return getInventoryOverview(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const overviewQuery = useAuthedQuery(
+    ["admin-inventory-overview"],
+    (token) => getInventoryOverview(token)
+  );
 
   const items = warehousesQuery.data?.data.items ?? [];
   const overview = overviewQuery.data?.data.entity;
 
   const filteredItems = useMemo(() => {
-    const q = filterQ.trim().toLowerCase();
+    const q = filters.q.trim().toLowerCase();
     if (!q) return items;
     return items.filter(
       (w) =>
         w.name.toLowerCase().includes(q) ||
         w.code.toLowerCase().includes(q) ||
-        (w.locationLabel ?? "").toLowerCase().includes(q)
+        (w.locationLabel ?? "").toLowerCase().includes(q),
     );
-  }, [items, filterQ]);
+  }, [items, filters.q]);
 
   const createWh = useMutation({
     mutationFn: async () => {
@@ -244,8 +243,8 @@ export const WarehousesListPage = () => {
         <div className="relative max-w-md flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
-            value={filterQ}
-            onChange={(e) => setFilterQ(e.target.value)}
+            value={filters.q}
+            onChange={(e) => setDebounced("q", e.target.value)}
             placeholder="Filter by name, code, or location…"
             className="w-full rounded-lg border-0 bg-[#f2f3ff] py-2 pl-10 pr-4 text-sm outline-none ring-2 ring-transparent focus:ring-[#1653cc]/20"
           />

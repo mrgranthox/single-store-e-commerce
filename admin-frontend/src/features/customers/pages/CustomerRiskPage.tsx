@@ -44,27 +44,17 @@ export const CustomerRiskPage = () => {
   const { customerId = "" } = useParams<{ customerId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
 
-  const detailQ = useQuery({
-    queryKey: ["admin-customer-detail", customerId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCustomerDetail(accessToken, customerId);
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const detailQ = useAuthedQuery(
+    ["admin-customer-detail", customerId],
+    (token) => getAdminCustomerDetail(token, customerId),
+    { enabled: Boolean(Boolean(customerId)) }
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-customer-risk", customerId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCustomerRisk(accessToken, customerId);
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const q = useAuthedQuery(
+    ["admin-customer-risk", customerId],
+    (token) => getAdminCustomerRisk(token, customerId),
+    { enabled: Boolean(Boolean(customerId)) }
+  );
 
   const entity = detailQ.data?.data.entity;
   const d = q.data?.data;

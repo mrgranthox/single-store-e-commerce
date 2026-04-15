@@ -22,6 +22,7 @@ import {
   parseMoneyInputToCents
 } from "@/features/catalog/lib/catalogFormat";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 export const CatalogProductPricingPage = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -45,38 +46,23 @@ export const CatalogProductPricingPage = () => {
   const [schedEffective, setSchedEffective] = useState("");
   const [schedNote, setSchedNote] = useState("");
 
-  const productQ = useQuery({
-    queryKey: ["admin-catalog-product", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProduct(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const productQ = useAuthedQuery(
+    ["admin-catalog-product", productId],
+    (token) => getAdminCatalogProduct(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-product-pricing", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductPricing(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const q = useAuthedQuery(
+    ["admin-catalog-product-pricing", productId],
+    (token) => getAdminCatalogProductPricing(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const activityQ = useQuery({
-    queryKey: ["admin-catalog-product-activity", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductActivity(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const activityQ = useAuthedQuery(
+    ["admin-catalog-product-activity", productId],
+    (token) => getAdminCatalogProductActivity(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
   const entity = q.data?.data.entity;
   const variants = entity?.variants ?? [];

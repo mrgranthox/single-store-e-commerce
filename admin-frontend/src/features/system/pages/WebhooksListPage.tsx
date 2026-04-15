@@ -96,8 +96,8 @@ export const WebhooksListPage = () => {
     retry: false
   });
 
-  const listQuery = useQuery({
-    queryKey: [
+  const listQuery = useAuthedQuery(
+    [
       "admin-webhooks",
       page,
       appliedProvider,
@@ -106,22 +106,16 @@ export const WebhooksListPage = () => {
       appliedReceivedAfter,
       appliedReceivedBefore
     ],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminWebhooks(accessToken, {
-        page,
-        pageSize: 20,
-        ...(appliedStatus ? { status: appliedStatus } : {}),
-        ...(appliedProvider.trim() ? { provider: appliedProvider.trim() } : {}),
-        ...(appliedEvent.trim() ? { eventType: appliedEvent.trim() } : {}),
-        ...(appliedReceivedAfter.trim() ? { receivedAfter: appliedReceivedAfter.trim() } : {}),
-        ...(appliedReceivedBefore.trim() ? { receivedBefore: appliedReceivedBefore.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+    (token) => listAdminWebhooks(token, {
+      page,
+      pageSize: 20,
+      ...(appliedStatus ? { status: appliedStatus } : {}),
+      ...(appliedProvider.trim() ? { provider: appliedProvider.trim() } : {}),
+      ...(appliedEvent.trim() ? { eventType: appliedEvent.trim() } : {}),
+      ...(appliedReceivedAfter.trim() ? { receivedAfter: appliedReceivedAfter.trim() } : {}),
+      ...(appliedReceivedBefore.trim() ? { receivedBefore: appliedReceivedBefore.trim() } : {})
+      })
+  );
 
   const canRetryWebhook = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
 

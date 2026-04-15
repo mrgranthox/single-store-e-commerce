@@ -76,16 +76,11 @@ export const CustomerDetailPage = () => {
   const [newNote, setNewNote] = useState("");
   const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-customer-detail", customerId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCustomerDetail(accessToken, customerId);
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-customer-detail", customerId],
+    (token) => getAdminCustomerDetail(token, customerId),
+    { enabled: Boolean(Boolean(customerId)) }
+  );
 
   const e = detailQuery.data?.data.entity;
 

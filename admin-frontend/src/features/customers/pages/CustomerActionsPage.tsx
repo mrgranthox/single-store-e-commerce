@@ -17,6 +17,7 @@ import {
 } from "@/features/customers/api/admin-customers.api";
 import { displayCustomerName } from "@/features/customers/lib/customerDisplay";
 import { CustomerWorkspaceHeader } from "@/features/customers/ui/CustomerWorkspaceHeader";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 const userStatusTone = (s: string): StatusBadgeTone => {
   switch (s) {
@@ -43,16 +44,10 @@ export const CustomerActionsPage = () => {
   const [escalateObservation, setEscalateObservation] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
 
-  const detailQ = useQuery({
-    queryKey: ["admin-customer-detail", customerId],
-    queryFn: async () => {
-      if (!accessToken || !customerId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCustomerDetail(accessToken, customerId);
-    },
-    enabled: Boolean(accessToken && customerId)
-  });
+  const detailQ = useAuthedQuery(
+    ["admin-customer-detail", customerId],
+    (token) => getAdminCustomerDetail(token, customerId)
+  );
 
   const entity = detailQ.data?.data.entity;
   const customerName = entity ? displayCustomerName(entity) : "Customer";

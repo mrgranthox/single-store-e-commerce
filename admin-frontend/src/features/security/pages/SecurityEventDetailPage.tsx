@@ -1,5 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { ArrowUpRight, Ban, Bell, ClipboardCopy, RefreshCw } from "lucide-react";
 
 import { BusinessMetadataSection } from "@/features/security/components/BusinessMetadataSection";
@@ -28,16 +30,11 @@ export const SecurityEventDetailPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
 
-  const q = useQuery({
-    queryKey: ["admin-security-event-detail", securityEventId],
-    queryFn: async () => {
-      if (!accessToken || !securityEventId) {
-        throw new Error("Missing context.");
-      }
-      return getSecurityEventDetail(accessToken, securityEventId);
-    },
-    enabled: Boolean(accessToken && securityEventId)
-  });
+  const q = useAuthedQuery(
+    ["admin-security-event-detail", securityEventId],
+    (token) => getSecurityEventDetail(token, securityEventId!),
+    { enabled: Boolean(securityEventId) },
+  );
 
   const resolveMut = useMutation({
     mutationFn: async () => {

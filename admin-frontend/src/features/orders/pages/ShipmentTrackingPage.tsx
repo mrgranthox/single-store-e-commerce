@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageActionsMenu } from "@/components/primitives/PageActionsMenu";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -131,16 +133,11 @@ export const ShipmentTrackingPage = () => {
   const [eventType, setEventType] = useState("");
   const [tick, setTick] = useState(0);
 
-  const q = useQuery({
-    queryKey: ["admin-shipment-tracking", shipmentId],
-    queryFn: async () => {
-      if (!accessToken || !shipmentId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminShipmentTracking(accessToken, shipmentId);
-    },
-    enabled: Boolean(accessToken && shipmentId)
-  });
+  const q = useAuthedQuery(
+    ["admin-shipment-tracking", shipmentId],
+    (token) => getAdminShipmentTracking(token, shipmentId!),
+    { enabled: Boolean(shipmentId) },
+  );
 
   useEffect(() => {
     const id = window.setInterval(() => setTick((t) => t + 1), 60_000);

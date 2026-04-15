@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
 import { PageActionsMenu } from "@/components/primitives/PageActionsMenu";
@@ -68,16 +70,11 @@ export const ShipmentDetailPage = () => {
   const [editNote, setEditNote] = useState("");
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
-  const q = useQuery({
-    queryKey: ["admin-shipment-detail", shipmentId],
-    queryFn: async () => {
-      if (!accessToken || !shipmentId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminShipmentDetail(accessToken, shipmentId);
-    },
-    enabled: Boolean(accessToken && shipmentId)
-  });
+  const q = useAuthedQuery(
+    ["admin-shipment-detail", shipmentId],
+    (token) => getAdminShipmentDetail(token, shipmentId!),
+    { enabled: Boolean(shipmentId) },
+  );
 
   const e = q.data?.data.entity;
   const err =

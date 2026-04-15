@@ -83,27 +83,17 @@ export const CustomerActivityPage = () => {
   const [rangeFrom, setRangeFrom] = useState("");
   const [rangeTo, setRangeTo] = useState("");
 
-  const detailQ = useQuery({
-    queryKey: ["admin-customer-detail", customerId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCustomerDetail(accessToken, customerId);
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const detailQ = useAuthedQuery(
+    ["admin-customer-detail", customerId],
+    (token) => getAdminCustomerDetail(token, customerId),
+    { enabled: Boolean(Boolean(customerId)) }
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-customer-activity", customerId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCustomerActivity(accessToken, customerId);
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const q = useAuthedQuery(
+    ["admin-customer-activity", customerId],
+    (token) => getAdminCustomerActivity(token, customerId),
+    { enabled: Boolean(Boolean(customerId)) }
+  );
 
   const entity = detailQ.data?.data.entity;
   const customerName = entity ? displayCustomerName(entity) : "Customer";

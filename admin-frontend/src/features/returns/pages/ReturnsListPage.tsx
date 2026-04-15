@@ -5,14 +5,19 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminReturnDetail, listAdminReturns, type ReturnListItem } from "@/features/returns/api/admin-returns.api";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useListFilters } from "@/lib/hooks/useListFilters";
 
 const RETURN_STATUSES = ["", "REQUESTED", "APPROVED", "REJECTED", "RECEIVED", "COMPLETED"] as const;
+
+const RETURN_FILTER_DEFAULTS = { q: "", reason: "", status: "" };
 
 const REASON_FILTERS: { label: string; value: string }[] = [
   { label: "All reasons", value: "" },
@@ -72,32 +77,32 @@ const refundPill = (r: ReturnListItem) => {
 export const ReturnsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const { filters, page, setPage, setMany } = useListFilters({ defaults: RETURN_FILTER_DEFAULTS });
   const [customerDraft, setCustomerDraft] = useState("");
   const [reasonDraft, setReasonDraft] = useState("");
   const [statusDraft, setStatusDraft] = useState("");
-  const [appliedCustomer, setAppliedCustomer] = useState("");
-  const [appliedReason, setAppliedReason] = useState("");
-  const [appliedStatus, setAppliedStatus] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
+  useEffect(() => {
+    setCustomerDraft(filters.q);
+    setReasonDraft(filters.reason);
+    setStatusDraft(filters.status);
+  }, [filters.q, filters.reason, filters.status]);
+
   const queryKey = useMemo(
-    () => ["admin-returns", page, appliedCustomer, appliedReason, appliedStatus] as const,
-    [page, appliedCustomer, appliedReason, appliedStatus]
+    () => ["admin-returns", page, filters.q, filters.reason, filters.status] as const,
+    [page, filters.q, filters.reason, filters.status],
   );
 
-  const listQuery = useAuthedQuery(
-  queryKey,
-  (token) => {
-    return listAdminReturns(token, {
-            page,
-            page_size: 20,
-            ...(appliedCustomer.trim() ? { q: appliedCustomer.trim() } : {}),
-            ...(appliedReason.trim() ? { reason_contains: appliedReason.trim() } : {}),
-            ...(appliedStatus ? { status: appliedStatus } : {})
-          });
-  }
-);
+  const listQuery = useAuthedQuery(queryKey, (token) =>
+    listAdminReturns(token, {
+      page,
+      page_size: 20,
+      ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+      ...(filters.reason.trim() ? { reason_contains: filters.reason.trim() } : {}),
+      ...(filters.status ? { status: filters.status } : {}),
+    }),
+  );
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
@@ -113,20 +118,14 @@ export const ReturnsListPage = () => {
     prefetchReturns(items.map((item) => item.id), 2);
   }, [items, prefetchReturns]);
 
-  const errorMessage =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
-
   const applyFilters = useCallback(() => {
-    setPage(1);
-    setAppliedCustomer(customerDraft);
-    setAppliedReason(reasonDraft);
-    setAppliedStatus(statusDraft);
+    setMany({
+      q: customerDraft.trim(),
+      reason: reasonDraft,
+      status: statusDraft,
+    });
     setSelected(new Set());
-  }, [customerDraft, reasonDraft, statusDraft]);
+  }, [customerDraft, reasonDraft, statusDraft, setMany]);
 
   const exportCsv = useCallback(() => {
     const rows: string[][] = [
@@ -301,13 +300,15 @@ export const ReturnsListPage = () => {
         </button>
       </div>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {listQuery.isError ? (
+        <QueryError label="returns" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
       ) : null}
 
       <div className="overflow-hidden rounded-xl border border-[#c3c6d6]/10 bg-white shadow-sm">
         {listQuery.isLoading ? (
-          <p className="p-12 text-center text-sm text-[#737685]">Loading…</p>
+          <div className="p-4">
+            <SkeletonTable rows={10} cols={10} label="Loading returns" />
+          </div>
         ) : (
           <>
             <div className="overflow-x-auto">
@@ -426,7 +427,7 @@ export const ReturnsListPage = () => {
                   <button
                     type="button"
                     disabled={page <= 1}
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    onClick={() => setPage(Math.max(1, page - 1))}
                     className="flex h-8 w-8 items-center justify-center rounded hover:bg-[#e6e7f6] disabled:opacity-40"
                   >
                     <MaterialIcon name="chevron_left" className="text-sm" />
@@ -446,7 +447,7 @@ export const ReturnsListPage = () => {
                   <button
                     type="button"
                     disabled={page >= meta.totalPages}
-                    onClick={() => setPage((p) => p + 1)}
+                    onClick={() => setPage(page + 1)}
                     className="flex h-8 w-8 items-center justify-center rounded hover:bg-[#e6e7f6] disabled:opacity-40"
                   >
                     <MaterialIcon name="chevron_right" className="text-sm" />

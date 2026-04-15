@@ -38,16 +38,10 @@ export const SupportAnalyticsPage = () => {
   const queryClient = useQueryClient();
   const [period, setPeriod] = useState<Period>("weekly");
 
-  const q = useQuery({
-    queryKey: ["admin-support-reports", period],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getSupportReports(accessToken, period);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+    ["admin-support-reports", period],
+    (token) => getSupportReports(token, period)
+  );
 
   const data = q.data?.data ?? null;
 

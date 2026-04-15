@@ -14,6 +14,7 @@ import {
 } from "@/features/catalog/api/admin-catalog.api";
 import { formatMoney } from "@/features/catalog/lib/catalogFormat";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 const periodOptions = [
   { value: "7d", label: "Last 7 days" },
@@ -210,27 +211,17 @@ export const CatalogProductAnalyticsPage = () => {
   const queryClient = useQueryClient();
   const [period, setPeriod] = useState<(typeof periodOptions)[number]["value"]>("30d");
 
-  const productQ = useQuery({
-    queryKey: ["admin-catalog-product", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProduct(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const productQ = useAuthedQuery(
+    ["admin-catalog-product", productId],
+    (token) => getAdminCatalogProduct(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-product-analytics", productId, period],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductAnalytics(accessToken, productId, period);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const q = useAuthedQuery(
+    ["admin-catalog-product-analytics", productId, period],
+    (token) => getAdminCatalogProductAnalytics(token, productId!, period),
+    { enabled: Boolean(productId) },
+  );
 
   const entity = q.data?.data.entity;
   const productTitle = productQ.data?.data.entity.title ?? "Product";

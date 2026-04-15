@@ -75,16 +75,11 @@ export const WebhookDetailPage = () => {
   const [retryOpen, setRetryOpen] = useState(false);
   const canRetryByPermission = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-webhook-event", webhookEventId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminWebhookEvent(accessToken, webhookEventId);
-    },
-    enabled: Boolean(accessToken) && Boolean(webhookEventId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-webhook-event", webhookEventId],
+    (token) => getAdminWebhookEvent(token, webhookEventId),
+    { enabled: Boolean(Boolean(webhookEventId)) }
+  );
 
   const retryMut = useAdminAction({
     mutationFn: async () => {

@@ -1,7 +1,4 @@
-import {
-  useQuery,
-  type QueryKey,
-  type UseQueryOptions } from "@tanstack/react-query";
+import { useQuery, type QueryKey, type UseQueryOptions } from "@tanstack/react-query";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 
 type AuthedQueryOptions<TData> = Omit<
@@ -33,5 +30,6 @@ export function useAuthedQuery<TData>(
     ...rest,
     queryKey,
     queryFn: () => queryFn(token!),
-    enabled: Boolean(token) && Boolean(enabled) });
+    enabled: Boolean(token) && Boolean(enabled),
+  });
 }

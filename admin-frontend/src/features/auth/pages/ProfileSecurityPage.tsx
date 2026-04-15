@@ -11,6 +11,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminBootstrap } from "@/features/auth/useAdminBootstrap";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 const formatLastActive = (iso: string | null | undefined, isCurrent: boolean) => {
   if (isCurrent) {
@@ -52,11 +53,10 @@ export const ProfileSecurityPage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
   const { shell } = useAdminBootstrap();
 
-  const sessionsQuery = useQuery({
-    queryKey: ["admin-sessions", accessToken],
-    queryFn: () => fetchAdminSessions(accessToken!),
-    enabled: Boolean(accessToken)
-  });
+  const sessionsQuery = useAuthedQuery(
+    ["admin-sessions", accessToken],
+    (token) => fetchAdminSessions(token)
+  );
 
   const revokeOne = useAdminAction({
     mutationFn: async (sessionId: string) => {

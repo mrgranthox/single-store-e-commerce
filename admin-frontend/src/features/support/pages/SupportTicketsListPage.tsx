@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import {
   AlarmClock,
@@ -13,6 +13,8 @@ import {
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import {
   StitchFieldLabel,
   StitchFilterPanel,
@@ -43,10 +45,12 @@ import {
 } from "@/features/support/lib/supportPresentation";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useListFilters } from "@/lib/hooks/useListFilters";
 
 const STATUSES = ["", "OPEN", "IN_PROGRESS", "PENDING_CUSTOMER", "CLOSED"] as const;
 const PRIORITIES = ["", "LOW", "MEDIUM", "HIGH", "URGENT"] as const;
-const ASSIGNMENTS = ["any", "unassigned", "me"] as const;
+
+const TICKET_FILTER_DEFAULTS = { q: "", status: "", priority: "", assignment: "any" };
 
 const SlaDueCell = ({ t }: { t: SupportTicketListItem }) => {
   if (t.status === "CLOSED") {
@@ -79,36 +83,44 @@ export const SupportTicketsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const actor = useAdminAuthStore((s) => s.actor);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
   const [ticketDraft, setTicketDraft] = useState("");
   const [subjectDraft, setSubjectDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [priority, setPriority] = useState("");
-  const [assignment, setAssignment] = useState<(typeof ASSIGNMENTS)[number]>("any");
+  const { filters, page, setPage, set, setMany } = useListFilters({
+    defaults: TICKET_FILTER_DEFAULTS,
+  });
+  const { q, status, priority, assignment } = filters;
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [bulkAssigneeId, setBulkAssigneeId] = useState("");
   const [bulkCloseDialogOpen, setBulkCloseDialogOpen] = useState(false);
 
   const queryKey = useMemo(
-    () => ["admin-support-tickets", page, appliedSearch, status, priority, assignment] as const,
-    [page, appliedSearch, status, priority, assignment]
+    () => ["admin-support-tickets", page, q, status, priority, assignment] as const,
+    [page, q, status, priority, assignment],
   );
 
-  const ticketsQuery = useAuthedQuery(
-  queryKey,
-  (token) => {
+  useEffect(() => {
+    if (!q) {
+      setTicketDraft("");
+      setSubjectDraft("");
+      return;
+    }
+    setTicketDraft("");
+    setSubjectDraft(q);
+  }, [q]);
+
+  const ticketsQuery = useAuthedQuery(queryKey, (token) => {
+    const assignmentFilter =
+      assignment === "unassigned" || assignment === "me" ? assignment : undefined;
     return listSupportTickets(token, {
-            page,
-            page_size: 20,
-            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
-            ...(status ? { status } : {}),
-            ...(priority ? { priority } : {}),
-            ...(assignment !== "any" ? { assignment } : {})
-          });
-  }
-);
+      page,
+      page_size: 20,
+      ...(q.trim() ? { q: q.trim() } : {}),
+      ...(status ? { status } : {}),
+      ...(priority ? { priority } : {}),
+      ...(assignmentFilter ? { assignment: assignmentFilter } : {}),
+    });
+  });
 
   const { prefetch: prefetchTicketDetail, prefetchMany: prefetchTicketDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
@@ -119,16 +131,10 @@ export const SupportTicketsListPage = () => {
       preloadLazyNamedComponent("../features/support/pages/SupportTicketDetailPage.tsx", "SupportTicketDetailPage")
   });
 
-  const reportsQuery = useQuery({
-    queryKey: ["admin-support-reports", "tickets-list-kpis", "weekly"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getSupportReports(accessToken, "weekly");
-    },
-    enabled: Boolean(accessToken)
-  });
+  const reportsQuery = useAuthedQuery(
+    ["admin-support-reports", "tickets-list-kpis", "weekly"],
+    (token) => getSupportReports(token, "weekly")
+  );
 
   const bulkAssignMut = useMutation({
     mutationFn: async (assignedToAdminUserId: string | null) => {
@@ -175,9 +181,8 @@ export const SupportTicketsListPage = () => {
   }, [items, prefetchTicketDetails]);
 
   const applyFilters = () => {
-    setPage(1);
     const parts = [ticketDraft.trim(), subjectDraft.trim()].filter(Boolean);
-    setAppliedSearch(parts.join(" "));
+    setMany({ q: parts.join(" ") });
   };
 
   const toggleRow = (id: string) => {
@@ -207,13 +212,6 @@ export const SupportTicketsListPage = () => {
       return next;
     });
   };
-
-  const errorMessage =
-    ticketsQuery.error instanceof ApiError
-      ? ticketsQuery.error.message
-      : ticketsQuery.error instanceof Error
-        ? ticketsQuery.error.message
-        : null;
 
   const urgentCount = rep ? countByPriority(rep.byPriority, "URGENT") : null;
   const closedTotal = rep ? countByStatus(rep.byStatus, "CLOSED") : null;
@@ -342,10 +340,7 @@ export const SupportTicketsListPage = () => {
             <StitchFieldLabel>Status</StitchFieldLabel>
             <select
               value={status}
-              onChange={(e) => {
-                setStatus(e.target.value);
-                setPage(1);
-              }}
+              onChange={(e) => set("status", e.target.value)}
               className={stitchSelectClass}
             >
               {STATUSES.map((s) => (
@@ -359,10 +354,7 @@ export const SupportTicketsListPage = () => {
             <StitchFieldLabel>Priority</StitchFieldLabel>
             <select
               value={priority}
-              onChange={(e) => {
-                setPriority(e.target.value);
-                setPage(1);
-              }}
+              onChange={(e) => set("priority", e.target.value)}
               className={stitchSelectClass}
             >
               {PRIORITIES.map((p) => (
@@ -376,10 +368,7 @@ export const SupportTicketsListPage = () => {
             <StitchFieldLabel>Assigned to</StitchFieldLabel>
             <select
               value={assignment}
-              onChange={(e) => {
-                setAssignment(e.target.value as (typeof ASSIGNMENTS)[number]);
-                setPage(1);
-              }}
+              onChange={(e) => set("assignment", e.target.value)}
               className={stitchSelectClass}
             >
               <option value="any">Any agent</option>
@@ -399,8 +388,8 @@ export const SupportTicketsListPage = () => {
         </div>
       </StitchFilterPanel>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {ticketsQuery.isError ? (
+        <QueryError label="support tickets" error={ticketsQuery.error} onRetry={() => void ticketsQuery.refetch()} />
       ) : null}
 
       {assignModalOpen ? (
@@ -491,7 +480,7 @@ export const SupportTicketsListPage = () => {
                 <button
                   type="button"
                   disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => setPage(Math.max(1, page - 1))}
                   className="rounded bg-white p-1.5 shadow-sm hover:bg-slate-50 disabled:opacity-40"
                   aria-label="Previous page"
                 >
@@ -500,7 +489,7 @@ export const SupportTicketsListPage = () => {
                 <button
                   type="button"
                   disabled={page >= meta.totalPages}
-                  onClick={() => setPage((p) => p + 1)}
+                  onClick={() => setPage(page + 1)}
                   className="rounded bg-white p-1.5 shadow-sm hover:bg-slate-50 disabled:opacity-40"
                   aria-label="Next page"
                 >
@@ -513,8 +502,8 @@ export const SupportTicketsListPage = () => {
       </div>
 
       {ticketsQuery.isLoading ? (
-        <div className="rounded-b-xl border border-t-0 border-[#e0e2f0] bg-white p-8 text-center text-sm text-[#60626c]">
-          Loading tickets…
+        <div className="rounded-b-xl border border-t-0 border-[#e0e2f0] bg-white p-4">
+          <SkeletonTable rows={8} cols={7} label="Loading support tickets" />
         </div>
       ) : (
         <div className="overflow-x-auto rounded-b-xl border border-[#e0e2f0] bg-white shadow-sm">
@@ -630,7 +619,7 @@ export const SupportTicketsListPage = () => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border border-[#e5e7eb] px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Previous
@@ -638,7 +627,7 @@ export const SupportTicketsListPage = () => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border border-[#e5e7eb] px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Next

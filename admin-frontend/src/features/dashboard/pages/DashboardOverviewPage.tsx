@@ -1,20 +1,22 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, type UseQueryResult } from "@tanstack/react-query";
 import { AlertTriangle, CreditCard, ShoppingBasket, TrendingUp, UserSearch } from "lucide-react";
 
 import { NetRevenueAreaChart } from "@/components/dashboard/NetRevenueAreaChart";
 import { TimeSeriesA11yTable } from "@/components/dashboard/TimeSeriesA11yTable";
 import { DashboardPartialBody, getDashboardPartialState } from "@/components/primitives/DashboardPartialBody";
 import { PageHeader } from "@/components/primitives/PageHeader";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonKpiRow, SkeletonTable, SkeletonText } from "@/components/primitives/Skeleton";
 import { timelinePayloadLine } from "@/features/security/lib/securityUiHelpers";
-import { adminJsonGet } from "@/lib/api/admin-get";
+import { adminJsonGet, type AdminSuccessEnvelope } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { formatMoney as _formatMoney } from "@/lib/format";
 import { STORE_CURRENCY_CODE } from "@/lib/store-currency";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 const formatMoney = (cents: number | null | undefined) => _formatMoney(cents, STORE_CURRENCY_CODE);
 
 type OverviewPayload = {
@@ -201,67 +203,67 @@ const humanizeToken = (value: string | null | undefined) =>
     .join(" ");
 
 export const DashboardOverviewPage = () => {
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
 
   const rangeQs = useMemo(() => rangeQueryLastDays(30), []);
 
-  const [overviewQ, salesQ, healthQ, ordersQ, inventoryQ, ticketsQ, activityQ] = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-dashboard", "overview", rangeQs],
-        queryFn: () =>
-          adminJsonGet<OverviewPayload>(`/api/admin/dashboard/overview?${rangeQs}`, accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL},
-      {
-        queryKey: ["admin-dashboard", "sales-series", rangeQs],
-        queryFn: () => adminJsonGet<SalesPayload>(`/api/admin/reports/sales?${rangeQs}`, accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.ANALYTICS},
-      {
-        queryKey: ["admin-dashboard", "system-health"],
-        queryFn: () => adminJsonGet<HealthPayload>("/api/admin/dashboard/system-health", accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.REAL_TIME},
-      {
-        queryKey: ["admin-dashboard", "recent-orders"],
-        queryFn: () =>
-          adminJsonGet<{ items: OrderRow[] }>(
-            "/api/admin/orders?page=1&page_size=5",
-            accessToken
-          ),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL},
-      {
-        queryKey: ["admin-dashboard", "inventory-slice", rangeQs],
-        queryFn: () =>
-          adminJsonGet<{ lowStock: LowStockRow[] }>(
-            `/api/admin/reports/inventory?${rangeQs}`,
-            accessToken
-          ),
-        enabled: Boolean(accessToken),
-        ...CACHE.ANALYTICS},
-      {
-        queryKey: ["admin-dashboard", "urgent-tickets"],
-        queryFn: () =>
-          adminJsonGet<{ items: TicketRow[] }>(
-            "/api/admin/support/tickets?page=1&page_size=12",
-            accessToken
-          ),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL},
-      {
-        queryKey: ["admin-dashboard", "recent-activity"],
-        queryFn: () =>
-          adminJsonGet<{ items: RecentActivityRow[] }>(
-            "/api/admin/dashboard/recent-activity?page=1&page_size=6",
-            accessToken
-          ),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL}
-    ]
-  });
+  type DashboardQuery<T> = UseQueryResult<AdminSuccessEnvelope<T>, Error>;
+
+  const [overviewQ, salesQ, healthQ, ordersQ, inventoryQ, ticketsQ, activityQ] = useAuthedQueries((token) => [
+    {
+      queryKey: ["admin-dashboard", "overview", rangeQs],
+      queryFn: () => adminJsonGet<OverviewPayload>(`/api/admin/dashboard/overview?${rangeQs}`, token),
+      ...CACHE.OPERATIONAL,
+    },
+    {
+      queryKey: ["admin-dashboard", "sales-series", rangeQs],
+      queryFn: () => adminJsonGet<SalesPayload>(`/api/admin/reports/sales?${rangeQs}`, token),
+      ...CACHE.ANALYTICS,
+    },
+    {
+      queryKey: ["admin-dashboard", "system-health"],
+      queryFn: () => adminJsonGet<HealthPayload>("/api/admin/dashboard/system-health", token),
+      ...CACHE.REAL_TIME,
+    },
+    {
+      queryKey: ["admin-dashboard", "recent-orders"],
+      queryFn: () =>
+        adminJsonGet<{ items: OrderRow[] }>("/api/admin/orders?page=1&page_size=5", token),
+      ...CACHE.OPERATIONAL,
+    },
+    {
+      queryKey: ["admin-dashboard", "inventory-slice", rangeQs],
+      queryFn: () =>
+        adminJsonGet<{ lowStock: LowStockRow[] }>(`/api/admin/reports/inventory?${rangeQs}`, token),
+      ...CACHE.ANALYTICS,
+    },
+    {
+      queryKey: ["admin-dashboard", "urgent-tickets"],
+      queryFn: () =>
+        adminJsonGet<{ items: TicketRow[] }>(
+          "/api/admin/support/tickets?page=1&page_size=12",
+          token,
+        ),
+      ...CACHE.OPERATIONAL,
+    },
+    {
+      queryKey: ["admin-dashboard", "recent-activity"],
+      queryFn: () =>
+        adminJsonGet<{ items: RecentActivityRow[] }>(
+          "/api/admin/dashboard/recent-activity?page=1&page_size=6",
+          token,
+        ),
+      ...CACHE.OPERATIONAL,
+    },
+  ]) as [
+    DashboardQuery<OverviewPayload>,
+    DashboardQuery<SalesPayload>,
+    DashboardQuery<HealthPayload>,
+    DashboardQuery<{ items: OrderRow[] }>,
+    DashboardQuery<{ lowStock: LowStockRow[] }>,
+    DashboardQuery<{ items: TicketRow[] }>,
+    DashboardQuery<{ items: RecentActivityRow[] }>,
+  ];
 
   const overviewData = overviewQ.data?.data;
   const kpis = overviewData?.kpis;
@@ -351,11 +353,9 @@ export const DashboardOverviewPage = () => {
       />
 
       {overviewQ.isLoading ? (
-        <p className="text-sm text-[var(--color-text-muted)]">Loading overview…</p>
+        <SkeletonKpiRow count={4} />
       ) : overviewQ.isError ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-          {overviewQ.error instanceof ApiError ? overviewQ.error.message : "Failed to load overview."}
-        </div>
+        <QueryError label="dashboard overview" error={overviewQ.error} onRetry={() => void overviewQ.refetch()} />
       ) : (
         <>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -436,11 +436,18 @@ export const DashboardOverviewPage = () => {
               </Link>
             </div>
             {ordersQ.isLoading ? (
-              <p className="px-6 py-4 text-sm text-[var(--color-text-muted)]">Loading orders…</p>
+              <div className="px-4 py-3">
+                <SkeletonTable rows={4} cols={5} label="Loading recent orders" />
+              </div>
             ) : ordersQ.isError ? (
-              <p className="px-6 py-4 text-sm text-amber-800">
-                {ordersQ.error instanceof ApiError ? ordersQ.error.message : "Orders unavailable."}
-              </p>
+              <div className="px-4 py-3">
+                <QueryError
+                  compact
+                  label="recent orders"
+                  error={ordersQ.error}
+                  onRetry={() => void ordersQ.refetch()}
+                />
+              </div>
             ) : orderItems.length === 0 ? (
               <p className="px-6 py-4 text-sm text-[var(--color-text-muted)]">No orders yet.</p>
             ) : (
@@ -499,11 +506,18 @@ export const DashboardOverviewPage = () => {
               System Health
             </h3>
             {healthQ.isLoading ? (
-              <p className="text-xs text-slate-400">Checking…</p>
+              <div className="space-y-2" aria-busy="true" aria-label="Loading system health">
+                <SkeletonText width="w-3/4" height="h-3" />
+                <SkeletonText width="w-full" height="h-3" />
+                <SkeletonText width="w-2/3" height="h-3" />
+              </div>
             ) : healthQ.isError ? (
-              <p className="text-xs text-amber-300">
-                {healthQ.error instanceof ApiError ? healthQ.error.message : "Health check failed."}
-              </p>
+              <QueryError
+                compact
+                label="system health"
+                error={healthQ.error}
+                onRetry={() => void healthQ.refetch()}
+              />
             ) : (
               <div className="space-y-4">
                 {healthTriplet.map((row) => (
@@ -562,9 +576,17 @@ export const DashboardOverviewPage = () => {
               </span>
             </div>
             {inventoryQ.isLoading ? (
-              <p className="text-xs text-slate-500">Loading stock signals…</p>
+              <div className="space-y-2" aria-busy="true" aria-label="Loading low stock">
+                <SkeletonText width="w-full" height="h-8" />
+                <SkeletonText width="w-full" height="h-8" />
+              </div>
             ) : inventoryQ.isError ? (
-              <p className="text-xs text-amber-800">Could not load low stock.</p>
+              <QueryError
+                compact
+                label="low stock signals"
+                error={inventoryQ.error}
+                onRetry={() => void inventoryQ.refetch()}
+              />
             ) : lowStockItems.length === 0 ? (
               <p className="text-xs text-slate-500">No low-stock variants in view.</p>
             ) : (
@@ -593,9 +615,17 @@ export const DashboardOverviewPage = () => {
           <section className="space-y-4 rounded-[12px] bg-white p-5 shadow-sm">
             <h3 className="text-xs font-bold uppercase tracking-[0.05em] text-[#434654]">Urgent Support Tickets</h3>
             {ticketsQ.isLoading ? (
-              <p className="text-xs text-slate-500">Loading tickets…</p>
+              <div className="space-y-2" aria-busy="true" aria-label="Loading tickets">
+                <SkeletonText width="w-full" height="h-16" />
+                <SkeletonText width="w-full" height="h-16" />
+              </div>
             ) : ticketsQ.isError ? (
-              <p className="text-xs text-amber-800">Tickets unavailable.</p>
+              <QueryError
+                compact
+                label="support tickets"
+                error={ticketsQ.error}
+                onRetry={() => void ticketsQ.refetch()}
+              />
             ) : urgentTickets.length === 0 ? (
               <p className="text-xs text-slate-500">No urgent or high-priority tickets in preview.</p>
             ) : (
@@ -642,20 +672,17 @@ export const DashboardOverviewPage = () => {
               </div>
             </div>
             {activityQ.isLoading ? (
-              <p className="text-xs text-slate-500">Loading operational activity…</p>
-            ) : activityQ.isError ? (
-              <div className="space-y-2">
-                <p className="text-xs text-amber-800">
-                  {activityQ.error instanceof ApiError ? activityQ.error.message : "Recent activity unavailable."}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => void activityQ.refetch()}
-                  className="rounded border border-amber-300 bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-900 hover:bg-amber-50"
-                >
-                  Retry
-                </button>
+              <div className="space-y-2" aria-busy="true" aria-label="Loading activity">
+                <SkeletonText width="w-full" height="h-14" />
+                <SkeletonText width="w-full" height="h-14" />
               </div>
+            ) : activityQ.isError ? (
+              <QueryError
+                compact
+                label="recent activity"
+                error={activityQ.error}
+                onRetry={() => void activityQ.refetch()}
+              />
             ) : recentActivity.length === 0 ? (
               <p className="text-xs text-slate-500">No recent activity recorded yet.</p>
             ) : (

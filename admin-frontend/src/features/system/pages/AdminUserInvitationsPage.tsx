@@ -33,14 +33,10 @@ export const AdminUserInvitationsPage = () => {
   });
   const [flash, setFlash] = useState<string | null>(null);
 
-  const query = useQuery({
-    queryKey: ["admin-user-invitations", page, status],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return listAdminInvitations(accessToken, { page, page_size: 20, status: status || undefined });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const query = useAuthedQuery(
+    ["admin-user-invitations", page, status],
+    (token) => listAdminInvitations(token, { page, page_size: 20, status: status || undefined })
+  );
 
   const roles = query.data?.data.availableRoles ?? [];
   const selectedSet = useMemo(() => new Set(form.roleCodes), [form.roleCodes]);

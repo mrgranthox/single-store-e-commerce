@@ -3,8 +3,10 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useSearchParams } from "react-router-dom";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonChart, SkeletonKpiRow, SkeletonTable } from "@/components/primitives/Skeleton";
 import { ReportDatasetViews } from "@/features/reports/components/ReportDatasetViews";
-import { ApiError, getAdminReportsDataset, type ReportsOverviewQuery } from "@/features/reports/api/admin-reports.api";
+import { getAdminReportsDataset, type ReportsOverviewQuery } from "@/features/reports/api/admin-reports.api";
 import type { ReportDatasetSegment } from "@/features/reports/types/report-payloads";
 import { StitchFieldLabel, StitchFilterPanel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { CACHE } from "@/lib/api/cache-strategy";
@@ -101,13 +103,6 @@ export const ReportDatasetPage = ({ segment, title, description }: ReportDataset
     },
   );
 
-  const err =
-    reportQuery.error instanceof ApiError
-      ? reportQuery.error.message
-      : reportQuery.error instanceof Error
-        ? reportQuery.error.message
-        : null;
-
   const handlePrint = () => {
     const prev = document.title;
     document.title = title;
@@ -183,12 +178,16 @@ export const ReportDatasetPage = ({ segment, title, description }: ReportDataset
         ) : null}
       </StitchFilterPanel>
 
-      {err ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
+      {reportQuery.isError ? (
+        <QueryError label="report" error={reportQuery.error} onRetry={() => void reportQuery.refetch()} />
       ) : null}
 
       {reportQuery.isLoading ? (
-        <p className="text-sm text-[var(--color-text-muted)]">Loading report…</p>
+        <div className="space-y-6">
+          <SkeletonKpiRow count={4} />
+          <SkeletonChart height="h-56" label="Loading chart" />
+          <SkeletonTable rows={8} cols={6} label="Loading report table" />
+        </div>
       ) : (
         <ReportDatasetViews
           segment={segment}

@@ -94,28 +94,20 @@ export const InventoryOverviewPage = () => {
   const [appliedMinAvail, setAppliedMinAvail] = useState<number | undefined>(undefined);
   const [appliedMaxAvail, setAppliedMaxAvail] = useState<number | undefined>(undefined);
 
-  const overviewQuery = useQuery({
-    queryKey: ["admin-inventory-overview"],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return getInventoryOverview(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const overviewQuery = useAuthedQuery(
+    ["admin-inventory-overview"],
+    (token) => getInventoryOverview(token)
+  );
 
-  const warehousesQuery = useQuery({
-    queryKey: ["admin-warehouses"],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return listAdminWarehouses(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const warehousesQuery = useAuthedQuery(
+    ["admin-warehouses"],
+    (token) => listAdminWarehouses(token)
+  );
 
   const healthFilter = healthFilterParam(statusFilter);
 
-  const stocksQuery = useQuery({
-    queryKey: [
+  const stocksQuery = useAuthedQuery(
+    [
       "admin-inventory-stocks",
       page,
       appliedSearch,
@@ -125,22 +117,18 @@ export const InventoryOverviewPage = () => {
       appliedMinAvail,
       appliedMaxAvail
     ],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return listInventoryStocks(accessToken, {
-        page,
-        page_size: 20,
-        sortBy: "productTitle",
-        sortOrder: "asc",
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
-        ...(warehouseId ? { warehouseId } : {}),
-        healthFilter,
-        ...(appliedMinAvail !== undefined ? { minAvailable: appliedMinAvail } : {}),
-        ...(appliedMaxAvail !== undefined ? { maxAvailable: appliedMaxAvail } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+    (token) => listInventoryStocks(token, {
+      page,
+      page_size: 20,
+      sortBy: "productTitle",
+      sortOrder: "asc",
+      ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
+      ...(warehouseId ? { warehouseId } : {}),
+      healthFilter,
+      ...(appliedMinAvail !== undefined ? { minAvailable: appliedMinAvail } : {}),
+      ...(appliedMaxAvail !== undefined ? { maxAvailable: appliedMaxAvail } : {})
+      })
+  );
 
   const entity = overviewQuery.data?.data.entity;
   const err =

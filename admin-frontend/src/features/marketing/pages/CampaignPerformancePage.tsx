@@ -51,16 +51,10 @@ export const CampaignPerformancePage = () => {
 
   const apiPeriod = toApiPeriod(periodUi);
 
-  const q = useQuery({
-    queryKey: ["admin-campaign-performance", apiPeriod],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getCampaignPerformance(accessToken, { period: apiPeriod });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+    ["admin-campaign-performance", apiPeriod],
+    (token) => getCampaignPerformance(token, { period: apiPeriod })
+  );
 
   const data = q.data?.data;
   const items = data?.items ?? [];

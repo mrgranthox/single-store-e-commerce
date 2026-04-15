@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Download, Search, SlidersHorizontal } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -66,33 +68,26 @@ export const WarehouseStockPage = () => {
   const [appliedSearch, setAppliedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "healthy" | "low_stock" | "out_of_stock">("all");
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-warehouse-detail", warehouseId],
-    queryFn: async () => {
-      if (!accessToken || !warehouseId) throw new Error("Missing context.");
-      return getAdminWarehouseDetail(accessToken, warehouseId);
-    },
-    enabled: Boolean(accessToken && warehouseId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-warehouse-detail", warehouseId],
+    (token) => getAdminWarehouseDetail(token, warehouseId!),
+    { enabled: Boolean(warehouseId) },
+  );
 
-  const q = useQuery({
-    queryKey: ["admin-warehouse-inventory", warehouseId, page, appliedSearch, statusFilter],
-    queryFn: async () => {
-      if (!accessToken || !warehouseId) {
-        throw new Error("Missing context.");
-      }
-      return listInventoryStocks(accessToken, {
+  const q = useAuthedQuery(
+    ["admin-warehouse-inventory", warehouseId, page, appliedSearch, statusFilter],
+    (token) =>
+      listInventoryStocks(token, {
         page,
         page_size: 25,
-        warehouseId,
+        warehouseId: warehouseId!,
         healthFilter: statusFilter,
         sortBy: "productTitle",
         sortOrder: "asc",
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken && warehouseId)
-  });
+        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
+      }),
+    { enabled: Boolean(warehouseId) },
+  );
 
   const items = q.data?.data.items ?? [];
   const meta = q.data?.meta;

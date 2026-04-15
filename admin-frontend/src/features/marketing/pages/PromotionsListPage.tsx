@@ -216,20 +216,14 @@ export const PromotionsListPage = () => {
     );
   };
 
-  const q = useQuery({
-    queryKey: ["admin-promotions-contract", page, statusFilter],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listContractPromotions(accessToken, {
-        page,
-        page_size: 20,
-        ...(statusFilter ? { status: statusFilter } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+    ["admin-promotions-contract", page, statusFilter],
+    (token) => listContractPromotions(token, {
+      page,
+      page_size: 20,
+      ...(statusFilter ? { status: statusFilter } : {})
+      })
+  );
 
   const { prefetch: prefetchPromotionRules, prefetchMany: prefetchManyPromotionRules } =
     useAdminDetailPrefetch({

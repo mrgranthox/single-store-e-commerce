@@ -90,14 +90,10 @@ export const InventoryMovementsPage = () => {
     }
   }, [urlProductId]);
 
-  const warehousesQuery = useQuery({
-    queryKey: ["admin-warehouses"],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return listAdminWarehouses(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const warehousesQuery = useAuthedQuery(
+    ["admin-warehouses"],
+    (token) => listAdminWarehouses(token)
+  );
 
   const queryKey = useMemo(
     () =>

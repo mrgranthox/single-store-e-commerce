@@ -71,14 +71,10 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
   const [warehouseId, setWarehouseId] = useState("");
   const [poOpen, setPoOpen] = useState(false);
 
-  const warehousesQuery = useQuery({
-    queryKey: ["admin-warehouses"],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return listAdminWarehouses(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const warehousesQuery = useAuthedQuery(
+    ["admin-warehouses"],
+    (token) => listAdminWarehouses(token)
+  );
 
   const queryKey = useMemo(
     () => ["admin-inventory-queue", mode, page, appliedSearch, warehouseId] as const,

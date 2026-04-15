@@ -67,55 +67,38 @@ export const InventoryAdjustmentsPage = () => {
     return () => window.clearTimeout(t);
   }, [productQuery]);
 
-  const productsQuery = useQuery({
-    queryKey: ["admin-adjust-products-search", debouncedQ],
-    queryFn: async () => {
-      if (!accessToken || debouncedQ.length < 2) return null;
-      return listAdminCatalogProducts(accessToken, { q: debouncedQ, page_size: 8, page: 1 });
-    },
-    enabled: Boolean(accessToken && debouncedQ.length >= 2)
-  });
+  const productsQuery = useAuthedQuery(
+    ["admin-adjust-products-search", debouncedQ],
+    (token) => listAdminCatalogProducts(token, { q: debouncedQ, page_size: 8, page: 1 })
+  );
 
-  const variantsQuery = useQuery({
-    queryKey: ["admin-adjust-variants", selectedProductId],
-    queryFn: async () => {
-      if (!accessToken || !selectedProductId) return null;
-      return getAdminCatalogProductVariants(accessToken, selectedProductId);
-    },
-    enabled: Boolean(accessToken && selectedProductId)
-  });
+  const variantsQuery = useAuthedQuery(
+    ["admin-adjust-variants", selectedProductId],
+    (token) => getAdminCatalogProductVariants(token, selectedProductId!),
+    { enabled: Boolean(selectedProductId) }
+  );
 
-  const warehousesQuery = useQuery({
-    queryKey: ["admin-warehouses"],
-    queryFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return listAdminWarehouses(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const warehousesQuery = useAuthedQuery(
+    ["admin-warehouses"],
+    (token) => listAdminWarehouses(token)
+  );
 
-  const invSummaryQuery = useQuery({
-    queryKey: ["admin-adjust-inv-summary", selectedProductId],
-    queryFn: async () => {
-      if (!accessToken || !selectedProductId) return null;
-      return getAdminCatalogProductInventorySummary(accessToken, selectedProductId);
-    },
-    enabled: Boolean(accessToken && selectedProductId)
-  });
+  const invSummaryQuery = useAuthedQuery(
+    ["admin-adjust-inv-summary", selectedProductId],
+    (token) => getAdminCatalogProductInventorySummary(token, selectedProductId!),
+    { enabled: Boolean(selectedProductId) }
+  );
 
-  const recentMovementsQuery = useQuery({
-    queryKey: ["admin-adjust-movements", selectedProductId],
-    queryFn: async () => {
-      if (!accessToken || !selectedProductId) return null;
-      return listInventoryMovements(accessToken, {
-        productId: selectedProductId,
-        page: 1,
-        page_size: 10,
-        sortOrder: "desc"
-      });
-    },
-    enabled: Boolean(accessToken && selectedProductId)
-  });
+  const recentMovementsQuery = useAuthedQuery(
+    ["admin-adjust-movements", selectedProductId],
+    (token) => listInventoryMovements(token, {
+      productId: selectedProductId ?? undefined,
+      page: 1,
+      page_size: 10,
+      sortOrder: "desc"
+    }),
+    { enabled: Boolean(selectedProductId) }
+  );
 
   const warehouses = warehousesQuery.data?.data.items ?? [];
   const variants = variantsQuery.data?.data.items ?? [];

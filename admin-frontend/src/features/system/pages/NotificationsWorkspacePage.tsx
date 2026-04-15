@@ -74,22 +74,16 @@ export const NotificationsWorkspacePage = () => {
     }
   }, [form]);
 
-  const query = useQuery({
-    queryKey: ["admin-notifications", page, status, typeFilter, recipientEmail],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminNotifications(accessToken, {
-        page,
-        page_size: 20,
-        status: status || undefined,
-        type: typeFilter || undefined,
-        recipientEmail: recipientEmail || undefined
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const query = useAuthedQuery(
+    ["admin-notifications", page, status, typeFilter, recipientEmail],
+    (token) => listAdminNotifications(token, {
+      page,
+      page_size: 20,
+      status: status || undefined,
+      type: typeFilter || undefined,
+      recipientEmail: recipientEmail || undefined
+      })
+  );
 
   const refreshKeys = useMemo(() => [["admin-notifications"]] as const, []);
 

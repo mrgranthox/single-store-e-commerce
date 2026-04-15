@@ -17,6 +17,7 @@ import { adminJsonGet } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 const rangeQueryString = () => {
   const to = new Date();
@@ -257,14 +258,11 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
     ]
   });
 
-  const legacyQ = useQuery({
-    queryKey: [...cfg.queryKey],
-    queryFn: () => {
-      const path = (cfg as { buildPath: () => string }).buildPath();
-      return adminJsonGet<unknown>(path, accessToken);
-    },
-    enabled: Boolean(accessToken) && segment !== "sales",
-    ...CACHE.OPERATIONAL});
+  const legacyQ = useAuthedQuery(
+    [...cfg.queryKey],
+    (token) => adminJsonGet<unknown>((cfg as { buildPath: () => string }).buildPath(), token),
+    { ...CACHE.OPERATIONAL, enabled: segment !== "sales" }
+  );
 
   const err =
     legacyQ.error instanceof ApiError

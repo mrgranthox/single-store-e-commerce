@@ -52,17 +52,11 @@ export const BrandEditPage = () => {
   (token) => listAdminBanners(token)
 );
 
-  const detailQ = useQuery({
-    queryKey: ["admin-catalog-brand", brandId],
-    queryFn: async () => {
-      if (!accessToken || !brandId) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCatalogBrand(accessToken, brandId);
-    },
-    enabled: Boolean(accessToken && brandId),
-    retry: false
-  });
+  const detailQ = useAuthedQuery(
+    ["admin-catalog-brand", brandId],
+    (token) => getAdminCatalogBrand(token, brandId!),
+    { enabled: Boolean(brandId) },
+  );
 
   const row = detailQ.data?.data.entity;
   const notFound = detailQ.isError && detailQ.error instanceof ApiError && detailQ.error.statusCode === 404;

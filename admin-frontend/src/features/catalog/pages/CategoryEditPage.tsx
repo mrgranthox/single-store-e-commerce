@@ -10,6 +10,7 @@ import { StatusBadge } from "@/components/primitives/StatusBadge";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import {
   ApiError,
   archiveAdminCatalogCategory,
@@ -33,17 +34,11 @@ export const CategoryEditPage = () => {
   const [lifecycleConfirm, setLifecycleConfirm] = useState<LifecycleAction | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const detailQ = useQuery({
-    queryKey: ["admin-catalog-category", categoryId],
-    queryFn: async () => {
-      if (!accessToken || !categoryId) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCatalogCategory(accessToken, categoryId);
-    },
-    enabled: Boolean(accessToken && categoryId),
-    retry: false
-  });
+  const detailQ = useAuthedQuery(
+    ["admin-catalog-category", categoryId],
+    (token) => getAdminCatalogCategory(token, categoryId!),
+    { enabled: Boolean(categoryId) },
+  );
 
   const row = detailQ.data?.data.entity;
   const notFound =

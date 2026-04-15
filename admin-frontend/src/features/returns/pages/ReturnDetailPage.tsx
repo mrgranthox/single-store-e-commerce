@@ -29,16 +29,11 @@ export const ReturnDetailPage = () => {
   const [actionNote, setActionNote] = useState("");
   const [internalNoteDraft, setInternalNoteDraft] = useState("");
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-return-detail", returnId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminReturnDetail(accessToken, returnId);
-    },
-    enabled: Boolean(accessToken) && Boolean(returnId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-return-detail", returnId],
+    (token) => getAdminReturnDetail(token, returnId),
+    { enabled: Boolean(Boolean(returnId)) }
+  );
 
   const e = detailQuery.data?.data.entity;
   const status = e?.status ?? "";

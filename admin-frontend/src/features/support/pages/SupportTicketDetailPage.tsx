@@ -93,16 +93,11 @@ export const SupportTicketDetailPage = () => {
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [csatPick, setCsatPick] = useState(5);
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-support-ticket", ticketId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getSupportTicketDetail(accessToken, ticketId);
-    },
-    enabled: Boolean(accessToken) && Boolean(ticketId)
-  });
+  const detailQuery = useAuthedQuery(
+    ["admin-support-ticket", ticketId],
+    (token) => getSupportTicketDetail(token, ticketId),
+    { enabled: Boolean(Boolean(ticketId)) }
+  );
 
   const e = detailQuery.data?.data.entity;
 
