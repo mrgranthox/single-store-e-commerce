@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/react";
 
 import { AppProviders } from "@/app/providers";
 import { AppRouter } from "@/app/router";
+import { StepUpDialog } from "@/features/auth/components/StepUpDialog";
 
 export const App = () => (
   <Sentry.ErrorBoundary
@@ -28,6 +29,7 @@ export const App = () => (
   >
     <AppProviders>
       <AppRouter />
+      <StepUpDialog />
     </AppProviders>
   </Sentry.ErrorBoundary>
 );

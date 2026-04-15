@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
+
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
@@ -32,6 +34,7 @@ export const CatalogProductMediaPage = () => {
   const [uploadMsg, setUploadMsg] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [mappingBusy, setMappingBusy] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const productQ = useQuery({
     queryKey: ["admin-catalog-product", productId],
@@ -277,11 +280,7 @@ export const CatalogProductMediaPage = () => {
                     }
                   }}
                   onSetPrimary={() => setPrimary(m.id)}
-                  onDelete={() => {
-                    if (window.confirm("Remove this image from the product?")) {
-                      deleteMut.mutate(m.id);
-                    }
-                  }}
+                  onDelete={() => setDeleteConfirmId(m.id)}
                   disabled={reorderMut.isPending || deleteMut.isPending}
                 />
               ))}
@@ -353,6 +352,18 @@ export const CatalogProductMediaPage = () => {
           )}
         </SurfaceCard>
       </div>
+      <ConfirmDialog
+        open={deleteConfirmId !== null}
+        title="Remove this image?"
+        body="The image will be permanently removed from this product's gallery."
+        confirmLabel="Remove image"
+        danger
+        onClose={() => setDeleteConfirmId(null)}
+        onConfirm={() => {
+          if (deleteConfirmId) deleteMut.mutate(deleteConfirmId);
+          setDeleteConfirmId(null);
+        }}
+      />
     </div>
   );
 };

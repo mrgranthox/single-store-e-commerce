@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { StatusBadge } from "@/components/primitives/StatusBadge";
@@ -28,6 +29,8 @@ export const CategoryEditPage = () => {
   const [name, setName] = useState("");
   const [archiveReason, setArchiveReason] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
+  type LifecycleAction = "draft" | "restore" | "archive";
+  const [lifecycleConfirm, setLifecycleConfirm] = useState<LifecycleAction | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const detailQ = useQuery({
@@ -321,12 +324,7 @@ export const CategoryEditPage = () => {
                         : undefined
                     }
                     className="w-fit rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-                    onClick={() => {
-                      if (window.confirm("Move this category to draft? It will disappear from the storefront.")) {
-                        setMsg(null);
-                        unpublishMut.mutate();
-                      }
-                    }}
+                    onClick={() => setLifecycleConfirm("draft")}
                   >
                     {unpublishMut.isPending ? "Updating…" : "Move to draft"}
                   </button>
@@ -343,12 +341,7 @@ export const CategoryEditPage = () => {
                   type="button"
                   disabled={restoreMut.isPending}
                   className="w-fit rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-                  onClick={() => {
-                    if (window.confirm("Restore this category to active?")) {
-                      setMsg(null);
-                      restoreMut.mutate();
-                    }
-                  }}
+                    onClick={() => setLifecycleConfirm("restore")}
                 >
                   {restoreMut.isPending ? "Restoring…" : "Restore to active"}
                 </button>
@@ -371,12 +364,7 @@ export const CategoryEditPage = () => {
                   type="button"
                   disabled={archiveMut.isPending}
                   className="w-fit rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-900 disabled:opacity-50"
-                  onClick={() => {
-                    if (window.confirm("Archive this category? You can still find it in the list when showing archived statuses.")) {
-                      setMsg(null);
-                      archiveMut.mutate();
-                    }
-                  }}
+                    onClick={() => setLifecycleConfirm("archive")}
                 >
                   {archiveMut.isPending ? "Archiving…" : "Archive category"}
                 </button>
@@ -387,6 +375,40 @@ export const CategoryEditPage = () => {
       ) : (
         <p className="text-sm text-slate-500">Loading…</p>
       )}
+      <ConfirmDialog
+        open={lifecycleConfirm !== null}
+        title={
+          lifecycleConfirm === "draft"
+            ? "Move category to draft?"
+            : lifecycleConfirm === "restore"
+              ? "Restore category to active?"
+              : "Archive this category?"
+        }
+        body={
+          lifecycleConfirm === "draft"
+            ? "The category will disappear from the storefront immediately."
+            : lifecycleConfirm === "restore"
+              ? "The category will become active and visible on the storefront."
+              : "The category will be hidden from merchandising flows. You can still find it in the list when filtering by archived status."
+        }
+        confirmLabel={
+          lifecycleConfirm === "draft"
+            ? "Move to draft"
+            : lifecycleConfirm === "restore"
+              ? "Restore"
+              : "Archive"
+        }
+        danger={lifecycleConfirm === "archive"}
+        onClose={() => setLifecycleConfirm(null)}
+        onConfirm={() => {
+          const action = lifecycleConfirm;
+          setLifecycleConfirm(null);
+          setMsg(null);
+          if (action === "draft") unpublishMut.mutate();
+          else if (action === "restore") restoreMut.mutate();
+          else if (action === "archive") archiveMut.mutate();
+        }}
+      />
     </StitchPageBody>
   );
 };

@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
@@ -32,6 +33,11 @@ export const CatalogProductVariantsPage = () => {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showAdd, setShowAdd] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [bulkPriceOpen, setBulkPriceOpen] = useState(false);
+  const [bulkPriceInput, setBulkPriceInput] = useState("");
+  const [bulkStatusOpen, setBulkStatusOpen] = useState(false);
+  const [bulkStatusInput, setBulkStatusInput] = useState<string>(variantStatuses[0]);
+  const [archiveConfirmOpen, setArchiveConfirmOpen] = useState(false);
 
   const productQ = useQuery({
     queryKey: ["admin-catalog-product", productId],
@@ -151,18 +157,16 @@ export const CatalogProductVariantsPage = () => {
     [items, selected]
   );
 
-  const runBulkPrice = async () => {
-    const raw = window.prompt("New list price (major units, e.g. 19.99) for all selected variants?");
-    if (raw == null) {
-      return;
-    }
-    const cents = parseMoneyInputToCents(raw);
+  const applyBulkPrice = async () => {
+    const cents = parseMoneyInputToCents(bulkPriceInput);
     if (cents == null) {
-      setFormError("Invalid price.");
+      setFormError("Invalid price. Enter a value like 19.99.");
       return;
     }
     const cur = defaultCurrency;
     setFormError(null);
+    setBulkPriceOpen(false);
+    setBulkPriceInput("");
     try {
       for (const v of selectedVariants) {
         await updateMut.mutateAsync({
@@ -180,22 +184,14 @@ export const CatalogProductVariantsPage = () => {
     }
   };
 
-  const runBulkStatus = async () => {
-    const next = window.prompt(`New status for selected variants (${variantStatuses.join(", ")}):`);
-    if (next == null) {
-      return;
-    }
-    const status = next.trim().toUpperCase();
-    if (!variantStatuses.includes(status as (typeof variantStatuses)[number])) {
-      setFormError("Invalid status.");
-      return;
-    }
+  const applyBulkStatus = async () => {
     setFormError(null);
+    setBulkStatusOpen(false);
     try {
       for (const v of selectedVariants) {
         await updateMut.mutateAsync({
           variantId: v.id,
-          body: { status }
+          body: { status: bulkStatusInput }
         });
       }
       setSelected(new Set());
@@ -239,14 +235,14 @@ export const CatalogProductVariantsPage = () => {
             <button
               type="button"
               className="rounded-md border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50"
-              onClick={runBulkPrice}
+              onClick={() => { setBulkPriceInput(""); setBulkPriceOpen(true); }}
             >
               Update price
             </button>
             <button
               type="button"
               className="rounded-md border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50"
-              onClick={runBulkStatus}
+              onClick={() => { setBulkStatusInput(variantStatuses[0]); setBulkStatusOpen(true); }}
             >
               Update status
             </button>
@@ -255,16 +251,7 @@ export const CatalogProductVariantsPage = () => {
               disabled={archiveMut.isPending}
               title="Archives selected SKUs (order history is preserved)."
               className="rounded-md border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-900 hover:bg-rose-100 disabled:opacity-50"
-              onClick={() => {
-                if (
-                  !window.confirm(
-                    `Archive ${selected.size} variant(s)? They will be hidden from active merchandising but remain on past orders.`
-                  )
-                ) {
-                  return;
-                }
-                archiveMut.mutate([...selected]);
-              }}
+              onClick={() => setArchiveConfirmOpen(true)}
             >
               Archive selected
             </button>
@@ -333,6 +320,81 @@ export const CatalogProductVariantsPage = () => {
           </table>
         </div>
       )}
+      {/* Bulk price dialog */}
+      {bulkPriceOpen ? (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/45 p-4 backdrop-blur-[2px]">
+          <div className="relative w-full max-w-sm rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-2xl">
+            <h2 className="font-headline text-lg font-bold text-[#181b25]">
+              Update price for {selected.size} variant(s)
+            </h2>
+            <p className="mt-1 text-sm text-[#60626c]">Enter the new list price in major units (e.g. 19.99).</p>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={bulkPriceInput}
+              onChange={(e) => setBulkPriceInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") void applyBulkPrice(); }}
+              placeholder="e.g. 19.99"
+              autoFocus
+              className="mt-4 w-full rounded-lg border border-[#e5e7eb] bg-[#f8f9fb] px-3 py-2.5 font-mono text-sm text-[#181b25] focus:border-[#1653cc] focus:outline-none focus:ring-2 focus:ring-[#1653cc]/20"
+            />
+            <div className="mt-6 flex justify-end gap-2">
+              <button type="button" onClick={() => setBulkPriceOpen(false)}
+                className="rounded-lg border border-[#e5e7eb] px-4 py-2 text-sm font-semibold text-[#434654] hover:bg-[#f8f9fb]">
+                Cancel
+              </button>
+              <button type="button" onClick={() => void applyBulkPrice()} disabled={!bulkPriceInput.trim()}
+                className="rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1653cc]/90 disabled:opacity-50">
+                Apply price
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Bulk status dialog */}
+      {bulkStatusOpen ? (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/45 p-4 backdrop-blur-[2px]">
+          <div className="relative w-full max-w-sm rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-2xl">
+            <h2 className="font-headline text-lg font-bold text-[#181b25]">
+              Update status for {selected.size} variant(s)
+            </h2>
+            <select
+              value={bulkStatusInput}
+              onChange={(e) => setBulkStatusInput(e.target.value)}
+              autoFocus
+              className="mt-4 w-full rounded-lg border border-[#e5e7eb] bg-[#f8f9fb] px-3 py-2.5 text-sm text-[#181b25] focus:border-[#1653cc] focus:outline-none focus:ring-2 focus:ring-[#1653cc]/20"
+            >
+              {variantStatuses.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <div className="mt-6 flex justify-end gap-2">
+              <button type="button" onClick={() => setBulkStatusOpen(false)}
+                className="rounded-lg border border-[#e5e7eb] px-4 py-2 text-sm font-semibold text-[#434654] hover:bg-[#f8f9fb]">
+                Cancel
+              </button>
+              <button type="button" onClick={() => void applyBulkStatus()}
+                className="rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1653cc]/90">
+                Apply status
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <ConfirmDialog
+        open={archiveConfirmOpen}
+        title={`Archive ${selected.size} variant(s)?`}
+        body="The selected SKUs will be hidden from active merchandising but remain on past orders."
+        confirmLabel="Archive selected"
+        danger
+        onClose={() => setArchiveConfirmOpen(false)}
+        onConfirm={() => {
+          setArchiveConfirmOpen(false);
+          archiveMut.mutate([...selected]);
+        }}
+      />
     </div>
   );
 };

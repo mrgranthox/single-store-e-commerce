@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
@@ -32,6 +33,7 @@ export const CatalogProductPricingPage = () => {
   const [cost, setCost] = useState("");
   const [currency, setCurrency] = useState("GHS");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [forceApplyConfirm, setForceApplyConfirm] = useState(false);
   const [confirmReason, setConfirmReason] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
   const [merchFeatured, setMerchFeatured] = useState(false);
@@ -590,11 +592,7 @@ export const CatalogProductPricingPage = () => {
                     type="button"
                     disabled={applySchedMut.isPending}
                     className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-950 disabled:opacity-50"
-                    onClick={() => {
-                      if (window.confirm("Apply scheduled price now even before the effective time?")) {
-                        applySchedMut.mutate(true);
-                      }
-                    }}
+                    onClick={() => setForceApplyConfirm(true)}
                   >
                     Force apply
                   </button>
@@ -655,6 +653,18 @@ export const CatalogProductPricingPage = () => {
           </div>
         </div>
       ) : null}
+      <ConfirmDialog
+        open={forceApplyConfirm}
+        title="Force-apply scheduled price?"
+        body="This will apply the scheduled price immediately, before its effective date. The variant list price will be updated and the schedule cleared."
+        confirmLabel="Apply now"
+        danger
+        onClose={() => setForceApplyConfirm(false)}
+        onConfirm={() => {
+          setForceApplyConfirm(false);
+          applySchedMut.mutate(true);
+        }}
+      />
     </div>
   );
 };

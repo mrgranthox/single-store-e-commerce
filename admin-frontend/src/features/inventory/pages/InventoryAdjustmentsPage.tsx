@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Search } from "lucide-react";
 
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
@@ -58,6 +59,7 @@ export const InventoryAdjustmentsPage = () => {
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [largeAdjConfirm, setLargeAdjConfirm] = useState(false);
 
   useEffect(() => {
     const t = window.setTimeout(() => setDebouncedQ(productQuery.trim()), 300);
@@ -143,16 +145,8 @@ export const InventoryAdjustmentsPage = () => {
       if (!selectedVariantId || !warehouseId || deltaOnHand === null || deltaOnHand === 0 || !reason.trim()) {
         throw new Error("Select product, variant, warehouse, valid quantity, and reason.");
       }
-      let confirmationReason: string | undefined;
-      if (Math.abs(deltaOnHand) > 100) {
-        const typed = window.prompt(
-          `This adjustment changes stock by ${deltaOnHand} units. Type CONFIRM to proceed.`
-        );
-        if (typed !== "CONFIRM") {
-          throw new Error("Confirmation cancelled.");
-        }
-        confirmationReason = "Large adjustment confirmed by operator";
-      }
+      const confirmationReason =
+        Math.abs(deltaOnHand) > 100 ? "Large adjustment confirmed by operator" : undefined;
       return createInventoryAdjustment(accessToken, {
         reason: reason.trim(),
         ...(notes.trim() ? { note: notes.trim() } : {}),
@@ -468,7 +462,11 @@ export const InventoryAdjustmentsPage = () => {
                         onClick={() => {
                           setMessage(null);
                           setConfirmOpen(false);
-                          m.mutate();
+                          if (deltaOnHand !== null && Math.abs(deltaOnHand) > 100) {
+                            setLargeAdjConfirm(true);
+                          } else {
+                            m.mutate();
+                          }
                         }}
                       >
                         Confirm
@@ -543,6 +541,26 @@ export const InventoryAdjustmentsPage = () => {
           </section>
         </div>
       </div>
+      <ConfirmDialog
+        open={largeAdjConfirm}
+        title={`Adjust stock by ${deltaOnHand} units?`}
+        body={
+          <>
+            <p>This is a large stock adjustment ({deltaOnHand} units). Confirm that this is intentional before proceeding.</p>
+            <p className="mt-2 font-mono text-xs">
+              Current: {currentOnHand ?? "—"} → Projected: {projected ?? "—"}
+            </p>
+          </>
+        }
+        confirmLabel="Yes, apply large adjustment"
+        danger
+        onClose={() => setLargeAdjConfirm(false)}
+        onConfirm={() => {
+          setLargeAdjConfirm(false);
+          setMessage(null);
+          m.mutate();
+        }}
+      />
     </div>
   );
 };

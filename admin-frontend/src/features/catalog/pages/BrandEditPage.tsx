@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 
 import { BannerLinkSelect } from "@/components/admin/BannerLinkSelect";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { StatusBadge } from "@/components/primitives/StatusBadge";
@@ -41,6 +42,8 @@ export const BrandEditPage = () => {
   const [galleryText, setGalleryText] = useState("");
   const [archiveReason, setArchiveReason] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
+  type LifecycleAction = "draft" | "restore" | "archive";
+  const [lifecycleConfirm, setLifecycleConfirm] = useState<LifecycleAction | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const bannersQ = useQuery({
@@ -380,12 +383,7 @@ export const BrandEditPage = () => {
                         : undefined
                     }
                     className="w-fit rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-                    onClick={() => {
-                      if (window.confirm("Move this brand to draft? It will no longer appear on the storefront.")) {
-                        setMsg(null);
-                        unpublishMut.mutate();
-                      }
-                    }}
+                    onClick={() => setLifecycleConfirm("draft")}
                   >
                     {unpublishMut.isPending ? "Updating…" : "Move to draft"}
                   </button>
@@ -402,12 +400,7 @@ export const BrandEditPage = () => {
                   type="button"
                   disabled={restoreMut.isPending}
                   className="w-fit rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-                  onClick={() => {
-                    if (window.confirm("Restore this brand to active?")) {
-                      setMsg(null);
-                      restoreMut.mutate();
-                    }
-                  }}
+                    onClick={() => setLifecycleConfirm("restore")}
                 >
                   {restoreMut.isPending ? "Restoring…" : "Restore to active"}
                 </button>
@@ -430,12 +423,7 @@ export const BrandEditPage = () => {
                   type="button"
                   disabled={archiveMut.isPending}
                   className="w-fit rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-900 disabled:opacity-50"
-                  onClick={() => {
-                    if (window.confirm("Archive this brand?")) {
-                      setMsg(null);
-                      archiveMut.mutate();
-                    }
-                  }}
+                    onClick={() => setLifecycleConfirm("archive")}
                 >
                   {archiveMut.isPending ? "Archiving…" : "Archive brand"}
                 </button>
@@ -446,6 +434,40 @@ export const BrandEditPage = () => {
       ) : (
         <p className="text-sm text-slate-500">Loading…</p>
       )}
+      <ConfirmDialog
+        open={lifecycleConfirm !== null}
+        title={
+          lifecycleConfirm === "draft"
+            ? "Move brand to draft?"
+            : lifecycleConfirm === "restore"
+              ? "Restore brand to active?"
+              : "Archive this brand?"
+        }
+        body={
+          lifecycleConfirm === "draft"
+            ? "The brand will no longer appear on the storefront and cannot be assigned to new products."
+            : lifecycleConfirm === "restore"
+              ? "The brand will become active and visible on brand landing pages."
+              : "The brand will be hidden from merchandising flows. You can restore it later from the list."
+        }
+        confirmLabel={
+          lifecycleConfirm === "draft"
+            ? "Move to draft"
+            : lifecycleConfirm === "restore"
+              ? "Restore"
+              : "Archive"
+        }
+        danger={lifecycleConfirm === "archive"}
+        onClose={() => setLifecycleConfirm(null)}
+        onConfirm={() => {
+          const action = lifecycleConfirm;
+          setLifecycleConfirm(null);
+          setMsg(null);
+          if (action === "draft") unpublishMut.mutate();
+          else if (action === "restore") restoreMut.mutate();
+          else if (action === "archive") archiveMut.mutate();
+        }}
+      />
     </StitchPageBody>
   );
 };

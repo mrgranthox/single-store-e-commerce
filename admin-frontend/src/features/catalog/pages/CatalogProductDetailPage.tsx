@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
@@ -114,6 +115,7 @@ export const CatalogProductDetailPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
+  const [archiveConfirm, setArchiveConfirm] = useState(false);
 
   const q = useQuery({
     queryKey: ["admin-catalog-product", productId],
@@ -148,9 +150,6 @@ export const CatalogProductDetailPage = () => {
       return;
     }
     setActionError(null);
-    if (!window.confirm("Archive this product? It will be hidden from storefront flows.")) {
-      return;
-    }
     try {
       await archiveAdminCatalogProduct(accessToken, productId, {});
       await queryClient.invalidateQueries({ queryKey: ["admin-catalog-product", productId] });
@@ -422,7 +421,7 @@ export const CatalogProductDetailPage = () => {
                 </Link>
                 <button
                   type="button"
-                  onClick={archiveProduct}
+                  onClick={() => setArchiveConfirm(true)}
                   disabled={entity.status === "ARCHIVED"}
                   className="rounded-lg border-2 border-red-200 py-2.5 text-center text-sm font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50"
                 >
@@ -453,6 +452,18 @@ export const CatalogProductDetailPage = () => {
           </div>
         </div>
       ) : null}
+      <ConfirmDialog
+        open={archiveConfirm}
+        title="Archive this product?"
+        body="The product will be hidden from all storefront flows. Existing orders are not affected."
+        confirmLabel="Archive product"
+        danger
+        onClose={() => setArchiveConfirm(false)}
+        onConfirm={() => {
+          setArchiveConfirm(false);
+          void archiveProduct();
+        }}
+      />
     </div>
   );
 };

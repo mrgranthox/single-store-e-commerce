@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
@@ -83,6 +84,7 @@ export const CatalogProductEditPage = () => {
   const queryClient = useQueryClient();
   const [serverError, setServerError] = useState<string | null>(null);
   const [statusBusy, setStatusBusy] = useState(false);
+  const [archiveConfirm, setArchiveConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formInitRef = useRef<string | null>(null);
 
@@ -241,10 +243,9 @@ export const CatalogProductEditPage = () => {
     if (!accessToken || !productId) {
       return;
     }
-    if (action === "archive") {
-      if (!window.confirm("Archive this product? It cannot be sold while archived.")) {
-        return;
-      }
+    if (action === "archive" && !archiveConfirm) {
+      setArchiveConfirm(true);
+      return;
     }
     setStatusBusy(true);
     setServerError(null);
@@ -569,6 +570,18 @@ export const CatalogProductEditPage = () => {
           </div>
         </form>
       )}
+      <ConfirmDialog
+        open={archiveConfirm}
+        title="Archive this product?"
+        body="The product cannot be sold while archived. You can restore it later from the catalog list."
+        confirmLabel="Archive product"
+        danger
+        onClose={() => setArchiveConfirm(false)}
+        onConfirm={() => {
+          setArchiveConfirm(false);
+          void runStatus("archive");
+        }}
+      />
     </div>
   );
 };

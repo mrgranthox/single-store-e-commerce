@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { ChevronDown, MoreHorizontal, Search } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -194,6 +195,8 @@ export const ProductsListPage = () => {
   const [bulkMessage, setBulkMessage] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [pinnedExpandId, setPinnedExpandId] = useState<string | null>(null);
+  const [bulkConfirmAction, setBulkConfirmAction] = useState<"publish" | "unpublish" | "archive" | null>(null);
+  const [singleArchiveId, setSingleArchiveId] = useState<string | null>(null);
 
   useEffect(() => {
     const c = searchParams.get("categoryId") ?? "";
@@ -395,15 +398,10 @@ export const ProductsListPage = () => {
     [accessToken, queryClient, selected]
   );
 
-  const confirmArchiveOne = useCallback(
+  const executeArchiveOne = useCallback(
     async (id: string) => {
-      if (!accessToken) {
-        return;
-      }
+      if (!accessToken) return;
       setActionError(null);
-      if (!window.confirm("Archive this product? Archived products cannot be republished from the list.")) {
-        return;
-      }
       try {
         await archiveAdminCatalogProduct(accessToken, id, {});
         await queryClient.invalidateQueries({ queryKey: ["admin-catalog-products"] });
@@ -577,7 +575,7 @@ export const ProductsListPage = () => {
           <button
             type="button"
             disabled={bulkBusy}
-            onClick={() => runBulk("publish")}
+            onClick={() => setBulkConfirmAction("publish")}
             className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-50"
           >
             Publish
@@ -585,7 +583,7 @@ export const ProductsListPage = () => {
           <button
             type="button"
             disabled={bulkBusy}
-            onClick={() => runBulk("unpublish")}
+            onClick={() => setBulkConfirmAction("unpublish")}
             className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-50"
           >
             Unpublish
@@ -593,7 +591,7 @@ export const ProductsListPage = () => {
           <button
             type="button"
             disabled={bulkBusy}
-            onClick={() => runBulk("archive")}
+            onClick={() => setBulkConfirmAction("archive")}
             className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-50"
           >
             Archive
@@ -740,7 +738,7 @@ export const ProductsListPage = () => {
                       </td>
                       <td className="px-3 py-2 align-middle text-sm text-slate-600">{product.visibility}</td>
                       <td className="px-3 py-2 align-middle">
-                        <RowActions product={product} onArchive={confirmArchiveOne} />
+                        <RowActions product={product} onArchive={(id) => setSingleArchiveId(id)} />
                       </td>
                     </tr>
                     {pinnedExpandId === product.id ? (
@@ -813,6 +811,48 @@ export const ProductsListPage = () => {
           </div>
         </div>
       ) : null}
+      <ConfirmDialog
+        open={singleArchiveId !== null}
+        title="Archive this product?"
+        body="Archived products cannot be republished from the list and will be hidden from storefront flows."
+        confirmLabel="Archive product"
+        danger
+        onClose={() => setSingleArchiveId(null)}
+        onConfirm={() => {
+          const id = singleArchiveId;
+          setSingleArchiveId(null);
+          if (id) void executeArchiveOne(id);
+        }}
+      />
+      <ConfirmDialog
+        open={bulkConfirmAction !== null}
+        title={
+          bulkConfirmAction === "archive"
+            ? `Archive ${selected.size} product(s)?`
+            : bulkConfirmAction === "publish"
+              ? `Publish ${selected.size} product(s)?`
+              : `Unpublish ${selected.size} product(s)?`
+        }
+        body={
+          bulkConfirmAction === "archive"
+            ? "Archived products cannot be republished from the list. This affects all selected products."
+            : undefined
+        }
+        confirmLabel={
+          bulkConfirmAction === "archive"
+            ? "Archive all selected"
+            : bulkConfirmAction === "publish"
+              ? "Publish all selected"
+              : "Unpublish all selected"
+        }
+        danger={bulkConfirmAction === "archive"}
+        onClose={() => setBulkConfirmAction(null)}
+        onConfirm={() => {
+          const action = bulkConfirmAction;
+          setBulkConfirmAction(null);
+          if (action) void runBulk(action);
+        }}
+      />
     </div>
   );
 };

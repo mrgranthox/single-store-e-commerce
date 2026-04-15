@@ -4,6 +4,7 @@ import { RefreshCw, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import {
@@ -66,6 +67,7 @@ export const BrandsListPage = () => {
   const [appliedSearch, setAppliedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [rowErr, setRowErr] = useState<string | null>(null);
+  const [pendingArchive, setPendingArchive] = useState<{ id: string; name: string } | null>(null);
 
   const q = useQuery({
     queryKey: ["admin-catalog-brands"],
@@ -145,14 +147,7 @@ export const BrandsListPage = () => {
   };
 
   const onArchive = (b: AdminBrandRow) => {
-    if (
-      !window.confirm(
-        `Archive brand "${b.name}"? You can restore it later from the list when showing archived statuses.`
-      )
-    ) {
-      return;
-    }
-    archiveMut.mutate(b.id);
+    setPendingArchive({ id: b.id, name: b.name });
   };
 
   const onRestore = (b: AdminBrandRow) => {
@@ -336,6 +331,18 @@ export const BrandsListPage = () => {
           emptyState={items.length === 0 ? "No brands yet." : "No brands match your filters."}
         />
       )}
+      <ConfirmDialog
+        open={pendingArchive !== null}
+        title={`Archive brand "${pendingArchive?.name}"?`}
+        body="The brand will be hidden from merchandising flows. You can restore it later by filtering by archived status."
+        confirmLabel="Archive brand"
+        danger
+        onClose={() => setPendingArchive(null)}
+        onConfirm={() => {
+          if (pendingArchive) archiveMut.mutate(pendingArchive.id);
+          setPendingArchive(null);
+        }}
+      />
     </StitchPageBody>
   );
 };

@@ -1,9 +1,9 @@
-import { useEffect, useId, useRef } from "react";
+import { type ReactNode, useEffect, useId, useRef } from "react";
 
 type ConfirmDialogProps = {
   open: boolean;
   title: string;
-  body?: string;
+  body?: ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;
   /** Destructive action — confirm button uses danger styling. */
@@ -12,6 +12,9 @@ type ConfirmDialogProps = {
   onConfirm: () => void;
   onClose: () => void;
 };
+
+const FOCUSABLE =
+  'button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
 export const ConfirmDialog = ({
   open,
@@ -27,6 +30,7 @@ export const ConfirmDialog = ({
   const titleId = useId();
   const bodyId = useId();
   const cancelButtonRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!open) {
@@ -34,10 +38,30 @@ export const ConfirmDialog = ({
     }
 
     cancelButtonRef.current?.focus();
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
         onClose();
+        return;
+      }
+      if (event.key === "Tab") {
+        const el = dialogRef.current;
+        if (!el) return;
+        const nodes = el.querySelectorAll<HTMLElement>(FOCUSABLE);
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        if (event.shiftKey) {
+          if (document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+          }
+        }
       }
     };
 
@@ -58,6 +82,7 @@ export const ConfirmDialog = ({
         onClick={onClose}
       />
       <div
+        ref={dialogRef}
         className="relative w-full max-w-md rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-2xl"
         role="alertdialog"
         aria-modal="true"

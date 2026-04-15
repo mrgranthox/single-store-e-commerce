@@ -4,6 +4,7 @@ import { RefreshCw, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import {
@@ -55,6 +56,7 @@ export const CategoriesListPage = () => {
   const [appliedSearch, setAppliedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [rowErr, setRowErr] = useState<string | null>(null);
+  const [pendingArchive, setPendingArchive] = useState<{ id: string; name: string } | null>(null);
 
   const q = useQuery({
     queryKey: ["admin-catalog-categories"],
@@ -127,14 +129,7 @@ export const CategoriesListPage = () => {
   };
 
   const onArchive = (c: AdminCategoryRow) => {
-    if (
-      !window.confirm(
-        `Archive category "${c.name}"? You can restore it later from the list when showing archived statuses.`
-      )
-    ) {
-      return;
-    }
-    archiveMut.mutate(c.id);
+    setPendingArchive({ id: c.id, name: c.name });
   };
 
   const onRestore = (c: AdminCategoryRow) => {
@@ -319,6 +314,18 @@ export const CategoriesListPage = () => {
           emptyState={items.length === 0 ? "No categories yet." : "No categories match your filters."}
         />
       )}
+      <ConfirmDialog
+        open={pendingArchive !== null}
+        title={`Archive category "${pendingArchive?.name}"?`}
+        body="The category will be hidden from merchandising flows. You can restore it later by filtering by archived status."
+        confirmLabel="Archive category"
+        danger
+        onClose={() => setPendingArchive(null)}
+        onConfirm={() => {
+          if (pendingArchive) archiveMut.mutate(pendingArchive.id);
+          setPendingArchive(null);
+        }}
+      />
     </StitchPageBody>
   );
 };
