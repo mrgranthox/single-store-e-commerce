@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { type UseQueryResult, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 
 import { GrossNetBarChart } from "@/components/dashboard/GrossNetBarChart";
 import { SecurityHourlyLineChart } from "@/components/dashboard/SecurityHourlyLineChart";
@@ -12,8 +13,7 @@ import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { DashboardPartialBody, getDashboardPartialState } from "@/components/primitives/DashboardPartialBody";
 import { StitchGradientButton, StitchKpiMicro, StitchSecondaryButton } from "@/components/stitch/stitch-primitives";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { adminJsonGet } from "@/lib/api/admin-get";
+import { adminJsonGet, type AdminSuccessEnvelope } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { CACHE } from "@/lib/api/cache-strategy";
@@ -230,33 +230,35 @@ type DashboardSubPageProps = {
 };
 
 export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
   const cfg = SEGMENTS[segment];
   const [salesRangeDays, setSalesRangeDays] = useState<7 | 30 | 90>(30);
   const salesRangeQs = useMemo(() => rangeQueryDays(salesRangeDays), [salesRangeDays]);
 
-  const salesBundle = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-dashboard", "sales-bundle", "sales", salesRangeDays],
-        queryFn: () =>
-          adminJsonGet<SalesDash>(`/api/admin/reports/sales?${salesRangeQs}`, accessToken),
-        enabled: Boolean(accessToken) && segment === "sales",
-        ...CACHE.OPERATIONAL},
-      {
-        queryKey: ["admin-dashboard", "sales-bundle", "products", salesRangeDays],
-        queryFn: () =>
-          adminJsonGet<ProductsDash>(`/api/admin/reports/products?${salesRangeQs}`, accessToken),
-        enabled: Boolean(accessToken) && segment === "sales",
-        ...CACHE.OPERATIONAL},
-      {
-        queryKey: ["admin-dashboard", "sales-bundle", "payments-overview"],
-        queryFn: () => adminJsonGet<OverviewPayments>("/api/admin/dashboard/overview", accessToken),
-        enabled: Boolean(accessToken) && segment === "sales",
-        ...CACHE.ANALYTICS}
-    ]
-  });
+  type SalesSeriesQuery = UseQueryResult<AdminSuccessEnvelope<SalesDash>, Error>;
+  type ProductsBundleQuery = UseQueryResult<AdminSuccessEnvelope<ProductsDash>, Error>;
+  type PaymentsOverviewBundleQuery = UseQueryResult<AdminSuccessEnvelope<OverviewPayments>, Error>;
+
+  const [salesSeriesQ, productsDashQ, paymentsOverviewQ] = useAuthedQueries((token) => [
+    {
+      queryKey: ["admin-dashboard", "sales-bundle", "sales", salesRangeDays],
+      queryFn: () => adminJsonGet<SalesDash>(`/api/admin/reports/sales?${salesRangeQs}`, token),
+      enabled: segment === "sales",
+      ...CACHE.OPERATIONAL
+    },
+    {
+      queryKey: ["admin-dashboard", "sales-bundle", "products", salesRangeDays],
+      queryFn: () => adminJsonGet<ProductsDash>(`/api/admin/reports/products?${salesRangeQs}`, token),
+      enabled: segment === "sales",
+      ...CACHE.OPERATIONAL
+    },
+    {
+      queryKey: ["admin-dashboard", "sales-bundle", "payments-overview"],
+      queryFn: () => adminJsonGet<OverviewPayments>("/api/admin/dashboard/overview", token),
+      enabled: segment === "sales",
+      ...CACHE.ANALYTICS
+    }
+  ]) as [SalesSeriesQuery, ProductsBundleQuery, PaymentsOverviewBundleQuery];
 
   const legacyQ = useAuthedQuery(
     [...cfg.queryKey],
@@ -271,7 +273,7 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
         ? legacyQ.error.message
         : null;
 
-  const salesErr = salesBundle.find((q) => q.isError)?.error;
+  const salesErr = salesSeriesQ.error ?? productsDashQ.error ?? paymentsOverviewQ.error;
   const salesErrMsg =
     salesErr instanceof ApiError ? salesErr.message : salesErr instanceof Error ? salesErr.message : null;
 
@@ -448,17 +450,17 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
               {salesErrMsg}
             </div>
           ) : null}
-          {salesBundle.some((q) => q.isLoading) ? (
+          {salesSeriesQ.isLoading || productsDashQ.isLoading || paymentsOverviewQ.isLoading ? (
             <p className="text-sm text-slate-500">Loading…</p>
-          ) : salesBundle[0].data?.data && salesBundle[1].data?.data ? (
+          ) : salesSeriesQ.data?.data && productsDashQ.data?.data ? (
             <SalesSegment
-              sales={salesBundle[0].data.data}
-              products={salesBundle[1].data.data}
-              payments={salesBundle[2].data?.data?.payments}
+              sales={salesSeriesQ.data.data}
+              products={productsDashQ.data.data}
+              payments={paymentsOverviewQ.data?.data?.payments}
               paymentsOverviewQuery={{
-                isLoading: salesBundle[2].isLoading,
-                isError: salesBundle[2].isError,
-                error: salesBundle[2].error
+                isLoading: paymentsOverviewQ.isLoading,
+                isError: paymentsOverviewQ.isError,
+                error: paymentsOverviewQ.error
               }}
             />
           ) : (
@@ -466,14 +468,14 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
               <p className="text-sm text-slate-500">Try refreshing or verify permissions.</p>
             </SurfaceCard>
           )}
-          {salesBundle[0].data?.data ? (
+          {salesSeriesQ.data?.data ? (
             <details className="rounded-lg border border-slate-200 bg-white">
               <summary className="cursor-pointer px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
                 Advanced details
               </summary>
               <div className="border-t border-slate-100 p-4">
                 <TechnicalJsonDisclosure
-                  data={{ sales: salesBundle[0].data.data, products: salesBundle[1].data?.data }}
+                  data={{ sales: salesSeriesQ.data.data, products: productsDashQ.data?.data }}
                   label="Underlying dashboard data"
                   defaultOpen={false}
                 />
@@ -492,12 +494,12 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
           ) : body ? (
             <div className="space-y-8">
               {segment === "operations" ? (
-                <OperationsSegment data={body as OperationsDash} accessToken={accessToken} />
+                <OperationsSegment data={body as OperationsDash} />
               ) : null}
               {segment === "support" ? <SupportSegment data={body as SupportDash} /> : null}
               {segment === "risk" ? <RiskSegment data={body as RiskDash} /> : null}
               {segment === "system-health" ? (
-                <HealthSegment data={body as HealthDash} accessToken={accessToken} />
+                <HealthSegment data={body as HealthDash} />
               ) : null}
               <details className="rounded-lg border border-slate-200 bg-white">
                 <summary className="cursor-pointer px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
@@ -802,21 +804,13 @@ type AdminActionRow = {
   createdAt: string;
 };
 
-const OperationsSegment = ({
-  data,
-  accessToken
-}: {
-  data: OperationsDash;
-  accessToken: string | null;
-}) => {
-  const overridesQ = useQuery({
-    queryKey: ["admin-dashboard", "ops-admin-actions"],
-    queryFn: () =>
-      adminJsonGet<{ items: AdminActionRow[] }>("/api/admin/admin-action-logs?page=1&page_size=5", accessToken),
-    enabled: Boolean(accessToken),
-    ...CACHE.OPERATIONAL,
-    retry: false
-  });
+const OperationsSegment = ({ data }: { data: OperationsDash }) => {
+  const overridesQ = useAuthedQuery(
+    ["admin-dashboard", "ops-admin-actions"],
+    (token) =>
+      adminJsonGet<{ items: AdminActionRow[] }>("/api/admin/admin-action-logs?page=1&page_size=5", token),
+    { ...CACHE.OPERATIONAL, retry: false }
+  );
   const overridesState = getDashboardPartialState({
     isLoading: overridesQ.isLoading,
     isError: overridesQ.isError,
@@ -827,37 +821,32 @@ const OperationsSegment = ({
       (overridesQ.data?.data.items ?? []).length === 0
   });
 
-  const queues = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-dashboard", "ops-fulfill-count"],
-        queryFn: async () => {
-          const r = await adminJsonGet<{ items: unknown[] }>(
-            "/api/admin/orders/fulfillment-queue?page=1&page_size=1",
-            accessToken
-          );
-          return Number((r.meta as { totalItems?: number })?.totalItems ?? 0);
-        },
-        enabled: Boolean(accessToken),
-        retry: false
+  type OpsQueueCountQuery = UseQueryResult<number, Error>;
+  const [ufQ, dqQ] = useAuthedQueries((token) => [
+    {
+      queryKey: ["admin-dashboard", "ops-fulfill-count"],
+      queryFn: async () => {
+        const r = await adminJsonGet<{ items: unknown[] }>(
+          "/api/admin/orders/fulfillment-queue?page=1&page_size=1",
+          token
+        );
+        return Number((r.meta as { totalItems?: number })?.totalItems ?? 0);
       },
-      {
-        queryKey: ["admin-dashboard", "ops-dispatch-count"],
-        queryFn: async () => {
-          const r = await adminJsonGet<{ items: unknown[] }>(
-            "/api/admin/orders/dispatch-queue?page=1&page_size=1",
-            accessToken
-          );
-          return Number((r.meta as { totalItems?: number })?.totalItems ?? 0);
-        },
-        enabled: Boolean(accessToken),
-        retry: false
-      }
-    ]
-  });
+      retry: false
+    },
+    {
+      queryKey: ["admin-dashboard", "ops-dispatch-count"],
+      queryFn: async () => {
+        const r = await adminJsonGet<{ items: unknown[] }>(
+          "/api/admin/orders/dispatch-queue?page=1&page_size=1",
+          token
+        );
+        return Number((r.meta as { totalItems?: number })?.totalItems ?? 0);
+      },
+      retry: false
+    }
+  ]) as [OpsQueueCountQuery, OpsQueueCountQuery];
 
-  const ufQ = queues[0];
-  const dqQ = queues[1];
   const unfulfilled = ufQ.isError || ufQ.isLoading ? 0 : (ufQ.data ?? 0);
   const dispatchBacklog = dqQ.isError || dqQ.isLoading ? 0 : (dqQ.data ?? 0);
   const oos = (data.lowStock ?? []).filter((r) => r.onHand === 0).length;
@@ -1394,42 +1383,40 @@ type IntegrationsHealthLatencyPayload = {
   };
 };
 
-const HealthSegment = ({ data, accessToken }: { data: HealthDash; accessToken: string | null }) => {
+const HealthSegment = ({ data }: { data: HealthDash }) => {
   const deps = data.dependencies ?? [];
   const workload = data.workload24h;
   const runtime = data.runtime;
   const webhookBuckets = workload?.webhookHourly ?? DEFAULT_WEBHOOK_HOURLY;
 
-  const [jobsQ, integrationsHealthQ] = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-dashboard", "health-live-jobs"],
-        queryFn: () =>
-          adminJsonGet<{ items: JobRunListItem[] }>("/api/admin/jobs?page=1&pageSize=8", accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.REAL_TIME,
-        retry: false
-      },
-      {
-        queryKey: ["admin-dashboard", "health-integrations-extended"],
-        queryFn: () => adminJsonGet<IntegrationsHealthLatencyPayload>("/api/admin/integrations/health", accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL,
-        retry: false
-      }
-    ]
-  });
+  type JobsLiveQuery = UseQueryResult<AdminSuccessEnvelope<{ items: JobRunListItem[] }>, Error>;
+  type IntegrationsExtendedQuery = UseQueryResult<AdminSuccessEnvelope<IntegrationsHealthLatencyPayload>, Error>;
+  type JobStatusCountQuery = UseQueryResult<AdminSuccessEnvelope<{ items: unknown[] }>, Error>;
 
-  const jobSuccessMetaQ = useQueries({
-    queries: (["SUCCEEDED", "FAILED"] as const).map((st) => ({
+  const [jobsQ, integrationsHealthQ] = useAuthedQueries((token) => [
+    {
+      queryKey: ["admin-dashboard", "health-live-jobs"],
+      queryFn: () => adminJsonGet<{ items: JobRunListItem[] }>("/api/admin/jobs?page=1&pageSize=8", token),
+      ...CACHE.REAL_TIME,
+      retry: false
+    },
+    {
+      queryKey: ["admin-dashboard", "health-integrations-extended"],
+      queryFn: () => adminJsonGet<IntegrationsHealthLatencyPayload>("/api/admin/integrations/health", token),
+      ...CACHE.OPERATIONAL,
+      retry: false
+    }
+  ]) as [JobsLiveQuery, IntegrationsExtendedQuery];
+
+  const jobSuccessMetaQ = useAuthedQueries((token) =>
+    (["SUCCEEDED", "FAILED"] as const).map((st) => ({
       queryKey: ["admin-dashboard", "health-job-success-split", st],
       queryFn: () =>
-        adminJsonGet<{ items: unknown[] }>(`/api/admin/jobs?page=1&pageSize=1&status=${st}`, accessToken),
-      enabled: Boolean(accessToken),
+        adminJsonGet<{ items: unknown[] }>(`/api/admin/jobs?page=1&pageSize=1&status=${st}`, token),
       ...CACHE.REAL_TIME,
       retry: false
     }))
-  });
+  ) as [JobStatusCountQuery, JobStatusCountQuery];
 
   const latency = integrationsHealthQ.data?.data?.webhookProcessingLatency;
   const jobItems = jobsQ.data?.data?.items ?? [];

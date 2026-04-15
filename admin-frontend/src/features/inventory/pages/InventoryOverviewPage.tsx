@@ -21,7 +21,6 @@ import { InventorySubNav } from "@/features/inventory/components/InventorySubNav
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { formatMoney as _formatMoney } from "@/lib/format";
 import { STORE_CURRENCY_CODE } from "@/lib/store-currency";
-import { useQuery } from "@tanstack/react-query";
 import {
   ApiError,
   getInventoryOverview,

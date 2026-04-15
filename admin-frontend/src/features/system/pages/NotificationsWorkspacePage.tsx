@@ -14,8 +14,10 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { formatDateTime } from "@/lib/format";
-import { useQuery } from "@tanstack/react-query";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
+import { useListFilters } from "@/lib/hooks/useListFilters";
 import {
   ApiError,
   createAdminNotification,
@@ -32,19 +34,25 @@ const notificationDraftSchema = z.object({
   payloadJson: z.string().trim().min(2, "Payload JSON is required.")
 });
 
+const NOTIFICATION_LIST_DEFAULTS = { status: "", type: "", recipient: "" };
+
 export const NotificationsWorkspacePage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
   const actorEmail = useAdminAuthStore((state) => state.actor?.email ?? null);
-  const [status, setStatus] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [recipientEmail, setRecipientEmail] = useState("");
+  const { filters, page, setPage, set, setDebounced } = useListFilters({ defaults: NOTIFICATION_LIST_DEFAULTS });
+  const [typeDraft, setTypeDraft] = useState("");
+  const [recipientDraft, setRecipientDraft] = useState("");
   const [form, setForm] = useState({
     type: "ADMIN_INVITATION",
     recipientEmail: "",
     payloadJson: '{\n  "message": ""\n}'
   });
-  const [page, setPage] = useState(1);
   const [flash, setFlash] = useState<string | null>(null);
+
+  useEffect(() => {
+    setTypeDraft(filters.type);
+    setRecipientDraft(filters.recipient);
+  }, [filters.type, filters.recipient]);
 
   const draftValidation = useMemo(() => {
     const parsed = notificationDraftSchema.safeParse(form);
@@ -75,13 +83,14 @@ export const NotificationsWorkspacePage = () => {
   }, [form]);
 
   const query = useAuthedQuery(
-    ["admin-notifications", page, status, typeFilter, recipientEmail],
-    (token) => listAdminNotifications(token, {
-      page,
-      page_size: 20,
-      status: status || undefined,
-      type: typeFilter || undefined,
-      recipientEmail: recipientEmail || undefined
+    ["admin-notifications", page, filters.status, filters.type, filters.recipient],
+    (token) =>
+      listAdminNotifications(token, {
+        page,
+        page_size: 20,
+        status: filters.status || undefined,
+        type: filters.type || undefined,
+        recipientEmail: filters.recipient || undefined
       })
   );
 
@@ -199,20 +208,28 @@ export const NotificationsWorkspacePage = () => {
       <SurfaceCard title="Outbox filters" description="Reduce delivery noise and isolate failed records.">
         <div className="grid gap-4 md:grid-cols-3">
           <input
-            value={typeFilter}
-            onChange={(event) => setTypeFilter(event.target.value)}
+            value={typeDraft}
+            onChange={(event) => {
+              const v = event.target.value;
+              setTypeDraft(v);
+              setDebounced("type", v);
+            }}
             placeholder="Type"
             className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
           />
           <input
-            value={recipientEmail}
-            onChange={(event) => setRecipientEmail(event.target.value)}
+            value={recipientDraft}
+            onChange={(event) => {
+              const v = event.target.value;
+              setRecipientDraft(v);
+              setDebounced("recipient", v);
+            }}
             placeholder="Recipient email"
             className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
           />
           <select
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
+            value={filters.status}
+            onChange={(event) => set("status", event.target.value)}
             className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
           >
             <option value="">All statuses</option>
@@ -255,17 +272,21 @@ export const NotificationsWorkspacePage = () => {
       </SurfaceCard>
 
       <SurfaceCard title="Notification delivery records" description="Recent notifications and replay actions.">
-        {query.error instanceof ApiError ? (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-            {query.error.message}
-          </div>
+        {query.isError ? (
+          <QueryError label="notifications" error={query.error} onRetry={() => void query.refetch()} />
         ) : null}
-        <DataTableShell
-          columns={["Id", "Type", "Recipient", "Status", "Created", "Actions"]}
-          rows={rows}
-          emptyState={query.isLoading ? "Loading notifications…" : "No notification records matched this filter."}
-          variant="stitchOperational"
-        />
+        {query.isLoading ? (
+          <div className="rounded-lg border border-[#eef1f8] bg-white p-4">
+            <SkeletonTable rows={8} cols={6} label="Loading notifications" />
+          </div>
+        ) : (
+          <DataTableShell
+            columns={["Id", "Type", "Recipient", "Status", "Created", "Actions"]}
+            rows={rows}
+            emptyState="No notification records matched this filter."
+            variant="stitchOperational"
+          />
+        )}
         <div className="mt-4 flex items-center justify-between text-sm text-[#5b5e68]">
           <span>
             Page {meta?.page ?? page} of {meta?.totalPages ?? 1}
@@ -274,16 +295,16 @@ export const NotificationsWorkspacePage = () => {
             <button
               type="button"
               className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
-              disabled={(meta?.page ?? page) <= 1}
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              disabled={page <= 1}
+              onClick={() => setPage(Math.max(1, page - 1))}
             >
               Previous
             </button>
             <button
               type="button"
               className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
-              disabled={(meta?.page ?? page) >= (meta?.totalPages ?? 1)}
-              onClick={() => setPage((current) => current + 1)}
+              disabled={page >= (meta?.totalPages ?? 1)}
+              onClick={() => setPage(page + 1)}
             >
               Next
             </button>

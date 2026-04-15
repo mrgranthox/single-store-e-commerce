@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
 import { Download, Filter, MoreVertical, RefreshCw } from "lucide-react";

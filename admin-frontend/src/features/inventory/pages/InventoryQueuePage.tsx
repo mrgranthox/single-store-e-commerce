@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Eye, FileSpreadsheet, RefreshCw, Search, Settings2 } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { StitchFilterPanel } from "@/components/stitch";
 import { InventoryProductCell } from "@/features/inventory/components/InventoryProductCell";
 import { InventorySubNav } from "@/features/inventory/components/InventorySubNav";
@@ -14,12 +15,14 @@ import { formatMoney as _formatMoney } from "@/lib/format";
 import { STORE_CURRENCY_CODE } from "@/lib/store-currency";
 const formatMoney = (cents: number | null | undefined) => _formatMoney(cents, STORE_CURRENCY_CODE);
 import {
-  ApiError,
   listAdminWarehouses,
   listLowStockInventory,
   listOutOfStockInventory,
   type InventoryStockRow
 } from "@/features/inventory/api/admin-inventory.api";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const INVENTORY_QUEUE_FILTER_DEFAULTS = { q: "", warehouseId: "" };
 
 type QueueMode = "low" | "out";
 
@@ -63,13 +66,16 @@ const replenishmentCentsForRow = (row: InventoryStockRow) => {
 };
 
 export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const { filters, page, setPage, set, setMany } = useListFilters({
+    defaults: INVENTORY_QUEUE_FILTER_DEFAULTS
+  });
   const [searchDraft, setSearchDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
-  const [warehouseId, setWarehouseId] = useState("");
   const [poOpen, setPoOpen] = useState(false);
+
+  useEffect(() => {
+    setSearchDraft(filters.q);
+  }, [filters.q]);
 
   const warehousesQuery = useAuthedQuery(
     ["admin-warehouses"],
@@ -77,42 +83,34 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
   );
 
   const queryKey = useMemo(
-    () => ["admin-inventory-queue", mode, page, appliedSearch, warehouseId] as const,
-    [mode, page, appliedSearch, warehouseId]
+    () => ["admin-inventory-queue", mode, page, filters.q, filters.warehouseId] as const,
+    [mode, page, filters.q, filters.warehouseId]
   );
 
   const listQuery = useAuthedQuery(
-  queryKey,
-  (token) => {
-    const query = {
-            page,
-            page_size: 20,
-            sortBy: "available" as const,
-            sortOrder: "asc" as const,
-            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
-            ...(warehouseId ? { warehouseId } : {})
-          };
-          return mode === "low"
-            ? listLowStockInventory(token, query)
-            : listOutOfStockInventory(token, query);
-  }
-);
+    queryKey,
+    (token) => {
+      const query = {
+        page,
+        page_size: 20,
+        sortBy: "available" as const,
+        sortOrder: "asc" as const,
+        ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+        ...(filters.warehouseId ? { warehouseId: filters.warehouseId } : {})
+      };
+      return mode === "low"
+        ? listLowStockInventory(token, query)
+        : listOutOfStockInventory(token, query);
+    }
+  );
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
   const warehouses = warehousesQuery.data?.data.items ?? [];
 
   const applySearch = () => {
-    setPage(1);
-    setAppliedSearch(searchDraft);
+    setMany({ q: searchDraft.trim() });
   };
-
-  const errorMessage =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
 
   const criticalCount = mode === "low" ? items.filter((r) => r.stock.available < 5).length : 0;
   const replenishmentPageCents =
@@ -392,7 +390,7 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
                 : "—"}
             </h4>
             <p className="mt-1 text-[10px] text-slate-500">
-              {warehouseId ? "Scoped warehouse shipments · " : "All warehouses · "}
+              {filters.warehouseId ? "Scoped warehouse shipments · " : "All warehouses · "}
               DISPATCHED / IN_TRANSIT · order line totals
             </p>
           </div>
@@ -427,7 +425,7 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
             </span>
             <span className="text-[10px] text-slate-500">
               Distinct open orders with a line for any OOS variant
-              {warehouseId ? " (this warehouse)" : ""}
+              {filters.warehouseId ? " (this warehouse)" : ""}
             </span>
             <Link to="/admin/orders" className="text-xs font-semibold text-[#1653cc] hover:underline">
               Open orders →
@@ -454,10 +452,9 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
         <label className="flex flex-col gap-1 text-xs font-medium text-[var(--color-text-muted)]">
           Warehouse
           <select
-            value={warehouseId}
+            value={filters.warehouseId}
             onChange={(e) => {
-              setWarehouseId(e.target.value);
-              setPage(1);
+              set("warehouseId", e.target.value);
             }}
             className="min-w-[180px] rounded-lg border border-[var(--color-border-light)] px-3 py-2 text-sm"
           >
@@ -478,15 +475,21 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
         </button>
       </StitchFilterPanel>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
-          {errorMessage}
-        </div>
+      {listQuery.isError ? (
+        <QueryError
+          label={mode === "low" ? "low-stock queue" : "out-of-stock queue"}
+          error={listQuery.error}
+          onRetry={() => void listQuery.refetch()}
+        />
       ) : null}
 
       {listQuery.isLoading ? (
-        <div className="rounded-xl border border-[var(--color-border-light)] bg-white p-8 text-center text-sm text-[var(--color-text-muted)]">
-          Loading…
+        <div className="rounded-xl border border-[var(--color-border-light)] bg-white p-4">
+          <SkeletonTable
+            rows={8}
+            cols={mode === "low" ? 9 : 6}
+            label={mode === "low" ? "Loading low-stock queue" : "Loading out-of-stock queue"}
+          />
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)]">
@@ -533,7 +536,7 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border border-[var(--color-border-light)] px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Previous
@@ -541,7 +544,7 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border border-[var(--color-border-light)] px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Next
