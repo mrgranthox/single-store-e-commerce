@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/primitives/PageHeader";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
@@ -20,6 +21,7 @@ import {
   type AdminProductListItem
 } from "@/features/catalog/api/admin-catalog.api";
 import { formatProductListPrice } from "@/features/catalog/lib/format-money";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
 const PRODUCT_DETAIL_STALE_MS = 20_000;
@@ -286,19 +288,14 @@ export const ProductsListPage = () => {
   const items = productsQuery.data?.data.items ?? [];
   const meta = productsQuery.data?.meta;
 
-  const prefetchProductDetail = useCallback(
-    (productId: string) => {
-      if (!accessToken) {
-        return;
-      }
-      void queryClient.prefetchQuery({
-        queryKey: ["admin-catalog-product", productId],
-        queryFn: () => getAdminCatalogProduct(accessToken, productId),
-        staleTime: PRODUCT_DETAIL_STALE_MS
-      });
-    },
-    [accessToken, queryClient]
-  );
+  const { prefetch: prefetchProductDetail, prefetchMany: prefetchProductDetails } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: PRODUCT_DETAIL_STALE_MS,
+    queryKeyFor: (productId: string) => ["admin-catalog-product", productId],
+    queryFnFor: (productId: string) => getAdminCatalogProduct(accessToken!, productId),
+    onPrefetch: () =>
+      preloadLazyNamedComponent("../features/catalog/pages/CatalogProductDetailPage.tsx", "CatalogProductDetailPage")
+  });
 
   useEffect(() => {
     if (items.length === 0) {
@@ -309,6 +306,10 @@ export const ProductsListPage = () => {
       prev != null && items.some((p) => p.id === prev) ? prev : items[0]!.id
     );
   }, [items]);
+
+  useEffect(() => {
+    prefetchProductDetails(items.map((product) => product.id), 2);
+  }, [items, prefetchProductDetails]);
 
   const applyFilters = () => {
     setPage(1);

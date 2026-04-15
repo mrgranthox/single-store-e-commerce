@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { PageActionGroup } from "@/components/primitives/PageActionGroup";
@@ -10,9 +11,11 @@ import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import {
   ApiError,
   createAdminUser,
+  getAdminUser,
   listAdminUsers
 } from "@/features/system/api/admin-users.api";
 
@@ -76,11 +79,25 @@ export const AdminUsersPage = () => {
   const items = query.data?.data.items ?? [];
   const roles = query.data?.data.availableRoles ?? [];
   const meta = query.data?.meta;
+  const { prefetch: prefetchAdminUser, prefetchMany: prefetchAdminUsers } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: 20_000,
+    queryKeyFor: (adminUserId: string) => ["admin-user-detail", adminUserId],
+    queryFnFor: (adminUserId: string) => getAdminUser(accessToken!, adminUserId),
+    onPrefetch: () =>
+      preloadLazyNamedComponent("../features/system/pages/AdminUserDetailPage.tsx", "AdminUserDetailPage")
+  });
+
+  useEffect(() => {
+    prefetchAdminUsers(items.map((item) => item.id), 2);
+  }, [items, prefetchAdminUsers]);
 
   const rows = items.map((item) => [
     <Link
       key={`email-${item.id}`}
       to={`/admin/system/admin-users/${item.id}`}
+      onMouseEnter={() => prefetchAdminUser(item.id)}
+      onFocus={() => prefetchAdminUser(item.id)}
       className="font-semibold text-[#1653cc] hover:underline"
     >
       {item.fullName ?? item.email}

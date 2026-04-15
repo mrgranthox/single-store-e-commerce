@@ -1,10 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
@@ -13,6 +14,7 @@ import {
   type AdminCustomerListItem
 } from "@/features/customers/api/admin-customers.api";
 import { displayCustomerName } from "@/features/customers/lib/customerDisplay";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { StitchFilterPanel } from "@/components/stitch";
 
@@ -167,22 +169,21 @@ export const CustomersListPage = () => {
     enabled: Boolean(accessToken)
   });
 
-  const prefetchCustomerDetail = useCallback(
-    (customerId: string) => {
-      if (!accessToken) {
-        return;
-      }
-      void queryClient.prefetchQuery({
-        queryKey: ["admin-customer-detail", customerId],
-        queryFn: () => getAdminCustomerDetail(accessToken, customerId),
-        staleTime: CUSTOMER_DETAIL_STALE_MS
-      });
-    },
-    [accessToken, queryClient]
-  );
+  const { prefetch: prefetchCustomerDetail, prefetchMany: prefetchCustomerDetails } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: CUSTOMER_DETAIL_STALE_MS,
+    queryKeyFor: (customerId: string) => ["admin-customer-detail", customerId],
+    queryFnFor: (customerId: string) => getAdminCustomerDetail(accessToken!, customerId),
+    onPrefetch: () =>
+      preloadLazyNamedComponent("../features/customers/pages/CustomerDetailPage.tsx", "CustomerDetailPage")
+  });
 
   const items = customersQuery.data?.data.items ?? [];
   const meta = customersQuery.data?.meta;
+
+  useEffect(() => {
+    prefetchCustomerDetails(items.map((customer) => customer.id), 2);
+  }, [items, prefetchCustomerDetails]);
 
   const summary = meta?.matchingSummary;
   const totalMatching = summary?.totalMatching ?? meta?.totalItems ?? 0;

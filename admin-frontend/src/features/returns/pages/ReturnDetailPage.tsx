@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
+import { SurfaceCard } from "@/components/primitives/SurfaceCard";
+import { WorkspaceStateCard } from "@/components/primitives/WorkspaceStateCard";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
@@ -121,6 +123,38 @@ export const ReturnDetailPage = () => {
     return 0;
   })();
 
+  if (detailQuery.isLoading) {
+    return (
+      <div className="mx-auto max-w-[1600px] space-y-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="text-sm text-slate-400">Returns / Detail</div>
+          <Link to="/admin/returns" className="text-sm font-semibold text-[#1653cc] hover:underline">
+            ← All returns
+          </Link>
+        </div>
+        <SurfaceCard title="Loading return">
+          <div className="space-y-4" aria-busy="true">
+            <div className="h-6 w-48 animate-pulse rounded bg-[#eef1f8]" />
+            <div className="h-4 w-full animate-pulse rounded bg-[#f4f6fb]" />
+            <div className="h-40 animate-pulse rounded-xl bg-[#f4f6fb]" />
+          </div>
+        </SurfaceCard>
+      </div>
+    );
+  }
+
+  if (!e) {
+    return (
+      <WorkspaceStateCard
+        eyebrow="Returns workspace"
+        title="Return record unavailable"
+        description="The return could not be loaded, or it is no longer accessible with your current permissions."
+        primaryActionLabel="Return to returns"
+        onPrimaryAction={() => window.history.back()}
+      />
+    );
+  }
+
   return (
     <div className="mx-auto max-w-[1600px] space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -146,9 +180,7 @@ export const ReturnDetailPage = () => {
       {!returnId ? <p className="text-sm text-red-700">Missing return id.</p> : null}
       {err ? <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div> : null}
 
-      {detailQuery.isLoading ? (
-        <p className="text-sm text-[#737685]">Loading…</p>
-      ) : e ? (
+      {e ? (
         <>
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>

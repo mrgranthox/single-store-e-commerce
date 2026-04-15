@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import {
@@ -12,16 +13,19 @@ import {
   StitchPageBody
 } from "@/components/stitch";
 import { stitchSelectClass } from "@/components/stitch/stitch-primitives";
+import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import {
   ApiError,
+  getAdminWebhookEvent,
   listAdminWebhooks,
   retryAdminWebhookEvent,
   type WebhookEventRow
 } from "@/features/system/api/admin-system.api";
 import { adminJsonGet } from "@/lib/api/admin-get";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { PageHeader } from "@/components/primitives/PageHeader";
 
@@ -76,6 +80,7 @@ const WEBHOOK_STATUSES = [
 
 export const WebhooksListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const actorEmail = useAdminAuthStore((s) => s.actor?.email ?? null);
   const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
@@ -128,11 +133,12 @@ export const WebhooksListPage = () => {
   const canRetryWebhook = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
 
   const retryMut = useAdminAction({
-    mutationFn: (id: string) => {
+    mutationFn: async (id: string) => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
-      return retryAdminWebhookEvent(accessToken, id);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
+      return retryAdminWebhookEvent(accessToken, id, stepUpToken);
     },
     isAllowed: canRetryWebhook,
     invalidate: [["admin-webhooks"], ["admin-webhooks-health-strip"]]
@@ -141,6 +147,17 @@ export const WebhooksListPage = () => {
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
   const totalPages = meta ? Math.max(1, Math.ceil(meta.total / meta.pageSize)) : 1;
+  const { prefetch: prefetchWebhook, prefetchMany: prefetchWebhooks } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: 20_000,
+    queryKeyFor: (webhookEventId: string) => ["admin-webhook-event", webhookEventId],
+    queryFnFor: (webhookEventId: string) => getAdminWebhookEvent(accessToken!, webhookEventId),
+    onPrefetch: () => preloadLazyNamedComponent("../features/system/pages/WebhookDetailPage.tsx", "WebhookDetailPage")
+  });
+
+  useEffect(() => {
+    prefetchWebhooks(items.map((item) => item.id), 2);
+  }, [items, prefetchWebhooks]);
 
   const err =
     listQuery.error instanceof ApiError ? listQuery.error.message : listQuery.error instanceof Error ? listQuery.error.message : null;
@@ -171,6 +188,8 @@ export const WebhooksListPage = () => {
       <Link
         key={`id-${w.id}`}
         to={`/admin/system/webhooks/${w.id}`}
+        onMouseEnter={() => prefetchWebhook(w.id)}
+        onFocus={() => prefetchWebhook(w.id)}
         className="font-mono text-xs font-semibold text-[#1653cc] hover:underline"
       >
         {w.id.slice(0, 10)}…
@@ -192,7 +211,12 @@ export const WebhooksListPage = () => {
         {w.latestAttempt?.attemptNo ?? w.attemptCount ?? "—"}
       </span>,
       <div key={`act-${w.id}`} className="flex flex-wrap items-center justify-end gap-2 text-right">
-        <Link to={`/admin/system/webhooks/${w.id}`} className="text-[11px] font-bold uppercase text-[#1653cc] hover:underline">
+        <Link
+          to={`/admin/system/webhooks/${w.id}`}
+          onMouseEnter={() => prefetchWebhook(w.id)}
+          onFocus={() => prefetchWebhook(w.id)}
+          className="text-[11px] font-bold uppercase text-[#1653cc] hover:underline"
+        >
           View
         </Link>
         {canRetryRow ? (

@@ -101,6 +101,57 @@ export type RiskSignalsListResponse = {
   meta?: { page: number; limit: number; totalItems: number; totalPages: number };
 };
 
+export type LoginEventItem = {
+  id: string;
+  email: string;
+  success: boolean;
+  failureReason: string | null;
+  ipCountry: string | null;
+  ipRegion: string | null;
+  userAgent: string | null;
+  createdAt: string;
+  user: { id: string; email: string | null } | null;
+  adminUser: { id: string; email: string | null } | null;
+};
+
+export type ListLoginEventsQuery = {
+  page?: number;
+  page_size?: number;
+  success?: boolean;
+  email?: string;
+};
+
+export type LoginEventsListResponse = {
+  success: true;
+  data: { items: LoginEventItem[] };
+  meta: { page: number; limit: number; totalItems: number; totalPages: number };
+};
+
+const loginEventsQs = (query: ListLoginEventsQuery) => {
+  const params = new URLSearchParams();
+  params.set("page", String(query.page ?? 1));
+  params.set("page_size", String(query.page_size ?? 20));
+  if (query.success === true) {
+    params.set("success", "true");
+  }
+  if (query.success === false) {
+    params.set("success", "false");
+  }
+  if (query.email?.trim()) {
+    params.set("email", query.email.trim());
+  }
+  return `?${params.toString()}`;
+};
+
+export const listLoginEvents = async (
+  accessToken: string,
+  query: ListLoginEventsQuery = {}
+): Promise<LoginEventsListResponse> =>
+  apiRequest<LoginEventsListResponse>({
+    path: `/api/admin/security/login-events${loginEventsQs(query)}`,
+    accessToken
+  });
+
 const riskSignalsQs = (query: ListRiskSignalsQuery) => {
   const params = new URLSearchParams();
   params.set("page", String(query.page ?? 1));

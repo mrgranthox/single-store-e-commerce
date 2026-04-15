@@ -21,6 +21,7 @@ import {
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { StitchBreadcrumbs, StitchPageBody } from "@/components/stitch";
 import { SupportWorkspaceNav } from "@/features/support/components/SupportWorkspaceNav";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
@@ -299,6 +300,54 @@ export const SupportTicketDetailPage = () => {
     }
   };
 
+  if (detailQuery.isLoading) {
+    return (
+      <StitchPageBody>
+        <SupportWorkspaceNav />
+        <PageHeader
+          title="Ticket"
+          description="Loading ticket thread, assignee context, and customer history."
+          breadcrumbItems={[{ label: "SUPPORT", to: "/admin/support/tickets" }, { label: "DETAIL" }]}
+          meta={
+            <Link to="/admin/support/tickets" className="text-sm font-semibold text-[#1653cc] hover:underline">
+              ← All tickets
+            </Link>
+          }
+        />
+        <SurfaceCard title="Loading ticket">
+          <div className="space-y-4" aria-busy="true">
+            <div className="h-6 w-52 animate-pulse rounded bg-[#eef1f8]" />
+            <div className="h-4 w-full animate-pulse rounded bg-[#f4f6fb]" />
+            <div className="h-40 animate-pulse rounded-xl bg-[#f4f6fb]" />
+          </div>
+        </SurfaceCard>
+      </StitchPageBody>
+    );
+  }
+
+  if (!e) {
+    return (
+      <StitchPageBody>
+        <SupportWorkspaceNav />
+        <PageHeader
+          title="Ticket unavailable"
+          description="The ticket could not be loaded, or it is no longer visible with your current access."
+          breadcrumbItems={[{ label: "SUPPORT", to: "/admin/support/tickets" }, { label: "DETAIL" }]}
+          meta={
+            <Link to="/admin/support/tickets" className="text-sm font-semibold text-[#1653cc] hover:underline">
+              ← All tickets
+            </Link>
+          }
+        />
+        <SurfaceCard title="Support thread unavailable">
+          <p className="text-sm text-[#5b5e68]">
+            Refresh the queue or return to the tickets workspace and open the thread again.
+          </p>
+        </SurfaceCard>
+      </StitchPageBody>
+    );
+  }
+
   return (
     <StitchPageBody>
       <SupportWorkspaceNav />
@@ -385,9 +434,7 @@ export const SupportTicketDetailPage = () => {
         </div>
       ) : null}
 
-      {detailQuery.isLoading ? (
-        <p className="text-sm text-[#60626c]">Loading…</p>
-      ) : e ? (
+      {e ? (
         <div className="grid grid-cols-12 items-start gap-6">
           <div className="col-span-12 flex flex-col gap-6 lg:col-span-7">
             <div className="flex max-h-[min(700px,72vh)] flex-col overflow-hidden rounded-xl bg-white shadow-sm">

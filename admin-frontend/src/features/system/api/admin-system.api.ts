@@ -141,12 +141,14 @@ export const getAdminWebhookEvent = async (
 
 export const retryAdminWebhookEvent = async (
   accessToken: string,
-  webhookEventId: string
+  webhookEventId: string,
+  stepUpToken?: string
 ): Promise<{ success: true; data: unknown }> =>
   apiRequest({
     method: "POST",
     path: `/api/admin/webhooks/${encodeURIComponent(webhookEventId)}/retry`,
     accessToken,
+    headers: stepUpToken ? { "x-admin-step-up-token": stepUpToken } : undefined,
     body: {}
   });
 
@@ -237,12 +239,14 @@ export const getAdminNotification = async (
 
 export const retryAdminNotification = async (
   accessToken: string,
-  notificationId: string
+  notificationId: string,
+  stepUpToken?: string
 ): Promise<AdminNotificationDetailResponse> =>
   apiRequest<AdminNotificationDetailResponse>({
     method: "POST",
     path: `/api/admin/notifications/${encodeURIComponent(notificationId)}/retry`,
     accessToken,
+    headers: stepUpToken ? { "x-admin-step-up-token": stepUpToken } : undefined,
     body: {}
   });
 
@@ -255,12 +259,14 @@ export const createAdminNotification = async (
     recipientEmail?: string;
     recipientType?: string;
     payload?: Record<string, unknown>;
-  }
+  },
+  stepUpToken?: string
 ): Promise<AdminNotificationDetailResponse> =>
   apiRequest<AdminNotificationDetailResponse>({
     method: "POST",
     path: "/api/admin/notifications",
     accessToken,
+    headers: stepUpToken ? { "x-admin-step-up-token": stepUpToken } : undefined,
     body
   });
 

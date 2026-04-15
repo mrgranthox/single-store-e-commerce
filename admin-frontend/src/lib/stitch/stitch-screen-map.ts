@@ -98,6 +98,7 @@ export const stitchExportSlugByScreenId: Record<string, string> = {
   "security-incidents": "incidents_list",
   "security-incident-detail": "incident_investigation_workspace",
   "security-risk-signals": "risk_signals_fraud_review",
+  "security-login-events": "audit_logs_explorer",
   "system-settings": "settings_overview_hub",
   "system-settings-checkout": "checkout_commerce_settings",
   "system-settings-reviews": "review_moderation_settings",

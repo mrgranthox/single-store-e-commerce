@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, listAdminPayments, type AdminPaymentListItem } from "@/features/payments/api/admin-payments.api";
+import { ApiError, getAdminPaymentDetail, listAdminPayments, type AdminPaymentListItem } from "@/features/payments/api/admin-payments.api";
 import { PAYSTACK_PROVIDER_QUERY_VALUE, formatPaymentGatewayLabel } from "@/features/payments/lib/paystackRails";
 import {
   StitchPaymentStatusPill,
@@ -12,6 +13,7 @@ import {
   customerInitials,
   stitchProviderSwatch
 } from "@/features/payments/ui/stitchPaymentsUi";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { PageActionsMenu } from "@/components/primitives/PageActionsMenu";
 
@@ -82,6 +84,13 @@ export const PaymentsListPage = () => {
 
   const items = paymentsQuery.data?.data.items ?? [];
   const meta = paymentsQuery.data?.meta;
+  const { prefetch: prefetchPayment, prefetchMany: prefetchPayments } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: 20_000,
+    queryKeyFor: (paymentId: string) => ["admin-payment-detail", paymentId],
+    queryFnFor: (paymentId: string) => getAdminPaymentDetail(accessToken!, paymentId),
+    onPrefetch: () => preloadLazyNamedComponent("../features/payments/pages/PaymentDetailPage.tsx", "PaymentDetailPage")
+  });
 
   const applyFilters = () => {
     setPage(1);
@@ -160,6 +169,10 @@ export const PaymentsListPage = () => {
     setDateFrom("");
     setPage(1);
   };
+
+  useEffect(() => {
+    prefetchPayments(items.map((item) => item.id), 2);
+  }, [items, prefetchPayments]);
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8">
@@ -400,6 +413,8 @@ export const PaymentsListPage = () => {
                       <td className="px-6 py-4">
                         <Link
                           to={`/admin/payments/${p.id}`}
+                          onMouseEnter={() => prefetchPayment(p.id)}
+                          onFocus={() => prefetchPayment(p.id)}
                           className="cursor-pointer font-mono text-[0.75rem] text-[#1653cc] hover:underline"
                         >
                           {p.orderNumber}

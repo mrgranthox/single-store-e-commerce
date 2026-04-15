@@ -1238,6 +1238,17 @@ const securityScreens = [
     endpointIds: ["security.riskSignals", "security.riskSignals.reviewPlain"],
     actions: ["Inspect risk signal", "Mark reviewed"],
     permissionHints: ["security.risk.read", "security.risk.review"]
+  }),
+  screen({
+    sequence: 88.1,
+    id: "security-login-events",
+    title: "Login Events Explorer",
+    group: "security",
+    path: "/admin/security/login-events",
+    purpose: "Authentication success and failure event explorer for investigations and access review.",
+    endpointIds: ["security.loginEvents"],
+    actions: ["Filter login events", "Export login events"],
+    permissionHints: ["security.events.read"]
   })
 ] as const;
 

@@ -5,6 +5,8 @@ import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentatio
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
+import { WorkspaceStateCard } from "@/components/primitives/WorkspaceStateCard";
+import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { ApiError, getAdminNotification, retryAdminNotification } from "@/features/system/api/admin-system.api";
@@ -21,6 +23,7 @@ const formatWhen = (value: string | null) => {
 export const NotificationDetailPage = () => {
   const { notificationId = "" } = useParams<{ notificationId: string }>();
   const accessToken = useAdminAuthStore((state) => state.accessToken);
+  const actorEmail = useAdminAuthStore((state) => state.actor?.email ?? null);
 
   const query = useQuery({
     queryKey: ["admin-notification", notificationId],
@@ -34,12 +37,40 @@ export const NotificationDetailPage = () => {
   const retryMutation = useAdminAction({
     mutationFn: async () => {
       if (!accessToken) throw new Error("Not signed in.");
-      return retryAdminNotification(accessToken, notificationId);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
+      return retryAdminNotification(accessToken, notificationId, stepUpToken);
     },
     invalidate: [["admin-notification", notificationId], ["admin-notifications"]]
   });
 
   const entity = query.data?.data.entity;
+
+  if (query.isLoading) {
+    return (
+      <div className="mx-auto max-w-5xl space-y-6">
+        <PageHeader title="Notification detail" description="Inspect payload, recipient, delivery attempts, and retry state." />
+        <SurfaceCard title="Loading notification">
+          <div className="space-y-3" aria-busy="true">
+            <div className="h-5 w-40 animate-pulse rounded bg-[#eef1f8]" />
+            <div className="h-4 w-full animate-pulse rounded bg-[#f4f6fb]" />
+            <div className="h-32 animate-pulse rounded-xl bg-[#f4f6fb]" />
+          </div>
+        </SurfaceCard>
+      </div>
+    );
+  }
+
+  if (!entity) {
+    return (
+      <WorkspaceStateCard
+        eyebrow="Notifications workspace"
+        title="Notification record unavailable"
+        description="The notification could not be loaded, or it is no longer visible to your role."
+        primaryActionLabel="Return to notifications"
+        onPrimaryAction={() => window.history.back()}
+      />
+    );
+  }
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
@@ -61,7 +92,7 @@ export const NotificationDetailPage = () => {
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{query.error.message}</div>
       ) : null}
 
-      {entity ? (
+      {
         <>
           <SurfaceCard title="Summary">
             <dl className="grid gap-4 md:grid-cols-2">
@@ -112,11 +143,7 @@ export const NotificationDetailPage = () => {
             </div>
           </SurfaceCard>
         </>
-      ) : query.isLoading ? (
-        <SurfaceCard title="Notification detail">
-          <p className="text-sm text-[#5b5e68]">Loading notification detail…</p>
-        </SurfaceCard>
-      ) : null}
+      }
     </div>
   );
 };

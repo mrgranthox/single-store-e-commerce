@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, type ComponentType, type LazyExoticComponent } from "react";
+import { useEffect } from "react";
 import { Link, Navigate, RouterProvider, createBrowserRouter, useRouteError } from "react-router-dom";
 
 import { PublicAuthLayout } from "@/components/layout/PublicAuthLayout";
@@ -8,53 +8,10 @@ import {
   adminScreenLookup,
   protectedAdminScreens
 } from "@/lib/contracts/admin-screen-catalog";
-import { WorkspaceRouteSkeleton } from "@/components/primitives/WorkspaceRouteSkeleton";
+import { renderLazyRoute } from "@/app/lazy-admin-routes";
 import { captureFrontendException } from "@/lib/observability/sentry";
 
 const stripAdminPrefix = (path: string) => path.replace(/^\/admin\/?/, "");
-const lazyModuleLoaders = import.meta.glob("../features/**/*.tsx");
-const lazyComponentCache = new Map<string, LazyExoticComponent<ComponentType<Record<string, unknown>>>>();
-
-const getLazyNamedComponent = (modulePath: string, exportName: string) => {
-  const cacheKey = `${modulePath}:${exportName}`;
-  const existing = lazyComponentCache.get(cacheKey);
-  if (existing) {
-    return existing;
-  }
-
-  const loader = lazyModuleLoaders[modulePath];
-  if (!loader) {
-    throw new Error(`Lazy route module not found: ${modulePath}`);
-  }
-
-  const component = lazy(async () => {
-    const mod = (await loader()) as Record<string, unknown>;
-    const namedExport = mod[exportName];
-    if (typeof namedExport !== "function") {
-      throw new Error(`Lazy route export not found: ${exportName} from ${modulePath}`);
-    }
-    return {
-      default: namedExport as ComponentType<Record<string, unknown>>
-    };
-  });
-
-  lazyComponentCache.set(cacheKey, component);
-  return component;
-};
-
-const renderLazyRoute = (
-  modulePath: string,
-  exportName: string,
-  props?: Record<string, unknown>
-) => {
-  const Component = getLazyNamedComponent(modulePath, exportName);
-
-  return (
-    <Suspense fallback={<WorkspaceRouteSkeleton />}>
-      <Component {...(props ?? {})} />
-    </Suspense>
-  );
-};
 
 const RouterErrorPage = () => {
   const error = useRouteError();
@@ -302,6 +259,11 @@ const screenRouteElement = (screenId: string) => {
       return renderLazyRoute(
         "../features/security/pages/SecurityEventDetailPage.tsx",
         "SecurityEventDetailPage"
+      );
+    case "security-login-events":
+      return renderLazyRoute(
+        "../features/security/pages/SecurityLoginEventsPage.tsx",
+        "SecurityLoginEventsPage"
       );
     case "security-risk-signals":
       return renderLazyRoute(

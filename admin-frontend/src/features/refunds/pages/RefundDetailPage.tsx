@@ -3,7 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
+import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
+import { WorkspaceStateCard } from "@/components/primitives/WorkspaceStateCard";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
@@ -238,14 +240,48 @@ export const RefundDetailPage = () => {
     return steps;
   }, [e]);
 
+  if (detailQuery.isLoading) {
+    return (
+      <div className="mx-auto max-w-[1440px] space-y-8 pb-12">
+        <header className="sticky top-0 z-10 -mx-4 mb-2 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 bg-[#f8f9fb]/95 px-4 py-3 backdrop-blur-md">
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <span>Financial Reconciliation</span>
+            <MaterialIcon name="chevron_right" className="text-xs" />
+            <span className="font-semibold text-slate-900">Refund Details</span>
+          </div>
+          <Link to="/admin/refunds" className="text-xs font-bold uppercase tracking-widest text-[#1653cc] hover:underline">
+            ← All refunds
+          </Link>
+        </header>
+        <SurfaceCard title="Loading refund">
+          <div className="space-y-4" aria-busy="true">
+            <div className="h-6 w-44 animate-pulse rounded bg-[#eef1f8]" />
+            <div className="h-4 w-full animate-pulse rounded bg-[#f4f6fb]" />
+            <div className="h-40 animate-pulse rounded-xl bg-[#f4f6fb]" />
+          </div>
+        </SurfaceCard>
+      </div>
+    );
+  }
+
+  if (!e) {
+    return (
+      <WorkspaceStateCard
+        eyebrow="Refunds workspace"
+        title="Refund record unavailable"
+        description="The refund could not be loaded, or it is no longer visible with your current permissions."
+        primaryActionLabel="Return to refunds"
+        onPrimaryAction={() => window.history.back()}
+      />
+    );
+  }
+
   return (
     <div className="mx-auto max-w-[1440px] space-y-8 pb-12">
       {!refundId ? <p className="text-sm text-red-700">Missing refund id.</p> : null}
       {err ? <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div> : null}
 
-      {detailQuery.isLoading ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">Loading refund…</div>
-      ) : e ? (
+      {e ? (
         <>
           <header className="sticky top-0 z-10 -mx-4 mb-2 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200/80 bg-[#f8f9fb]/95 px-4 py-3 backdrop-blur-md">
             <div className="flex items-center gap-2 text-sm text-slate-500">

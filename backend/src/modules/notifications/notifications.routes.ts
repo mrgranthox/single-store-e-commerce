@@ -3,6 +3,7 @@ import { Router } from "express";
 import type { RouteModule } from "../../app/route.types";
 import { rateLimit, rateLimitKeyFromActorOrIp } from "../../common/middleware/rate-limit.middleware";
 import { validateRequest } from "../../common/validation/validate-request";
+import { requireAdminStepUp } from "../auth/admin-step-up.middleware";
 import { requireCustomerActor } from "../auth/auth.middleware";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
 import {
@@ -62,6 +63,7 @@ router.post(
   "/admin/notifications",
   requireAdminActor,
   requirePermissions(["notifications.write"]),
+  requireAdminStepUp(),
   adminNotificationCreateRateLimit,
   validateRequest({ body: createNotificationBodySchema }),
   createNotificationAdmin
@@ -70,6 +72,7 @@ router.post(
   "/admin/notifications/:notificationId/retry",
   requireAdminActor,
   requirePermissions(["notifications.write"]),
+  requireAdminStepUp(),
   adminNotificationRetryRateLimit,
   validateRequest({ params: notificationIdParamsSchema }),
   retryNotificationAdmin

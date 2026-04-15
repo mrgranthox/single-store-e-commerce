@@ -1,17 +1,22 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
+import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import {
   ApiError,
   createAdminNotification,
+  getAdminNotification,
   listAdminNotifications,
   retryAdminNotification,
   type NotificationRow
@@ -25,8 +30,15 @@ const formatWhen = (value: string) => {
   }
 };
 
+const notificationDraftSchema = z.object({
+  type: z.string().trim().min(1, "Notification type is required."),
+  recipientEmail: z.string().trim().email("Enter a valid recipient email."),
+  payloadJson: z.string().trim().min(2, "Payload JSON is required.")
+});
+
 export const NotificationsWorkspacePage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
+  const actorEmail = useAdminAuthStore((state) => state.actor?.email ?? null);
   const [status, setStatus] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [recipientEmail, setRecipientEmail] = useState("");
@@ -37,6 +49,34 @@ export const NotificationsWorkspacePage = () => {
   });
   const [page, setPage] = useState(1);
   const [flash, setFlash] = useState<string | null>(null);
+
+  const draftValidation = useMemo(() => {
+    const parsed = notificationDraftSchema.safeParse(form);
+    if (!parsed.success) {
+      return {
+        ok: false as const,
+        message: parsed.error.issues[0]?.message ?? "Complete the notification draft."
+      };
+    }
+    try {
+      const parsedPayload = JSON.parse(parsed.data.payloadJson) as unknown;
+      if (!parsedPayload || typeof parsedPayload !== "object" || Array.isArray(parsedPayload)) {
+        return {
+          ok: false as const,
+          message: "Payload JSON must be an object."
+        };
+      }
+      return {
+        ok: true as const,
+        payload: parsedPayload as Record<string, unknown>
+      };
+    } catch {
+      return {
+        ok: false as const,
+        message: "Payload JSON must be valid JSON."
+      };
+    }
+  }, [form]);
 
   const query = useQuery({
     queryKey: ["admin-notifications", page, status, typeFilter, recipientEmail],
@@ -60,16 +100,21 @@ export const NotificationsWorkspacePage = () => {
   const createMutation = useAdminAction({
     mutationFn: async () => {
       if (!accessToken) throw new Error("Not signed in.");
-      const payload = JSON.parse(form.payloadJson) as Record<string, unknown>;
+      if (!draftValidation.ok) {
+        throw new Error(draftValidation.message);
+      }
+      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
       return createAdminNotification(
         accessToken,
         {
           type: form.type.trim(),
           recipientEmail: form.recipientEmail.trim(),
-          payload
-        }
+          payload: draftValidation.payload
+        },
+        stepUpToken
       );
     },
+    isAvailable: draftValidation.ok,
     invalidate: [...refreshKeys],
     onSuccess: () => {
       setFlash("Notification queued.");
@@ -85,17 +130,33 @@ export const NotificationsWorkspacePage = () => {
   const retryMutation = useAdminAction({
     mutationFn: async (notificationId: string) => {
       if (!accessToken) throw new Error("Not signed in.");
-      return retryAdminNotification(accessToken, notificationId);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
+      return retryAdminNotification(accessToken, notificationId, stepUpToken);
     },
     invalidate: [...refreshKeys]
   });
 
   const items = query.data?.data.items ?? [];
   const meta = query.data?.meta;
+  const { prefetch: prefetchNotification, prefetchMany: prefetchNotifications } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: 20_000,
+    queryKeyFor: (notificationId: string) => ["admin-notification", notificationId],
+    queryFnFor: (notificationId: string) => getAdminNotification(accessToken!, notificationId),
+    onPrefetch: () =>
+      preloadLazyNamedComponent("../features/system/pages/NotificationDetailPage.tsx", "NotificationDetailPage")
+  });
+
+  useEffect(() => {
+    prefetchNotifications(items.map((item) => item.id), 2);
+  }, [items, prefetchNotifications]);
+
   const rows = items.map((item: NotificationRow) => [
     <Link
       key={`id-${item.id}`}
       to={`/admin/system/notifications/${item.id}`}
+      onMouseEnter={() => prefetchNotification(item.id)}
+      onFocus={() => prefetchNotification(item.id)}
       className="font-mono text-xs font-semibold text-[#1653cc] hover:underline"
     >
       {item.id.slice(0, 10)}…
@@ -113,7 +174,12 @@ export const NotificationsWorkspacePage = () => {
       {formatWhen(item.createdAt)}
     </span>,
     <div key={`actions-${item.id}`} className="flex justify-end gap-2">
-      <Link to={`/admin/system/notifications/${item.id}`} className="text-xs font-semibold text-[#1653cc] hover:underline">
+      <Link
+        to={`/admin/system/notifications/${item.id}`}
+        onMouseEnter={() => prefetchNotification(item.id)}
+        onFocus={() => prefetchNotification(item.id)}
+        className="text-xs font-semibold text-[#1653cc] hover:underline"
+      >
         View
       </Link>
       <button
@@ -168,6 +234,11 @@ export const NotificationsWorkspacePage = () => {
       </SurfaceCard>
 
       <SurfaceCard title="Manual notification" description="Queue a one-off admin notification through the existing delivery pipeline.">
+        {!draftValidation.ok ? (
+          <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            {draftValidation.message}
+          </div>
+        ) : null}
         <div className="grid gap-4 lg:grid-cols-[1fr_1fr_auto]">
           <input
             value={form.type}
@@ -189,6 +260,7 @@ export const NotificationsWorkspacePage = () => {
           value={form.payloadJson}
           onChange={(event) => setForm((current) => ({ ...current, payloadJson: event.target.value }))}
           className="mt-4 min-h-48 w-full rounded-xl border border-[#d8dbe8] bg-[#0f172a] p-4 font-mono text-xs text-slate-100"
+          spellCheck={false}
         />
       </SurfaceCard>
 

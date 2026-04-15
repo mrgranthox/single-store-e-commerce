@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -212,6 +212,22 @@ export const OrderDetailPage = () => {
   const canOverrideFulfillment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment", "orders.update"]);
   const canCancelOrder = adminHasAnyPermission(actorPermissions, ["orders.cancel"]);
   const canViewAudit = adminHasAnyPermission(actorPermissions, ["security.audit.read"]);
+  const normalizedWarehouseId = warehouseId.trim();
+  const normalizedShipWarehouseId = shipWarehouseId.trim();
+  const normalizedCampaignId = campaignId.trim();
+  const normalizedCampaignNote = campaignNote.trim();
+  const normalizedCancelReason = cancelReason.trim();
+  const shipmentCreatable = Boolean(normalizedShipWarehouseId);
+  const campaignHasChanges = Boolean(
+    entity && (normalizedCampaignId !== (entity.campaignId ?? "") || normalizedCampaignNote)
+  );
+
+  useEffect(() => {
+    if (!entity) {
+      return;
+    }
+    setCampaignId(entity.campaignId ?? "");
+  }, [entity?.campaignId, entity?.id]);
 
   const statusMut = useAdminAction({
     mutationFn: () => {
@@ -243,7 +259,7 @@ export const OrderDetailPage = () => {
         throw new Error("Not signed in.");
       }
       return assignAdminOrderWarehouse(accessToken, orderId, {
-        warehouseId: warehouseId.trim(),
+        warehouseId: normalizedWarehouseId,
         ...(assignNote.trim() ? { note: assignNote.trim() } : {})
       });
     },
@@ -257,6 +273,7 @@ export const OrderDetailPage = () => {
       });
     },
     isAllowed: canOverrideFulfillment,
+    isAvailable: Boolean(normalizedWarehouseId),
     invalidate: [...orderInvalidateKeys]
   });
 
@@ -266,7 +283,7 @@ export const OrderDetailPage = () => {
         throw new Error("Not signed in.");
       }
       return cancelAdminOrder(accessToken, orderId, {
-        reason: cancelReason.trim(),
+        reason: normalizedCancelReason,
         ...(cancelNote.trim() ? { note: cancelNote.trim() } : {})
       });
     },
@@ -280,6 +297,7 @@ export const OrderDetailPage = () => {
       });
     },
     isAllowed: canCancelOrder,
+    isAvailable: Boolean(normalizedCancelReason),
     invalidate: [...orderInvalidateKeys]
   });
 
@@ -289,7 +307,7 @@ export const OrderDetailPage = () => {
         throw new Error("Not signed in.");
       }
       return createAdminOrderShipment(accessToken, orderId, {
-        warehouseId: shipWarehouseId.trim(),
+        warehouseId: normalizedShipWarehouseId,
         ...(shipCarrier.trim() ? { carrier: shipCarrier.trim() } : {}),
         ...(shipTracking.trim() ? { trackingNumber: shipTracking.trim() } : {}),
         ...(shipNote.trim() ? { note: shipNote.trim() } : {})
@@ -305,6 +323,7 @@ export const OrderDetailPage = () => {
       });
     },
     isAllowed: canOverrideFulfillment,
+    isAvailable: shipmentCreatable,
     invalidate: [...orderInvalidateKeys]
   });
 
@@ -314,8 +333,8 @@ export const OrderDetailPage = () => {
         throw new Error("Not signed in.");
       }
       return patchAdminOrderCampaignAttribution(accessToken, orderId, {
-        campaignId: campaignId.trim() || null,
-        ...(campaignNote.trim() ? { note: campaignNote.trim() } : {})
+        campaignId: normalizedCampaignId || null,
+        ...(normalizedCampaignNote ? { note: normalizedCampaignNote } : {})
       });
     },
     onSuccess: () => {
@@ -328,6 +347,7 @@ export const OrderDetailPage = () => {
       });
     },
     isAllowed: canUpdateOrder,
+    isAvailable: campaignHasChanges,
     invalidate: [...orderInvalidateKeys]
   });
 
@@ -887,10 +907,16 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={shipMut.isPending || shipMut.blocked || !shipWarehouseId.trim() || !canOverrideFulfillment}
+                    disabled={shipMut.isPending || shipMut.blocked}
                     onClick={() => setConfirmAction("ship")}
                     className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
-                    title={canOverrideFulfillment ? undefined : "Requires orders.override_fulfillment permission"}
+                    title={
+                      !canOverrideFulfillment
+                        ? "Requires orders.override_fulfillment permission"
+                        : !shipmentCreatable
+                          ? "Warehouse is required before creating a shipment"
+                          : undefined
+                    }
                   >
                     {shipMut.isPending ? "Creating…" : "Create shipment"}
                   </button>
@@ -901,7 +927,7 @@ export const OrderDetailPage = () => {
                   <label className="flex flex-col gap-1 text-xs text-slate-600">
                     Campaign ID
                     <input
-                      value={campaignId || entity.campaignId || ""}
+                      value={campaignId}
                       onChange={(ev) => setCampaignId(ev.target.value)}
                       className="font-mono rounded-lg border border-slate-200 px-3 py-2 text-sm"
                       placeholder="Campaign id or leave blank to clear"
@@ -918,10 +944,16 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={campaignMut.isPending || campaignMut.blocked || !canUpdateOrder}
+                    disabled={campaignMut.isPending || campaignMut.blocked}
                     onClick={() => campaignMut.run(undefined)}
                     className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
-                    title={canUpdateOrder ? undefined : "Requires orders.update permission"}
+                    title={
+                      !canUpdateOrder
+                        ? "Requires orders.update permission"
+                        : !campaignHasChanges
+                          ? "Change the campaign id or add a note before saving"
+                          : undefined
+                    }
                   >
                     {campaignMut.isPending ? "Saving…" : "Update campaign"}
                   </button>

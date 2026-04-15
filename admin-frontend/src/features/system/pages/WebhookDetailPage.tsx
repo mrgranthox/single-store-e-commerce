@@ -6,6 +6,8 @@ import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
+import { WorkspaceStateCard } from "@/components/primitives/WorkspaceStateCard";
+import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import {
@@ -73,6 +75,7 @@ const humanizeAttemptError = (error: unknown): string | null => {
 export const WebhookDetailPage = () => {
   const { webhookEventId = "" } = useParams<{ webhookEventId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const actorEmail = useAdminAuthStore((s) => s.actor?.email ?? null);
   const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const [retryOpen, setRetryOpen] = useState(false);
   const canRetryByPermission = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
@@ -89,11 +92,12 @@ export const WebhookDetailPage = () => {
   });
 
   const retryMut = useAdminAction({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
-      return retryAdminWebhookEvent(accessToken, webhookEventId);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
+      return retryAdminWebhookEvent(accessToken, webhookEventId, stepUpToken);
     },
     isAllowed: canRetryByPermission,
     invalidate: [["admin-webhook-event", webhookEventId], ["admin-webhooks"]]
@@ -112,6 +116,35 @@ export const WebhookDetailPage = () => {
   const attempts = [...(raw?.attempts ?? [])].sort((a, b) => b.attemptNo - a.attemptNo);
   const businessLines =
     raw != null ? buildWebhookBusinessSummary(raw.payload, raw.provider, raw.eventType) : [];
+
+  if (detailQuery.isLoading) {
+    return (
+      <StitchPageBody>
+        <div className="space-y-6">
+          <PageHeader title="Webhook event" description="Inbound webhook record, verification, and processing attempts." />
+          <SurfaceCard title="Loading webhook">
+            <div className="space-y-3" aria-busy="true">
+              <div className="h-5 w-40 animate-pulse rounded bg-[#eef1f8]" />
+              <div className="h-4 w-full animate-pulse rounded bg-[#f4f6fb]" />
+              <div className="h-32 animate-pulse rounded-xl bg-[#f4f6fb]" />
+            </div>
+          </SurfaceCard>
+        </div>
+      </StitchPageBody>
+    );
+  }
+
+  if (!raw) {
+    return (
+      <WorkspaceStateCard
+        eyebrow="System webhooks"
+        title="Webhook event unavailable"
+        description="The webhook record could not be loaded, or it is no longer accessible with your current permissions."
+        primaryActionLabel="Return to webhooks"
+        onPrimaryAction={() => window.history.back()}
+      />
+    );
+  }
 
   return (
     <StitchPageBody>
@@ -136,9 +169,7 @@ export const WebhookDetailPage = () => {
 
       {err ? <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div> : null}
 
-      {detailQuery.isLoading ? <p className="text-sm text-[#737685]">Loading…</p> : null}
-
-      {raw ? (
+      {
         <>
           <SurfaceCard title="Event overview" description="Operational summary. The full provider message is not shown on this screen.">
             <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -223,7 +254,7 @@ export const WebhookDetailPage = () => {
           </SurfaceCard>
 
         </>
-      ) : null}
+      }
 
       <ConfirmDialog
         open={retryOpen}

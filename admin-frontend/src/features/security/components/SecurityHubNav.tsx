@@ -25,6 +25,11 @@ const HUB_ITEMS: { to: string; label: string; match: (path: string) => boolean }
     match: (p) => p.includes("/admin/security/events")
   },
   {
+    to: "/admin/security/login-events",
+    label: "Login events",
+    match: (p) => p.includes("/admin/security/login-events")
+  },
+  {
     to: "/admin/security/incidents",
     label: "Incidents",
     match: (p) => p.includes("/admin/security/incidents")

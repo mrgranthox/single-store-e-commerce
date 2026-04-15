@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -14,6 +14,7 @@ import {
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import {
   ApiError,
   getAdminOrderDetail,
@@ -21,6 +22,7 @@ import {
   type AdminOrderListItem
 } from "@/features/orders/api/admin-orders.api";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
 const ORDER_STATUSES = [
@@ -162,22 +164,20 @@ export const OrdersListPage = () => {
     enabled: Boolean(accessToken)
   });
 
-  const prefetchOrderDetail = useCallback(
-    (orderId: string) => {
-      if (!accessToken) {
-        return;
-      }
-      void queryClient.prefetchQuery({
-        queryKey: ["admin-order-detail", orderId],
-        queryFn: () => getAdminOrderDetail(accessToken, orderId),
-        staleTime: ORDER_DETAIL_STALE_MS
-      });
-    },
-    [accessToken, queryClient]
-  );
+  const { prefetch: prefetchOrderDetail, prefetchMany: prefetchOrderDetails } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: ORDER_DETAIL_STALE_MS,
+    queryKeyFor: (orderId: string) => ["admin-order-detail", orderId],
+    queryFnFor: (orderId: string) => getAdminOrderDetail(accessToken!, orderId),
+    onPrefetch: () => preloadLazyNamedComponent("../features/orders/pages/OrderDetailPage.tsx", "OrderDetailPage")
+  });
 
   const items = ordersQuery.data?.data.items ?? [];
   const meta = ordersQuery.data?.meta;
+
+  useEffect(() => {
+    prefetchOrderDetails(items.map((order) => order.id), 2);
+  }, [items, prefetchOrderDetails]);
 
   const applyFilters = useCallback(() => {
     const parts = [orderDraft.trim(), customerDraft.trim()].filter(Boolean);

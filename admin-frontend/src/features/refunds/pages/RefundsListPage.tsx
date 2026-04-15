@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, listAdminRefunds, type RefundListItem } from "@/features/refunds/api/admin-refunds.api";
+import { ApiError, getAdminRefundDetail, listAdminRefunds, type RefundListItem } from "@/features/refunds/api/admin-refunds.api";
 import { customerInitials } from "@/features/payments/ui/stitchPaymentsUi";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 
 const refundRefLabel = (id: string) => `REF-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 const returnRefLabel = (id: string) => `RET-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -115,6 +117,17 @@ export const RefundsListPage = () => {
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
+  const { prefetch: prefetchRefund, prefetchMany: prefetchRefunds } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: 20_000,
+    queryKeyFor: (refundId: string) => ["admin-refund-detail", refundId],
+    queryFnFor: (refundId: string) => getAdminRefundDetail(accessToken!, refundId),
+    onPrefetch: () => preloadLazyNamedComponent("../features/refunds/pages/RefundDetailPage.tsx", "RefundDetailPage")
+  });
+
+  useEffect(() => {
+    prefetchRefunds(items.map((item) => item.id), 2);
+  }, [items, prefetchRefunds]);
 
   const displayItems = useMemo(() => {
     let r = items;
@@ -426,7 +439,12 @@ export const RefundsListPage = () => {
                         />
                       </td>
                       <td className="p-4">
-                        <Link to={`/admin/refunds/${r.id}`} className="font-mono text-xs font-medium text-[#0f1117] hover:text-[#1653cc]">
+                        <Link
+                          to={`/admin/refunds/${r.id}`}
+                          onMouseEnter={() => prefetchRefund(r.id)}
+                          onFocus={() => prefetchRefund(r.id)}
+                          className="font-mono text-xs font-medium text-[#0f1117] hover:text-[#1653cc]"
+                        >
                           {refundRefLabel(r.id)}
                         </Link>
                       </td>
@@ -470,6 +488,8 @@ export const RefundsListPage = () => {
                         <div className="flex items-center justify-end gap-1">
                           <Link
                             to={`/admin/refunds/${r.id}`}
+                            onMouseEnter={() => prefetchRefund(r.id)}
+                            onFocus={() => prefetchRefund(r.id)}
                             className="p-1.5 text-slate-400 transition-colors hover:text-[#1653cc]"
                             title="Review"
                           >

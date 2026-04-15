@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import type { RouteModule } from "../../app/route.types";
 import { validateRequest } from "../../common/validation/validate-request";
+import { requireAdminStepUp } from "../auth/admin-step-up.middleware";
 import { requireAdminActor } from "../roles-permissions/rbac.middleware";
 import { requirePermissions } from "../roles-permissions/rbac.middleware";
 import {
@@ -111,6 +112,7 @@ router.post(
   "/system/webhooks/events/:webhookEventId/retry",
   requireAdminActor,
   requirePermissions(["system.webhooks.retry", "integrations.webhooks.write"], "any"),
+  requireAdminStepUp(),
   validateRequest({ params: webhookEventIdParamsSchema }),
   retryTrackedWebhookEvent
 );
@@ -118,6 +120,7 @@ router.post(
   "/admin/webhooks/:webhookEventId/retry",
   requireAdminActor,
   requirePermissions(["system.webhooks.retry", "integrations.webhooks.write"], "any"),
+  requireAdminStepUp(),
   validateRequest({ params: webhookEventIdParamsSchema }),
   retryTrackedWebhookEvent
 );

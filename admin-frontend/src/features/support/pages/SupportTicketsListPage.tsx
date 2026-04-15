@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -20,6 +20,7 @@ import {
   stitchSelectClass
 } from "@/components/stitch";
 import { SupportWorkspaceNav } from "@/features/support/components/SupportWorkspaceNav";
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
@@ -39,6 +40,7 @@ import {
   priorityDotClass,
   totalTickets
 } from "@/features/support/lib/supportPresentation";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 
 const TICKET_DETAIL_STALE_MS = 20_000;
 
@@ -112,19 +114,14 @@ export const SupportTicketsListPage = () => {
     enabled: Boolean(accessToken)
   });
 
-  const prefetchTicketDetail = useCallback(
-    (id: string) => {
-      if (!accessToken) {
-        return;
-      }
-      void queryClient.prefetchQuery({
-        queryKey: ["admin-support-ticket", id],
-        queryFn: () => getSupportTicketDetail(accessToken, id),
-        staleTime: TICKET_DETAIL_STALE_MS
-      });
-    },
-    [accessToken, queryClient]
-  );
+  const { prefetch: prefetchTicketDetail, prefetchMany: prefetchTicketDetails } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: TICKET_DETAIL_STALE_MS,
+    queryKeyFor: (id: string) => ["admin-support-ticket", id],
+    queryFnFor: (id: string) => getSupportTicketDetail(accessToken!, id),
+    onPrefetch: () =>
+      preloadLazyNamedComponent("../features/support/pages/SupportTicketDetailPage.tsx", "SupportTicketDetailPage")
+  });
 
   const reportsQuery = useQuery({
     queryKey: ["admin-support-reports", "tickets-list-kpis", "weekly"],
@@ -176,6 +173,10 @@ export const SupportTicketsListPage = () => {
   const items = ticketsQuery.data?.data.items ?? [];
   const meta = ticketsQuery.data?.meta;
   const rep = reportsQuery.data?.data;
+
+  useEffect(() => {
+    prefetchTicketDetails(items.map((ticket) => ticket.id), 2);
+  }, [items, prefetchTicketDetails]);
 
   const applyFilters = () => {
     setPage(1);

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 
@@ -95,6 +95,32 @@ export const ShipmentDetailPage = () => {
 
   const terminal = e ? ["DELIVERED", "CANCELLED"].includes(e.status.toUpperCase()) : true;
   const canUpdateShipment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment"]);
+  const normalizedWarehouseId = editWarehouseId.trim();
+  const normalizedCarrier = editCarrier.trim();
+  const normalizedTrackingNumber = editTrackingNumber.trim();
+  const normalizedNote = editNote.trim();
+  const nextShipmentStatus = editStatus || e?.status || "";
+  const shipmentHasChanges = Boolean(
+    e &&
+      (
+        normalizedWarehouseId !== (e.warehouse?.id ?? "") ||
+        normalizedCarrier !== (e.carrier ?? "") ||
+        normalizedTrackingNumber !== (e.trackingNumber ?? "") ||
+        nextShipmentStatus !== e.status ||
+        normalizedNote
+      )
+  );
+
+  useEffect(() => {
+    if (!e) {
+      return;
+    }
+    setEditWarehouseId(e.warehouse?.id ?? "");
+    setEditStatus(e.status);
+    setEditCarrier(e.carrier ?? "");
+    setEditTrackingNumber(e.trackingNumber ?? "");
+    setEditNote("");
+  }, [e]);
 
   const updateMutation = useAdminAction({
     mutationFn: async () => {
@@ -102,19 +128,21 @@ export const ShipmentDetailPage = () => {
         throw new Error("Missing context.");
       }
       return updateAdminShipment(accessToken, shipmentId, {
-        warehouseId: editWarehouseId.trim() || e.warehouse?.id || undefined,
-        shipmentStatus: editStatus || e.status,
-        trackingNumber: editTrackingNumber.trim() || e.trackingNumber || undefined,
-        carrier: editCarrier.trim() || e.carrier || undefined,
-        note: editNote.trim() || undefined
+        warehouseId: normalizedWarehouseId || e.warehouse?.id || undefined,
+        shipmentStatus: nextShipmentStatus || e.status,
+        trackingNumber: normalizedTrackingNumber || e.trackingNumber || undefined,
+        carrier: normalizedCarrier || e.carrier || undefined,
+        note: normalizedNote || undefined
       });
     },
     onSuccess: () => {
       setActionMessage("Shipment updated.");
+      setEditNote("");
     },
     onError: (error: unknown) => {
       setActionMessage(error instanceof ApiError ? error.message : "Shipment update failed.");
     },
+    isAvailable: Boolean(e) && !terminal && shipmentHasChanges,
     isAllowed: canUpdateShipment,
     invalidate: [["admin-shipment-detail", shipmentId], ["admin-shipment-tracking", shipmentId]]
   });
@@ -319,7 +347,7 @@ export const ShipmentDetailPage = () => {
                     <label className="flex flex-col gap-1 text-xs text-slate-500">
                       Warehouse ID
                       <input
-                        value={editWarehouseId || e.warehouse?.id || ""}
+                        value={editWarehouseId}
                         onChange={(event) => setEditWarehouseId(event.target.value)}
                         className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
                         placeholder="Warehouse UUID"
@@ -328,7 +356,7 @@ export const ShipmentDetailPage = () => {
                     <label className="flex flex-col gap-1 text-xs text-slate-500">
                       Shipment status
                       <select
-                        value={editStatus || e.status}
+                        value={editStatus}
                         onChange={(event) => setEditStatus(event.target.value)}
                         className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
                       >
@@ -342,7 +370,7 @@ export const ShipmentDetailPage = () => {
                     <label className="flex flex-col gap-1 text-xs text-slate-500">
                       Carrier
                       <input
-                        value={editCarrier || e.carrier || ""}
+                        value={editCarrier}
                         onChange={(event) => setEditCarrier(event.target.value)}
                         className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
                         placeholder="Carrier name"
@@ -351,7 +379,7 @@ export const ShipmentDetailPage = () => {
                     <label className="flex flex-col gap-1 text-xs text-slate-500">
                       Tracking number
                       <input
-                        value={editTrackingNumber || e.trackingNumber || ""}
+                        value={editTrackingNumber}
                         onChange={(event) => setEditTrackingNumber(event.target.value)}
                         className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
                         placeholder="Tracking number"
@@ -369,9 +397,17 @@ export const ShipmentDetailPage = () => {
                     {actionMessage ? <p className="text-xs text-[#434654]">{actionMessage}</p> : null}
                     <AsyncActionButton
                       pending={updateMutation.isPending}
-                      blocked={updateMutation.blocked || !canUpdateShipment}
+                      blocked={updateMutation.blocked}
                       onClick={() => updateMutation.run(undefined)}
-                      title={canUpdateShipment ? undefined : "Requires orders.override_fulfillment permission"}
+                      title={
+                        !canUpdateShipment
+                          ? "Requires orders.override_fulfillment permission"
+                          : terminal
+                            ? "Delivered and cancelled shipments are locked from inline edits"
+                            : shipmentHasChanges
+                              ? undefined
+                              : "Make a change before saving"
+                      }
                     >
                       Save shipment changes
                     </AsyncActionButton>

@@ -1,11 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, listAdminReturns, type ReturnListItem } from "@/features/returns/api/admin-returns.api";
+import { ApiError, getAdminReturnDetail, listAdminReturns, type ReturnListItem } from "@/features/returns/api/admin-returns.api";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
 const RETURN_STATUSES = ["", "REQUESTED", "APPROVED", "REJECTED", "RECEIVED", "COMPLETED"] as const;
@@ -101,6 +103,17 @@ export const ReturnsListPage = () => {
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
+  const { prefetch: prefetchReturn, prefetchMany: prefetchReturns } = useAdminDetailPrefetch({
+    enabled: Boolean(accessToken),
+    staleTime: 20_000,
+    queryKeyFor: (returnId: string) => ["admin-return-detail", returnId],
+    queryFnFor: (returnId: string) => getAdminReturnDetail(accessToken!, returnId),
+    onPrefetch: () => preloadLazyNamedComponent("../features/returns/pages/ReturnDetailPage.tsx", "ReturnDetailPage")
+  });
+
+  useEffect(() => {
+    prefetchReturns(items.map((item) => item.id), 2);
+  }, [items, prefetchReturns]);
 
   const errorMessage =
     listQuery.error instanceof ApiError
@@ -345,6 +358,8 @@ export const ReturnsListPage = () => {
                         <td className="px-4">
                           <Link
                             to={`/admin/returns/${r.id}`}
+                            onMouseEnter={() => prefetchReturn(r.id)}
+                            onFocus={() => prefetchReturn(r.id)}
                             className="font-mono text-xs font-medium text-[#1653cc] hover:underline"
                           >
                             {returnRef(r)}
@@ -372,7 +387,12 @@ export const ReturnsListPage = () => {
                         <td className="px-4 font-mono text-xs text-slate-400">{formatQueueWhen(r.requestedAt)}</td>
                         <td className="px-4 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <Link to={`/admin/returns/${r.id}`} className="p-1 text-slate-500 hover:text-[#1653cc]">
+                            <Link
+                              to={`/admin/returns/${r.id}`}
+                              onMouseEnter={() => prefetchReturn(r.id)}
+                              onFocus={() => prefetchReturn(r.id)}
+                              className="p-1 text-slate-500 hover:text-[#1653cc]"
+                            >
                               <MaterialIcon name="visibility" className="text-lg" />
                             </Link>
                             <button
