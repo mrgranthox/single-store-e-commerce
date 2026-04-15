@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { type UseQueryResult, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 
 import { AdminResponseBodyView } from "@/components/primitives/DataPresentation";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
@@ -15,7 +16,6 @@ import { resolveEndpointPath } from "@/lib/admin-paths/resolveEndpointPath";
 import { adminJsonGet, type AdminSuccessEnvelope } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import type { PageActionItem } from "@/components/primitives/PageActionsMenu";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { CACHE } from "@/lib/api/cache-strategy";
 
@@ -69,7 +69,6 @@ const buildResolvedGets = (screen: AdminScreenResolved, routeParams: Record<stri
 export const AdminSurfacePage = ({ screenId }: AdminSurfacePageProps) => {
   const screen = adminScreenLookup[screenId];
   const routeParams = useParams();
-  const accessToken = useAdminAuthStore((state) => state.accessToken);
   const queryClient = useQueryClient();
   const stitch = getStitchReference(screen.id);
 
@@ -79,13 +78,15 @@ export const AdminSurfacePage = ({ screenId }: AdminSurfacePageProps) => {
     ResolvedGet & { resolvedPath: string }
   >;
 
-  const results = useQueries({
-    queries: fetchable.map((entry) => ({
+  type SurfaceQuery = UseQueryResult<AdminSuccessEnvelope, Error>;
+
+  const results = useAuthedQueries((token) =>
+    fetchable.map((entry) => ({
       queryKey: ["admin-surface", screen.id, entry.endpointId, entry.resolvedPath],
-      queryFn: () => adminJsonGet(entry.resolvedPath, accessToken),
-      enabled: Boolean(accessToken) && Boolean(entry.resolvedPath),
-      ...CACHE.OPERATIONAL}))
-  });
+      queryFn: () => adminJsonGet(entry.resolvedPath, token),
+      ...CACHE.OPERATIONAL
+    }))
+  ) as SurfaceQuery[];
 
   const resultByEndpointId = useMemo(() => {
     const map = new Map<string, (typeof results)[number]>();

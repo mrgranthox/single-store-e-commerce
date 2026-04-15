@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { StitchGradientButton, StitchSecondaryButton } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
@@ -18,6 +20,9 @@ import {
 } from "@/features/catalog/api/admin-catalog.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { formatDate } from "@/lib/format";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const REVIEW_LIST_DEFAULTS = { q: "", status: "" };
 
 const tone = (s: string): StatusBadgeTone => {
   if (s === "PUBLISHED") {
@@ -293,44 +298,38 @@ const ReviewModerationDrawer = ({
 export const CatalogReviewsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
-  const [status, setStatus] = useState("");
+  const { filters, page, set, setPage, setMany, reset } = useListFilters({ defaults: REVIEW_LIST_DEFAULTS });
   const [searchDraft, setSearchDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
   const [drawerReview, setDrawerReview] = useState<AdminReviewListItem | null>(null);
 
+  useEffect(() => {
+    setSearchDraft(filters.q);
+  }, [filters.q]);
+
   const queryKey = useMemo(
-    () => ["admin-catalog-reviews", page, status, appliedSearch] as const,
-    [page, status, appliedSearch]
+    () => ["admin-catalog-reviews", page, filters.status, filters.q] as const,
+    [page, filters.status, filters.q]
   );
 
-  const q = useAuthedQuery(
-  queryKey,
-  (token) => {
-    return listAdminCatalogReviews(token, {
-            page,
-            page_size: 20,
-            ...(status ? { status } : {}),
-            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
-          });
-  }
-);
+  const reviewsQuery = useAuthedQuery(queryKey, (token) =>
+    listAdminCatalogReviews(token, {
+      page,
+      page_size: 20,
+      ...(filters.status ? { status: filters.status } : {}),
+      ...(filters.q.trim() ? { q: filters.q.trim() } : {})
+    })
+  );
 
-  const items = q.data?.data.items ?? [];
-  const meta = q.data?.meta;
-  const err =
-    q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;
+  const items = reviewsQuery.data?.data.items ?? [];
+  const meta = reviewsQuery.data?.meta;
 
   const applyFilters = () => {
-    setPage(1);
-    setAppliedSearch(searchDraft);
+    setMany({ q: searchDraft.trim() });
   };
 
   const clearFilters = () => {
+    reset();
     setSearchDraft("");
-    setAppliedSearch("");
-    setStatus("");
-    setPage(1);
   };
 
   const rows = items.map((r) => {
@@ -406,11 +405,8 @@ export const CatalogReviewsListPage = () => {
           <label>
             <span className="mb-1.5 block text-xs font-medium text-slate-400">Status</span>
             <select
-              value={status}
-              onChange={(e) => {
-                setPage(1);
-                setStatus(e.target.value);
-              }}
+              value={filters.status}
+              onChange={(e) => set("status", e.target.value)}
               className="h-11 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
             >
               <option value="">All statuses</option>
@@ -439,12 +435,12 @@ export const CatalogReviewsListPage = () => {
         </div>
       </div>
 
-      {err ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
+      {reviewsQuery.isError ? (
+        <QueryError label="reviews" error={reviewsQuery.error} onRetry={() => void reviewsQuery.refetch()} />
       ) : null}
 
-      {q.isLoading ? (
-        <p className="text-sm text-[var(--color-text-muted)]">Loading…</p>
+      {reviewsQuery.isLoading ? (
+        <SkeletonTable rows={8} cols={7} label="Loading reviews" />
       ) : (
         <>
           <DataTableShell
@@ -459,7 +455,7 @@ export const CatalogReviewsListPage = () => {
                 type="button"
                 disabled={page <= 1}
                 className="rounded-lg border border-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-40"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => setPage(Math.max(1, page - 1))}
               >
                 Previous
               </button>
@@ -470,7 +466,7 @@ export const CatalogReviewsListPage = () => {
                 type="button"
                 disabled={page >= meta.totalPages}
                 className="rounded-lg border border-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-40"
-                onClick={() => setPage((p) => p + 1)}
+                onClick={() => setPage(page + 1)}
               >
                 Next
               </button>

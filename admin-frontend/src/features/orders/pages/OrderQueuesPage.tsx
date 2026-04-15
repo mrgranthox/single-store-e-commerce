@@ -1,19 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
-import {
-  ApiError,
-  listAdminDispatchQueue,
-  listAdminFulfillmentQueue,
-  type AdminOrderListItem
-} from "@/features/orders/api/admin-orders.api";
+import { listAdminDispatchQueue, listAdminFulfillmentQueue, type AdminOrderListItem } from "@/features/orders/api/admin-orders.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { formatMoney } from "@/lib/format";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
+
+const ORDER_QUEUE_DEFAULTS = { q: "" };
 
 
 const hoursSince = (iso: string) => (Date.now() - new Date(iso).getTime()) / 36e5;
@@ -76,51 +75,42 @@ type OrderQueuesPageProps = {
 };
 
 export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const { filters, page, setPage, setMany, reset } = useListFilters({ defaults: ORDER_QUEUE_DEFAULTS });
   const [searchDraft, setSearchDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
+
+  useEffect(() => {
+    setSearchDraft(filters.q);
+  }, [filters.q]);
 
   const queryKey = useMemo(
-    () => ["admin-order-queue", mode, page, appliedSearch] as const,
-    [mode, page, appliedSearch]
+    () => ["admin-order-queue", mode, page, filters.q] as const,
+    [mode, page, filters.q]
   );
 
-  const queueQuery = useAuthedQuery(
-  queryKey,
-  (token) => {
+  const queueQuery = useAuthedQuery(queryKey, (token) => {
     const base = { page, page_size: 20 };
-          if (mode === "fulfillment") {
-            return listAdminFulfillmentQueue(token, {
-              ...base,
-              ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
-            });
-          }
-          return listAdminDispatchQueue(token, {
-            ...base,
-            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
-          });
-  }
-);
+    if (mode === "fulfillment") {
+      return listAdminFulfillmentQueue(token, {
+        ...base,
+        ...(filters.q.trim() ? { q: filters.q.trim() } : {})
+      });
+    }
+    return listAdminDispatchQueue(token, {
+      ...base,
+      ...(filters.q.trim() ? { q: filters.q.trim() } : {})
+    });
+  });
 
   const items = queueQuery.data?.data.items ?? [];
   const meta = queueQuery.data?.meta;
-
-  const errorMessage =
-    queueQuery.error instanceof ApiError
-      ? queueQuery.error.message
-      : queueQuery.error instanceof Error
-        ? queueQuery.error.message
-        : null;
 
   const atRisk = useMemo(() => items.filter((o) => hoursSince(o.createdAt) > 24).length, [items]);
   const unassignedWh = useMemo(() => items.filter((o) => !o.assignedWarehouse?.id).length, [items]);
 
   const clearFilters = () => {
+    reset();
     setSearchDraft("");
-    setAppliedSearch("");
-    setPage(1);
   };
 
   const from = meta ? (meta.page - 1) * meta.limit + 1 : 0;
@@ -209,8 +199,8 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
           </div>
         </div>
 
-        {errorMessage ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+        {queueQuery.isError ? (
+          <QueryError label="fulfillment queue" error={queueQuery.error} onRetry={() => void queueQuery.refetch()} />
         ) : null}
 
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
@@ -227,7 +217,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                 <button
                   type="button"
                   disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => setPage(Math.max(1, page - 1))}
                   className="rounded p-1 hover:bg-[#ecedfb] disabled:opacity-40"
                 >
                   <MaterialIcon name="chevron_left" className="text-sm" />
@@ -235,7 +225,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                 <button
                   type="button"
                   disabled={!meta || page >= meta.totalPages}
-                  onClick={() => setPage((p) => p + 1)}
+                  onClick={() => setPage(page + 1)}
                   className="rounded p-1 hover:bg-[#ecedfb] disabled:opacity-40"
                 >
                   <MaterialIcon name="chevron_right" className="text-sm" />
@@ -245,7 +235,9 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
           </div>
 
           {queueQuery.isLoading ? (
-            <p className="p-10 text-center text-sm text-[#737685]">Loading…</p>
+            <div className="p-4">
+              <SkeletonTable rows={8} cols={9} label="Loading fulfillment queue" />
+            </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-sm">
@@ -461,7 +453,11 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
             <input
               value={searchDraft}
               onChange={(e) => setSearchDraft(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && (setAppliedSearch(searchDraft), setPage(1))}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setMany({ q: searchDraft.trim() });
+                }
+              }}
               placeholder="Order # or customer…"
               className="w-full rounded-sm border border-slate-200 bg-slate-50 py-2 pl-3 pr-3 text-sm focus:border-[#1653cc] focus:ring-0"
             />
@@ -488,10 +484,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
           </button>
           <button
             type="button"
-            onClick={() => {
-              setAppliedSearch(searchDraft);
-              setPage(1);
-            }}
+            onClick={() => setMany({ q: searchDraft.trim() })}
             className="mt-5 rounded-sm bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200"
           >
             Apply search
@@ -508,13 +501,15 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
         </div>
       </div>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {queueQuery.isError ? (
+        <QueryError label="dispatch queue" error={queueQuery.error} onRetry={() => void queueQuery.refetch()} />
       ) : null}
 
       <div className="overflow-hidden rounded-sm border border-[rgba(115,118,133,0.15)] bg-white">
         {queueQuery.isLoading ? (
-          <p className="p-10 text-center text-sm text-[#737685]">Loading…</p>
+          <div className="p-4">
+            <SkeletonTable rows={8} cols={8} label="Loading dispatch queue" />
+          </div>
         ) : (
           <>
             <div className="overflow-x-auto">
@@ -607,7 +602,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                   <button
                     type="button"
                     disabled={page <= 1}
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    onClick={() => setPage(Math.max(1, page - 1))}
                     className="flex h-8 w-8 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-400 hover:text-[#1653cc] disabled:opacity-40"
                   >
                     <MaterialIcon name="chevron_left" className="text-lg" />
@@ -618,7 +613,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                   <button
                     type="button"
                     disabled={page >= meta.totalPages}
-                    onClick={() => setPage((p) => p + 1)}
+                    onClick={() => setPage(page + 1)}
                     className="flex h-8 w-8 items-center justify-center rounded-sm border border-slate-200 bg-white text-slate-400 hover:text-[#1653cc] disabled:opacity-40"
                   >
                     <MaterialIcon name="chevron_right" className="text-lg" />

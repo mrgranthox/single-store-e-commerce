@@ -1,14 +1,16 @@
 import { useMemo } from "react";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { type UseQueryResult, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, CreditCard, Headphones, Info, RotateCcw, Truck } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
   getAdminOrderDetail,
-  getAdminOrderTimeline
+  getAdminOrderTimeline,
+  type AdminOrderDetailResponse,
+  type AdminOrderTimelineResponse
 } from "@/features/orders/api/admin-orders.api";
 import { OrderStitchFulfillmentTimeline } from "@/features/orders/components/OrderStitchFulfillmentTimeline";
 import { formatMoney } from "@/lib/format";
@@ -43,33 +45,23 @@ const HeaderStatusChip = ({ status }: { status: string }) => {
 
 export const OrderTimelinePage = () => {
   const { orderId } = useParams<{ orderId: string }>();
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
 
-  const [detailQ, timelineQ] = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-order-detail", orderId],
-        queryFn: async () => {
-          if (!accessToken || !orderId) {
-            throw new Error("Missing context.");
-          }
-          return getAdminOrderDetail(accessToken, orderId);
-        },
-        enabled: Boolean(accessToken && orderId)
-      },
-      {
-        queryKey: ["admin-order-timeline", orderId],
-        queryFn: async () => {
-          if (!accessToken || !orderId) {
-            throw new Error("Missing context.");
-          }
-          return getAdminOrderTimeline(accessToken, orderId);
-        },
-        enabled: Boolean(accessToken && orderId)
-      }
-    ]
-  });
+  type DetailQuery = UseQueryResult<AdminOrderDetailResponse, Error>;
+  type TimelineQuery = UseQueryResult<AdminOrderTimelineResponse, Error>;
+
+  const [detailQ, timelineQ] = useAuthedQueries((token) => [
+    {
+      queryKey: ["admin-order-detail", orderId],
+      queryFn: async () => getAdminOrderDetail(token, orderId!),
+      enabled: Boolean(orderId)
+    },
+    {
+      queryKey: ["admin-order-timeline", orderId],
+      queryFn: async () => getAdminOrderTimeline(token, orderId!),
+      enabled: Boolean(orderId)
+    }
+  ]) as [DetailQuery, TimelineQuery];
 
   const entity = detailQ.data?.data.entity;
   const timeline = timelineQ.data?.data.timeline ?? [];

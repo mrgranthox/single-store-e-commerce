@@ -1,10 +1,11 @@
 import { Fragment, memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ChevronDown, MoreHorizontal, Search } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { QueryError } from "@/components/primitives/QueryError";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
@@ -29,6 +30,16 @@ import { toast } from "@/lib/toast";
 import { catalogKeys } from "@/lib/query-keys";
 import { formatDate } from "@/lib/format";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const PRODUCT_LIST_DEFAULTS = {
+  q: "",
+  status: "",
+  categoryId: "",
+  brandId: "",
+  dateFrom: "",
+  dateTo: ""
+};
 
 const STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "", label: "All statuses" },
@@ -298,15 +309,8 @@ const ProductTableRow = memo(({
 export const ProductsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(1);
+  const { filters, page, set, setPage, setMany, reset } = useListFilters({ defaults: PRODUCT_LIST_DEFAULTS });
   const [searchDraft, setSearchDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [categoryId, setCategoryId] = useState(() => searchParams.get("categoryId") ?? "");
-  const [brandId, setBrandId] = useState(() => searchParams.get("brandId") ?? "");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
   const [pinnedExpandId, setPinnedExpandId] = useState<string | null>(null);
@@ -314,32 +318,8 @@ export const ProductsListPage = () => {
   const [singleArchiveId, setSingleArchiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    const c = searchParams.get("categoryId") ?? "";
-    const b = searchParams.get("brandId") ?? "";
-    setCategoryId((prev) => (prev === c ? prev : c));
-    setBrandId((prev) => (prev === b ? prev : b));
-  }, [searchParams]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const curCat = params.get("categoryId") ?? "";
-    const curBrand = params.get("brandId") ?? "";
-    if (curCat === categoryId && curBrand === brandId) {
-      return;
-    }
-    const next = new URLSearchParams(params);
-    if (categoryId) {
-      next.set("categoryId", categoryId);
-    } else {
-      next.delete("categoryId");
-    }
-    if (brandId) {
-      next.set("brandId", brandId);
-    } else {
-      next.delete("brandId");
-    }
-    setSearchParams(next, { replace: true });
-  }, [brandId, categoryId, setSearchParams]);
+    setSearchDraft(filters.q);
+  }, [filters.q]);
 
   const categoriesQuery = useAuthedQuery(
     catalogKeys.categories(),
@@ -355,8 +335,16 @@ export const ProductsListPage = () => {
   const brands = brandsQuery.data?.data.items ?? [];
 
   const productListParams = useMemo(
-    () => ({ page, appliedSearch, statusFilter, categoryId, brandId, dateFrom, dateTo }),
-    [page, appliedSearch, statusFilter, categoryId, brandId, dateFrom, dateTo],
+    () => ({
+      page,
+      appliedSearch: filters.q,
+      statusFilter: filters.status,
+      categoryId: filters.categoryId,
+      brandId: filters.brandId,
+      dateFrom: filters.dateFrom,
+      dateTo: filters.dateTo
+    }),
+    [page, filters.q, filters.status, filters.categoryId, filters.brandId, filters.dateFrom, filters.dateTo]
   );
 
   const productsQuery = useAuthedQuery(
@@ -367,12 +355,13 @@ export const ProductsListPage = () => {
         page_size: 25,
         sortBy: "updatedAt",
         sortOrder: "desc",
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
-        ...(statusFilter ? { status: statusFilter } : {}),
-        ...(categoryId ? { categoryId } : {}),
-        ...(brandId ? { brandId } : {}),
-        ...(dateFrom ? { dateFrom } : {}),
-        ...(dateTo ? { dateTo } : {}) }),
+        ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+        ...(filters.status ? { status: filters.status } : {}),
+        ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
+        ...(filters.brandId ? { brandId: filters.brandId } : {}),
+        ...(filters.dateFrom ? { dateFrom: filters.dateFrom } : {}),
+        ...(filters.dateTo ? { dateTo: filters.dateTo } : {})
+      })
   );
 
   const items = productsQuery.data?.data.items ?? [];
@@ -402,29 +391,15 @@ export const ProductsListPage = () => {
   }, [items, prefetchProductDetails]);
 
   const applyFilters = () => {
-    setPage(1);
-    setAppliedSearch(searchDraft);
+    setMany({ q: searchDraft.trim() });
     setSelected(new Set());
   };
 
   const clearFilters = () => {
+    reset();
     setSearchDraft("");
-    setAppliedSearch("");
-    setStatusFilter("");
-    setCategoryId("");
-    setBrandId("");
-    setDateFrom("");
-    setDateTo("");
-    setPage(1);
     setSelected(new Set());
   };
-
-  const errorMessage =
-    productsQuery.error instanceof ApiError
-      ? productsQuery.error.message
-      : productsQuery.error instanceof Error
-        ? productsQuery.error.message
-        : null;
 
   const allOnPageSelected = items.length > 0 && items.every((p) => selected.has(p.id));
   const someOnPageSelected = items.some((p) => selected.has(p.id));
@@ -550,10 +525,9 @@ export const ProductsListPage = () => {
           <label>
             <span className="mb-1.5 block text-xs font-medium text-slate-400">Status</span>
             <select
-              value={statusFilter}
+              value={filters.status}
               onChange={(e) => {
-                setStatusFilter(e.target.value);
-                setPage(1);
+                set("status", e.target.value);
                 setSelected(new Set());
               }}
               className="h-11 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
@@ -568,10 +542,9 @@ export const ProductsListPage = () => {
           <label>
             <span className="mb-1.5 block text-xs font-medium text-slate-400">Category</span>
             <select
-              value={categoryId}
+              value={filters.categoryId}
               onChange={(e) => {
-                setCategoryId(e.target.value);
-                setPage(1);
+                set("categoryId", e.target.value);
                 setSelected(new Set());
               }}
               className="h-11 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
@@ -587,10 +560,9 @@ export const ProductsListPage = () => {
           <label>
             <span className="mb-1.5 block text-xs font-medium text-slate-400">Brand</span>
             <select
-              value={brandId}
+              value={filters.brandId}
               onChange={(e) => {
-                setBrandId(e.target.value);
-                setPage(1);
+                set("brandId", e.target.value);
                 setSelected(new Set());
               }}
               className="h-11 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
@@ -608,10 +580,9 @@ export const ProductsListPage = () => {
               <span className="mb-1.5 block text-xs font-medium text-slate-400">From</span>
               <input
                 type="date"
-                value={dateFrom}
+                value={filters.dateFrom}
                 onChange={(e) => {
-                  setDateFrom(e.target.value);
-                  setPage(1);
+                  set("dateFrom", e.target.value);
                   setSelected(new Set());
                 }}
                 className="h-11 w-full rounded-md border border-slate-200 px-2 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
@@ -621,10 +592,9 @@ export const ProductsListPage = () => {
               <span className="mb-1.5 block text-xs font-medium text-slate-400">To</span>
               <input
                 type="date"
-                value={dateTo}
+                value={filters.dateTo}
                 onChange={(e) => {
-                  setDateTo(e.target.value);
-                  setPage(1);
+                  set("dateTo", e.target.value);
                   setSelected(new Set());
                 }}
                 className="h-11 w-full rounded-md border border-slate-200 px-2 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
@@ -646,11 +616,11 @@ export const ProductsListPage = () => {
         </div>
       </div>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
-          {errorMessage}
+      {productsQuery.isError ? (
+        <div className="space-y-2" role="alert">
+          <QueryError label="products" error={productsQuery.error} onRetry={() => void productsQuery.refetch()} />
           {productsQuery.error instanceof ApiError && productsQuery.error.statusCode === 403 ? (
-            <span className="mt-1 block text-xs">Your role may need the catalog.products.read permission.</span>
+            <p className="text-xs text-red-700">Your role may need the catalog.products.read permission.</p>
           ) : null}
         </div>
       ) : null}
@@ -771,7 +741,7 @@ export const ProductsListPage = () => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border border-slate-200 px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Previous
@@ -779,7 +749,7 @@ export const ProductsListPage = () => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border border-slate-200 px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Next

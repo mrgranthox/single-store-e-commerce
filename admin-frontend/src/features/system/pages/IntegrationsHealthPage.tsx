@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
+import { type UseQueryResult, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { StitchKpiMicro, StitchPageBody, StitchSecondaryButton } from "@/components/stitch";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { adminJsonGet } from "@/lib/api/admin-get";
+import { adminJsonGet, type AdminSuccessEnvelope } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import type { PageActionItem } from "@/components/primitives/PageHeader";
 import { formatDateTime } from "@/lib/format";
@@ -149,29 +149,30 @@ const LatencyTrendSvg = ({
 };
 
 export const IntegrationsHealthPage = () => {
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useState<DrawerState | null>(null);
 
-  const [healthQ, providersQ, exceptionsQ] = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-integrations-health"],
-        queryFn: () => adminJsonGet<HealthPayload>("/api/admin/integrations/health", accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL},
-      {
-        queryKey: ["admin-integrations-providers"],
-        queryFn: () => adminJsonGet<ProvidersPayload>("/api/admin/integrations/providers", accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL},
-      {
-        queryKey: ["admin-integrations-exceptions"],
-        queryFn: () => adminJsonGet<ExceptionsPayload>("/api/admin/integrations/exceptions", accessToken),
-        enabled: Boolean(accessToken),
-        ...CACHE.OPERATIONAL}
-    ]
-  });
+  type HealthQuery = UseQueryResult<AdminSuccessEnvelope<HealthPayload>, Error>;
+  type ProvidersQuery = UseQueryResult<AdminSuccessEnvelope<ProvidersPayload>, Error>;
+  type ExceptionsQuery = UseQueryResult<AdminSuccessEnvelope<ExceptionsPayload>, Error>;
+
+  const [healthQ, providersQ, exceptionsQ] = useAuthedQueries((token) => [
+    {
+      queryKey: ["admin-integrations-health"],
+      queryFn: () => adminJsonGet<HealthPayload>("/api/admin/integrations/health", token),
+      ...CACHE.OPERATIONAL
+    },
+    {
+      queryKey: ["admin-integrations-providers"],
+      queryFn: () => adminJsonGet<ProvidersPayload>("/api/admin/integrations/providers", token),
+      ...CACHE.OPERATIONAL
+    },
+    {
+      queryKey: ["admin-integrations-exceptions"],
+      queryFn: () => adminJsonGet<ExceptionsPayload>("/api/admin/integrations/exceptions", token),
+      ...CACHE.OPERATIONAL
+    }
+  ]) as [HealthQuery, ProvidersQuery, ExceptionsQuery];
 
   const err =
     healthQ.error instanceof ApiError
