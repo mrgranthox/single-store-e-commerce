@@ -44,11 +44,16 @@ export const BrandCreatePage = () => {
         throw new Error("Not signed in.");
       }
       return createAdminCatalogBrand(accessToken, {
-        slug: slug.trim(),
+        slug: slug
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/-{2,}/g, "-")
+          .replace(/^-+|-+$/g, ""),
         name: name.trim(),
         ...(publishImmediately ? { status: "ACTIVE" as const } : {}),
         ...(bannerId.trim() ? { bannerId: bannerId.trim() } : {}),
-        ...(logoUrl ? { logoUrl } : {}),
+        ...(logoUrl?.trim() ? { logoUrl: logoUrl.trim() } : {}),
         ...(galleryUrls.length > 0 ? { galleryImageUrls: galleryUrls } : {})
       });
     },
@@ -131,7 +136,15 @@ export const BrandCreatePage = () => {
               required
               className={`${stitchInputClass} font-mono`}
               value={slug}
-              onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
+              onChange={(e) =>
+                setSlug(
+                  e.target.value
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/-{2,}/g, "-")
+                    .replace(/^-+|-+$/g, "")
+                )
+              }
               placeholder="northwind"
             />
           </label>
@@ -151,12 +164,14 @@ export const BrandCreatePage = () => {
             label="Logo (optional)"
             hint="Square logo works best. JPG, PNG, WebP, or AVIF, max 8MB."
             purpose="logo"
+            traceOperation="media.catalog_brand_logo"
           />
           <CatalogTaxonomyGalleryUpload
             accessToken={accessToken}
             createIntent={createCatalogBrandMediaUploadIntent}
             urls={galleryUrls}
             onChange={setGalleryUrls}
+            traceOperation="media.catalog_brand_gallery"
           />
           <div className="border-t border-[#737685]/10 pt-5">
             <button

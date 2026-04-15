@@ -79,6 +79,8 @@ export const adminEndpointCatalog = [
   endpoint("catalog.media.reorder", "catalog", "PATCH", "/api/admin/catalog/products/:productId/media/reorder", "Reorder product media."),
   endpoint("catalog.media.patch", "catalog", "PATCH", "/api/admin/catalog/media/:mediaId", "Update product media metadata (e.g. variant assignment)."),
   endpoint("catalog.media.delete", "catalog", "DELETE", "/api/admin/catalog/media/:mediaId", "Delete product media."),
+  endpoint("catalog.brands.mediaUploadIntent", "catalog", "POST", "/api/admin/catalog/brands/media/upload-intents", "Create a signed upload intent for brand media."),
+  endpoint("catalog.categories.mediaUploadIntent", "catalog", "POST", "/api/admin/catalog/categories/media/upload-intents", "Create a signed upload intent for category media."),
   endpoint("catalog.pricing.detail", "catalog", "GET", "/api/admin/catalog/products/:productId/pricing", "Load product pricing configuration."),
   endpoint("catalog.pricing.update", "catalog", "PATCH", "/api/admin/catalog/products/:productId/pricing", "Update product pricing."),
   endpoint("catalog.pricing.scheduledApply", "catalog", "POST", "/api/admin/catalog/products/:productId/scheduled-pricing/apply", "Apply scheduled list price to the configured variant."),

@@ -286,6 +286,7 @@ export const CategoryEditPage = () => {
                 label="Cover image (optional)"
                 hint="Upload a wide hero image for this category (JPG, PNG, WebP, or AVIF, max 8MB)."
                 purpose="cover"
+                traceOperation="media.catalog_category_cover"
               />
               <div className="border-t border-[#737685]/10 pt-5">
                 <button

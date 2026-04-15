@@ -123,6 +123,8 @@ export const getClientConfig = (surface: ClientSurface) => {
           },
           media: {
             catalogUploadIntent: "/api/admin/catalog/products/:productId/media/upload-intents",
+            catalogBrandUploadIntent: "/api/admin/catalog/brands/media/upload-intents",
+            catalogCategoryUploadIntent: "/api/admin/catalog/categories/media/upload-intents",
             contentUploadIntent: "/api/admin/content/media/upload-intents"
           }
         }

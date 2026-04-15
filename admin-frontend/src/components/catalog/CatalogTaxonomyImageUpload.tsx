@@ -4,6 +4,7 @@ import { ImageIcon, Loader2, Upload, X } from "lucide-react";
 
 import { StitchFieldLabel } from "@/components/stitch";
 import { ApiError, type CatalogMediaUploadIntentEntity } from "@/features/catalog/api/admin-catalog.api";
+import { postSignedCloudinaryDirectUpload } from "@/lib/media/cloudinaryDirectUpload";
 
 const ACCEPT = "image/jpeg,image/png,image/webp,image/avif";
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -18,42 +19,6 @@ type IntentFn = (
   }
 ) => Promise<{ success: true; data: { entity: CatalogMediaUploadIntentEntity } }>;
 
-const readCloudinaryUploadError = async (response: Response): Promise<string> => {
-  try {
-    const raw = await response.text();
-    const parsed = JSON.parse(raw) as { error?: { message?: string } };
-    const msg = parsed?.error?.message;
-    return msg && msg.trim().length > 0 ? msg : raw.slice(0, 200);
-  } catch {
-    return response.statusText || "Upload rejected.";
-  }
-};
-
-const postToCloudinary = async (intent: CatalogMediaUploadIntentEntity, file: File) => {
-  const form = new FormData();
-  for (const [key, value] of Object.entries(intent.signedFormFields ?? {})) {
-    form.append(key, value);
-  }
-  form.append("api_key", intent.apiKey);
-  form.append("signature", intent.signature);
-  form.append("file", file);
-  const up = await fetch(intent.uploadUrl, { method: "POST", body: form });
-  if (!up.ok) {
-    const detail = await readCloudinaryUploadError(up);
-    throw new Error(
-      up.status === 401
-        ? `Cloudinary rejected the upload (401). Usually invalid signature or API credentials — ${detail}`
-        : `Upload to media provider failed (${up.status}): ${detail}`
-    );
-  }
-  const json = (await up.json()) as { secure_url?: string; url?: string };
-  const url = json.secure_url ?? json.url;
-  if (!url) {
-    throw new Error("Upload response missing URL.");
-  }
-  return url;
-};
-
 export type CatalogTaxonomyImageUploadProps = {
   accessToken: string | null;
   createIntent: IntentFn;
@@ -64,6 +29,8 @@ export type CatalogTaxonomyImageUploadProps = {
   hint?: string;
   /** e.g. "Logo" vs "Cover image" */
   purpose?: "logo" | "cover";
+  /** Sentry / performance span name for the Cloudinary POST (after intent). */
+  traceOperation?: string;
 };
 
 /**
@@ -77,11 +44,13 @@ export const CatalogTaxonomyImageUpload = ({
   disabled = false,
   label,
   hint,
-  purpose = "cover"
+  purpose = "cover",
+  traceOperation = "media.catalog_taxonomy_image"
 }: CatalogTaxonomyImageUploadProps) => {
   const inputId = useId();
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [phase, setPhase] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   const pickFile = useCallback(() => {
@@ -109,6 +78,7 @@ export const CatalogTaxonomyImageUpload = ({
       }
       setErr(null);
       setBusy(true);
+      setPhase("Preparing upload…");
       try {
         const intentRes = await createIntent(accessToken, {
           fileName: file.name,
@@ -117,18 +87,20 @@ export const CatalogTaxonomyImageUpload = ({
           resourceType: "image"
         });
         const intent = intentRes.data.entity;
-        const url = await postToCloudinary(intent, file);
+        setPhase("Uploading image…");
+        const url = await postSignedCloudinaryDirectUpload(intent, file, { operation: traceOperation });
         onChange(url);
       } catch (e) {
         setErr(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Upload failed.");
       } finally {
         setBusy(false);
+        setPhase(null);
         if (fileRef.current) {
           fileRef.current.value = "";
         }
       }
     },
-    [accessToken, createIntent, disabled, onChange]
+    [accessToken, createIntent, disabled, onChange, traceOperation]
   );
 
   const frame =
@@ -144,6 +116,12 @@ export const CatalogTaxonomyImageUpload = ({
         {value ? (
           <>
             <img src={value} alt="" className="h-full w-full object-contain p-2" />
+            {busy && phase ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#f8f9fb]/90 px-2 text-center">
+                <Loader2 className="h-6 w-6 animate-spin text-[#1653cc]" aria-hidden />
+                <p className="text-xs font-semibold text-[#181b25]">{phase}</p>
+              </div>
+            ) : null}
             <div className="absolute right-2 top-2 flex gap-1">
               <button
                 type="button"
@@ -173,7 +151,7 @@ export const CatalogTaxonomyImageUpload = ({
             className="flex h-full min-h-[120px] w-full flex-col items-center justify-center gap-2 px-4 text-center text-sm font-medium text-[#737685] transition-colors hover:bg-[#f2f3ff]/60 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {busy ? <Loader2 className="h-8 w-8 animate-spin text-[#1653cc]" /> : <ImageIcon className="h-8 w-8 text-[#1653cc]/70" />}
-            {busy ? "Uploading…" : "Click to upload an image"}
+            {busy ? phase ?? "Uploading…" : "Click to upload an image"}
             {!accessToken ? <span className="text-xs text-amber-700">Sign in to upload.</span> : null}
           </button>
         )}
@@ -200,6 +178,7 @@ export type CatalogTaxonomyGalleryUploadProps = {
   urls: string[];
   onChange: (urls: string[]) => void;
   disabled?: boolean;
+  traceOperation?: string;
 };
 
 /**
@@ -210,10 +189,12 @@ export const CatalogTaxonomyGalleryUpload = ({
   createIntent,
   urls,
   onChange,
-  disabled = false
+  disabled = false,
+  traceOperation = "media.catalog_taxonomy_gallery"
 }: CatalogTaxonomyGalleryUploadProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [phase, setPhase] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   const append = useCallback(
@@ -235,6 +216,7 @@ export const CatalogTaxonomyGalleryUpload = ({
       }
       setErr(null);
       setBusy(true);
+      setPhase("Preparing upload…");
       try {
         const intentRes = await createIntent(accessToken, {
           fileName: file.name,
@@ -242,18 +224,22 @@ export const CatalogTaxonomyGalleryUpload = ({
           fileSizeBytes: file.size,
           resourceType: "image"
         });
-        const url = await postToCloudinary(intentRes.data.entity, file);
+        setPhase("Uploading image…");
+        const url = await postSignedCloudinaryDirectUpload(intentRes.data.entity, file, {
+          operation: traceOperation
+        });
         onChange([...urls, url]);
       } catch (e) {
         setErr(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Upload failed.");
       } finally {
         setBusy(false);
+        setPhase(null);
         if (fileRef.current) {
           fileRef.current.value = "";
         }
       }
     },
-    [accessToken, createIntent, disabled, onChange, urls]
+    [accessToken, createIntent, disabled, onChange, traceOperation, urls]
   );
 
   const removeAt = (idx: number) => {
@@ -301,6 +287,9 @@ export const CatalogTaxonomyGalleryUpload = ({
               disabled={disabled || busy}
               onChange={(e) => void append(e.target.files?.[0] ?? null)}
             />
+            {busy && phase ? (
+              <p className="mt-1 max-w-[9rem] text-xs font-medium leading-snug text-[#1653cc]">{phase}</p>
+            ) : null}
           </div>
         ) : null}
       </div>

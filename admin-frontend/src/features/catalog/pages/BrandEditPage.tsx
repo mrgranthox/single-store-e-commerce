@@ -307,6 +307,7 @@ export const BrandEditPage = () => {
                 label="Logo (optional)"
                 hint="Square logo works best. JPG, PNG, WebP, or AVIF, max 8MB."
                 purpose="logo"
+                traceOperation="media.catalog_brand_logo"
               />
               <CatalogTaxonomyGalleryUpload
                 accessToken={accessToken}
@@ -314,6 +315,7 @@ export const BrandEditPage = () => {
                 urls={galleryUrls}
                 onChange={setGalleryUrls}
                 disabled={row.status === "ARCHIVED"}
+                traceOperation="media.catalog_brand_gallery"
               />
               <div className="border-t border-[#737685]/10 pt-5">
                 <button

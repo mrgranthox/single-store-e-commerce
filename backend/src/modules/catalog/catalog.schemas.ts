@@ -13,6 +13,14 @@ const slugSchema = z
   .max(150)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 
+/** Category and brand handles (product slugs keep `slugSchema` min 3 for storefront SEO). */
+const taxonomySlugSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(150)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
 const optionalUuidSchema = z.string().uuid().nullable().optional();
 const sortOrderSchema = z.enum(["asc", "desc"]).default("desc");
 const optionalMoneyAmountSchema = z.coerce.number().int().min(0).nullable().optional();
@@ -252,7 +260,7 @@ const optionalHttpUrlSchema = z
   .optional();
 
 export const createCategoryBodySchema = z.object({
-  slug: slugSchema,
+  slug: taxonomySlugSchema,
   name: z.string().trim().min(1).max(120),
   /** Defaults to DRAFT so new categories are not public until published. */
   status: createTaxonomyStatusSchema,
@@ -260,7 +268,7 @@ export const createCategoryBodySchema = z.object({
 });
 
 export const updateCategoryBodySchema = z.object({
-  slug: slugSchema.optional(),
+  slug: taxonomySlugSchema.optional(),
   name: z.string().trim().min(1).max(120).optional(),
   imageUrl: z
     .union([
@@ -274,7 +282,16 @@ export const updateCategoryBodySchema = z.object({
     .optional()
 });
 
-const optionalBrandBannerIdSchema = z.string().uuid().nullable().optional();
+const optionalBrandBannerIdSchema = z.preprocess(
+  (val) => (val === "" ? null : val),
+  z.union([z.string().uuid(), z.null()]).optional()
+);
+
+const optionalCreateBrandBannerIdSchema = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z.string().uuid().optional()
+);
+
 const galleryImageUrlsSchema = z
   .array(
     z
@@ -287,16 +304,16 @@ const galleryImageUrlsSchema = z
   .optional();
 
 export const createBrandBodySchema = z.object({
-  slug: slugSchema,
+  slug: taxonomySlugSchema,
   name: z.string().trim().min(1).max(120),
   status: createTaxonomyStatusSchema,
-  bannerId: z.string().uuid().optional(),
+  bannerId: optionalCreateBrandBannerIdSchema,
   logoUrl: optionalHttpUrlSchema,
   galleryImageUrls: galleryImageUrlsSchema
 });
 
 export const updateBrandBodySchema = z.object({
-  slug: slugSchema.optional(),
+  slug: taxonomySlugSchema.optional(),
   name: z.string().trim().min(1).max(120).optional(),
   bannerId: optionalBrandBannerIdSchema,
   logoUrl: z

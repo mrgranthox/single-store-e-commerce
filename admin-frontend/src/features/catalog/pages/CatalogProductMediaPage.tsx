@@ -1,6 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
@@ -23,6 +24,7 @@ import {
 } from "@/features/catalog/api/admin-catalog.api";
 import { formatVariantOptions } from "@/features/catalog/lib/catalogFormat";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { postSignedCloudinaryDirectUpload } from "@/lib/media/cloudinaryDirectUpload";
 
 const ACCEPT = "image/jpeg,image/png,image/webp";
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -32,7 +34,11 @@ export const CatalogProductMediaPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadInFlightRef = useRef(false);
+  const [uploadBusy, setUploadBusy] = useState(false);
+  const [uploadStep, setUploadStep] = useState<string | null>(null);
   const [uploadMsg, setUploadMsg] = useState<string | null>(null);
+  const [uploadMsgTone, setUploadMsgTone] = useState<"success" | "error" | "neutral">("neutral");
   const [dragOver, setDragOver] = useState(false);
   const [mappingBusy, setMappingBusy] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -94,15 +100,24 @@ export const CatalogProductMediaPage = () => {
       if (!accessToken || !productId) {
         return;
       }
+      if (uploadInFlightRef.current) {
+        return;
+      }
       if (!ACCEPT.split(",").some((t) => file.type === t)) {
+        setUploadMsgTone("error");
         setUploadMsg("Use JPG, PNG, or WebP.");
         return;
       }
       if (file.size > MAX_BYTES) {
+        setUploadMsgTone("error");
         setUploadMsg("File must be 5MB or smaller.");
         return;
       }
+      uploadInFlightRef.current = true;
+      setUploadBusy(true);
+      setUploadStep("Preparing upload…");
       setUploadMsg(null);
+      setUploadMsgTone("neutral");
       try {
         const intentRes = await createCatalogMediaUploadIntent(accessToken, productId, {
           fileName: file.name,
@@ -111,22 +126,11 @@ export const CatalogProductMediaPage = () => {
           resourceType: "image"
         });
         const intent = intentRes.data.entity;
-        const form = new FormData();
-        for (const [key, value] of Object.entries(intent.signedFormFields ?? {})) {
-          form.append(key, value);
-        }
-        form.append("api_key", intent.apiKey);
-        form.append("signature", intent.signature);
-        form.append("file", file);
-        const up = await fetch(intent.uploadUrl, { method: "POST", body: form });
-        if (!up.ok) {
-          throw new Error("Upload to media provider failed.");
-        }
-        const json = (await up.json()) as { secure_url?: string; url?: string };
-        const url = json.secure_url ?? json.url;
-        if (!url) {
-          throw new Error("Upload response missing URL.");
-        }
+        setUploadStep("Uploading image…");
+        const url = await postSignedCloudinaryDirectUpload(intent, file, {
+          operation: "media.catalog_product_gallery"
+        });
+        setUploadStep("Saving to catalog…");
         await createAdminCatalogProductMediaRecord(accessToken, productId, {
           url,
           kind: "IMAGE",
@@ -140,9 +144,15 @@ export const CatalogProductMediaPage = () => {
           originalFilename: file.name
         });
         invalidate();
+        setUploadMsgTone("success");
         setUploadMsg("Upload complete.");
       } catch (e) {
+        setUploadMsgTone("error");
         setUploadMsg(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Upload failed.");
+      } finally {
+        uploadInFlightRef.current = false;
+        setUploadBusy(false);
+        setUploadStep(null);
       }
     },
     [accessToken, productId, items.length]
@@ -199,14 +209,21 @@ export const CatalogProductMediaPage = () => {
         <div className="space-y-4">
           <div
             role="button"
-            tabIndex={0}
+            tabIndex={uploadBusy ? -1 : 0}
+            aria-busy={uploadBusy}
             onKeyDown={(e) => {
+              if (uploadBusy) {
+                return;
+              }
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 fileInputRef.current?.click();
               }
             }}
             onDragOver={(e) => {
+              if (uploadBusy) {
+                return;
+              }
               e.preventDefault();
               setDragOver(true);
             }}
@@ -214,22 +231,34 @@ export const CatalogProductMediaPage = () => {
             onDrop={(e) => {
               e.preventDefault();
               setDragOver(false);
+              if (uploadBusy) {
+                return;
+              }
               const f = e.dataTransfer.files[0];
               if (f) {
                 void uploadFile(f);
               }
             }}
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => {
+              if (!uploadBusy) {
+                fileInputRef.current?.click();
+              }
+            }}
             className={[
-              "flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-12 text-center transition-colors",
-              dragOver ? "border-[#4f7ef8] bg-[rgba(79,126,248,0.06)]" : "border-slate-200 bg-slate-50/50 hover:border-slate-300"
-            ].join(" ")}
+              "flex flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-12 text-center transition-colors",
+              uploadBusy ? "cursor-wait border-[#4f7ef8]/40 bg-slate-50" : "cursor-pointer",
+              !uploadBusy && dragOver ? "border-[#4f7ef8] bg-[rgba(79,126,248,0.06)]" : "",
+              !uploadBusy && !dragOver ? "border-slate-200 bg-slate-50/50 hover:border-slate-300" : ""
+            ]
+              .filter(Boolean)
+              .join(" ")}
           >
             <input
               ref={fileInputRef}
               type="file"
               accept={ACCEPT}
               className="hidden"
+              disabled={uploadBusy}
               onChange={(e) => {
                 const f = e.target.files?.[0];
                 if (f) {
@@ -238,12 +267,37 @@ export const CatalogProductMediaPage = () => {
                 e.target.value = "";
               }}
             />
-            <div className="text-3xl text-slate-400" aria-hidden>
-              ☁
-            </div>
-            <p className="mt-2 text-sm font-semibold text-slate-800">Drag & drop or click to upload</p>
-            <p className="mt-1 text-xs text-[var(--color-text-muted)]">JPG, PNG, or WebP · max 5MB</p>
-            {uploadMsg ? <p className="mt-3 text-sm text-slate-700">{uploadMsg}</p> : null}
+            {uploadBusy ? (
+              <>
+                <Loader2 className="h-10 w-10 shrink-0 animate-spin text-[#4f7ef8]" aria-hidden />
+                <p className="mt-3 text-sm font-semibold text-slate-800">{uploadStep}</p>
+                <p className="mt-1 max-w-xs text-xs text-[var(--color-text-muted)]">
+                  Keep this tab open until the upload finishes.
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="text-3xl text-slate-400" aria-hidden>
+                  ☁
+                </div>
+                <p className="mt-2 text-sm font-semibold text-slate-800">Drag & drop or click to upload</p>
+                <p className="mt-1 text-xs text-[var(--color-text-muted)]">JPG, PNG, or WebP · max 5MB</p>
+              </>
+            )}
+            {!uploadBusy && uploadMsg ? (
+              <p
+                className={[
+                  "mt-3 text-sm font-medium",
+                  uploadMsgTone === "error" ? "text-rose-700" : "",
+                  uploadMsgTone === "success" ? "text-emerald-800" : "",
+                  uploadMsgTone === "neutral" ? "text-slate-700" : ""
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {uploadMsg}
+              </p>
+            ) : null}
           </div>
 
           {q.isLoading ? (
@@ -267,7 +321,7 @@ export const CatalogProductMediaPage = () => {
                   }}
                   onSetPrimary={() => setPrimary(m.id)}
                   onDelete={() => setDeleteConfirmId(m.id)}
-                  disabled={reorderMut.isPending || deleteMut.isPending}
+                  disabled={uploadBusy || reorderMut.isPending || deleteMut.isPending}
                 />
               ))}
             </div>
@@ -299,6 +353,7 @@ export const CatalogProductMediaPage = () => {
                           }
                           setMappingBusy(true);
                           setUploadMsg(null);
+                          setUploadMsgTone("neutral");
                           try {
                             for (const m of assigned) {
                               await patchAdminCatalogProductMedia(accessToken, m.id, { variantId: null });
@@ -310,6 +365,7 @@ export const CatalogProductMediaPage = () => {
                             await patchAdminCatalogProductMedia(accessToken, val, { variantId: v.id });
                             invalidate();
                           } catch {
+                            setUploadMsgTone("error");
                             setUploadMsg("Could not update variant mapping.");
                           } finally {
                             setMappingBusy(false);

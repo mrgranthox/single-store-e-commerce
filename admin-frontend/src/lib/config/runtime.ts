@@ -56,6 +56,8 @@ export type AdminRuntimeConfig = {
     };
     media: {
       catalogUploadIntent: string;
+      catalogBrandUploadIntent: string;
+      catalogCategoryUploadIntent: string;
       contentUploadIntent: string;
     };
   };

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import clsx from "clsx";
-import { ImageIcon, X } from "lucide-react";
+import { ImageIcon, Loader2, X } from "lucide-react";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -24,6 +24,7 @@ import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { ContentWorkspaceNav, StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { useListFilters } from "@/lib/hooks/useListFilters";
+import { postSignedCloudinaryDirectUpload } from "@/lib/media/cloudinaryDirectUpload";
 
 const BANNER_LIST_DEFAULTS = { status: "", placement: "" };
 
@@ -443,6 +444,7 @@ const BannerEditorPanel = ({
   const [justSaved, setJustSaved] = useState(false);
   const saveDoneTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [uploadBusy, setUploadBusy] = useState(false);
+  const [uploadPhase, setUploadPhase] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [mediaMeta, setMediaMeta] = useState<{
     mediaUrl: string;
@@ -464,6 +466,7 @@ const BannerEditorPanel = ({
     setLocalError(null);
     setJustSaved(false);
     setUploadBusy(false);
+    setUploadPhase(null);
     setMediaMeta(null);
     if (banner) {
       setPlacement(banner.placement || "HERO");
@@ -569,6 +572,7 @@ const BannerEditorPanel = ({
       }
       setLocalError(null);
       setUploadBusy(true);
+      setUploadPhase("Preparing upload…");
       try {
         const intentRes = await createContentMediaUploadIntent(accessToken, {
           fileName: file.name,
@@ -577,22 +581,10 @@ const BannerEditorPanel = ({
           resourceType: "image"
         });
         const intent = intentRes.data.entity;
-        const form = new FormData();
-        for (const [key, value] of Object.entries(intent.signedFormFields ?? {})) {
-          form.append(key, value);
-        }
-        form.append("api_key", intent.apiKey);
-        form.append("signature", intent.signature);
-        form.append("file", file);
-        const up = await fetch(intent.uploadUrl, { method: "POST", body: form });
-        if (!up.ok) {
-          throw new Error("Upload to media provider failed.");
-        }
-        const json = (await up.json()) as { secure_url?: string; url?: string };
-        const url = json.secure_url ?? json.url;
-        if (!url) {
-          throw new Error("Upload response missing URL.");
-        }
+        setUploadPhase("Uploading image…");
+        const url = await postSignedCloudinaryDirectUpload(intent, file, {
+          operation: "media.content_banner"
+        });
         setPreviewUrl(url);
         setMediaMeta({
           mediaUrl: url,
@@ -605,6 +597,7 @@ const BannerEditorPanel = ({
         setLocalError(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Upload failed.");
       } finally {
         setUploadBusy(false);
+        setUploadPhase(null);
       }
     },
     [accessToken, readOnly]
@@ -659,6 +652,15 @@ const BannerEditorPanel = ({
             ) : (
               <div className="flex h-full items-center justify-center text-sm text-slate-500">No image</div>
             )}
+            {uploadBusy ? (
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#181b25]/55 px-4 text-center"
+                aria-live="polite"
+              >
+                <Loader2 className="h-8 w-8 animate-spin text-white" aria-hidden />
+                <p className="text-xs font-semibold text-white">{uploadPhase ?? "Uploading…"}</p>
+              </div>
+            ) : null}
           </div>
           {!readOnly ? (
             <div>
@@ -681,7 +683,7 @@ const BannerEditorPanel = ({
                 onClick={() => fileRef.current?.click()}
                 className="w-full rounded-lg border border-[#1653cc]/25 bg-white py-2.5 text-sm font-semibold text-[#1653cc] shadow-sm transition-colors hover:bg-[#f2f3ff] disabled:opacity-50"
               >
-                {uploadBusy ? "Uploading…" : "Upload image"}
+                {uploadBusy ? (uploadPhase ?? "Working…") : "Upload image"}
               </button>
               <p className="mt-1 text-xs text-[#737685]">JPG, PNG, or WebP · max 8MB. Cloudinary must be configured on the API.</p>
             </div>

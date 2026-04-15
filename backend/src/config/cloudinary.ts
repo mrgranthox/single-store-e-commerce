@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { extname } from "node:path";
 
+import * as Sentry from "@sentry/node";
 import { v2 as cloudinary } from "cloudinary";
 
 import {
@@ -9,6 +10,7 @@ import {
   serviceUnavailableError
 } from "../common/errors/app-error";
 import { env } from "./env";
+import { logger } from "./logger";
 
 export type CloudinaryScope =
   | "catalog_product"
@@ -197,78 +199,99 @@ export const isCloudinaryConfigured = Boolean(
   env.CLOUDINARY_CLOUD_NAME && env.CLOUDINARY_API_KEY && env.CLOUDINARY_API_SECRET
 );
 
-export const createSignedUploadIntent = (input: CloudinaryIntentInput) => {
-  ensureConfigured();
+export const createSignedUploadIntent = (input: CloudinaryIntentInput) =>
+  Sentry.startSpan(
+    {
+      name: "cloudinary.signed_upload_intent",
+      op: "cloudinary.sign",
+      attributes: {
+        "cloudinary.scope": input.scope,
+        "cloudinary.has_entity_id": input.entityId ? 1 : 0
+      }
+    },
+    () => {
+      ensureConfigured();
 
-  const resourceType = inferResourceType(input.contentType, input.requestedResourceType);
-  assertFileWithinPolicy({
-    resourceType,
-    scope: input.scope,
-    fileName: input.fileName,
-    fileSizeBytes: input.fileSizeBytes
-  });
+      const resourceType = inferResourceType(input.contentType, input.requestedResourceType);
+      assertFileWithinPolicy({
+        resourceType,
+        scope: input.scope,
+        fileName: input.fileName,
+        fileSizeBytes: input.fileSizeBytes
+      });
 
-  const deliveryType = resolveExpectedDeliveryType(input.scope);
-  /**
-   * Legacy fixed-folder mode: `folder` is prepended to `public_id`.
-   * `public_id` must be the basename only (no folder path), or Cloudinary duplicates the path and the signature fails (401).
-   */
-  const folderPath = buildFolder(input.scope, input.entityId, input.secondaryId);
-  const baseName = sanitizePublicIdSegment(
-    input.fileName.replace(/\.[^.]+$/, "") || `${resourceType}-asset`
+      const deliveryType = resolveExpectedDeliveryType(input.scope);
+      /**
+       * Legacy fixed-folder mode: `folder` is prepended to `public_id`.
+       * `public_id` must be the basename only (no folder path), or Cloudinary duplicates the path and the signature fails (401).
+       */
+      const folderPath = buildFolder(input.scope, input.entityId, input.secondaryId);
+      const baseName = sanitizePublicIdSegment(
+        input.fileName.replace(/\.[^.]+$/, "") || `${resourceType}-asset`
+      );
+      const assetKey = `${baseName}-${randomUUID()}`;
+      const fullPublicId = `${folderPath}/${assetKey}`;
+      const timestamp = Math.floor(Date.now() / 1000);
+      const allowedFormats = buildAllowedFormats(resourceType, input.scope);
+      /**
+       * Per Cloudinary auth docs, `resource_type` must NOT be included in the signature when posting to
+       * `POST /v1_1/:cloud/:resource_type/upload` — it is implied by the URL path. Including it breaks verification (Invalid Signature).
+       */
+      const uploadParams: Record<string, string | number | boolean> = {
+        timestamp,
+        folder: folderPath,
+        public_id: assetKey,
+        type: deliveryType,
+        allowed_formats: allowedFormats.join(","),
+        overwrite: false,
+        unique_filename: false,
+        invalidate: true
+      };
+
+      if (input.actorId) {
+        uploadParams.context = `uploaded_by=${input.actorId}|scope=${input.scope}`;
+      }
+
+      const signature = cloudinary.utils.api_sign_request(
+        uploadParams,
+        env.CLOUDINARY_API_SECRET!
+      );
+
+      const signedFormFields: Record<string, string> = {};
+      for (const [key, value] of Object.entries(uploadParams)) {
+        signedFormFields[key] = typeof value === "boolean" ? String(value) : String(value);
+      }
+
+      logger.info(
+        {
+          event: "cloudinary_signed_upload_intent",
+          scope: input.scope,
+          resourceType,
+          folder: folderPath
+        },
+        "cloudinary signed upload intent"
+      );
+
+      return {
+        provider: "cloudinary",
+        cloudName: env.CLOUDINARY_CLOUD_NAME!,
+        apiKey: env.CLOUDINARY_API_KEY!,
+        timestamp,
+        signature,
+        /** Exact fields that were included in the signature — POST these with `file` and `signature`. */
+        signedFormFields,
+        uploadUrl: `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
+        resourceType,
+        deliveryType,
+        /** Full public_id path (folder + asset key) for persistence and resolveCloudinaryAsset checks. */
+        publicId: fullPublicId,
+        folder: folderPath,
+        allowedFormats,
+        maxFileSizeBytes: resolveMaxBytes(resourceType),
+        signed: env.CLOUDINARY_SIGNED_UPLOADS_ONLY
+      };
+    }
   );
-  const assetKey = `${baseName}-${randomUUID()}`;
-  const fullPublicId = `${folderPath}/${assetKey}`;
-  const timestamp = Math.floor(Date.now() / 1000);
-  const allowedFormats = buildAllowedFormats(resourceType, input.scope);
-  /**
-   * Per Cloudinary auth docs, `resource_type` must NOT be included in the signature when posting to
-   * `POST /v1_1/:cloud/:resource_type/upload` — it is implied by the URL path. Including it breaks verification (Invalid Signature).
-   */
-  const uploadParams: Record<string, string | number | boolean> = {
-    timestamp,
-    folder: folderPath,
-    public_id: assetKey,
-    type: deliveryType,
-    allowed_formats: allowedFormats.join(","),
-    overwrite: false,
-    unique_filename: false,
-    invalidate: true
-  };
-
-  if (input.actorId) {
-    uploadParams.context = `uploaded_by=${input.actorId}|scope=${input.scope}`;
-  }
-
-  const signature = cloudinary.utils.api_sign_request(
-    uploadParams,
-    env.CLOUDINARY_API_SECRET!
-  );
-
-  const signedFormFields: Record<string, string> = {};
-  for (const [key, value] of Object.entries(uploadParams)) {
-    signedFormFields[key] = typeof value === "boolean" ? String(value) : String(value);
-  }
-
-  return {
-    provider: "cloudinary",
-    cloudName: env.CLOUDINARY_CLOUD_NAME!,
-    apiKey: env.CLOUDINARY_API_KEY!,
-    timestamp,
-    signature,
-    /** Exact fields that were included in the signature — POST these with `file` and `signature`. */
-    signedFormFields,
-    uploadUrl: `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
-    resourceType,
-    deliveryType,
-    /** Full public_id path (folder + asset key) for persistence and resolveCloudinaryAsset checks. */
-    publicId: fullPublicId,
-    folder: folderPath,
-    allowedFormats,
-    maxFileSizeBytes: resolveMaxBytes(resourceType),
-    signed: env.CLOUDINARY_SIGNED_UPLOADS_ONLY
-  };
-};
 
 export const resolveCloudinaryAsset = async (
   scope: CloudinaryScope,

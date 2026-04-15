@@ -34,10 +34,15 @@ export const CategoryCreatePage = () => {
         throw new Error("Not signed in.");
       }
       return createAdminCatalogCategory(accessToken, {
-        slug: slug.trim(),
+        slug: slug
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/-{2,}/g, "-")
+          .replace(/^-+|-+$/g, ""),
         name: name.trim(),
         ...(publishImmediately ? { status: "ACTIVE" as const } : {}),
-        ...(imageUrl ? { imageUrl } : {})
+        ...(imageUrl?.trim() ? { imageUrl: imageUrl.trim() } : {})
       });
     },
     onSuccess: (res) => {
@@ -122,7 +127,15 @@ export const CategoryCreatePage = () => {
               required
               className={`${stitchInputClass} font-mono`}
               value={slug}
-              onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
+              onChange={(e) =>
+                setSlug(
+                  e.target.value
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/-{2,}/g, "-")
+                    .replace(/^-+|-+$/g, "")
+                )
+              }
               placeholder="footwear"
             />
           </label>
@@ -134,6 +147,7 @@ export const CategoryCreatePage = () => {
             label="Cover image (optional)"
             hint="Shown on category surfaces. Upload a wide image (JPG, PNG, WebP, or AVIF, max 8MB)."
             purpose="cover"
+            traceOperation="media.catalog_category_cover"
           />
           <div className="border-t border-[#737685]/10 pt-5">
             <button
