@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import {
   Archive,
   Bold,
@@ -37,6 +37,8 @@ import {
   type SupportTicketAttachment,
   type SupportTicketStatus
 } from "@/features/support/api/admin-support.api";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 import {
   formatSlaCountdown,
   formatTicketNumber,
@@ -58,13 +60,6 @@ type FeedItem =
     }
   | { kind: "internal"; id: string; createdAt: string; note: string };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const isCustomerAuthor = (authorType: string) => authorType.toUpperCase().includes("CUSTOMER");
 
@@ -467,7 +462,7 @@ export const SupportTicketDetailPage = () => {
                     </button>
                   </div>
                 </div>
-                <span className="font-mono text-xs text-[#5b5e68]">{formatWhen(new Date().toISOString())}</span>
+                <span className="font-mono text-xs text-[#5b5e68]">{formatDateTime(new Date().toISOString())}</span>
               </div>
 
               <div className="flex-1 space-y-6 overflow-y-auto p-6">
@@ -486,7 +481,7 @@ export const SupportTicketDetailPage = () => {
                                   Internal note
                                 </span>
                                 <span className="font-mono text-[10px] text-amber-800/70">
-                                  {formatWhen(item.createdAt)}
+                                  {formatDateTime(item.createdAt)}
                                 </span>
                               </div>
                               <p className="whitespace-pre-wrap text-xs italic text-amber-950/90">{item.note}</p>
@@ -546,7 +541,7 @@ export const SupportTicketDetailPage = () => {
                             ) : null}
                           </div>
                           <span className="mt-1 text-[10px] font-medium text-[#5b5e68]">
-                            {customer ? customerName : "Support"} · {formatWhen(item.createdAt)}
+                            {customer ? customerName : "Support"} · {formatDateTime(item.createdAt)}
                           </span>
                         </div>
                       </div>
@@ -678,7 +673,7 @@ export const SupportTicketDetailPage = () => {
                   <span>—</span>
                 )}
               </div>
-              <p className="mt-2 font-mono text-[10px] text-[#60626c]">Due {formatWhen(e.slaDueAt)}</p>
+              <p className="mt-2 font-mono text-[10px] text-[#60626c]">Due {formatDateTime(e.slaDueAt)}</p>
               <p className="mt-3 text-xs text-[#60626c]">
                 First-response SLA from ticket creation ({e.priority} priority). Timer updates every second until an
                 admin replies or the ticket closes.
@@ -763,11 +758,11 @@ export const SupportTicketDetailPage = () => {
               <div className="grid grid-cols-2 gap-4 border-t border-[#e0e2f0] bg-[#f2f3ff] px-5 py-4">
                 <div>
                   <p className="text-[9px] font-bold uppercase text-[#5b5e68]">Created</p>
-                  <p className="text-xs font-medium text-[#181b25]">{formatWhen(e.createdAt)}</p>
+                  <p className="text-xs font-medium text-[#181b25]">{formatDateTime(e.createdAt)}</p>
                 </div>
                 <div>
                   <p className="text-[9px] font-bold uppercase text-[#5b5e68]">Last updated</p>
-                  <p className="text-xs font-medium text-[#181b25]">{formatWhen(e.updatedAt)}</p>
+                  <p className="text-xs font-medium text-[#181b25]">{formatDateTime(e.updatedAt)}</p>
                 </div>
               </div>
             </div>
@@ -785,7 +780,7 @@ export const SupportTicketDetailPage = () => {
                     <p className="text-sm text-[#181b25]">
                       Last recorded: <strong>{e.csatScore}</strong> / 5
                       {e.csatSubmittedAt ? (
-                        <span className="text-[#60626c]"> · {formatWhen(e.csatSubmittedAt)}</span>
+                        <span className="text-[#60626c]"> · {formatDateTime(e.csatSubmittedAt)}</span>
                       ) : null}
                     </p>
                   ) : (

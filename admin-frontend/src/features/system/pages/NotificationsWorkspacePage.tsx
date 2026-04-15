@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { z } from "zod";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
@@ -13,6 +13,8 @@ import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 import {
   ApiError,
   createAdminNotification,
@@ -22,13 +24,6 @@ import {
   type NotificationRow
 } from "@/features/system/api/admin-system.api";
 
-const formatWhen = (value: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
-  } catch {
-    return value;
-  }
-};
 
 const notificationDraftSchema = z.object({
   type: z.string().trim().min(1, "Notification type is required."),
@@ -171,7 +166,7 @@ export const NotificationsWorkspacePage = () => {
       {item.status.replace(/_/g, " ")}
     </span>,
     <span key={`created-${item.id}`} className="text-xs text-[#737685]">
-      {formatWhen(item.createdAt)}
+      {formatDateTime(item.createdAt)}
     </span>,
     <div key={`actions-${item.id}`} className="flex justify-end gap-2">
       <Link

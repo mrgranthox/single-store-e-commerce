@@ -9,17 +9,8 @@ import {
 } from "lucide-react";
 
 import type { AdminOrderTimelineItem } from "@/features/orders/api/admin-orders.api";
+import { formatDateTime } from "@/lib/format";
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "medium"
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const humanize = (raw: string) => raw.replace(/_/g, " ");
 
@@ -134,7 +125,7 @@ export const OrderStitchFulfillmentTimeline = ({ events }: { events: AdminOrderT
                   className="shrink-0 rounded bg-[#f2f3ff] px-2 py-1 font-mono text-xs text-[#434654]"
                   dateTime={t.occurredAt}
                 >
-                  {formatWhen(t.occurredAt)}
+                  {formatDateTime(t.occurredAt)}
                 </time>
               </div>
             </li>

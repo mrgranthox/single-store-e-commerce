@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { ContentWorkspaceNav } from "@/components/stitch/ContentWorkspaceNav";
@@ -136,16 +137,10 @@ export const HomepageManagementPage = () => {
   const [status, setStatus] = useState<AdminHomepageDraftEntity["status"] | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const homepageQuery = useQuery({
-    queryKey: ["admin-homepage-draft"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminHomepageDraft(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const homepageQuery = useAuthedQuery(
+  ["admin-homepage-draft"],
+  (token) => getAdminHomepageDraft(token)
+);
 
   useEffect(() => {
     const entity = homepageQuery.data?.data.entity;

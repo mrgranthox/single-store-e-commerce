@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { ArrowRight, Bell, Lock, Network, ShoppingCart, Star, Headphones, Shield } from "lucide-react";
 
 import { DataTableShell } from "@/components/primitives/DataTableShell";
@@ -61,27 +62,15 @@ export const SystemSettingsPage = () => {
   const [draftJson, setDraftJson] = useState("");
   const [parseError, setParseError] = useState<string | null>(null);
 
-  const settingsQuery = useQuery({
-    queryKey: ["admin-system-settings"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminSystemSettings(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const settingsQuery = useAuthedQuery(
+  ["admin-system-settings"],
+  (token) => listAdminSystemSettings(token)
+);
 
-  const recentQuery = useQuery({
-    queryKey: ["admin-settings-hub-recent-actions"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminActionLogs(accessToken, { page: 1, page_size: 8 });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const recentQuery = useAuthedQuery(
+  ["admin-settings-hub-recent-actions"],
+  (token) => listAdminActionLogs(token, { page: 1, page_size: 8 })
+);
 
   const healthQuery = useQuery({
     queryKey: ["admin-settings-hub-health"],

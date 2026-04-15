@@ -77,8 +77,7 @@ export const IncidentsListPage = () => {
         page,
         page_size: 20,
         ...(q.trim() ? { q: q.trim() } : {}),
-        ...(status ? { status } : {}),
-      }),
+        ...(status ? { status } : {}) }),
   );
 
   const createMut = useMutation({

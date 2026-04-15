@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Plus, Search, Store, X } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -55,16 +56,10 @@ export const WarehousesListPage = () => {
   const [newOpStatus, setNewOpStatus] = useState<"ACTIVE" | "MAINTENANCE" | "OFFLINE">("ACTIVE");
   const [formError, setFormError] = useState<string | null>(null);
 
-  const warehousesQuery = useQuery({
-    queryKey: ["admin-warehouses"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminWarehouses(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const warehousesQuery = useAuthedQuery(
+  ["admin-warehouses"],
+  (token) => listAdminWarehouses(token)
+);
 
   const overviewQuery = useQuery({
     queryKey: ["admin-inventory-overview"],

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Download, Search } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -14,6 +14,8 @@ import {
 import type { InventoryMovementRow } from "@/features/inventory/api/admin-inventory.api";
 import { StitchFilterPanel } from "@/components/stitch";
 import { InventorySubNav } from "@/features/inventory/components/InventorySubNav";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
 const MOVEMENT_TYPES = [
   "",
@@ -46,23 +48,7 @@ const movementBadgeClass = (label: string) => {
   return "border-slate-200 bg-slate-50 text-slate-700";
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "short", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
-const formatWhenMono = (iso: string) => {
-  try {
-    const d = new Date(iso);
-    const pad = (n: number) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-  } catch {
-    return iso;
-  }
-};
 
 const actorLabel = (m: InventoryMovementRow) => {
   if (!m.actorAdminUserId) return "System";
@@ -129,27 +115,23 @@ export const InventoryMovementsPage = () => {
     [page, appliedSku, movementType, appliedProductId, warehouseId, appliedDateFrom, appliedDateTo, appliedActorId]
   );
 
-  const movementsQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listInventoryMovements(accessToken, {
-        page,
-        page_size: 25,
-        sortOrder: "desc",
-        ...(appliedSku.trim() ? { sku: appliedSku.trim() } : {}),
-        ...(movementType ? { movementType } : {}),
-        ...(appliedProductId ? { productId: appliedProductId } : {}),
-        ...(warehouseId ? { warehouseId } : {}),
-        ...(appliedDateFrom.trim() ? { dateFrom: appliedDateFrom.trim() } : {}),
-        ...(appliedDateTo.trim() ? { dateTo: appliedDateTo.trim() } : {}),
-        ...(appliedActorId.trim() ? { actorAdminUserId: appliedActorId.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const movementsQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listInventoryMovements(token, {
+            page,
+            page_size: 25,
+            sortOrder: "desc",
+            ...(appliedSku.trim() ? { sku: appliedSku.trim() } : {}),
+            ...(movementType ? { movementType } : {}),
+            ...(appliedProductId ? { productId: appliedProductId } : {}),
+            ...(warehouseId ? { warehouseId } : {}),
+            ...(appliedDateFrom.trim() ? { dateFrom: appliedDateFrom.trim() } : {}),
+            ...(appliedDateTo.trim() ? { dateTo: appliedDateTo.trim() } : {}),
+            ...(appliedActorId.trim() ? { actorAdminUserId: appliedActorId.trim() } : {})
+          });
+  }
+);
 
   const items = movementsQuery.data?.data.items ?? [];
   const meta = movementsQuery.data?.meta;
@@ -209,7 +191,7 @@ export const InventoryMovementsPage = () => {
         const before = m.resultingOnHand - m.deltaOnHand;
         const label = movementTypeLabel(m.movementType);
         return [
-          formatWhenMono(m.createdAt),
+          formatDateTime(m.createdAt),
           `"${m.variant.product.title.replace(/"/g, '""')}"`,
           m.variant.sku,
           m.warehouse.code,
@@ -245,7 +227,7 @@ export const InventoryMovementsPage = () => {
       m.deltaOnHand > 0 ? "text-emerald-700" : m.deltaOnHand < 0 ? "text-red-600 font-bold" : "text-slate-600";
     return [
       <span key={`t-${m.id}`} className="font-mono text-xs text-slate-500">
-        {formatWhenMono(m.createdAt)}
+        {formatDateTime(m.createdAt)}
       </span>,
       <div key={`p-${m.id}`}>
         <Link

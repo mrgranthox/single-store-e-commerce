@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link, useBlocker, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { z } from "zod";
 
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
@@ -113,27 +114,15 @@ export const CatalogProductEditPage = () => {
     enabled: Boolean(accessToken && productId)
   });
 
-  const categoriesQuery = useQuery({
-    queryKey: ["admin-catalog-categories-options"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogCategories(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const categoriesQuery = useAuthedQuery(
+  ["admin-catalog-categories-options"],
+  (token) => listAdminCatalogCategories(token)
+);
 
-  const brandsQuery = useQuery({
-    queryKey: ["admin-catalog-brands-options"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogBrands(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const brandsQuery = useAuthedQuery(
+  ["admin-catalog-brands-options"],
+  (token) => listAdminCatalogBrands(token)
+);
 
   const entity = q.data?.data.entity;
   const categories = categoriesQuery.data?.data.items ?? [];

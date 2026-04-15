@@ -12,5 +12,4 @@ export const customerKeys = {
   addresses: (id: string) =>
     [...customerKeys.detail(id), "addresses"] as const,
   notes: (id: string) => [...customerKeys.detail(id), "notes"] as const,
-  timeline: (id: string) => [...customerKeys.detail(id), "timeline"] as const,
-};
+  timeline: (id: string) => [...customerKeys.detail(id), "timeline"] as const };

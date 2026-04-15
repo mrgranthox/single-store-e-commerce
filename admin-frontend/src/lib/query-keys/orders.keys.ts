@@ -19,5 +19,4 @@ export const orderKeys = {
   items: (id: string) => [...orderKeys.detail(id), "items"] as const,
   fulfillments: (id: string) =>
     [...orderKeys.detail(id), "fulfillments"] as const,
-  refunds: (id: string) => [...orderKeys.detail(id), "refunds"] as const,
-};
+  refunds: (id: string) => [...orderKeys.detail(id), "refunds"] as const };

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
 
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -12,17 +13,10 @@ import {
   formatPaymentGatewayLabel
 } from "@/features/payments/lib/paystackRails";
 import { customerInitials } from "@/features/payments/ui/stitchPaymentsUi";
+import { formatMoney } from "@/lib/format";
 
 const paymentRefLabel = (id: string) => `PAY-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
-const formatMoney = (cents: number, currency: string) => {
-  const cur = currency.toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
 const formatTimeUtc = (iso: string) => {
   try {

@@ -108,8 +108,7 @@ export const SecurityRiskSignalsPage = () => {
         page_size: 20,
         ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}),
         ...(min != null && !Number.isNaN(min) ? { minScore: min } : {}),
-        ...(reviewed !== undefined ? { reviewed } : {}),
-      });
+        ...(reviewed !== undefined ? { reviewed } : {}) });
     },
   );
 

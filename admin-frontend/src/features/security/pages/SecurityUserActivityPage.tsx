@@ -59,8 +59,7 @@ export const SecurityUserActivityPage = () => {
         ...(applied.entityId.trim() ? { entityId: applied.entityId.trim() } : {}),
         ...(applied.eventType.trim() ? { eventType: applied.eventType.trim() } : {}),
         ...(applied.occurredAtFrom.trim() ? { occurredAtFrom: applied.occurredAtFrom.trim() } : {}),
-        ...(applied.occurredAtTo.trim() ? { occurredAtTo: applied.occurredAtTo.trim() } : {}),
-      }),
+        ...(applied.occurredAtTo.trim() ? { occurredAtTo: applied.occurredAtTo.trim() } : {}) }),
   );
 
   const items = q.data?.data.items ?? [];

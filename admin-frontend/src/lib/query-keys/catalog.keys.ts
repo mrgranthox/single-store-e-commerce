@@ -39,5 +39,4 @@ export const catalogKeys = {
   brand: (id: string) => [...catalogKeys.brands(), id] as const,
 
   // Tags
-  tags: () => [...catalogKeys.all(), "tags"] as const,
-};
+  tags: () => [...catalogKeys.all(), "tags"] as const };

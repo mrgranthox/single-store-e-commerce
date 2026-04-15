@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -17,6 +18,7 @@ import {
   suspendAdminCustomer
 } from "@/features/customers/api/admin-customers.api";
 import { displayCustomerName, formatMinorCurrency } from "@/features/customers/lib/customerDisplay";
+import { formatDateTime } from "@/lib/format";
 
 const userStatusTone = (s: string): StatusBadgeTone => {
   switch (s) {
@@ -44,13 +46,6 @@ const initials = (c: { firstName: string | null; lastName: string | null; email:
   return em ? em.toUpperCase() : "?";
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const formatJoined = (iso: string) => {
   try {
@@ -304,7 +299,7 @@ export const CustomerDetailPage = () => {
                     {e.lastOrder.orderNumber}
                   </Link>
                   <span className="text-[10px] font-bold uppercase text-slate-400">
-                    {formatWhen(e.lastOrder.createdAt)}
+                    {formatDateTime(e.lastOrder.createdAt)}
                   </span>
                 </>
               ) : (
@@ -361,7 +356,7 @@ export const CustomerDetailPage = () => {
                   </div>
                   <div>
                     <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Last profile update</p>
-                    <p className="text-sm font-medium">{formatWhen(e.updatedAt)}</p>
+                    <p className="text-sm font-medium">{formatDateTime(e.updatedAt)}</p>
                   </div>
                   {e.addresses.length > 0 ? (
                     <div className="sm:col-span-2">
@@ -486,7 +481,7 @@ export const CustomerDetailPage = () => {
                 {e.notes.map((n) => (
                   <li key={n.id} className="rounded-lg border border-[var(--color-border-light)] bg-[var(--color-bg-content)] p-3">
                     <p className="text-[10px] text-[var(--color-text-muted)]">
-                      {formatWhen(n.createdAt)}
+                      {formatDateTime(n.createdAt)}
                       {n.actorAdmin?.email ? ` · ${n.actorAdmin.email}` : ""}
                     </p>
                     <p className="mt-1 whitespace-pre-wrap text-sm">{n.note}</p>

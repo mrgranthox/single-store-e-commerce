@@ -13,29 +13,11 @@ import {
   type PaymentTransactionsResponse
 } from "@/features/payments/api/admin-payments.api";
 import { StitchPaymentStatusPill } from "@/features/payments/ui/stitchPaymentsUi";
+import { formatDateTime, formatMoney } from "@/lib/format";
 
 const paymentRefLabel = (id: string) => `PAY-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
-const formatMoney = (cents: number | null, currency: string | null) => {
-  if (cents == null || !currency) return "—";
-  const cur = currency.toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
-const formatWhenParts = (iso: string) => {
-  try {
-    const d = new Date(iso);
-    const date = new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(d);
-    const time = new Intl.DateTimeFormat(undefined, { timeStyle: "medium" }).format(d);
-    return { date, time };
-  } catch {
-    return { date: iso, time: "" };
-  }
-};
 
 const finalStatusHeadline = (state: string) => {
   switch (state) {
@@ -328,7 +310,10 @@ export const PaymentTransactionsPage = () => {
                   const border = fail ? "border-red-600" : ok ? "border-[#006b2d]" : "border-[#1653cc]";
                   const dot = fail ? "bg-red-600" : ok ? "bg-[#006b2d]" : "bg-[#1653cc]";
                   const badgeBorder = fail ? "border-red-600 text-red-600" : ok ? "border-[#006b2d] text-[#006b2d]" : "border-[#1653cc] text-[#1653cc]";
-                  const { date, time } = formatWhenParts(row.createdAt);
+                  const dtStr = formatDateTime(row.createdAt);
+                  const dtParts = dtStr.split(", ");
+                  const date = dtParts[0] ?? dtStr;
+                  const time = dtParts[1] ?? "";
                   const title =
                     row.providerEventType?.replace(/_/g, " ")?.toLowerCase().replace(/^\w/, (c) => c.toUpperCase()) ??
                     "Provider event";

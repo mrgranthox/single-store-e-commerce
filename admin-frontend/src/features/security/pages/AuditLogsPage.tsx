@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
-import { Link, useSearchParams } from "react-router-dom";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+import { Link } from "react-router-dom";
 import { Download, ExternalLink, Filter, RefreshCw } from "lucide-react";
 
 import {
@@ -30,38 +31,26 @@ import {
 
 const ACTION_PRESETS = ["", "CREATE", "UPDATE", "DELETE", "LOGIN"] as const;
 
+const AUDIT_FILTER_DEFAULTS = {
+  actionPreset: "",
+  actionCode: "",
+  entityType: "",
+  entityId: "",
+  actorAdminUserId: "",
+  actorEmailContains: "" } as const;
+
 export const AuditLogsPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [searchParams] = useSearchParams();
-  const [page, setPage] = useState(1);
-  const [actionCode, setActionCode] = useState("");
-  const [actionPreset, setActionPreset] = useState("");
-  const [entityType, setEntityType] = useState("");
-  const [entityId, setEntityId] = useState("");
-  const [actorAdminUserId, setActorAdminUserId] = useState("");
-  const [actorEmailContains, setActorEmailContains] = useState("");
 
-  const searchKey = searchParams.toString();
+  const { filters, page, setPage, set, reset } = useListFilters({
+    defaults: AUDIT_FILTER_DEFAULTS });
 
-  useEffect(() => {
-    const params = new URLSearchParams(searchKey);
-    const et = params.get("entityType");
-    const eid = params.get("entityId");
-    if (et != null && et !== "") {
-      setEntityType(et);
-    }
-    if (eid != null && eid !== "") {
-      setEntityId(eid);
-    }
-    setPage(1);
-  }, [searchKey]);
-
-  const effectiveAction = actionPreset || actionCode.trim();
+  const effectiveAction = filters.actionPreset || filters.actionCode.trim();
 
   const queryKey = useMemo(
-    () => ["admin-audit-logs", page, effectiveAction, entityType, entityId, actorAdminUserId, actorEmailContains] as const,
-    [page, effectiveAction, entityType, entityId, actorAdminUserId, actorEmailContains]
+    () => ["admin-audit-logs", page, effectiveAction, filters.entityType, filters.entityId, filters.actorAdminUserId, filters.actorEmailContains] as const,
+    [page, effectiveAction, filters.entityType, filters.entityId, filters.actorAdminUserId, filters.actorEmailContains]
   );
 
   const listQuery = useAuthedQuery(
@@ -71,11 +60,10 @@ export const AuditLogsPage = () => {
         page,
         page_size: 25,
         ...(effectiveAction ? { actionCode: effectiveAction } : {}),
-        ...(entityType.trim() ? { entityType: entityType.trim() } : {}),
-        ...(entityId.trim() ? { entityId: entityId.trim() } : {}),
-        ...(actorAdminUserId.trim() ? { actorAdminUserId: actorAdminUserId.trim() } : {}),
-        ...(actorEmailContains.trim() ? { actorEmailContains: actorEmailContains.trim() } : {}),
-      }),
+        ...(filters.entityType.trim() ? { entityType: filters.entityType.trim() } : {}),
+        ...(filters.entityId.trim() ? { entityId: filters.entityId.trim() } : {}),
+        ...(filters.actorAdminUserId.trim() ? { actorAdminUserId: filters.actorAdminUserId.trim() } : {}),
+        ...(filters.actorEmailContains.trim() ? { actorEmailContains: filters.actorEmailContains.trim() } : {}) }),
   );
 
   const items = listQuery.data?.data.items ?? [];
@@ -150,11 +138,8 @@ export const AuditLogsPage = () => {
           <div>
             <StitchFieldLabel>Actor user ID</StitchFieldLabel>
             <input
-              value={actorAdminUserId}
-              onChange={(e) => {
-                setActorAdminUserId(e.target.value);
-                setPage(1);
-              }}
+              value={filters.actorAdminUserId}
+              onChange={(e) => set("actorAdminUserId", e.target.value)}
               placeholder="User ID"
               className={`${stitchInputClass} font-mono text-xs`}
             />
@@ -162,11 +147,8 @@ export const AuditLogsPage = () => {
           <div>
             <StitchFieldLabel>Actor email contains</StitchFieldLabel>
             <input
-              value={actorEmailContains}
-              onChange={(e) => {
-                setActorEmailContains(e.target.value);
-                setPage(1);
-              }}
+              value={filters.actorEmailContains}
+              onChange={(e) => set("actorEmailContains", e.target.value)}
               placeholder="Substring match…"
               className={stitchInputClass}
             />
@@ -174,11 +156,10 @@ export const AuditLogsPage = () => {
           <div>
             <StitchFieldLabel>Action type</StitchFieldLabel>
             <select
-              value={actionPreset}
+              value={filters.actionPreset}
               onChange={(e) => {
-                setActionPreset(e.target.value);
-                if (e.target.value) setActionCode("");
-                setPage(1);
+                set("actionPreset", e.target.value);
+                if (e.target.value) set("actionCode", "");
               }}
               className={stitchSelectClass}
             >
@@ -193,12 +174,9 @@ export const AuditLogsPage = () => {
           <div>
             <StitchFieldLabel>Action code</StitchFieldLabel>
             <input
-              value={actionCode}
-              disabled={Boolean(actionPreset)}
-              onChange={(e) => {
-                setActionCode(e.target.value);
-                setPage(1);
-              }}
+              value={filters.actionCode}
+              disabled={Boolean(filters.actionPreset)}
+              onChange={(e) => set("actionCode", e.target.value)}
               placeholder="e.g. orders.update…"
               className={stitchInputClass}
             />
@@ -206,11 +184,8 @@ export const AuditLogsPage = () => {
           <div>
             <StitchFieldLabel>Entity type</StitchFieldLabel>
             <input
-              value={entityType}
-              onChange={(e) => {
-                setEntityType(e.target.value);
-                setPage(1);
-              }}
+              value={filters.entityType}
+              onChange={(e) => set("entityType", e.target.value)}
               placeholder="ORDER, USER…"
               className={stitchInputClass}
             />
@@ -219,11 +194,8 @@ export const AuditLogsPage = () => {
             <StitchFieldLabel>Entity ID</StitchFieldLabel>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
               <input
-                value={entityId}
-                onChange={(e) => {
-                  setEntityId(e.target.value);
-                  setPage(1);
-                }}
+                value={filters.entityId}
+                onChange={(e) => set("entityId", e.target.value)}
                 placeholder="Record ID"
                 className={`${stitchInputClass} min-w-0 flex-1 font-mono text-xs`}
               />
@@ -365,7 +337,7 @@ export const AuditLogsPage = () => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border border-[#e5e7eb] px-3 py-2 text-[#1653cc] hover:bg-[#f8fafc] disabled:opacity-40"
             >
               Previous
@@ -373,7 +345,7 @@ export const AuditLogsPage = () => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border border-[#e5e7eb] px-3 py-2 text-[#1653cc] hover:bg-[#f8fafc] disabled:opacity-40"
             >
               Next

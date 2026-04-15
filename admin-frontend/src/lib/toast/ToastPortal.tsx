@@ -15,32 +15,26 @@ const VARIANTS: Record<
     icon: CheckCircle2,
     iconClass: "text-emerald-400",
     border: "border-l-emerald-500",
-    bg: "bg-[#181b25]",
-  },
+    bg: "bg-[#181b25]" },
   error: {
     icon: XCircle,
     iconClass: "text-red-400",
     border: "border-l-red-500",
-    bg: "bg-[#181b25]",
-  },
+    bg: "bg-[#181b25]" },
   warning: {
     icon: AlertTriangle,
     iconClass: "text-amber-400",
     border: "border-l-amber-500",
-    bg: "bg-[#181b25]",
-  },
+    bg: "bg-[#181b25]" },
   info: {
     icon: Info,
     iconClass: "text-blue-400",
     border: "border-l-blue-500",
-    bg: "bg-[#181b25]",
-  },
-};
+    bg: "bg-[#181b25]" } };
 
 function ToastCard({
   toast,
-  onDismiss,
-}: {
+  onDismiss }: {
   toast: Toast;
   onDismiss: () => void;
 }) {

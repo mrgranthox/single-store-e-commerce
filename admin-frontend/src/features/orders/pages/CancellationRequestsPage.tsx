@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { PageActionsMenu } from "@/components/primitives/PageActionsMenu";
@@ -15,6 +16,7 @@ import {
   type CancellationRequestListItem
 } from "@/features/orders/api/admin-orders.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { formatMoney } from "@/lib/format";
 
 const crRef = (id: string) => `CR-${id.replace(/-/g, "").slice(0, 5).toUpperCase()}`;
 
@@ -31,17 +33,6 @@ const formatWhenTable = (iso: string) => {
   }
 };
 
-const formatMoney = (cents: number | null | undefined, currency: string | null | undefined) => {
-  if (typeof cents !== "number" || Number.isNaN(cents)) {
-    return "—";
-  }
-  const cur = (currency ?? "USD").toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
 const initialsFromCustomer = (row: CancellationRequestListItem) => {
   const name = row.customer.name?.trim();
@@ -171,20 +162,16 @@ export const CancellationRequestsPage = () => {
     [page, statusDraft]
   );
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCancellationRequests(accessToken, {
-        page,
-        page_size: 20,
-        ...(statusDraft.trim() ? { status: statusDraft.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listAdminCancellationRequests(token, {
+            page,
+            page_size: 20,
+            ...(statusDraft.trim() ? { status: statusDraft.trim() } : {})
+          });
+  }
+);
 
   const approveMut = useAdminAction({
     mutationFn: async ({ id, note }: { id: string; note?: string }) => {

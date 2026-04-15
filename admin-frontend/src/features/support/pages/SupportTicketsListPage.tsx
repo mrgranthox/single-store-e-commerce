@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import {
   AlarmClock,
   CheckCircle2,
@@ -96,23 +97,19 @@ export const SupportTicketsListPage = () => {
     [page, appliedSearch, status, priority, assignment]
   );
 
-  const ticketsQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listSupportTickets(accessToken, {
-        page,
-        page_size: 20,
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
-        ...(status ? { status } : {}),
-        ...(priority ? { priority } : {}),
-        ...(assignment !== "any" ? { assignment } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const ticketsQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listSupportTickets(token, {
+            page,
+            page_size: 20,
+            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
+            ...(status ? { status } : {}),
+            ...(priority ? { priority } : {}),
+            ...(assignment !== "any" ? { assignment } : {})
+          });
+  }
+);
 
   const { prefetch: prefetchTicketDetail, prefetchMany: prefetchTicketDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -9,6 +9,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, listContractPromotions, type PromotionListItem } from "@/features/marketing/api/admin-marketing.api";
 import { formatAdminDate, humanizeLabel } from "@/features/marketing/lib/marketingPresentation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { useQuery } from "@tanstack/react-query";
 
 export const PromotionRulesHubPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link, useNavigate } from "react-router-dom";
 
 import { BannerLinkSelect } from "@/components/admin/BannerLinkSelect";
@@ -27,16 +28,10 @@ export const BrandCreatePage = () => {
   const [galleryText, setGalleryText] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
 
-  const bannersQ = useQuery({
-    queryKey: ["admin-banners-picker"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminBanners(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const bannersQ = useAuthedQuery(
+  ["admin-banners-picker"],
+  (token) => listAdminBanners(token)
+);
 
   const mut = useMutation({
     mutationFn: async () => {

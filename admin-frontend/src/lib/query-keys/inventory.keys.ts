@@ -12,5 +12,4 @@ export const inventoryKeys = {
     [...inventoryKeys.detail(variantId), "movements"] as const,
 
   adjustments: () => [...inventoryKeys.all(), "adjustments"] as const,
-  alerts: () => [...inventoryKeys.all(), "alerts"] as const,
-};
+  alerts: () => [...inventoryKeys.all(), "alerts"] as const };

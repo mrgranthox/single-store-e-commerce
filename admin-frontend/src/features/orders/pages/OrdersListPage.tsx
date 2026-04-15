@@ -122,8 +122,7 @@ export const OrdersListPage = () => {
   const [customerDraft, setCustomerDraft] = useState("");
 
   const { filters, page, setPage, set, reset } = useListFilters({
-    defaults: ORDER_FILTERS_DEFAULTS,
-  });
+    defaults: ORDER_FILTERS_DEFAULTS });
 
   const ordersQuery = useAuthedQuery(
     orderKeys.list({ page, ...filters }),
@@ -133,8 +132,7 @@ export const OrdersListPage = () => {
         page_size: 20,
         ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
         ...(filters.status ? { status: filters.status } : {}),
-        ...(filters.paymentState ? { paymentState: filters.paymentState } : {}),
-      }),
+        ...(filters.paymentState ? { paymentState: filters.paymentState } : {}) }),
   );
 
   const { prefetch: prefetchOrderDetail, prefetchMany: prefetchOrderDetails } = useAdminDetailPrefetch({
@@ -142,8 +140,7 @@ export const OrdersListPage = () => {
     staleTime: ORDER_DETAIL_STALE_MS,
     queryKeyFor: (orderId: string) => orderKeys.detail(orderId),
     queryFnFor: (orderId: string) => getAdminOrderDetail(accessToken!, orderId),
-    onPrefetch: () => preloadLazyNamedComponent("../features/orders/pages/OrderDetailPage.tsx", "OrderDetailPage"),
-  });
+    onPrefetch: () => preloadLazyNamedComponent("../features/orders/pages/OrderDetailPage.tsx", "OrderDetailPage") });
 
   const items = ordersQuery.data?.data.items ?? [];
   const meta = ordersQuery.data?.meta;

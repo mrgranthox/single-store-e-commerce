@@ -45,8 +45,7 @@ export const useAdminAction = <TVariables, TResult>({
   successMessage,
   errorMessage,
   onSuccess,
-  onError,
-}: AdminActionOptions<TVariables, TResult>) => {
+  onError }: AdminActionOptions<TVariables, TResult>) => {
   const queryClient = useQueryClient();
   const token = useAdminAuthStore((s) => s.accessToken);
 
@@ -80,8 +79,7 @@ export const useAdminAction = <TVariables, TResult>({
         toast.error(msg);
       }
       onError?.(error, variables);
-    },
-  });
+    } });
 
   const run = (variables: TVariables) => {
     if (mutation.isPending || !isAllowed || !isAvailable) {
@@ -102,6 +100,5 @@ export const useAdminAction = <TVariables, TResult>({
     ...mutation,
     run,
     state,
-    blocked: state === "permission-blocked" || state === "unavailable",
-  };
+    blocked: state === "permission-blocked" || state === "unavailable" };
 };

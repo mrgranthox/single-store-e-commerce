@@ -33,6 +33,7 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { orderKeys } from "@/lib/query-keys";
+import { formatDateTime, formatMoney } from "@/lib/format";
 
 const ORDER_STATUSES: AdminOrderStatus[] = [
   "DRAFT",
@@ -44,29 +45,7 @@ const ORDER_STATUSES: AdminOrderStatus[] = [
   "CLOSED"
 ];
 
-const formatMoney = (cents: number | null | undefined, currency: string | null | undefined) => {
-  if (typeof cents !== "number" || Number.isNaN(cents)) {
-    return "—";
-  }
-  const cur = (currency ?? "USD").toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
-const formatWhenUtcLabel = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "medium",
-      timeZone: "UTC"
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const humanize = (raw: string | null | undefined) => (raw ?? "—").replace(/_/g, " ");
 
@@ -221,42 +200,36 @@ export const OrderDetailPage = () => {
       updateAdminOrderStatus(accessToken!, orderId, {
         status: nextStatus,
         ...(statusReason.trim() ? { reason: statusReason.trim() } : {}),
-        ...(statusNote.trim() ? { note: statusNote.trim() } : {}),
-      }),
+        ...(statusNote.trim() ? { note: statusNote.trim() } : {}) }),
     successMessage: "Order status updated.",
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Status update failed.",
     isAllowed: canUpdateOrder,
-    invalidate: orderInvalidateKeys,
-  });
+    invalidate: orderInvalidateKeys });
 
   const assignMut = useAdminAction({
     mutationFn: () =>
       assignAdminOrderWarehouse(accessToken!, orderId, {
         warehouseId: normalizedWarehouseId,
-        ...(assignNote.trim() ? { note: assignNote.trim() } : {}),
-      }),
+        ...(assignNote.trim() ? { note: assignNote.trim() } : {}) }),
     successMessage: "Warehouse assigned.",
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Assign warehouse failed.",
     isAllowed: canOverrideFulfillment,
     isAvailable: Boolean(normalizedWarehouseId),
-    invalidate: orderInvalidateKeys,
-  });
+    invalidate: orderInvalidateKeys });
 
   const cancelMut = useAdminAction({
     mutationFn: () =>
       cancelAdminOrder(accessToken!, orderId, {
         reason: normalizedCancelReason,
-        ...(cancelNote.trim() ? { note: cancelNote.trim() } : {}),
-      }),
+        ...(cancelNote.trim() ? { note: cancelNote.trim() } : {}) }),
     successMessage: "Cancellation recorded.",
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Cancel order failed.",
     isAllowed: canCancelOrder,
     isAvailable: Boolean(normalizedCancelReason),
-    invalidate: orderInvalidateKeys,
-  });
+    invalidate: orderInvalidateKeys });
 
   const shipMut = useAdminAction({
     mutationFn: () =>
@@ -264,29 +237,25 @@ export const OrderDetailPage = () => {
         warehouseId: normalizedShipWarehouseId,
         ...(shipCarrier.trim() ? { carrier: shipCarrier.trim() } : {}),
         ...(shipTracking.trim() ? { trackingNumber: shipTracking.trim() } : {}),
-        ...(shipNote.trim() ? { note: shipNote.trim() } : {}),
-      }),
+        ...(shipNote.trim() ? { note: shipNote.trim() } : {}) }),
     successMessage: "Shipment created.",
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Create shipment failed.",
     isAllowed: canOverrideFulfillment,
     isAvailable: shipmentCreatable,
-    invalidate: orderInvalidateKeys,
-  });
+    invalidate: orderInvalidateKeys });
 
   const campaignMut = useAdminAction({
     mutationFn: () =>
       patchAdminOrderCampaignAttribution(accessToken!, orderId, {
         campaignId: normalizedCampaignId || null,
-        ...(normalizedCampaignNote ? { note: normalizedCampaignNote } : {}),
-      }),
+        ...(normalizedCampaignNote ? { note: normalizedCampaignNote } : {}) }),
     successMessage: "Campaign attribution updated.",
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Campaign attribution update failed.",
     isAllowed: canUpdateOrder,
     isAvailable: campaignHasChanges,
-    invalidate: orderInvalidateKeys,
-  });
+    invalidate: orderInvalidateKeys });
 
   const itemRows = useMemo(
     () =>
@@ -452,7 +421,7 @@ export const OrderDetailPage = () => {
                     </h2>
                     <HeaderStatusChip status={entity.status} />
                   </div>
-                  <p className="text-sm text-slate-500">Placed on {formatWhenUtcLabel(entity.createdAt)} (UTC)</p>
+                  <p className="text-sm text-slate-500">Placed on {formatDateTime(entity.createdAt)} (UTC)</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -653,7 +622,7 @@ export const OrderDetailPage = () => {
                                 </p>
                               </div>
                               <span className="shrink-0 text-[10px] text-slate-400">
-                                {formatWhenUtcLabel(event.occurredAt)}
+                                {formatDateTime(event.occurredAt)}
                               </span>
                             </div>
                           </div>

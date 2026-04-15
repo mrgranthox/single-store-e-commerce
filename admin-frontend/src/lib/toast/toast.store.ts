@@ -26,8 +26,7 @@ const DEFAULT_DURATION: Record<ToastVariant, number> = {
   success: 4000,
   error: 7000,
   warning: 6000,
-  info: 5000,
-};
+  info: 5000 };
 
 export const useToastStore = create<ToastState & ToastActions>((set) => ({
   toasts: [],
@@ -37,8 +36,7 @@ export const useToastStore = create<ToastState & ToastActions>((set) => ({
     const duration = input.duration ?? DEFAULT_DURATION[input.variant];
     set((s) => ({
       // Cap at 5 visible toasts; drop the oldest when over limit
-      toasts: [...s.toasts.slice(-4), { ...input, id, duration }],
-    }));
+      toasts: [...s.toasts.slice(-4), { ...input, id, duration }] }));
     if (duration > 0) {
       window.setTimeout(() => {
         set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }));
@@ -50,8 +48,7 @@ export const useToastStore = create<ToastState & ToastActions>((set) => ({
   dismiss: (id) =>
     set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 
-  dismissAll: () => set({ toasts: [] }),
-}));
+  dismissAll: () => set({ toasts: [] }) }));
 
 /**
  * Imperative helper — safe to call outside React components (e.g. in mutation
@@ -65,5 +62,4 @@ export const toast = {
   warning: (title: string, description?: string) =>
     useToastStore.getState().push({ variant: "warning", title, description }),
   info: (title: string, description?: string) =>
-    useToastStore.getState().push({ variant: "info", title, description }),
-};
+    useToastStore.getState().push({ variant: "info", title, description }) };

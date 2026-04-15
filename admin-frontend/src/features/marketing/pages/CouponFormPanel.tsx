@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { X } from "lucide-react";
 
 import { BannerLinkSelect } from "@/components/admin/BannerLinkSelect";
@@ -64,16 +65,10 @@ export const CouponFormPanel = ({
   const [linkedBannerId, setLinkedBannerId] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
 
-  const bannersQ = useQuery({
-    queryKey: ["admin-banners-picker"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminBanners(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const bannersQ = useAuthedQuery(
+  ["admin-banners-picker"],
+  (token) => listAdminBanners(token)
+);
 
   useEffect(() => {
     setLocalError(null);

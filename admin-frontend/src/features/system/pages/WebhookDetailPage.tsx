@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -18,6 +18,8 @@ import {
 import { buildWebhookBusinessSummary } from "@/features/system/lib/webhookBusinessSummary";
 import { StitchPageBody } from "@/components/stitch";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
 type WebhookAttempt = {
   id: string;
@@ -48,13 +50,6 @@ const tone = (s: string): StatusBadgeTone => {
   return "pending";
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "short", timeStyle: "medium" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const humanizeAttemptError = (error: unknown): string | null => {
   if (error == null) {
@@ -187,7 +182,7 @@ export const WebhookDetailPage = () => {
             <span className="text-xs text-[#737685]">
               Signature: {raw.signatureValid ? "Verified" : "Failed or not verified"}
             </span>
-            <span className="text-xs text-[#737685]">Received {formatWhen(raw.receivedAt)}</span>
+            <span className="text-xs text-[#737685]">Received {formatDateTime(raw.receivedAt)}</span>
             <span className="font-mono text-[10px] text-[#5b5e68]">Ref {raw.id.slice(0, 13)}…</span>
           </div>
 
@@ -235,8 +230,8 @@ export const WebhookDetailPage = () => {
                         <td className="py-2 pr-2">
                           <StatusBadge label={a.status} tone={a.status === "SUCCEEDED" ? "active" : "danger"} />
                         </td>
-                        <td className="py-2 pr-2 text-[#374151]">{formatWhen(a.startedAt)}</td>
-                        <td className="py-2 pr-2 text-[#374151]">{a.finishedAt ? formatWhen(a.finishedAt) : "—"}</td>
+                        <td className="py-2 pr-2 text-[#374151]">{formatDateTime(a.startedAt)}</td>
+                        <td className="py-2 pr-2 text-[#374151]">{a.finishedAt ? formatDateTime(a.finishedAt) : "—"}</td>
                         <td className="py-2 align-top text-[#374151]">
                           <span className="font-mono text-[11px] text-[#5b5e68]">{a.retryCount ?? 0}</span>
                           {humanizeAttemptError(a.error) ? (

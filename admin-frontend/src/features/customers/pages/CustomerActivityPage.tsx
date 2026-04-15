@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { CustomerWorkspaceNav } from "@/components/stitch/CustomerWorkspaceNav";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
@@ -17,6 +17,7 @@ import {
 } from "@/features/customers/lib/customerActivityPresentation";
 import { displayCustomerName } from "@/features/customers/lib/customerDisplay";
 import { CustomerWorkspaceHeader } from "@/features/customers/ui/CustomerWorkspaceHeader";
+import { useQuery } from "@tanstack/react-query";
 
 const CHIP_LABELS: { id: ActivityFilterChip; label: string }[] = [
   { id: "all", label: "All" },

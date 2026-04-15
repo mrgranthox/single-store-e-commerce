@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -12,18 +13,8 @@ import {
   type AdminOrderListItem
 } from "@/features/orders/api/admin-orders.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { formatMoney } from "@/lib/format";
 
-const formatMoney = (cents: number | null | undefined, currency: string | null | undefined) => {
-  if (typeof cents !== "number" || Number.isNaN(cents)) {
-    return "—";
-  }
-  const cur = (currency ?? "USD").toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
 const hoursSince = (iso: string) => (Date.now() - new Date(iso).getTime()) / 36e5;
 
@@ -96,26 +87,22 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
     [mode, page, appliedSearch]
   );
 
-  const queueQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      const base = { page, page_size: 20 };
-      if (mode === "fulfillment") {
-        return listAdminFulfillmentQueue(accessToken, {
-          ...base,
-          ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
-        });
-      }
-      return listAdminDispatchQueue(accessToken, {
-        ...base,
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const queueQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    const base = { page, page_size: 20 };
+          if (mode === "fulfillment") {
+            return listAdminFulfillmentQueue(token, {
+              ...base,
+              ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
+            });
+          }
+          return listAdminDispatchQueue(token, {
+            ...base,
+            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
+          });
+  }
+);
 
   const items = queueQuery.data?.data.items ?? [];
   const meta = queueQuery.data?.meta;

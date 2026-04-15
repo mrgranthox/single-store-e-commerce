@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
@@ -15,6 +16,7 @@ import {
   StitchPageBody
 } from "@/components/stitch";
 import { stitchSelectClass } from "@/components/stitch/stitch-primitives";
+import { formatDateTime } from "@/lib/format";
 
 const STATUSES = ["", "QUEUED", "RUNNING", "SUCCEEDED", "FAILED"] as const;
 
@@ -32,13 +34,6 @@ const tone = (s: string): StatusBadgeTone => {
   }
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "short", timeStyle: "medium" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const formatJobRunDuration = (startedAt: string, finishedAt: string | null) => {
   if (!finishedAt) {
@@ -74,23 +69,19 @@ export const JobsListPage = () => {
     [page, status, jobName, appliedStartedAfter, appliedStartedBefore]
   );
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminJobRuns(accessToken, {
-        page,
-        pageSize: 20,
-        ...(status ? { status } : {}),
-        ...(jobName.trim() ? { jobName: jobName.trim() } : {}),
-        ...(appliedStartedAfter.trim() ? { startedAfter: appliedStartedAfter.trim() } : {}),
-        ...(appliedStartedBefore.trim() ? { startedBefore: appliedStartedBefore.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listAdminJobRuns(token, {
+            page,
+            pageSize: 20,
+            ...(status ? { status } : {}),
+            ...(jobName.trim() ? { jobName: jobName.trim() } : {}),
+            ...(appliedStartedAfter.trim() ? { startedAfter: appliedStartedAfter.trim() } : {}),
+            ...(appliedStartedBefore.trim() ? { startedBefore: appliedStartedBefore.trim() } : {})
+          });
+  }
+);
 
   const countQueries = useQueries({
     queries: (["SUCCEEDED", "FAILED", "RUNNING", "QUEUED"] as const).map((st) => ({
@@ -129,7 +120,7 @@ export const JobsListPage = () => {
     </span>,
     <StatusBadge key={`st-${row.id}`} label={row.status.replace(/_/g, " ")} tone={tone(row.status)} />,
     <span key={`stt-${row.id}`} className="text-xs text-[#737685]">
-      {formatWhen(row.startedAt)}
+      {formatDateTime(row.startedAt)}
     </span>,
     <span key={`du-${row.id}`} className="font-mono text-xs text-[#374151]">
       {formatJobRunDuration(row.startedAt, row.finishedAt)}

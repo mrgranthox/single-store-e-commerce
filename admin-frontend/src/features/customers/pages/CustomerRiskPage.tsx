@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
@@ -9,6 +9,8 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminCustomerDetail, getAdminCustomerRisk } from "@/features/customers/api/admin-customers.api";
 import { displayCustomerName, formatMinorCurrency } from "@/features/customers/lib/customerDisplay";
 import { CustomerWorkspaceHeader } from "@/features/customers/ui/CustomerWorkspaceHeader";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
 const userStatusTone = (s: string): StatusBadgeTone => {
   switch (s) {
@@ -37,13 +39,6 @@ const severityTone = (s: string): StatusBadgeTone => {
   return "info";
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 export const CustomerRiskPage = () => {
   const { customerId = "" } = useParams<{ customerId: string }>();
@@ -172,7 +167,7 @@ export const CustomerRiskPage = () => {
                         <tbody className="divide-y divide-slate-50">
                           {loginPatterns.map((row) => (
                             <tr key={row.id} className="hover:bg-slate-50">
-                              <td className="px-5 py-3 text-xs text-slate-600">{formatWhen(row.createdAt)}</td>
+                              <td className="px-5 py-3 text-xs text-slate-600">{formatDateTime(row.createdAt)}</td>
                               <td className="px-5 py-3">
                                 <StatusBadge
                                   label={row.success ? "Success" : "Failed"}
@@ -224,7 +219,7 @@ export const CustomerRiskPage = () => {
                             <dt className="text-[10px] font-bold uppercase text-slate-500">Most recent</dt>
                             <dd className="mt-1 text-xs text-slate-700">
                               {refundSummary.lastCompletedAt
-                                ? `${formatWhen(refundSummary.lastCompletedAt)}${
+                                ? `${formatDateTime(refundSummary.lastCompletedAt)}${
                                     refundSummary.lastAmountCents != null && refundSummary.lastCurrency
                                       ? ` · ${formatMinorCurrency(refundSummary.lastAmountCents, refundSummary.lastCurrency)}`
                                       : ""
@@ -266,9 +261,9 @@ export const CustomerRiskPage = () => {
                           <tr key={row.id} className="hover:bg-slate-50">
                             <td className="px-5 py-3 text-sm font-medium">{row.type.replace(/_/g, " ")}</td>
                             <td className="px-5 py-3 font-mono text-sm">{row.score}</td>
-                            <td className="px-5 py-3 text-xs text-slate-600">{formatWhen(row.createdAt)}</td>
+                            <td className="px-5 py-3 text-xs text-slate-600">{formatDateTime(row.createdAt)}</td>
                             <td className="px-5 py-3 text-xs text-slate-600">
-                              {row.reviewedAt ? formatWhen(row.reviewedAt) : "—"}
+                              {row.reviewedAt ? formatDateTime(row.reviewedAt) : "—"}
                             </td>
                             <td className="px-5 py-3">
                               {row.metadata != null && typeof row.metadata === "object" && Object.keys(row.metadata).length > 0 ? (
@@ -313,9 +308,9 @@ export const CustomerRiskPage = () => {
                               <StatusBadge label={row.severity} tone={severityTone(row.severity)} />
                             </td>
                             <td className="px-5 py-3 text-xs font-semibold uppercase text-slate-600">{row.status}</td>
-                            <td className="px-5 py-3 text-xs text-slate-600">{formatWhen(row.createdAt)}</td>
+                            <td className="px-5 py-3 text-xs text-slate-600">{formatDateTime(row.createdAt)}</td>
                             <td className="px-5 py-3 text-xs text-slate-600">
-                              {row.resolvedAt ? formatWhen(row.resolvedAt) : "—"}
+                              {row.resolvedAt ? formatDateTime(row.resolvedAt) : "—"}
                             </td>
                             <td className="px-5 py-3">
                               {row.metadata != null && typeof row.metadata === "object" && Object.keys(row.metadata).length > 0 ? (

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
@@ -147,36 +148,26 @@ export const CouponsListPage = () => {
     [page, q, status, discountType, activeFrom, activeTo, usageFloor]
   );
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCoupons(accessToken, {
-        page,
-        page_size: 20,
-        ...(q.trim() ? { q: q.trim() } : {}),
-        ...(status ? { status } : {}),
-        ...(discountType ? { discount_type: discountType } : {}),
-        ...(activeFrom.trim() ? { active_from: activeFrom.trim() } : {}),
-        ...(activeTo.trim() ? { active_to: activeTo.trim() } : {}),
-        ...(usageFloor > 0 ? { usage_ratio_min: usageFloor, usage_ratio_max: 100 } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listAdminCoupons(token, {
+            page,
+            page_size: 20,
+            ...(q.trim() ? { q: q.trim() } : {}),
+            ...(status ? { status } : {}),
+            ...(discountType ? { discount_type: discountType } : {}),
+            ...(activeFrom.trim() ? { active_from: activeFrom.trim() } : {}),
+            ...(activeTo.trim() ? { active_to: activeTo.trim() } : {}),
+            ...(usageFloor > 0 ? { usage_ratio_min: usageFloor, usage_ratio_max: 100 } : {})
+          });
+  }
+);
 
-  const analyticsKpi = useQuery({
-    queryKey: ["admin-marketing-coupon-analytics-kpi"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminCouponAnalytics(accessToken, { period_days: 30 });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const analyticsKpi = useAuthedQuery(
+  ["admin-marketing-coupon-analytics-kpi"],
+  (token) => getAdminCouponAnalytics(token, { period_days: 30 })
+);
 
   const items = listQuery.data?.data.items ?? [];
 

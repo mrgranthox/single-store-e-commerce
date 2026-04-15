@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
@@ -10,15 +10,9 @@ import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { ApiError, getAdminNotification, retryAdminNotification } from "@/features/system/api/admin-system.api";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
-const formatWhen = (value: string | null) => {
-  if (!value) return "—";
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
-  } catch {
-    return value;
-  }
-};
 
 export const NotificationDetailPage = () => {
   const { notificationId = "" } = useParams<{ notificationId: string }>();
@@ -110,7 +104,7 @@ export const NotificationDetailPage = () => {
               </div>
               <div>
                 <dt className="text-xs font-bold uppercase tracking-wider text-[#737685]">Created</dt>
-                <dd className="mt-1 text-sm text-[#181b25]">{formatWhen(entity.createdAt)}</dd>
+                <dd className="mt-1 text-sm text-[#181b25]">{formatDateTime(entity.createdAt)}</dd>
               </div>
             </dl>
           </SurfaceCard>
@@ -129,11 +123,11 @@ export const NotificationDetailPage = () => {
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-semibold text-[#181b25]">{delivery.status}</p>
-                        <p className="text-xs text-[#737685]">Created {formatWhen(delivery.createdAt)}</p>
+                        <p className="text-xs text-[#737685]">Created {formatDateTime(delivery.createdAt)}</p>
                       </div>
                       <div className="text-right text-xs text-[#5b5e68]">
                         <p>Provider message: {delivery.providerMessageId ?? "—"}</p>
-                        <p>Sent at: {formatWhen(delivery.sentAt)}</p>
+                        <p>Sent at: {formatDateTime(delivery.sentAt)}</p>
                       </div>
                     </div>
                     {delivery.error ? <div className="mt-3"><TechnicalJsonDisclosure data={delivery.error} label="Delivery error" /></div> : null}

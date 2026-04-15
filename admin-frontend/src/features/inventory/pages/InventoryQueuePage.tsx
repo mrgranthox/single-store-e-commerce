@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Eye, FileSpreadsheet, RefreshCw, Search, Settings2 } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -9,6 +10,9 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { StitchFilterPanel } from "@/components/stitch";
 import { InventoryProductCell } from "@/features/inventory/components/InventoryProductCell";
 import { InventorySubNav } from "@/features/inventory/components/InventorySubNav";
+import { formatMoney as _formatMoney } from "@/lib/format";
+import { STORE_CURRENCY_CODE } from "@/lib/store-currency";
+const formatMoney = (cents: number | null | undefined) => _formatMoney(cents, STORE_CURRENCY_CODE);
 import {
   ApiError,
   listAdminWarehouses,
@@ -51,13 +55,6 @@ const formatRestockHint = (row: InventoryStockRow) => {
   return d === "—" ? "—" : `${d} days ago`;
 };
 
-const formatMoney = (cents: number, currency = "GHS") => {
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency }).format(cents / 100);
-  } catch {
-    return `$${(cents / 100).toFixed(2)}`;
-  }
-};
 
 const replenishmentCentsForRow = (row: InventoryStockRow) => {
   const need = Math.max(0, row.stock.effectiveReorderLevel - row.stock.available);
@@ -88,26 +85,22 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
     [mode, page, appliedSearch, warehouseId]
   );
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      const query = {
-        page,
-        page_size: 20,
-        sortBy: "available" as const,
-        sortOrder: "asc" as const,
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
-        ...(warehouseId ? { warehouseId } : {})
-      };
-      return mode === "low"
-        ? listLowStockInventory(accessToken, query)
-        : listOutOfStockInventory(accessToken, query);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    const query = {
+            page,
+            page_size: 20,
+            sortBy: "available" as const,
+            sortOrder: "asc" as const,
+            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
+            ...(warehouseId ? { warehouseId } : {})
+          };
+          return mode === "low"
+            ? listLowStockInventory(token, query)
+            : listOutOfStockInventory(token, query);
+  }
+);
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;

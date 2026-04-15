@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+import { customerKeys } from "@/lib/query-keys";
+import { formatDate } from "@/lib/format";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
@@ -68,13 +72,6 @@ const listInitials = (c: AdminCustomerListItem) => {
   return em ? em.toUpperCase() : "?";
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const parseOptionalInt = (value: string) => {
   const trimmed = value.trim();
@@ -126,53 +123,52 @@ const exportPageCsv = (items: AdminCustomerListItem[], page: number) => {
   URL.revokeObjectURL(url);
 };
 
+const CUSTOMER_FILTER_DEFAULTS = {
+  q: "",
+  status: "",
+  joined_after: "",
+  joined_before: "",
+  min_orders: "",
+  max_orders: "",
+  min_ltv_dollars: "",
+  max_ltv_dollars: "" } as const;
+
 export const CustomersListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
-  const [applied, setApplied] = useState<ListFilters>(emptyFilters);
-  const [draft, setDraft] = useState<ListFilters>(emptyFilters);
+  // Local draft state — committed to URL on Apply / Enter
+  const [draft, setDraft] = useState(CUSTOMER_FILTER_DEFAULTS as Record<string, string>);
 
-  const queryKey = useMemo(() => ["admin-customers", page, applied] as const, [page, applied]);
+  const { filters, page, setPage, setMany, reset } = useListFilters({
+    defaults: CUSTOMER_FILTER_DEFAULTS });
 
-  const customersQuery = useQuery({
+  const queryKey = useMemo(() => customerKeys.list({ page, ...filters }), [page, filters]);
+
+  const customersQuery = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCustomers(accessToken, {
+    (token) => {
+      const minO = parseOptionalInt(filters.min_orders);
+      const maxO = parseOptionalInt(filters.max_orders);
+      const minL = parseOptionalLtvCents(filters.min_ltv_dollars);
+      const maxL = parseOptionalLtvCents(filters.max_ltv_dollars);
+      return listAdminCustomers(token, {
         page,
         page_size: 20,
-        ...(applied.q.trim() ? { q: applied.q.trim() } : {}),
-        ...(applied.status ? { status: applied.status } : {}),
-        ...(applied.joined_after.trim() ? { joined_after: applied.joined_after.trim() } : {}),
-        ...(applied.joined_before.trim() ? { joined_before: applied.joined_before.trim() } : {}),
-        ...(() => {
-          const minO = parseOptionalInt(applied.min_orders);
-          const maxO = parseOptionalInt(applied.max_orders);
-          return {
-            ...(minO != null ? { min_orders: minO } : {}),
-            ...(maxO != null ? { max_orders: maxO } : {})
-          };
-        })(),
-        ...(() => {
-          const minL = parseOptionalLtvCents(applied.min_ltv_dollars);
-          const maxL = parseOptionalLtvCents(applied.max_ltv_dollars);
-          return {
-            ...(minL != null ? { min_ltv_cents: minL } : {}),
-            ...(maxL != null ? { max_ltv_cents: maxL } : {})
-          };
-        })()
-      });
+        ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+        ...(filters.status ? { status: filters.status } : {}),
+        ...(filters.joined_after.trim() ? { joined_after: filters.joined_after.trim() } : {}),
+        ...(filters.joined_before.trim() ? { joined_before: filters.joined_before.trim() } : {}),
+        ...(minO != null ? { min_orders: minO } : {}),
+        ...(maxO != null ? { max_orders: maxO } : {}),
+        ...(minL != null ? { min_ltv_cents: minL } : {}),
+        ...(maxL != null ? { max_ltv_cents: maxL } : {}) });
     },
-    enabled: Boolean(accessToken)
-  });
+  );
 
   const { prefetch: prefetchCustomerDetail, prefetchMany: prefetchCustomerDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
     staleTime: CUSTOMER_DETAIL_STALE_MS,
-    queryKeyFor: (customerId: string) => ["admin-customer-detail", customerId],
+    queryKeyFor: (customerId: string) => customerKeys.detail(customerId),
     queryFnFor: (customerId: string) => getAdminCustomerDetail(accessToken!, customerId),
     onPrefetch: () =>
       preloadLazyNamedComponent("../features/customers/pages/CustomerDetailPage.tsx", "CustomerDetailPage")
@@ -195,8 +191,7 @@ export const CustomersListPage = () => {
   const pendingMatching = summary?.byStatus?.PENDING_VERIFICATION ?? 0;
 
   const applyFilters = () => {
-    setPage(1);
-    setApplied({ ...draft });
+    setMany(draft as typeof CUSTOMER_FILTER_DEFAULTS);
   };
 
   const errorMessage =
@@ -211,7 +206,7 @@ export const CustomersListPage = () => {
       <PageHeader
         title="Customers"
         description="Search and review shopper accounts, order volume, and support load."
-        actionMenuItems={[refreshDataMenuItem(queryClient, ["admin-customers"])]}
+        actionMenuItems={[refreshDataMenuItem(queryClient, customerKeys.lists())]}
         actions={
           <button
             type="button"
@@ -358,9 +353,8 @@ export const CustomersListPage = () => {
           <button
             type="button"
             onClick={() => {
-              setDraft(emptyFilters);
-              setApplied(emptyFilters);
-              setPage(1);
+              setDraft({ ...CUSTOMER_FILTER_DEFAULTS });
+              reset();
             }}
             className="rounded-lg border border-[var(--color-border-light)] px-4 py-2 text-sm font-semibold text-slate-600"
           >
@@ -433,8 +427,8 @@ export const CustomersListPage = () => {
                       <td className="px-4 py-4 font-mono text-sm">{c.counts.orders}</td>
                       <td className="px-4 py-4 font-mono text-sm">{c.counts.openSupportTickets}</td>
                       <td className="px-4 py-4 font-mono text-sm">{c.counts.reviews}</td>
-                      <td className="px-4 py-4 text-sm text-slate-600">{formatWhen(c.createdAt)}</td>
-                      <td className="px-4 py-4 text-sm text-slate-600">{formatWhen(c.updatedAt)}</td>
+                      <td className="px-4 py-4 text-sm text-slate-600">{formatDate(c.createdAt)}</td>
+                      <td className="px-4 py-4 text-sm text-slate-600">{formatDate(c.updatedAt)}</td>
                       <td className="px-4 py-4 text-right">
                         <Link
                           to={`/admin/customers/${c.id}`}
@@ -461,7 +455,7 @@ export const CustomersListPage = () => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border border-[var(--color-border-light)] px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Previous
@@ -469,7 +463,7 @@ export const CustomersListPage = () => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border border-[var(--color-border-light)] px-3 py-1.5 font-medium disabled:opacity-40"
             >
               Next

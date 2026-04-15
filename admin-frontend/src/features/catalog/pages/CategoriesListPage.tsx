@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { RefreshCw, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
@@ -58,16 +59,10 @@ export const CategoriesListPage = () => {
   const [rowErr, setRowErr] = useState<string | null>(null);
   const [pendingArchive, setPendingArchive] = useState<{ id: string; name: string } | null>(null);
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-categories"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogCategories(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+  ["admin-catalog-categories"],
+  (token) => listAdminCatalogCategories(token)
+);
 
   const archiveMut = useMutation({
     mutationFn: async (categoryId: string) => {

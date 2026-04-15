@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
@@ -19,6 +19,8 @@ import {
 } from "@/features/refunds/api/admin-refunds.api";
 import { PAYSTACK_RAILS_COMPACT, formatPaymentGatewayLabel } from "@/features/payments/lib/paystackRails";
 import { customerInitials } from "@/features/payments/ui/stitchPaymentsUi";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
 const refundRefLabel = (id: string) => `REF-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 const returnRefLabel = (id: string) => `RET-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -31,14 +33,6 @@ const money = (cents: number, cur: string) => {
   }
 };
 
-const formatWhen = (iso: string | null) => {
-  if (!iso) return "—";
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const headlineStatus = (state: string) => {
   switch (state) {
@@ -195,7 +189,7 @@ export const RefundDetailPage = () => {
     if (!e) return [];
     const st = e.state;
     const steps = [
-      { key: "req", label: "Requested", when: formatWhen(e.createdAt), done: true, current: false },
+      { key: "req", label: "Requested", when: formatDateTime(e.createdAt), done: true, current: false },
       {
         key: "rev",
         label: "In Review",
@@ -206,7 +200,7 @@ export const RefundDetailPage = () => {
       {
         key: "app",
         label: "Approved",
-        when: st === "APPROVED" || st === "PENDING_PROVIDER" || st === "COMPLETED" ? formatWhen(e.approvedAt ?? e.updatedAt) : "TBD",
+        when: st === "APPROVED" || st === "PENDING_PROVIDER" || st === "COMPLETED" ? formatDateTime(e.approvedAt ?? e.updatedAt) : "TBD",
         done: st === "APPROVED" || st === "PENDING_PROVIDER" || st === "COMPLETED",
         current: st === "APPROVED"
       },
@@ -220,7 +214,7 @@ export const RefundDetailPage = () => {
       {
         key: "done",
         label: "Completed",
-        when: st === "COMPLETED" ? formatWhen(e.updatedAt) : "TBD",
+        when: st === "COMPLETED" ? formatDateTime(e.updatedAt) : "TBD",
         done: st === "COMPLETED",
         current: st === "COMPLETED"
       }
@@ -231,7 +225,7 @@ export const RefundDetailPage = () => {
         {
           key: "halt",
           label: st === "REJECTED" ? "Rejected" : "Failed",
-          when: formatWhen(e.updatedAt),
+          when: formatDateTime(e.updatedAt),
           done: true,
           current: true
         }
@@ -348,7 +342,7 @@ export const RefundDetailPage = () => {
                   <div className="text-sm font-medium">
                     {e.order.customer.name ?? e.order.customer.email ?? "Guest"} (Customer)
                   </div>
-                  <div className="text-xs text-slate-400">Via portal · {formatWhen(e.createdAt)}</div>
+                  <div className="text-xs text-slate-400">Via portal · {formatDateTime(e.createdAt)}</div>
                 </div>
                 <div className="space-y-1">
                   <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Original Payment</div>
@@ -424,7 +418,7 @@ export const RefundDetailPage = () => {
                     <div className="flex flex-col">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold">Request recorded</span>
-                        <span className="text-[10px] text-slate-400">{formatWhen(e.createdAt)}</span>
+                        <span className="text-[10px] text-slate-400">{formatDateTime(e.createdAt)}</span>
                       </div>
                       <p className="mt-1 text-xs text-slate-500">Refund request created and linked to the order payment.</p>
                     </div>
@@ -451,7 +445,7 @@ export const RefundDetailPage = () => {
                       <div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-bold">Approved</span>
-                          <span className="text-[10px] text-slate-400">{formatWhen(e.approvedAt)}</span>
+                          <span className="text-[10px] text-slate-400">{formatDateTime(e.approvedAt)}</span>
                         </div>
                         <p className="mt-1 text-xs text-slate-500">Refund approved for provider processing.</p>
                       </div>
@@ -464,7 +458,7 @@ export const RefundDetailPage = () => {
                       </div>
                       <div>
                         <span className="text-sm font-bold text-red-800">Rejected</span>
-                        <p className="mt-1 text-xs text-slate-500">{formatWhen(e.updatedAt)}</p>
+                        <p className="mt-1 text-xs text-slate-500">{formatDateTime(e.updatedAt)}</p>
                       </div>
                     </div>
                   ) : null}
@@ -651,7 +645,7 @@ export const RefundDetailPage = () => {
                   </div>
                   <div className="rounded-lg bg-[#faf8ff] p-3 text-center">
                     <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-400">Updated</div>
-                    <div className="text-lg font-bold text-slate-900">{formatWhen(e.updatedAt)}</div>
+                    <div className="text-lg font-bold text-slate-900">{formatDateTime(e.updatedAt)}</div>
                   </div>
                 </div>
               </div>

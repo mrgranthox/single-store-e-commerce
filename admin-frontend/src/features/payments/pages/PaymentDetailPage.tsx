@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -13,26 +13,13 @@ import {
   inferPaymentRailFromTransactions
 } from "@/features/payments/lib/paystackRails";
 import { StitchPaymentStatusPill, customerInitials } from "@/features/payments/ui/stitchPaymentsUi";
+import { formatDateTime, formatMoney } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
 const paymentRefLabel = (id: string) => `PAY-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 const refundRefLabel = (id: string) => `REF-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
-const formatMoney = (cents: number, currency: string) => {
-  const cur = currency.toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const refundStatusStitch = (state: string) => {
   const u = state.toUpperCase();
@@ -106,7 +93,7 @@ export const PaymentDetailPage = () => {
       return {
         id: tx.id,
         title: tx.providerEventType?.replace(/_/g, " ") ?? "Provider event",
-        when: formatWhen(tx.createdAt),
+        when: formatDateTime(tx.createdAt),
         ring,
         icon
       };
@@ -304,7 +291,7 @@ export const PaymentDetailPage = () => {
                           <td className="px-6 py-4 font-mono text-xs font-semibold">
                             {formatMoney(r.amountCents, r.currency)}
                           </td>
-                          <td className="px-6 py-4 text-xs text-slate-500">{formatWhen(r.createdAt)}</td>
+                          <td className="px-6 py-4 text-xs text-slate-500">{formatDateTime(r.createdAt)}</td>
                           <td className="px-6 py-4">{refundStatusStitch(r.state)}</td>
                         </tr>
                       ))

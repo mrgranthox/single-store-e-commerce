@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -8,16 +9,10 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { ApiError, listAdminFinanceExceptions, resolveAdminFinanceException, type FinancialExceptionRow } from "@/features/payments/api/admin-finance.api";
+import { formatDateTime } from "@/lib/format";
 
 const exceptionRefLabel = (id: string) => `EX-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "short", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const readRecord = (v: unknown): Record<string, unknown> | null =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : null;
@@ -70,16 +65,10 @@ export const FinanceExceptionsPage = () => {
 
   const queryKey = useMemo(() => ["admin-finance-exceptions", page] as const, [page]);
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminFinanceExceptions(accessToken, { page, page_size: 20 });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => listAdminFinanceExceptions(token, { page, page_size: 20 })
+);
 
   const resolveMut = useAdminAction({
     mutationFn: ({ id, note }: { id: string; note: string }) => {
@@ -360,7 +349,7 @@ export const FinanceExceptionsPage = () => {
                       <td className="px-6 py-4 text-right font-mono text-xs">{m.actual}</td>
                       <td className="px-6 py-4 text-right font-mono text-xs font-semibold text-red-700">{m.disc}</td>
                       <td className="px-6 py-4">{statusPill(row.status)}</td>
-                      <td className="px-6 py-4 text-xs text-slate-500">{formatWhen(row.createdAt)}</td>
+                      <td className="px-6 py-4 text-xs text-slate-500">{formatDateTime(row.createdAt)}</td>
                       <td className="px-6 py-4 text-center">
                         {open ? (
                           <div className="mx-auto flex max-w-[200px] flex-col gap-2">

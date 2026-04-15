@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
@@ -54,16 +55,10 @@ export const SystemSettingsScopedPage = ({ scope, title, description, eyebrow }:
 
   const queryKey = useMemo(() => ["admin-settings-scoped", scope] as const, [scope]);
 
-  const settingsQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminSettingsScoped(accessToken, scope);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const settingsQuery = useAuthedQuery(
+  queryKey,
+  (token) => listAdminSettingsScoped(token, scope)
+);
 
   const patchMut = useMutation({
     mutationFn: async (payload: { key: string; value: unknown }) => {

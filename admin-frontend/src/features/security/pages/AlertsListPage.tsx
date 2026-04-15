@@ -86,8 +86,7 @@ export const AlertsListPage = () => {
         page_size: 20,
         ...(status ? { status } : {}),
         ...(severity ? { severity } : {}),
-        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}),
-      }),
+        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}) }),
   );
 
   const bulkAckMut = useMutation({

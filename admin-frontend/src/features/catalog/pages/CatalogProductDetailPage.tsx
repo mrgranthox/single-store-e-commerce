@@ -45,6 +45,7 @@ const formatReorderRange = (min: number | null | undefined, max: number | null |
   return `${min.toLocaleString()} – ${max.toLocaleString()} units`;
 };
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { formatDateTime } from "@/lib/format";
 
 const statusTone = (status: string): StatusBadgeTone => {
   switch (status) {
@@ -86,13 +87,6 @@ const variantLabel = (v: AdminCatalogProductVariant) => {
   return "Default";
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "short", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const humanizeEvent = (eventType: string) =>
   eventType
@@ -427,7 +421,7 @@ export const CatalogProductDetailPage = () => {
                     <li key={row.id} className="border-b border-slate-100 pb-3 last:border-0 last:pb-0">
                       <p className="text-sm font-medium text-slate-800">{humanizeEvent(row.eventType)}</p>
                       <p className="text-xs text-slate-500">
-                        {activityActor(row)} · {formatWhen(row.occurredAt)}
+                        {activityActor(row)} · {formatDateTime(row.occurredAt)}
                       </p>
                     </li>
                   ))}

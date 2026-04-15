@@ -46,8 +46,7 @@ export const PaymentsListPage = () => {
   const [dateFrom, setDateFrom] = useState("");
 
   const { filters, page, setPage, set, reset } = useListFilters({
-    defaults: PAYMENT_FILTERS_DEFAULTS,
-  });
+    defaults: PAYMENT_FILTERS_DEFAULTS });
 
   const providerFilter = filters.provider === "" ? "" : PAYSTACK_PROVIDER_QUERY_VALUE;
 
@@ -59,8 +58,7 @@ export const PaymentsListPage = () => {
         page_size: 20,
         ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
         ...(filters.paymentState ? { paymentState: filters.paymentState } : {}),
-        ...(providerFilter.trim() ? { provider: providerFilter.trim() } : {}),
-      }),
+        ...(providerFilter.trim() ? { provider: providerFilter.trim() } : {}) }),
   );
 
   const items = paymentsQuery.data?.data.items ?? [];
@@ -71,8 +69,7 @@ export const PaymentsListPage = () => {
     queryKeyFor: (paymentId: string) => paymentKeys.detail(paymentId),
     queryFnFor: (paymentId: string) => getAdminPaymentDetail(accessToken!, paymentId),
     onPrefetch: () =>
-      preloadLazyNamedComponent("../features/payments/pages/PaymentDetailPage.tsx", "PaymentDetailPage"),
-  });
+      preloadLazyNamedComponent("../features/payments/pages/PaymentDetailPage.tsx", "PaymentDetailPage") });
 
   const applySearch = () => {
     set("q", searchDraft);

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
@@ -28,6 +29,7 @@ import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { formatDateTime } from "@/lib/format";
 
 const tone = (s: string): StatusBadgeTone => {
   if (s === "PROCESSED") {
@@ -46,16 +48,6 @@ type HealthAgg = {
   webhookEvents?: { byStatus?: Array<{ status: string; count: number }>; failuresLast24Hours?: number };
 };
 
-const formatWhen = (iso: string | undefined) => {
-  if (!iso) {
-    return "—";
-  }
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "short", timeStyle: "medium" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const attemptDurationMs = (w: WebhookEventRow): number | null => {
   const a = w.latestAttempt;
@@ -202,7 +194,7 @@ export const WebhooksListPage = () => {
       </span>,
       <StatusBadge key={`st-${w.id}`} label={w.status.replace(/_/g, " ")} tone={tone(w.status)} />,
       <span key={`u-${w.id}`} className="text-xs text-[#737685]">
-        {formatWhen(w.receivedAt ?? w.updatedAt ?? w.createdAt)}
+        {formatDateTime(w.receivedAt ?? w.updatedAt ?? w.createdAt)}
       </span>,
       <span key={`ms-${w.id}`} className="text-right font-mono text-xs text-[#374151]">
         {ms === null ? "—" : ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(2)}s`}

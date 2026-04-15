@@ -54,8 +54,7 @@ export const SecurityEventsListPage = () => {
         page_size: 20,
         ...(severity ? { severity } : {}),
         ...(status.trim() ? { status: status.trim() } : {}),
-        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}),
-      }),
+        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}) }),
   );
 
   const notifyMut = useMutation({

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
@@ -12,6 +12,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
+import { useQuery } from "@tanstack/react-query";
 import {
   ApiError,
   createAdminUser,

@@ -12,5 +12,4 @@ export const paymentKeys = {
     [...paymentKeys.detail(id), "transactions"] as const,
   timeline: (id: string) => [...paymentKeys.detail(id), "timeline"] as const,
 
-  reconciliation: () => [...paymentKeys.all(), "reconciliation"] as const,
-};
+  reconciliation: () => [...paymentKeys.all(), "reconciliation"] as const };

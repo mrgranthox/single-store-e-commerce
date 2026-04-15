@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { WorkspaceStateCard } from "@/components/primitives/WorkspaceStateCard";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { formatDateTime, formatMoney } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 import {
   ApiError,
   approveAdminReturn,
@@ -18,21 +20,7 @@ import {
 
 const returnRef = (id: string) => `RET-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
-const formatCreated = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
-const formatMoney = (cents: number, cur: string) => {
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur.toUpperCase() }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
 export const ReturnDetailPage = () => {
   const { returnId = "" } = useParams<{ returnId: string }>();
@@ -198,7 +186,7 @@ export const ReturnDetailPage = () => {
                 <span className="text-[#c3c6d6]">|</span>
                 <div className="flex items-center">
                   <MaterialIcon name="calendar_today" className="mr-1 text-sm" />
-                  Created {formatCreated(e.requestedAt)}
+                  Created {formatDateTime(e.requestedAt)}
                 </div>
                 <div className="flex items-center rounded-full border border-[#c3c6d6] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider">
                   <span className="mr-2 h-1.5 w-1.5 rounded-full bg-[#006b2d]" />
@@ -317,7 +305,7 @@ export const ReturnDetailPage = () => {
                       <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full border-4 border-[#006b2d] bg-white" />
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-sm font-semibold">Return requested</p>
-                        <span className="font-mono text-[10px] text-[#737685]">{formatCreated(e.requestedAt)}</span>
+                        <span className="font-mono text-[10px] text-[#737685]">{formatDateTime(e.requestedAt)}</span>
                       </div>
                       <p className="mt-1 text-xs text-[#5b5e68]">Logged when the customer submitted the return.</p>
                     </div>
@@ -329,9 +317,9 @@ export const ReturnDetailPage = () => {
                         </p>
                         <span className="font-mono text-[10px] text-[#737685]">
                           {e.rejectedAt
-                            ? formatCreated(e.rejectedAt)
+                            ? formatDateTime(e.rejectedAt)
                             : e.approvedAt
-                              ? formatCreated(e.approvedAt)
+                              ? formatDateTime(e.approvedAt)
                               : "Pending"}
                         </span>
                       </div>

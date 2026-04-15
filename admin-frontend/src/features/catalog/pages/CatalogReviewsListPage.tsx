@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -16,6 +17,7 @@ import {
   type ReviewModerationStatus
 } from "@/features/catalog/api/admin-catalog.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { formatDate } from "@/lib/format";
 
 const tone = (s: string): StatusBadgeTone => {
   if (s === "PUBLISHED") {
@@ -27,16 +29,6 @@ const tone = (s: string): StatusBadgeTone => {
   return "pending";
 };
 
-const formatDate = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "short"
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const moderationStatusLabel = (s: string) => {
   const map: Record<string, string> = {
@@ -312,21 +304,17 @@ export const CatalogReviewsListPage = () => {
     [page, status, appliedSearch]
   );
 
-  const q = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogReviews(accessToken, {
-        page,
-        page_size: 20,
-        ...(status ? { status } : {}),
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listAdminCatalogReviews(token, {
+            page,
+            page_size: 20,
+            ...(status ? { status } : {}),
+            ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {})
+          });
+  }
+);
 
   const items = q.data?.data.items ?? [];
   const meta = q.data?.meta;

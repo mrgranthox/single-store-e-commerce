@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
@@ -8,6 +8,8 @@ import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 import {
   ApiError,
   createAdminInvitation,
@@ -16,14 +18,6 @@ import {
   revokeAdminInvitation
 } from "@/features/system/api/admin-users.api";
 
-const formatWhen = (value: string | null) => {
-  if (!value) return "—";
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
-  } catch {
-    return value;
-  }
-};
 
 export const AdminUserInvitationsPage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
@@ -103,7 +97,7 @@ export const AdminUserInvitationsPage = () => {
     <span key={`email-${item.id}`} className="font-semibold text-[#181b25]">{item.email}</span>,
     <span key={`roles-${item.id}`} className="text-sm text-[#434654]">{item.roles.map((role) => role.name).join(", ") || "—"}</span>,
     <span key={`status-${item.id}`} className="text-xs font-semibold uppercase text-[#5b5e68]">{item.status}</span>,
-    <span key={`expires-${item.id}`} className="text-xs text-[#737685]">{formatWhen(item.expiresAt)}</span>,
+    <span key={`expires-${item.id}`} className="text-xs text-[#737685]">{formatDateTime(item.expiresAt)}</span>,
     <div key={`actions-${item.id}`} className="flex gap-2">
       <button type="button" className="text-xs font-semibold text-[#1653cc] underline" onClick={() => resendMutation.run(item.id)} disabled={resendMutation.isPending || resendMutation.blocked || item.status === "ACCEPTED"}>
         Resend

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useSearchParams } from "react-router-dom";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -8,6 +8,7 @@ import { ReportDatasetViews } from "@/features/reports/components/ReportDatasetV
 import { ApiError, getAdminReportsDataset, type ReportsOverviewQuery } from "@/features/reports/api/admin-reports.api";
 import type { ReportDatasetSegment } from "@/features/reports/types/report-payloads";
 import { StitchFieldLabel, StitchFilterPanel, StitchPageBody, stitchInputClass } from "@/components/stitch";
+import { useQuery } from "@tanstack/react-query";
 
 export type { ReportDatasetSegment };
 
@@ -81,16 +82,10 @@ export const ReportDatasetPage = ({ segment, title, description }: ReportDataset
 
   const queryKey = useMemo(() => ["admin-report-dataset", segment, from, to] as const, [segment, from, to]);
 
-  const reportQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminReportsDataset(accessToken, segment, range);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const reportQuery = useAuthedQuery(
+  queryKey,
+  (token) => getAdminReportsDataset(token, segment, range)
+);
 
   const compareQuery = useQuery({
     queryKey: ["admin-report-dataset", "compare", segment, compareRange?.from, compareRange?.to] as const,

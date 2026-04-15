@@ -1,9 +1,10 @@
 import { createContext, createElement, useContext, useEffect, useMemo, type PropsWithChildren } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { fetchCurrentAdmin } from "@/features/auth/auth.api";
 import { useAdminAuthStore, type AdminActor } from "@/features/auth/auth.store";
 import { ApiError } from "@/lib/api/http";
+import { useQuery } from "@tanstack/react-query";
 
 export type AdminBootstrapState =
   | "cold"

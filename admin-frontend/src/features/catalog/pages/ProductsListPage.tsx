@@ -27,6 +27,7 @@ import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { toast } from "@/lib/toast";
 import { catalogKeys } from "@/lib/query-keys";
+import { formatDate } from "@/lib/format";
 
 const PRODUCT_DETAIL_STALE_MS = 20_000;
 
@@ -50,16 +51,6 @@ const statusTone = (status: string): StatusBadgeTone => {
   }
 };
 
-const formatDate = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "short"
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const BulkDeleteDisabled = () => (
   <span className="group/del relative inline-flex rounded-md outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-[#4f7ef8]" tabIndex={0}>
@@ -258,8 +249,7 @@ export const ProductsListPage = () => {
         ...(categoryId ? { categoryId } : {}),
         ...(brandId ? { brandId } : {}),
         ...(dateFrom ? { dateFrom } : {}),
-        ...(dateTo ? { dateTo } : {}),
-      }),
+        ...(dateTo ? { dateTo } : {}) }),
   );
 
   const items = productsQuery.data?.data.items ?? [];

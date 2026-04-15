@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { CustomerWorkspaceNav } from "@/components/stitch/CustomerWorkspaceNav";
@@ -8,6 +8,8 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminCustomerDetail, listAdminCustomerSupport } from "@/features/customers/api/admin-customers.api";
 import { displayCustomerName } from "@/features/customers/lib/customerDisplay";
 import { CustomerWorkspaceHeader } from "@/features/customers/ui/CustomerWorkspaceHeader";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
 const tone = (s: string): StatusBadgeTone => {
   switch (s) {
@@ -22,13 +24,6 @@ const tone = (s: string): StatusBadgeTone => {
   }
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 export const CustomerSupportPage = () => {
   const { customerId = "" } = useParams<{ customerId: string }>();
@@ -48,16 +43,11 @@ export const CustomerSupportPage = () => {
     enabled: Boolean(accessToken) && Boolean(customerId)
   });
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCustomerSupport(accessToken, customerId, { page, page_size: 20 });
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => listAdminCustomerSupport(token, customerId, { page, page_size: 20 }),
+  { enabled: Boolean(customerId) }
+);
 
   const entity = detailQ.data?.data.entity;
   const customerName = entity ? displayCustomerName(entity) : "Customer";
@@ -120,7 +110,7 @@ export const CustomerSupportPage = () => {
                           <StatusBadge label={t.status.replace(/_/g, " ")} tone={tone(t.status)} />
                         </td>
                         <td className="px-6 py-4 text-xs font-semibold uppercase text-slate-600">{t.priority}</td>
-                        <td className="px-6 py-4 text-xs text-slate-600">{formatWhen(t.updatedAt)}</td>
+                        <td className="px-6 py-4 text-xs text-slate-600">{formatDateTime(t.updatedAt)}</td>
                         <td className="px-6 py-4">
                           {t.order ? (
                             <Link

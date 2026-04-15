@@ -12,16 +12,10 @@ import {
   type ShipmentTrackingEventApi
 } from "@/features/orders/api/admin-orders.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { formatDateTime } from "@/lib/format";
 
 const shipmentRef = (id: string) => `SHP-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "medium" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const formatDateOnly = (iso: string) => {
   try {
@@ -362,7 +356,7 @@ export const ShipmentTrackingPage = () => {
                               >
                                 {manual ? "Manual entry" : "Carrier API"}
                               </span>
-                              <span className="font-mono text-sm text-[#737685]">{formatWhen(ev.occurredAt)}</span>
+                              <span className="font-mono text-sm text-[#737685]">{formatDateTime(ev.occurredAt)}</span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-[#434654]">

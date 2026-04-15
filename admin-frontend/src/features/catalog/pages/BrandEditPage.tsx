@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 
@@ -46,16 +47,10 @@ export const BrandEditPage = () => {
   const [lifecycleConfirm, setLifecycleConfirm] = useState<LifecycleAction | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const bannersQ = useQuery({
-    queryKey: ["admin-banners-picker"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminBanners(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const bannersQ = useAuthedQuery(
+  ["admin-banners-picker"],
+  (token) => listAdminBanners(token)
+);
 
   const detailQ = useQuery({
     queryKey: ["admin-catalog-brand", brandId],

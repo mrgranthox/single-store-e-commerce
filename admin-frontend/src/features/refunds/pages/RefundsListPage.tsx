@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -99,21 +100,17 @@ export const RefundsListPage = () => {
     setSelected(new Set());
   }, [page, q, state]);
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminRefunds(accessToken, {
-        page,
-        page_size: 20,
-        ...(q.trim() ? { q: q.trim() } : {}),
-        ...(state ? { state } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listAdminRefunds(token, {
+            page,
+            page_size: 20,
+            ...(q.trim() ? { q: q.trim() } : {}),
+            ...(state ? { state } : {})
+          });
+  }
+);
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;

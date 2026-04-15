@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { CheckCircle2, Star, Timer, TrendingUp, Zap } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";

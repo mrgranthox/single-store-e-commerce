@@ -61,8 +61,7 @@ export function useVirtualList<T>({
   itemHeight,
   containerRef,
   overscan = 3,
-  containerHeight: containerHeightProp,
-}: VirtualListOptions<T>): VirtualListResult<T> {
+  containerHeight: containerHeightProp }: VirtualListOptions<T>): VirtualListResult<T> {
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(containerHeightProp ?? 600);
 
@@ -100,8 +99,7 @@ export function useVirtualList<T>({
 
     const visibleItems = items.slice(startIndex, endIndex).map((item, i) => ({
       item,
-      index: startIndex + i,
-    }));
+      index: startIndex + i }));
 
     const offsetTop = startIndex * itemHeight;
 

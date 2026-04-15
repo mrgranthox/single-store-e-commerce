@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import clsx from "clsx";
 import { ImageIcon, X } from "lucide-react";
 
@@ -93,16 +94,10 @@ export const BannersListPage = () => {
     }
   });
 
-  const listQuery = useQuery({
-    queryKey: ["admin-banners"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminBanners(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  ["admin-banners"],
+  (token) => listAdminBanners(token)
+);
 
   const items = listQuery.data?.data.items ?? [];
 

@@ -12,6 +12,9 @@ import { timelinePayloadLine } from "@/features/security/lib/securityUiHelpers";
 import { adminJsonGet } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { formatMoney as _formatMoney } from "@/lib/format";
+import { STORE_CURRENCY_CODE } from "@/lib/store-currency";
+const formatMoney = (cents: number | null | undefined) => _formatMoney(cents, STORE_CURRENCY_CODE);
 
 type OverviewPayload = {
   range: { from: string | null; to: string | null };
@@ -126,13 +129,6 @@ const stitchHealthTriplet = (deps: HealthPayload["dependencies"]) => {
   ];
 };
 
-const formatMoney = (cents: number) => {
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: "GHS" }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} GHS`;
-  }
-};
 
 const rangeQueryLastDays = (days: number) => {
   const to = new Date();

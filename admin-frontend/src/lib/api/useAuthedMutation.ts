@@ -1,7 +1,6 @@
 import {
   useMutation,
-  type UseMutationOptions,
-} from "@tanstack/react-query";
+  type UseMutationOptions } from "@tanstack/react-query";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 
 /**
@@ -21,6 +20,5 @@ export function useAuthedMutation<TData, TVariables = void>(
     mutationFn: (variables) => {
       if (!token) throw new Error("Session expired. Please sign in again.");
       return mutationFn(token, variables);
-    },
-  });
+    } });
 }

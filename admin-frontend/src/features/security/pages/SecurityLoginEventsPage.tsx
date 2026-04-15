@@ -18,6 +18,7 @@ import {
   type LoginEventItem
 } from "@/features/security/api/admin-security.api";
 import { SecurityHubNav } from "@/features/security/components/SecurityHubNav";
+import { formatDateTime } from "@/lib/format";
 import {
   downloadUtf8Csv,
   relativeShort,
@@ -37,16 +38,6 @@ const outcomeChip = (success: boolean) =>
     </span>
   );
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "short"
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const summarizeLocation = (item: LoginEventItem) => {
   const parts = [item.ipRegion, item.ipCountry].filter(Boolean);
@@ -74,8 +65,7 @@ export const SecurityLoginEventsPage = () => {
         page_size: 20,
         ...(email.trim() ? { email: email.trim() } : {}),
         ...(outcome === "success" ? { success: true } : {}),
-        ...(outcome === "failure" ? { success: false } : {}),
-      }),
+        ...(outcome === "failure" ? { success: false } : {}) }),
   );
 
   const items = query.data?.data.items ?? [];
@@ -264,7 +254,7 @@ export const SecurityLoginEventsPage = () => {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-col">
-                      <span className="text-xs text-[#434654]">{formatWhen(item.createdAt)}</span>
+                      <span className="text-xs text-[#434654]">{formatDateTime(item.createdAt)}</span>
                       <span className="text-[11px] text-[#737685]">{relativeShort(item.createdAt)}</span>
                     </div>
                   </td>

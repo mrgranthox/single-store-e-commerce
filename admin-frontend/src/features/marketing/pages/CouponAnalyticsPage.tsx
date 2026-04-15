@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { PageHeader } from "@/components/primitives/PageHeader";

@@ -9,15 +9,10 @@
 export const CACHE = {
   REAL_TIME: {
     staleTime: 10_000,
-    refetchInterval: 15_000,
-  },
+    refetchInterval: 15_000 },
   OPERATIONAL: {
-    staleTime: 30_000,
-  },
+    staleTime: 30_000 },
   REFERENCE: {
-    staleTime: 5 * 60_000,
-  },
+    staleTime: 5 * 60_000 },
   ANALYTICS: {
-    staleTime: 60_000,
-  },
-} as const;
+    staleTime: 60_000 } } as const;

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -71,16 +72,10 @@ export const ContentPagesListPage = () => {
   const [deleteTarget, setDeleteTarget] = useState<ContentPageListItem | null>(null);
   const [deleteErr, setDeleteErr] = useState<string | null>(null);
 
-  const q = useQuery({
-    queryKey: ["admin-content-pages"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminContentPages(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const q = useAuthedQuery(
+  ["admin-content-pages"],
+  (token) => listAdminContentPages(token)
+);
 
   const items = q.data?.data.items ?? [];
   const filtered = useMemo(() => {

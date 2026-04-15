@@ -50,8 +50,7 @@ export const AdminActionLogsPage = () => {
         ...(actionCode.trim() ? { actionCode: actionCode.trim() } : {}),
         ...(adminUserId.trim() ? { adminUserId: adminUserId.trim() } : {}),
         ...(entityType.trim() ? { entityType: entityType.trim() } : {}),
-        ...(entityId.trim() ? { entityId: entityId.trim() } : {}),
-      }),
+        ...(entityId.trim() ? { entityId: entityId.trim() } : {}) }),
   );
 
   const items = listQuery.data?.data.items ?? [];

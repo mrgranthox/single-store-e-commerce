@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import {
   AlertCircle,
   AlertTriangle,
@@ -19,6 +19,9 @@ import { MiniSparkline } from "@/components/stitch";
 import { InventoryProductCell } from "@/features/inventory/components/InventoryProductCell";
 import { InventorySubNav } from "@/features/inventory/components/InventorySubNav";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { formatMoney as _formatMoney } from "@/lib/format";
+import { STORE_CURRENCY_CODE } from "@/lib/store-currency";
+import { useQuery } from "@tanstack/react-query";
 import {
   ApiError,
   getInventoryOverview,
@@ -26,6 +29,7 @@ import {
   listInventoryStocks,
   type InventoryStockRow
 } from "@/features/inventory/api/admin-inventory.api";
+const formatMoney = (cents: number | null | undefined) => _formatMoney(cents, STORE_CURRENCY_CODE);
 
 const healthFilterParam = (v: string): "all" | "healthy" | "low_stock" | "out_of_stock" => {
   if (v === "in_stock") return "healthy";
@@ -67,13 +71,6 @@ const rowBorderClass = (row: InventoryStockRow) => {
   return "";
 };
 
-const formatMoney = (cents: number, currency = "GHS") => {
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency }).format(cents / 100);
-  } catch {
-    return `$${(cents / 100).toFixed(2)}`;
-  }
-};
 
 const formatDeltaPct = (value: number | null | undefined) => {
   if (value === null || value === undefined) {

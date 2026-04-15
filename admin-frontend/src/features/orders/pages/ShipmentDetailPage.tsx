@@ -15,18 +15,12 @@ import {
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { formatDateTime } from "@/lib/format";
 
 const shipmentRef = (id: string) => `SHP-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
 const idSuffix = (uuid: string) => uuid.replace(/-/g, "").slice(-2).toUpperCase();
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const formatCreatedStitch = (iso: string) => {
   try {
@@ -532,7 +526,7 @@ export const ShipmentDetailPage = () => {
                           ) : isCreated ? (
                             <>
                               <p className="text-sm font-bold text-[#181b25]">Shipment created</p>
-                              <p className="text-[11px] text-slate-500">{formatWhen(phase.at)}</p>
+                              <p className="text-[11px] text-slate-500">{formatDateTime(phase.at)}</p>
                             </>
                           ) : (
                             <>
@@ -541,7 +535,7 @@ export const ShipmentDetailPage = () => {
                               >
                                 {phase.ev.statusLabel}
                               </p>
-                              <p className="text-[11px] text-slate-500">{formatWhen(phase.ev.occurredAt)}</p>
+                              <p className="text-[11px] text-slate-500">{formatDateTime(phase.ev.occurredAt)}</p>
                               {activeEvent ? (
                                 <p className="text-[11px] text-slate-500">Last event at this checkpoint</p>
                               ) : null}

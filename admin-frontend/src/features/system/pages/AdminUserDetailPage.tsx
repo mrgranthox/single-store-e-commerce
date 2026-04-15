@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQueries } from "@tanstack/react-query";
+import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
@@ -11,6 +11,8 @@ import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { formatDateTime } from "@/lib/format";
+import { useQueries } from "@tanstack/react-query";
 import {
   ApiError,
   getAdminUser,
@@ -23,14 +25,6 @@ import {
   updateAdminUserRoles
 } from "@/features/system/api/admin-users.api";
 
-const formatWhen = (value: string | null) => {
-  if (!value) return "—";
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
-  } catch {
-    return value;
-  }
-};
 
 export const AdminUserDetailPage = () => {
   const { adminUserId = "" } = useParams<{ adminUserId: string }>();
@@ -40,33 +34,25 @@ export const AdminUserDetailPage = () => {
   const [selectedRoleCodes, setSelectedRoleCodes] = useState<string[]>([]);
   const [confirmAction, setConfirmAction] = useState<"suspend" | "reactivate" | null>(null);
 
+  const token = accessToken ?? "";
   const [detailQ, rolesQ, sessionsQ] = useQueries({
     queries: [
       {
         queryKey: ["admin-user-detail", adminUserId],
-        queryFn: async () => {
-          if (!accessToken) throw new Error("Not signed in.");
-          return getAdminUser(accessToken, adminUserId);
-        },
-        enabled: Boolean(accessToken && adminUserId)
+        queryFn: async () => getAdminUser(token, adminUserId),
+        enabled: Boolean(accessToken && adminUserId),
       },
       {
         queryKey: ["admin-user-role-options"],
-        queryFn: async () => {
-          if (!accessToken) throw new Error("Not signed in.");
-          return listAdminUsers(accessToken, { page: 1, page_size: 1 });
-        },
-        enabled: Boolean(accessToken)
+        queryFn: async () => listAdminUsers(token, { page: 1, page_size: 1 }),
+        enabled: Boolean(accessToken),
       },
       {
         queryKey: ["admin-user-sessions", adminUserId],
-        queryFn: async () => {
-          if (!accessToken) throw new Error("Not signed in.");
-          return listAdminUserSessions(accessToken, adminUserId);
-        },
-        enabled: Boolean(accessToken && adminUserId)
-      }
-    ]
+        queryFn: async () => listAdminUserSessions(token, adminUserId),
+        enabled: Boolean(accessToken && adminUserId),
+      },
+    ],
   });
 
   const entity = detailQ.data?.data.entity;
@@ -86,8 +72,7 @@ export const AdminUserDetailPage = () => {
 
   const updateProfileMutation = useAdminAction({
     mutationFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      return updateAdminUser(accessToken, adminUserId, {
+      return updateAdminUser(token, adminUserId, {
         firstName: editForm.firstName || null,
         lastName: editForm.lastName || null
       });
@@ -103,36 +88,32 @@ export const AdminUserDetailPage = () => {
 
   const updateRolesMutation = useAdminAction({
     mutationFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
-      return updateAdminUserRoles(accessToken, adminUserId, { roleCodes: [...selectedSet] }, stepUpToken);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken: token, email: actorEmail });
+      return updateAdminUserRoles(token, adminUserId, { roleCodes: [...selectedSet] }, stepUpToken);
     },
     invalidate: [["admin-user-detail", adminUserId], ["admin-users"]]
   });
 
   const suspendMutation = useAdminAction({
     mutationFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
-      return suspendAdminUser(accessToken, adminUserId, {}, stepUpToken);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken: token, email: actorEmail });
+      return suspendAdminUser(token, adminUserId, {}, stepUpToken);
     },
     invalidate: [["admin-user-detail", adminUserId], ["admin-users"]]
   });
 
   const reactivateMutation = useAdminAction({
     mutationFn: async () => {
-      if (!accessToken) throw new Error("Not signed in.");
-      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
-      return reactivateAdminUser(accessToken, adminUserId, {}, stepUpToken);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken: token, email: actorEmail });
+      return reactivateAdminUser(token, adminUserId, {}, stepUpToken);
     },
     invalidate: [["admin-user-detail", adminUserId], ["admin-users"]]
   });
 
   const revokeSessionMutation = useAdminAction({
     mutationFn: async (sessionId: string) => {
-      if (!accessToken) throw new Error("Not signed in.");
-      const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
-      return revokeAdminUserSession(accessToken, adminUserId, sessionId, {}, stepUpToken);
+      const stepUpToken = await requestAdminStepUpToken({ accessToken: token, email: actorEmail });
+      return revokeAdminUserSession(token, adminUserId, sessionId, {}, stepUpToken);
     },
     invalidate: [["admin-user-sessions", adminUserId], ["admin-user-detail", adminUserId]]
   });
@@ -140,7 +121,7 @@ export const AdminUserDetailPage = () => {
   const sessionRows = (sessionsQ.data?.data.items ?? []).map((session) => [
     <span key={`ua-${session.id}`} className="text-sm text-[#181b25]">{session.userAgent ?? "Unknown device"}</span>,
     <span key={`ip-${session.id}`} className="font-mono text-xs text-[#434654]">{session.ipAddress ?? "—"}</span>,
-    <span key={`last-${session.id}`} className="text-xs text-[#737685]">{formatWhen(session.lastSeenAt)}</span>,
+    <span key={`last-${session.id}`} className="text-xs text-[#737685]">{formatDateTime(session.lastSeenAt)}</span>,
     <span key={`status-${session.id}`} className="text-xs font-semibold uppercase text-[#5b5e68]">{session.revokedAt ? "Revoked" : "Active"}</span>,
     <button
       key={`revoke-${session.id}`}

@@ -1,7 +1,8 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { z } from "zod";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -70,27 +71,15 @@ export const ProductCreatePage = () => {
     mode: "onSubmit"
   });
 
-  const categoriesQuery = useQuery({
-    queryKey: ["admin-catalog-categories-options"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogCategories(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const categoriesQuery = useAuthedQuery(
+  ["admin-catalog-categories-options"],
+  (token) => listAdminCatalogCategories(token)
+);
 
-  const brandsQuery = useQuery({
-    queryKey: ["admin-catalog-brands-options"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCatalogBrands(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const brandsQuery = useAuthedQuery(
+  ["admin-catalog-brands-options"],
+  (token) => listAdminCatalogBrands(token)
+);
 
   const categories = categoriesQuery.data?.data.items ?? [];
   const brands = brandsQuery.data?.data.items ?? [];

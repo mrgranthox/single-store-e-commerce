@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -84,22 +85,18 @@ export const ReturnsListPage = () => {
     [page, appliedCustomer, appliedReason, appliedStatus]
   );
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminReturns(accessToken, {
-        page,
-        page_size: 20,
-        ...(appliedCustomer.trim() ? { q: appliedCustomer.trim() } : {}),
-        ...(appliedReason.trim() ? { reason_contains: appliedReason.trim() } : {}),
-        ...(appliedStatus ? { status: appliedStatus } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => {
+    return listAdminReturns(token, {
+            page,
+            page_size: 20,
+            ...(appliedCustomer.trim() ? { q: appliedCustomer.trim() } : {}),
+            ...(appliedReason.trim() ? { reason_contains: appliedReason.trim() } : {}),
+            ...(appliedStatus ? { status: appliedStatus } : {})
+          });
+  }
+);
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;

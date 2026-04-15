@@ -11,18 +11,8 @@ import {
   getAdminOrderTimeline
 } from "@/features/orders/api/admin-orders.api";
 import { OrderStitchFulfillmentTimeline } from "@/features/orders/components/OrderStitchFulfillmentTimeline";
+import { formatMoney } from "@/lib/format";
 
-const formatMoney = (cents: number | null | undefined, currency: string | null | undefined) => {
-  if (typeof cents !== "number" || Number.isNaN(cents)) {
-    return "—";
-  }
-  const cur = (currency ?? "USD").toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
 
 const formatCreatedMono = (iso: string) => {
   try {

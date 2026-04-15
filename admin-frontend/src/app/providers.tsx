@@ -3,8 +3,7 @@ import {
   MutationCache,
   QueryCache,
   QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+  QueryClientProvider } from "@tanstack/react-query";
 
 import { captureFrontendException } from "@/lib/observability/sentry";
 import { ApiError } from "@/lib/api/http";
@@ -17,17 +16,14 @@ const queryClient = new QueryClient({
       captureFrontendException(error, {
         scope: "react-query",
         kind: "query",
-        queryKey: query.queryKey,
-      });
-    },
-  }),
+        queryKey: query.queryKey });
+    } }),
   mutationCache: new MutationCache({
     onError: (error, _variables, _context, mutation) => {
       captureFrontendException(error, {
         scope: "react-query",
         kind: "mutation",
-        mutationKey: mutation.options.mutationKey ?? null,
-      });
+        mutationKey: mutation.options.mutationKey ?? null });
 
       // Safety-net: surface truly unexpected (non-API) runtime errors that no
       // individual mutation handles.  ApiErrors are expected business errors
@@ -38,16 +34,12 @@ const queryClient = new QueryClient({
           "Please refresh the page and try again.",
         );
       }
-    },
-  }),
+    } }),
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
       // Default: operational cadence.  Override per-query via CACHE constants.
-      ...CACHE.OPERATIONAL,
-    },
-  },
-});
+      ...CACHE.OPERATIONAL } } });
 
 export const AppProviders = ({ children }: PropsWithChildren) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

@@ -23,8 +23,7 @@ export const formatMoney = (
     return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: currency.toUpperCase(),
-      minimumFractionDigits: 2,
-    }).format(amountCents / 100);
+      minimumFractionDigits: 2 }).format(amountCents / 100);
   } catch {
     return `${(amountCents / 100).toFixed(2)} ${currency.toUpperCase()}`;
   }
@@ -61,8 +60,7 @@ export const formatDateTime = (iso: string | null | undefined): string => {
   try {
     return new Intl.DateTimeFormat(undefined, {
       dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(iso));
+      timeStyle: "short" }).format(new Date(iso));
   } catch {
     return iso;
   }
@@ -92,8 +90,7 @@ export const formatDateTimeUtc = (iso: string | null | undefined): string => {
     return new Intl.DateTimeFormat(undefined, {
       dateStyle: "medium",
       timeStyle: "medium",
-      timeZone: "UTC",
-    }).format(new Date(iso));
+      timeZone: "UTC" }).format(new Date(iso));
   } catch {
     return iso;
   }
@@ -110,8 +107,7 @@ export const formatDateCompact = (iso: string | null | undefined): string => {
       month: "short",
       day: "numeric",
       hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(iso));
+      minute: "2-digit" }).format(new Date(iso));
   } catch {
     return iso;
   }

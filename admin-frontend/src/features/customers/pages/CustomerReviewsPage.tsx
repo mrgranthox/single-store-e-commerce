@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { CustomerWorkspaceNav } from "@/components/stitch/CustomerWorkspaceNav";
@@ -8,16 +8,11 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminCustomerDetail, listAdminCustomerReviews } from "@/features/customers/api/admin-customers.api";
 import { displayCustomerName } from "@/features/customers/lib/customerDisplay";
 import { CustomerWorkspaceHeader } from "@/features/customers/ui/CustomerWorkspaceHeader";
+import { formatDateTime } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
 
 const tone = (s: string): StatusBadgeTone => (s === "PUBLISHED" ? "active" : s === "REJECTED" ? "danger" : "pending");
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 export const CustomerReviewsPage = () => {
   const { customerId = "" } = useParams<{ customerId: string }>();
@@ -37,16 +32,11 @@ export const CustomerReviewsPage = () => {
     enabled: Boolean(accessToken) && Boolean(customerId)
   });
 
-  const listQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminCustomerReviews(accessToken, customerId, { page, page_size: 20 });
-    },
-    enabled: Boolean(accessToken) && Boolean(customerId)
-  });
+  const listQuery = useAuthedQuery(
+  queryKey,
+  (token) => listAdminCustomerReviews(token, customerId, { page, page_size: 20 }),
+  { enabled: Boolean(customerId) }
+);
 
   const entity = detailQ.data?.data.entity;
   const customerName = entity ? displayCustomerName(entity) : "Customer";
@@ -108,7 +98,7 @@ export const CustomerReviewsPage = () => {
                           </Link>
                         </td>
                         <td className="px-6 py-4 font-mono text-[10px] text-slate-500">{r.variant?.sku ?? "—"}</td>
-                        <td className="px-6 py-4 text-xs text-slate-600">{formatWhen(r.createdAt)}</td>
+                        <td className="px-6 py-4 text-xs text-slate-600">{formatDateTime(r.createdAt)}</td>
                       </tr>
                     ))}
                   </tbody>

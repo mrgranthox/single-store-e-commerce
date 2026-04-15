@@ -11,6 +11,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { adminJsonGet } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import type { PageActionItem } from "@/components/primitives/PageHeader";
+import { formatDateTime } from "@/lib/format";
 
 type HealthPayload = {
   providers?: Record<string, boolean>;
@@ -91,13 +92,6 @@ const webhookTone = (s: string): StatusBadgeTone => {
   return "pending";
 };
 
-const formatWhen = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "short", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 type DrawerState =
   | { kind: "webhook"; row: NonNullable<ExceptionsPayload["failedWebhooks"]>[number] }
@@ -249,7 +243,7 @@ export const IntegrationsHealthPage = () => {
       </span>,
       <StatusBadge key={`s-${w.id}`} label={w.status.replace(/_/g, " ")} tone={webhookTone(w.status)} />,
       <span key={`t-${w.id}`} className="text-xs text-[#737685]">
-        {formatWhen(w.receivedAt)}
+        {formatDateTime(w.receivedAt)}
       </span>
     ]) ?? [];
 
@@ -262,7 +256,7 @@ export const IntegrationsHealthPage = () => {
       d.notification?.channel ?? "—",
       <StatusBadge key={`ds-${d.id}`} label={d.status} tone={d.status === "SENT" ? "active" : "pending"} />,
       <span key={`dt-${d.id}`} className="text-xs text-[#737685]">
-        {formatWhen(d.sentAt ?? d.createdAt)}
+        {formatDateTime(d.sentAt ?? d.createdAt)}
       </span>
     ]) ?? [];
 
@@ -279,7 +273,7 @@ export const IntegrationsHealthPage = () => {
       </span>,
       <StatusBadge key={`st-${w.id}`} label={w.status.replace(/_/g, " ")} tone="danger" />,
       <span key={`rt-${w.id}`} className="text-xs text-[#737685]">
-        {formatWhen(w.receivedAt)}
+        {formatDateTime(w.receivedAt)}
       </span>,
       <button
         key={`ex-${w.id}`}
@@ -302,7 +296,7 @@ export const IntegrationsHealthPage = () => {
         {n.recipientEmail ?? "—"}
       </span>,
       <span key={`nt-${n.id}`} className="text-xs text-[#737685]">
-        {formatWhen(n.updatedAt)}
+        {formatDateTime(n.updatedAt)}
       </span>,
       <button
         key={`nx-${n.id}`}
@@ -325,7 +319,7 @@ export const IntegrationsHealthPage = () => {
         {x.orderId ? `Order ${x.orderId.slice(0, 8)}…` : x.paymentId ? `Pay ${x.paymentId.slice(0, 8)}…` : "—"}
       </span>,
       <span key={`xt-${x.id}`} className="text-xs text-[#737685]">
-        {formatWhen(x.updatedAt)}
+        {formatDateTime(x.updatedAt)}
       </span>,
       <button
         key={`fx-${x.id}`}
@@ -610,7 +604,7 @@ export const IntegrationsHealthPage = () => {
                         </div>
                         <div>
                           <dt className="text-[10px] font-bold uppercase text-[#737685]">Last received</dt>
-                          <dd className="mt-0.5">{formatWhen(drawer.row.receivedAt)}</dd>
+                          <dd className="mt-0.5">{formatDateTime(drawer.row.receivedAt)}</dd>
                         </div>
                       </dl>
                       <div className="rounded-sm bg-[#f2f3ff] px-3 py-3">
@@ -652,7 +646,7 @@ export const IntegrationsHealthPage = () => {
                         </div>
                         <div>
                           <dt className="text-[10px] font-bold uppercase text-[#737685]">Last update</dt>
-                          <dd className="mt-0.5">{formatWhen(drawer.row.updatedAt)}</dd>
+                          <dd className="mt-0.5">{formatDateTime(drawer.row.updatedAt)}</dd>
                         </div>
                       </dl>
                       <div className="rounded-sm bg-[#f2f3ff] px-3 py-3 text-xs text-[#374151]">
@@ -696,7 +690,7 @@ export const IntegrationsHealthPage = () => {
                         </div>
                         <div>
                           <dt className="text-[10px] font-bold uppercase text-[#737685]">Updated</dt>
-                          <dd className="mt-0.5">{formatWhen(drawer.row.updatedAt)}</dd>
+                          <dd className="mt-0.5">{formatDateTime(drawer.row.updatedAt)}</dd>
                         </div>
                       </dl>
                       <Link
