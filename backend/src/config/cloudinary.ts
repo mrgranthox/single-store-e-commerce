@@ -221,11 +221,14 @@ export const createSignedUploadIntent = (input: CloudinaryIntentInput) => {
   const fullPublicId = `${folderPath}/${assetKey}`;
   const timestamp = Math.floor(Date.now() / 1000);
   const allowedFormats = buildAllowedFormats(resourceType, input.scope);
+  /**
+   * Per Cloudinary auth docs, `resource_type` must NOT be included in the signature when posting to
+   * `POST /v1_1/:cloud/:resource_type/upload` — it is implied by the URL path. Including it breaks verification (Invalid Signature).
+   */
   const uploadParams: Record<string, string | number | boolean> = {
     timestamp,
     folder: folderPath,
     public_id: assetKey,
-    resource_type: resourceType,
     type: deliveryType,
     allowed_formats: allowedFormats.join(","),
     overwrite: false,
