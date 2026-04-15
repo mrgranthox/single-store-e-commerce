@@ -626,6 +626,8 @@ model Category {
   storeId   String?
   slug      String @unique
   name      String
+  /// Optional hero/cover image for category landing and merchandising surfaces.
+  imageUrl  String?
   status    String @default("ACTIVE")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

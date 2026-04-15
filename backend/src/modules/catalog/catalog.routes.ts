@@ -19,6 +19,7 @@ import {
   createMediaBodySchema,
   createMediaUploadIntentBodySchema,
   createProductBodySchema,
+  taxonomyMediaUploadIntentBodySchema,
   createVariantBodySchema,
   mediaIdParamsSchema,
   productIdParamsSchema,
@@ -49,7 +50,9 @@ import {
   archiveAdminCatalogProduct,
   bulkArchiveAdminCatalogProductVariants,
   createAdminCatalogBrand,
+  createAdminCatalogBrandMediaUploadIntent,
   createAdminCatalogCategory,
+  createAdminCatalogCategoryMediaUploadIntent,
   createAdminCatalogProduct,
   createAdminCatalogProductMediaUploadIntent,
   createAdminCatalogProductMedia,
@@ -186,6 +189,13 @@ router.post(
   validateRequest({ params: categoryIdParamsSchema, body: productMutationBodySchema }),
   restoreAdminCatalogCategory
 );
+router.post(
+  "/admin/catalog/categories/media/upload-intents",
+  requireAdminActor,
+  requirePermissions(["catalog.categories.write"]),
+  validateRequest({ body: taxonomyMediaUploadIntentBodySchema }),
+  createAdminCatalogCategoryMediaUploadIntent
+);
 router.get(
   "/admin/catalog/brands",
   requireAdminActor,
@@ -199,6 +209,13 @@ router.get(
   requirePermissions(["catalog.brands.read"]),
   validateRequest({ params: brandIdParamsSchema }),
   getAdminCatalogBrand
+);
+router.post(
+  "/admin/catalog/brands/media/upload-intents",
+  requireAdminActor,
+  requirePermissions(["catalog.brands.write"]),
+  validateRequest({ body: taxonomyMediaUploadIntentBodySchema }),
+  createAdminCatalogBrandMediaUploadIntent
 );
 router.post("/admin/catalog/brands", requireAdminActor, requirePermissions(["catalog.brands.write"]), validateRequest({ body: createBrandBodySchema }), createAdminCatalogBrand);
 router.patch("/admin/catalog/brands/:brandId", requireAdminActor, requirePermissions(["catalog.brands.write"]), validateRequest({ params: brandIdParamsSchema, body: updateBrandBodySchema }), updateAdminCatalogBrand);
@@ -273,6 +290,14 @@ export const catalogRouteModule: RouteModule = {
     { method: "POST", path: "/api/v1/admin/catalog/categories/:categoryId/publish", summary: "Publish a draft category (make it active).", tags: ["catalog"], auth: "admin", permissions: ["catalog.categories.write"] },
     { method: "POST", path: "/api/v1/admin/catalog/categories/:categoryId/unpublish", summary: "Move an active category back to draft when it has no products.", tags: ["catalog"], auth: "admin", permissions: ["catalog.categories.write"] },
     { method: "POST", path: "/api/v1/admin/catalog/categories/:categoryId/restore", summary: "Restore an archived category to active.", tags: ["catalog"], auth: "admin", permissions: ["catalog.categories.write"] },
+    {
+      method: "POST",
+      path: "/api/v1/admin/catalog/categories/media/upload-intents",
+      summary: "Create a signed upload intent for category imagery.",
+      tags: ["catalog"],
+      auth: "admin",
+      permissions: ["catalog.categories.write"]
+    },
     { method: "GET", path: "/api/v1/admin/catalog/brands", summary: "List admin brands.", tags: ["catalog"], auth: "admin", permissions: ["catalog.brands.read"] },
     {
       method: "GET",
@@ -281,6 +306,14 @@ export const catalogRouteModule: RouteModule = {
       tags: ["catalog"],
       auth: "admin",
       permissions: ["catalog.brands.read"]
+    },
+    {
+      method: "POST",
+      path: "/api/v1/admin/catalog/brands/media/upload-intents",
+      summary: "Create a signed upload intent for brand logo or gallery imagery.",
+      tags: ["catalog"],
+      auth: "admin",
+      permissions: ["catalog.brands.write"]
     },
     { method: "POST", path: "/api/v1/admin/catalog/brands", summary: "Create a brand.", tags: ["catalog"], auth: "admin", permissions: ["catalog.brands.write"] },
     { method: "PATCH", path: "/api/v1/admin/catalog/brands/:brandId", summary: "Update a brand.", tags: ["catalog"], auth: "admin", permissions: ["catalog.brands.write"] },

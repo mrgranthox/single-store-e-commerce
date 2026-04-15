@@ -1,37 +1,42 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link, useNavigate } from "react-router-dom";
 
 import { BannerLinkSelect } from "@/components/admin/BannerLinkSelect";
+import {
+  CatalogTaxonomyGalleryUpload,
+  CatalogTaxonomyImageUpload
+} from "@/components/catalog/CatalogTaxonomyImageUpload";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
+import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, createAdminCatalogBrand } from "@/features/catalog/api/admin-catalog.api";
+import {
+  ApiError,
+  createAdminCatalogBrand,
+  createCatalogBrandMediaUploadIntent
+} from "@/features/catalog/api/admin-catalog.api";
 import { listAdminBanners } from "@/features/content/api/admin-content.api";
 
-const parseGalleryText = (text: string) =>
-  text
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter((l) => l.length > 0);
+const primarySaveClass =
+  "inline-flex items-center justify-center gap-2 rounded-sm bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-5 py-2.5 font-headline text-sm font-semibold text-white shadow-lg shadow-[#1653cc]/20 transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100";
 
 export const BrandCreatePage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const formRef = useRef<HTMLFormElement>(null);
   const [slug, setSlug] = useState("");
   const [name, setName] = useState("");
   const [publishImmediately, setPublishImmediately] = useState(false);
   const [bannerId, setBannerId] = useState("");
-  const [logoUrl, setLogoUrl] = useState("");
-  const [galleryText, setGalleryText] = useState("");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
 
-  const bannersQ = useAuthedQuery(
-  ["admin-banners-picker"],
-  (token) => listAdminBanners(token)
-);
+  const bannersQ = useAuthedQuery(["admin-banners-picker"], (token) => listAdminBanners(token));
 
   const mut = useMutation({
     mutationFn: async () => {
@@ -43,8 +48,8 @@ export const BrandCreatePage = () => {
         name: name.trim(),
         ...(publishImmediately ? { status: "ACTIVE" as const } : {}),
         ...(bannerId.trim() ? { bannerId: bannerId.trim() } : {}),
-        ...(logoUrl.trim() ? { logoUrl: logoUrl.trim() } : {}),
-        ...(parseGalleryText(galleryText).length > 0 ? { galleryImageUrls: parseGalleryText(galleryText) } : {})
+        ...(logoUrl ? { logoUrl } : {}),
+        ...(galleryUrls.length > 0 ? { galleryImageUrls: galleryUrls } : {})
       });
     },
     onSuccess: (res) => {
@@ -57,15 +62,31 @@ export const BrandCreatePage = () => {
     }
   });
 
+  const submit = useCallback(() => {
+    setMsg(null);
+    mut.mutate();
+  }, [mut]);
+
   return (
-    <div className="space-y-6">
+    <StitchPageBody>
       <PageHeader
         title="New brand"
         description="Create a brand record for use on product detail and filters. The URL slug must be unique."
         actions={
-          <Link to="/admin/catalog/brands" className="text-sm font-semibold text-[#4f7ef8] hover:underline">
-            Back to brands
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              disabled={mut.isPending || !slug.trim() || !name.trim()}
+              className={primarySaveClass}
+              onClick={() => formRef.current?.requestSubmit()}
+            >
+              <MaterialIcon name="save" className="text-lg text-white" />
+              {mut.isPending ? "Saving…" : "Save brand"}
+            </button>
+            <Link to="/admin/catalog/brands" className="text-sm font-semibold text-[#1653cc] hover:underline">
+              Back to brands
+            </Link>
+          </div>
         }
       />
       {msg ? (
@@ -73,11 +94,11 @@ export const BrandCreatePage = () => {
       ) : null}
       <SurfaceCard title="Details">
         <form
-          className="grid max-w-lg gap-4"
+          ref={formRef}
+          className="grid max-w-lg gap-5"
           onSubmit={(e) => {
             e.preventDefault();
-            setMsg(null);
-            mut.mutate();
+            submit();
           }}
         >
           <label className="flex cursor-pointer items-start gap-3 text-sm text-slate-700">
@@ -94,21 +115,21 @@ export const BrandCreatePage = () => {
               </span>
             </span>
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
-            Display name
+          <label className="block">
+            <StitchFieldLabel>Display name</StitchFieldLabel>
             <input
               required
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
+              className={stitchInputClass}
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Northwind"
             />
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
-            URL slug
+          <label className="block">
+            <StitchFieldLabel>URL slug</StitchFieldLabel>
             <input
               required
-              className="rounded-lg border border-slate-200 px-3 py-2 font-mono text-sm"
+              className={`${stitchInputClass} font-mono`}
               value={slug}
               onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
               placeholder="northwind"
@@ -122,33 +143,33 @@ export const BrandCreatePage = () => {
             loading={bannersQ.isLoading}
             hint="Most banners are not tied to a brand; linking is optional."
           />
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
-            Logo URL (optional)
-            <input
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://…"
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
-            Gallery image URLs (optional, one per line)
-            <textarea
-              className="min-h-[88px] rounded-lg border border-slate-200 px-3 py-2 font-mono text-xs"
-              value={galleryText}
-              onChange={(e) => setGalleryText(e.target.value)}
-              placeholder="https://…"
-            />
-          </label>
-          <button
-            type="submit"
-            disabled={mut.isPending || !slug.trim() || !name.trim()}
-            className="w-fit rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            {mut.isPending ? "Saving…" : "Create brand"}
-          </button>
+          <CatalogTaxonomyImageUpload
+            accessToken={accessToken}
+            createIntent={createCatalogBrandMediaUploadIntent}
+            value={logoUrl}
+            onChange={setLogoUrl}
+            label="Logo (optional)"
+            hint="Square logo works best. JPG, PNG, WebP, or AVIF, max 8MB."
+            purpose="logo"
+          />
+          <CatalogTaxonomyGalleryUpload
+            accessToken={accessToken}
+            createIntent={createCatalogBrandMediaUploadIntent}
+            urls={galleryUrls}
+            onChange={setGalleryUrls}
+          />
+          <div className="border-t border-[#737685]/10 pt-5">
+            <button
+              type="submit"
+              disabled={mut.isPending || !slug.trim() || !name.trim()}
+              className={`${primarySaveClass} w-full py-3 sm:w-auto sm:min-w-[220px]`}
+            >
+              <MaterialIcon name="save" className="text-lg text-white" />
+              {mut.isPending ? "Saving…" : "Save brand"}
+            </button>
+          </div>
         </form>
       </SurfaceCard>
-    </div>
+    </StitchPageBody>
   );
 };

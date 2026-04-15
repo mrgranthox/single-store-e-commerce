@@ -10,7 +10,12 @@ import {
 } from "../common/errors/app-error";
 import { env } from "./env";
 
-export type CloudinaryScope = "catalog_product" | "content_banner" | "support_attachment";
+export type CloudinaryScope =
+  | "catalog_product"
+  | "catalog_brand"
+  | "catalog_category"
+  | "content_banner"
+  | "support_attachment";
 export type CloudinaryResourceType = "image" | "video" | "raw";
 export type CloudinaryDeliveryType = "upload" | "private";
 
@@ -34,6 +39,8 @@ type CloudinaryAssetReference = {
 
 const scopedFolders: Record<CloudinaryScope, string> = {
   catalog_product: env.CLOUDINARY_PRODUCT_MEDIA_FOLDER,
+  catalog_brand: env.CLOUDINARY_BRAND_MEDIA_FOLDER,
+  catalog_category: env.CLOUDINARY_CATEGORY_MEDIA_FOLDER,
   content_banner: env.CLOUDINARY_BANNER_FOLDER,
   support_attachment: env.CLOUDINARY_SUPPORT_FOLDER
 };

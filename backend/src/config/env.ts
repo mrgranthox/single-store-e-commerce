@@ -236,6 +236,8 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string().optional(),
   CLOUDINARY_UPLOAD_FOLDER: z.string().trim().min(1).default("ecommerce"),
   CLOUDINARY_PRODUCT_MEDIA_FOLDER: z.string().trim().min(1).default("catalog/products"),
+  CLOUDINARY_BRAND_MEDIA_FOLDER: z.string().trim().min(1).default("catalog/brands"),
+  CLOUDINARY_CATEGORY_MEDIA_FOLDER: z.string().trim().min(1).default("catalog/categories"),
   CLOUDINARY_BANNER_FOLDER: z.string().trim().min(1).default("content/banners"),
   CLOUDINARY_SUPPORT_FOLDER: z.string().trim().min(1).default("support/attachments"),
   CLOUDINARY_SIGNED_UPLOADS_ONLY: booleanFromString.default(true),

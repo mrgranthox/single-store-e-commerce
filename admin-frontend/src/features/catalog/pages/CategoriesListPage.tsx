@@ -138,8 +138,12 @@ export const CategoriesListPage = () => {
 
   const rows = filtered.map((c) => [
     <div key={c.id} className="flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-slate-100">
-        <MaterialIcon name="category" className="text-sm text-slate-400" />
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded bg-slate-100">
+        {c.imageUrl ? (
+          <img src={c.imageUrl} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <MaterialIcon name="category" className="text-sm text-slate-400" />
+        )}
       </div>
       <span className="text-sm font-semibold text-[#181b25]">{c.name}</span>
     </div>,

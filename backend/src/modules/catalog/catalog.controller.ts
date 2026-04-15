@@ -25,6 +25,7 @@ import {
   createMediaBodySchema,
   createMediaUploadIntentBodySchema,
   createProductBodySchema,
+  taxonomyMediaUploadIntentBodySchema,
   createVariantBodySchema,
   mediaIdParamsSchema,
   productIdParamsSchema,
@@ -58,6 +59,8 @@ import {
   createAdminProduct,
   createAdminProductMedia,
   createAdminProductMediaUploadIntent,
+  createAdminBrandMediaUploadIntent,
+  createAdminCategoryMediaUploadIntent,
   createAdminProductVariant,
   deleteAdminProductMedia,
   updateAdminProductMedia,
@@ -353,6 +356,32 @@ export const createAdminCatalogProductMediaUploadIntent = asyncHandler(async (re
   const data = await createAdminProductMediaUploadIntent({
     actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
     productId: params.productId,
+    ...body
+  });
+
+  return sendSuccess(response, {
+    statusCode: 201,
+    data
+  });
+});
+
+export const createAdminCatalogBrandMediaUploadIntent = asyncHandler(async (request, response) => {
+  const body = readValidatedBody<z.infer<typeof taxonomyMediaUploadIntentBodySchema>>(request);
+  const data = await createAdminBrandMediaUploadIntent({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
+    ...body
+  });
+
+  return sendSuccess(response, {
+    statusCode: 201,
+    data
+  });
+});
+
+export const createAdminCatalogCategoryMediaUploadIntent = asyncHandler(async (request, response) => {
+  const body = readValidatedBody<z.infer<typeof taxonomyMediaUploadIntentBodySchema>>(request);
+  const data = await createAdminCategoryMediaUploadIntent({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
     ...body
   });
 

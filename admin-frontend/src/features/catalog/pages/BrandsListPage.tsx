@@ -154,7 +154,11 @@ export const BrandsListPage = () => {
   const rows = filtered.map((b) => [
     <div key={b.id} className="flex items-center gap-3">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-slate-100 text-xs font-bold text-slate-600">
-        {initialsFromName(b.name)}
+        {b.logoUrl ? (
+          <img src={b.logoUrl} alt="" className="h-full w-full object-cover" />
+        ) : (
+          initialsFromName(b.name)
+        )}
       </div>
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-[#181b25]">{b.name}</p>

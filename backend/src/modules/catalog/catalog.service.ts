@@ -45,6 +45,7 @@ type CategoryShape = {
     slug: string;
     name: string;
     status: string;
+    imageUrl: string | null;
   };
 };
 
@@ -386,7 +387,8 @@ const serializeCategories = (categories: CategoryShape[]) =>
     id: entry.category.id,
     slug: entry.category.slug,
     name: entry.category.name,
-    status: entry.category.status
+    status: entry.category.status,
+    imageUrl: entry.category.imageUrl
   }));
 
 const selectPrimaryMedia = (product: ProductShape) => {
@@ -1043,6 +1045,7 @@ export const listCatalogCategories = async () => {
     slug: category.slug,
     name: category.name,
     status: category.status,
+    imageUrl: category.imageUrl,
     productCount: category._count.products
   }));
 };
@@ -2320,6 +2323,40 @@ export const createAdminProductMediaUploadIntent = async (input: {
   };
 };
 
+export const createAdminBrandMediaUploadIntent = async (input: {
+  actorAdminUserId: string;
+  fileName: string;
+  contentType: string;
+  fileSizeBytes?: number;
+  resourceType?: "image" | "video" | "raw";
+}) => ({
+  entity: createSignedUploadIntent({
+    scope: "catalog_brand",
+    actorId: input.actorAdminUserId,
+    fileName: input.fileName,
+    contentType: input.contentType,
+    fileSizeBytes: input.fileSizeBytes,
+    requestedResourceType: input.resourceType
+  })
+});
+
+export const createAdminCategoryMediaUploadIntent = async (input: {
+  actorAdminUserId: string;
+  fileName: string;
+  contentType: string;
+  fileSizeBytes?: number;
+  resourceType?: "image" | "video" | "raw";
+}) => ({
+  entity: createSignedUploadIntent({
+    scope: "catalog_category",
+    actorId: input.actorAdminUserId,
+    fileName: input.fileName,
+    contentType: input.contentType,
+    fileSizeBytes: input.fileSizeBytes,
+    requestedResourceType: input.resourceType
+  })
+});
+
 export const createAdminProductMedia = async (input: {
   actorAdminUserId: string;
   productId: string;
@@ -2808,6 +2845,7 @@ export const listAdminCategories = async (input?: { status?: string }) => {
     slug: category.slug,
     name: category.name,
     status: category.status,
+    imageUrl: category.imageUrl,
     productCount: category._count.products,
     updatedAt: category.updatedAt
   }));
@@ -2834,6 +2872,7 @@ export const getAdminCategoryById = async (categoryId: string) => {
     slug: category.slug,
     name: category.name,
     status: category.status,
+    imageUrl: category.imageUrl,
     productCount: category._count.products,
     updatedAt: category.updatedAt
   };
@@ -2844,15 +2883,19 @@ export const createAdminCategory = async (input: {
   slug: string;
   name: string;
   status?: "DRAFT" | "ACTIVE";
+  imageUrl?: string;
 }) => {
   try {
     return await runInTransaction(async (transaction) => {
       const status = input.status ?? "DRAFT";
+      const imageUrl =
+        input.imageUrl != null && input.imageUrl.trim().length > 0 ? input.imageUrl.trim() : null;
       const category = await transaction.category.create({
         data: {
           slug: input.slug,
           name: input.name,
-          status
+          status,
+          imageUrl
         }
       });
 
@@ -2864,7 +2907,8 @@ export const createAdminCategory = async (input: {
         after: {
           slug: category.slug,
           name: category.name,
-          status: category.status
+          status: category.status,
+          imageUrl: category.imageUrl
         },
         eventType: "CATEGORY_CREATED"
       });
@@ -2883,6 +2927,7 @@ export const updateAdminCategory = async (input: {
   categoryId: string;
   slug?: string;
   name?: string;
+  imageUrl?: string | null;
 }) => {
   try {
     return await runInTransaction(async (transaction) => {
@@ -2900,14 +2945,24 @@ export const updateAdminCategory = async (input: {
         throw invalidInputError("Archived categories cannot be edited. Restore them to active first.");
       }
 
+      const nextImageUrl =
+        input.imageUrl === undefined
+          ? existingCategory.imageUrl
+          : input.imageUrl === null || input.imageUrl.trim().length === 0
+            ? null
+            : input.imageUrl.trim();
+
+      const data: Prisma.CategoryUpdateInput = {
+        ...(input.slug !== undefined ? { slug: input.slug } : {}),
+        ...(input.name !== undefined ? { name: input.name } : {}),
+        ...(input.imageUrl !== undefined ? { imageUrl: nextImageUrl } : {})
+      };
+
       await transaction.category.update({
         where: {
           id: input.categoryId
         },
-        data: {
-          slug: input.slug,
-          name: input.name
-        }
+        data
       });
 
       await recordCatalogMutation(transaction, {
@@ -2918,12 +2973,14 @@ export const updateAdminCategory = async (input: {
         before: {
           slug: existingCategory.slug,
           name: existingCategory.name,
-          status: existingCategory.status
+          status: existingCategory.status,
+          imageUrl: existingCategory.imageUrl
         },
         after: {
           slug: input.slug ?? existingCategory.slug,
           name: input.name ?? existingCategory.name,
-          status: existingCategory.status
+          status: existingCategory.status,
+          imageUrl: input.imageUrl !== undefined ? nextImageUrl : existingCategory.imageUrl
         },
         eventType: "CATEGORY_UPDATED"
       });

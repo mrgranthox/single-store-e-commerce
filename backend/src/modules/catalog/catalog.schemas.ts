@@ -234,27 +234,47 @@ export const createMediaUploadIntentBodySchema = z.object({
   resourceType: optionalResourceTypeSchema
 });
 
+/** Signed upload intent for brand or category imagery (Cloudinary). */
+export const taxonomyMediaUploadIntentBodySchema = z.object({
+  fileName: z.string().trim().min(1).max(255),
+  contentType: z.string().trim().min(1).max(120),
+  fileSizeBytes: z.coerce.number().int().min(1).optional(),
+  resourceType: optionalResourceTypeSchema
+});
+
 const createTaxonomyStatusSchema = z.enum(["DRAFT", "ACTIVE"]).optional();
 
-export const createCategoryBodySchema = z.object({
-  slug: slugSchema,
-  name: z.string().trim().min(1).max(120),
-  /** Defaults to DRAFT so new categories are not public until published. */
-  status: createTaxonomyStatusSchema
-});
-
-export const updateCategoryBodySchema = z.object({
-  slug: slugSchema.optional(),
-  name: z.string().trim().min(1).max(120).optional()
-});
-
-const optionalBrandBannerIdSchema = z.string().uuid().nullable().optional();
 const optionalHttpUrlSchema = z
   .string()
   .trim()
   .max(2048)
   .refine((s) => s.length === 0 || /^https?:\/\//i.test(s), "Must be an http(s) URL.")
   .optional();
+
+export const createCategoryBodySchema = z.object({
+  slug: slugSchema,
+  name: z.string().trim().min(1).max(120),
+  /** Defaults to DRAFT so new categories are not public until published. */
+  status: createTaxonomyStatusSchema,
+  imageUrl: optionalHttpUrlSchema
+});
+
+export const updateCategoryBodySchema = z.object({
+  slug: slugSchema.optional(),
+  name: z.string().trim().min(1).max(120).optional(),
+  imageUrl: z
+    .union([
+      z
+        .string()
+        .trim()
+        .max(2048)
+        .refine((s) => s.length === 0 || /^https?:\/\//i.test(s), "Must be an http(s) URL."),
+      z.null()
+    ])
+    .optional()
+});
+
+const optionalBrandBannerIdSchema = z.string().uuid().nullable().optional();
 const galleryImageUrlsSchema = z
   .array(
     z

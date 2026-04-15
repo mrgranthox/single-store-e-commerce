@@ -98,6 +98,7 @@ export type AdminCategoryRow = {
   slug: string;
   name: string;
   status: string;
+  imageUrl?: string | null;
   productCount: number;
   updatedAt: string;
 };
@@ -143,7 +144,7 @@ export const getAdminCatalogCategory = async (
 
 export const createAdminCatalogCategory = async (
   accessToken: string,
-  body: { slug: string; name: string; status?: "DRAFT" | "ACTIVE" }
+  body: { slug: string; name: string; status?: "DRAFT" | "ACTIVE"; imageUrl?: string }
 ): Promise<{ success: true; data: { entity: { id: string } } }> =>
   apiRequest({
     method: "POST",
@@ -155,7 +156,7 @@ export const createAdminCatalogCategory = async (
 export const updateAdminCatalogCategory = async (
   accessToken: string,
   categoryId: string,
-  body: { slug?: string; name?: string }
+  body: { slug?: string; name?: string; imageUrl?: string | null }
 ): Promise<{ success: true; data: { entity: { id: string } } }> =>
   apiRequest({
     method: "PATCH",
@@ -845,6 +846,38 @@ export const createCatalogMediaUploadIntent = async (
     path: `/api/admin/catalog/products/${encodeURIComponent(productId)}/media/upload-intents`,
     accessToken,
     body
+  });
+
+export const createCatalogCategoryMediaUploadIntent = async (
+  accessToken: string,
+  body: CreateCatalogMediaUploadIntentBody
+): Promise<{ success: true; data: { entity: CatalogMediaUploadIntentEntity } }> =>
+  apiRequest({
+    method: "POST",
+    path: "/api/admin/catalog/categories/media/upload-intents",
+    accessToken,
+    body: {
+      fileName: body.fileName,
+      contentType: body.contentType,
+      fileSizeBytes: body.fileSizeBytes,
+      resourceType: body.resourceType
+    }
+  });
+
+export const createCatalogBrandMediaUploadIntent = async (
+  accessToken: string,
+  body: CreateCatalogMediaUploadIntentBody
+): Promise<{ success: true; data: { entity: CatalogMediaUploadIntentEntity } }> =>
+  apiRequest({
+    method: "POST",
+    path: "/api/admin/catalog/brands/media/upload-intents",
+    accessToken,
+    body: {
+      fileName: body.fileName,
+      contentType: body.contentType,
+      fileSizeBytes: body.fileSizeBytes,
+      resourceType: body.resourceType
+    }
   });
 
 export type CreateAdminCatalogProductMediaBody = {

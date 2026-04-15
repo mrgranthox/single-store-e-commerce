@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 
 import { BannerLinkSelect } from "@/components/admin/BannerLinkSelect";
+import {
+  CatalogTaxonomyGalleryUpload,
+  CatalogTaxonomyImageUpload
+} from "@/components/catalog/CatalogTaxonomyImageUpload";
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
@@ -19,17 +23,10 @@ import {
   publishAdminCatalogBrand,
   restoreAdminCatalogBrand,
   unpublishAdminCatalogBrand,
+  createCatalogBrandMediaUploadIntent,
   updateAdminCatalogBrand
 } from "@/features/catalog/api/admin-catalog.api";
 import { listAdminBanners } from "@/features/content/api/admin-content.api";
-
-const parseGalleryText = (text: string) =>
-  text
-    .split(/\r?\n/)
-    .map((l) => l.trim())
-    .filter((l) => l.length > 0);
-
-const galleryToText = (urls: string[] | undefined) => (urls?.length ? urls.join("\n") : "");
 
 export const BrandEditPage = () => {
   const { brandId } = useParams<{ brandId: string }>();
@@ -39,8 +36,8 @@ export const BrandEditPage = () => {
   const [slug, setSlug] = useState("");
   const [name, setName] = useState("");
   const [bannerId, setBannerId] = useState("");
-  const [logoUrl, setLogoUrl] = useState("");
-  const [galleryText, setGalleryText] = useState("");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [archiveReason, setArchiveReason] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   type LifecycleAction = "draft" | "restore" | "archive";
@@ -68,8 +65,8 @@ export const BrandEditPage = () => {
     setSlug(row.slug);
     setName(row.name);
     setBannerId(row.bannerId ?? "");
-    setLogoUrl(row.logoUrl ?? "");
-    setGalleryText(galleryToText(row.galleryImageUrls));
+    setLogoUrl(row.logoUrl ?? null);
+    setGalleryUrls(row.galleryImageUrls?.length ? [...row.galleryImageUrls] : []);
   }, [row?.id, row?.slug, row?.name, row?.bannerId, row?.logoUrl, row?.galleryImageUrls]);
 
   const saveMut = useMutation({
@@ -81,8 +78,8 @@ export const BrandEditPage = () => {
         slug: slug.trim(),
         name: name.trim(),
         bannerId: bannerId.trim() === "" ? null : bannerId.trim(),
-        logoUrl: logoUrl.trim() === "" ? null : logoUrl.trim(),
-        galleryImageUrls: parseGalleryText(galleryText)
+        logoUrl: logoUrl && logoUrl.trim() ? logoUrl.trim() : null,
+        galleryImageUrls: galleryUrls
       });
     },
     onSuccess: () => {
@@ -301,30 +298,23 @@ export const BrandEditPage = () => {
                 disabled={row.status === "ARCHIVED"}
                 hint="Banners are independent content assets; only this brand points to the chosen banner."
               />
-              <label className="block">
-                <StitchFieldLabel>Logo URL (optional)</StitchFieldLabel>
-                <input
-                  className={clsx(stitchInputClass, row.status === "ARCHIVED" && "cursor-not-allowed opacity-80")}
-                  value={logoUrl}
-                  onChange={(e) => setLogoUrl(e.target.value)}
-                  placeholder="https://…"
-                  disabled={row.status === "ARCHIVED"}
-                />
-              </label>
-              <label className="block">
-                <StitchFieldLabel>Gallery image URLs (optional, one per line)</StitchFieldLabel>
-                <textarea
-                  className={clsx(
-                    stitchInputClass,
-                    "min-h-[100px] font-mono text-xs",
-                    row.status === "ARCHIVED" && "cursor-not-allowed opacity-80"
-                  )}
-                  value={galleryText}
-                  onChange={(e) => setGalleryText(e.target.value)}
-                  placeholder="https://…"
-                  disabled={row.status === "ARCHIVED"}
-                />
-              </label>
+              <CatalogTaxonomyImageUpload
+                accessToken={accessToken}
+                createIntent={createCatalogBrandMediaUploadIntent}
+                value={logoUrl}
+                onChange={setLogoUrl}
+                disabled={row.status === "ARCHIVED"}
+                label="Logo (optional)"
+                hint="Square logo works best. JPG, PNG, WebP, or AVIF, max 8MB."
+                purpose="logo"
+              />
+              <CatalogTaxonomyGalleryUpload
+                accessToken={accessToken}
+                createIntent={createCatalogBrandMediaUploadIntent}
+                urls={galleryUrls}
+                onChange={setGalleryUrls}
+                disabled={row.status === "ARCHIVED"}
+              />
               <div className="border-t border-[#737685]/10 pt-5">
                 <button
                   type="submit"

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 
+import { CatalogTaxonomyImageUpload } from "@/components/catalog/CatalogTaxonomyImageUpload";
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
@@ -18,6 +19,7 @@ import {
   publishAdminCatalogCategory,
   restoreAdminCatalogCategory,
   unpublishAdminCatalogCategory,
+  createCatalogCategoryMediaUploadIntent,
   updateAdminCatalogCategory
 } from "@/features/catalog/api/admin-catalog.api";
 
@@ -28,6 +30,7 @@ export const CategoryEditPage = () => {
   const queryClient = useQueryClient();
   const [slug, setSlug] = useState("");
   const [name, setName] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [archiveReason, setArchiveReason] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   type LifecycleAction = "draft" | "restore" | "archive";
@@ -50,7 +53,8 @@ export const CategoryEditPage = () => {
     }
     setSlug(row.slug);
     setName(row.name);
-  }, [row?.id, row?.slug, row?.name]);
+    setImageUrl(row.imageUrl ?? null);
+  }, [row?.id, row?.slug, row?.name, row?.imageUrl]);
 
   const saveMut = useMutation({
     mutationFn: async () => {
@@ -59,7 +63,8 @@ export const CategoryEditPage = () => {
       }
       return updateAdminCatalogCategory(accessToken, categoryId, {
         slug: slug.trim(),
-        name: name.trim()
+        name: name.trim(),
+        imageUrl: imageUrl && imageUrl.trim() ? imageUrl.trim() : null
       });
     },
     onSuccess: () => {
@@ -272,6 +277,16 @@ export const CategoryEditPage = () => {
                   onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
                 />
               </label>
+              <CatalogTaxonomyImageUpload
+                accessToken={accessToken}
+                createIntent={createCatalogCategoryMediaUploadIntent}
+                value={imageUrl}
+                onChange={setImageUrl}
+                disabled={row.status === "ARCHIVED"}
+                label="Cover image (optional)"
+                hint="Upload a wide hero image for this category (JPG, PNG, WebP, or AVIF, max 8MB)."
+                purpose="cover"
+              />
               <div className="border-t border-[#737685]/10 pt-5">
                 <button
                   type="submit"
