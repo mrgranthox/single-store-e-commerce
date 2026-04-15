@@ -248,6 +248,16 @@ export const WebhooksListPage = () => {
       {err ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
       ) : null}
+      {retryMut.isError ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {retryMut.error instanceof ApiError ? retryMut.error.message : String(retryMut.error)}
+        </div>
+      ) : null}
+      {retryMut.isSuccess ? (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          Replay queued. Refresh in a few seconds for updated status.
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <StitchKpiMicro

@@ -100,7 +100,7 @@ export const WebhookDetailPage = () => {
       return retryAdminWebhookEvent(accessToken, webhookEventId, stepUpToken);
     },
     isAllowed: canRetryByPermission,
-    invalidate: [["admin-webhook-event", webhookEventId], ["admin-webhooks"]]
+    invalidate: [["admin-webhook-event", webhookEventId], ["admin-webhooks"], ["admin-webhooks-health-strip"]]
   });
 
   const raw = detailQuery.data?.data as WebhookDetail | undefined;
@@ -261,6 +261,7 @@ export const WebhookDetailPage = () => {
         title="Retry webhook processing?"
         body="Processing will be re-queued for this verified event. Confirm when duplicates and side effects are acceptable for your runbook."
         confirmLabel="Queue replay"
+        confirmDisabled={!canRetry || retryMut.isPending || retryMut.blocked}
         onClose={() => setRetryOpen(false)}
         onConfirm={() => {
           setRetryOpen(false);
