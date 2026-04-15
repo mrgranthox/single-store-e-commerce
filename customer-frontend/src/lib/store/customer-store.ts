@@ -1,72 +1,43 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export interface CartItem {
-  productId: string;
-  variantId: string;
-  quantity: number;
-  price: number;
-  name: string;
-  imageUrl: string;
-}
+import { clearAuthTokens, clearCommerceSession, getAccessToken, setAuthTokens } from "@/lib/api/commerce-session";
 
 const MAX_RECENT = 16;
-const normalizeQuantity = (quantity: number) => Math.max(0, Math.floor(Number.isFinite(quantity) ? quantity : 0));
 
 interface CustomerStore {
-  cart: CartItem[];
   wishlist: string[];
   recentlyViewedProductSlugs: string[];
   isAuthenticated: boolean;
 
-  addToCart: (item: CartItem) => void;
-  updateQuantity: (variantId: string, quantity: number) => void;
-  clearCart: () => void;
+  hydrateAuth: () => void;
+  setAuthenticatedSession: (accessToken: string, refreshToken: string) => void;
+  signOut: () => void;
+
   toggleWishlist: (productId: string) => void;
   addRecentlyViewed: (productSlug: string) => void;
   clearRecentlyViewed: () => void;
-  signIn: () => void;
-  signOut: () => void;
 }
 
 export const useCustomerStore = create<CustomerStore>()(
   persist(
     (set) => ({
-      cart: [],
       wishlist: [],
       recentlyViewedProductSlugs: [],
-      isAuthenticated: false,
+      isAuthenticated: Boolean(typeof window !== "undefined" && getAccessToken()),
 
-      addToCart: (item) =>
-        set((state) => {
-          const quantityToAdd = normalizeQuantity(item.quantity);
-          if (quantityToAdd <= 0) {
-            return state;
-          }
+      hydrateAuth: () => set({ isAuthenticated: Boolean(getAccessToken()) }),
 
-          const existing = state.cart.find((c) => c.variantId === item.variantId);
-          if (existing) {
-            return {
-              cart: state.cart.map((c) =>
-                c.variantId === item.variantId ? { ...c, quantity: c.quantity + quantityToAdd } : c
-              ),
-            };
-          }
-          return { cart: [...state.cart, { ...item, quantity: quantityToAdd }] };
-        }),
+      setAuthenticatedSession: (accessToken, refreshToken) => {
+        setAuthTokens(accessToken, refreshToken);
+        set({ isAuthenticated: true });
+      },
 
-      updateQuantity: (variantId, quantity) =>
-        set((state) => {
-          const normalizedQuantity = normalizeQuantity(quantity);
-          return {
-            cart:
-              normalizedQuantity <= 0
-                ? state.cart.filter((c) => c.variantId !== variantId)
-                : state.cart.map((c) => (c.variantId === variantId ? { ...c, quantity: normalizedQuantity } : c)),
-          };
-        }),
-
-      clearCart: () => set({ cart: [] }),
+      signOut: () => {
+        clearAuthTokens();
+        clearCommerceSession();
+        set({ isAuthenticated: false, wishlist: [] });
+      },
 
       toggleWishlist: (productId) =>
         set((state) => ({
@@ -82,10 +53,13 @@ export const useCustomerStore = create<CustomerStore>()(
         }),
 
       clearRecentlyViewed: () => set({ recentlyViewedProductSlugs: [] }),
-
-      signIn: () => set({ isAuthenticated: true }),
-      signOut: () => set({ isAuthenticated: false }),
     }),
-    { name: "atelier-customer-store" }
+    {
+      name: "atelier-customer-store",
+      partialize: (state) => ({
+        wishlist: state.wishlist,
+        recentlyViewedProductSlugs: state.recentlyViewedProductSlugs,
+      }),
+    }
   )
 );

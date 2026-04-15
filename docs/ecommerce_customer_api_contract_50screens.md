@@ -94,10 +94,12 @@ The goal is to provide an implementation-grade contract that frontend engineers 
 ## Returns and refunds endpoints
 - `GET /api/account/returns`
 - `GET /api/account/refunds`
-- `POST /api/account/orders/:orderId/returns/eligibility`
+- `GET /api/account/orders/:orderId/return-eligibility` (also `POST /api/account/orders/:orderId/returns/eligibility` on the same handler in `customer-compat.routes.ts`)
+- `GET /api/account/orders/:orderId/refund-eligibility`
 - `POST /api/account/orders/:orderId/returns`
 
 ## Public help/contact endpoints
+- `GET /api/support/public-config` (captcha + endpoint hints)
 - `POST /api/support/contact`
 - `POST /api/products/:slug/inquiry`
 
@@ -142,6 +144,9 @@ The goal is to provide an implementation-grade contract that frontend engineers 
   }
 }
 ```
+
+## Manual admin parity checklist
+Use the admin app read-only to confirm customer mutations landed: after **checkout**, the order (and payment state) appears under admin orders; after **support ticket** or **public contact**, the ticket exists in admin support queues; after **return request**, the return appears under admin returns; after **refund** flows, the refund row matches the customer refunds list.
 
 ## Final position
 This contract is designed to support the full 50-screen customer experience: discovery, cart and checkout, account area, reviews, support, returns, refunds, and trust content.

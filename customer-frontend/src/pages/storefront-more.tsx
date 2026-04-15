@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { StorefrontMain, StorefrontShell } from "@/components/layout";
 import { ProductCard, StarRating, fieldClass, labelClass } from "@/components/ui";
 import { Icon } from "@/components/Icon";
-import { allProducts, productsBySlug } from "@/lib/data/customer-mock";
+import { customerBackendApi } from "@/lib/api/customer-backend-api";
+import { CommerceApiError } from "@/lib/api/commerce-fetch";
+import { mapPublicProductDetailToProduct, mapStorefrontProductCards, mapWishlistApiItemToProduct } from "@/lib/catalog/storefront-mappers";
+import type { Product } from "@/lib/data/customer-mock";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const ProductSubpageMissing = () => (
@@ -24,18 +28,19 @@ export const SubcategoryPage = () => {
   const parent = categorySlug ?? "";
   const sub = (subcategorySlug ?? "").replace(/-/g, " ");
   const label = sub ? sub.charAt(0).toUpperCase() + sub.slice(1) : "Subcategory";
-  const filtered = allProducts.filter((p) => {
-    const cat = p.category.toLowerCase();
-    const par = parent.toLowerCase();
-    const subL = (subcategorySlug ?? "").toLowerCase().replace(/-/g, " ");
-    return (
-      cat.includes(par) ||
-      par.includes(cat) ||
-      p.name.toLowerCase().includes(subL) ||
-      p.slug.toLowerCase().includes(subL)
-    );
+  const q = [parent, sub].filter(Boolean).join(" ").trim();
+
+  const searchQuery = useQuery({
+    queryKey: ["customer-subcategory", q],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.searchProducts({ q, page: 1, page_size: 48 });
+      return mapStorefrontProductCards(data.items ?? []);
+    },
+    enabled: Boolean(q),
+    staleTime: 30_000
   });
-  const list = filtered.length > 0 ? filtered : allProducts;
+
+  const list = searchQuery.data ?? [];
 
   return (
     <StorefrontShell>
@@ -55,13 +60,25 @@ export const SubcategoryPage = () => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-background mb-4">
             {label}
           </h1>
-          <p className="text-on-surface-variant">{list.length} pieces in this edit.</p>
+          <p className="text-on-surface-variant">
+            {searchQuery.isPending ? "Loading…" : `${list.length} pieces in this edit.`}
+          </p>
         </header>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-          {list.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {searchQuery.isError ? (
+          <p className="text-error text-sm">Could not load this edit.</p>
+        ) : searchQuery.isPending ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 animate-pulse">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+            {list.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
       </StorefrontMain>
     </StorefrontShell>
   );
@@ -70,9 +87,40 @@ export const SubcategoryPage = () => {
 /* ── Product gallery fullscreen ── */
 export const ProductGalleryPage = () => {
   const { productSlug } = useParams();
-  const product = productSlug ? productsBySlug[productSlug] : undefined;
-  if (!product) return <ProductSubpageMissing />;
-  const imgs = [product.imageUrl, ...(product.images ?? [])].filter(Boolean);
+  const detailQuery = useQuery({
+    queryKey: ["customer-product-detail", productSlug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.getProduct(productSlug!);
+      return data;
+    },
+    enabled: Boolean(productSlug),
+    staleTime: 60_000
+  });
+
+  const product = useMemo(
+    () => (detailQuery.data ? mapPublicProductDetailToProduct(detailQuery.data) : null),
+    [detailQuery.data]
+  );
+
+  const imgs = useMemo(() => {
+    if (!detailQuery.data || typeof detailQuery.data !== "object") return [] as string[];
+    const media = (detailQuery.data as { media?: Array<{ url?: string | null }> }).media ?? [];
+    return media.map((m) => m.url).filter((u): u is string => Boolean(u?.trim()));
+  }, [detailQuery.data]);
+
+  if (detailQuery.isPending) {
+    return (
+      <StorefrontShell>
+        <StorefrontMain>
+          <p className="text-on-surface-variant py-24 text-center">Loading gallery…</p>
+        </StorefrontMain>
+      </StorefrontShell>
+    );
+  }
+
+  if (detailQuery.isError || !product) return <ProductSubpageMissing />;
+
+  const gallery = imgs.length > 0 ? imgs : [product.imageUrl];
 
   return (
     <StorefrontShell>
@@ -88,7 +136,7 @@ export const ProductGalleryPage = () => {
           <h1 className="font-headline font-bold text-lg truncate">{product.name}</h1>
         </div>
         <div className="space-y-6">
-          {imgs.map((src, i) => (
+          {gallery.map((src, i) => (
             <div
               key={i}
               className="relative w-full aspect-[3/4] max-h-[85dvh] bg-surface-container-low rounded-xl overflow-hidden"
@@ -102,19 +150,52 @@ export const ProductGalleryPage = () => {
   );
 };
 
-const MOCK_REVIEWS = [
-  { author: "Eleanor V.", rating: 5, date: "Nov 2024", title: "Investment quality", body: "Fabric and finish exceeded expectations. True atelier level." },
-  { author: "Marcus T.", rating: 4, date: "Oct 2024", title: "Beautiful drape", body: "Slightly long in the sleeves for me but tailoring fixed it." },
-  { author: "Sasha K.", rating: 5, date: "Sep 2024", title: "Perfect for travel", body: "Lightweight, wrinkle-resistant, and looks sharp." },
-];
+type ApiReview = { id?: string; rating?: number; body?: string; createdAt?: string; authorName?: string };
 
 /* ── Product reviews ── */
 export const ProductReviewsPage = () => {
   const { productSlug } = useParams();
-  const product = productSlug ? productsBySlug[productSlug] : undefined;
   const [filter, setFilter] = useState<"all" | "5" | "4">("all");
-  if (!product) return <ProductSubpageMissing />;
-  const reviews = MOCK_REVIEWS.filter((r) => (filter === "all" ? true : String(r.rating) === filter));
+
+  const productQuery = useQuery({
+    queryKey: ["customer-product-detail", productSlug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.getProduct(productSlug!);
+      return data;
+    },
+    enabled: Boolean(productSlug),
+    staleTime: 60_000
+  });
+
+  const reviewsQuery = useQuery({
+    queryKey: ["customer-product-reviews", productSlug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listProductReviews(productSlug!, 1, 50);
+      return data.items as ApiReview[];
+    },
+    enabled: Boolean(productSlug) && productQuery.isSuccess,
+    staleTime: 30_000
+  });
+
+  const product = useMemo(
+    () => (productQuery.data ? mapPublicProductDetailToProduct(productQuery.data) : null),
+    [productQuery.data]
+  );
+
+  if (productQuery.isPending) {
+    return (
+      <StorefrontShell>
+        <StorefrontMain>
+          <p className="text-on-surface-variant py-24 text-center">Loading…</p>
+        </StorefrontMain>
+      </StorefrontShell>
+    );
+  }
+
+  if (productQuery.isError || !product) return <ProductSubpageMissing />;
+
+  const rawReviews = reviewsQuery.data ?? [];
+  const reviews = rawReviews.filter((r) => (filter === "all" ? true : String(r.rating) === filter));
 
   return (
     <StorefrontShell>
@@ -146,20 +227,39 @@ export const ProductReviewsPage = () => {
             ))}
           </div>
         </header>
-        <ul className="space-y-6">
-          {reviews.map((r, i) => (
-            <li key={i} className="p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
-              <div className="flex justify-between items-start gap-4 mb-3">
-                <div>
-                  <p className="font-headline font-bold">{r.title}</p>
-                  <p className="text-xs text-outline">{r.author} · {r.date}</p>
-                </div>
-                <StarRating rating={r.rating} />
-              </div>
-              <p className="text-on-surface-variant leading-relaxed">{r.body}</p>
-            </li>
-          ))}
-        </ul>
+        {reviewsQuery.isPending ? (
+          <p className="text-on-surface-variant">Loading reviews…</p>
+        ) : reviewsQuery.isError ? (
+          <p className="text-error text-sm">Reviews could not be loaded.</p>
+        ) : (
+          <ul className="space-y-6">
+            {reviews.map((r) => {
+              const title =
+                typeof r.body === "string" && r.body.trim().length > 0
+                  ? r.body.trim().split("\n")[0]!.slice(0, 80)
+                  : "Review";
+              const date =
+                typeof r.createdAt === "string"
+                  ? new Date(r.createdAt).toLocaleDateString(undefined, { month: "short", year: "numeric" })
+                  : "";
+              return (
+                <li key={r.id ?? title} className="p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
+                  <div className="flex justify-between items-start gap-4 mb-3">
+                    <div>
+                      <p className="font-headline font-bold">{title}</p>
+                      <p className="text-xs text-outline">
+                        {r.authorName ?? "Customer"}
+                        {date ? ` · ${date}` : ""}
+                      </p>
+                    </div>
+                    <StarRating rating={typeof r.rating === "number" ? r.rating : 0} />
+                  </div>
+                  <p className="text-on-surface-variant leading-relaxed">{r.body}</p>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </StorefrontMain>
     </StorefrontShell>
   );
@@ -168,9 +268,52 @@ export const ProductReviewsPage = () => {
 /* ── Product Q&A ── */
 export const ProductQuestionsPage = () => {
   const { productSlug } = useParams();
-  const product = productSlug ? productsBySlug[productSlug] : undefined;
+  const queryClient = useQueryClient();
   const [q, setQ] = useState("");
-  if (!product) return <ProductSubpageMissing />;
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitErr, setSubmitErr] = useState<string | null>(null);
+  const [submitOk, setSubmitOk] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const productQuery = useQuery({
+    queryKey: ["customer-product-detail", productSlug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.getProduct(productSlug!);
+      return data;
+    },
+    enabled: Boolean(productSlug),
+    staleTime: 60_000
+  });
+
+  const questionsQuery = useQuery({
+    queryKey: ["customer-product-questions", productSlug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.getProductQuestions(productSlug!);
+      return data as { entity?: { questions?: Array<{ id?: string; question: string; answer: string }> } };
+    },
+    enabled: Boolean(productSlug) && productQuery.isSuccess,
+    staleTime: 30_000
+  });
+
+  const product = useMemo(
+    () => (productQuery.data ? mapPublicProductDetailToProduct(productQuery.data) : null),
+    [productQuery.data]
+  );
+
+  if (productQuery.isPending) {
+    return (
+      <StorefrontShell>
+        <StorefrontMain>
+          <p className="text-on-surface-variant py-24 text-center">Loading…</p>
+        </StorefrontMain>
+      </StorefrontShell>
+    );
+  }
+
+  if (productQuery.isError || !product || !productSlug) return <ProductSubpageMissing />;
+
+  const qaItems = questionsQuery.data?.entity?.questions ?? [];
 
   return (
     <StorefrontShell>
@@ -183,11 +326,39 @@ export const ProductQuestionsPage = () => {
         <p className="text-on-surface-variant mb-8 text-sm">Ask our concierge; answers post within 1–2 business days.</p>
         <form
           className="space-y-4 mb-12 p-6 bg-surface-container-low rounded-2xl"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            setQ("");
+            setSubmitErr(null);
+            setSubmitOk(false);
+            setBusy(true);
+            try {
+              await customerBackendApi.createProductInquiry(productSlug, {
+                message: q.trim(),
+                name: name.trim() || undefined,
+                email: email.trim() || undefined
+              });
+              setSubmitOk(true);
+              setQ("");
+              await queryClient.invalidateQueries({ queryKey: ["customer-product-questions", productSlug] });
+            } catch (err) {
+              setSubmitErr(err instanceof CommerceApiError ? err.message : "Could not submit question.");
+            } finally {
+              setBusy(false);
+            }
           }}
         >
+          <div>
+            <label className={labelClass} htmlFor="pq-name">
+              Name (optional)
+            </label>
+            <input id="pq-name" value={name} onChange={(e) => setName(e.target.value)} className={fieldClass} type="text" />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="pq-email">
+              Email (optional)
+            </label>
+            <input id="pq-email" value={email} onChange={(e) => setEmail(e.target.value)} className={fieldClass} type="email" />
+          </div>
           <div>
             <label className={labelClass} htmlFor="pq">
               Your question
@@ -201,22 +372,33 @@ export const ProductQuestionsPage = () => {
               required
             />
           </div>
-          <button type="submit" className="w-full sm:w-auto bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold text-sm uppercase tracking-widest">
-            Submit question
+          {submitErr ? <p className="text-error text-sm">{submitErr}</p> : null}
+          {submitOk ? <p className="text-secondary text-sm font-bold">Thanks — we received your question.</p> : null}
+          <button
+            type="submit"
+            disabled={busy}
+            className="w-full sm:w-auto bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold text-sm uppercase tracking-widest disabled:opacity-50"
+          >
+            {busy ? "Sending…" : "Submit question"}
           </button>
         </form>
-        <div className="space-y-6">
-          {[
-            { q: "Is this piece lined?", a: "Yes — full cupro lining in the body.", who: "Tees Support" },
-            { q: "Machine washable?", a: "We recommend dry clean only to preserve the wool finish.", who: "Tees Support" },
-          ].map((item, i) => (
-            <div key={i} className="border-b border-outline-variant/20 pb-6">
-              <p className="font-headline font-bold mb-2">{item.q}</p>
-              <p className="text-on-surface-variant text-sm mb-2">{item.a}</p>
-              <p className="text-xs text-outline uppercase tracking-widest">{item.who}</p>
-            </div>
-          ))}
-        </div>
+        {questionsQuery.isPending ? (
+          <p className="text-on-surface-variant">Loading Q&amp;A…</p>
+        ) : (
+          <div className="space-y-6">
+            {qaItems.length === 0 ? (
+              <p className="text-on-surface-variant text-sm">No answered questions yet — be the first to ask.</p>
+            ) : (
+              qaItems.map((item) => (
+                <div key={item.id ?? item.question} className="border-b border-outline-variant/20 pb-6">
+                  <p className="font-headline font-bold mb-2">{item.question}</p>
+                  <p className="text-on-surface-variant text-sm mb-2">{item.answer}</p>
+                  <p className="text-xs text-outline uppercase tracking-widest">Support</p>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </StorefrontMain>
     </StorefrontShell>
   );
@@ -224,11 +406,52 @@ export const ProductQuestionsPage = () => {
 
 /* ── Saved items + recently viewed (catalog /saved-items) ── */
 export const SavedItemsPage = () => {
-  const wishlist = useCustomerStore((s) => s.wishlist);
+  const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
+  const localWishlistIds = useCustomerStore((s) => s.wishlist);
   const recentSlugs = useCustomerStore((s) => s.recentlyViewedProductSlugs);
   const clearRecent = useCustomerStore((s) => s.clearRecentlyViewed);
-  const wishItems = allProducts.filter((p) => wishlist.includes(p.id));
-  const recentItems = recentSlugs.map((slug) => productsBySlug[slug]).filter(Boolean);
+
+  const remoteWishlistQuery = useQuery({
+    queryKey: ["customer-wishlist"],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listWishlist();
+      return data as { items?: unknown[] };
+    },
+    enabled: isAuthenticated,
+    staleTime: 20_000
+  });
+
+  const guestWishlistQuery = useQuery({
+    queryKey: ["customer-saved-wishlist-local", [...localWishlistIds].sort().join(",")],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listProducts({ page: 1, page_size: 100, sort: "newest" });
+      const cards = mapStorefrontProductCards(data.items ?? []);
+      const set = new Set(localWishlistIds);
+      return cards.filter((p) => set.has(p.id));
+    },
+    enabled: !isAuthenticated && localWishlistIds.length > 0,
+    staleTime: 30_000
+  });
+
+  const wishItems: Product[] = isAuthenticated
+    ? (remoteWishlistQuery.data?.items ?? [])
+        .map(mapWishlistApiItemToProduct)
+        .filter((p): p is Product => Boolean(p))
+    : guestWishlistQuery.data ?? [];
+
+  const recentQueries = useQueries({
+    queries: recentSlugs.slice(0, 12).map((slug) => ({
+      queryKey: ["customer-product-detail", slug],
+      queryFn: async () => {
+        const { data } = await customerBackendApi.getProduct(slug);
+        return mapPublicProductDetailToProduct(data);
+      },
+      enabled: Boolean(slug),
+      staleTime: 120_000
+    }))
+  });
+
+  const recentItems = recentQueries.map((r) => r.data).filter((p): p is Product => Boolean(p));
 
   return (
     <StorefrontShell>
@@ -253,7 +476,7 @@ export const SavedItemsPage = () => {
               </button>
             )}
           </div>
-          {recentItems.length === 0 ? (
+          {recentSlugs.length === 0 ? (
             <p className="text-on-surface-variant text-sm py-12 text-center bg-surface-container-low rounded-2xl">
               No recent items yet. Browse the{" "}
               <Link to="/shop" className="text-secondary font-bold underline underline-offset-4">
@@ -261,15 +484,22 @@ export const SavedItemsPage = () => {
               </Link>
               .
             </p>
+          ) : recentQueries.some((q) => q.isPending) ? (
+            <p className="text-on-surface-variant text-sm py-8">Loading recent items…</p>
+          ) : recentItems.length === 0 ? (
+            <p className="text-on-surface-variant text-sm py-12 text-center bg-surface-container-low rounded-2xl">
+              Recent products are no longer available.{" "}
+              <Link to="/shop" className="text-secondary font-bold underline underline-offset-4">
+                Browse shop
+              </Link>
+            </p>
           ) : (
             <div className="flex overflow-x-auto no-scrollbar gap-4 pb-2 snap-x">
-              {recentItems.map((p) =>
-                p ? (
-                  <div key={p.slug} className="flex-shrink-0 w-44 snap-start">
-                    <ProductCard product={p} />
-                  </div>
-                ) : null
-              )}
+              {recentItems.map((p) => (
+                <div key={p.slug} className="flex-shrink-0 w-44 snap-start">
+                  <ProductCard product={p} />
+                </div>
+              ))}
             </div>
           )}
         </section>
@@ -281,7 +511,11 @@ export const SavedItemsPage = () => {
               Open full wishlist
             </Link>
           </div>
-          {wishItems.length === 0 ? (
+          {isAuthenticated && remoteWishlistQuery.isPending ? (
+            <p className="text-on-surface-variant text-sm py-8">Loading wishlist…</p>
+          ) : !isAuthenticated && localWishlistIds.length > 0 && guestWishlistQuery.isPending ? (
+            <p className="text-on-surface-variant text-sm py-8">Loading wishlist…</p>
+          ) : wishItems.length === 0 ? (
             <p className="text-on-surface-variant text-sm py-12 text-center bg-surface-container-low rounded-2xl">
               Nothing saved. Tap the heart on any product to add it here.
             </p>

@@ -1,9 +1,13 @@
 import type React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Icon } from "@/components/Icon";
 import { formatGhs } from "@/lib/currency";
 import { neutralFieldClass } from "@/lib/form-field-styles";
-import { useCustomerStore } from "@/lib/store/customer-store";
+import { customerBackendApi } from "@/lib/api/customer-backend-api";
+import { CommerceApiError } from "@/lib/api/commerce-fetch";
+import { useWishlistActions } from "@/hooks/use-wishlist-actions";
 import type { Product } from "@/lib/data/customer-mock";
 
 /* ── input ── */
@@ -19,10 +23,16 @@ export const FieldLabel = ({ htmlFor, children }: { htmlFor?: string; children: 
 
 /* ── product card ── matches home_page/code.html exactly ── */
 export const ProductCard = ({ product }: { product: Product }) => {
-  const addToCart = useCustomerStore((s) => s.addToCart);
-  const wishlist = useCustomerStore((s) => s.wishlist);
-  const toggleWishlist = useCustomerStore((s) => s.toggleWishlist);
-  const inWishlist = wishlist.includes(product.id);
+  const queryClient = useQueryClient();
+  const { inWishlist, toggle } = useWishlistActions();
+  const heartOn = inWishlist(product.id);
+  const [cartBusy, setCartBusy] = useState(false);
+  const [cartError, setCartError] = useState<string | null>(null);
+
+  const variantId =
+    "defaultVariantId" in product && typeof (product as { defaultVariantId?: string }).defaultVariantId === "string"
+      ? (product as { defaultVariantId?: string }).defaultVariantId
+      : null;
 
   const stars = Array.from({ length: 5 }, (_, i) => i < Math.round(product.rating ?? 4));
 
@@ -47,14 +57,31 @@ export const ProductCard = ({ product }: { product: Product }) => {
           </div>
         )}
         <button
-          onClick={() => toggleWishlist(product.id)}
+          type="button"
+          onClick={() => void toggle(product)}
           className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
         >
-          <Icon name="favorite" filled={inWishlist} className={inWishlist ? "text-error" : "text-on-surface"} />
+          <Icon name="favorite" filled={heartOn} className={heartOn ? "text-error" : "text-on-surface"} />
         </button>
         <button
-          onClick={() => addToCart({ productId: product.id, variantId: product.id, quantity: 1, price: product.price, name: product.name, imageUrl: product.imageUrl })}
-          className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+          type="button"
+          disabled={!variantId || cartBusy}
+          title={cartError ?? (!variantId ? "Open product to choose options" : "Add to bag")}
+          onClick={async () => {
+            if (!variantId) return;
+            setCartBusy(true);
+            setCartError(null);
+            try {
+              await customerBackendApi.addCartItem({ variantId, quantity: 1 });
+              await queryClient.invalidateQueries({ queryKey: ["customer-cart-eval"] });
+            } catch (error) {
+              const message = error instanceof CommerceApiError ? error.message : "Could not add to bag.";
+              setCartError(message);
+            } finally {
+              setCartBusy(false);
+            }
+          }}
+          className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg disabled:opacity-40"
         >
           <Icon name="add_shopping_cart" className="text-on-surface" />
         </button>
@@ -217,11 +244,38 @@ const statusStyles: Record<string, string> = {
   Delivered: "bg-surface-container-high text-on-surface-variant",
   Cancelled: "bg-error-container text-on-error-container",
   Returned: "bg-surface-container-high text-on-surface-variant",
+  DRAFT: "bg-surface-container-high text-on-surface-variant",
+  PENDING_PAYMENT: "bg-tertiary-fixed text-on-tertiary-fixed",
+  CONFIRMED: "bg-tertiary-fixed text-on-tertiary-fixed",
+  PROCESSING: "bg-tertiary-fixed text-on-tertiary-fixed",
+  COMPLETED: "bg-surface-container-high text-on-surface-variant",
+  CANCELLED: "bg-error-container text-on-error-container",
+  CLOSED: "bg-surface-container-high text-on-surface-variant"
+};
+
+const orderStatusBadgeText = (status: string) => {
+  const map: Record<string, string> = {
+    DRAFT: "Draft",
+    PENDING_PAYMENT: "Pending payment",
+    CONFIRMED: "Confirmed",
+    PROCESSING: "Processing",
+    COMPLETED: "Completed",
+    CANCELLED: "Cancelled",
+    CLOSED: "Closed"
+  };
+  return (
+    map[status] ??
+    status
+      .toLowerCase()
+      .split("_")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ")
+  );
 };
 
 export const OrderStatusBadge = ({ status }: { status: string }) => (
   <span className={`text-[10px] uppercase tracking-widest font-black px-2 py-1 rounded ${statusStyles[status] ?? "bg-surface-container-high text-on-surface-variant"}`}>
-    {status}
+    {orderStatusBadgeText(status)}
   </span>
 );
 

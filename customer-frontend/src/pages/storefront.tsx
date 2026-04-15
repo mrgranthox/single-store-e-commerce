@@ -1,26 +1,24 @@
 import type { FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { StorefrontMain, StorefrontShell, storefrontScrollRegionClasses } from "@/components/layout";
 import { ProductCard, StarRating, TrustBadge } from "@/components/ui";
 import { Icon } from "@/components/Icon";
-import {
-  brandDirectory,
-  brandDirectoryBySlug,
-  brandSlugFromName,
-  campaigns,
-  featuredProducts,
-  allProducts,
-  productsBySlug,
-  productsFromSlugs,
-  campaignBySlug,
-} from "@/lib/data/customer-mock";
 import { customerApi } from "@/lib/api/customer";
+import { customerBackendApi } from "@/lib/api/customer-backend-api";
+import { CommerceApiError } from "@/lib/api/commerce-fetch";
+import {
+  mapPublicProductDetailToProduct,
+  mapStorefrontProductCards,
+  mapWishlistApiItemToProduct,
+  slugifyBrand
+} from "@/lib/catalog/storefront-mappers";
 import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
+import type { Product } from "@/lib/data/customer-mock";
 import { neutralFieldClass } from "@/lib/form-field-styles";
-import { searchCatalog } from "@/lib/catalog-search";
+import { useWishlistActions } from "@/hooks/use-wishlist-actions";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const ShellMain = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
@@ -613,6 +611,25 @@ export const HomePage = () => {
 export const ShopAllPage = () => {
   const [sort, setSort] = useState("featured");
 
+  const listQuery = useQuery({
+    queryKey: ["customer-shop-all", sort],
+    queryFn: async () => {
+      const sortParam =
+        sort === "price_asc"
+          ? ({ sortBy: "title" as const, sortOrder: "asc" as const })
+          : sort === "price_desc"
+            ? ({ sortBy: "title" as const, sortOrder: "desc" as const })
+            : ({ sort: "newest" as const });
+      const { data } = await customerBackendApi.listProducts({
+        page: 1,
+        page_size: 48,
+        ...sortParam
+      });
+      return mapStorefrontProductCards(data.items ?? []);
+    },
+    staleTime: 30_000
+  });
+
   return (
     <ShellMain>
         <header className="mb-10 md:mb-16">
@@ -663,11 +680,21 @@ export const ShopAllPage = () => {
             </select>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-          {allProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {listQuery.isPending ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 animate-pulse">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
+            ))}
+          </div>
+        ) : listQuery.isError ? (
+          <p className="text-error text-sm">Could not load products. Please try again.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+            {listQuery.data?.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
     </ShellMain>
   );
 };
@@ -677,28 +704,61 @@ export const ShopAllPage = () => {
 ───────────────────────────────────────────── */
 export const CategoryPage = () => {
   const { categorySlug } = useParams();
-  const category = categorySlug ?? "all";
-  const label = category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, " ");
-  const filtered = allProducts.filter((p) =>
-    category === "all" ? true : p.category.toLowerCase().includes(category.toLowerCase())
-  );
+  const slug = categorySlug ?? "";
+  const label = slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : "Category";
+
+  const categoryQuery = useQuery({
+    queryKey: ["customer-category-products", slug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listCategoryProducts(slug, { page: 1, page_size: 48 });
+      return data as { category?: { name?: string | null }; items?: unknown[] };
+    },
+    enabled: Boolean(slug),
+    staleTime: 30_000
+  });
+
+  const displayName =
+    (typeof categoryQuery.data?.category === "object" &&
+      categoryQuery.data?.category &&
+      "name" in categoryQuery.data.category &&
+      typeof (categoryQuery.data.category as { name?: string }).name === "string" &&
+      (categoryQuery.data.category as { name: string }).name.trim()) ||
+    label;
+  const items = mapStorefrontProductCards(categoryQuery.data?.items ?? []);
 
   return (
     <ShellMain>
         <nav className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-label tracking-widest uppercase text-outline mb-6 md:mb-10">
           <Link className="hover:text-secondary transition-colors" to="/">Home</Link>
           <Icon name="chevron_right" className="text-[10px]" />
-          <span className="text-on-surface">{label}</span>
+          <span className="text-on-surface">{displayName}</span>
         </nav>
         <header className="mb-10 md:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-background mb-4">{label}</h1>
-          <p className="text-on-surface-variant">{filtered.length} items</p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-background mb-4">{displayName}</h1>
+          <p className="text-on-surface-variant">
+            {categoryQuery.isPending ? "Loading…" : `${items.length} items`}
+          </p>
         </header>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-          {(filtered.length > 0 ? filtered : allProducts).map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {categoryQuery.isPending ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 animate-pulse">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
+            ))}
+          </div>
+        ) : categoryQuery.isError ? (
+          <div className="rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-8 text-center">
+            <p className="text-on-surface-variant mb-4">This category could not be loaded.</p>
+            <Link to="/shop" className="text-secondary font-label font-bold text-sm uppercase tracking-widest underline">
+              Shop all
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+            {items.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
     </ShellMain>
   );
 };
@@ -708,21 +768,61 @@ export const CategoryPage = () => {
 ───────────────────────────────────────────── */
 export const ProductDetailPage = () => {
   const { productSlug } = useParams();
-  const product = productSlug ? productsBySlug[productSlug] : undefined;
-  const addToCart = useCustomerStore((s) => s.addToCart);
-  const wishlist = useCustomerStore((s) => s.wishlist);
-  const toggleWishlist = useCustomerStore((s) => s.toggleWishlist);
+  const queryClient = useQueryClient();
   const addRecentlyViewed = useCustomerStore((s) => s.addRecentlyViewed);
-  const inWishlist = product ? wishlist.includes(product.id) : false;
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState(0);
+  const { inWishlist, toggle } = useWishlistActions();
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"description" | "specs" | "shipping">("description");
+  const [cartBusy, setCartBusy] = useState(false);
+  const [cartErr, setCartErr] = useState<string | null>(null);
+
+  const detailQuery = useQuery({
+    queryKey: ["customer-product-detail", productSlug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.getProduct(productSlug!);
+      return data;
+    },
+    enabled: Boolean(productSlug),
+    staleTime: 30_000
+  });
+
+  const product = useMemo(
+    () => (detailQuery.data ? mapPublicProductDetailToProduct(detailQuery.data) : null),
+    [detailQuery.data]
+  );
+
+  const relatedProducts = useMemo(() => {
+    if (!detailQuery.data || typeof detailQuery.data !== "object") return [] as Product[];
+    const rp = (detailQuery.data as { relatedProducts?: unknown[] }).relatedProducts;
+    return mapStorefrontProductCards(Array.isArray(rp) ? rp : []);
+  }, [detailQuery.data]);
+
+  const availabilityMessage: string | undefined = (() => {
+    if (!detailQuery.data || typeof detailQuery.data !== "object") return undefined;
+    const msg = (detailQuery.data as { availability?: { message?: string } }).availability?.message;
+    const s = typeof msg === "string" ? msg.trim() : "";
+    return s || undefined;
+  })();
 
   useEffect(() => {
-    if (productSlug && productsBySlug[productSlug]) addRecentlyViewed(productSlug);
+    if (productSlug) addRecentlyViewed(productSlug);
   }, [productSlug, addRecentlyViewed]);
 
-  if (!product) {
+  useEffect(() => {
+    if (!product) return;
+    const v = product.pdpVariants?.find((x) => x.inStock) ?? product.pdpVariants?.[0];
+    setSelectedVariantId(v?.id ?? product.defaultVariantId ?? null);
+  }, [product?.id, product?.pdpVariants, product?.defaultVariantId]);
+
+  if (detailQuery.isPending || !productSlug) {
+    return (
+      <ShellMain>
+        <div className="py-24 text-center text-on-surface-variant">Loading product…</div>
+      </ShellMain>
+    );
+  }
+
+  if (detailQuery.isError || !product) {
     return (
       <ShellMain>
         <div className="py-20 text-center">
@@ -827,10 +927,12 @@ export const ProductDetailPage = () => {
                   )}
                 </div>
                 <div className="sm:ml-auto sm:text-right pt-1 sm:pt-0 border-t border-outline-variant/15 sm:border-0">
-                  <span className="text-[10px] font-label font-bold text-error uppercase tracking-widest inline-flex items-center gap-1 sm:justify-end">
-                    <span className="w-1.5 h-1.5 rounded-full bg-error animate-pulse shrink-0" />
-                    Only 2 Left
-                  </span>
+                  {availabilityMessage ? (
+                    <span className="text-[10px] font-label font-bold text-error uppercase tracking-widest inline-flex items-center gap-1 sm:justify-end">
+                      <span className="w-1.5 h-1.5 rounded-full bg-error animate-pulse shrink-0" />
+                      {availabilityMessage}
+                    </span>
+                  ) : null}
                 </div>
               </div>
 
@@ -839,19 +941,15 @@ export const ProductDetailPage = () => {
                 <div className="mb-8">
                   <div className="flex justify-between items-end mb-4">
                     <span className="text-xs font-label font-bold uppercase tracking-widest">
-                      Color: <span className="text-outline font-normal">{product.colorVariants[selectedColor].name}</span>
+                      Color: <span className="text-outline font-normal">{product.colorVariants[0].name}</span>
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {product.colorVariants.map((c, i) => (
                       <button
                         key={i}
-                        onClick={() => setSelectedColor(i)}
-                        className={`w-10 h-10 rounded-full border-2 transition-all ${
-                          i === selectedColor
-                            ? "border-on-surface ring-2 ring-offset-2 ring-on-surface"
-                            : "border-transparent hover:border-outline-variant"
-                        }`}
+                        type="button"
+                        className="w-10 h-10 rounded-full border-2 border-on-surface ring-2 ring-offset-2 ring-on-surface transition-all"
                         style={{ backgroundColor: c.hex }}
                       />
                     ))}
@@ -859,12 +957,40 @@ export const ProductDetailPage = () => {
                 </div>
               )}
 
-              {/* Sizes */}
-              {product.sizes && product.sizes.length > 0 && (
+              {/* Variants (API) or legacy sizes */}
+              {product.pdpVariants && product.pdpVariants.length > 1 ? (
+                <div className="mb-10">
+                  <div className="flex justify-between items-end mb-4">
+                    <span className="text-xs font-label font-bold uppercase tracking-widest">Options</span>
+                    <button type="button" className="text-[10px] font-label text-secondary underline underline-offset-2 uppercase tracking-widest font-bold">
+                      Size Guide
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
+                    {product.pdpVariants.map((pv) => (
+                      <button
+                        key={pv.id}
+                        type="button"
+                        disabled={!pv.inStock}
+                        onClick={() => pv.inStock && setSelectedVariantId(pv.id)}
+                        className={`py-3 px-2 text-xs font-label border transition-colors text-center ${
+                          !pv.inStock
+                            ? "border-outline-variant opacity-40 cursor-not-allowed line-through"
+                            : selectedVariantId === pv.id
+                              ? "border-on-surface bg-on-surface text-white"
+                              : "border-outline-variant hover:border-on-surface"
+                        }`}
+                      >
+                        {pv.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : product.sizes && product.sizes.length > 0 ? (
                 <div className="mb-10">
                   <div className="flex justify-between items-end mb-4">
                     <span className="text-xs font-label font-bold uppercase tracking-widest">Size</span>
-                    <button className="text-[10px] font-label text-secondary underline underline-offset-2 uppercase tracking-widest font-bold">
+                    <button type="button" className="text-[10px] font-label text-secondary underline underline-offset-2 uppercase tracking-widest font-bold">
                       Size Guide
                     </button>
                   </div>
@@ -874,12 +1000,11 @@ export const ProductDetailPage = () => {
                       return (
                         <button
                           key={size}
-                          onClick={() => !oos && setSelectedSize(size)}
+                          type="button"
+                          disabled={oos}
                           className={`py-3 text-sm font-label border transition-colors ${
                             oos
                               ? "border-outline-variant opacity-40 cursor-not-allowed line-through"
-                              : selectedSize === size
-                              ? "border-on-surface bg-on-surface text-white"
                               : "border-outline-variant hover:border-on-surface"
                           }`}
                         >
@@ -889,35 +1014,44 @@ export const ProductDetailPage = () => {
                     })}
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* CTA */}
               <div className="flex flex-row gap-3 sm:gap-4 mb-10 items-stretch">
                 <button
                   type="button"
-                  onClick={() =>
-                    addToCart({
-                      productId: product.id,
-                      variantId: `${product.id}-${selectedSize ?? "default"}`,
-                      quantity: 1,
-                      price: product.price,
-                      name: product.name,
-                      imageUrl: product.imageUrl,
-                    })
-                  }
-                  className="flex-1 min-w-0 min-h-[3.5rem] sm:min-h-[3.75rem] bg-primary text-on-primary py-3 sm:py-4 rounded-sm font-label font-bold uppercase tracking-widest hover:bg-secondary transition-all active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm md:text-base px-2 sm:px-4"
+                  disabled={!selectedVariantId || cartBusy}
+                  onClick={async () => {
+                    if (!selectedVariantId) return;
+                    setCartBusy(true);
+                    setCartErr(null);
+                    try {
+                      await customerBackendApi.addCartItem({ variantId: selectedVariantId, quantity: 1 });
+                      await queryClient.invalidateQueries({ queryKey: ["customer-cart-eval"] });
+                    } catch (e) {
+                      setCartErr(e instanceof CommerceApiError ? e.message : "Could not add to bag.");
+                    } finally {
+                      setCartBusy(false);
+                    }
+                  }}
+                  className="flex-1 min-w-0 min-h-[3.5rem] sm:min-h-[3.75rem] bg-primary text-on-primary py-3 sm:py-4 rounded-sm font-label font-bold uppercase tracking-widest hover:bg-secondary transition-all active:scale-[0.98] flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm md:text-base px-2 sm:px-4 disabled:opacity-50"
                 >
                   <Icon name="shopping_bag" className="shrink-0" />
                   <span className="text-center leading-tight">Add to Bag</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => toggleWishlist(product.id)}
+                  onClick={() => void toggle(product)}
                   className="shrink-0 w-14 min-h-[3.5rem] sm:w-16 sm:min-h-[3.75rem] border border-outline-variant flex items-center justify-center hover:bg-surface-container-low transition-colors group"
                 >
-                  <Icon name="favorite" filled={inWishlist} className={`group-hover:text-error transition-colors ${inWishlist ? "text-error" : ""}`} />
+                  <Icon
+                    name="favorite"
+                    filled={inWishlist(product.id)}
+                    className={`group-hover:text-error transition-colors ${inWishlist(product.id) ? "text-error" : ""}`}
+                  />
                 </button>
               </div>
+              {cartErr ? <p className="text-error text-xs mb-4">{cartErr}</p> : null}
 
               {/* Trust Cues */}
               <div className="bg-surface-container-low p-4 sm:p-6 rounded-sm space-y-4">
@@ -1027,7 +1161,7 @@ export const ProductDetailPage = () => {
             <Link to="/shop" className="text-sm font-label font-bold uppercase tracking-widest underline underline-offset-8 decoration-secondary shrink-0">View Collection</Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {allProducts.filter((p) => p.id !== product.id).slice(0, 4).map((p) => (
+            {(relatedProducts.length > 0 ? relatedProducts : []).slice(0, 4).map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
@@ -1048,7 +1182,29 @@ export const SearchPage = () => {
     setDraft(qParam);
   }, [qParam]);
 
-  const results = useMemo(() => searchCatalog(allProducts, qParam), [qParam]);
+  const browseQuery = useQuery({
+    queryKey: ["customer-search-browse"],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listProducts({ page: 1, page_size: 48, sort: "newest" });
+      return mapStorefrontProductCards(data.items ?? []);
+    },
+    enabled: !qParam,
+    staleTime: 60_000
+  });
+
+  const searchQuery = useQuery({
+    queryKey: ["customer-search", qParam],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.searchProducts({ q: qParam, page: 1, page_size: 48 });
+      return mapStorefrontProductCards(data.items ?? []);
+    },
+    enabled: Boolean(qParam),
+    staleTime: 30_000
+  });
+
+  const browseProducts = browseQuery.data ?? [];
+  const results = searchQuery.data ?? [];
+  const totalIndexed = browseProducts.length;
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -1101,8 +1257,13 @@ export const SearchPage = () => {
               </button>
             </div>
             <p className="mt-2 text-xs text-on-surface-variant">
-              {allProducts.length} products indexed
-              {qParam ? ` · ${results.length} match${results.length === 1 ? "" : "es"}` : ""}
+              {qParam
+                ? searchQuery.isPending
+                  ? "Searching…"
+                  : `${results.length} match${results.length === 1 ? "" : "es"}`
+                : browseQuery.isPending
+                  ? "Loading catalogue…"
+                  : `${totalIndexed} products indexed`}
             </p>
           </form>
         </div>
@@ -1114,11 +1275,19 @@ export const SearchPage = () => {
                 Browse everything
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16">
-                {allProducts.map((p) => (
+                {browseProducts.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
             </>
+          ) : searchQuery.isError ? (
+            <div className="text-center py-12 text-error text-sm">Search failed. Try again in a moment.</div>
+          ) : searchQuery.isPending ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16 animate-pulse">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
+              ))}
+            </div>
           ) : results.length > 0 ? (
             <>
               <h2 className="font-headline font-bold text-lg sm:text-xl text-on-background mb-4 sm:mb-6">
@@ -1166,12 +1335,55 @@ export const SearchPage = () => {
 ───────────────────────────────────────────── */
 export const CampaignPage = () => {
   const { campaignSlug } = useParams();
-  const campaign = campaignBySlug(campaignSlug);
-  if (!campaign) {
-    return <Navigate to={`/campaigns/${campaigns[0].slug}`} replace />;
+  const slug = campaignSlug ?? "";
+
+  const campaignQuery = useQuery({
+    queryKey: ["customer-campaign", slug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.getCampaign(slug);
+      return data as { entity?: Record<string, unknown> };
+    },
+    enabled: Boolean(slug),
+    retry: false
+  });
+
+  const entity = campaignQuery.data?.entity;
+  const heroBanner = entity?.heroBanner as { mediaUrl?: string | null; title?: string | null } | undefined;
+  const heroUrl =
+    heroBanner?.mediaUrl?.trim() ||
+    "https://placehold.co/1600x900/181b25/737685/png?text=Campaign";
+  const title = typeof entity?.name === "string" ? entity.name : "Campaign";
+  const subtitle =
+    (typeof heroBanner?.title === "string" && heroBanner.title) ||
+    (entity?.promotion && typeof (entity.promotion as { name?: string }).name === "string"
+      ? (entity.promotion as { name: string }).name
+      : "Limited-time offers from our catalogue.");
+
+  const gridQuery = useQuery({
+    queryKey: ["customer-campaign-grid", slug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listProducts({ page: 1, page_size: 12, sort: "newest" });
+      return mapStorefrontProductCards(data.items ?? []);
+    },
+    enabled: Boolean(slug) && campaignQuery.isSuccess,
+    staleTime: 30_000
+  });
+
+  if (campaignQuery.isPending) {
+    return (
+      <StorefrontShell>
+        <main className={`${storefrontScrollRegionClasses} bg-surface text-on-background font-body min-w-0 flex items-center justify-center`}>
+          <p className="text-on-surface-variant">Loading campaign…</p>
+        </main>
+      </StorefrontShell>
+    );
   }
-  const gridProducts = productsFromSlugs(campaign.products);
-  const showProducts = gridProducts.length > 0 ? gridProducts : allProducts;
+
+  if (campaignQuery.isError || !entity) {
+    return <Navigate to="/shop" replace />;
+  }
+
+  const showProducts = gridQuery.data ?? [];
 
   return (
     <StorefrontShell>
@@ -1179,7 +1391,7 @@ export const CampaignPage = () => {
         <section className="relative w-full min-h-[42dvh] sm:min-h-[48dvh] md:min-h-[56dvh] lg:h-[min(72dvh,640px)] lg:min-h-0 overflow-hidden bg-primary-container">
           <img
             className="absolute inset-0 w-full h-full object-cover object-center opacity-55 sm:opacity-60"
-            src={campaign.heroImageUrl}
+            src={heroUrl}
             alt="" loading="lazy" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/90 md:from-primary-container/82 via-primary-container/35 md:via-transparent to-transparent" />
           <div className="relative h-full min-h-[42dvh] sm:min-h-[48dvh] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-start py-10 sm:py-14 md:py-16 lg:py-0">
@@ -1187,9 +1399,9 @@ export const CampaignPage = () => {
               Seasonal campaign
             </span>
             <h1 className="text-white font-headline text-[1.75rem] leading-tight sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter mb-3 sm:mb-4 md:mb-6 max-w-[18ch] sm:max-w-none">
-              {campaign.title}
+              {title}
             </h1>
-            <p className="text-white/75 mb-6 md:mb-8 font-light leading-relaxed max-w-lg text-sm sm:text-base">{campaign.subtitle}</p>
+            <p className="text-white/75 mb-6 md:mb-8 font-light leading-relaxed max-w-lg text-sm sm:text-base">{subtitle}</p>
             <Link
               to="/shop"
               className="inline-flex items-center justify-center bg-secondary text-on-secondary px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-label font-bold text-xs sm:text-sm uppercase tracking-widest hover:opacity-95 transition-opacity mb-2 md:mb-0 w-full sm:w-auto text-center"
@@ -1203,9 +1415,7 @@ export const CampaignPage = () => {
             <div>
               <h2 className="font-headline text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-on-background">In this campaign</h2>
               <p className="text-on-surface-variant text-sm sm:text-base mt-1">
-                {gridProducts.length > 0
-                  ? "Pieces curated for this story — tracked delivery & Tees packaging."
-                  : "Browse the full preview catalogue."}
+                Fresh arrivals and highlights — add to bag from the grid below.
               </p>
             </div>
             <Link
@@ -1215,11 +1425,19 @@ export const CampaignPage = () => {
               Search catalogue
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16">
-            {showProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+          {gridQuery.isPending ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16 animate-pulse">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16">
+              {showProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </StorefrontShell>
@@ -1230,16 +1448,54 @@ export const CampaignPage = () => {
    WISHLIST PAGE
 ───────────────────────────────────────────── */
 export const WishlistPage = () => {
-  const wishlist = useCustomerStore((s) => s.wishlist);
-  const items = allProducts.filter((p) => wishlist.includes(p.id));
+  const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
+  const localWishlistIds = useCustomerStore((s) => s.wishlist);
+
+  const remoteQuery = useQuery({
+    queryKey: ["customer-wishlist"],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listWishlist();
+      return data as { items?: unknown[] };
+    },
+    enabled: isAuthenticated,
+    staleTime: 20_000
+  });
+
+  const localGridQuery = useQuery({
+    queryKey: ["customer-wishlist-local-grid", [...localWishlistIds].sort().join(",")],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listProducts({ page: 1, page_size: 100, sort: "newest" });
+      const cards = mapStorefrontProductCards(data.items ?? []);
+      const set = new Set(localWishlistIds);
+      return cards.filter((p) => set.has(p.id));
+    },
+    enabled: !isAuthenticated && localWishlistIds.length > 0,
+    staleTime: 30_000
+  });
+
+  const serverItems =
+    (remoteQuery.data?.items ?? [])
+      .map(mapWishlistApiItemToProduct)
+      .filter((p): p is Product => Boolean(p)) ?? [];
+  const guestItems = localGridQuery.data ?? [];
+  const items = isAuthenticated ? serverItems : guestItems;
+  const loading = isAuthenticated ? remoteQuery.isPending : localWishlistIds.length > 0 && localGridQuery.isPending;
 
   return (
     <ShellMain>
         <header className="mb-10 md:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter mb-4">Wishlist</h1>
-          <p className="text-on-surface-variant">{items.length} saved item{items.length !== 1 ? "s" : ""}</p>
+          <p className="text-on-surface-variant">
+            {loading ? "Loading…" : `${items.length} saved item${items.length !== 1 ? "s" : ""}`}
+          </p>
         </header>
-        {items.length > 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 animate-pulse">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
+            ))}
+          </div>
+        ) : items.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
             {items.map((p) => (
               <ProductCard key={p.id} product={p} />
@@ -1249,10 +1505,24 @@ export const WishlistPage = () => {
           <div className="text-center py-32">
             <Icon name="favorite_border" className="text-6xl text-outline mb-6" />
             <h2 className="font-headline text-2xl font-bold mb-4">Your wishlist is empty</h2>
-            <p className="text-on-surface-variant mb-8">Save items you love to revisit them anytime.</p>
-            <Link to="/shop" className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90">
-              Shop Now
-            </Link>
+            <p className="text-on-surface-variant mb-8">
+              {isAuthenticated
+                ? "Save items you love to revisit them anytime."
+                : "Sign in to sync your wishlist across devices, or save items while you browse."}
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link to="/shop" className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90">
+                Shop Now
+              </Link>
+              {!isAuthenticated ? (
+                <Link
+                  to="/login"
+                  className="border border-outline-variant px-8 py-3 rounded-md font-bold text-on-surface hover:border-secondary"
+                >
+                  Sign in
+                </Link>
+              ) : null}
+            </div>
           </div>
         )}
     </ShellMain>
@@ -1262,54 +1532,90 @@ export const WishlistPage = () => {
 /* ─────────────────────────────────────────────
    BRANDS DIRECTORY
 ───────────────────────────────────────────── */
-export const BrandsIndexPage = () => (
-  <ShellMain className="min-w-0">
-    <nav className="mb-6">
-      <Link to="/shop" className="inline-flex items-center gap-2 text-sm font-label font-bold uppercase tracking-widest text-secondary hover:underline underline-offset-4">
-        <Icon name="arrow_back" className="text-lg" />
-        Back to shop
-      </Link>
-    </nav>
-    <header className="mb-8 sm:mb-12 max-w-2xl">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-background mb-2">
-        Brands
-      </h1>
-      <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed">
-        Houses and studios behind the edit — each with a distinct point of view.
-      </p>
-    </header>
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
-      {brandDirectory.map((b) => (
-        <Link
-          key={b.slug}
-          to={`/brands/${b.slug}`}
-          className="group flex flex-col rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-container-lowest hover:border-secondary/25 hover:shadow-[0_20px_48px_rgba(11,28,48,0.08)] transition-all"
-        >
-          <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-container-low">
-            <img
-              src={b.heroImage}
-              alt=""
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-container/70 via-transparent to-transparent" />
-            <span className="absolute bottom-4 left-4 font-label text-[10px] uppercase tracking-[0.2em] text-white/90 font-bold">
-              Brand
-            </span>
-          </div>
-          <div className="p-5 sm:p-6 flex flex-col flex-1">
-            <h2 className="font-headline text-xl sm:text-2xl font-extrabold text-on-background group-hover:text-secondary transition-colors">
-              {b.name}
-            </h2>
-            <p className="text-on-surface-variant text-sm mt-2 leading-relaxed flex-1">{b.tagline}</p>
-            <span className="mt-4 inline-flex items-center gap-1 text-secondary font-label font-bold text-xs uppercase tracking-widest">
-              View collection
-              <Icon name="arrow_forward" className="text-sm group-hover:translate-x-0.5 transition-transform" />
-            </span>
-          </div>
+export const BrandsIndexPage = () => {
+  const productsQuery = useQuery({
+    queryKey: ["customer-brands-index"],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listProducts({ page: 1, page_size: 120, sort: "newest" });
+      return mapStorefrontProductCards(data.items ?? []);
+    },
+    staleTime: 60_000
+  });
+
+  const brands = useMemo(() => {
+    const map = new Map<string, { slug: string; name: string; hero: string; count: number }>();
+    for (const p of productsQuery.data ?? []) {
+      const name = p.brand?.trim() || "Other";
+      const slug = slugifyBrand(name);
+      const cur = map.get(slug);
+      if (!cur) {
+        map.set(slug, { slug, name, hero: p.imageUrl, count: 1 });
+      } else {
+        cur.count += 1;
+      }
+    }
+    return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+  }, [productsQuery.data]);
+
+  return (
+    <ShellMain className="min-w-0">
+      <nav className="mb-6">
+        <Link to="/shop" className="inline-flex items-center gap-2 text-sm font-label font-bold uppercase tracking-widest text-secondary hover:underline underline-offset-4">
+          <Icon name="arrow_back" className="text-lg" />
+          Back to shop
         </Link>
-      ))}
-    </div>
-  </ShellMain>
-);
+      </nav>
+      <header className="mb-8 sm:mb-12 max-w-2xl">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-background mb-2">
+          Brands
+        </h1>
+        <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed">
+          Houses and studios behind the edit — each with a distinct point of view.
+        </p>
+      </header>
+      {productsQuery.isPending ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 animate-pulse">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-64 rounded-2xl bg-surface-container-high" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+          {brands.map((b) => (
+            <Link
+              key={b.slug}
+              to={`/brands/${b.slug}`}
+              className="group flex flex-col rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-container-lowest hover:border-secondary/25 hover:shadow-[0_20px_48px_rgba(11,28,48,0.08)] transition-all"
+            >
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface-container-low">
+                <img
+                  src={b.hero}
+                  alt=""
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-container/70 via-transparent to-transparent" />
+                <span className="absolute bottom-4 left-4 font-label text-[10px] uppercase tracking-[0.2em] text-white/90 font-bold">
+                  Brand
+                </span>
+              </div>
+              <div className="p-5 sm:p-6 flex flex-col flex-1">
+                <h2 className="font-headline text-xl sm:text-2xl font-extrabold text-on-background group-hover:text-secondary transition-colors">
+                  {b.name}
+                </h2>
+                <p className="text-on-surface-variant text-sm mt-2 leading-relaxed flex-1">
+                  {b.count} piece{b.count === 1 ? "" : "s"} in catalogue
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1 text-secondary font-label font-bold text-xs uppercase tracking-widest">
+                  View collection
+                  <Icon name="arrow_forward" className="text-sm group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </ShellMain>
+  );
+};
 
 /* ─────────────────────────────────────────────
    BRAND DETAIL — full brand story + catalogue slice
@@ -1317,14 +1623,27 @@ export const BrandsIndexPage = () => (
 export const BrandPage = () => {
   const { brandSlug } = useParams();
   const slug = brandSlug ?? "";
-  const meta = brandDirectoryBySlug[slug];
   const titleCase = (s: string) =>
     s
       .split(/[-\s]+/)
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(" ");
-  const displayName = meta?.name ?? (titleCase(slug) || "Brand");
-  const brandProducts = allProducts.filter((p) => brandSlugFromName(p.brand ?? "Tees") === slug);
+
+  const brandQuery = useQuery({
+    queryKey: ["customer-brand-products", slug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listBrandProducts(slug, { page: 1, page_size: 48 });
+      return data as { brand?: { name?: string | null }; items?: unknown[] };
+    },
+    enabled: Boolean(slug),
+    retry: false,
+    staleTime: 30_000
+  });
+
+  const brandRec = brandQuery.data?.brand as { name?: string | null } | undefined;
+  const displayName = brandRec?.name?.trim() || titleCase(slug) || "Brand";
+  const brandProducts = mapStorefrontProductCards(brandQuery.data?.items ?? []);
+  const hero = brandProducts[0]?.imageUrl;
 
   return (
     <ShellMain className="min-w-0">
@@ -1342,7 +1661,10 @@ export const BrandPage = () => {
 
       <section className="relative w-full overflow-hidden rounded-2xl border border-outline-variant/20 bg-primary-container min-h-[38dvh] sm:min-h-[44dvh] md:min-h-[360px] mb-8 sm:mb-12">
         <img
-          src={meta?.heroImage ?? brandProducts[0]?.imageUrl ?? featuredProducts[0].imageUrl}
+          src={
+            hero ??
+            "https://placehold.co/1200x600/181b25/737685/png?text=Brand"
+          }
           alt=""
           className="absolute inset-0 h-full w-full object-cover object-center opacity-50" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/92 md:from-primary-container/88 via-primary-container/45 to-transparent" />
@@ -1354,23 +1676,16 @@ export const BrandPage = () => {
             {displayName}
           </h1>
           <p className="text-white/80 text-sm sm:text-base leading-relaxed max-w-xl">
-            {meta?.tagline ?? `Discover pieces from ${displayName} in our curated catalogue.`}
+            {`Discover pieces from ${displayName} in our curated catalogue.`}
           </p>
         </div>
       </section>
-
-      {meta && (
-        <section className="mb-10 sm:mb-14 max-w-3xl">
-          <h2 className="font-headline text-lg sm:text-xl font-bold text-on-background mb-3">The house</h2>
-          <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed">{meta.story}</p>
-        </section>
-      )}
 
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 sm:mb-8">
         <h2 className="font-headline text-lg sm:text-2xl font-extrabold text-on-background">
           Shop {displayName}
           <span className="block sm:inline sm:ml-2 text-on-surface-variant text-sm sm:text-base font-normal font-body mt-1 sm:mt-0">
-            {brandProducts.length} piece{brandProducts.length === 1 ? "" : "s"}
+            {brandQuery.isPending ? "…" : `${brandProducts.length} piece${brandProducts.length === 1 ? "" : "s"}`}
           </span>
         </h2>
         <Link
@@ -1381,7 +1696,20 @@ export const BrandPage = () => {
         </Link>
       </div>
 
-      {brandProducts.length > 0 ? (
+      {brandQuery.isPending ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16 animate-pulse">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
+          ))}
+        </div>
+      ) : brandQuery.isError ? (
+        <div className="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-10 text-center">
+          <p className="text-on-surface-variant text-sm sm:text-base mb-4">This brand could not be loaded.</p>
+          <Link to="/brands" className="text-secondary font-bold text-sm uppercase tracking-widest hover:underline">
+            All brands
+          </Link>
+        </div>
+      ) : brandProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16">
           {brandProducts.map((p) => (
             <ProductCard key={p.id} product={p} />

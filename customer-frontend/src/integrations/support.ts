@@ -58,7 +58,7 @@ export const submitSupportContact = async (input: SupportContactInput) => {
 
 export const submitProductInquiry = async (input: ProductInquiryInput) => {
   const response = await fetch(
-    new URL(`/api/products/${encodeURIComponent(input.productSlug)}/questions`, input.backendBaseUrl),
+    new URL(`/api/products/${encodeURIComponent(input.productSlug)}/inquiry`, input.backendBaseUrl),
     {
       method: "POST",
       headers: {

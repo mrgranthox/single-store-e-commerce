@@ -4,6 +4,8 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Icon } from "@/components/Icon";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
 import { neutralFieldClass } from "@/lib/form-field-styles";
+import { useCartItemCount } from "@/hooks/use-cart-summary";
+import { useCustomerSignOut } from "@/hooks/use-customer-sign-out";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const topNavIconBtn =
@@ -86,9 +88,9 @@ export const StorefrontMain = ({
    TOPNAVBAR — desktop: home_page; mobile: compact bar + drawer
 ───────────────────────────────────────────── */
 export const TopNavBar = () => {
-  const cartCount = useCustomerStore((s) => s.cart.reduce((sum, item) => sum + item.quantity, 0));
+  const cartCount = useCartItemCount();
   const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
-  const signOut = useCustomerStore((s) => s.signOut);
+  const signOut = useCustomerSignOut();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -195,7 +197,7 @@ export const TopNavBar = () => {
                     type="button"
                     className={topNavIconBtn}
                     aria-label="Sign out"
-                    onClick={signOut}
+                    onClick={() => void signOut()}
                   >
                     <Icon name="logout" className="text-[22px]" />
                   </button>
@@ -306,7 +308,7 @@ export const TopNavBar = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      signOut();
+                      void signOut();
                       closeMenu();
                     }}
                     className={drawerLinkIdle}
@@ -393,7 +395,7 @@ export const Footer = () => (
    MOBILE BOTTOM NAV — token-aligned tab bar
 ───────────────────────────────────────────── */
 export const BottomNavBar = () => {
-  const cartCount = useCustomerStore((s) => s.cart.reduce((sum, item) => sum + item.quantity, 0));
+  const cartCount = useCartItemCount();
 
   const scrollTabToTop = () => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -586,7 +588,7 @@ export const AccountMobileNav = () => (
 );
 
 export const AccountSidebar = () => {
-  const signOut = useCustomerStore((s) => s.signOut);
+  const signOut = useCustomerSignOut();
 
   return (
     <aside className="hidden md:flex flex-col w-64 shrink-0 border-r border-outline-variant/20 bg-surface-container-low/80 p-6 space-y-8 sticky top-[calc(4rem+env(safe-area-inset-top,0px))] self-start max-h-[calc(100dvh-5rem-env(safe-area-inset-top,0px))] overflow-y-auto">
@@ -623,7 +625,7 @@ export const AccountSidebar = () => {
         </NavLink>
         <button
           type="button"
-          onClick={signOut}
+          onClick={() => void signOut()}
           className="flex items-center gap-3 px-3 py-2.5 text-on-surface-variant font-headline font-medium text-sm hover:bg-surface-container rounded-xl transition-all w-full text-left"
         >
           <Icon name="logout" />

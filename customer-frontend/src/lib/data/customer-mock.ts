@@ -19,6 +19,10 @@ export interface Product {
   outOfStockSizes?: string[];
   inStock?: boolean;
   brand?: string;
+  /** When set (API-backed PLP), quick-add uses this variant id. */
+  defaultVariantId?: string | null;
+  /** When set (API PDP), variant selector maps to these ids for add-to-bag. */
+  pdpVariants?: Array<{ id: string; label: string; inStock: boolean }>;
 }
 
 export interface Order {

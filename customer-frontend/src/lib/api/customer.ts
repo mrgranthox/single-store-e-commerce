@@ -1,29 +1,8 @@
 import { getCustomerScreen } from "@/lib/contracts/customer-screen-catalog";
-import { campaigns, faqItems, featuredProducts, orders, pages, tickets } from "@/lib/data/customer-mock";
 import { fetchCustomerRuntimeConfig } from "@/integrations/backend-config";
 import { submitProductInquiry, submitSupportContact } from "@/integrations/support";
-
-const backendBaseUrl =
-  import.meta.env.VITE_BACKEND_BASE_URL?.trim() || window.location.origin;
-
-type ApiEnvelope<T> = { success: true; data: T };
-
-const readJson = async <T>(response: Response) => {
-  const payload = (await response.json()) as ApiEnvelope<T>;
-  if (!response.ok || payload.success !== true) {
-    throw new Error(`Request failed with status ${response.status}`);
-  }
-  return payload.data;
-};
-
-const safeFetch = async <T>(input: RequestInfo | URL, fallback: T) => {
-  try {
-    const response = await fetch(input, { headers: { accept: "application/json" } });
-    return await readJson<T>(response);
-  } catch {
-    return fallback;
-  }
-};
+import { commerceFetchJson, getBackendBaseUrl } from "@/lib/api/commerce-fetch";
+import { customerBackendApi } from "@/lib/api/customer-backend-api";
 
 export type HomepageProductCard = {
   id: string;
@@ -150,20 +129,27 @@ export type CustomerHomepagePayload = {
   };
 };
 
+const readHomepageEntity = async () => {
+  const response = await fetch(new URL("/api/content/homepage", getBackendBaseUrl()), {
+    headers: { accept: "application/json" }
+  });
+  const payload = (await response.json()) as { success?: boolean; data?: { entity: CustomerHomepagePayload } };
+  if (!response.ok || payload.success !== true || !payload.data?.entity) {
+    throw new Error(`Homepage request failed with status ${response.status}`);
+  }
+  return payload.data.entity;
+};
+
 export const customerApi = {
-  getHomepage: async () => {
-    const response = await fetch(new URL("/api/content/homepage", backendBaseUrl), {
-      headers: { accept: "application/json" }
-    });
-    return readJson<{ entity: CustomerHomepagePayload }>(response);
-  },
+  getHomepage: async () => ({ entity: await readHomepageEntity() }),
+
   getRuntimeConfig: async () => {
     try {
-      return await fetchCustomerRuntimeConfig(backendBaseUrl);
+      return await fetchCustomerRuntimeConfig(getBackendBaseUrl());
     } catch {
       return {
         surface: "customer" as const,
-        api: { baseUrl: backendBaseUrl, restBasePath: "/api" },
+        api: { baseUrl: getBackendBaseUrl(), restBasePath: "/api" },
         routes: {
           support: {
             contactPath: "/api/support/contact",
@@ -180,35 +166,59 @@ export const customerApi = {
       };
     }
   },
-  getProducts: (search?: string) => {
-    const filtered = search
-      ? featuredProducts.filter((product) =>
-          `${product.name} ${product.category} ${product.brand}`.toLowerCase().includes(search.toLowerCase())
-        )
-      : featuredProducts;
-    return safeFetch(
-      new URL(`/api/products${search ? `?query=${encodeURIComponent(search)}` : ""}`, backendBaseUrl),
-      filtered
-    );
+
+  getProducts: async (search?: string) => {
+    const { data } = await customerBackendApi.listProducts({
+      query: search,
+      page: 1,
+      page_size: 48
+    });
+    return data;
   },
+
   getProduct: async (slug: string) => {
-    const fallback = featuredProducts.find((product) => product.slug === slug) ?? featuredProducts[0];
-    return safeFetch(new URL(`/api/products/${slug}`, backendBaseUrl), fallback);
+    const { data } = await customerBackendApi.getProduct(slug);
+    return data;
   },
-  getOrders: () => safeFetch(new URL("/api/account/orders", backendBaseUrl), orders),
+
+  getOrders: async () => {
+    const { data } = await customerBackendApi.listOrders({ page: 1, page_size: 50 });
+    return data;
+  },
+
   getOrder: async (orderId: string) => {
-    const fallback = orders.find((order) => order.id === orderId) ?? orders[0];
-    return safeFetch(new URL(`/api/account/orders/${orderId}`, backendBaseUrl), fallback);
+    const { data } = await customerBackendApi.getOrder(orderId);
+    return data;
   },
-  getTickets: () => safeFetch(new URL("/api/account/support/tickets", backendBaseUrl), tickets),
+
+  getTickets: async () => {
+    const { data } = await customerBackendApi.listSupportTickets({ page: 1, page_size: 50 });
+    return data;
+  },
+
   getTicket: async (ticketId: string) => {
-    const fallback = tickets.find((ticket) => ticket.id === ticketId) ?? tickets[0];
-    return safeFetch(new URL(`/api/account/support/tickets/${ticketId}`, backendBaseUrl), fallback);
+    const { data } = await customerBackendApi.getSupportTicket(ticketId);
+    return data;
   },
-  getFaq: async () => faqItems,
-  getCampaign: async (slug: string) => campaigns.find((campaign) => campaign.slug === slug) ?? campaigns[0],
-  getPageContent: async (slug: keyof typeof pages) => pages[slug],
+
+  getFaq: async () => {
+    const { data } = await commerceFetchJson<unknown>("/api/help", { method: "GET" });
+    return data;
+  },
+
+  getCampaign: async (slug: string) => {
+    const { data } = await customerBackendApi.getCampaign(slug);
+    return data;
+  },
+
+  getPageContent: async (slug: string) => {
+    const { data } = await customerBackendApi.getPage(slug);
+    return data;
+  },
+
   getScreenMeta: async (screenId: Parameters<typeof getCustomerScreen>[0]) => getCustomerScreen(screenId),
+
   submitSupportContact: (payload: Parameters<typeof submitSupportContact>[0]) => submitSupportContact(payload),
+
   submitProductInquiry: (payload: Parameters<typeof submitProductInquiry>[0]) => submitProductInquiry(payload)
 };

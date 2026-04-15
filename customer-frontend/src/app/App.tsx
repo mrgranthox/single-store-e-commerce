@@ -1,8 +1,9 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ScrollToTop } from "@/app/ScrollToTop";
 import { PageLoader } from "@/app/PageLoader";
+import { useCustomerStore } from "@/lib/store/customer-store";
 
 // ---------------------------------------------------------------------------
 // Lazy route components — each barrel becomes a separate Vite chunk.
@@ -81,6 +82,14 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 1000 * 60 * 5, retry: 1 } },
 });
 
+const AuthHydration = () => {
+  const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
+  useEffect(() => {
+    hydrateAuth();
+  }, [hydrateAuth]);
+  return null;
+};
+
 const NotFoundPage = () => (
   <div className="min-h-screen bg-surface flex flex-col items-center justify-center text-center px-6">
     <span className="material-symbols-outlined text-6xl text-outline mb-6">sentiment_dissatisfied</span>
@@ -95,6 +104,7 @@ const NotFoundPage = () => (
 export const App = () => (
   <QueryClientProvider client={queryClient}>
     <BrowserRouter>
+      <AuthHydration />
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>

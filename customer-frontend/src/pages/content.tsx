@@ -1,17 +1,33 @@
+import type { ReactNode } from "react";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { TopNavBar, Footer, BottomNavBar } from "@/components/layout";
 import { Icon } from "@/components/Icon";
+import { formatIsoDate } from "@/lib/account/account-ui";
+import { customerBackendApi } from "@/lib/api/customer-backend-api";
+import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import { STORE_EMAIL_PRIVACY, STORE_EMAIL_SUPPORT, STORE_NAME_FULL } from "@/lib/brand";
 import { formatGhs } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 
-const PolicyLayout = ({ title, children }: { title: string; children: React.ReactNode }) => (
+const PolicyLayout = ({
+  title,
+  lastUpdatedLabel,
+  children
+}: {
+  title: string;
+  lastUpdatedLabel?: string | null;
+  children: React.ReactNode;
+}) => (
   <div className="bg-surface text-on-background font-body">
     <TopNavBar />
     <main className="pt-[calc(5rem+env(safe-area-inset-top,0px))] md:pt-24 pb-24 md:pb-20 max-w-3xl mx-auto px-4 sm:px-6 md:px-8">
       <header className="mb-8 md:mb-12">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-headline font-extrabold tracking-tighter mb-3">{title}</h1>
-        <p className="text-xs text-outline font-label uppercase tracking-widest">Last updated: January 1, 2024</p>
+        <p className="text-xs text-outline font-label uppercase tracking-widest">
+          Last updated: {lastUpdatedLabel ?? "January 1, 2024"}
+        </p>
       </header>
       <div className="prose max-w-none">{children}</div>
     </main>
@@ -27,89 +43,226 @@ const ProseSection = ({ title, text }: { title: string; text: string }) => (
   </div>
 );
 
+const renderCmsSections = (content: unknown): ReactNode => {
+  if (!content || typeof content !== "object") return null;
+  const c = content as Record<string, unknown>;
+  const sections = Array.isArray(c.sections) ? c.sections : null;
+  if (!sections) return null;
+  return sections
+    .map((raw, idx) => {
+      if (!raw || typeof raw !== "object") return null;
+      const s = raw as Record<string, unknown>;
+      const titleText = typeof s.title === "string" ? s.title : `Section ${idx + 1}`;
+      const bodyText =
+        typeof s.body === "string" ? s.body : typeof s.text === "string" ? s.text : typeof s.content === "string" ? s.content : "";
+      if (!bodyText) return null;
+      return <ProseSection key={`${titleText}-${idx}`} title={titleText} text={bodyText} />;
+    })
+    .filter(Boolean);
+};
+
+const CmsPolicyPage = ({ slug, title, fallback }: { slug: string; title: string; fallback: ReactNode }) => {
+  const { data, isPending, error } = useQuery({
+    queryKey: ["cms-page", slug],
+    queryFn: async () => {
+      const res = await customerBackendApi.getPage(slug);
+      return res.data as { entity: { title?: string | null; content?: unknown; updatedAt?: string } };
+    },
+    retry: false
+  });
+
+  const entity = error ? undefined : data?.entity;
+  const cmsBody = entity?.content ? renderCmsSections(entity.content) : null;
+  const heading = entity?.title?.trim() || title;
+  const updated =
+    entity?.updatedAt && !error ? formatIsoDate(entity.updatedAt) : error ? null : undefined;
+
+  return (
+    <PolicyLayout title={heading} lastUpdatedLabel={updated}>
+      {isPending ? <p className="text-on-surface-variant text-sm mb-6">Loading…</p> : null}
+      {cmsBody ? cmsBody : fallback}
+    </PolicyLayout>
+  );
+};
+
 /* ─────────────────────────────────────────────
    CONTACT PAGE
 ───────────────────────────────────────────── */
-export const ContactPage = () => (
-  <div className="bg-surface text-on-background font-body">
-    <TopNavBar />
-    <main className="pt-[calc(5rem+env(safe-area-inset-top,0px))] md:pt-24 pb-24 md:pb-20 max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-      <header className="mb-10 md:mb-16 text-center">
-        <span className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-4 block">Get in Touch</span>
-        <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-4">Contact Us</h1>
-        <p className="text-on-surface-variant max-w-xl mx-auto">
-          Our concierge team is here to help. We typically respond within 2-3 business hours.
-        </p>
-      </header>
+export const ContactPage = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("Order Support");
+  const [message, setMessage] = useState("");
+  const [done, setDone] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-        {/* Contact Form */}
-        <div>
-          <h2 className="font-headline font-bold text-2xl mb-8">Send a Message</h2>
-          <form className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {["First Name", "Last Name"].map((label) => (
-                <div key={label} className="space-y-2">
-                  <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">{label}</label>
-                  <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} type="text" />
+  const { data: contactPayload } = useQuery({
+    queryKey: ["storefront", "contact"],
+    queryFn: async () => {
+      const res = await customerBackendApi.getContactPage();
+      return res.data as { entity?: { title?: string | null; content?: unknown } };
+    },
+    retry: false
+  });
+
+  const intro =
+    typeof contactPayload?.entity?.content === "object" && contactPayload.entity.content !== null
+      ? String((contactPayload.entity.content as Record<string, unknown>).intro ?? "")
+      : "";
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const name = [firstName.trim(), lastName.trim()].filter(Boolean).join(" ");
+      await customerBackendApi.postPublicSupportContact({
+        name: name || undefined,
+        email: email.trim(),
+        subject,
+        message: message.trim(),
+        captchaToken: undefined
+      });
+    },
+    onSuccess: () => setDone(true),
+    onError: (err) => setFormError(err instanceof CommerceApiError ? err.message : "Could not send message.")
+  });
+
+  return (
+    <div className="bg-surface text-on-background font-body">
+      <TopNavBar />
+      <main className="pt-[calc(5rem+env(safe-area-inset-top,0px))] md:pt-24 pb-24 md:pb-20 max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
+        <header className="mb-10 md:mb-16 text-center">
+          <span className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-4 block">Get in Touch</span>
+          <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tighter mb-4">Contact Us</h1>
+          <p className="text-on-surface-variant max-w-xl mx-auto">
+            {intro || "Our concierge team is here to help. We typically respond within 2-3 business hours."}
+          </p>
+        </header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div>
+            <h2 className="font-headline font-bold text-2xl mb-8">Send a Message</h2>
+            {!done ? (
+              <form
+                className="space-y-6"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setFormError(null);
+                  if (!email.trim() || !message.trim()) {
+                    setFormError("Email and message are required.");
+                    return;
+                  }
+                  mutation.mutate();
+                }}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">First Name</label>
+                    <input
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`}
+                      type="text"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Last Name</label>
+                    <input
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`}
+                      type="text"
+                    />
+                  </div>
                 </div>
-              ))}
-            </div>
-            <div className="space-y-2">
-              <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Email</label>
-              <input className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`} type="email" />
-            </div>
-            <div className="space-y-2">
-              <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Subject</label>
-              <select className={`w-full rounded-lg py-3 px-4 ${neutralFieldClass}`}>
-                <option>Order Support</option>
-                <option>Returns & Refunds</option>
-                <option>Product Question</option>
-                <option>Styling Advice</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Message</label>
-              <textarea className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`} rows={5} placeholder="How can we help?" />
-            </div>
-            <button type="submit" className="w-full bg-secondary text-on-secondary py-4 rounded-md font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
-              Send Message
-            </button>
-          </form>
-        </div>
+                <div className="space-y-2">
+                  <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Email</label>
+                  <input
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`}
+                    type="email"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Subject</label>
+                  <select
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className={`w-full rounded-lg py-3 px-4 ${neutralFieldClass}`}
+                  >
+                    <option>Order Support</option>
+                    <option>Returns & Refunds</option>
+                    <option>Product Question</option>
+                    <option>Styling Advice</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Message</label>
+                  <textarea
+                    required
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`}
+                    rows={5}
+                    placeholder="How can we help?"
+                  />
+                </div>
+                {formError ? <p className="text-error text-sm">{formError}</p> : null}
+                <button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="w-full bg-secondary text-on-secondary py-4 rounded-md font-bold uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-60"
+                >
+                  {mutation.isPending ? "Sending…" : "Send Message"}
+                </button>
+              </form>
+            ) : (
+              <p className="text-on-surface-variant">Thanks — we received your message.</p>
+            )}
+          </div>
 
-        {/* Contact Info */}
-        <div className="space-y-8">
-          <h2 className="font-headline font-bold text-2xl mb-8">Other Ways to Reach Us</h2>
-          {[
-            { icon: "mail", title: "Email", desc: STORE_EMAIL_SUPPORT, sub: "Response within 2-3 hours" },
-            { icon: "chat", title: "Live Chat", desc: "Chat with an expert", sub: "Monday–Friday, 9am–6pm EST" },
-            { icon: "phone", title: "Phone", desc: "+1 (800) 284-3627", sub: "Monday–Friday, 10am–5pm EST" },
-          ].map(({ icon, title, desc, sub }) => (
-            <div key={title} className="flex items-start gap-5 p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
-              <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center text-secondary flex-shrink-0">
-                <Icon name={icon} />
+          <div className="space-y-8">
+            <h2 className="font-headline font-bold text-2xl mb-8">Other Ways to Reach Us</h2>
+            {[
+              { icon: "mail" as const, title: "Email", desc: STORE_EMAIL_SUPPORT, sub: "Response within 2-3 hours" },
+              { icon: "chat" as const, title: "Live Chat", desc: "Chat with an expert", sub: "Monday–Friday, 9am–6pm EST" },
+              { icon: "phone" as const, title: "Phone", desc: "+1 (800) 284-3627", sub: "Monday–Friday, 10am–5pm EST" }
+            ].map(({ icon, title, desc, sub }) => (
+              <div key={title} className="flex items-start gap-5 p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
+                <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center text-secondary flex-shrink-0">
+                  <Icon name={icon} />
+                </div>
+                <div>
+                  <p className="font-headline font-bold">{title}</p>
+                  <p className="text-on-surface font-medium">{desc}</p>
+                  <p className="text-sm text-on-surface-variant">{sub}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-headline font-bold">{title}</p>
-                <p className="text-on-surface font-medium">{desc}</p>
-                <p className="text-sm text-on-surface-variant">{sub}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
-    <Footer />
-    <BottomNavBar />
-  </div>
-);
+      </main>
+      <Footer />
+      <BottomNavBar />
+    </div>
+  );
+};
 
 /* ─────────────────────────────────────────────
    ABOUT PAGE
 ───────────────────────────────────────────── */
-export const AboutPage = () => (
+export const AboutPage = () => {
+  const { data: aboutPayload } = useQuery({
+    queryKey: ["cms-page", "about"],
+    queryFn: async () => (await customerBackendApi.getPage("about")).data as { entity?: { content?: unknown } },
+    retry: false
+  });
+
+  const cmsStory = aboutPayload?.entity?.content ? renderCmsSections(aboutPayload.entity.content) : null;
+
+  return (
   <div className="bg-surface text-on-background font-body">
     <TopNavBar />
     <main className="pt-[calc(4rem+env(safe-area-inset-top,0px))] md:pt-20">
@@ -129,6 +282,7 @@ export const AboutPage = () => (
       </section>
 
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-24 pb-24 md:pb-24">
+        {cmsStory ? <div className="mb-16 md:mb-20">{cmsStory}</div> : null}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16 md:mb-24">
           <div>
             <span className="text-secondary font-bold text-[10px] uppercase tracking-widest block mb-4">Founded 2019</span>
@@ -167,61 +321,86 @@ export const AboutPage = () => (
     <Footer />
     <BottomNavBar />
   </div>
-);
+  );
+};
 
 /* ─────────────────────────────────────────────
    SHIPPING POLICY
 ───────────────────────────────────────────── */
 export const ShippingPolicyPage = () => (
-  <PolicyLayout title="Shipping Policy">
-    <ProseSection title="Delivery Timeframes" text="Standard delivery takes 3-5 business days within the United States. Express shipping delivers next business day for orders placed before 12pm EST. International orders typically take 7-14 business days and may be subject to customs delays." />
-    <ProseSection
-      title="Shipping Costs"
-      text={`We offer free standard shipping on all orders over ${formatGhs(250, 0)}. For orders below this threshold, standard shipping is ${formatGhs(12)}. Express shipping is ${formatGhs(24)} regardless of order size.`}
-    />
-    <ProseSection title="International Shipping" text={`We ship to many countries worldwide. International orders may incur customs duties and taxes, which are the responsibility of the recipient. ${STORE_NAME_FULL} is not responsible for customs delays.`} />
-    <ProseSection title="Order Tracking" text="Once your order has been dispatched, you will receive a confirmation email with a tracking link. You can also track your orders in your account dashboard." />
-    <ProseSection title="Packaging" text={`All ${STORE_NAME_FULL} orders ship in minimal, recyclable packaging. We avoid single-use plastics wherever possible.`} />
-  </PolicyLayout>
+  <CmsPolicyPage
+    slug="shipping-policy"
+    title="Shipping Policy"
+    fallback={
+      <>
+        <ProseSection title="Delivery Timeframes" text="Standard delivery takes 3-5 business days within the United States. Express shipping delivers next business day for orders placed before 12pm EST. International orders typically take 7-14 business days and may be subject to customs delays." />
+        <ProseSection
+          title="Shipping Costs"
+          text={`We offer free standard shipping on all orders over ${formatGhs(250, 0)}. For orders below this threshold, standard shipping is ${formatGhs(12)}. Express shipping is ${formatGhs(24)} regardless of order size.`}
+        />
+        <ProseSection title="International Shipping" text={`We ship to many countries worldwide. International orders may incur customs duties and taxes, which are the responsibility of the recipient. ${STORE_NAME_FULL} is not responsible for customs delays.`} />
+        <ProseSection title="Order Tracking" text="Once your order has been dispatched, you will receive a confirmation email with a tracking link. You can also track your orders in your account dashboard." />
+        <ProseSection title="Packaging" text={`All ${STORE_NAME_FULL} orders ship in minimal, recyclable packaging. We avoid single-use plastics wherever possible.`} />
+      </>
+    }
+  />
 );
 
 /* ─────────────────────────────────────────────
    RETURNS POLICY
 ───────────────────────────────────────────── */
 export const ReturnsPolicyPage = () => (
-  <PolicyLayout title="Returns & Exchanges">
-    <ProseSection title="Return Window" text="We accept returns within 30 days of delivery. Items must be unworn, unwashed, and in their original condition with all tags attached. Sale items are final sale and cannot be returned." />
-    <ProseSection title="How to Return" text="To start a return, log in to your account and navigate to Orders. Select the order and click 'Request Return'. You will receive a prepaid return label via email within 1 business day." />
-    <ProseSection title="Refund Processing" text="Once we receive and inspect your return, we will process your refund within 2-3 business days. Refunds are issued to the original payment method and typically appear within 5-7 business days." />
-    <ProseSection title="Exchanges" text="We currently do not offer direct exchanges. To exchange an item, please return the original item and place a new order for your desired item." />
-    <ProseSection title="Damaged or Defective Items" text="If you receive a damaged or defective item, please contact us within 7 days of delivery with photos. We will arrange for a replacement or full refund at our expense." />
-  </PolicyLayout>
+  <CmsPolicyPage
+    slug="returns-policy"
+    title="Returns & Exchanges"
+    fallback={
+      <>
+        <ProseSection title="Return Window" text="We accept returns within 30 days of delivery. Items must be unworn, unwashed, and in their original condition with all tags attached. Sale items are final sale and cannot be returned." />
+        <ProseSection title="How to Return" text="To start a return, log in to your account and navigate to Orders. Select the order and click 'Request Return'. You will receive a prepaid return label via email within 1 business day." />
+        <ProseSection title="Refund Processing" text="Once we receive and inspect your return, we will process your refund within 2-3 business days. Refunds are issued to the original payment method and typically appear within 5-7 business days." />
+        <ProseSection title="Exchanges" text="We currently do not offer direct exchanges. To exchange an item, please return the original item and place a new order for your desired item." />
+        <ProseSection title="Damaged or Defective Items" text="If you receive a damaged or defective item, please contact us within 7 days of delivery with photos. We will arrange for a replacement or full refund at our expense." />
+      </>
+    }
+  />
 );
 
 /* ─────────────────────────────────────────────
    PRIVACY POLICY
 ───────────────────────────────────────────── */
 export const PrivacyPolicyPage = () => (
-  <PolicyLayout title="Privacy Policy">
-    <ProseSection title="Information We Collect" text="We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support. This includes your name, email address, postal address, payment information, and order history." />
-    <ProseSection title="How We Use Your Information" text="We use the information we collect to process transactions, send order confirmations and updates, provide customer support, and send promotional communications (with your consent)." />
-    <ProseSection title="Information Sharing" text="We do not sell or rent your personal information to third parties. We may share your information with service providers who assist us in operating our website and conducting our business, subject to confidentiality agreements." />
-    <ProseSection title="Cookie Policy" text="We use cookies and similar tracking technologies to enhance your experience on our website. You can control cookie settings through your browser preferences." />
-    <ProseSection title="Data Security" text="We implement industry-standard security measures to protect your personal information. Card and mobile-money payments are processed by Paystack, a PCI-DSS compliant provider." />
-    <ProseSection title="Your Rights" text={`You have the right to access, correct, or delete your personal information at any time. Contact us at ${STORE_EMAIL_PRIVACY} to exercise these rights.`} />
-  </PolicyLayout>
+  <CmsPolicyPage
+    slug="privacy-policy"
+    title="Privacy Policy"
+    fallback={
+      <>
+        <ProseSection title="Information We Collect" text="We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support. This includes your name, email address, postal address, payment information, and order history." />
+        <ProseSection title="How We Use Your Information" text="We use the information we collect to process transactions, send order confirmations and updates, provide customer support, and send promotional communications (with your consent)." />
+        <ProseSection title="Information Sharing" text="We do not sell or rent your personal information to third parties. We may share your information with service providers who assist us in operating our website and conducting our business, subject to confidentiality agreements." />
+        <ProseSection title="Cookie Policy" text="We use cookies and similar tracking technologies to enhance your experience on our website. You can control cookie settings through your browser preferences." />
+        <ProseSection title="Data Security" text="We implement industry-standard security measures to protect your personal information. Card and mobile-money payments are processed by Paystack, a PCI-DSS compliant provider." />
+        <ProseSection title="Your Rights" text={`You have the right to access, correct, or delete your personal information at any time. Contact us at ${STORE_EMAIL_PRIVACY} to exercise these rights.`} />
+      </>
+    }
+  />
 );
 
 /* ─────────────────────────────────────────────
    TERMS & CONDITIONS
 ───────────────────────────────────────────── */
 export const TermsPage = () => (
-  <PolicyLayout title="Terms & Conditions">
-    <ProseSection title="Acceptance of Terms" text={`By accessing and using the ${STORE_NAME_FULL} website, you accept and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our website.`} />
-    <ProseSection title="Use of the Website" text="You agree to use this website only for lawful purposes and in a manner that does not infringe the rights of others or restrict their use of this website." />
-    <ProseSection title="Product Descriptions" text="We make every effort to ensure that product descriptions are accurate. However, we do not warrant that product descriptions or other content is accurate, complete, or error-free." />
-    <ProseSection title="Pricing" text="All prices are listed in Ghana cedis (GHS) using the cedi symbol (₵) and are subject to change without notice. We reserve the right to modify or discontinue products at any time." />
-    <ProseSection title="Intellectual Property" text={`All content on this website, including text, images, graphics, and logos, is the property of ${STORE_NAME_FULL} and protected by copyright laws. Unauthorized use is strictly prohibited.`} />
-    <ProseSection title="Limitation of Liability" text={`${STORE_NAME_FULL} shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our products or services.`} />
-  </PolicyLayout>
+  <CmsPolicyPage
+    slug="terms"
+    title="Terms & Conditions"
+    fallback={
+      <>
+        <ProseSection title="Acceptance of Terms" text={`By accessing and using the ${STORE_NAME_FULL} website, you accept and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our website.`} />
+        <ProseSection title="Use of the Website" text="You agree to use this website only for lawful purposes and in a manner that does not infringe the rights of others or restrict their use of this website." />
+        <ProseSection title="Product Descriptions" text="We make every effort to ensure that product descriptions are accurate. However, we do not warrant that product descriptions or other content is accurate, complete, or error-free." />
+        <ProseSection title="Pricing" text="All prices are listed in Ghana cedis (GHS) using the cedi symbol (₵) and are subject to change without notice. We reserve the right to modify or discontinue products at any time." />
+        <ProseSection title="Intellectual Property" text={`All content on this website, including text, images, graphics, and logos, is the property of ${STORE_NAME_FULL} and protected by copyright laws. Unauthorized use is strictly prohibited.`} />
+        <ProseSection title="Limitation of Liability" text={`${STORE_NAME_FULL} shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our products or services.`} />
+      </>
+    }
+  />
 );

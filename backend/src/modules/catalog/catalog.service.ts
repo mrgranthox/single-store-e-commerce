@@ -417,6 +417,8 @@ const serializeMediaAsset = (media: MediaShape) => ({
 // TODO(platform-spec): The approved schema currently has no dedicated pricing columns.
 const serializePublicProductCard = (product: ProductShape) => {
   const inventory = deriveInventorySummary(product.variants);
+  const activeVariants = product.variants.filter((variant) => variant.status === "ACTIVE");
+  const primaryVariant = activeVariants[0] ?? product.variants[0];
 
   return {
     id: product.id,
@@ -427,6 +429,7 @@ const serializePublicProductCard = (product: ProductShape) => {
     categories: serializeCategories(product.categories),
     primaryMedia: selectPrimaryMedia(product),
     pricing: deriveProductPricing(product.variants),
+    defaultVariantId: primaryVariant?.id ?? null,
     availability: {
       inStock: inventory.available > 0,
       availableQuantity: inventory.available,

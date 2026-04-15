@@ -1,6 +1,7 @@
 import type React from "react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,6 +10,8 @@ import { StoreBrandLink } from "@/components/layout";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL } from "@/lib/brand";
 import { mockImages } from "@/lib/data/mock-images";
 import { neutralCheckboxClass, neutralFieldClass } from "@/lib/form-field-styles";
+import { customerAuthApi } from "@/lib/api/customer-auth-api";
+import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const AuthFooter = () => (
@@ -45,15 +48,24 @@ const loginSchema = z.object({
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const signIn = useCustomerStore((s) => s.signIn);
+  const queryClient = useQueryClient();
+  const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = () => {
-    signIn();
-    navigate("/account");
-  };
+  const onSubmit = handleSubmit(async (data) => {
+    setSubmitError(null);
+    try {
+      await customerAuthApi.login({ email: data.email, password: data.password });
+      hydrateAuth();
+      await queryClient.invalidateQueries();
+      navigate("/account");
+    } catch (error) {
+      setSubmitError(error instanceof CommerceApiError ? error.message : "Sign in failed.");
+    }
+  });
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col">
@@ -110,7 +122,8 @@ export const LoginPage = () => {
               <div className="flex-grow border-t border-outline-variant/30" />
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={onSubmit} className="space-y-5">
+              {submitError ? <p className="text-error text-sm">{submitError}</p> : null}
               <div>
                 <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2" htmlFor="email">
                   Email Address
@@ -196,7 +209,9 @@ const registerSchema = z.object({
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
-  const signIn = useCustomerStore((s) => s.signIn);
+  const queryClient = useQueryClient();
+  const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
   });
@@ -204,10 +219,28 @@ export const RegisterPage = () => {
   const pwd = watch("password") ?? "";
   const strength = Math.min(Math.floor((pwd.length / 12) * 4), 4);
 
-  const onSubmit = () => {
-    signIn();
-    navigate("/account");
-  };
+  const onSubmit = handleSubmit(async (data) => {
+    setSubmitError(null);
+    const parts = data.fullName.trim().split(/\s+/).filter(Boolean);
+    const firstName = parts[0] ?? "Customer";
+    const lastName = parts.length > 1 ? parts.slice(1).join(" ") : "Customer";
+    try {
+      await customerAuthApi.register({
+        firstName,
+        lastName,
+        email: data.email,
+        password: data.password,
+        marketingOptIn: Boolean(data.newsletter),
+        acceptTerms: true
+      });
+      await customerAuthApi.login({ email: data.email, password: data.password });
+      hydrateAuth();
+      await queryClient.invalidateQueries();
+      navigate("/account");
+    } catch (error) {
+      setSubmitError(error instanceof CommerceApiError ? error.message : "Registration failed.");
+    }
+  });
 
   return (
     <div className="bg-surface text-on-surface min-h-screen flex flex-col">
@@ -250,7 +283,8 @@ export const RegisterPage = () => {
               <h2 className="text-3xl font-bold tracking-tighter text-on-surface">Create Account</h2>
               <p className="text-on-surface-variant mt-2">Start shopping with {STORE_NAME_FULL}.</p>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={onSubmit} className="space-y-6">
+              {submitError ? <p className="text-error text-sm">{submitError}</p> : null}
               {[
                 { name: "fullName", label: "Full Name", placeholder: "Elias Sjöberg", type: "text" },
                 { name: "email", label: "Email Address", placeholder: "you@example.com", type: "email" },
@@ -359,6 +393,9 @@ export const RegisterPage = () => {
 ───────────────────────────────────────────── */
 export const ForgotPasswordPage = () => {
   const [sent, setSent] = useState(false);
+  const [email, setEmail] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col">
@@ -373,13 +410,40 @@ export const ForgotPasswordPage = () => {
             Enter your email address and we'll send you a link to reset your password.
           </p>
           {!sent ? (
-            <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-6">
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setError(null);
+                setBusy(true);
+                try {
+                  await customerAuthApi.forgotPassword(email.trim());
+                  setSent(true);
+                } catch (err) {
+                  setError(err instanceof CommerceApiError ? err.message : "Could not send reset link.");
+                } finally {
+                  setBusy(false);
+                }
+              }}
+              className="space-y-6"
+            >
+              {error ? <p className="text-error text-sm">{error}</p> : null}
               <div>
                 <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2">Email Address</label>
-                <input required className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`} placeholder="name@example.com" type="email" />
+                <input
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`}
+                  placeholder="name@example.com"
+                  type="email"
+                />
               </div>
-              <button type="submit" className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all">
-                Send Reset Link
+              <button
+                type="submit"
+                disabled={busy}
+                className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all disabled:opacity-60"
+              >
+                {busy ? "Sending…" : "Send Reset Link"}
               </button>
             </form>
           ) : (
@@ -404,6 +468,12 @@ export const ForgotPasswordPage = () => {
 ───────────────────────────────────────────── */
 export const ResetPasswordPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token") ?? "";
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col">
@@ -411,15 +481,61 @@ export const ResetPasswordPage = () => {
         <div className="max-w-md w-full bg-surface-container-lowest rounded-xl shadow-[0_20px_50px_rgba(11,28,48,0.08)] p-10">
           <h2 className="font-headline font-extrabold text-3xl text-on-surface tracking-tight mb-2">Create New Password</h2>
           <p className="text-on-surface-variant mb-8">Your new password must be at least 8 characters.</p>
-          <form onSubmit={(e) => { e.preventDefault(); navigate("/login"); }} className="space-y-6">
-            {[{ label: "New Password", placeholder: "••••••••" }, { label: "Confirm Password", placeholder: "••••••••" }].map(({ label, placeholder }) => (
-              <div key={label}>
-                <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2">{label}</label>
-                <input required minLength={8} className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`} placeholder={placeholder} type="password" />
-              </div>
-            ))}
-            <button type="submit" className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all">
-              Reset Password
+          {!token ? (
+            <p className="text-error text-sm mb-4">This link is missing a reset token. Request a new reset email.</p>
+          ) : null}
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setError(null);
+              if (password !== confirm) {
+                setError("Passwords do not match.");
+                return;
+              }
+              if (!token) return;
+              setBusy(true);
+              try {
+                await customerAuthApi.resetPassword(token, password);
+                navigate("/login");
+              } catch (err) {
+                setError(err instanceof CommerceApiError ? err.message : "Could not reset password.");
+              } finally {
+                setBusy(false);
+              }
+            }}
+            className="space-y-6"
+          >
+            {error ? <p className="text-error text-sm">{error}</p> : null}
+            <div>
+              <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2">New Password</label>
+              <input
+                required
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`}
+                placeholder="••••••••"
+                type="password"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface mb-2">Confirm Password</label>
+              <input
+                required
+                minLength={8}
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`}
+                placeholder="••••••••"
+                type="password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={busy || !token}
+              className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all disabled:opacity-60"
+            >
+              {busy ? "Saving…" : "Reset Password"}
             </button>
           </form>
         </div>
@@ -432,24 +548,86 @@ export const ResetPasswordPage = () => {
 /* ─────────────────────────────────────────────
    VERIFY EMAIL
 ───────────────────────────────────────────── */
-export const VerifyEmailPage = () => (
-  <div className="bg-background text-on-background min-h-screen flex flex-col">
-    <main className="flex-grow flex items-center justify-center py-12 px-6">
-      <div className="max-w-md w-full bg-surface-container-lowest rounded-xl shadow-[0_20px_50px_rgba(11,28,48,0.08)] p-10 text-center space-y-6">
-        <Icon name="mark_email_unread" filled className="text-6xl text-secondary mx-auto" />
-        <h2 className="font-headline font-extrabold text-3xl text-on-surface tracking-tight">Verify Your Email</h2>
-        <p className="text-on-surface-variant">
-          We sent a confirmation link to your email address. Click the link to activate your account.
-        </p>
-        <button className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all">
-          Resend Email
-        </button>
-        <Link className="block text-sm text-secondary hover:underline" to="/login">Back to Sign In</Link>
-      </div>
-    </main>
-    <AuthFooter />
-  </div>
-);
+export const VerifyEmailPage = () => {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token") ?? "";
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "busy" | "done" | "error">("idle");
+  const [message, setMessage] = useState<string | null>(null);
+  const autoVerifiedToken = useRef<string | null>(null);
+
+  const verify = async (t: string) => {
+    setStatus("busy");
+    setMessage(null);
+    try {
+      await customerAuthApi.verifyEmail(t);
+      setStatus("done");
+      setMessage("Your email is verified. You can sign in.");
+    } catch (err) {
+      setStatus("error");
+      setMessage(err instanceof CommerceApiError ? err.message : "Verification failed.");
+    }
+  };
+
+  useEffect(() => {
+    if (!token || autoVerifiedToken.current === token) return;
+    autoVerifiedToken.current = token;
+    void verify(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- verify once per URL token (StrictMode-safe)
+  }, [token]);
+
+  return (
+    <div className="bg-background text-on-background min-h-screen flex flex-col">
+      <main className="flex-grow flex items-center justify-center py-12 px-6">
+        <div className="max-w-md w-full bg-surface-container-lowest rounded-xl shadow-[0_20px_50px_rgba(11,28,48,0.08)] p-10 text-center space-y-6">
+          <Icon name="mark_email_unread" filled className="text-6xl text-secondary mx-auto" />
+          <h2 className="font-headline font-extrabold text-3xl text-on-surface tracking-tight">Verify Your Email</h2>
+          <p className="text-on-surface-variant">
+            We sent a confirmation link to your email address. Click the link to activate your account.
+          </p>
+          {message ? <p className={status === "error" ? "text-error text-sm" : "text-on-surface-variant text-sm"}>{message}</p> : null}
+          {!token ? (
+            <div className="space-y-3 text-left">
+              <label className="block text-xs font-label font-bold uppercase tracking-wider text-on-surface">Email for resend</label>
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`w-full rounded-md px-5 py-4 ${neutralFieldClass}`}
+                placeholder="name@example.com"
+                type="email"
+              />
+            </div>
+          ) : null}
+          <button
+            type="button"
+            disabled={status === "busy"}
+            onClick={async () => {
+              if (token) {
+                await verify(token);
+                return;
+              }
+              setStatus("busy");
+              setMessage(null);
+              try {
+                await customerAuthApi.resendVerification(email.trim());
+                setStatus("done");
+                setMessage("If that email is registered, a new link was sent.");
+              } catch (err) {
+                setStatus("error");
+                setMessage(err instanceof CommerceApiError ? err.message : "Could not resend.");
+              }
+            }}
+            className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all disabled:opacity-60"
+          >
+            {token ? (status === "busy" ? "Verifying…" : "Retry verification") : "Resend Email"}
+          </button>
+          <Link className="block text-sm text-secondary hover:underline" to="/login">Back to Sign In</Link>
+        </div>
+      </main>
+      <AuthFooter />
+    </div>
+  );
+};
 
 /* ─────────────────────────────────────────────
    SESSION EXPIRED
