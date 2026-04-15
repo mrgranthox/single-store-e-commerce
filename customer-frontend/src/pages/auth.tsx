@@ -16,7 +16,7 @@ const AuthFooter = () => (
     <div className="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-6 md:gap-0">
       <div className="flex flex-col items-center md:items-start gap-2">
         <div className="flex items-center gap-2">
-          <img src={LOGO_SRC} alt={LOGO_ALT} className="h-8 w-auto object-contain rounded-xl" width={100} height={32} />
+          <img src={LOGO_SRC} alt={LOGO_ALT} className="h-8 w-auto object-contain rounded-xl" width={100} height={32} loading="lazy" decoding="async" />
           <span className="font-bold text-slate-900 font-headline tracking-tighter text-xl">{STORE_NAME_FULL}</span>
         </div>
         <p className="text-sm text-slate-500">© 2024 {STORE_NAME_FULL}. All rights reserved.</p>
@@ -65,8 +65,7 @@ export const LoginPage = () => {
             <img
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
-              src={mockImages.authPanel}
-            />
+              src={mockImages.authPanel} loading="lazy" decoding="async" />
             <div className="absolute bottom-12 left-12 right-12 z-20">
               <div className="text-surface-bright mb-4">
                 <span className="font-headline font-bold text-4xl tracking-tighter block mb-2">{STORE_NAME_FULL}</span>
@@ -235,7 +234,7 @@ export const RegisterPage = () => {
             <div className="flex items-center gap-4 py-6 border-t border-outline-variant/30">
               <div className="flex -space-x-3">
                 {[mockImages.authSlide1, mockImages.authSlide2, mockImages.authSlide3].map((src, i) => (
-                  <img key={i} className="w-10 h-10 rounded-full border-2 border-surface-container-low object-cover" src={src} alt="" />
+                  <img key={i} className="w-10 h-10 rounded-full border-2 border-surface-container-low object-cover" src={src} alt="" loading="lazy" decoding="async" />
                 ))}
               </div>
               <p className="text-sm text-outline font-medium italic">Join 12,000+ tastemakers worldwide.</p>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import {
   Archive,
@@ -78,6 +79,8 @@ const safeAttachmentUrl = (value: string) => {
 export const SupportTicketDetailPage = () => {
   const { ticketId = "" } = useParams<{ ticketId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const queryClient = useQueryClient();
+  const ticketQueryKey = ["admin-support-ticket", ticketId];
 
   const [replyBody, setReplyBody] = useState("");
   const [internalNote, setInternalNote] = useState("");
@@ -217,16 +220,36 @@ export const SupportTicketDetailPage = () => {
         ...(statusNote.trim() ? { note: statusNote.trim() } : {})
       });
     },
+    onMutate: async (next: SupportTicketStatus) => {
+      // Cancel in-flight queries to avoid overwriting optimistic update
+      await queryClient.cancelQueries({ queryKey: ticketQueryKey });
+      // Snapshot current data for rollback
+      const snapshot = queryClient.getQueryData(ticketQueryKey);
+      // Optimistically patch the status in cache
+      queryClient.setQueryData(ticketQueryKey, (old: unknown) => {
+        if (!old || typeof old !== "object") return old;
+        const prev = old as { data?: { entity?: { status?: string } } };
+        if (!prev.data?.entity) return old;
+        return { ...prev, data: { ...prev.data, entity: { ...prev.data.entity, status: next } } };
+      });
+      return snapshot;
+    },
+    onError: (err: unknown, _next: unknown, context: unknown) => {
+      if (context !== undefined) {
+        queryClient.setQueryData(ticketQueryKey, context);
+      }
+      setMsg({ type: "err", text: err instanceof ApiError ? err.message : "Status update failed." });
+    },
     onSuccess: (_, next) => {
       setStatusPick(next);
       setStatusNote("");
       setMsg({ type: "ok", text: "Ticket status updated." });
     },
-    onError: (err: unknown) => {
-      setMsg({ type: "err", text: err instanceof ApiError ? err.message : "Status update failed." });
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ticketQueryKey });
     },
     isAllowed: e?.allowedActions.canUpdateStatus ?? true,
-    invalidate: [...supportInvalidateKeys]
+    invalidate: [],
   });
 
   const feedItems: FeedItem[] = useMemo(() => {

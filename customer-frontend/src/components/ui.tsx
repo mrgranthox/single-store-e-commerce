@@ -32,8 +32,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
         <img
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           src={product.imageUrl}
-          alt={product.name}
-        />
+          alt={product.name} loading="lazy" decoding="async" />
         {product.badge && (
           <div className="absolute top-4 left-4">
             <span
@@ -89,7 +88,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
 /* ── cart item image card ── */
 export const CartItemImage = ({ src, alt }: { src: string; alt: string }) => (
   <div className="w-24 sm:w-28 md:w-48 shrink-0 aspect-[4/5] bg-surface-container-low overflow-hidden rounded-lg">
-    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={src} alt={alt} />
+    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={src} alt={alt} loading="lazy" decoding="async" />
   </div>
 );
 
@@ -154,7 +153,7 @@ export const CheckoutOrderSummary = ({
         {items.map((item, i) => (
           <div key={i} className="flex gap-4">
             <div className="w-20 h-24 bg-surface-container-highest rounded-lg overflow-hidden flex-shrink-0">
-              <img className="w-full h-full object-cover" src={item.image} alt={item.name} />
+              <img className="w-full h-full object-cover" src={item.image} alt={item.name} loading="lazy" decoding="async" />
             </div>
             <div className="flex flex-col justify-between py-1">
               <div>

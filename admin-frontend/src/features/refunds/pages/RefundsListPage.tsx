@@ -9,6 +9,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminRefundDetail, listAdminRefunds, type RefundListItem } from "@/features/refunds/api/admin-refunds.api";
 import { customerInitials } from "@/features/payments/ui/stitchPaymentsUi";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const refundRefLabel = (id: string) => `REF-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 const returnRefLabel = (id: string) => `RET-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -116,7 +117,7 @@ export const RefundsListPage = () => {
   const meta = listQuery.data?.meta;
   const { prefetch: prefetchRefund, prefetchMany: prefetchRefunds } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (refundId: string) => ["admin-refund-detail", refundId],
     queryFnFor: (refundId: string) => getAdminRefundDetail(accessToken!, refundId),
     onPrefetch: () => preloadLazyNamedComponent("../features/refunds/pages/RefundDetailPage.tsx", "RefundDetailPage")

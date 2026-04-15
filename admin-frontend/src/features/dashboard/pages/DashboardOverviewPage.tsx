@@ -14,6 +14,7 @@ import { ApiError } from "@/lib/api/http";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { formatMoney as _formatMoney } from "@/lib/format";
 import { STORE_CURRENCY_CODE } from "@/lib/store-currency";
+import { CACHE } from "@/lib/api/cache-strategy";
 const formatMoney = (cents: number | null | undefined) => _formatMoney(cents, STORE_CURRENCY_CODE);
 
 type OverviewPayload = {
@@ -212,20 +213,17 @@ export const DashboardOverviewPage = () => {
         queryFn: () =>
           adminJsonGet<OverviewPayload>(`/api/admin/dashboard/overview?${rangeQs}`, accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 30_000
-      },
+        ...CACHE.OPERATIONAL},
       {
         queryKey: ["admin-dashboard", "sales-series", rangeQs],
         queryFn: () => adminJsonGet<SalesPayload>(`/api/admin/reports/sales?${rangeQs}`, accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 60_000
-      },
+        ...CACHE.ANALYTICS},
       {
         queryKey: ["admin-dashboard", "system-health"],
         queryFn: () => adminJsonGet<HealthPayload>("/api/admin/dashboard/system-health", accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 15_000
-      },
+        ...CACHE.REAL_TIME},
       {
         queryKey: ["admin-dashboard", "recent-orders"],
         queryFn: () =>
@@ -234,8 +232,7 @@ export const DashboardOverviewPage = () => {
             accessToken
           ),
         enabled: Boolean(accessToken),
-        staleTime: 20_000
-      },
+        ...CACHE.OPERATIONAL},
       {
         queryKey: ["admin-dashboard", "inventory-slice", rangeQs],
         queryFn: () =>
@@ -244,8 +241,7 @@ export const DashboardOverviewPage = () => {
             accessToken
           ),
         enabled: Boolean(accessToken),
-        staleTime: 60_000
-      },
+        ...CACHE.ANALYTICS},
       {
         queryKey: ["admin-dashboard", "urgent-tickets"],
         queryFn: () =>
@@ -254,8 +250,7 @@ export const DashboardOverviewPage = () => {
             accessToken
           ),
         enabled: Boolean(accessToken),
-        staleTime: 25_000
-      },
+        ...CACHE.OPERATIONAL},
       {
         queryKey: ["admin-dashboard", "recent-activity"],
         queryFn: () =>
@@ -264,8 +259,7 @@ export const DashboardOverviewPage = () => {
             accessToken
           ),
         enabled: Boolean(accessToken),
-        staleTime: 20_000
-      }
+        ...CACHE.OPERATIONAL}
     ]
   });
 

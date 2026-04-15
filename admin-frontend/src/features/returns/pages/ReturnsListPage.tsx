@@ -10,6 +10,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminReturnDetail, listAdminReturns, type ReturnListItem } from "@/features/returns/api/admin-returns.api";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const RETURN_STATUSES = ["", "REQUESTED", "APPROVED", "REJECTED", "RECEIVED", "COMPLETED"] as const;
 
@@ -102,7 +103,7 @@ export const ReturnsListPage = () => {
   const meta = listQuery.data?.meta;
   const { prefetch: prefetchReturn, prefetchMany: prefetchReturns } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (returnId: string) => ["admin-return-detail", returnId],
     queryFnFor: (returnId: string) => getAdminReturnDetail(accessToken!, returnId),
     onPrefetch: () => preloadLazyNamedComponent("../features/returns/pages/ReturnDetailPage.tsx", "ReturnDetailPage")

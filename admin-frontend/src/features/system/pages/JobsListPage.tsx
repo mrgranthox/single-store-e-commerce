@@ -17,6 +17,7 @@ import {
 } from "@/components/stitch";
 import { stitchSelectClass } from "@/components/stitch/stitch-primitives";
 import { formatDateTime } from "@/lib/format";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const STATUSES = ["", "QUEUED", "RUNNING", "SUCCEEDED", "FAILED"] as const;
 
@@ -88,8 +89,7 @@ export const JobsListPage = () => {
       queryKey: ["admin-job-runs-count", st],
       queryFn: () => listAdminJobRuns(accessToken!, { page: 1, pageSize: 1, status: st }),
       enabled: Boolean(accessToken),
-      staleTime: 25_000
-    }))
+      ...CACHE.OPERATIONAL}))
   });
 
   const [succT, failT, runT, queueT] = countQueries.map((q) => q.data?.meta.total ?? 0);

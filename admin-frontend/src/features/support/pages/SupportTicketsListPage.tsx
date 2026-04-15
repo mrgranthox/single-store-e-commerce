@@ -42,8 +42,7 @@ import {
   totalTickets
 } from "@/features/support/lib/supportPresentation";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
-
-const TICKET_DETAIL_STALE_MS = 20_000;
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const STATUSES = ["", "OPEN", "IN_PROGRESS", "PENDING_CUSTOMER", "CLOSED"] as const;
 const PRIORITIES = ["", "LOW", "MEDIUM", "HIGH", "URGENT"] as const;
@@ -113,7 +112,7 @@ export const SupportTicketsListPage = () => {
 
   const { prefetch: prefetchTicketDetail, prefetchMany: prefetchTicketDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: TICKET_DETAIL_STALE_MS,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (id: string) => ["admin-support-ticket", id],
     queryFnFor: (id: string) => getSupportTicketDetail(accessToken!, id),
     onPrefetch: () =>

@@ -93,7 +93,7 @@ export const ProductGalleryPage = () => {
               key={i}
               className="relative w-full aspect-[3/4] max-h-[85dvh] bg-surface-container-low rounded-xl overflow-hidden"
             >
-              <img src={src} alt="" className="w-full h-full object-contain bg-black/5" />
+              <img src={src} alt="" className="w-full h-full object-contain bg-black/5" loading="lazy" decoding="async" />
             </div>
           ))}
         </div>

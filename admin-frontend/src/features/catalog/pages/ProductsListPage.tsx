@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ChevronDown, MoreHorizontal, Search } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,8 +28,7 @@ import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { toast } from "@/lib/toast";
 import { catalogKeys } from "@/lib/query-keys";
 import { formatDate } from "@/lib/format";
-
-const PRODUCT_DETAIL_STALE_MS = 20_000;
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "", label: "All statuses" },
@@ -51,7 +50,6 @@ const statusTone = (status: string): StatusBadgeTone => {
   }
 };
 
-
 const BulkDeleteDisabled = () => (
   <span className="group/del relative inline-flex rounded-md outline-none ring-offset-2 focus-within:ring-2 focus-within:ring-[#4f7ef8]" tabIndex={0}>
     <button
@@ -72,7 +70,7 @@ const BulkDeleteDisabled = () => (
   </span>
 );
 
-const Thumb = ({ url, title }: { url: string | null; title: string }) => {
+const Thumb = memo(({ url, title }: { url: string | null; title: string }) => {
   if (!url) {
     return (
       <div
@@ -94,7 +92,7 @@ const Thumb = ({ url, title }: { url: string | null; title: string }) => {
       }}
     />
   );
-};
+});
 
 const RowActions = ({
   product,
@@ -171,6 +169,131 @@ const RowActions = ({
     </div>
   );
 };
+
+type ProductTableRowProps = {
+  product: AdminProductListItem;
+  isSelected: boolean;
+  isExpanded: boolean;
+  onToggleSelect: (id: string) => void;
+  onToggleExpand: (id: string) => void;
+  onPrefetch: (id: string) => void;
+  onArchive: (id: string) => void;
+};
+
+const ProductTableRow = memo(({
+  product,
+  isSelected,
+  isExpanded,
+  onToggleSelect,
+  onToggleExpand,
+  onPrefetch,
+  onArchive,
+}: ProductTableRowProps) => (
+  <Fragment>
+    <tr
+      className="group transition-colors hover:bg-[#e6e7f6]/80"
+      onMouseEnter={() => onPrefetch(product.id)}
+    >
+      <td className="px-3 py-2 align-middle">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={() => onToggleSelect(product.id)}
+          aria-label={`Select ${product.title}`}
+          className="h-4 w-4 rounded border-slate-300"
+        />
+      </td>
+      <td className="px-3 py-2 align-middle">
+        <div className="flex items-start gap-3">
+          <button
+            type="button"
+            className="mt-1 shrink-0 text-slate-400 hover:text-slate-700"
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? "Collapse row details" : "Expand row details"}
+            onClick={() => onToggleExpand(product.id)}
+          >
+            <ChevronDown
+              className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+              strokeWidth={2}
+            />
+          </button>
+          <Thumb url={product.thumbnailUrl} title={product.title} />
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                to={`/admin/catalog/products/${product.id}`}
+                className="font-semibold text-[#4f7ef8] hover:underline"
+                onFocus={() => onPrefetch(product.id)}
+              >
+                {product.title}
+              </Link>
+              <span className="hidden opacity-0 transition-opacity group-hover:opacity-100 sm:inline-flex sm:gap-1">
+                <Link
+                  to={`/admin/catalog/products/${product.id}/edit`}
+                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50"
+                >
+                  Edit
+                </Link>
+                <Link
+                  to={`/admin/catalog/products/${product.id}/analytics`}
+                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50"
+                >
+                  Analytics
+                </Link>
+              </span>
+            </div>
+            <p className="mt-0.5 font-mono text-xs text-slate-500">
+              {product.primarySku ?? "—"}
+            </p>
+          </div>
+        </div>
+      </td>
+      <td className="max-w-[160px] px-3 py-2 align-middle text-sm text-slate-700">
+        {product.categoryLabels.length ? product.categoryLabels.join(", ") : "—"}
+      </td>
+      <td className="px-3 py-2 align-middle text-sm text-slate-700">
+        {product.brand?.name ?? "—"}
+      </td>
+      <td className="whitespace-nowrap px-3 py-2 align-middle text-sm text-slate-800">
+        {formatProductListPrice(product.pricing)}
+      </td>
+      <td className="px-3 py-2 align-middle">
+        <div className="font-mono text-sm">{product.inventorySummary.available.toLocaleString()}</div>
+        {product.inventorySummary.lowStock ? (
+          <StatusBadge label="Low" tone="pending" />
+        ) : null}
+      </td>
+      <td className="px-3 py-2 align-middle">
+        <StatusBadge label={product.status.replace(/_/g, " ")} tone={statusTone(product.status)} />
+      </td>
+      <td className="px-3 py-2 align-middle text-sm text-slate-600">{product.visibility}</td>
+      <td className="px-3 py-2 align-middle">
+        <RowActions product={product} onArchive={onArchive} />
+      </td>
+    </tr>
+    {isExpanded ? (
+      <tr className="bg-[#eef1fb]">
+        <td colSpan={9} className="border-t border-slate-200 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-700">
+            <span>
+              <span className="font-semibold text-slate-500">Slug</span>{" "}
+              <span className="font-mono text-xs">{product.slug}</span>
+            </span>
+            <span>
+              <span className="font-semibold text-slate-500">Updated</span> {formatDate(product.updatedAt)}
+            </span>
+            <span>
+              <span className="font-semibold text-slate-500">Visibility</span> {product.visibility}
+            </span>
+            <Link to={`/admin/catalog/products/${product.id}/edit`} className="font-semibold text-[#4f7ef8] hover:underline">Quick edit</Link>
+            <Link to={`/admin/catalog/products/${product.id}/variants`} className="font-semibold text-[#4f7ef8] hover:underline">Variants</Link>
+            <Link to={`/admin/catalog/products/${product.id}/media`} className="font-semibold text-[#4f7ef8] hover:underline">Media</Link>
+          </div>
+        </td>
+      </tr>
+    ) : null}
+  </Fragment>
+));
 
 export const ProductsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
@@ -257,7 +380,7 @@ export const ProductsListPage = () => {
 
   const { prefetch: prefetchProductDetail, prefetchMany: prefetchProductDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: PRODUCT_DETAIL_STALE_MS,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (productId: string) => catalogKeys.product(productId),
     queryFnFor: (productId: string) => getAdminCatalogProduct(accessToken!, productId),
     onPrefetch: () =>
@@ -322,7 +445,7 @@ export const ProductsListPage = () => {
     }
   };
 
-  const toggleOne = (id: string) => {
+  const toggleOne = useCallback((id: string) => {
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -332,7 +455,13 @@ export const ProductsListPage = () => {
       }
       return next;
     });
-  };
+  }, []);
+
+  const toggleExpand = useCallback((id: string) => {
+    setPinnedExpandId((prev) => (prev === id ? null : id));
+  }, []);
+
+  const handleArchive = useCallback((id: string) => setSingleArchiveId(id), []);
 
   const runBulk = useCallback(
     async (action: "publish" | "unpublish" | "archive") => {
@@ -614,128 +743,18 @@ export const ProductsListPage = () => {
                   </tr>
                 ) : (
                   items.map((product) => (
-                    <Fragment key={product.id}>
-                    <tr
-                      className="group transition-colors hover:bg-[#e6e7f6]/80"
-                      onMouseEnter={() => prefetchProductDetail(product.id)}
-                    >
-                      <td className="px-3 py-2 align-middle">
-                        <input
-                          type="checkbox"
-                          checked={selected.has(product.id)}
-                          onChange={() => toggleOne(product.id)}
-                          aria-label={`Select ${product.title}`}
-                          className="h-4 w-4 rounded border-slate-300"
-                        />
-                      </td>
-                      <td className="px-3 py-2 align-middle">
-                        <div className="flex items-start gap-3">
-                          <button
-                            type="button"
-                            className="mt-1 shrink-0 text-slate-400 hover:text-slate-700"
-                            aria-expanded={pinnedExpandId === product.id}
-                            aria-label={pinnedExpandId === product.id ? "Collapse row details" : "Expand row details"}
-                            onClick={() =>
-                              setPinnedExpandId((id) => (id === product.id ? null : product.id))
-                            }
-                          >
-                            <ChevronDown
-                              className={`h-4 w-4 transition-transform ${pinnedExpandId === product.id ? "rotate-180" : ""}`}
-                              strokeWidth={2}
-                            />
-                          </button>
-                          <Thumb url={product.thumbnailUrl} title={product.title} />
-                          <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <Link
-                                to={`/admin/catalog/products/${product.id}`}
-                                className="font-semibold text-[#4f7ef8] hover:underline"
-                                onFocus={() => prefetchProductDetail(product.id)}
-                              >
-                                {product.title}
-                              </Link>
-                              <span className="hidden opacity-0 transition-opacity group-hover:opacity-100 sm:inline-flex sm:gap-1">
-                                <Link
-                                  to={`/admin/catalog/products/${product.id}/edit`}
-                                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50"
-                                >
-                                  Edit
-                                </Link>
-                                <Link
-                                  to={`/admin/catalog/products/${product.id}/analytics`}
-                                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50"
-                                >
-                                  Analytics
-                                </Link>
-                              </span>
-                            </div>
-                            <p className="mt-0.5 font-mono text-xs text-slate-500">
-                              {product.primarySku ?? "—"}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="max-w-[160px] px-3 py-2 align-middle text-sm text-slate-700">
-                        {product.categoryLabels.length ? product.categoryLabels.join(", ") : "—"}
-                      </td>
-                      <td className="px-3 py-2 align-middle text-sm text-slate-700">
-                        {product.brand?.name ?? "—"}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2 align-middle text-sm text-slate-800">
-                        {formatProductListPrice(product.pricing)}
-                      </td>
-                      <td className="px-3 py-2 align-middle">
-                        <div className="font-mono text-sm">{product.inventorySummary.available.toLocaleString()}</div>
-                        {product.inventorySummary.lowStock ? (
-                          <StatusBadge label="Low" tone="pending" />
-                        ) : null}
-                      </td>
-                      <td className="px-3 py-2 align-middle">
-                        <StatusBadge label={product.status.replace(/_/g, " ")} tone={statusTone(product.status)} />
-                      </td>
-                      <td className="px-3 py-2 align-middle text-sm text-slate-600">{product.visibility}</td>
-                      <td className="px-3 py-2 align-middle">
-                        <RowActions product={product} onArchive={(id) => setSingleArchiveId(id)} />
-                      </td>
-                    </tr>
-                    {pinnedExpandId === product.id ? (
-                      <tr className="bg-[#eef1fb]">
-                        <td colSpan={9} className="border-t border-slate-200 px-4 py-3">
-                          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-700">
-                            <span>
-                              <span className="font-semibold text-slate-500">Slug</span>{" "}
-                              <span className="font-mono text-xs">{product.slug}</span>
-                            </span>
-                            <span>
-                              <span className="font-semibold text-slate-500">Updated</span> {formatDate(product.updatedAt)}
-                            </span>
-                            <span>
-                              <span className="font-semibold text-slate-500">Visibility</span> {product.visibility}
-                            </span>
-                            <Link
-                              to={`/admin/catalog/products/${product.id}/edit`}
-                              className="font-semibold text-[#4f7ef8] hover:underline"
-                            >
-                              Quick edit
-                            </Link>
-                            <Link
-                              to={`/admin/catalog/products/${product.id}/variants`}
-                              className="font-semibold text-[#4f7ef8] hover:underline"
-                            >
-                              Variants
-                            </Link>
-                            <Link
-                              to={`/admin/catalog/products/${product.id}/media`}
-                              className="font-semibold text-[#4f7ef8] hover:underline"
-                            >
-                              Media
-                            </Link>
-                          </div>
-                        </td>
-                      </tr>
-                    ) : null}
-                    </Fragment>
+                    <ProductTableRow
+                      key={product.id}
+                      product={product}
+                      isSelected={selected.has(product.id)}
+                      isExpanded={pinnedExpandId === product.id}
+                      onToggleSelect={toggleOne}
+                      onToggleExpand={toggleExpand}
+                      onPrefetch={prefetchProductDetail}
+                      onArchive={handleArchive}
+                    />
                   ))
+
                 )}
               </tbody>
             </table>

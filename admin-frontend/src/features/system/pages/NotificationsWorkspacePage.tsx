@@ -15,6 +15,7 @@ import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { formatDateTime } from "@/lib/format";
 import { useQuery } from "@tanstack/react-query";
+import { CACHE } from "@/lib/api/cache-strategy";
 import {
   ApiError,
   createAdminNotification,
@@ -135,7 +136,7 @@ export const NotificationsWorkspacePage = () => {
   const meta = query.data?.meta;
   const { prefetch: prefetchNotification, prefetchMany: prefetchNotifications } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (notificationId: string) => ["admin-notification", notificationId],
     queryFnFor: (notificationId: string) => getAdminNotification(accessToken!, notificationId),
     onPrefetch: () =>

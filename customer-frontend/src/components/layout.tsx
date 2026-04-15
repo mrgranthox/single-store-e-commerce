@@ -48,8 +48,7 @@ export const StoreBrandLink = ({
       alt={LOGO_ALT}
       className="h-7 w-auto sm:h-8 md:h-9 object-contain rounded-xl"
       width={120}
-      height={40}
-    />
+      height={40} loading="lazy" decoding="async" />
     <span
       className={`font-headline text-base sm:text-lg md:text-xl font-extrabold tracking-tighter truncate ${wordmarkClassName}`.trim()}
     >
@@ -338,7 +337,7 @@ export const Footer = () => (
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 md:gap-12">
       <div className="col-span-2 lg:col-span-1">
         <div className="flex items-center gap-2 mb-4">
-          <img src={LOGO_SRC} alt={LOGO_ALT} className="h-9 w-auto object-contain rounded-xl" width={120} height={40} />
+          <img src={LOGO_SRC} alt={LOGO_ALT} className="h-9 w-auto object-contain rounded-xl" width={120} height={40} loading="lazy" decoding="async" />
           <span className="text-lg font-headline font-extrabold tracking-tight text-on-background">{STORE_NAME_FULL}</span>
         </div>
         <p className="text-on-surface-variant text-xs tracking-wide leading-relaxed max-w-xs">

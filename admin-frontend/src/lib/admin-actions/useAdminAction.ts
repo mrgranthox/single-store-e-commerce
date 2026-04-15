@@ -32,7 +32,14 @@ type AdminActionOptions<TVariables, TResult> = {
    */
   errorMessage?: string | ((error: unknown, variables: TVariables) => string);
   onSuccess?: (result: TResult, variables: TVariables) => void;
-  onError?: (error: unknown, variables: TVariables) => void;
+  onError?: (error: unknown, variables: TVariables, context?: unknown) => void;
+  /**
+   * Called immediately before the mutation fires.
+   * Return a snapshot value to pass to `onError` and `onSettled` for rollback.
+   * Use this to implement optimistic UI updates.
+   */
+  onMutate?: (variables: TVariables) => Promise<unknown> | unknown;
+  onSettled?: (result: TResult | undefined, error: unknown, variables: TVariables) => void;
 };
 
 export const useAdminAction = <TVariables, TResult>({
@@ -45,7 +52,10 @@ export const useAdminAction = <TVariables, TResult>({
   successMessage,
   errorMessage,
   onSuccess,
-  onError }: AdminActionOptions<TVariables, TResult>) => {
+  onError,
+  onMutate,
+  onSettled,
+}: AdminActionOptions<TVariables, TResult>) => {
   const queryClient = useQueryClient();
   const token = useAdminAuthStore((s) => s.accessToken);
 
@@ -70,7 +80,8 @@ export const useAdminAction = <TVariables, TResult>({
       }
       onSuccess?.(result, variables);
     },
-    onError: (error, variables) => {
+    onMutate,
+    onError: (error, variables, context) => {
       if (errorMessage) {
         const msg =
           typeof errorMessage === "function"
@@ -78,8 +89,12 @@ export const useAdminAction = <TVariables, TResult>({
             : errorMessage;
         toast.error(msg);
       }
-      onError?.(error, variables);
-    } });
+      onError?.(error, variables, context);
+    },
+    onSettled: onSettled
+      ? (result, error, variables) => onSettled(result as TResult | undefined, error, variables)
+      : undefined,
+  });
 
   const run = (variables: TVariables) => {
     if (mutation.isPending || !isAllowed || !isAvailable) {

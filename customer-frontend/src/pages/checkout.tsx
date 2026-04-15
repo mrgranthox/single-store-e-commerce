@@ -98,8 +98,7 @@ export const CartPage = () => {
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     src={item.imageUrl}
-                    alt={item.name}
-                  />
+                    alt={item.name} loading="lazy" decoding="async" />
                 </div>
                 <div className="flex flex-col flex-grow min-w-0">
                   <div className="flex justify-between items-start gap-2 mb-1 md:mb-2">
@@ -483,7 +482,7 @@ export const CheckoutPaymentPage = () => {
                   {SUMMARY_ITEMS.map((item, i) => (
                     <div key={i} className="flex gap-4">
                       <div className="w-20 h-24 bg-surface-container-high overflow-hidden rounded-lg flex-shrink-0">
-                        <img className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" src={item.image} alt={item.name} />
+                        <img className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" src={item.image} alt={item.name} loading="lazy" decoding="async" />
                       </div>
                       <div className="flex flex-col justify-between py-1">
                         <div>
@@ -695,7 +694,7 @@ export const OrderSuccessPage = () => (
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
                   <div className="w-20 h-24 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
-                    <img className="w-full h-full object-cover" src={item.image} alt={item.name} />
+                    <img className="w-full h-full object-cover" src={item.image} alt={item.name} loading="lazy" decoding="async" />
                   </div>
                   <div className="flex-grow flex flex-col justify-center">
                     <p className="font-bold text-on-background">{item.name}</p>

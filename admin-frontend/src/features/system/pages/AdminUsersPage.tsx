@@ -13,6 +13,7 @@ import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { useQuery } from "@tanstack/react-query";
+import { CACHE } from "@/lib/api/cache-strategy";
 import {
   ApiError,
   createAdminUser,
@@ -82,7 +83,7 @@ export const AdminUsersPage = () => {
   const meta = query.data?.meta;
   const { prefetch: prefetchAdminUser, prefetchMany: prefetchAdminUsers } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (adminUserId: string) => ["admin-user-detail", adminUserId],
     queryFnFor: (adminUserId: string) => getAdminUser(accessToken!, adminUserId),
     onPrefetch: () =>

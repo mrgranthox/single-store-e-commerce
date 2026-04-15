@@ -30,6 +30,7 @@ import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { formatDateTime } from "@/lib/format";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const tone = (s: string): StatusBadgeTone => {
   if (s === "PROCESSED") {
@@ -91,7 +92,7 @@ export const WebhooksListPage = () => {
     queryKey: ["admin-webhooks-health-strip"],
     queryFn: () => adminJsonGet<HealthAgg>("/api/admin/integrations/health", accessToken),
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     retry: false
   });
 
@@ -141,7 +142,7 @@ export const WebhooksListPage = () => {
   const totalPages = meta ? Math.max(1, Math.ceil(meta.total / meta.pageSize)) : 1;
   const { prefetch: prefetchWebhook, prefetchMany: prefetchWebhooks } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (webhookEventId: string) => ["admin-webhook-event", webhookEventId],
     queryFnFor: (webhookEventId: string) => getAdminWebhookEvent(accessToken!, webhookEventId),
     onPrefetch: () => preloadLazyNamedComponent("../features/system/pages/WebhookDetailPage.tsx", "WebhookDetailPage")

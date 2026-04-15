@@ -195,17 +195,37 @@ export const OrderDetailPage = () => {
     setCampaignId(entity.campaignId ?? "");
   }, [entity?.campaignId, entity?.id]);
 
+  const orderDetailKey = orderKeys.detail(orderId);
+
   const statusMut = useAdminAction({
     mutationFn: () =>
       updateAdminOrderStatus(accessToken!, orderId, {
         status: nextStatus,
         ...(statusReason.trim() ? { reason: statusReason.trim() } : {}),
         ...(statusNote.trim() ? { note: statusNote.trim() } : {}) }),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: orderDetailKey });
+      const snapshot = queryClient.getQueryData(orderDetailKey);
+      queryClient.setQueryData(orderDetailKey, (old: unknown) => {
+        if (!old || typeof old !== "object") return old;
+        const prev = old as { data?: { entity?: { status?: string } } };
+        if (!prev.data?.entity) return old;
+        return { ...prev, data: { ...prev.data, entity: { ...prev.data.entity, status: nextStatus } } };
+      });
+      return snapshot;
+    },
+    onError: (_err: unknown, _vars: unknown, context: unknown) => {
+      if (context !== undefined) queryClient.setQueryData(orderDetailKey, context);
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: orderDetailKey });
+    },
     successMessage: "Order status updated.",
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Status update failed.",
     isAllowed: canUpdateOrder,
-    invalidate: orderInvalidateKeys });
+    invalidate: [],
+  });
 
   const assignMut = useAdminAction({
     mutationFn: () =>

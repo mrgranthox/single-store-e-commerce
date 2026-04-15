@@ -28,6 +28,7 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useListFilters } from "@/lib/hooks/useListFilters";
 import { formatMoney, formatDateCompact } from "@/lib/format";
 import { orderKeys } from "@/lib/query-keys";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const ORDER_STATUSES = [
   "",
@@ -48,7 +49,6 @@ const PAYMENT_STATES = [
   { value: "FAILED", label: "Failed" },
   { value: "REFUNDED", label: "Refunded" }
 ] as const;
-
 
 const isSameLocalDay = (iso: string, day: Date) => {
   try {
@@ -109,8 +109,6 @@ const orderStatusPill = (status: string) => {
   return <GhostPill dotClass="bg-[#1653cc]" label={status.replace(/_/g, " ")} textClass="text-[#1653cc]" />;
 };
 
-const ORDER_DETAIL_STALE_MS = 20_000;
-
 const ORDER_FILTERS_DEFAULTS = { q: "", status: "", paymentState: "" } as const;
 
 export const OrdersListPage = () => {
@@ -137,7 +135,7 @@ export const OrdersListPage = () => {
 
   const { prefetch: prefetchOrderDetail, prefetchMany: prefetchOrderDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: ORDER_DETAIL_STALE_MS,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (orderId: string) => orderKeys.detail(orderId),
     queryFnFor: (orderId: string) => getAdminOrderDetail(accessToken!, orderId),
     onPrefetch: () => preloadLazyNamedComponent("../features/orders/pages/OrderDetailPage.tsx", "OrderDetailPage") });

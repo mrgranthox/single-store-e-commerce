@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 /**
@@ -94,5 +94,34 @@ export function useListFilters<TFilters extends Record<string, string>>(options:
     ([key, value]) => value !== (options.defaults[key] ?? ""),
   );
 
-  return { filters, page, setPage, set, setMany, reset, hasActiveFilters };
+  /**
+   * Debounced `set` — ideal for live text inputs.
+   * Waits `delay` ms after the last call before writing to the URL so that
+   * intermediate keystrokes don't trigger extra queries.
+   */
+  const debounceTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const setRef = useRef(set);
+  setRef.current = set;
+
+  const setDebounced = useCallback(
+    <K extends keyof TFilters>(key: K, value: string, delay = 350) => {
+      const k = key as string;
+      const existing = debounceTimers.current.get(k);
+      if (existing) clearTimeout(existing);
+      const id = setTimeout(() => {
+        setRef.current(key, value);
+        debounceTimers.current.delete(k);
+      }, delay);
+      debounceTimers.current.set(k, id);
+    },
+    [],
+  );
+
+  // Clean up any pending timers on unmount
+  useEffect(() => {
+    const timers = debounceTimers.current;
+    return () => { timers.forEach(clearTimeout); };
+  }, []);
+
+  return { filters, page, setPage, set, setDebounced, setMany, reset, hasActiveFilters };
 }

@@ -17,6 +17,7 @@ import { ApiError } from "@/lib/api/http";
 import type { PageActionItem } from "@/components/primitives/PageActionsMenu";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 type AdminSurfacePageProps = {
   screenId: keyof typeof adminScreenLookup;
@@ -83,8 +84,7 @@ export const AdminSurfacePage = ({ screenId }: AdminSurfacePageProps) => {
       queryKey: ["admin-surface", screen.id, entry.endpointId, entry.resolvedPath],
       queryFn: () => adminJsonGet(entry.resolvedPath, accessToken),
       enabled: Boolean(accessToken) && Boolean(entry.resolvedPath),
-      staleTime: 20_000
-    }))
+      ...CACHE.OPERATIONAL}))
   });
 
   const resultByEndpointId = useMemo(() => {

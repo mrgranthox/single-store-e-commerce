@@ -20,6 +20,7 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useListFilters } from "@/lib/hooks/useListFilters";
 import { formatMoney, formatDateTime } from "@/lib/format";
 import { paymentKeys } from "@/lib/query-keys";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 
 const paymentRefLabel = (id: string) => `PAY-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -65,7 +66,7 @@ export const PaymentsListPage = () => {
   const meta = paymentsQuery.data?.meta;
   const { prefetch: prefetchPayment, prefetchMany: prefetchPayments } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (paymentId: string) => paymentKeys.detail(paymentId),
     queryFnFor: (paymentId: string) => getAdminPaymentDetail(accessToken!, paymentId),
     onPrefetch: () =>

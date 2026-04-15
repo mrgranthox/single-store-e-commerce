@@ -12,6 +12,7 @@ import { adminJsonGet } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import type { PageActionItem } from "@/components/primitives/PageHeader";
 import { formatDateTime } from "@/lib/format";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 type HealthPayload = {
   providers?: Record<string, boolean>;
@@ -158,20 +159,17 @@ export const IntegrationsHealthPage = () => {
         queryKey: ["admin-integrations-health"],
         queryFn: () => adminJsonGet<HealthPayload>("/api/admin/integrations/health", accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 20_000
-      },
+        ...CACHE.OPERATIONAL},
       {
         queryKey: ["admin-integrations-providers"],
         queryFn: () => adminJsonGet<ProvidersPayload>("/api/admin/integrations/providers", accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 20_000
-      },
+        ...CACHE.OPERATIONAL},
       {
         queryKey: ["admin-integrations-exceptions"],
         queryFn: () => adminJsonGet<ExceptionsPayload>("/api/admin/integrations/exceptions", accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 20_000
-      }
+        ...CACHE.OPERATIONAL}
     ]
   });
 

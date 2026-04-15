@@ -43,7 +43,7 @@ export const AuditLogsPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
 
-  const { filters, page, setPage, set, reset } = useListFilters({
+  const { filters, page, setPage, set, setDebounced, reset } = useListFilters({
     defaults: AUDIT_FILTER_DEFAULTS });
 
   const effectiveAction = filters.actionPreset || filters.actionCode.trim();
@@ -139,7 +139,7 @@ export const AuditLogsPage = () => {
             <StitchFieldLabel>Actor user ID</StitchFieldLabel>
             <input
               value={filters.actorAdminUserId}
-              onChange={(e) => set("actorAdminUserId", e.target.value)}
+              onChange={(e) => setDebounced("actorAdminUserId", e.target.value)}
               placeholder="User ID"
               className={`${stitchInputClass} font-mono text-xs`}
             />
@@ -148,7 +148,7 @@ export const AuditLogsPage = () => {
             <StitchFieldLabel>Actor email contains</StitchFieldLabel>
             <input
               value={filters.actorEmailContains}
-              onChange={(e) => set("actorEmailContains", e.target.value)}
+              onChange={(e) => setDebounced("actorEmailContains", e.target.value)}
               placeholder="Substring match…"
               className={stitchInputClass}
             />
@@ -176,7 +176,7 @@ export const AuditLogsPage = () => {
             <input
               value={filters.actionCode}
               disabled={Boolean(filters.actionPreset)}
-              onChange={(e) => set("actionCode", e.target.value)}
+              onChange={(e) => setDebounced("actionCode", e.target.value)}
               placeholder="e.g. orders.update…"
               className={stitchInputClass}
             />
@@ -185,7 +185,7 @@ export const AuditLogsPage = () => {
             <StitchFieldLabel>Entity type</StitchFieldLabel>
             <input
               value={filters.entityType}
-              onChange={(e) => set("entityType", e.target.value)}
+              onChange={(e) => setDebounced("entityType", e.target.value)}
               placeholder="ORDER, USER…"
               className={stitchInputClass}
             />
@@ -195,7 +195,7 @@ export const AuditLogsPage = () => {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
               <input
                 value={filters.entityId}
-                onChange={(e) => set("entityId", e.target.value)}
+                onChange={(e) => setDebounced("entityId", e.target.value)}
                 placeholder="Record ID"
                 className={`${stitchInputClass} min-w-0 flex-1 font-mono text-xs`}
               />

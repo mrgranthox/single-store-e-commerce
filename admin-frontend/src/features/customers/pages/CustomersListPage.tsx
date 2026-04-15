@@ -21,6 +21,7 @@ import { displayCustomerName } from "@/features/customers/lib/customerDisplay";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { StitchFilterPanel } from "@/components/stitch";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const USER_STATUSES = ["", "ACTIVE", "PENDING_VERIFICATION", "SUSPENDED", "LOCKED", "DEACTIVATED"] as const;
 
@@ -72,7 +73,6 @@ const listInitials = (c: AdminCustomerListItem) => {
   return em ? em.toUpperCase() : "?";
 };
 
-
 const parseOptionalInt = (value: string) => {
   const trimmed = value.trim();
   if (!trimmed) {
@@ -81,8 +81,6 @@ const parseOptionalInt = (value: string) => {
   const parsed = parseInt(trimmed, 10);
   return Number.isFinite(parsed) ? parsed : undefined;
 };
-
-const CUSTOMER_DETAIL_STALE_MS = 20_000;
 
 const parseOptionalLtvCents = (value: string) => {
   const trimmed = value.trim();
@@ -167,7 +165,7 @@ export const CustomersListPage = () => {
 
   const { prefetch: prefetchCustomerDetail, prefetchMany: prefetchCustomerDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
-    staleTime: CUSTOMER_DETAIL_STALE_MS,
+    ...CACHE.OPERATIONAL,
     queryKeyFor: (customerId: string) => customerKeys.detail(customerId),
     queryFnFor: (customerId: string) => getAdminCustomerDetail(accessToken!, customerId),
     onPrefetch: () =>

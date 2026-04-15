@@ -107,8 +107,7 @@ export const AccountDashboardPage = () => {
                 <img
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   src={order.items[0].imageUrl}
-                  alt={order.items[0].name}
-                />
+                  alt={order.items[0].name} loading="lazy" decoding="async" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -213,8 +212,7 @@ export const OrdersListPage = () => {
                 <img
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   src={order.items[0].imageUrl}
-                  alt={order.items[0].name}
-                />
+                  alt={order.items[0].name} loading="lazy" decoding="async" />
               </div>
               <div className="flex-grow mt-6 lg:mt-0 lg:px-8 space-y-1">
                 <div className="flex items-center gap-3 mb-2">
@@ -326,7 +324,7 @@ export const OrderDetailPage = () => {
           {order.items.map((item, i) => (
             <div key={i} className="flex gap-6 p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
               <div className="w-24 h-28 bg-surface-container rounded-xl overflow-hidden flex-shrink-0">
-                <img className="w-full h-full object-cover" src={item.imageUrl} alt={item.name} />
+                <img className="w-full h-full object-cover" src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" />
               </div>
               <div className="flex flex-col justify-between flex-grow">
                 <div>
@@ -536,7 +534,7 @@ export const ReviewsCenterPage = () => {
           <div key={order.id} className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20 mb-4">
             <div className="flex gap-4 mb-6">
               <div className="w-16 h-20 bg-surface-container rounded-lg overflow-hidden">
-                <img className="w-full h-full object-cover" src={order.items[0].imageUrl} alt={order.items[0].name} />
+                <img className="w-full h-full object-cover" src={order.items[0].imageUrl} alt={order.items[0].name} loading="lazy" decoding="async" />
               </div>
               <div>
                 <h3 className="font-headline font-bold">{order.items[0].name}</h3>
@@ -876,7 +874,7 @@ export const ReturnRequestPage = () => {
                 >
                   <input type="checkbox" className={`h-5 w-5 ${neutralCheckboxClass}`} />
                   <div className="w-16 h-20 bg-surface-container rounded-lg overflow-hidden">
-                    <img className="w-full h-full object-cover" src={item.imageUrl} alt={item.name} />
+                    <img className="w-full h-full object-cover" src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" />
                   </div>
                   <div>
                     <p className="font-bold">{item.name}</p>

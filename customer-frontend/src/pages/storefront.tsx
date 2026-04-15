@@ -119,8 +119,7 @@ export const HomePage = () => {
           <img
             className="absolute inset-0 w-full h-full object-cover object-center opacity-95 md:opacity-92"
             src={homepage.hero.backgroundImageUrl}
-            alt={homepage.hero.backgroundImageAlt}
-          />
+            alt={homepage.hero.backgroundImageAlt} loading="eager" fetchPriority="high" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/72 md:from-black/58 via-black/28 md:via-black/15 to-transparent" />
           <div className="relative z-[1] min-h-[min(72dvh,540px)] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-stretch sm:items-start pb-16 md:pb-0 pt-24 md:pt-0 w-full min-w-0">
             {homepage.hero.eyebrow ? (
@@ -212,8 +211,7 @@ export const HomePage = () => {
                     <img
                       src={category.imageUrl}
                       alt={`${category.title} — ${category.description}`}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                    />
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" loading="lazy" decoding="async" />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary-container/75 via-primary-container/10 to-transparent" />
                   </div>
                   <div className="p-3 sm:p-4 flex flex-col flex-1">
@@ -311,8 +309,7 @@ export const HomePage = () => {
                     <img
                       src={brand.heroImageUrl}
                       alt={`${brand.title}: ${brand.tagline}`}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                    />
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary-container/80 via-transparent to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-2">
                       <div>
@@ -348,8 +345,7 @@ export const HomePage = () => {
                                 <img
                                   src={product.imageUrl}
                                   alt={`${product.name} — ${brand.title}`}
-                                  className="h-full w-full object-cover group-hover/p:scale-105 transition-transform duration-500"
-                                />
+                                  className="h-full w-full object-cover group-hover/p:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                               </div>
                               <span className="text-[10px] font-headline font-semibold text-on-background line-clamp-2 leading-tight group-hover/p:text-secondary transition-colors break-words">
                                 {product.name}
@@ -412,8 +408,7 @@ export const HomePage = () => {
                         <img
                           src={campaign.heroImageUrl}
                           alt={`${campaign.title} campaign`}
-                          className="absolute inset-0 h-full w-full object-cover object-center opacity-55 transition-transform duration-[2.2s] group-hover:scale-[1.04]"
-                        />
+                          className="absolute inset-0 h-full w-full object-cover object-center opacity-55 transition-transform duration-[2.2s] group-hover:scale-[1.04]" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-gradient-to-r from-primary-container/95 via-primary-container/55 to-transparent" />
                         <div className="relative z-[1] h-full min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] flex flex-col justify-end md:justify-center p-5 sm:p-10 md:p-14 w-full max-w-full md:max-w-lg min-w-0">
                           <span className="font-label text-tertiary-fixed tracking-[0.3em] uppercase text-[10px] font-bold mb-2">
@@ -441,8 +436,7 @@ export const HomePage = () => {
                           <img
                             src={campaign.heroImageUrl}
                             alt={`${campaign.title} campaign`}
-                            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-                          />
+                            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
                           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/50 to-transparent" />
                         </div>
                         <div className="flex flex-1 flex-col justify-center p-5 sm:p-8 md:p-10 min-w-0">
@@ -501,8 +495,7 @@ export const HomePage = () => {
                     <img
                       src={promo.bannerImageUrl}
                       alt={`${promo.headline} — promotional banner, code ${promo.code}`}
-                      className="absolute inset-0 h-full w-full object-cover object-center"
-                    />
+                      className="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" decoding="async" />
                     <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-primary-container/88 via-primary-container/35 to-transparent" />
                     <div className="relative h-full min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-6 sm:p-8">
                       <span className="inline-flex w-fit rounded-full bg-white/15 backdrop-blur-md px-3 py-1 font-label text-[10px] uppercase tracking-widest text-white font-bold border border-white/20">
@@ -594,8 +587,7 @@ export const HomePage = () => {
                         <img
                           className="w-full h-full object-cover"
                           src={testimonial.imageUrl}
-                          alt={`Portrait of ${testimonial.customerName}`}
-                        />
+                          alt={`Portrait of ${testimonial.customerName}`} loading="lazy" decoding="async" />
                       </div>
                       <div>
                         <p className="font-headline font-bold text-sm">{testimonial.customerName}</p>
@@ -760,11 +752,11 @@ export const ProductDetailPage = () => {
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-w-0">
               <div className="order-2 lg:order-none flex flex-row lg:flex-col gap-3 lg:gap-4 lg:w-20 shrink-0 overflow-x-auto no-scrollbar pb-1 lg:pb-0 -mx-1 px-1 lg:mx-0 lg:px-0 w-full lg:w-auto">
                 <button type="button" className="flex-shrink-0 w-16 sm:w-20 aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm group border-2 border-secondary">
-                  <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={product.imageUrl} alt={product.name} />
+                  <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={product.imageUrl} alt={product.name} loading="lazy" decoding="async" />
                 </button>
                 {(product.images ?? []).slice(1, 3).map((img, i) => (
                   <button key={i} type="button" className="flex-shrink-0 w-16 sm:w-20 aspect-[3/4] bg-surface-container-low overflow-hidden rounded-sm group border-2 border-transparent">
-                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={img} alt="" />
+                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={img} alt="" loading="lazy" decoding="async" />
                   </button>
                 ))}
                 <Link
@@ -776,7 +768,7 @@ export const ProductDetailPage = () => {
                 </Link>
               </div>
               <div className="order-1 lg:order-none w-full min-w-0 flex-1 relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-[4/5] max-h-[min(78dvh,560px)] sm:max-h-[min(88dvh,640px)] lg:max-h-none bg-surface-container-low overflow-hidden rounded-sm group">
-                <img className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 cursor-zoom-in" src={product.imageUrl} alt={product.name} />
+                <img className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 cursor-zoom-in" src={product.imageUrl} alt={product.name} loading="lazy" decoding="async" />
                 {product.badge && (
                   <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
                     <span className="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 text-[10px] font-label font-bold uppercase tracking-widest shadow-sm">
@@ -982,7 +974,7 @@ export const ProductDetailPage = () => {
               </div>
               <div className="col-span-12 lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 min-w-0">
                 <div className="aspect-[4/3] sm:aspect-square max-h-80 sm:max-h-none w-full bg-surface-container overflow-hidden rounded-sm">
-                  <img className="w-full h-full object-cover" src={product.imageUrl} alt="detail" />
+                  <img className="w-full h-full object-cover" src={product.imageUrl} alt="detail" loading="lazy" decoding="async" />
                 </div>
                 <div className="flex flex-col justify-center min-w-0 pt-2 sm:pt-0">
                   <h4 className="text-xs font-label font-bold uppercase tracking-widest mb-4">Craftsmanship Details</h4>
@@ -1188,8 +1180,7 @@ export const CampaignPage = () => {
           <img
             className="absolute inset-0 w-full h-full object-cover object-center opacity-55 sm:opacity-60"
             src={campaign.heroImageUrl}
-            alt=""
-          />
+            alt="" loading="lazy" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/90 md:from-primary-container/82 via-primary-container/35 md:via-transparent to-transparent" />
           <div className="relative h-full min-h-[42dvh] sm:min-h-[48dvh] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-start py-10 sm:py-14 md:py-16 lg:py-0">
             <span className="font-label text-tertiary-fixed tracking-[0.35em] uppercase text-[10px] sm:text-xs mb-3 sm:mb-4 font-bold block">
@@ -1298,8 +1289,7 @@ export const BrandsIndexPage = () => (
             <img
               src={b.heroImage}
               alt=""
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-            />
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-t from-primary-container/70 via-transparent to-transparent" />
             <span className="absolute bottom-4 left-4 font-label text-[10px] uppercase tracking-[0.2em] text-white/90 font-bold">
               Brand
@@ -1354,8 +1344,7 @@ export const BrandPage = () => {
         <img
           src={meta?.heroImage ?? brandProducts[0]?.imageUrl ?? featuredProducts[0].imageUrl}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-50"
-        />
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-50" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/92 md:from-primary-container/88 via-primary-container/45 to-transparent" />
         <div className="relative z-[1] flex flex-col justify-end md:justify-center min-h-[38dvh] sm:min-h-[44dvh] md:min-h-[360px] px-5 sm:px-8 md:px-12 py-8 sm:py-10 md:py-12 max-w-3xl">
           <span className="font-label text-tertiary-fixed text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold mb-2 sm:mb-3">

@@ -13,6 +13,7 @@ import { adminJsonGet } from "@/lib/api/admin-get";
 import { ApiError, listAdminSystemSettings, patchAdminSystemSettings, type SystemSettingRow } from "@/features/system/api/admin-system.api";
 import { listAdminActionLogs, type AdminActionLogItem } from "@/features/security/api/admin-audit.api";
 import { humanizeSettingKey, summarizeSettingValue } from "@/features/system/lib/settingsValueSummary";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const formatApiUptime = (totalSeconds: number) => {
   const d = Math.floor(totalSeconds / 86400);
@@ -82,8 +83,7 @@ export const SystemSettingsPage = () => {
     },
     enabled: Boolean(accessToken),
     retry: false,
-    staleTime: 60_000
-  });
+    ...CACHE.ANALYTICS});
 
   const patchMut = useMutation({
     mutationFn: async (payload: { key: string; value: unknown }) => {

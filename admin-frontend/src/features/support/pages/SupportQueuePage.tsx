@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
@@ -819,7 +819,7 @@ const slaQueueRemainingCell = (t: SupportTicketListItem) => {
   return <span className="text-xs text-[#60626c]">—</span>;
 };
 
-const SlaQueueRow = ({ t, index }: { t: SupportTicketListItem; index: number }) => (
+const SlaQueueRow = memo(({ t, index }: { t: SupportTicketListItem; index: number }) => (
   <tr className="group transition-colors hover:bg-[#e6e7f6]">
     <td className="px-6 py-3 font-mono text-sm text-[#434654]">{String(index + 1).padStart(2, "0")}</td>
     <td className="px-6 py-3 font-mono text-sm font-bold text-[#ba1a1a]">
@@ -861,9 +861,9 @@ const SlaQueueRow = ({ t, index }: { t: SupportTicketListItem; index: number }) 
       </Link>
     </td>
   </tr>
-);
+));
 
-const PrePurchaseRow = ({ t }: { t: SupportTicketListItem }) => {
+const PrePurchaseRow = memo(({ t }: { t: SupportTicketListItem }) => {
   const initials = initialsFromCustomer(t.customer.name, t.customer.email);
   const guest = !t.customer.id;
   return (
@@ -919,9 +919,10 @@ const PrePurchaseRow = ({ t }: { t: SupportTicketListItem }) => {
       </td>
     </tr>
   );
-};
+});
 
-const ComplaintRow = ({ t }: { t: SupportTicketListItem }) => {
+
+const ComplaintRow = memo(({ t }: { t: SupportTicketListItem }) => {
   const atRisk =
     t.slaBreached ||
     (t.slaSecondsRemaining != null && t.slaSecondsRemaining > 0 && t.slaSecondsRemaining <= 3600);
@@ -962,4 +963,5 @@ const ComplaintRow = ({ t }: { t: SupportTicketListItem }) => {
       </td>
     </tr>
   );
-};
+});
+

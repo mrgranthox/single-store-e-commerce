@@ -16,6 +16,7 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { adminJsonGet } from "@/lib/api/admin-get";
 import { ApiError } from "@/lib/api/http";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 const rangeQueryString = () => {
   const to = new Date();
@@ -241,21 +242,18 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
         queryFn: () =>
           adminJsonGet<SalesDash>(`/api/admin/reports/sales?${salesRangeQs}`, accessToken),
         enabled: Boolean(accessToken) && segment === "sales",
-        staleTime: 30_000
-      },
+        ...CACHE.OPERATIONAL},
       {
         queryKey: ["admin-dashboard", "sales-bundle", "products", salesRangeDays],
         queryFn: () =>
           adminJsonGet<ProductsDash>(`/api/admin/reports/products?${salesRangeQs}`, accessToken),
         enabled: Boolean(accessToken) && segment === "sales",
-        staleTime: 30_000
-      },
+        ...CACHE.OPERATIONAL},
       {
         queryKey: ["admin-dashboard", "sales-bundle", "payments-overview"],
         queryFn: () => adminJsonGet<OverviewPayments>("/api/admin/dashboard/overview", accessToken),
         enabled: Boolean(accessToken) && segment === "sales",
-        staleTime: 60_000
-      }
+        ...CACHE.ANALYTICS}
     ]
   });
 
@@ -266,8 +264,7 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
       return adminJsonGet<unknown>(path, accessToken);
     },
     enabled: Boolean(accessToken) && segment !== "sales",
-    staleTime: 30_000
-  });
+    ...CACHE.OPERATIONAL});
 
   const err =
     legacyQ.error instanceof ApiError
@@ -819,7 +816,7 @@ const OperationsSegment = ({
     queryFn: () =>
       adminJsonGet<{ items: AdminActionRow[] }>("/api/admin/admin-action-logs?page=1&page_size=5", accessToken),
     enabled: Boolean(accessToken),
-    staleTime: 20_000,
+    ...CACHE.OPERATIONAL,
     retry: false
   });
   const overridesState = getDashboardPartialState({
@@ -1412,14 +1409,14 @@ const HealthSegment = ({ data, accessToken }: { data: HealthDash; accessToken: s
         queryFn: () =>
           adminJsonGet<{ items: JobRunListItem[] }>("/api/admin/jobs?page=1&pageSize=8", accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 12_000,
+        ...CACHE.REAL_TIME,
         retry: false
       },
       {
         queryKey: ["admin-dashboard", "health-integrations-extended"],
         queryFn: () => adminJsonGet<IntegrationsHealthLatencyPayload>("/api/admin/integrations/health", accessToken),
         enabled: Boolean(accessToken),
-        staleTime: 20_000,
+        ...CACHE.OPERATIONAL,
         retry: false
       }
     ]
@@ -1431,7 +1428,7 @@ const HealthSegment = ({ data, accessToken }: { data: HealthDash; accessToken: s
       queryFn: () =>
         adminJsonGet<{ items: unknown[] }>(`/api/admin/jobs?page=1&pageSize=1&status=${st}`, accessToken),
       enabled: Boolean(accessToken),
-      staleTime: 15_000,
+      ...CACHE.REAL_TIME,
       retry: false
     }))
   });

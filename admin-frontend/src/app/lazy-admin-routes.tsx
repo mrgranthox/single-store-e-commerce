@@ -1,4 +1,5 @@
 import { Suspense, lazy, type ComponentType, type LazyExoticComponent } from "react";
+import { FeatureErrorBoundary } from "@/components/primitives/FeatureErrorBoundary";
 
 import { WorkspaceRouteSkeleton } from "@/components/primitives/WorkspaceRouteSkeleton";
 
@@ -56,16 +57,25 @@ export const getLazyNamedComponent = (modulePath: string, exportName: string) =>
   return component;
 };
 
+/** Derive a human-readable feature label from the module path for error reporting. */
+const featureLabelFromPath = (modulePath: string): string => {
+  const segment = modulePath.split("/features/")[1]?.split("/")[0] ?? modulePath;
+  return segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ");
+};
+
 export const renderLazyRoute = (
   modulePath: string,
   exportName: string,
   props?: Record<string, unknown>
 ) => {
   const Component = getLazyNamedComponent(modulePath, exportName);
+  const feature = featureLabelFromPath(modulePath);
 
   return (
-    <Suspense fallback={<WorkspaceRouteSkeleton />}>
-      <Component {...(props ?? {})} />
-    </Suspense>
+    <FeatureErrorBoundary feature={feature}>
+      <Suspense fallback={<WorkspaceRouteSkeleton />}>
+        <Component {...(props ?? {})} />
+      </Suspense>
+    </FeatureErrorBoundary>
   );
 };
