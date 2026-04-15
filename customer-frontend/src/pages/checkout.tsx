@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -870,7 +870,12 @@ export const CheckoutReviewPage = () => {
 ───────────────────────────────────────────── */
 export const OrderSuccessPage = () => {
   const result = readCheckoutResult();
+  const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
   const orderLabel = result?.orderNumber ? `#${result.orderNumber}` : "your order";
+  const rawNum = result?.orderNumber?.replace(/^#/, "").trim() ?? "";
+  const trackHref =
+    rawNum.length > 0 ? `/track-order?order=${encodeURIComponent(rawNum)}` : "/track-order";
+  const accountOrderHref = result?.orderId ? `/account/orders/${result.orderId}` : "/account/orders";
 
   return (
   <div className="bg-surface font-body text-on-surface antialiased">
@@ -905,8 +910,11 @@ export const OrderSuccessPage = () => {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Link to="/account/orders" className="bg-gradient-to-r from-secondary to-secondary-container text-on-secondary px-8 py-4 rounded-md font-bold tracking-tight text-center hover:opacity-90 transition-opacity">
-              Track Your Order
+            <Link
+              to={isAuthenticated ? accountOrderHref : trackHref}
+              className="bg-gradient-to-r from-secondary to-secondary-container text-on-secondary px-8 py-4 rounded-md font-bold tracking-tight text-center hover:opacity-90 transition-opacity"
+            >
+              {isAuthenticated ? "View order" : "Track your order"}
             </Link>
             <Link to="/shop" className="bg-surface-container-high text-on-surface px-8 py-4 rounded-md font-bold tracking-tight text-center hover:bg-surface-variant transition-colors">
               Continue Shopping
@@ -930,11 +938,25 @@ export const OrderSuccessPage = () => {
           <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_-5px_rgba(11,28,48,0.06)] space-y-8">
             <h2 className="text-xl font-headline font-bold text-on-background">Order Summary</h2>
             <p className="text-sm text-on-surface-variant leading-relaxed">
-              Line items and final totals are stored with your order. Open{" "}
-              <Link to="/account/orders" className="text-secondary font-bold underline underline-offset-4">
-                Orders
-              </Link>{" "}
-              when signed in, or use track order with the email used at checkout.
+              Line items and final totals are stored with your order.
+              {isAuthenticated ? (
+                <>
+                  {" "}
+                  Open{" "}
+                  <Link to="/account/orders" className="text-secondary font-bold underline underline-offset-4">
+                    Orders
+                  </Link>{" "}
+                  for full history.
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Link to={trackHref} className="text-secondary font-bold underline underline-offset-4">
+                    Track this order
+                  </Link>{" "}
+                  with your order number and checkout email.
+                </>
+              )}
             </p>
             <div className="bg-surface-container-low p-4 rounded-xl flex items-start gap-3">
               <Icon name="verified" className="text-secondary" />
@@ -963,11 +985,18 @@ export const OrderSuccessPage = () => {
    GUEST TRACKING PAGE
 ───────────────────────────────────────────── */
 export const GuestTrackingPage = () => {
+  const [searchParams] = useSearchParams();
   const [orderNumber, setOrderNumber] = useState("");
   const [email, setEmail] = useState("");
   const [entity, setEntity] = useState<unknown>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    const fromQuery = searchParams.get("order")?.trim();
+    if (!fromQuery) return;
+    setOrderNumber(fromQuery.replace(/^#/, ""));
+  }, [searchParams]);
 
   return (
     <StorefrontShell>

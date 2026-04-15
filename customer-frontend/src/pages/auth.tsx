@@ -12,6 +12,7 @@ import { mockImages } from "@/lib/data/mock-images";
 import { neutralCheckboxClass, neutralFieldClass } from "@/lib/form-field-styles";
 import { customerAuthApi } from "@/lib/api/customer-auth-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
+import { sanitizeReturnTo } from "@/app/require-customer-auth";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const AuthFooter = () => (
@@ -48,6 +49,9 @@ const loginSchema = z.object({
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnToSafe = sanitizeReturnTo(searchParams.get("returnTo"));
+  const registerHref = returnToSafe ? `/register?returnTo=${encodeURIComponent(returnToSafe)}` : "/register";
   const queryClient = useQueryClient();
   const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -61,7 +65,7 @@ export const LoginPage = () => {
       await customerAuthApi.login({ email: data.email, password: data.password });
       hydrateAuth();
       await queryClient.invalidateQueries();
-      navigate("/account");
+      navigate(returnToSafe ?? "/account");
     } catch (error) {
       setSubmitError(error instanceof CommerceApiError ? error.message : "Sign in failed.");
     }
@@ -174,7 +178,7 @@ export const LoginPage = () => {
 
             <p className="mt-8 text-center text-sm font-body text-on-surface-variant">
               Don't have an account?{" "}
-              <Link className="text-secondary font-semibold hover:underline" to="/register">Create an account</Link>
+              <Link className="text-secondary font-semibold hover:underline" to={registerHref}>Create an account</Link>
             </p>
 
             <div className="mt-12 flex justify-center items-center gap-6 opacity-60">
@@ -198,9 +202,15 @@ export const LoginPage = () => {
 /* ─────────────────────────────────────────────
    REGISTER PAGE — matches register/code.html
 ───────────────────────────────────────────── */
+const e164Phone = z
+  .string()
+  .trim()
+  .regex(/^\+[1-9]\d{7,14}$/, "Use international format with + and country code (e.g. +233241234567).");
+
 const registerSchema = z.object({
   fullName: z.string().min(2, "Name required"),
   email: z.string().email("Invalid email"),
+  phoneNumber: e164Phone,
   password: z.string().min(8, "Min 8 characters"),
   confirmPassword: z.string(),
   newsletter: z.boolean().optional(),
@@ -209,6 +219,9 @@ const registerSchema = z.object({
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnToSafe = sanitizeReturnTo(searchParams.get("returnTo"));
+  const loginHref = returnToSafe ? `/login?returnTo=${encodeURIComponent(returnToSafe)}` : "/login";
   const queryClient = useQueryClient();
   const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -229,6 +242,7 @@ export const RegisterPage = () => {
         firstName,
         lastName,
         email: data.email,
+        phoneNumber: data.phoneNumber.trim(),
         password: data.password,
         marketingOptIn: Boolean(data.newsletter),
         acceptTerms: true
@@ -236,7 +250,7 @@ export const RegisterPage = () => {
       await customerAuthApi.login({ email: data.email, password: data.password });
       hydrateAuth();
       await queryClient.invalidateQueries();
-      navigate("/account");
+      navigate(returnToSafe ?? "/account");
     } catch (error) {
       setSubmitError(error instanceof CommerceApiError ? error.message : "Registration failed.");
     }
@@ -247,7 +261,7 @@ export const RegisterPage = () => {
       <header className="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl">
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <StoreBrandLink to="/" wordmarkClassName="text-slate-900" />
-          <Link className="text-sm font-label font-medium text-secondary hover:underline transition-all" to="/login">
+          <Link className="text-sm font-label font-medium text-secondary hover:underline transition-all" to={loginHref}>
             Already have an account? Sign in
           </Link>
         </div>
@@ -303,6 +317,26 @@ export const RegisterPage = () => {
                   )}
                 </div>
               ))}
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-label font-bold uppercase tracking-wider text-outline" htmlFor="phoneNumber">
+                  Mobile number
+                </label>
+                <input
+                  {...register("phoneNumber")}
+                  id="phoneNumber"
+                  className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`}
+                  placeholder="+233241234567"
+                  type="tel"
+                  autoComplete="tel"
+                />
+                <p className="text-[11px] text-on-surface-variant leading-snug">
+                  Include country code with + (required for account security).
+                </p>
+                {errors.phoneNumber ? (
+                  <p className="text-xs text-error">{String(errors.phoneNumber.message ?? "")}</p>
+                ) : null}
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[

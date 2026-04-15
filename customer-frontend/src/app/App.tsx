@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ScrollToTop } from "@/app/ScrollToTop";
 import { PageLoader } from "@/app/PageLoader";
+import { RequireCustomerAuth } from "@/app/require-customer-auth";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 // ---------------------------------------------------------------------------
@@ -143,24 +144,143 @@ export const App = () => (
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/session-expired" element={<SessionExpiredPage />} />
 
-          {/* Account */}
-          <Route path="/account" element={<AccountDashboardPage />} />
-          <Route path="/account/profile" element={<ProfilePage />} />
-          <Route path="/account/addresses" element={<AddressesPage />} />
-          <Route path="/account/orders" element={<AccountOrdersListPage />} />
-          <Route path="/account/orders/:orderId" element={<AccountOrderDetailPage />} />
-          <Route path="/account/orders/:orderId/tracking" element={<ShipmentTrackingPage />} />
-          <Route path="/account/orders/:orderId/track" element={<ShipmentTrackingPage />} />
-          <Route path="/account/orders/:orderId/return" element={<ReturnRequestPage />} />
-          <Route path="/account/returns" element={<ReturnsListPage />} />
-          <Route path="/account/returns/new" element={<ReturnRequestPage />} />
-          <Route path="/account/refunds" element={<RefundsListPage />} />
-          <Route path="/account/reviews" element={<ReviewsCenterPage />} />
-          <Route path="/account/security" element={<AccountSecurityPage />} />
-          <Route path="/account/preferences" element={<PreferencesPage />} />
-          <Route path="/account/support" element={<AccountSupportPage />} />
-          <Route path="/account/support/new" element={<CreateTicketPage />} />
-          <Route path="/account/support/:ticketId" element={<AccountTicketDetailPage />} />
+          {/* Account — signed-in only; guests can still checkout and use /track-order */}
+          <Route
+            path="/account"
+            element={
+              <RequireCustomerAuth>
+                <AccountDashboardPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/profile"
+            element={
+              <RequireCustomerAuth>
+                <ProfilePage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/addresses"
+            element={
+              <RequireCustomerAuth>
+                <AddressesPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/orders"
+            element={
+              <RequireCustomerAuth>
+                <AccountOrdersListPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/orders/:orderId"
+            element={
+              <RequireCustomerAuth>
+                <AccountOrderDetailPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/orders/:orderId/tracking"
+            element={
+              <RequireCustomerAuth>
+                <ShipmentTrackingPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/orders/:orderId/track"
+            element={
+              <RequireCustomerAuth>
+                <ShipmentTrackingPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/orders/:orderId/return"
+            element={
+              <RequireCustomerAuth>
+                <ReturnRequestPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/returns"
+            element={
+              <RequireCustomerAuth>
+                <ReturnsListPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/returns/new"
+            element={
+              <RequireCustomerAuth>
+                <ReturnRequestPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/refunds"
+            element={
+              <RequireCustomerAuth>
+                <RefundsListPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/reviews"
+            element={
+              <RequireCustomerAuth>
+                <ReviewsCenterPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/security"
+            element={
+              <RequireCustomerAuth>
+                <AccountSecurityPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/preferences"
+            element={
+              <RequireCustomerAuth>
+                <PreferencesPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/support"
+            element={
+              <RequireCustomerAuth>
+                <AccountSupportPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/support/new"
+            element={
+              <RequireCustomerAuth>
+                <CreateTicketPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/support/:ticketId"
+            element={
+              <RequireCustomerAuth>
+                <AccountTicketDetailPage />
+              </RequireCustomerAuth>
+            }
+          />
 
           {/* Support */}
           <Route path="/support" element={<SupportCenterPage />} />

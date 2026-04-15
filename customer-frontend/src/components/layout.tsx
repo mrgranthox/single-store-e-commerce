@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "@/components/Icon";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
 import { neutralFieldClass } from "@/lib/form-field-styles";
@@ -189,9 +189,15 @@ export const TopNavBar = () => {
                     </span>
                   )}
                 </Link>
-                <Link to="/account" className={topNavIconBtn} aria-label="Account">
-                  <Icon name="person" className="text-[22px]" />
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/account" className={topNavIconBtn} aria-label="Account">
+                    <Icon name="person" className="text-[22px]" />
+                  </Link>
+                ) : (
+                  <Link to="/login" className={topNavIconBtn} aria-label="Sign in">
+                    <Icon name="login" className="text-[22px]" />
+                  </Link>
+                )}
                 {isAuthenticated && (
                   <button
                     type="button"
@@ -396,6 +402,10 @@ export const Footer = () => (
 ───────────────────────────────────────────── */
 export const BottomNavBar = () => {
   const cartCount = useCartItemCount();
+  const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
+  const { pathname } = useLocation();
+  const guestAuthTabActive =
+    !isAuthenticated && (pathname === "/login" || pathname === "/register");
 
   const scrollTabToTop = () => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -471,17 +481,30 @@ export const BottomNavBar = () => {
             </>
           )}
         </NavLink>
-        <NavLink to="/account" onClick={scrollTabToTop} className={({ isActive }) => tabWrap(isActive)}>
-          {({ isActive }) => (
+        <NavLink
+          to={isAuthenticated ? "/account" : "/login"}
+          onClick={scrollTabToTop}
+          className={({ isActive }) => tabWrap(isActive || guestAuthTabActive)}
+        >
+          {({ isActive }) => {
+            const tabOn = isActive || guestAuthTabActive;
+            return (
             <>
               <span
-                className={`h-0.5 w-5 rounded-full mb-0.5 transition-opacity ${isActive ? "bg-secondary opacity-100" : "opacity-0"}`}
+                className={`h-0.5 w-5 rounded-full mb-0.5 transition-opacity ${tabOn ? "bg-secondary opacity-100" : "opacity-0"}`}
                 aria-hidden
               />
-              <Icon name="person" filled={isActive} className="text-[24px] -mt-1" />
-              <span className="font-label text-[7px] font-bold tracking-[0.12em] uppercase leading-none">You</span>
+              <Icon
+                name={isAuthenticated ? "person" : "login"}
+                filled={tabOn}
+                className="text-[24px] -mt-1"
+              />
+              <span className="font-label text-[7px] font-bold tracking-[0.12em] uppercase leading-none">
+                {isAuthenticated ? "You" : "Sign in"}
+              </span>
             </>
-          )}
+            );
+          }}
         </NavLink>
       </div>
     </nav>
