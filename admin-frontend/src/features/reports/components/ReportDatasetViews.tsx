@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { ReactNode } from "react";
 
 import { DataTableShell } from "@/components/primitives/DataTableShell";
@@ -173,11 +174,10 @@ const SalesView = ({
         ? `${summary.discountImpactPctOfGross}% (of gross)`
         : "—";
 
-  const points = series.map((row) => ({
-    date: row.date,
-    grossCents: row.revenueCents,
-    netCents: row.netRevenueCents
-  }));
+  const points = useMemo(
+    () => series.map((row) => ({ date: row.date, grossCents: row.revenueCents, netCents: row.netRevenueCents })),
+    [series],
+  );
 
   const exportSalesCsv = () => {
     downloadCsv(
@@ -337,18 +337,13 @@ const ProductsView = ({
   const avgReturn =
     totalUnits > 0 ? `${((returnedUnits / totalUnits) * 100).toFixed(2)}%` : "—";
   const avgRefund = totalRev > 0 ? `${((refundedCents / totalRev) * 100).toFixed(2)}%` : "—";
-  const rows = data.topProducts.map((p, i) => {
-    const pct = totalRev > 0 ? `${((p.revenueCents / totalRev) * 100).toFixed(1)}%` : "—";
-    return [
-      String(i + 1),
-      p.title,
-      String(p.quantitySold),
-      money(p.revenueCents),
-      `${p.returnRatePct ?? 0}%`,
-      `${p.refundRatePct ?? 0}%`,
-      pct
-    ];
-  });
+  const rows = useMemo(
+    () => data.topProducts.map((p, i) => {
+      const pct = totalRev > 0 ? `${((p.revenueCents / totalRev) * 100).toFixed(1)}%` : "—";
+      return [String(i + 1), p.title, String(p.quantitySold), money(p.revenueCents), `${p.returnRatePct ?? 0}%`, `${p.refundRatePct ?? 0}%`, pct];
+    }),
+    [data.topProducts, totalRev],
+  );
 
   const catRows = data.categoryPerformance ?? [];
   const highReturn = data.highReturnProducts ?? [];
@@ -622,16 +617,17 @@ const CustomersView = ({
   const ltv = data.ltvBuckets ?? [];
   const geo = data.geographicDistribution ?? [];
 
-  const rows = data.topCustomers.map((c) => [
-    c.name ?? "—",
-    <span key={c.id} className="font-mono text-xs">
-      {c.email}
-    </span>,
-    String(c.orderCount),
-    money(c.spendCents),
-    String(c.supportTicketCount),
-    String(c.reviewCount)
-  ]);
+  const rows = useMemo(
+    () => data.topCustomers.map((c) => [
+      c.name ?? "—",
+      <span key={c.id} className="font-mono text-xs">{c.email}</span>,
+      String(c.orderCount),
+      money(c.spendCents),
+      String(c.supportTicketCount),
+      String(c.reviewCount)
+    ]),
+    [data.topCustomers],
+  );
 
   return (
     <>

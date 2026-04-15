@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { marketingKeys } from "@/lib/query-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
@@ -43,7 +44,7 @@ const CouponDisableAction = ({ coupon }: { coupon: CouponListItem }) => {
       return disableAdminCoupon(accessToken, coupon.id);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["admin-coupons"] });
+      void queryClient.invalidateQueries({ queryKey: marketingKeys.coupons() });
       void queryClient.invalidateQueries({ queryKey: ["admin-marketing-coupon-analytics-kpi"] });
       void queryClient.invalidateQueries({ queryKey: ["admin-marketing-coupon-analytics"] });
     }
@@ -79,7 +80,7 @@ const CouponRestoreAction = ({ coupon }: { coupon: CouponListItem }) => {
       return updateAdminCoupon(accessToken, coupon.id, { status: "ACTIVE" });
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["admin-coupons"] });
+      void queryClient.invalidateQueries({ queryKey: marketingKeys.coupons() });
       void queryClient.invalidateQueries({ queryKey: ["admin-marketing-coupon-analytics-kpi"] });
       void queryClient.invalidateQueries({ queryKey: ["admin-marketing-coupon-analytics"] });
     }
@@ -136,7 +137,7 @@ export const CouponsListPage = () => {
   const queryKey = useMemo(
     () =>
       [
-        "admin-coupons",
+        marketingKeys.coupons()[0],
         page,
         q,
         status,
@@ -172,7 +173,7 @@ export const CouponsListPage = () => {
   const items = listQuery.data?.data.items ?? [];
 
   const invalidateCouponQueries = () => {
-    void queryClient.invalidateQueries({ queryKey: ["admin-coupons"] });
+    void queryClient.invalidateQueries({ queryKey: marketingKeys.coupons() });
     void queryClient.invalidateQueries({ queryKey: ["admin-marketing-coupon-analytics-kpi"] });
     void queryClient.invalidateQueries({ queryKey: ["admin-marketing-coupon-analytics"] });
   };
@@ -343,7 +344,7 @@ export const CouponsListPage = () => {
             id: "refresh-coupons",
             label: "Refresh data",
             onSelect: () => {
-              void queryClient.invalidateQueries({ queryKey: ["admin-coupons"] });
+              void queryClient.invalidateQueries({ queryKey: marketingKeys.coupons() });
               void queryClient.invalidateQueries({ queryKey: ["admin-marketing-coupon-analytics-kpi"] });
             }
           }

@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
+import { marketingKeys } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
@@ -12,6 +14,7 @@ import {
   ApiError,
   deleteAdminPromotion,
   listContractPromotions,
+  listPromotionRules,
   updateAdminPromotion,
   type PromotionListItem
 } from "@/features/marketing/api/admin-marketing.api";
@@ -228,7 +231,18 @@ export const PromotionsListPage = () => {
     enabled: Boolean(accessToken)
   });
 
+  const { prefetch: prefetchPromotionRules, prefetchMany: prefetchManyPromotionRules } =
+    useAdminDetailPrefetch({
+      enabled: Boolean(accessToken),
+      queryKeyFor: (id: string) => marketingKeys.promotionRules(id),
+      queryFnFor: (id: string) => listPromotionRules(accessToken!, id),
+    });
+
   const items = q.data?.data.items ?? [];
+
+  useEffect(() => {
+    prefetchManyPromotionRules(items.map((p) => p.id), 2);
+  }, [items, prefetchManyPromotionRules]);
   const meta = q.data?.meta;
   const pulse = meta?.pulse;
   const err =

@@ -1,14 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useSearchParams } from "react-router-dom";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ReportDatasetViews } from "@/features/reports/components/ReportDatasetViews";
 import { ApiError, getAdminReportsDataset, type ReportsOverviewQuery } from "@/features/reports/api/admin-reports.api";
 import type { ReportDatasetSegment } from "@/features/reports/types/report-payloads";
 import { StitchFieldLabel, StitchFilterPanel, StitchPageBody, stitchInputClass } from "@/components/stitch";
-import { useQuery } from "@tanstack/react-query";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 export type { ReportDatasetSegment };
 
@@ -36,7 +35,6 @@ type ReportDatasetPageProps = {
 };
 
 export const ReportDatasetPage = ({ segment, title, description }: ReportDatasetPageProps) => {
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
   const [searchParams, setSearchParams] = useSearchParams();
   const fromParam = searchParams.get("from") ?? "";
   const toParam = searchParams.get("to") ?? "";
@@ -57,7 +55,7 @@ export const ReportDatasetPage = ({ segment, title, description }: ReportDataset
     [from, to]
   );
 
-  const applyRangeToUrl = (nextFrom: string, nextTo: string) => {
+  const applyRangeToUrl = useCallback((nextFrom: string, nextTo: string) => {
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev);
@@ -69,7 +67,8 @@ export const ReportDatasetPage = ({ segment, title, description }: ReportDataset
       },
       { replace: true }
     );
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [comparePrevious, setComparePrevious] = useState(false);
 
@@ -80,26 +79,27 @@ export const ReportDatasetPage = ({ segment, title, description }: ReportDataset
 
   const filtersActive = Boolean(from.trim() || to.trim());
 
-  const queryKey = useMemo(() => ["admin-report-dataset", segment, from, to] as const, [segment, from, to]);
+  const queryKey = useMemo(
+    () => ["admin-report-dataset", segment, from, to] as const,
+    [segment, from, to],
+  );
 
-  const reportQuery = useAuthedQuery(
-  queryKey,
-  (token) => getAdminReportsDataset(token, segment, range)
-);
-
-  const compareQuery = useQuery({
-    queryKey: ["admin-report-dataset", "compare", segment, compareRange?.from, compareRange?.to] as const,
-    queryFn: async () => {
-      if (!accessToken || !compareRange) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminReportsDataset(accessToken, segment, {
-        from: compareRange.from,
-        to: compareRange.to
-      });
-    },
-    enabled: Boolean(accessToken && filtersActive && comparePrevious && compareRange)
+  const reportQuery = useAuthedQuery(queryKey, (token) => getAdminReportsDataset(token, segment, range), {
+    ...CACHE.ANALYTICS,
+    enabled: Boolean(from.trim() || to.trim()),
   });
+
+  const compareQuery = useAuthedQuery(
+    ["admin-report-dataset", "compare", segment, compareRange?.from, compareRange?.to],
+    (token) =>
+      compareRange
+        ? getAdminReportsDataset(token, segment, { from: compareRange.from, to: compareRange.to })
+        : Promise.reject(new Error("No compare range")),
+    {
+      ...CACHE.ANALYTICS,
+      enabled: filtersActive && comparePrevious && Boolean(compareRange),
+    },
+  );
 
   const err =
     reportQuery.error instanceof ApiError

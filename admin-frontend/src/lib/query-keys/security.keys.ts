@@ -23,10 +23,14 @@ export const securityKeys = {
 
   // Incidents
   incidents: () => [...securityKeys.all(), "incidents"] as const,
+  incidentList: (params: Record<string, unknown>) =>
+    [...securityKeys.incidents(), "list", params] as const,
   incident: (id: string) => [...securityKeys.incidents(), id] as const,
 
   // Alerts
   alerts: () => [...securityKeys.all(), "alerts"] as const,
+  alertList: (params: Record<string, unknown>) =>
+    [...securityKeys.alerts(), "list", params] as const,
   alert: (id: string) => [...securityKeys.alerts(), id] as const,
 
   // Risk signals

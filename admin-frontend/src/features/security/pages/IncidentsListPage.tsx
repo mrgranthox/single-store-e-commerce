@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
+import { securityKeys } from "@/lib/query-keys";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
@@ -15,7 +17,7 @@ import {
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
-import { ApiError, createAdminIncident, listAdminIncidents } from "@/features/security/api/admin-incidents.api";
+import { ApiError, createAdminIncident, getAdminIncidentDetail, listAdminIncidents } from "@/features/security/api/admin-incidents.api";
 import { getSecurityDashboard } from "@/features/security/api/admin-security.api";
 import { SecurityHubNav } from "@/features/security/components/SecurityHubNav";
 import {
@@ -63,7 +65,14 @@ export const IncidentsListPage = () => {
   const [newSeverity, setNewSeverity] = useState<string>("HIGH");
   const [createErr, setCreateErr] = useState<string | null>(null);
 
-  const queryKey = useMemo(() => ["admin-incidents", page, q, status] as const, [page, q, status]);
+  const { prefetch: prefetchIncidentDetail, prefetchMany: prefetchManyIncidentDetails } =
+    useAdminDetailPrefetch({
+      enabled: Boolean(accessToken),
+      queryKeyFor: (id: string) => securityKeys.incident(id),
+      queryFnFor: (id: string) => getAdminIncidentDetail(accessToken!, id),
+    });
+
+  const queryKey = useMemo(() => securityKeys.incidentList({ page, q, status }), [page, q, status]);
 
   const dashQuery = useAuthedQuery(
   ["admin-security-dashboard-metrics"],
@@ -100,7 +109,7 @@ export const IncidentsListPage = () => {
       setNewTitle("");
       setNewSummary("");
       setCreateErr(null);
-      void queryClient.invalidateQueries({ queryKey: ["admin-incidents"] });
+      void queryClient.invalidateQueries({ queryKey: securityKeys.incidents() });
       void queryClient.invalidateQueries({ queryKey: ["admin-security-dashboard-metrics"] });
     },
     onError: (e: Error) => {
@@ -110,6 +119,10 @@ export const IncidentsListPage = () => {
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
+
+  useEffect(() => {
+    prefetchManyIncidentDetails(items.map((r) => r.id), 3);
+  }, [items, prefetchManyIncidentDetails]);
   const ops = dashQuery.data?.data.metrics.incidentsOps;
 
   const errorMessage =
@@ -357,7 +370,7 @@ export const IncidentsListPage = () => {
                     const email = actorAdminEmail(row.createdBy);
                     const initials = email !== "—" ? initialsFromEmail(email) : "?";
                     return (
-                      <tr key={row.id} className="transition-colors hover:bg-[#e6e7f6]">
+                      <tr key={row.id} className="transition-colors hover:bg-[#e6e7f6]" onMouseEnter={() => prefetchIncidentDetail(row.id)}>
                         <td className="px-6 py-4 font-mono text-[0.75rem] font-medium">
                           <Link to={`/admin/security/incidents/${row.id}`} className={`${stitchRecordLinkClass} font-mono normal-case`}>
                             {row.id.slice(0, 8).toUpperCase()}…

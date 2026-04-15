@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
+import { securityKeys } from "@/lib/query-keys";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
@@ -19,6 +21,7 @@ import {
   ApiError,
   bulkAcknowledgeAdminAlerts,
   bulkAssignAdminAlerts,
+  getAdminAlertDetail,
   listAdminAlerts
 } from "@/features/security/api/admin-alerts.api";
 import { SecurityHubNav } from "@/features/security/components/SecurityHubNav";
@@ -69,7 +72,8 @@ export const AlertsListPage = () => {
   const [assigneeBulkId, setAssigneeBulkId] = useState("");
 
   const queryKey = useMemo(
-    () => ["admin-alerts", page, status, severity, typeFilter] as const,
+    () => securityKeys.alertList({ page, status, severity, typeFilter }),
+
     [page, status, severity, typeFilter]
   );
 
@@ -105,7 +109,7 @@ export const AlertsListPage = () => {
     },
     onSuccess: () => {
       setSelected(new Set());
-      void queryClient.invalidateQueries({ queryKey: ["admin-alerts"] });
+      void queryClient.invalidateQueries({ queryKey: securityKeys.alerts() });
       void queryClient.invalidateQueries({ queryKey: ["admin-security-dashboard-metrics"] });
     }
   });
@@ -128,12 +132,23 @@ export const AlertsListPage = () => {
     },
     onSuccess: () => {
       setSelected(new Set());
-      void queryClient.invalidateQueries({ queryKey: ["admin-alerts"] });
+      void queryClient.invalidateQueries({ queryKey: securityKeys.alerts() });
       void queryClient.invalidateQueries({ queryKey: ["admin-security-dashboard-metrics"] });
     }
   });
 
+  const { prefetch: prefetchAlertDetail, prefetchMany: prefetchManyAlertDetails } =
+    useAdminDetailPrefetch({
+      enabled: Boolean(accessToken),
+      queryKeyFor: (id: string) => securityKeys.alert(id),
+      queryFnFor: (id: string) => getAdminAlertDetail(accessToken!, id),
+    });
+
   const items = listQuery.data?.data.items ?? [];
+
+  useEffect(() => {
+    prefetchManyAlertDetails(items.map((a) => a.id), 3);
+  }, [items, prefetchManyAlertDetails]);
   const meta = listQuery.data?.meta;
   const sev = dashQuery.data?.data.metrics.alertsOpenBySeverity ?? {};
 
@@ -424,6 +439,7 @@ export const AlertsListPage = () => {
                     <tr
                       key={a.id}
                       className={`border-b border-[#f1f3f9] transition-colors hover:bg-[#f8f9fb] ${severityBorder(a.severity)}`}
+                      onMouseEnter={() => prefetchAlertDetail(a.id)}
                     >
                       <td className="px-2 align-middle">
                         <input

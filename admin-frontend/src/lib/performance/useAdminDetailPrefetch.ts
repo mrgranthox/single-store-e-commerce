@@ -1,8 +1,10 @@
 import { useCallback, useRef } from "react";
 import { useQueryClient, type QueryKey } from "@tanstack/react-query";
+import { CACHE } from "@/lib/api/cache-strategy";
 
 type UseAdminDetailPrefetchOptions<TId, TResult> = {
   enabled: boolean;
+  /** Defaults to CACHE.OPERATIONAL.staleTime — data prefetched on hover is considered fresh for 30s. */
   staleTime?: number;
   queryKeyFor: (id: TId) => QueryKey;
   queryFnFor: (id: TId) => Promise<TResult>;
@@ -13,7 +15,7 @@ const signatureForKey = (queryKey: QueryKey) => JSON.stringify(queryKey);
 
 export const useAdminDetailPrefetch = <TId, TResult>({
   enabled,
-  staleTime = 20_000,
+  staleTime = CACHE.OPERATIONAL.staleTime,
   queryKeyFor,
   queryFnFor,
   onPrefetch
