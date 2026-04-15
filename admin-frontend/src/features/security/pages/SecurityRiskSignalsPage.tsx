@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
 import { ArrowUp, ArrowUpRight, CheckCircle, Download, RefreshCw, TrendingUp } from "lucide-react";
 
@@ -91,36 +92,26 @@ export const SecurityRiskSignalsPage = () => {
     [page, typeFilter, minScore, reviewFilter]
   );
 
-  const dashQuery = useQuery({
-    queryKey: ["admin-security-dashboard-metrics"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getSecurityDashboard(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const dashQuery = useAuthedQuery(
+  ["admin-security-dashboard-metrics"],
+  (token) => getSecurityDashboard(token)
+);
 
-  const q = useQuery({
+  const q = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
+    (token) => {
       const reviewed =
         reviewFilter === "pending" ? false : reviewFilter === "reviewed" ? true : undefined;
       const min = minScore ? Number(minScore) : undefined;
-      return listRiskSignals(accessToken, {
+      return listRiskSignals(token, {
         page,
         page_size: 20,
         ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}),
         ...(min != null && !Number.isNaN(min) ? { minScore: min } : {}),
-        ...(reviewed !== undefined ? { reviewed } : {})
+        ...(reviewed !== undefined ? { reviewed } : {}),
       });
     },
-    enabled: Boolean(accessToken)
-  });
+  );
 
   const reviewMut = useMutation({
     mutationFn: async (input: { id: string; disposition: "reviewed" | "escalated" }) => {

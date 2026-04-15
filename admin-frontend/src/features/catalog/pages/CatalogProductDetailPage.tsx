@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
+import { toast } from "@/lib/toast";
+import { catalogKeys } from "@/lib/query-keys";
 import { Link, useParams } from "react-router-dom";
 
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
@@ -114,30 +117,19 @@ export const CatalogProductDetailPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [actionError, setActionError] = useState<string | null>(null);
   const [archiveConfirm, setArchiveConfirm] = useState(false);
 
-  const q = useQuery({
-    queryKey: ["admin-catalog-product", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProduct(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const q = useAuthedQuery(
+    catalogKeys.product(productId ?? ""),
+    (token) => getAdminCatalogProduct(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
-  const activityQuery = useQuery({
-    queryKey: ["admin-catalog-product-activity", productId],
-    queryFn: async () => {
-      if (!accessToken || !productId) {
-        throw new Error("Missing context.");
-      }
-      return getAdminCatalogProductActivity(accessToken, productId);
-    },
-    enabled: Boolean(accessToken && productId)
-  });
+  const activityQuery = useAuthedQuery(
+    [...catalogKeys.product(productId ?? ""), "activity"] as const,
+    (token) => getAdminCatalogProductActivity(token, productId!),
+    { enabled: Boolean(productId) },
+  );
 
   const entity = q.data?.data.entity;
   const activity = activityQuery.data?.data.items ?? [];
@@ -146,16 +138,14 @@ export const CatalogProductDetailPage = () => {
     q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;
 
   const archiveProduct = async () => {
-    if (!accessToken || !productId || !entity) {
-      return;
-    }
-    setActionError(null);
+    if (!accessToken || !productId || !entity) return;
     try {
       await archiveAdminCatalogProduct(accessToken, productId, {});
-      await queryClient.invalidateQueries({ queryKey: ["admin-catalog-product", productId] });
-      await queryClient.invalidateQueries({ queryKey: ["admin-catalog-products"] });
+      await queryClient.invalidateQueries({ queryKey: catalogKeys.product(productId) });
+      await queryClient.invalidateQueries({ queryKey: catalogKeys.productLists() });
+      toast.success("Product archived.");
     } catch (e) {
-      setActionError(e instanceof ApiError ? e.message : "Could not archive.");
+      toast.error(e instanceof ApiError ? e.message : "Could not archive.");
     }
   };
 
@@ -170,11 +160,6 @@ export const CatalogProductDetailPage = () => {
 
   return (
     <div className="space-y-6">
-      {actionError ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {actionError}
-        </div>
-      ) : null}
       <PageHeader
         title={entity?.title ?? "Product"}
         description="Overview of catalog content, variants, reviews, and operational signals."

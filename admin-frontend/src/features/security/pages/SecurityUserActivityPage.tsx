@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Calendar, Download, RefreshCw, UserSearch } from "lucide-react";
 
 import {
@@ -48,24 +49,19 @@ export const SecurityUserActivityPage = () => {
 
   const queryKey = useMemo(() => ["admin-security-user-activity", page, applied] as const, [page, applied]);
 
-  const q = useQuery({
+  const q = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getUserActivityExplorer(accessToken, {
+    (token) =>
+      getUserActivityExplorer(token, {
         page,
         page_size: 25,
         ...(applied.entityType.trim() ? { entityType: applied.entityType.trim() } : {}),
         ...(applied.entityId.trim() ? { entityId: applied.entityId.trim() } : {}),
         ...(applied.eventType.trim() ? { eventType: applied.eventType.trim() } : {}),
         ...(applied.occurredAtFrom.trim() ? { occurredAtFrom: applied.occurredAtFrom.trim() } : {}),
-        ...(applied.occurredAtTo.trim() ? { occurredAtTo: applied.occurredAtTo.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(applied.occurredAtTo.trim() ? { occurredAtTo: applied.occurredAtTo.trim() } : {}),
+      }),
+  );
 
   const items = q.data?.data.items ?? [];
   const meta = q.data?.meta;

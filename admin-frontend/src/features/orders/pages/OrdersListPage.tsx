@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   CheckCircle2,
   ChevronLeft,
@@ -24,6 +24,10 @@ import {
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+import { formatMoney, formatDateCompact } from "@/lib/format";
+import { orderKeys } from "@/lib/query-keys";
 
 const ORDER_STATUSES = [
   "",
@@ -45,30 +49,6 @@ const PAYMENT_STATES = [
   { value: "REFUNDED", label: "Refunded" }
 ] as const;
 
-const formatMoney = (cents: number | null | undefined, currency: string | null | undefined) => {
-  if (typeof cents !== "number" || Number.isNaN(cents)) {
-    return "—";
-  }
-  const cur = (currency ?? "GHS").toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
-
-const formatPlacedShort = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const isSameLocalDay = (iso: string, day: Date) => {
   try {
@@ -131,45 +111,38 @@ const orderStatusPill = (status: string) => {
 
 const ORDER_DETAIL_STALE_MS = 20_000;
 
+const ORDER_FILTERS_DEFAULTS = { q: "", status: "", paymentState: "" } as const;
+
 export const OrdersListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  // Draft inputs — committed to URL on Apply / Enter only
   const [orderDraft, setOrderDraft] = useState("");
   const [customerDraft, setCustomerDraft] = useState("");
-  const [appliedQ, setAppliedQ] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [paymentStateFilter, setPaymentStateFilter] = useState("");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
 
-  const queryKey = useMemo(
-    () => ["admin-orders", page, appliedQ, statusFilter, paymentStateFilter] as const,
-    [page, appliedQ, statusFilter, paymentStateFilter]
-  );
+  const { filters, page, setPage, set, reset } = useListFilters({
+    defaults: ORDER_FILTERS_DEFAULTS,
+  });
 
-  const ordersQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminOrders(accessToken, {
+  const ordersQuery = useAuthedQuery(
+    orderKeys.list({ page, ...filters }),
+    (token) =>
+      listAdminOrders(token, {
         page,
         page_size: 20,
-        ...(appliedQ.trim() ? { q: appliedQ.trim() } : {}),
-        ...(statusFilter ? { status: statusFilter } : {}),
-        ...(paymentStateFilter ? { paymentState: paymentStateFilter } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+        ...(filters.status ? { status: filters.status } : {}),
+        ...(filters.paymentState ? { paymentState: filters.paymentState } : {}),
+      }),
+  );
 
   const { prefetch: prefetchOrderDetail, prefetchMany: prefetchOrderDetails } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
     staleTime: ORDER_DETAIL_STALE_MS,
-    queryKeyFor: (orderId: string) => ["admin-order-detail", orderId],
+    queryKeyFor: (orderId: string) => orderKeys.detail(orderId),
     queryFnFor: (orderId: string) => getAdminOrderDetail(accessToken!, orderId),
-    onPrefetch: () => preloadLazyNamedComponent("../features/orders/pages/OrderDetailPage.tsx", "OrderDetailPage")
+    onPrefetch: () => preloadLazyNamedComponent("../features/orders/pages/OrderDetailPage.tsx", "OrderDetailPage"),
   });
 
   const items = ordersQuery.data?.data.items ?? [];
@@ -179,22 +152,18 @@ export const OrdersListPage = () => {
     prefetchOrderDetails(items.map((order) => order.id), 2);
   }, [items, prefetchOrderDetails]);
 
-  const applyFilters = useCallback(() => {
+  const applySearch = () => {
     const parts = [orderDraft.trim(), customerDraft.trim()].filter(Boolean);
-    setAppliedQ(parts.join(" "));
-    setPage(1);
+    set("q", parts.join(" "));
     setSelected(new Set());
-  }, [orderDraft, customerDraft]);
+  };
 
-  const clearFilters = useCallback(() => {
+  const clearFilters = () => {
     setOrderDraft("");
     setCustomerDraft("");
-    setAppliedQ("");
-    setStatusFilter("");
-    setPaymentStateFilter("");
-    setPage(1);
+    reset();
     setSelected(new Set());
-  }, []);
+  };
 
   const errorMessage =
     ordersQuery.error instanceof ApiError
@@ -290,7 +259,7 @@ export const OrdersListPage = () => {
         title="Orders"
         titleSize="deck"
         description="Central command for all orders."
-        actionMenuItems={[refreshDataMenuItem(queryClient, ["admin-orders"])]}
+        actionMenuItems={[refreshDataMenuItem(queryClient, orderKeys.lists())]}
       />
 
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -349,7 +318,7 @@ export const OrdersListPage = () => {
             <input
               value={orderDraft}
               onChange={(e) => setOrderDraft(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+              onKeyDown={(e) => e.key === "Enter" && applySearch()}
               placeholder="Search ID…"
               className="w-full rounded-lg border-none bg-[#f2f3ff] py-2.5 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
             />
@@ -361,7 +330,7 @@ export const OrdersListPage = () => {
             <input
               value={customerDraft}
               onChange={(e) => setCustomerDraft(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+              onKeyDown={(e) => e.key === "Enter" && applySearch()}
               placeholder="Name or email…"
               className="w-full rounded-lg border-none bg-[#f2f3ff] py-2.5 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
             />
@@ -371,11 +340,8 @@ export const OrdersListPage = () => {
               Payment
             </label>
             <select
-              value={paymentStateFilter}
-              onChange={(e) => {
-                setPaymentStateFilter(e.target.value);
-                setPage(1);
-              }}
+              value={filters.paymentState}
+              onChange={(e) => set("paymentState", e.target.value)}
               className="w-full rounded-lg border-none bg-[#f2f3ff] py-2.5 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
             >
               {PAYMENT_STATES.map((p) => (
@@ -403,11 +369,8 @@ export const OrdersListPage = () => {
               Order status
             </label>
             <select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
-                setPage(1);
-              }}
+              value={filters.status}
+              onChange={(e) => set("status", e.target.value)}
               className="w-full rounded-lg border-none bg-[#f2f3ff] py-2.5 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
             >
               {ORDER_STATUSES.map((s) => (
@@ -431,7 +394,7 @@ export const OrdersListPage = () => {
           <div className="flex items-end gap-2">
             <button
               type="button"
-              onClick={applyFilters}
+              onClick={applySearch}
               className="h-10 flex-1 rounded-lg bg-[#1653cc] text-xs font-semibold text-white transition-all hover:brightness-110"
             >
               Apply
@@ -582,12 +545,12 @@ export const OrdersListPage = () => {
                         {order.itemCount} item{order.itemCount === 1 ? "" : "s"}
                       </td>
                       <td className="px-4 py-4 font-mono text-xs font-semibold text-[#181b25]">
-                        {formatMoney(order.totals?.grandTotalCents ?? null, order.totals?.currency ?? null)}
+                        {formatMoney(order.totals?.grandTotalCents, order.totals?.currency)}
                       </td>
                       <td className="px-4 py-4 text-center">{paymentPill(order.paymentState)}</td>
                       <td className="px-4 py-4 text-center">{fulfillmentPill(order)}</td>
                       <td className="px-4 py-4 text-center">{orderStatusPill(order.status)}</td>
-                      <td className="px-4 py-4 text-xs text-[#434654]">{formatPlacedShort(order.createdAt)}</td>
+                      <td className="px-4 py-4 text-xs text-[#434654]">{formatDateCompact(order.createdAt)}</td>
                       <td className="px-6 py-4 text-right">
                         <Link
                           to={`/admin/orders/${order.id}`}
@@ -612,7 +575,7 @@ export const OrdersListPage = () => {
                 <button
                   type="button"
                   disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => setPage(Math.max(1, page - 1))}
                   className="flex h-8 w-8 items-center justify-center rounded bg-white text-[#737685] shadow-sm transition-all hover:text-[#1653cc] disabled:opacity-40"
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -623,7 +586,7 @@ export const OrdersListPage = () => {
                 <button
                   type="button"
                   disabled={page >= meta.totalPages}
-                  onClick={() => setPage((p) => p + 1)}
+                  onClick={() => setPage(page + 1)}
                   className="flex h-8 w-8 items-center justify-center rounded bg-white text-[#737685] shadow-sm transition-all hover:text-[#1653cc] disabled:opacity-40"
                 >
                   <ChevronRight className="h-4 w-4" />

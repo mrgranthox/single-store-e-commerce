@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { ArrowUpRight, Ban, ClipboardCopy, Share2 } from "lucide-react";
 
 import { BusinessMetadataSection } from "@/features/security/components/BusinessMetadataSection";
@@ -60,16 +61,11 @@ export const AlertDetailPage = () => {
   const [assigneeId, setAssigneeId] = useState("");
   const [confirm, setConfirm] = useState<null | "ack" | "resolve" | "ip">(null);
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-alert-detail", alertId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminAlertDetail(accessToken, alertId);
-    },
-    enabled: Boolean(accessToken) && Boolean(alertId)
-  });
+  const detailQuery = useAuthedQuery(
+  ["admin-alert-detail", alertId],
+  (token) => getAdminAlertDetail(token, alertId),
+  { enabled: Boolean(alertId) }
+);
 
   const inv = () => queryClient.invalidateQueries({ queryKey: ["admin-alert-detail", alertId] });
 

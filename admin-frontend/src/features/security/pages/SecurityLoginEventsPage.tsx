@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Download, RefreshCw, ShieldAlert, ShieldCheck } from "lucide-react";
 
 import {
@@ -65,22 +66,17 @@ export const SecurityLoginEventsPage = () => {
     [page, email, outcome]
   );
 
-  const query = useQuery({
+  const query = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listLoginEvents(accessToken, {
+    (token) =>
+      listLoginEvents(token, {
         page,
         page_size: 20,
         ...(email.trim() ? { email: email.trim() } : {}),
         ...(outcome === "success" ? { success: true } : {}),
-        ...(outcome === "failure" ? { success: false } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(outcome === "failure" ? { success: false } : {}),
+      }),
+  );
 
   const items = query.data?.data.items ?? [];
   const meta = query.data?.meta;

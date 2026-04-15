@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { ArrowUpRight, Bell, CheckCircle, RefreshCw } from "lucide-react";
 
 import {
@@ -45,22 +46,17 @@ export const SecurityEventsListPage = () => {
     [page, severity, status, typeFilter]
   );
 
-  const q = useQuery({
+  const q = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listSecurityEvents(accessToken, {
+    (token) =>
+      listSecurityEvents(token, {
         page,
         page_size: 20,
         ...(severity ? { severity } : {}),
         ...(status.trim() ? { status: status.trim() } : {}),
-        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}),
+      }),
+  );
 
   const notifyMut = useMutation({
     mutationFn: async (eventId: string) => {

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -16,23 +16,11 @@ import {
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { PageActionsMenu } from "@/components/primitives/PageActionsMenu";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+import { formatMoney, formatDateTime } from "@/lib/format";
+import { paymentKeys } from "@/lib/query-keys";
 
-const formatMoney = (cents: number, currency: string) => {
-  const cur = currency.toUpperCase();
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: cur }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${cur}`;
-  }
-};
-
-const formatDate = (iso: string) => {
-  try {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-};
 
 const paymentRefLabel = (id: string) => `PAY-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
@@ -46,55 +34,48 @@ const parseMoneyToCents = (raw: string): number | null => {
 
 const providerCellLabel = (p: AdminPaymentListItem) => formatPaymentGatewayLabel(p.provider);
 
+const PAYMENT_FILTERS_DEFAULTS = { q: "", paymentState: "", provider: "" } as const;
+
 export const PaymentsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
   const [searchDraft, setSearchDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
-  const [stateFilter, setStateFilter] = useState("");
-  const [providerUi, setProviderUi] = useState("");
+  // Client-side amount / date refinement (not sent to API)
   const [amountMin, setAmountMin] = useState("");
   const [amountMax, setAmountMax] = useState("");
   const [dateFrom, setDateFrom] = useState("");
 
-  const providerFilter = providerUi === "" ? "" : PAYSTACK_PROVIDER_QUERY_VALUE;
+  const { filters, page, setPage, set, reset } = useListFilters({
+    defaults: PAYMENT_FILTERS_DEFAULTS,
+  });
 
-  const queryKey = useMemo(
-    () => ["admin-payments", page, appliedSearch, stateFilter, providerFilter] as const,
-    [page, appliedSearch, stateFilter, providerFilter]
-  );
+  const providerFilter = filters.provider === "" ? "" : PAYSTACK_PROVIDER_QUERY_VALUE;
 
-  const paymentsQuery = useQuery({
-    queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminPayments(accessToken, {
+  const paymentsQuery = useAuthedQuery(
+    paymentKeys.list({ page, ...filters }),
+    (token) =>
+      listAdminPayments(token, {
         page,
         page_size: 20,
-        ...(appliedSearch.trim() ? { q: appliedSearch.trim() } : {}),
-        ...(stateFilter ? { paymentState: stateFilter } : {}),
-        ...(providerFilter.trim() ? { provider: providerFilter.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+        ...(filters.paymentState ? { paymentState: filters.paymentState } : {}),
+        ...(providerFilter.trim() ? { provider: providerFilter.trim() } : {}),
+      }),
+  );
 
   const items = paymentsQuery.data?.data.items ?? [];
   const meta = paymentsQuery.data?.meta;
   const { prefetch: prefetchPayment, prefetchMany: prefetchPayments } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
     staleTime: 20_000,
-    queryKeyFor: (paymentId: string) => ["admin-payment-detail", paymentId],
+    queryKeyFor: (paymentId: string) => paymentKeys.detail(paymentId),
     queryFnFor: (paymentId: string) => getAdminPaymentDetail(accessToken!, paymentId),
-    onPrefetch: () => preloadLazyNamedComponent("../features/payments/pages/PaymentDetailPage.tsx", "PaymentDetailPage")
+    onPrefetch: () =>
+      preloadLazyNamedComponent("../features/payments/pages/PaymentDetailPage.tsx", "PaymentDetailPage"),
   });
 
-  const applyFilters = () => {
-    setPage(1);
-    setAppliedSearch(searchDraft);
+  const applySearch = () => {
+    set("q", searchDraft);
   };
 
   const displayItems = useMemo(() => {
@@ -161,13 +142,10 @@ export const PaymentsListPage = () => {
 
   const clearFilters = () => {
     setSearchDraft("");
-    setAppliedSearch("");
-    setStateFilter("");
-    setProviderUi("");
     setAmountMin("");
     setAmountMax("");
     setDateFrom("");
-    setPage(1);
+    reset();
   };
 
   useEffect(() => {
@@ -183,7 +161,7 @@ export const PaymentsListPage = () => {
             <p className="mt-1 text-sm text-slate-500">Monitor and manage all inbound financial transactions</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <PageActionsMenu items={[refreshDataMenuItem(queryClient, ["admin-payments"])]} />
+            <PageActionsMenu items={[refreshDataMenuItem(queryClient, paymentKeys.lists())]} />
             <button
               type="button"
               onClick={exportPageCsv}
@@ -248,7 +226,7 @@ export const PaymentsListPage = () => {
               <input
                 value={searchDraft}
                 onChange={(e) => setSearchDraft(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+                onKeyDown={(e) => e.key === "Enter" && applySearch()}
                 placeholder="Order # or Payment Ref..."
                 className="w-full rounded-md border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-xs focus:ring-1 focus:ring-[#1653cc]/20"
               />
@@ -259,11 +237,8 @@ export const PaymentsListPage = () => {
               Provider
             </label>
             <select
-              value={providerUi}
-              onChange={(e) => {
-                setProviderUi(e.target.value);
-                setPage(1);
-              }}
+              value={filters.provider}
+              onChange={(e) => set("provider", e.target.value)}
               className="w-full rounded-md border border-slate-200 bg-slate-50 py-2 text-xs focus:ring-1 focus:ring-[#1653cc]/20"
             >
               <option value="">All Providers</option>
@@ -278,11 +253,8 @@ export const PaymentsListPage = () => {
           <div>
             <label className="mb-1.5 block text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Status</label>
             <select
-              value={stateFilter}
-              onChange={(e) => {
-                setStateFilter(e.target.value);
-                setPage(1);
-              }}
+              value={filters.paymentState}
+              onChange={(e) => set("paymentState", e.target.value)}
               className="w-full rounded-md border border-slate-200 bg-slate-50 py-2 text-xs focus:ring-1 focus:ring-[#1653cc]/20"
             >
               <option value="">All Statuses</option>
@@ -336,7 +308,7 @@ export const PaymentsListPage = () => {
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={applyFilters}
+              onClick={applySearch}
               className="rounded-md bg-[#1653cc] px-4 py-2 text-xs font-semibold text-white hover:opacity-90"
             >
               Apply search
@@ -440,7 +412,7 @@ export const PaymentsListPage = () => {
                       <td className="px-6 py-4">
                         <StitchPaymentStatusPill paymentState={p.paymentState} />
                       </td>
-                      <td className="px-6 py-4 text-[0.7rem] text-slate-500">{formatDate(p.createdAt)}</td>
+                      <td className="px-6 py-4 text-[0.7rem] text-slate-500">{formatDateTime(p.createdAt)}</td>
                       <td className="px-6 py-4 text-center">
                         <StitchTableActions detailTo={`/admin/payments/${p.id}`} orderTo={`/admin/orders/${p.orderId}`} />
                       </td>
@@ -469,7 +441,7 @@ export const PaymentsListPage = () => {
                 <button
                   type="button"
                   disabled={page <= 1}
-                  onClick={() => setPage((pg) => Math.max(1, pg - 1))}
+                  onClick={() => setPage(Math.max(1, page - 1))}
                   className="rounded border border-slate-200 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-50"
                 >
                   Previous
@@ -478,7 +450,7 @@ export const PaymentsListPage = () => {
                 <button
                   type="button"
                   disabled={page >= meta.totalPages}
-                  onClick={() => setPage((pg) => pg + 1)}
+                  onClick={() => setPage(page + 1)}
                   className="rounded border border-slate-200 px-3 py-1 text-xs text-slate-600 hover:bg-slate-50 disabled:opacity-50"
                 >
                   Next

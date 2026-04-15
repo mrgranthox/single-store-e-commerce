@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { ArrowUpRight, Download, Plus } from "lucide-react";
 
 import {
@@ -64,32 +65,21 @@ export const IncidentsListPage = () => {
 
   const queryKey = useMemo(() => ["admin-incidents", page, q, status] as const, [page, q, status]);
 
-  const dashQuery = useQuery({
-    queryKey: ["admin-security-dashboard-metrics"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getSecurityDashboard(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const dashQuery = useAuthedQuery(
+  ["admin-security-dashboard-metrics"],
+  (token) => getSecurityDashboard(token)
+);
 
-  const listQuery = useQuery({
+  const listQuery = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminIncidents(accessToken, {
+    (token) =>
+      listAdminIncidents(token, {
         page,
         page_size: 20,
         ...(q.trim() ? { q: q.trim() } : {}),
-        ...(status ? { status } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(status ? { status } : {}),
+      }),
+  );
 
   const createMut = useMutation({
     mutationFn: async () => {

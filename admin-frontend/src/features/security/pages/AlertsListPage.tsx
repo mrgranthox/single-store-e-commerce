@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { AlertTriangle, ArrowUpRight, CheckCheck, Download, FileWarning, Info, ShieldAlert, UserPlus } from "lucide-react";
 
 import {
@@ -72,33 +73,22 @@ export const AlertsListPage = () => {
     [page, status, severity, typeFilter]
   );
 
-  const dashQuery = useQuery({
-    queryKey: ["admin-security-dashboard-metrics"],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getSecurityDashboard(accessToken);
-    },
-    enabled: Boolean(accessToken)
-  });
+  const dashQuery = useAuthedQuery(
+  ["admin-security-dashboard-metrics"],
+  (token) => getSecurityDashboard(token)
+);
 
-  const listQuery = useQuery({
+  const listQuery = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminAlerts(accessToken, {
+    (token) =>
+      listAdminAlerts(token, {
         page,
         page_size: 20,
         ...(status ? { status } : {}),
         ...(severity ? { severity } : {}),
-        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}),
+      }),
+  );
 
   const bulkAckMut = useMutation({
     mutationFn: async () => {

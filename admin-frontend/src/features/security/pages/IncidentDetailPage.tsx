@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { BusinessMetadataSection } from "@/features/security/components/BusinessMetadataSection";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { StitchBreadcrumbs, StitchPageBody } from "@/components/stitch";
@@ -49,16 +50,11 @@ export const IncidentDetailPage = () => {
   const [closeNote, setCloseNote] = useState("");
   const [noteDraft, setNoteDraft] = useState("");
 
-  const detailQuery = useQuery({
-    queryKey: ["admin-incident-detail", incidentId],
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return getAdminIncidentDetail(accessToken, incidentId);
-    },
-    enabled: Boolean(accessToken) && Boolean(incidentId)
-  });
+  const detailQuery = useAuthedQuery(
+  ["admin-incident-detail", incidentId],
+  (token) => getAdminIncidentDetail(token, incidentId),
+  { enabled: Boolean(incidentId) }
+);
 
   const inv = () => queryClient.invalidateQueries({ queryKey: ["admin-incident-detail", incidentId] });
 

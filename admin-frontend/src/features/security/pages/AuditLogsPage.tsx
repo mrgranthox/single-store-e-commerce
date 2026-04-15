@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link, useSearchParams } from "react-router-dom";
 import { Download, ExternalLink, Filter, RefreshCw } from "lucide-react";
 
@@ -63,24 +64,19 @@ export const AuditLogsPage = () => {
     [page, effectiveAction, entityType, entityId, actorAdminUserId, actorEmailContains]
   );
 
-  const listQuery = useQuery({
+  const listQuery = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminAuditLogs(accessToken, {
+    (token) =>
+      listAdminAuditLogs(token, {
         page,
         page_size: 25,
         ...(effectiveAction ? { actionCode: effectiveAction } : {}),
         ...(entityType.trim() ? { entityType: entityType.trim() } : {}),
         ...(entityId.trim() ? { entityId: entityId.trim() } : {}),
         ...(actorAdminUserId.trim() ? { actorAdminUserId: actorAdminUserId.trim() } : {}),
-        ...(actorEmailContains.trim() ? { actorEmailContains: actorEmailContains.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(actorEmailContains.trim() ? { actorEmailContains: actorEmailContains.trim() } : {}),
+      }),
+  );
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;

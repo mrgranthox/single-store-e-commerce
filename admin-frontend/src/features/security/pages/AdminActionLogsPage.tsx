@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
 import { ExternalLink, RefreshCw } from "lucide-react";
 
@@ -39,24 +40,19 @@ export const AdminActionLogsPage = () => {
     [page, screen, actionCode, adminUserId, entityType, entityId]
   );
 
-  const listQuery = useQuery({
+  const listQuery = useAuthedQuery(
     queryKey,
-    queryFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return listAdminActionLogs(accessToken, {
+    (token) =>
+      listAdminActionLogs(token, {
         page,
         page_size: 25,
         ...(screen.trim() ? { screen: screen.trim() } : {}),
         ...(actionCode.trim() ? { actionCode: actionCode.trim() } : {}),
         ...(adminUserId.trim() ? { adminUserId: adminUserId.trim() } : {}),
         ...(entityType.trim() ? { entityType: entityType.trim() } : {}),
-        ...(entityId.trim() ? { entityId: entityId.trim() } : {})
-      });
-    },
-    enabled: Boolean(accessToken)
-  });
+        ...(entityId.trim() ? { entityId: entityId.trim() } : {}),
+      }),
+  );
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
