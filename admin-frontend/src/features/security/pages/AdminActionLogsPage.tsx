@@ -83,7 +83,7 @@ export const AdminActionLogsPage = () => {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="flex items-center gap-2 rounded-lg border border-[#c3c6d6]/20 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#5b5e68]">
+          <span className="flex items-center gap-2 rounded-lg border border-[#c3c6d6]/20 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-[#5b5e68]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#006b2d]" />
             System status: Nominal
           </span>
@@ -184,7 +184,7 @@ export const AdminActionLogsPage = () => {
                     (h) => (
                     <th
                       key={h || "actions"}
-                      className={`px-4 py-3 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685] sm:px-6 sm:py-4 ${
+                      className={`px-4 py-3 text-xs font-bold uppercase tracking-widest text-[#737685] sm:px-6 sm:py-4 ${
                         h === "Open" ? "text-right" : ""
                       }`}
                     >
@@ -215,7 +215,7 @@ export const AdminActionLogsPage = () => {
                         </td>
                         <td className="px-6 py-3">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1653cc]/10 text-[10px] font-bold text-[#1653cc]">
+                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1653cc]/10 text-xs font-bold text-[#1653cc]">
                               {initials}
                             </div>
                             <span className="text-xs font-medium text-[#181b25]">{email}</span>
@@ -225,7 +225,7 @@ export const AdminActionLogsPage = () => {
                           <p className="text-sm font-semibold leading-snug text-[#181b25]">
                             {humanizeEnumLabel(log.actionCode.replace(/\./g, " ").replace(/_/g, " "))}
                           </p>
-                          <p className="mt-0.5 font-mono text-[10px] text-[#9ca3af]" title={log.actionCode}>
+                          <p className="mt-0.5 font-mono text-xs text-[#9ca3af]" title={log.actionCode}>
                             {log.actionCode.length > 42 ? `${log.actionCode.slice(0, 42)}…` : log.actionCode}
                           </p>
                         </td>
@@ -236,7 +236,7 @@ export const AdminActionLogsPage = () => {
                                 {log.entityType ? humanizeEnumLabel(log.entityType.replace(/_/g, " ")) : "Record"}
                               </span>
                               {log.entityId ? (
-                                <span className="mt-0.5 block truncate font-mono text-[10px] text-[#737685]" title={log.entityId}>
+                                <span className="mt-0.5 block truncate font-mono text-xs text-[#737685]" title={log.entityId}>
                                   {log.entityId.length > 20 ? `${log.entityId.slice(0, 20)}…` : log.entityId}
                                 </span>
                               ) : null}

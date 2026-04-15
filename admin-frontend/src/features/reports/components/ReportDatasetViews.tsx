@@ -94,7 +94,7 @@ const SimpleDonut = ({
       <svg viewBox={`0 0 ${w} ${w}`} className="h-40 w-40 shrink-0" role="img" aria-label="Distribution chart">
         {arcs}
         <circle cx={c} cy={c} r={32} fill="white" />
-        <text x={c} y={c + 4} textAnchor="middle" className="fill-[#0f1117] font-headline text-[11px] font-bold">
+        <text x={c} y={c + 4} textAnchor="middle" className="fill-[#0f1117] font-headline text-xs font-bold">
           {format(total)}
         </text>
       </svg>
@@ -132,7 +132,7 @@ const PriorityVolumeBars = ({ byPriority }: { byPriority: SupportReportData["byP
         {rows.map((r) => (
           <div
             key={r.priority}
-            className={`${colors[r.priority] ?? "bg-slate-400"} flex items-center justify-center text-[10px] font-bold text-white`}
+            className={`${colors[r.priority] ?? "bg-slate-400"} flex items-center justify-center text-xs font-bold text-white`}
             style={{ width: `${(r.count / total) * 100}%` }}
             title={`${r.priority}: ${r.count}`}
           >
@@ -140,7 +140,7 @@ const PriorityVolumeBars = ({ byPriority }: { byPriority: SupportReportData["byP
           </div>
         ))}
       </div>
-      <div className="flex flex-wrap gap-4 text-[11px] text-[var(--color-text-muted)]">
+      <div className="flex flex-wrap gap-4 text-xs text-[var(--color-text-muted)]">
         {rows.map((r) => (
           <span key={r.priority} className="flex items-center gap-1">
             <span className={`h-2 w-2 rounded-full ${colors[r.priority]}`} />
@@ -843,10 +843,10 @@ const SupportView = ({
               t.subject,
               t.priority,
               t.status.replace(/_/g, " "),
-              <span key={t.id} className="font-mono text-[11px] text-[#6b7280]">
+              <span key={t.id} className="font-mono text-xs text-[#6b7280]">
                 {new Date(t.createdAt).toLocaleString()}
               </span>,
-              <span key={`d-${t.id}`} className="font-mono text-[11px] text-[#6b7280]">
+              <span key={`d-${t.id}`} className="font-mono text-xs text-[#6b7280]">
                 {new Date(t.slaDeadlineIso).toLocaleString()}
               </span>
             ])}
@@ -891,23 +891,23 @@ const SupportView = ({
       <SurfaceCard title="Backlog overview" description="Approximate new, open, pending, and resolved ticket counts.">
         <ul className="grid grid-cols-2 gap-3 text-sm md:grid-cols-5">
           <li className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] px-3 py-2">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">New</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">New</div>
             <div className="font-headline text-xl font-bold">{data.stitchBacklog.new}</div>
           </li>
           <li className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] px-3 py-2">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">Open</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">Open</div>
             <div className="font-headline text-xl font-bold">{data.stitchBacklog.open}</div>
           </li>
           <li className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] px-3 py-2">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">Pending</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">Pending</div>
             <div className="font-headline text-xl font-bold">{data.stitchBacklog.pending}</div>
           </li>
           <li className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] px-3 py-2">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">On hold</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">On hold</div>
             <div className="font-headline text-xl font-bold">{data.stitchBacklog.onHold}</div>
           </li>
           <li className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] px-3 py-2">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">Resolved</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">Resolved</div>
             <div className="font-headline text-xl font-bold">{data.stitchBacklog.resolved}</div>
           </li>
         </ul>
@@ -1162,19 +1162,19 @@ const MarketingView = ({
       <SurfaceCard title="Program inventory" description="Totals for coupons, promotions, and campaigns.">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] p-4">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">Coupons</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">Coupons</div>
             <p className="mt-2 text-sm text-[#374151]">
               Total {data.coupons.total} · Active {data.coupons.active} · Disabled {data.coupons.disabled}
             </p>
           </div>
           <div className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] p-4">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">Promotions</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">Promotions</div>
             <p className="mt-2 text-sm text-[#374151]">
               Total {data.promotions.total} · Active {data.promotions.active} · Rules {data.promotions.ruleCount}
             </p>
           </div>
           <div className="rounded-lg border border-[var(--color-border-light)] bg-[#f8f9fb] p-4">
-            <div className="text-[11px] font-semibold uppercase text-[var(--color-text-muted)]">Campaigns</div>
+            <div className="text-xs font-semibold uppercase text-[var(--color-text-muted)]">Campaigns</div>
             <p className="mt-2 text-sm text-[#374151]">
               Total {data.campaigns.total} · Active {data.campaigns.active} · Banners {data.campaigns.bannerCount}
             </p>

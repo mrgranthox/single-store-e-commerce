@@ -182,13 +182,13 @@ export const AlertDetailPage = () => {
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-3">
                 <span
-                  className={`flex items-center gap-2 rounded-full border px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wider ${severityBadgeClass(e.severity)}`}
+                  className={`flex items-center gap-2 rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider ${severityBadgeClass(e.severity)}`}
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80" />
                   {humanizeEnumLabel(e.severity)} severity
                 </span>
                 <StatusBadge label={e.status.replace(/_/g, " ")} tone={stTone(e.status)} />
-                <span className="flex items-center gap-1 text-[0.6875rem] font-medium uppercase tracking-widest text-[#737685]">
+                <span className="flex items-center gap-1 text-xs font-medium uppercase tracking-widest text-[#737685]">
                   Triggered · {formatAdminDateTimeLong(e.createdAt)}
                 </span>
               </div>
@@ -224,7 +224,7 @@ export const AlertDetailPage = () => {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
             <div className="space-y-6 lg:col-span-8">
               <div className="rounded-sm border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">
+                <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-[#737685]">
                   Summary &amp; context
                 </h2>
                 <p className="text-sm leading-relaxed text-[#434654]">
@@ -275,13 +275,13 @@ export const AlertDetailPage = () => {
               </div>
 
               <div className="rounded-sm border border-[#e8eaf4] bg-white p-6 shadow-sm">
-                <h2 className="mb-3 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">Record identifiers</h2>
+                <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#737685]">Record identifiers</h2>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <span className="break-all font-mono text-xs text-[#434654]">{e.id}</span>
                   <button
                     type="button"
                     onClick={() => void navigator.clipboard.writeText(e.id)}
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-[#c3c6d6]/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#1653cc] hover:bg-[#f2f3ff]"
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-[#c3c6d6]/40 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-[#1653cc] hover:bg-[#f2f3ff]"
                   >
                     <ClipboardCopy className="h-3.5 w-3.5" aria-hidden />
                     Copy ID
@@ -293,7 +293,7 @@ export const AlertDetailPage = () => {
               </div>
 
               <div className="rounded-sm bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">Related records</h2>
+                <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-[#737685]">Related records</h2>
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                   {e.relatedOrderId ? (
                     <Link to={`/admin/orders/${e.relatedOrderId}`} className={stitchVisibleLinkClass}>
@@ -331,8 +331,8 @@ export const AlertDetailPage = () => {
 
             <div className="space-y-6 lg:col-span-4">
               <div className="rounded-xl bg-[#1a1d27] p-6 text-white shadow-xl">
-                <h2 className="mb-4 text-[0.65rem] font-bold uppercase tracking-widest text-slate-500">Workflow</h2>
-                <label className="mb-2 block text-[0.65rem] font-semibold uppercase tracking-wide text-slate-400">
+                <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-slate-500">Workflow</h2>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Resolution note
                 </label>
                 <textarea
@@ -342,7 +342,7 @@ export const AlertDetailPage = () => {
                   className="mb-4 w-full rounded-md border-none bg-[#13161e] p-3 text-xs text-white placeholder:text-slate-500 focus:ring-1 focus:ring-[#1653cc]"
                   placeholder="Optional note for assign, acknowledge, or resolve…"
                 />
-                <label className="mb-2 block text-[0.65rem] font-semibold uppercase tracking-wide text-slate-400">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Assignee user ID
                 </label>
                 <input
@@ -358,7 +358,7 @@ export const AlertDetailPage = () => {
                     const t = assigneeId.trim();
                     assignMut.mutate(t ? t : null);
                   }}
-                  className="mb-6 w-full rounded-md bg-[#1653cc] py-2 text-[0.7rem] font-bold transition-all hover:brightness-110 disabled:opacity-50"
+                  className="mb-6 w-full rounded-md bg-[#1653cc] py-2 text-xs font-bold transition-all hover:brightness-110 disabled:opacity-50"
                   title={canManageAlerts ? undefined : "Requires security.alerts.manage permission"}
                 >
                   Apply assignment
@@ -369,7 +369,7 @@ export const AlertDetailPage = () => {
                     type="button"
                     disabled={ackMut.isPending || e.status === "RESOLVED" || !canManageAlerts}
                     onClick={() => setConfirm("ack")}
-                    className="rounded-md border border-slate-600 py-2 text-[0.7rem] font-bold text-white hover:bg-white/5 disabled:opacity-50"
+                    className="rounded-md border border-slate-600 py-2 text-xs font-bold text-white hover:bg-white/5 disabled:opacity-50"
                     title={canManageAlerts ? undefined : "Requires security.alerts.manage permission"}
                   >
                     Acknowledge
@@ -378,7 +378,7 @@ export const AlertDetailPage = () => {
                     type="button"
                     disabled={resolveMut.isPending || e.status === "RESOLVED" || !canManageAlerts}
                     onClick={() => setConfirm("resolve")}
-                    className="rounded-md bg-[#006b2d] py-2 text-[0.7rem] font-bold text-white hover:brightness-110 disabled:opacity-50"
+                    className="rounded-md bg-[#006b2d] py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-50"
                     title={canManageAlerts ? undefined : "Requires security.alerts.manage permission"}
                   >
                     Resolve

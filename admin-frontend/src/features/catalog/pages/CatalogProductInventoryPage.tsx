@@ -349,7 +349,7 @@ export const CatalogProductInventoryPage = () => {
                             placeholder="e.g. 10"
                           />
                           {oh != null ? (
-                            <span className="text-[11px] font-normal text-[var(--color-text-muted)]">
+                            <span className="text-xs font-normal text-[var(--color-text-muted)]">
                               Current on hand: {oh}
                             </span>
                           ) : null}
@@ -432,7 +432,7 @@ export const CatalogProductInventoryPage = () => {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[920px] border-collapse text-left text-sm">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50/90 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                    <tr className="border-b border-slate-200 bg-slate-50/90 text-xs font-semibold uppercase tracking-wide text-slate-500">
                       <th className="px-4 py-3">Variant</th>
                       <th className="px-4 py-3">SKU</th>
                       <th className="px-4 py-3">Warehouse</th>
@@ -474,7 +474,7 @@ export const CatalogProductInventoryPage = () => {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[720px] border-collapse text-left text-sm">
                   <thead>
-                    <tr className="border-b border-slate-200 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                    <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wide text-slate-500">
                       <th className="py-2 pr-3">Type</th>
                       <th className="py-2 pr-3">Qty Δ</th>
                       <th className="py-2 pr-3">Actor</th>

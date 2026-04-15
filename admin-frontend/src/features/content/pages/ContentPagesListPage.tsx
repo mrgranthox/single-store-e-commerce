@@ -280,7 +280,7 @@ export const ContentPagesListPage = () => {
 
       <div className="flex flex-wrap items-center gap-4 rounded-xl border border-[#737685]/15 bg-white p-4 shadow-sm">
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Status</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Status</span>
           <select
             value={filters.status}
             onChange={(e) => set("status", e.target.value)}

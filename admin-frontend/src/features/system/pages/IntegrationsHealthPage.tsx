@@ -233,11 +233,11 @@ export const IntegrationsHealthPage = () => {
 
   const recentWebhookRows =
     providers?.webhooks?.map((w) => [
-      <span key={w.id} className="font-mono text-[11px]">
+      <span key={w.id} className="font-mono text-xs">
         {w.id.slice(0, 8)}…
       </span>,
       w.provider,
-      <span key={`e-${w.id}`} className="max-w-[180px] truncate font-mono text-[11px]">
+      <span key={`e-${w.id}`} className="max-w-[180px] truncate font-mono text-xs">
         {w.eventType}
       </span>,
       <StatusBadge key={`s-${w.id}`} label={w.status.replace(/_/g, " ")} tone={webhookTone(w.status)} />,
@@ -248,7 +248,7 @@ export const IntegrationsHealthPage = () => {
 
   const deliveryRows =
     providers?.notificationDeliveries?.map((d) => [
-      <span key={d.id} className="font-mono text-[11px]">
+      <span key={d.id} className="font-mono text-xs">
         {d.id.slice(0, 8)}…
       </span>,
       d.notification?.type ?? "—",
@@ -263,7 +263,7 @@ export const IntegrationsHealthPage = () => {
 
   const failedWhRows =
     exceptions?.failedWebhooks?.map((w) => [
-      <span key={w.id} className="font-mono text-[11px]">
+      <span key={w.id} className="font-mono text-xs">
         {w.id.slice(0, 8)}…
       </span>,
       w.provider,
@@ -278,7 +278,7 @@ export const IntegrationsHealthPage = () => {
         key={`ex-${w.id}`}
         type="button"
         onClick={() => setDrawer({ kind: "webhook", row: w })}
-        className="text-left text-[11px] font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
+        className="text-left text-xs font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
       >
         Inspect
       </button>
@@ -286,7 +286,7 @@ export const IntegrationsHealthPage = () => {
 
   const failedNotifRows =
     exceptions?.failedNotifications?.map((n) => [
-      <span key={n.id} className="font-mono text-[11px]">
+      <span key={n.id} className="font-mono text-xs">
         {n.id.slice(0, 8)}…
       </span>,
       n.type,
@@ -301,7 +301,7 @@ export const IntegrationsHealthPage = () => {
         key={`nx-${n.id}`}
         type="button"
         onClick={() => setDrawer({ kind: "notif", row: n })}
-        className="text-left text-[11px] font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
+        className="text-left text-xs font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
       >
         Inspect
       </button>
@@ -309,7 +309,7 @@ export const IntegrationsHealthPage = () => {
 
   const finExcRows =
     exceptions?.financialExceptions?.map((x) => [
-      <span key={x.id} className="font-mono text-[11px]">
+      <span key={x.id} className="font-mono text-xs">
         {x.id.slice(0, 8)}…
       </span>,
       x.exceptionType.replace(/_/g, " "),
@@ -324,7 +324,7 @@ export const IntegrationsHealthPage = () => {
         key={`fx-${x.id}`}
         type="button"
         onClick={() => setDrawer({ kind: "finance", row: x })}
-        className="text-left text-[11px] font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
+        className="text-left text-xs font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
       >
         Inspect
       </button>
@@ -413,7 +413,7 @@ export const IntegrationsHealthPage = () => {
                 {health.queues.names.map((n) => (
                   <li
                     key={n}
-                    className="rounded-full bg-[#f2f3ff] px-3 py-1 font-mono text-[11px] font-semibold text-[#181b25]"
+                    className="rounded-full bg-[#f2f3ff] px-3 py-1 font-mono text-xs font-semibold text-[#181b25]"
                   >
                     {n}
                   </li>
@@ -496,7 +496,7 @@ export const IntegrationsHealthPage = () => {
           <section className="overflow-hidden rounded-xl bg-white shadow-sm">
             <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
               <h3 className="font-headline text-lg font-bold text-[#181b25]">Active integration exceptions</h3>
-              <div className="flex flex-wrap gap-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+              <div className="flex flex-wrap gap-3 text-xs font-bold uppercase tracking-wider text-[#737685]">
                 <span>Failed webhooks: {exSummary?.failedWebhookCount ?? 0}</span>
                 <span>Failed notifications: {exSummary?.failedNotificationCount ?? 0}</span>
                 <span>Open finance: {exSummary?.openFinancialExceptionCount ?? 0}</span>
@@ -504,7 +504,7 @@ export const IntegrationsHealthPage = () => {
             </header>
             <div className="space-y-6 p-5">
               <div>
-                <h4 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#737685]">Failed webhooks</h4>
+                <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#737685]">Failed webhooks</h4>
                 <DataTableShell
                   variant="stitchOperational"
                   embedded
@@ -515,7 +515,7 @@ export const IntegrationsHealthPage = () => {
                 />
               </div>
               <div>
-                <h4 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+                <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#737685]">
                   Failed notifications
                 </h4>
                 <DataTableShell
@@ -528,7 +528,7 @@ export const IntegrationsHealthPage = () => {
                 />
               </div>
               <div>
-                <h4 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+                <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#737685]">
                   Open financial exceptions
                 </h4>
                 <DataTableShell
@@ -554,7 +554,7 @@ export const IntegrationsHealthPage = () => {
               <aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-[#e0e2f0] bg-white shadow-2xl">
                 <div className="flex items-start justify-between gap-3 border-b border-[#e0e2f0] px-5 py-4">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#737685]">
                       {drawer.kind === "webhook"
                         ? "Failed webhook"
                         : drawer.kind === "notif"
@@ -581,7 +581,7 @@ export const IntegrationsHealthPage = () => {
                   {drawer.kind === "webhook" ? (
                     <div className="space-y-5">
                       <div className="rounded-sm border border-[#ba1a1a]/25 bg-[#fff5f5] px-3 py-2">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-[#ba1a1a]">Severity</p>
+                        <p className="text-xs font-bold uppercase tracking-wider text-[#ba1a1a]">Severity</p>
                         <p className="mt-1 text-sm font-semibold text-[#181b25]">Payment pipeline risk</p>
                         <p className="mt-1 text-xs leading-relaxed text-[#434654]">
                           A provider webhook did not complete successfully. Money movement may be out of sync until this is
@@ -590,24 +590,24 @@ export const IntegrationsHealthPage = () => {
                       </div>
                       <dl className="space-y-3">
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Provider</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Provider</dt>
                           <dd className="mt-0.5 font-medium text-[#181b25]">{drawer.row.provider}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">What failed</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">What failed</dt>
                           <dd className="mt-0.5">{drawer.row.eventType.replace(/[._]/g, " ")}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Processing state</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Processing state</dt>
                           <dd className="mt-0.5">{drawer.row.status.replace(/_/g, " ")}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Last received</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Last received</dt>
                           <dd className="mt-0.5">{formatDateTime(drawer.row.receivedAt)}</dd>
                         </div>
                       </dl>
                       <div className="rounded-sm bg-[#f2f3ff] px-3 py-3">
-                        <p className="text-[10px] font-bold uppercase text-[#1653cc]">Recommended next steps</p>
+                        <p className="text-xs font-bold uppercase text-[#1653cc]">Recommended next steps</p>
                         <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-[#374151]">
                           <li>Open the event in webhooks to replay after verifying the Paystack secret.</li>
                           <li>Confirm the charge or transfer in the Paystack dashboard.</li>
@@ -616,7 +616,7 @@ export const IntegrationsHealthPage = () => {
                       </div>
                       <Link
                         to={`/admin/system/webhooks/${drawer.row.id}`}
-                        className="inline-flex text-[11px] font-bold uppercase text-[#1653cc] hover:underline"
+                        className="inline-flex text-xs font-bold uppercase text-[#1653cc] hover:underline"
                       >
                         Open in webhooks monitor →
                       </Link>
@@ -625,26 +625,26 @@ export const IntegrationsHealthPage = () => {
                   {drawer.kind === "notif" ? (
                     <div className="space-y-5">
                       <div className="rounded-sm border border-amber-200 bg-amber-50 px-3 py-2">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-amber-900">Customer impact</p>
+                        <p className="text-xs font-bold uppercase tracking-wider text-amber-900">Customer impact</p>
                         <p className="mt-1 text-xs text-[#434654]">
                           The customer may not have received this message. Check spam folders and provider quotas.
                         </p>
                       </div>
                       <dl className="space-y-3">
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Template / type</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Template / type</dt>
                           <dd className="mt-0.5 font-medium">{drawer.row.type}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Channel</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Channel</dt>
                           <dd className="mt-0.5">{drawer.row.channel}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Recipient</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Recipient</dt>
                           <dd className="mt-0.5">{drawer.row.recipientEmail ?? "Not captured"}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Last update</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Last update</dt>
                           <dd className="mt-0.5">{formatDateTime(drawer.row.updatedAt)}</dd>
                         </div>
                       </dl>
@@ -661,22 +661,22 @@ export const IntegrationsHealthPage = () => {
                   {drawer.kind === "finance" ? (
                     <div className="space-y-5">
                       <div className="rounded-sm border border-[#1653cc]/20 bg-[#f2f3ff] px-3 py-2">
-                        <p className="text-[10px] font-bold uppercase text-[#1653cc]">Reconciliation</p>
+                        <p className="text-xs font-bold uppercase text-[#1653cc]">Reconciliation</p>
                         <p className="mt-1 text-xs text-[#434654]">
                           Financial exceptions need a human decision before payouts or refunds proceed.
                         </p>
                       </div>
                       <dl className="space-y-3">
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Exception type</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Exception type</dt>
                           <dd className="mt-0.5 font-medium">{drawer.row.exceptionType.replace(/_/g, " ")}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Workflow status</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Workflow status</dt>
                           <dd className="mt-0.5">{drawer.row.status}</dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Linked record</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Linked record</dt>
                           <dd className="mt-0.5">
                             {drawer.row.orderId
                               ? `Order ${drawer.row.orderId.slice(0, 8)}…`
@@ -688,13 +688,13 @@ export const IntegrationsHealthPage = () => {
                           </dd>
                         </div>
                         <div>
-                          <dt className="text-[10px] font-bold uppercase text-[#737685]">Updated</dt>
+                          <dt className="text-xs font-bold uppercase text-[#737685]">Updated</dt>
                           <dd className="mt-0.5">{formatDateTime(drawer.row.updatedAt)}</dd>
                         </div>
                       </dl>
                       <Link
                         to="/admin/finance/exceptions"
-                        className="inline-flex text-[11px] font-bold uppercase text-[#1653cc] hover:underline"
+                        className="inline-flex text-xs font-bold uppercase text-[#1653cc] hover:underline"
                       >
                         Open finance exceptions →
                       </Link>
@@ -706,7 +706,7 @@ export const IntegrationsHealthPage = () => {
           ) : null}
 
           <details className="rounded-xl border border-slate-200 bg-white shadow-sm">
-            <summary className="cursor-pointer px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+            <summary className="cursor-pointer px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">
               Technical reference — full API responses
             </summary>
             <div className="space-y-4 border-t border-slate-100 p-4">

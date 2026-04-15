@@ -33,7 +33,7 @@ const HeaderStatusChip = ({ status }: { status: string }) => {
   const cancelled = u === "CANCELLED";
   return (
     <div
-      className={`flex items-center gap-1.5 rounded border border-[#c3c6d6] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+      className={`flex items-center gap-1.5 rounded border border-[#c3c6d6] px-2 py-0.5 text-xs font-semibold uppercase tracking-wider ${
         cancelled ? "text-[#ba1a1a]" : "text-[#006b2d]"
       }`}
     >
@@ -173,7 +173,7 @@ export const OrderTimelinePage = () => {
                 <div className="p-6">
                   <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">
                         Total value
                       </span>
                       <h4 className="mt-1 font-headline text-2xl font-bold text-[#181b25]">
@@ -181,7 +181,7 @@ export const OrderTimelinePage = () => {
                       </h4>
                     </div>
                     <div className="text-right">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Qty</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Qty</span>
                       <p className="text-sm font-semibold text-[#181b25]">
                         {itemQty} {itemQty === 1 ? "item" : "items"}
                       </p>
@@ -194,12 +194,12 @@ export const OrderTimelinePage = () => {
                     ) : (
                       previewLines.map((line) => (
                         <div key={line.id} className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded bg-[#ecedfb] text-[10px] font-bold text-[#1653cc]">
+                          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded bg-[#ecedfb] text-xs font-bold text-[#1653cc]">
                             {line.productTitle.slice(0, 2).toUpperCase()}
                           </div>
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-xs font-semibold text-[#181b25]">{line.productTitle}</p>
-                            <p className="font-mono text-[10px] text-[#434654]">
+                            <p className="font-mono text-xs text-[#434654]">
                               Variant ·{" "}
                               {line.variantId.length > 14
                                 ? `${line.variantId.slice(0, 12)}…`
@@ -210,7 +210,7 @@ export const OrderTimelinePage = () => {
                             <p className="text-xs font-bold text-[#181b25]">
                               {formatMoney(line.lineTotalCents, line.unitPriceCurrency)}
                             </p>
-                            <p className="text-[10px] text-[#434654]">×{line.quantity}</p>
+                            <p className="text-xs text-[#434654]">×{line.quantity}</p>
                           </div>
                         </div>
                       ))
@@ -238,7 +238,7 @@ export const OrderTimelinePage = () => {
                         <CreditCard className="h-5 w-5 text-[#1653cc]" aria-hidden />
                         <div>
                           <p className="text-xs font-semibold text-[#181b25]">Payment</p>
-                          <p className="font-mono text-[10px] text-[#434654]">
+                          <p className="font-mono text-xs text-[#434654]">
                             {humanize(entity.payment.paymentState)}
                           </p>
                         </div>
@@ -251,7 +251,7 @@ export const OrderTimelinePage = () => {
                         <CreditCard className="h-5 w-5 text-[#737685]" aria-hidden />
                         <div>
                           <p className="text-xs font-semibold text-[#181b25]">Payment</p>
-                          <p className="text-[10px] text-[#434654]">No payment record linked</p>
+                          <p className="text-xs text-[#434654]">No payment record linked</p>
                         </div>
                       </div>
                     </div>
@@ -266,7 +266,7 @@ export const OrderTimelinePage = () => {
                         <Truck className="h-5 w-5 text-[#006b2d]" aria-hidden />
                         <div>
                           <p className="text-xs font-semibold text-[#181b25]">Shipment</p>
-                          <p className="font-mono text-[10px] text-[#434654]">
+                          <p className="font-mono text-xs text-[#434654]">
                             {latestShip.trackingNumber ?? latestShip.id.slice(0, 8)}
                           </p>
                         </div>
@@ -279,7 +279,7 @@ export const OrderTimelinePage = () => {
                         <Truck className="h-5 w-5 text-[#737685]" aria-hidden />
                         <div>
                           <p className="text-xs font-semibold text-[#181b25]">Shipment</p>
-                          <p className="text-[10px] text-[#434654]">No shipments yet</p>
+                          <p className="text-xs text-[#434654]">No shipments yet</p>
                         </div>
                       </div>
                     </div>
@@ -290,7 +290,7 @@ export const OrderTimelinePage = () => {
                       <RotateCcw className="h-5 w-5 text-[#737685]" aria-hidden />
                       <div>
                         <p className="text-xs font-semibold text-[#181b25]">Returns</p>
-                        <p className="text-[10px] italic text-[#434654]">No active returns</p>
+                        <p className="text-xs italic text-[#434654]">No active returns</p>
                       </div>
                     </div>
                   </div>
@@ -303,7 +303,7 @@ export const OrderTimelinePage = () => {
                       <Headphones className="h-5 w-5 text-[#ba1a1a]" aria-hidden />
                       <div>
                         <p className="text-xs font-semibold text-[#181b25]">Support</p>
-                        <p className="font-mono text-[10px] text-[#434654]">Open support queue</p>
+                        <p className="font-mono text-xs text-[#434654]">Open support queue</p>
                       </div>
                     </div>
                     <ArrowRight className="h-4 w-4 text-[#737685] transition-colors group-hover:text-[#1653cc]" />
@@ -316,7 +316,7 @@ export const OrderTimelinePage = () => {
                   <Info className="h-5 w-5 shrink-0 text-[#1653cc]" aria-hidden />
                   <div>
                     <h4 className="text-xs font-bold text-[#00174a]">Pro tip</h4>
-                    <p className="mt-1 text-[11px] leading-relaxed text-[#003ea7]">
+                    <p className="mt-1 text-xs leading-relaxed text-[#003ea7]">
                       Use order detail for mutations and shipment creation. This view is optimized for chronological
                       auditing and cross-entity navigation.
                     </p>

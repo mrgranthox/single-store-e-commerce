@@ -213,7 +213,7 @@ export const CouponFormPanel = ({
           ) : null}
           {mode === "create" ? (
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Code</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Code</span>
               <input
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
@@ -228,7 +228,7 @@ export const CouponFormPanel = ({
             </p>
           )}
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Status</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Status</span>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -240,7 +240,7 @@ export const CouponFormPanel = ({
             </select>
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Discount type</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Discount type</span>
             <select
               value={discountType}
               onChange={(e) => setDiscountType(e.target.value)}
@@ -253,7 +253,7 @@ export const CouponFormPanel = ({
           </label>
           {discountType.toUpperCase() === "PERCENTAGE" ? (
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Percent off</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Percent off</span>
               <input
                 type="number"
                 min={0}
@@ -267,7 +267,7 @@ export const CouponFormPanel = ({
           ) : null}
           {discountType.toUpperCase() === "FIXED_AMOUNT" ? (
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Amount off (USD)</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Amount off (USD)</span>
               <input
                 type="number"
                 min={0}
@@ -279,7 +279,7 @@ export const CouponFormPanel = ({
             </label>
           ) : null}
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Minimum order (USD)</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Minimum order (USD)</span>
             <input
               type="number"
               min={0}
@@ -290,7 +290,7 @@ export const CouponFormPanel = ({
             />
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Max redemptions (total)</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Max redemptions (total)</span>
             <input
               type="number"
               min={1}
@@ -301,7 +301,7 @@ export const CouponFormPanel = ({
             />
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Per-customer limit</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Per-customer limit</span>
             <input
               type="number"
               min={1}
@@ -321,7 +321,7 @@ export const CouponFormPanel = ({
           />
           <div className="grid grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Active from</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Active from</span>
               <input
                 type="date"
                 value={activeFrom}
@@ -330,7 +330,7 @@ export const CouponFormPanel = ({
               />
             </label>
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Active through</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Active through</span>
               <input
                 type="date"
                 value={activeTo}

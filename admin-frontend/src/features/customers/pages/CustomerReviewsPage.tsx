@@ -70,11 +70,11 @@ export const CustomerReviewsPage = () => {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="bg-[#ecedfb]/50">
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Rating</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Product</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">SKU</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Submitted</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Rating</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Status</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Product</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">SKU</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Submitted</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#c3c6d6]/10">
@@ -92,7 +92,7 @@ export const CustomerReviewsPage = () => {
                             {r.product.title}
                           </Link>
                         </td>
-                        <td className="px-6 py-4 font-mono text-[10px] text-slate-500">{r.variant?.sku ?? "—"}</td>
+                        <td className="px-6 py-4 font-mono text-xs text-slate-500">{r.variant?.sku ?? "—"}</td>
                         <td className="px-6 py-4 text-xs text-slate-600">{formatDateTime(r.createdAt)}</td>
                       </tr>
                     ))}

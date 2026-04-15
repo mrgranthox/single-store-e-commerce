@@ -87,7 +87,7 @@ export const QueryError = ({
           ⚠
         </span>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-400 mb-1">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-red-400 mb-1">
             Error
           </p>
           <h2 className="text-lg font-bold text-red-900">{heading}</h2>

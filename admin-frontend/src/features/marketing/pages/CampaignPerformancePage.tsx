@@ -36,7 +36,7 @@ const CampaignStatusPill = ({ status }: { status: string }) => {
   const active = u === "ACTIVE";
   return (
     <div
-      className={`inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider ${active ? "text-[#006b2d]" : "text-[#434654]"}`}
+      className={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider ${active ? "text-[#006b2d]" : "text-[#434654]"}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${active ? "bg-[#006b2d]" : "bg-slate-400"}`} />
       {humanizeLabel(status)}
@@ -180,7 +180,7 @@ export const CampaignPerformancePage = () => {
         <>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div className="relative overflow-hidden rounded-xl border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
-              <p className="mb-2 text-[0.6875rem] font-bold uppercase tracking-wider text-[#434654]">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#434654]">
                 Campaigns in window
               </p>
               <div className="flex items-baseline gap-2">
@@ -198,14 +198,14 @@ export const CampaignPerformancePage = () => {
               </div>
             </div>
             <div className="relative overflow-hidden rounded-xl border-l-4 border-[#00873b] bg-white p-6 shadow-sm">
-              <p className="mb-2 text-[0.6875rem] font-bold uppercase tracking-wider text-[#434654]">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#434654]">
                 Active in window
               </p>
               <div className="flex items-baseline gap-2">
                 <span className="font-headline text-2xl font-bold tracking-tighter text-[#181b25]">
                   {summary.activeCampaignsInView}
                 </span>
-                <span className="text-[0.6875rem] font-bold text-[#434654]">
+                <span className="text-xs font-bold text-[#434654]">
                   / {summary.campaignsInView} loaded
                 </span>
               </div>
@@ -214,7 +214,7 @@ export const CampaignPerformancePage = () => {
               </p>
             </div>
             <div className="relative overflow-hidden rounded-xl border-l-4 border-[#5b5e68] bg-white p-6 shadow-sm">
-              <p className="mb-2 text-[0.6875rem] font-bold uppercase tracking-wider text-[#434654]">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#434654]">
                 Linked promotions
               </p>
               <div className="flex items-baseline gap-2">
@@ -227,14 +227,14 @@ export const CampaignPerformancePage = () => {
               </p>
             </div>
             <div className="relative overflow-hidden rounded-xl border-l-4 border-[#ba1a1a] bg-white p-6 shadow-sm">
-              <p className="mb-2 text-[0.6875rem] font-bold uppercase tracking-wider text-[#434654]">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#434654]">
                 Banner placements
               </p>
               <div className="flex items-baseline gap-2">
                 <span className="font-headline text-2xl font-bold tracking-tighter text-[#181b25]">
                   {summary.bannerPlacementsInView}
                 </span>
-                <span className="text-[0.6875rem] font-bold text-[#434654]">In window</span>
+                <span className="text-xs font-bold text-[#434654]">In window</span>
               </div>
             </div>
           </div>
@@ -260,7 +260,7 @@ export const CampaignPerformancePage = () => {
                       style={{ height: `${Math.max(8, (c.bannerCount / channelMax) * 100)}%` }}
                       title={`${c.placement}: ${c.bannerCount}`}
                     />
-                    <span className="max-w-full truncate text-center text-[10px] font-bold uppercase tracking-tighter text-[#434654]">
+                    <span className="max-w-full truncate text-center text-xs font-bold uppercase tracking-tighter text-[#434654]">
                       {c.placement}
                     </span>
                     <span className="text-xs font-semibold text-[#181b25]">{c.bannerCount}</span>

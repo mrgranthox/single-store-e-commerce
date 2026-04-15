@@ -384,7 +384,7 @@ export const SupportTicketDetailPage = () => {
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="mb-1 flex flex-wrap items-center gap-3">
-              <span className="rounded bg-[#3b6de6] px-2 py-0.5 text-[10px] font-bold text-white">TICKET</span>
+              <span className="rounded bg-[#3b6de6] px-2 py-0.5 text-xs font-bold text-white">TICKET</span>
               <span className="font-mono text-sm font-medium text-[#5b5e68]">{formatTicketNumber(e.id)}</span>
             </div>
             <h1 className="font-headline text-2xl font-bold tracking-tight text-[#181b25]">{e.subject}</h1>
@@ -460,7 +460,7 @@ export const SupportTicketDetailPage = () => {
                     <button
                       type="button"
                       onClick={() => setThreadFilter("all")}
-                      className={`rounded-full px-3 py-1 text-[10px] font-bold ${
+                      className={`rounded-full px-3 py-1 text-xs font-bold ${
                         threadFilter === "all" ? "bg-[#1653cc] text-white" : "text-[#5b5e68] hover:bg-[#e0e2f0]"
                       }`}
                     >
@@ -469,7 +469,7 @@ export const SupportTicketDetailPage = () => {
                     <button
                       type="button"
                       onClick={() => setThreadFilter("internal")}
-                      className={`flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-bold ${
+                      className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${
                         threadFilter === "internal"
                           ? "bg-[#1653cc] text-white"
                           : "text-[#5b5e68] hover:bg-[#e0e2f0]"
@@ -495,10 +495,10 @@ export const SupportTicketDetailPage = () => {
                             <Lock className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" aria-hidden />
                             <div className="min-w-0 flex-1">
                               <div className="mb-1 flex flex-wrap items-center gap-2">
-                                <span className="text-[10px] font-bold uppercase tracking-tight text-amber-900">
+                                <span className="text-xs font-bold uppercase tracking-tight text-amber-900">
                                   Internal note
                                 </span>
-                                <span className="font-mono text-[10px] text-amber-800/70">
+                                <span className="font-mono text-xs text-amber-800/70">
                                   {formatDateTime(item.createdAt)}
                                 </span>
                               </div>
@@ -558,7 +558,7 @@ export const SupportTicketDetailPage = () => {
                               </ul>
                             ) : null}
                           </div>
-                          <span className="mt-1 text-[10px] font-medium text-[#5b5e68]">
+                          <span className="mt-1 text-xs font-medium text-[#5b5e68]">
                             {customer ? customerName : "Support"} · {formatDateTime(item.createdAt)}
                           </span>
                         </div>
@@ -629,7 +629,7 @@ export const SupportTicketDetailPage = () => {
                     <ShoppingCart className="h-5 w-5" aria-hidden />
                   </div>
                   <span className="text-[9px] font-bold uppercase tracking-tighter text-[#5b5e68]">Order</span>
-                  <span className="font-mono text-[10px] font-medium text-[#181b25]">{e.order.orderNumber}</span>
+                  <span className="font-mono text-xs font-medium text-[#181b25]">{e.order.orderNumber}</span>
                 </Link>
                 <div className="h-8 w-px bg-[#c3c6d6]/40" />
               </>
@@ -668,8 +668,8 @@ export const SupportTicketDetailPage = () => {
               }`}
             >
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#5b5e68]">SLA / Response</span>
-                <span className="rounded bg-[#ffdad6] px-2 py-0.5 text-[10px] font-bold text-[#ba1a1a]">
+                <span className="text-xs font-bold uppercase tracking-widest text-[#5b5e68]">SLA / Response</span>
+                <span className="rounded bg-[#ffdad6] px-2 py-0.5 text-xs font-bold text-[#ba1a1a]">
                   {e.priority}
                 </span>
               </div>
@@ -691,7 +691,7 @@ export const SupportTicketDetailPage = () => {
                   <span>—</span>
                 )}
               </div>
-              <p className="mt-2 font-mono text-[10px] text-[#60626c]">Due {formatDateTime(e.slaDueAt)}</p>
+              <p className="mt-2 font-mono text-xs text-[#60626c]">Due {formatDateTime(e.slaDueAt)}</p>
               <p className="mt-3 text-xs text-[#60626c]">
                 First-response SLA from ticket creation ({e.priority} priority). Timer updates every second until an
                 admin replies or the ticket closes.
@@ -743,7 +743,7 @@ export const SupportTicketDetailPage = () => {
                       value={assigneeId}
                       onChange={(ev) => setAssigneeId(ev.target.value)}
                       placeholder="User ID, or leave empty to unassign"
-                      className="mt-2 w-full rounded border border-[#e0e2f0] px-2 py-1.5 font-mono text-[11px] disabled:opacity-50"
+                      className="mt-2 w-full rounded border border-[#e0e2f0] px-2 py-1.5 font-mono text-xs disabled:opacity-50"
                       disabled={!e.allowedActions.canAssign}
                     />
                     <button
@@ -865,18 +865,18 @@ export const SupportTicketDetailPage = () => {
                   {e.customer.id ? (
                     <Link
                       to={`/admin/customers/${e.customer.id}`}
-                      className="flex-1 rounded bg-[#ecedfb] py-1.5 text-center text-[10px] font-bold uppercase text-[#181b25] transition-colors hover:bg-[#e0e2f0]"
+                      className="flex-1 rounded bg-[#ecedfb] py-1.5 text-center text-xs font-bold uppercase text-[#181b25] transition-colors hover:bg-[#e0e2f0]"
                     >
                       Profile
                     </Link>
                   ) : (
-                    <span className="flex-1 rounded bg-[#f8f9fb] py-1.5 text-center text-[10px] font-bold uppercase text-[#9ca3af]">
+                    <span className="flex-1 rounded bg-[#f8f9fb] py-1.5 text-center text-xs font-bold uppercase text-[#9ca3af]">
                       Profile
                     </span>
                   )}
                   <Link
                     to="/admin/support/tickets"
-                    className="flex-1 rounded bg-[#ecedfb] py-1.5 text-center text-[10px] font-bold uppercase text-[#181b25] transition-colors hover:bg-[#e0e2f0]"
+                    className="flex-1 rounded bg-[#ecedfb] py-1.5 text-center text-xs font-bold uppercase text-[#181b25] transition-colors hover:bg-[#e0e2f0]"
                   >
                     History
                   </Link>

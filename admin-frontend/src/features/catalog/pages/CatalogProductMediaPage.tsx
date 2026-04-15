@@ -386,7 +386,7 @@ const MediaTile = ({
       ⣿
     </div>
     {isPrimary ? (
-      <span className="absolute right-2 top-2 z-10 rounded-full bg-[#4f7ef8] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+      <span className="absolute right-2 top-2 z-10 rounded-full bg-[#4f7ef8] px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white">
         Primary
       </span>
     ) : null}
@@ -423,7 +423,7 @@ const MediaTile = ({
         Delete
       </button>
     </div>
-    <div className="truncate px-2 py-1.5 text-[11px] text-slate-500">
+    <div className="truncate px-2 py-1.5 text-xs text-slate-500">
       {media.originalFilename?.trim() || media.kind}
     </div>
   </div>

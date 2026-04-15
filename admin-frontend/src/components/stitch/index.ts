@@ -6,6 +6,7 @@ export { MiniSparkline } from "@/components/stitch/MiniSparkline";
 export { PaymentsWorkspaceNav } from "@/components/stitch/PaymentsWorkspaceNav";
 
 export {
+  DisabledTooltipWrapper,
   StitchBreadcrumbs,
   StitchCodePanel,
   StitchFieldLabel,

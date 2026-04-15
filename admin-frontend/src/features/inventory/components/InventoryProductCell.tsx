@@ -16,7 +16,7 @@ export const InventoryProductCell = ({
       {thumbnailUrl ? (
         <img src={thumbnailUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-[10px] font-bold text-slate-400">—</div>
+        <div className="flex h-full w-full items-center justify-center text-xs font-bold text-slate-400">—</div>
       )}
     </div>
     <Link

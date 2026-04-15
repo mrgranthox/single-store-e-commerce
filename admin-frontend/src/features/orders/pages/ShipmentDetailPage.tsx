@@ -279,7 +279,7 @@ export const ShipmentDetailPage = () => {
                       Carrier Details
                     </h2>
                     <div className="flex h-6 w-12 items-center justify-center rounded bg-slate-100">
-                      <span className="text-[10px] font-bold text-slate-400">
+                      <span className="text-xs font-bold text-slate-400">
                         {(e.carrier ?? "—").slice(0, 5).toUpperCase()}
                       </span>
                     </div>
@@ -411,21 +411,21 @@ export const ShipmentDetailPage = () => {
                   <h2 className="font-headline text-sm font-bold uppercase tracking-wider text-slate-500">
                     Contents (order)
                   </h2>
-                  <span className="rounded bg-[#1653cc]/10 px-2 py-0.5 text-[10px] font-bold text-[#1653cc]">
+                  <span className="rounded bg-[#1653cc]/10 px-2 py-0.5 text-xs font-bold text-[#1653cc]">
                     VIEW ON ORDER
                   </span>
                 </div>
                 <table className="w-full text-left">
                   <thead>
                     <tr className="bg-slate-50/50">
-                      <th className="px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-400">
                         Product
                       </th>
-                      <th className="px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-400">
                         Variant
                       </th>
-                      <th className="px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-400">SKU</th>
-                      <th className="px-6 py-3 text-right text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-400">SKU</th>
+                      <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-widest text-slate-400">
                         Qty
                       </th>
                     </tr>
@@ -518,12 +518,12 @@ export const ShipmentDetailPage = () => {
                           {isPending ? (
                             <>
                               <p className="text-sm font-semibold text-slate-400">Out for delivery</p>
-                              <p className="text-[11px] text-slate-300">Pending</p>
+                              <p className="text-xs text-slate-300">Pending</p>
                             </>
                           ) : isCreated ? (
                             <>
                               <p className="text-sm font-bold text-[#181b25]">Shipment created</p>
-                              <p className="text-[11px] text-slate-500">{formatDateTime(phase.at)}</p>
+                              <p className="text-xs text-slate-500">{formatDateTime(phase.at)}</p>
                             </>
                           ) : (
                             <>
@@ -532,13 +532,13 @@ export const ShipmentDetailPage = () => {
                               >
                                 {phase.ev.statusLabel}
                               </p>
-                              <p className="text-[11px] text-slate-500">{formatDateTime(phase.ev.occurredAt)}</p>
+                              <p className="text-xs text-slate-500">{formatDateTime(phase.ev.occurredAt)}</p>
                               {activeEvent ? (
-                                <p className="text-[11px] text-slate-500">Last event at this checkpoint</p>
+                                <p className="text-xs text-slate-500">Last event at this checkpoint</p>
                               ) : null}
                               {phase.ev.location || trackingNote(phase.ev.payload) ? (
                                 <div className="mt-2 rounded-lg border border-slate-100 bg-slate-50 p-2">
-                                  <p className="text-[11px] italic text-slate-600">
+                                  <p className="text-xs italic text-slate-600">
                                     {phase.ev.location
                                       ? `"${phase.ev.location}"`
                                       : trackingNote(phase.ev.payload)}
@@ -599,7 +599,7 @@ export const ShipmentDetailPage = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-slate-500">Notification status</span>
-                    <span className="rounded bg-[#6bff8f] px-2 py-0.5 text-[10px] font-bold text-[#002109]">
+                    <span className="rounded bg-[#6bff8f] px-2 py-0.5 text-xs font-bold text-[#002109]">
                       SENT
                     </span>
                   </div>

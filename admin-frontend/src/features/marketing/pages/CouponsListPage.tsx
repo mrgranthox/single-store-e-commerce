@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { QueryError } from "@/components/primitives/QueryError";
 import { SkeletonTable } from "@/components/primitives/Skeleton";
-import { MarketingWorkspaceNav, StitchPageBody } from "@/components/stitch";
+import { MarketingWorkspaceNav, StitchFilterPanel, StitchKpiMicro, StitchPageBody } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
@@ -123,7 +123,7 @@ const CouponStatusCell = ({ status }: { status: string }) => {
   const dot = isActive ? "bg-[#006b2d]" : isExpired ? "bg-[#ba1a1a]" : "bg-slate-400";
   const text = isActive ? "text-[#006b2d]" : isExpired ? "text-[#ba1a1a]" : "text-slate-600";
   return (
-    <div className={`flex items-center text-[10px] font-bold uppercase tracking-wider ${text}`}>
+    <div className={`flex items-center text-xs font-bold uppercase tracking-wider ${text}`}>
       <span className={`mr-2 h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} />
       {humanizeLabel(status)}
     </div>
@@ -236,7 +236,7 @@ export const CouponsListPage = () => {
       </div>,
       <span
         key={`ty-${c.id}`}
-        className="inline-flex rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-bold text-slate-600"
+        className="inline-flex rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs font-bold text-slate-600"
       >
         {humanizeLabel(c.discountType).toUpperCase()}
       </span>,
@@ -247,7 +247,7 @@ export const CouponsListPage = () => {
         {formatCentsMoney(c.minOrderAmountCents)}
       </span>,
       <div key={`use-${c.id}`} className="max-w-[100px]">
-        <div className="mb-1 flex justify-between text-[10px] font-bold">
+        <div className="mb-1 flex justify-between text-xs font-bold">
           <span>{used}</span>
           <span className="text-slate-400">{limit != null ? `/ ${limit}` : "—"}</span>
         </div>
@@ -382,44 +382,16 @@ export const CouponsListPage = () => {
         All-time redemptions recorded: <span className="font-semibold text-[#181b25]">{redemptionTotal.toLocaleString()}</span>
       </p>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-5 shadow-sm">
-          <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-wider text-slate-400">Active coupons</p>
-          <div className="flex items-end justify-between">
-            <span className="font-headline text-2xl font-bold text-[#181b25]">{activeCoupons}</span>
-            <span className="rounded bg-[#006b2d]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#006b2d]">Live</span>
-          </div>
-        </div>
-        <div className="rounded-xl border-l-4 border-[#006b2d] bg-white p-5 shadow-sm">
-          <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-wider text-slate-400">Est. savings (lifetime)</p>
-          <div className="flex items-end justify-between">
-            <span className="font-headline text-2xl font-bold text-[#181b25]">
-              {formatCentsMoney(lifetimeSavingsCents)}
-            </span>
-            <span className="text-[10px] font-bold text-slate-400">MODELED</span>
-          </div>
-        </div>
-        <div className="rounded-xl border-l-4 border-[#ba1a1a] bg-white p-5 shadow-sm">
-          <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-wider text-slate-400">Expired</p>
-          <div className="flex items-end justify-between">
-            <span className="font-headline text-2xl font-bold text-[#ba1a1a]">{expiredCoupons}</span>
-            <span className="rounded bg-[#ffdad6]/40 px-1.5 py-0.5 text-[10px] font-bold text-[#ba1a1a]">Review</span>
-          </div>
-        </div>
-        <div className="rounded-xl border-l-4 border-slate-300 bg-white p-5 shadow-sm">
-          <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-wider text-slate-400">Avg usage (capped)</p>
-          <div className="flex items-end justify-between">
-            <span className="font-headline text-2xl font-bold text-[#181b25]">
-              {avgUsage != null ? `${avgUsage.toFixed(1)}%` : "—"}
-            </span>
-            <span className="text-[10px] font-bold text-slate-400">OF LIMIT</span>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StitchKpiMicro label="Active coupons" value={activeCoupons} footer="Live" barClass="bg-[#1653cc]" />
+        <StitchKpiMicro label="Est. savings" value={formatCentsMoney(lifetimeSavingsCents)} footer="Lifetime modeled" barClass="bg-emerald-700" />
+        <StitchKpiMicro label="Expired" value={expiredCoupons} footer="Review" barClass="bg-[#ba1a1a]" />
+        <StitchKpiMicro label="Avg usage" value={avgUsage != null ? `${avgUsage.toFixed(1)}%` : "—"} footer="Of limit" barClass="bg-slate-300" />
       </div>
 
-      <div className="grid grid-cols-1 items-end gap-4 rounded-xl bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <StitchFilterPanel className="grid grid-cols-1 items-end gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase text-slate-500">Status</span>
+          <span className="text-xs font-bold uppercase text-slate-500">Status</span>
           <select
             value={filters.status}
             onChange={(e) => set("status", e.target.value)}
@@ -433,7 +405,7 @@ export const CouponsListPage = () => {
           </select>
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase text-slate-500">Type</span>
+          <span className="text-xs font-bold uppercase text-slate-500">Type</span>
           <select
             value={filters.discount_type}
             onChange={(e) => set("discount_type", e.target.value)}
@@ -446,7 +418,7 @@ export const CouponsListPage = () => {
           </select>
         </label>
         <label className="flex flex-col gap-1 lg:col-span-1">
-          <span className="text-[10px] font-bold uppercase text-slate-500">Search code</span>
+          <span className="text-xs font-bold uppercase text-slate-500">Search code</span>
           <div className="relative">
             <MaterialIcon
               name="search"
@@ -466,7 +438,7 @@ export const CouponsListPage = () => {
           </div>
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase text-slate-500">Active from</span>
+          <span className="text-xs font-bold uppercase text-slate-500">Active from</span>
           <input
             type="date"
             value={filters.active_from}
@@ -475,7 +447,7 @@ export const CouponsListPage = () => {
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase text-slate-500">Active through</span>
+          <span className="text-xs font-bold uppercase text-slate-500">Active through</span>
           <input
             type="date"
             value={filters.active_to}
@@ -484,7 +456,7 @@ export const CouponsListPage = () => {
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase text-slate-500">
+          <span className="text-xs font-bold uppercase text-slate-500">
             Min usage of cap ({usageFloorNum}%)
           </span>
           <input
@@ -508,7 +480,7 @@ export const CouponsListPage = () => {
             Clear filters
           </button>
         </div>
-      </div>
+      </StitchFilterPanel>
 
       {listQuery.isError ? (
         <QueryError label="coupons" error={listQuery.error} onRetry={() => void listQuery.refetch()} />

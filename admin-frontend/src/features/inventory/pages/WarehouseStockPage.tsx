@@ -21,7 +21,7 @@ import { refreshDataMenuItem } from "@/lib/page-action-menu";
 const statusBadge = (row: InventoryStockRow) => {
   if (row.health?.outOfStock) {
     return (
-      <span className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-red-700">
+      <span className="inline-flex items-center gap-1 rounded border border-red-200 px-2 py-0.5 text-xs font-bold uppercase tracking-tight text-red-700">
         <span className="mr-1 h-1.5 w-1.5 rounded-full bg-red-500" />
         Critical
       </span>
@@ -29,14 +29,14 @@ const statusBadge = (row: InventoryStockRow) => {
   }
   if (row.health?.lowStock) {
     return (
-      <span className="inline-flex items-center gap-1 rounded border border-amber-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-amber-800">
+      <span className="inline-flex items-center gap-1 rounded border border-amber-200 px-2 py-0.5 text-xs font-bold uppercase tracking-tight text-amber-800">
         <span className="mr-1 h-1.5 w-1.5 rounded-full bg-amber-500" />
         Low stock
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded border border-emerald-200 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-emerald-800">
+    <span className="inline-flex items-center gap-1 rounded border border-emerald-200 px-2 py-0.5 text-xs font-bold uppercase tracking-tight text-emerald-800">
       <span className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
       In stock
     </span>
@@ -122,7 +122,7 @@ export const WarehouseStockPage = () => {
     <span key={`rl-${row.id}`} className="text-right font-mono text-sm text-slate-500">
       {row.stock.effectiveReorderLevel}
     </span>,
-    <span key={`lm-${row.id}`} className="text-[11px] text-slate-500">
+    <span key={`lm-${row.id}`} className="text-xs text-slate-500">
       {formatMovement(row)}
     </span>,
     <span key={`st-${row.id}`}>{statusBadge(row)}</span>,
@@ -240,7 +240,7 @@ export const WarehouseStockPage = () => {
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Status</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Status</span>
             <select
               value={statusFilter}
               onChange={(e) => {
@@ -268,21 +268,21 @@ export const WarehouseStockPage = () => {
         </div>
         <div className="col-span-12 grid grid-cols-2 gap-4 lg:col-span-4">
           <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-card lg:col-span-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Facility totals</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Facility totals</span>
             <span className="mt-1 block font-headline text-xl font-bold text-[#181b25]">
               {summary ? `${summary.inventoryItemCount.toLocaleString()} SKUs · ${summary.totals.onHand.toLocaleString()} on hand` : "—"}
             </span>
             <span className="text-xs text-slate-500">Totals for this facility</span>
           </div>
           <div className="rounded-xl border-l-4 border-red-600 bg-white p-4 shadow-card">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Out of stock</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Out of stock</span>
             <span className="mt-1 block font-headline text-2xl font-bold text-red-600">
               {summary?.outOfStockCount ?? "—"}
             </span>
             <span className="text-xs text-slate-500">Whole warehouse</span>
           </div>
           <div className="rounded-xl border-l-4 border-amber-500 bg-white p-4 shadow-card">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Low stock</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Low stock</span>
             <span className="mt-1 block font-headline text-2xl font-bold text-amber-600">
               {summary?.lowStockCount ?? "—"}
             </span>

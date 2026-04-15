@@ -110,7 +110,7 @@ export const ScopedSettingsStitchWorkspace = ({ scope, items, onPatch, patching 
                     className="block w-full rounded-sm border-0 bg-[#f2f3ff] py-2 pl-7 pr-3 font-mono text-sm font-medium text-[#181b25] focus:ring-1 focus:ring-[#1653cc]"
                   />
                 </div>
-                <p className="mt-1.5 text-[10px] text-[#737685]">
+                <p className="mt-1.5 text-xs text-[#737685]">
                   Amounts in Ghana Cedis ({STORE_CURRENCY_CODE}). Example display: {formatMinorGhs(minCents)}. Set to 0.00 to
                   disable threshold logic.
                 </p>
@@ -135,7 +135,7 @@ export const ScopedSettingsStitchWorkspace = ({ scope, items, onPatch, patching 
                     HOURS
                   </span>
                 </div>
-                <p className="mt-1.5 text-[10px] text-[#737685]">Grace period for customer-initiated cancellation.</p>
+                <p className="mt-1.5 text-xs text-[#737685]">Grace period for customer-initiated cancellation.</p>
               </div>
             </div>
           </div>
@@ -195,7 +195,7 @@ export const ScopedSettingsStitchWorkspace = ({ scope, items, onPatch, patching 
         <section className="rounded-sm bg-white p-6 shadow-sm">
           <div className="mb-6 flex items-center justify-between">
             <h3 className="text-sm font-bold uppercase tracking-wider text-[#434654]">Tax architecture</h3>
-            <span className="flex items-center gap-1 rounded-full bg-[#00873b]/10 px-2 py-0.5 text-[10px] font-bold text-[#006b2d]">
+            <span className="flex items-center gap-1 rounded-full bg-[#00873b]/10 px-2 py-0.5 text-xs font-bold text-[#006b2d]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#006b2d]" />
               Regulatory mode
             </span>

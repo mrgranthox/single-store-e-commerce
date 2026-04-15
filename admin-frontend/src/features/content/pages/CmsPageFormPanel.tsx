@@ -178,7 +178,7 @@ export const CmsPageFormPanel = ({
           ) : null}
           {mode === "create" ? (
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">URL slug</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">URL slug</span>
               <input
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
@@ -193,7 +193,7 @@ export const CmsPageFormPanel = ({
             </p>
           )}
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Title</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Title</span>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -202,7 +202,7 @@ export const CmsPageFormPanel = ({
             />
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Workflow status</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Workflow status</span>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -215,7 +215,7 @@ export const CmsPageFormPanel = ({
             </select>
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Page headline</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Page headline</span>
             <input
               value={intro}
               onChange={(e) => setIntro(e.target.value)}
@@ -225,7 +225,7 @@ export const CmsPageFormPanel = ({
             />
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Body copy</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Body copy</span>
             <textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}

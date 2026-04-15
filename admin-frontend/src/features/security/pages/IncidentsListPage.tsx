@@ -251,31 +251,31 @@ export const IncidentsListPage = () => {
         </div>
       ) : null}
 
-      <p className="text-[10px] font-medium uppercase tracking-wider text-[#737685]">
+      <p className="text-xs font-medium uppercase tracking-wider text-[#737685]">
         Summary tiles use studio-wide incident operations from the security dashboard (last 7 days for throughput / MTTR).
       </p>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#ba1a1a] bg-white p-4">
-          <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Open</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Open</span>
           <span className="mt-2 font-headline text-3xl font-bold text-[#181b25]">
             {String(ops?.open ?? 0).padStart(2, "0")}
           </span>
         </div>
         <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-4">
-          <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">In progress</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">In progress</span>
           <span className="mt-2 font-headline text-3xl font-bold text-[#181b25]">
             {String(ops?.investigating ?? 0).padStart(2, "0")}
           </span>
         </div>
         <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#006b2d] bg-white p-4">
-          <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Closed (7d)</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Closed (7d)</span>
           <span className="mt-2 font-headline text-3xl font-bold text-[#181b25]">
             {String(ops?.resolvedOrClosedLast7Days ?? 0).padStart(2, "0")}
           </span>
         </div>
         <div className="flex flex-col justify-between rounded-xl border-l-4 border-slate-400 bg-white p-4">
-          <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Avg MTTR (7d, h)</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Avg MTTR (7d, h)</span>
           <span className="mt-2 font-headline text-3xl font-bold text-[#181b25]">
             {ops?.avgMttrHoursLast7Days != null ? ops.avgMttrHoursLast7Days.toFixed(1) : "—"}
           </span>
@@ -348,7 +348,7 @@ export const IncidentsListPage = () => {
                   ].map((h) => (
                     <th
                       key={h}
-                      className={`px-6 py-3 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500 ${
+                      className={`px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500 ${
                         h === "Actions" ? "text-right" : ""
                       }`}
                     >
@@ -379,18 +379,18 @@ export const IncidentsListPage = () => {
                         <td className="max-w-xs px-6 py-4">
                           <p className="text-[0.8125rem] font-semibold text-[#181b25]">{row.title}</p>
                           {row.summary ? (
-                            <p className="mt-0.5 truncate text-[0.6875rem] text-slate-500" title={row.summary}>
+                            <p className="mt-0.5 truncate text-xs text-slate-500" title={row.summary}>
                               {row.summary}
                             </p>
                           ) : null}
                         </td>
-                        <td className="px-6 py-4 text-[0.6875rem] font-bold text-slate-600">{sev}</td>
+                        <td className="px-6 py-4 text-xs font-bold text-slate-600">{sev}</td>
                         <td className="px-6 py-4">
                           <StatusBadge label={row.status.replace(/_/g, " ")} tone={tone(row.status)} />
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2 text-[0.75rem] text-[#181b25]">
-                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1653cc]/10 text-[10px] font-bold text-[#1653cc]">
+                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1653cc]/10 text-xs font-bold text-[#1653cc]">
                               {initials}
                             </span>
                             {ownerLabel(row.createdBy)}

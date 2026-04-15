@@ -291,19 +291,19 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
         <>
           <Link
             to="/admin/orders/fulfillment-queue"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Fulfillment queue
           </Link>
           <Link
             to="/admin/orders/dispatch-queue"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Dispatch queue
           </Link>
           <Link
             to="/admin/inventory/low-stock"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Low stock
           </Link>
@@ -313,13 +313,13 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
         <>
           <Link
             to="/admin/support/queue"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             SLA queue
           </Link>
           <Link
             to="/admin/support/complaints"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Complaints
           </Link>
@@ -329,19 +329,19 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
         <>
           <Link
             to="/admin/security/alerts"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Alerts
           </Link>
           <Link
             to="/admin/security/risk-signals"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Risk signals
           </Link>
           <Link
             to="/admin/security/incidents"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Incidents
           </Link>
@@ -351,19 +351,19 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
         <>
           <Link
             to="/admin/system/jobs"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Job runs
           </Link>
           <Link
             to="/admin/system/webhooks"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Webhooks
           </Link>
           <Link
             to="/admin/system/integrations-health"
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
           >
             Integrations
           </Link>
@@ -372,7 +372,7 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
       {segment === "sales" ? (
         <Link
           to="/admin/reports/sales"
-          className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
+          className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 shadow-sm hover:bg-slate-50"
         >
           Full sales report
         </Link>
@@ -389,7 +389,7 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
             type="button"
             onClick={() => setSalesRangeDays(d)}
             className={clsx(
-              "min-h-11 rounded-md px-3 py-2 text-[10px] font-bold uppercase tracking-tighter transition-all sm:min-h-0 sm:py-1",
+              "min-h-11 rounded-md px-3 py-2 text-xs font-bold uppercase tracking-tighter transition-all sm:min-h-0 sm:py-1",
               salesRangeDays === d
                 ? "bg-white text-[var(--color-primary)] shadow-sm"
                 : "text-[#434654] hover:text-[var(--color-primary)]"
@@ -401,7 +401,7 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
         <button
           type="button"
           disabled
-          className="flex min-h-11 items-center gap-1 rounded-md px-3 py-2 text-[10px] font-bold uppercase tracking-tighter text-slate-400 sm:min-h-0 sm:py-1"
+          className="flex min-h-11 items-center gap-1 rounded-md px-3 py-2 text-xs font-bold uppercase tracking-tighter text-slate-400 sm:min-h-0 sm:py-1"
           title="Custom range coming soon"
         >
           Custom
@@ -470,7 +470,7 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
           )}
           {salesSeriesQ.data?.data ? (
             <details className="rounded-lg border border-slate-200 bg-white">
-              <summary className="cursor-pointer px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+              <summary className="cursor-pointer px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">
                 Advanced details
               </summary>
               <div className="border-t border-slate-100 p-4">
@@ -502,7 +502,7 @@ export const DashboardSubPage = ({ segment }: DashboardSubPageProps) => {
                 <HealthSegment data={body as HealthDash} />
               ) : null}
               <details className="rounded-lg border border-slate-200 bg-white">
-                <summary className="cursor-pointer px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+                <summary className="cursor-pointer px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">
                   Advanced details
                 </summary>
                 <div className="border-t border-slate-100 p-4">
@@ -585,31 +585,31 @@ const SalesSegment = ({
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <div className="relative overflow-hidden rounded-[12px] bg-white p-5 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#434654]">Gross Revenue</div>
+          <div className="text-xs font-bold uppercase tracking-widest text-[#434654]">Gross Revenue</div>
           <div className="mt-1 font-mono text-2xl font-bold tracking-tight text-[#181b25]">{grossLabel}</div>
-          <p className="mt-2 text-[10px] text-slate-400">{sales.summary?.orderCount ?? 0} orders in range</p>
+          <p className="mt-2 text-xs text-slate-400">{sales.summary?.orderCount ?? 0} orders in range</p>
         </div>
         <div className="relative overflow-hidden rounded-[12px] bg-white p-5 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#006b2d]" />
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#434654]">Net Revenue</div>
+          <div className="text-xs font-bold uppercase tracking-widest text-[#434654]">Net Revenue</div>
           <div className="mt-1 font-mono text-2xl font-bold tracking-tight text-[#181b25]">{netLabel}</div>
-          <p className="mt-2 text-[10px] text-slate-400">
+          <p className="mt-2 text-xs text-slate-400">
             Gross {grossLabel} minus refunds completed in window ({money(refundsCompleted)}).
           </p>
         </div>
         <div className="relative overflow-hidden rounded-[12px] bg-white p-5 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#5b5e68]" />
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#434654]">Average Order Value</div>
+          <div className="text-xs font-bold uppercase tracking-widest text-[#434654]">Average Order Value</div>
           <div className="mt-1 font-mono text-2xl font-bold tracking-tight text-[#181b25]">{money(avgGrossOrder)}</div>
-          <p className="mt-2 text-[10px] text-slate-400">Gross AOV in window</p>
+          <p className="mt-2 text-xs text-slate-400">Gross AOV in window</p>
         </div>
         <div className="relative overflow-hidden rounded-[12px] bg-white p-5 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#ba1a1a]" />
-          <div className="text-[10px] font-bold uppercase tracking-widest text-[#434654]">Discount Impact</div>
+          <div className="text-xs font-bold uppercase tracking-widest text-[#434654]">Discount Impact</div>
           <div className="mt-1 font-mono text-2xl font-bold tracking-tight text-[#181b25]">
             {discountPct === "—" ? "—" : `${discountPct}%`}
           </div>
-          <p className="mt-2 text-[10px] text-[#434654]">Paid payments with refund activity / paid count.</p>
+          <p className="mt-2 text-xs text-[#434654]">Paid payments with refund activity / paid count.</p>
         </div>
       </div>
 
@@ -668,7 +668,7 @@ const SalesSegment = ({
             <h3 className="text-sm font-bold uppercase tracking-tight text-[#181b25]">Top Products by Revenue</h3>
             <Link
               to="/admin/reports/products"
-              className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-primary)] hover:underline"
+              className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)] hover:underline"
             >
               View Full Report
             </Link>
@@ -676,7 +676,7 @@ const SalesSegment = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-50 text-[10px] font-bold uppercase tracking-widest text-[#434654]">
+                <tr className="border-b border-slate-50 text-xs font-bold uppercase tracking-widest text-[#434654]">
                   <th className="pb-3">Rank</th>
                   <th className="pb-3">Product Name</th>
                   <th className="pb-3 text-right">Units Sold</th>
@@ -689,7 +689,7 @@ const SalesSegment = ({
                   const pct = Math.round((p.revenueCents / totalTopRev) * 100);
                   return (
                     <tr key={p.slug} className="hover:bg-slate-50">
-                      <td className="py-4 font-mono text-[11px] text-slate-400">{String(i + 1).padStart(2, "0")}</td>
+                      <td className="py-4 font-mono text-xs text-slate-400">{String(i + 1).padStart(2, "0")}</td>
                       <td className="py-4 text-xs font-semibold text-[#181b25]">{p.title}</td>
                       <td className="py-4 text-right font-mono text-xs">{p.quantitySold.toLocaleString()}</td>
                       <td className="py-4 text-right font-mono text-xs font-bold">{money(p.revenueCents)}</td>
@@ -698,7 +698,7 @@ const SalesSegment = ({
                           <div className="h-1.5 w-12 overflow-hidden rounded-full bg-slate-100">
                             <div className="h-full bg-[#1653cc]" style={{ width: `${pct}%` }} />
                           </div>
-                          <span className="font-mono text-[10px]">{pct}%</span>
+                          <span className="font-mono text-xs">{pct}%</span>
                         </div>
                       </td>
                     </tr>
@@ -946,7 +946,7 @@ const OperationsSegment = ({ data }: { data: OperationsDash }) => {
               />
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <div className="mt-3 flex flex-wrap gap-4 text-xs font-bold uppercase tracking-wider text-slate-500">
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-[#006b2d]" /> On-time
             </span>
@@ -972,7 +972,7 @@ const OperationsSegment = ({ data }: { data: OperationsDash }) => {
               <Link
                 key={w.name}
                 to="/admin/inventory/low-stock"
-                className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
+                className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
               >
                 View
               </Link>
@@ -995,7 +995,7 @@ const OperationsSegment = ({ data }: { data: OperationsDash }) => {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-slate-100 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <th className="h-11 px-3">Admin</th>
                   <th className="h-11 px-3">Action</th>
                   <th className="h-11 px-3">Entity</th>
@@ -1006,17 +1006,17 @@ const OperationsSegment = ({ data }: { data: OperationsDash }) => {
               <tbody className="divide-y divide-slate-50">
                 {(overridesQ.data?.data.items ?? []).map((row) => (
                   <tr key={row.id} className="h-11">
-                    <td className="px-3 align-middle font-mono text-[11px] text-slate-700">
+                    <td className="px-3 align-middle font-mono text-xs text-slate-700">
                       {row.adminUser?.email ?? "—"}
                     </td>
                     <td className="px-3 align-middle text-xs font-semibold text-[#181b25]">{row.actionCode}</td>
-                    <td className="px-3 align-middle font-mono text-[10px] text-slate-500">
+                    <td className="px-3 align-middle font-mono text-xs text-slate-500">
                       {(row.entityType ?? "—") + (row.entityId ? ` · ${row.entityId.slice(0, 8)}` : "")}
                     </td>
-                    <td className="px-3 align-middle font-mono text-[10px] text-slate-400">
+                    <td className="px-3 align-middle font-mono text-xs text-slate-400">
                       {new Date(row.createdAt).toLocaleString()}
                     </td>
-                    <td className="max-w-[200px] truncate px-3 align-middle text-[11px] text-slate-600">
+                    <td className="max-w-[200px] truncate px-3 align-middle text-xs text-slate-600">
                       {row.reason ?? "—"}
                     </td>
                   </tr>
@@ -1122,7 +1122,7 @@ const SupportSegment = ({ data }: { data: SupportDash }) => {
             ))}
           </div>
         </div>
-        <div className="mt-3 flex flex-wrap gap-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <div className="mt-3 flex flex-wrap gap-3 text-xs font-bold uppercase tracking-wider text-slate-500">
           <span className="flex items-center gap-1">
             <span className={clsx("h-2 w-2 rounded-full", stitchBacklogColors.new)} /> New ({backlog.new})
           </span>
@@ -1165,7 +1165,7 @@ const SupportSegment = ({ data }: { data: SupportDash }) => {
                     <SlaCountdown deadlineIso={t.slaDeadlineIso} />
                   </div>
                   <p className="mt-1 line-clamp-2 text-xs font-semibold">{t.subject}</p>
-                  <p className="mt-1 text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+                  <p className="mt-1 text-xs uppercase tracking-wider text-[var(--color-text-muted)]">
                     {t.priority.replace(/_/g, " ")} · {t.status.replace(/_/g, " ")}
                   </p>
                 </li>
@@ -1249,7 +1249,7 @@ const RiskSegment = ({ data }: { data: RiskDash }) => {
               <SecurityHourlyLineChart counts={hourlyCounts} />
             </div>
           </div>
-          <figcaption className="text-[10px] text-[var(--color-text-muted)]">
+          <figcaption className="text-xs text-[var(--color-text-muted)]">
             Failed admin logins (24h): {m?.failedLoginsLast24Hours ?? 0}.
           </figcaption>
         </figure>
@@ -1260,7 +1260,7 @@ const RiskSegment = ({ data }: { data: RiskDash }) => {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[480px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-slate-100 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <th className="h-11 px-3">Type</th>
                   <th className="h-11 px-3">Severity</th>
                   <th className="h-11 px-3">Assigned</th>
@@ -1278,11 +1278,11 @@ const RiskSegment = ({ data }: { data: RiskDash }) => {
                   alertsList.map((row) => (
                     <tr key={row.id} className="h-11">
                       <td className="px-3 align-middle text-xs font-semibold text-[#181b25]">{row.type}</td>
-                      <td className="px-3 align-middle text-[10px] font-bold uppercase text-slate-600">{row.severity}</td>
-                      <td className="px-3 align-middle font-mono text-[10px] text-slate-500">
+                      <td className="px-3 align-middle text-xs font-bold uppercase text-slate-600">{row.severity}</td>
+                      <td className="px-3 align-middle font-mono text-xs text-slate-500">
                         {row.assignedToEmail ?? "—"}
                       </td>
-                      <td className="px-3 text-right align-middle font-mono text-[10px] text-slate-400">
+                      <td className="px-3 text-right align-middle font-mono text-xs text-slate-400">
                         {formatTimeAgo(row.createdAt)}
                       </td>
                     </tr>
@@ -1296,7 +1296,7 @@ const RiskSegment = ({ data }: { data: RiskDash }) => {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[480px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-slate-100 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <th className="h-11 px-3">Title</th>
                   <th className="h-11 px-3">Status</th>
                   <th className="h-11 px-3">Created</th>
@@ -1316,13 +1316,13 @@ const RiskSegment = ({ data }: { data: RiskDash }) => {
                       <td className="max-w-[200px] truncate px-3 align-middle text-xs font-semibold text-[#181b25]">
                         {row.title}
                       </td>
-                      <td className="px-3 align-middle text-[10px] font-bold uppercase text-slate-600">
+                      <td className="px-3 align-middle text-xs font-bold uppercase text-slate-600">
                         {row.status.replace(/_/g, " ")}
                       </td>
-                      <td className="px-3 align-middle font-mono text-[10px] text-slate-500">
+                      <td className="px-3 align-middle font-mono text-xs text-slate-500">
                         {new Date(row.createdAt).toLocaleString()}
                       </td>
-                      <td className="px-3 align-middle font-mono text-[10px] text-slate-500">
+                      <td className="px-3 align-middle font-mono text-xs text-slate-500">
                         {row.ownerEmail ?? "—"}
                       </td>
                     </tr>
@@ -1484,7 +1484,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
           footer={
             <Link
               to="/admin/system/jobs"
-              className="text-[11px] font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
+              className="text-xs font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
             >
               Job runs
             </Link>
@@ -1497,7 +1497,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
           footer={
             <Link
               to="/admin/system/webhooks"
-              className="text-[11px] font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
+              className="text-xs font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
             >
               Webhooks
             </Link>
@@ -1516,7 +1516,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
           footer={
             <Link
               to="/admin/system/integrations-health"
-              className="text-[11px] font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
+              className="text-xs font-bold uppercase tracking-tight text-[#1653cc] hover:underline"
             >
               Integration health
             </Link>
@@ -1531,7 +1531,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
             <span className="font-mono text-2xl font-bold tracking-tight text-[#181b25]">
               {runtime ? formatProcessUptime(runtime.uptimeSeconds) : "—"}
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
               {runtime?.environment ?? "—"}
             </span>
           </div>
@@ -1545,7 +1545,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
             >
               {data.status}
             </div>
-            <p className="text-[10px] text-slate-500">
+            <p className="text-xs text-slate-500">
               <span className="font-mono">{new Date(data.now).toLocaleTimeString()}</span>
             </p>
           </div>
@@ -1569,7 +1569,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
               };
             })}
           />
-          <div className="mb-2 flex flex-wrap gap-4 text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+          <div className="mb-2 flex flex-wrap gap-4 text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
             <span className="flex items-center gap-2">
               <span className="h-0.5 w-4 bg-[var(--color-primary)]" />
               Received
@@ -1647,7 +1647,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
             <div className="overflow-x-auto -mx-1 px-1 sm:mx-0 sm:px-0">
               <table className="w-full min-w-[320px] text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[var(--color-border-light)] text-[10px] font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+                  <tr className="border-b border-[var(--color-border-light)] text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
                     <th className="pb-2 pr-2">Job</th>
                     <th className="pb-2 pr-2">Status</th>
                     <th className="pb-2 text-right">Duration</th>
@@ -1659,7 +1659,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
                       <td className="py-2 pr-2">
                         <Link
                           to={`/admin/system/jobs/${job.id}`}
-                          className="font-mono text-[11px] font-semibold text-[var(--color-primary)] hover:underline"
+                          className="font-mono text-xs font-semibold text-[var(--color-primary)] hover:underline"
                         >
                           {job.jobName}
                         </Link>
@@ -1679,7 +1679,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
                           {job.status.replace(/_/g, " ")}
                         </span>
                       </td>
-                      <td className="py-2 text-right font-mono text-[11px] text-[var(--color-text-muted)]">
+                      <td className="py-2 text-right font-mono text-xs text-[var(--color-text-muted)]">
                         {formatJobRunDuration(job.startedAt, job.finishedAt)}
                       </td>
                     </tr>
@@ -1690,7 +1690,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
           </DashboardPartialBody>
           <Link
             to="/admin/system/jobs"
-            className="mt-4 inline-block text-[10px] font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
+            className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
           >
             View all job runs
           </Link>
@@ -1725,7 +1725,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
                       <span className="font-mono text-[9px] text-[var(--color-text-muted)]">n={row.sampleCount}</span>
                     </div>
                     <div className="mt-2 space-y-1">
-                      <p className="text-[10px] font-bold uppercase tracking-tighter text-[var(--color-text-muted)]">
+                      <p className="text-xs font-bold uppercase tracking-tighter text-[var(--color-text-muted)]">
                         p50 / avg
                       </p>
                       <p className="font-mono text-sm font-bold text-[var(--color-primary)]">
@@ -1739,7 +1739,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
           </DashboardPartialBody>
           <Link
             to="/admin/system/integrations-health"
-            className="mt-4 inline-block text-[10px] font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
+            className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
           >
             Full integration health
           </Link>
@@ -1759,7 +1759,7 @@ const HealthSegment = ({ data }: { data: HealthDash }) => {
                   />
                   <span className="text-sm font-semibold text-[#181b25]">{d.ok ? "Healthy" : "Unavailable"}</span>
                 </div>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">{d.id}</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-slate-400">{d.id}</span>
               </div>
             </SurfaceCard>
           ))

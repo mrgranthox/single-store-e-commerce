@@ -183,10 +183,10 @@ export const ResetPasswordPage = () => {
                 ))}
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-medium text-slate-500">
+                <span className="text-xs font-medium text-slate-500">
                   Strength: <span className={strength.textClass}>{strength.label}</span>
                 </span>
-                <span className="font-mono text-[11px] text-[#737685]">8+ Characters</span>
+                <span className="font-mono text-xs text-[#737685]">8+ Characters</span>
               </div>
             </div>
             {form.formState.errors.password ? (
@@ -252,7 +252,7 @@ export const ResetPasswordPage = () => {
       <div className="pointer-events-none fixed bottom-8 right-8 hidden items-center gap-6 lg:flex">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-          <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">TLS encrypted</span>
+          <span className="font-mono text-xs uppercase tracking-widest text-slate-400">TLS encrypted</span>
         </div>
       </div>
     </>

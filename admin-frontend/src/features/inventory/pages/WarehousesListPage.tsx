@@ -6,6 +6,7 @@ import { Plus, Search, Store, X } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { StitchKpiMicro } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
@@ -23,7 +24,7 @@ const statusBadge = (status?: string) => {
   const s = (status ?? "ACTIVE").toUpperCase();
   if (s === "MAINTENANCE") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-900">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-amber-900">
         <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
         Maintenance
       </span>
@@ -31,14 +32,14 @@ const statusBadge = (status?: string) => {
   }
   if (s === "OFFLINE") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-700">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-100 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-700">
         <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
         Offline
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-800">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-emerald-800">
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
       Active
     </span>
@@ -213,30 +214,15 @@ export const WarehousesListPage = () => {
       <InventorySubNav />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-5 shadow-card">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total nodes</p>
-          <p className="mt-1 font-headline text-2xl font-bold">{items.length}</p>
-          <span className="mt-2 inline-block rounded bg-[#1653cc]/10 px-2 py-0.5 text-[10px] font-mono text-[#1653cc]">
-            Active
-          </span>
-        </div>
-        <div className="rounded-xl border-l-4 border-emerald-600 bg-white p-5 shadow-card">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Stock integrity</p>
-          <p className="mt-1 font-headline text-2xl font-bold">{stockIntegrityPct}%</p>
-          <span className="text-[10px] text-emerald-700">Global healthy lines</span>
-        </div>
-        <div className="rounded-xl border-l-4 border-red-600 bg-white p-5 shadow-card">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Critical alerts</p>
-          <p className="mt-1 font-headline text-2xl font-bold text-red-700">
-            {(overview?.lowStockCount ?? 0) + (overview?.outOfStockCount ?? 0)}
-          </p>
-          <span className="text-[10px] font-bold text-red-600">Low + out of stock</span>
-        </div>
-        <div className="rounded-xl border-l-4 border-slate-500 bg-white p-5 shadow-card">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total SKUs</p>
-          <p className="mt-1 font-headline text-2xl font-bold">{totalSkus.toLocaleString()}</p>
-          <span className="text-[10px] text-slate-500">Across warehouses</span>
-        </div>
+        <StitchKpiMicro label="Total nodes" value={items.length} footer="Active" barClass="bg-[#1653cc]" />
+        <StitchKpiMicro label="Stock integrity" value={`${stockIntegrityPct}%`} footer="Healthy lines" barClass="bg-emerald-600" />
+        <StitchKpiMicro
+          label="Critical alerts"
+          value={(overview?.lowStockCount ?? 0) + (overview?.outOfStockCount ?? 0)}
+          footer="Low + out of stock"
+          barClass="bg-red-600"
+        />
+        <StitchKpiMicro label="Total SKUs" value={totalSkus.toLocaleString()} footer="Across warehouses" barClass="bg-slate-500" />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-card ring-1 ring-slate-200">
@@ -332,7 +318,7 @@ export const WarehousesListPage = () => {
                   <option value="OFFLINE">Offline</option>
                 </select>
               </label>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Location (stored in metadata)</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Location (stored in metadata)</p>
               <label className="block text-xs font-semibold text-slate-600">
                 Address line 1
                 <input

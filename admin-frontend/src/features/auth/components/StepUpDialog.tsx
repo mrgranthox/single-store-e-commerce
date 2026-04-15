@@ -82,7 +82,7 @@ export const StepUpDialog = () => {
         <div className="mt-4">
           <label
             htmlFor="step-up-password"
-            className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-[#737685]"
+            className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#737685]"
           >
             Password
           </label>

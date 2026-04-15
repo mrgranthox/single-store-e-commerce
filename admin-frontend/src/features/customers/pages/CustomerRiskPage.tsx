@@ -103,32 +103,32 @@ export const CustomerRiskPage = () => {
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <div className="relative overflow-hidden rounded-sm border-l-4 border-[#ba1a1a] bg-white p-5">
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">Highest risk score</p>
+                  <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Highest risk score</p>
                   <p className="font-headline text-4xl font-extrabold text-[#181b25]">
                     {maxScore != null ? Math.round(maxScore) : "—"}
                   </p>
-                  <p className="mt-2 text-[10px] text-slate-400">From recorded fraud / risk signals</p>
+                  <p className="mt-2 text-xs text-slate-400">From recorded fraud / risk signals</p>
                 </div>
                 <div className="rounded-sm border-l-4 border-[#1653cc] bg-white p-5">
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">Risk signals</p>
+                  <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Risk signals</p>
                   <p className="font-headline text-4xl font-extrabold">{riskSignals.length}</p>
-                  <p className="mt-2 text-[10px] text-slate-400">All-time rows for this customer</p>
+                  <p className="mt-2 text-xs text-slate-400">All-time rows for this customer</p>
                 </div>
                 <div className="rounded-sm border-l-4 border-[#5b5e68] bg-white p-5">
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">Open security events</p>
+                  <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Open security events</p>
                   <p className="font-headline text-4xl font-extrabold">{openSecurityCount}</p>
-                  <p className="mt-2 text-[10px] text-slate-400">Status &quot;OPEN&quot; in the feed below</p>
+                  <p className="mt-2 text-xs text-slate-400">Status &quot;OPEN&quot; in the feed below</p>
                 </div>
                 <div className="flex flex-col justify-between rounded-sm bg-[#13161e] p-5 text-white">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Operational posture</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Operational posture</p>
                     <p className="mt-1 font-headline text-xl font-bold">
                       {openSecurityCount > 0 || (maxScore != null && maxScore >= 70)
                         ? "Elevated monitoring"
                         : "Standard monitoring"}
                     </p>
                   </div>
-                  <p className="mt-4 text-[10px] text-slate-400">Derived from open events and peak score</p>
+                  <p className="mt-4 text-xs text-slate-400">Derived from open events and peak score</p>
                 </div>
               </div>
 
@@ -148,10 +148,10 @@ export const CustomerRiskPage = () => {
                       <table className="w-full text-left">
                         <thead>
                           <tr className="border-b border-slate-100 bg-slate-50">
-                            <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">When</th>
-                            <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Result</th>
-                            <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Location (IP)</th>
-                            <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Detail</th>
+                            <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">When</th>
+                            <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Result</th>
+                            <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Location (IP)</th>
+                            <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Detail</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -193,11 +193,11 @@ export const CustomerRiskPage = () => {
                       <>
                         <dl className="grid grid-cols-2 gap-3 text-sm">
                           <div>
-                            <dt className="text-[10px] font-bold uppercase text-slate-500">Count</dt>
+                            <dt className="text-xs font-bold uppercase text-slate-500">Count</dt>
                             <dd className="mt-1 font-mono text-lg font-semibold">{refundSummary.completedCount}</dd>
                           </div>
                           <div>
-                            <dt className="text-[10px] font-bold uppercase text-slate-500">Total (sum of cents)</dt>
+                            <dt className="text-xs font-bold uppercase text-slate-500">Total (sum of cents)</dt>
                             <dd className="mt-1 font-mono text-lg font-semibold">
                               {formatMinorCurrency(
                                 refundSummary.totalAmountCents,
@@ -206,7 +206,7 @@ export const CustomerRiskPage = () => {
                             </dd>
                           </div>
                           <div className="col-span-2">
-                            <dt className="text-[10px] font-bold uppercase text-slate-500">Most recent</dt>
+                            <dt className="text-xs font-bold uppercase text-slate-500">Most recent</dt>
                             <dd className="mt-1 text-xs text-slate-700">
                               {refundSummary.lastCompletedAt
                                 ? `${formatDateTime(refundSummary.lastCompletedAt)}${
@@ -218,7 +218,7 @@ export const CustomerRiskPage = () => {
                             </dd>
                           </div>
                         </dl>
-                        <p className="text-[10px] leading-relaxed text-slate-400">
+                        <p className="text-xs leading-relaxed text-slate-400">
                           If refunds used multiple currencies, combined totals are approximate — confirm amounts in payments.
                         </p>
                       </>
@@ -239,11 +239,11 @@ export const CustomerRiskPage = () => {
                     <table className="w-full text-left">
                       <thead>
                         <tr className="border-b border-slate-100 bg-slate-50">
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Type</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Score</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Recorded</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Reviewed</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Context</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Type</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Score</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Recorded</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Reviewed</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Context</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-50">
@@ -282,12 +282,12 @@ export const CustomerRiskPage = () => {
                     <table className="w-full text-left">
                       <thead>
                         <tr className="border-b border-slate-100 bg-slate-50">
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Event</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Severity</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Status</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">When</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Resolved</th>
-                          <th className="px-5 py-2 text-[10px] font-bold uppercase text-slate-500">Context</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Event</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Severity</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Status</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">When</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Resolved</th>
+                          <th className="px-5 py-2 text-xs font-bold uppercase text-slate-500">Context</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-50">

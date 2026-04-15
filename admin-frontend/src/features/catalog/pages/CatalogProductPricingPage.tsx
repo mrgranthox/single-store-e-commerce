@@ -426,7 +426,7 @@ export const CatalogProductPricingPage = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[560px] text-left text-sm">
                     <thead>
-                      <tr className="border-b border-slate-200 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                      <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wide text-slate-500">
                         <th className="py-2 pr-3">Date</th>
                         <th className="py-2 pr-3">SKU</th>
                         <th className="py-2 pr-3">Old list</th>

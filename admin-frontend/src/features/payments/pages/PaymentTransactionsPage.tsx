@@ -167,7 +167,7 @@ export const PaymentTransactionsPage = () => {
     <div className="mx-auto w-full max-w-7xl space-y-8 pb-12">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <nav className="mb-2 flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+          <nav className="mb-2 flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-slate-400">
             <span>Ledger</span>
             <MaterialIcon name="chevron_right" className="text-xs" />
             <span>Transactions</span>
@@ -223,34 +223,34 @@ export const PaymentTransactionsPage = () => {
         <>
           <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div className="relative flex flex-col justify-between overflow-hidden rounded-xl border-l-4 border-[#1653cc] bg-white p-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Volume</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Total Volume</p>
               <h3 className="mt-2 font-mono text-2xl font-bold">{formatMoney(totalVolumeCents, primaryCurrency)}</h3>
-              <span className="absolute bottom-4 right-4 flex items-center text-[10px] font-bold text-[#006b2d]">
+              <span className="absolute bottom-4 right-4 flex items-center text-xs font-bold text-[#006b2d]">
                 <MaterialIcon name="trending_up" className="mr-1 text-xs" />
                 Events: {items.length}
               </span>
             </div>
             <div className="relative flex flex-col justify-between overflow-hidden rounded-xl border-l-4 border-[#006b2d] bg-white p-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Final Status</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Final Status</p>
               <h3 className="mt-2 font-headline text-2xl font-bold text-[#006b2d]">{finalStatusHeadline(entity.paymentState)}</h3>
-              <div className="absolute bottom-4 right-4 flex items-center text-[10px] font-bold text-slate-400">
+              <div className="absolute bottom-4 right-4 flex items-center text-xs font-bold text-slate-400">
                 <span className="mr-2 h-1.5 w-1.5 rounded-full bg-[#006b2d]" />
                 Ledger
               </div>
             </div>
             <div className="relative flex flex-col justify-between overflow-hidden rounded-xl border-l-4 border-slate-300 bg-white p-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Provider</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Provider</p>
               <h3 className="mt-2 font-headline text-2xl font-bold">{formatPaymentGatewayLabel(entity.provider)}</h3>
-              <span className="absolute bottom-4 right-4 max-w-[55%] truncate text-[10px] font-bold text-slate-400">
+              <span className="absolute bottom-4 right-4 max-w-[55%] truncate text-xs font-bold text-slate-400">
                 {entity.providerPaymentRef?.trim() ? `Ref: ${entity.providerPaymentRef.slice(0, 18)}…` : PAYSTACK_GATEWAY_HELP.slice(0, 42)}
               </span>
             </div>
             <div className="relative flex flex-col justify-between overflow-hidden rounded-xl border-l-4 border-red-600 bg-white p-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Session Span</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Session Span</p>
               <h3 className="mt-2 font-mono text-2xl font-bold">
                 {latencyMs != null ? `${latencyMs.toLocaleString()}ms` : "—"}
               </h3>
-              <span className="absolute bottom-4 right-4 flex items-center text-[10px] font-bold text-red-600">
+              <span className="absolute bottom-4 right-4 flex items-center text-xs font-bold text-red-600">
                 <MaterialIcon name="schedule" className="mr-1 text-xs" />
                 First → last event
               </span>
@@ -273,14 +273,14 @@ export const PaymentTransactionsPage = () => {
               </h2>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:space-x-6">
                 <div className="flex items-center">
-                  <span className="mr-3 text-[10px] font-bold uppercase text-slate-500">Filter Logs:</span>
+                  <span className="mr-3 text-xs font-bold uppercase text-slate-500">Filter Logs:</span>
                   <div className="flex space-x-2">
                     {(["all", "errors", "webhooks"] as const).map((key) => (
                       <button
                         key={key}
                         type="button"
                         onClick={() => setLogFilter(key)}
-                        className={`rounded px-3 py-1 text-[10px] font-bold transition-all ${
+                        className={`rounded px-3 py-1 text-xs font-bold transition-all ${
                           logFilter === key
                             ? "bg-slate-100 text-slate-600"
                             : "text-slate-400 hover:bg-slate-100"
@@ -324,13 +324,13 @@ export const PaymentTransactionsPage = () => {
                       <div className="ml-10 grid flex-1 grid-cols-12 items-start gap-6">
                         <div className="col-span-12 sm:col-span-2">
                           <p className="font-mono text-xs font-bold text-slate-900">{date}</p>
-                          <p className="font-mono text-[10px] text-slate-400">{time}</p>
+                          <p className="font-mono text-xs text-slate-400">{time}</p>
                         </div>
                         <div className="col-span-12 sm:col-span-10">
                           <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
                             <div className="flex flex-wrap items-center gap-3">
                               <span
-                                className={`rounded border px-2 py-0.5 text-[10px] font-bold uppercase ${badgeBorder}`}
+                                className={`rounded border px-2 py-0.5 text-xs font-bold uppercase ${badgeBorder}`}
                               >
                                 {row.providerEventType?.replace(/_/g, " ") ?? "Event"}
                               </span>
@@ -359,7 +359,7 @@ export const PaymentTransactionsPage = () => {
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col gap-2 px-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-8 flex flex-col gap-2 px-4 text-xs font-bold uppercase tracking-widest text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center">
               <MaterialIcon name="verified_user" className="mr-2 text-xs" />
               Append-only provider events · {PAYSTACK_GATEWAY_HELP.slice(0, 64)}…

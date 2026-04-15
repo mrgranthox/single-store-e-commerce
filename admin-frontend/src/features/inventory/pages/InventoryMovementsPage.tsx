@@ -242,7 +242,7 @@ export const InventoryMovementsPage = () => {
       </span>,
       <span key={`ty-${m.id}`}>
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide ${movementBadgeClass(label)}`}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-bold uppercase tracking-wide ${movementBadgeClass(label)}`}
         >
           <span className="h-1.5 w-1.5 rounded-full bg-current opacity-60" />
           {label}

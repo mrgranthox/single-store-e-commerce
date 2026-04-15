@@ -1,16 +1,28 @@
 import { type ReactNode, useEffect, useId, useRef } from "react";
 
+type ConfirmDialogSize = "sm" | "md" | "lg";
+
 type ConfirmDialogProps = {
   open: boolean;
   title: string;
   body?: ReactNode;
+  /** Short consequence note rendered above the action buttons with muted danger styling */
+  impactSummary?: ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;
-  /** Destructive action — confirm button uses danger styling. */
+  /** Destructive action — confirm button uses danger styling */
   danger?: boolean;
   confirmDisabled?: boolean;
+  /** Dialog width: sm=max-w-md (480), md=max-w-xl (640), lg=max-w-2xl (800) */
+  size?: ConfirmDialogSize;
   onConfirm: () => void;
   onClose: () => void;
+};
+
+const sizeClass: Record<ConfirmDialogSize, string> = {
+  sm: "max-w-md",
+  md: "max-w-xl",
+  lg: "max-w-2xl"
 };
 
 const FOCUSABLE =
@@ -20,10 +32,12 @@ export const ConfirmDialog = ({
   open,
   title,
   body,
+  impactSummary,
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
   danger = false,
   confirmDisabled = false,
+  size = "sm",
   onConfirm,
   onClose
 }: ConfirmDialogProps) => {
@@ -83,7 +97,7 @@ export const ConfirmDialog = ({
       />
       <div
         ref={dialogRef}
-        className="relative w-full max-w-md rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-2xl"
+        className={`relative w-full ${sizeClass[size]} rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-2xl`}
         role="alertdialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -96,6 +110,11 @@ export const ConfirmDialog = ({
           <p id={bodyId} className="mt-2 text-sm leading-relaxed text-[#60626c]">
             {body}
           </p>
+        ) : null}
+        {impactSummary ? (
+          <div className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-medium text-rose-800">
+            {impactSummary}
+          </div>
         ) : null}
         <div className="mt-6 flex flex-wrap justify-end gap-2">
           <button

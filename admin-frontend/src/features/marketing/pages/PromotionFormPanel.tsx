@@ -136,7 +136,7 @@ export const PromotionFormPanel = ({
             <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{localError}</div>
           ) : null}
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Name</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Name</span>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -145,7 +145,7 @@ export const PromotionFormPanel = ({
             />
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Status</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Status</span>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -177,7 +177,7 @@ export const PromotionFormPanel = ({
           )}
           <div className="grid grid-cols-2 gap-3">
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Active from</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Active from</span>
               <input
                 type="date"
                 value={activeFrom}
@@ -187,7 +187,7 @@ export const PromotionFormPanel = ({
               />
             </label>
             <label className="block">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Active through</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Active through</span>
               <input
                 type="date"
                 value={activeTo}

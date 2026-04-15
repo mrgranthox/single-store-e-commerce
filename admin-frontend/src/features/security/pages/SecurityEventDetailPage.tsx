@@ -121,7 +121,7 @@ export const SecurityEventDetailPage = () => {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-8">
             <div className="rounded-sm border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
-              <h2 className="mb-3 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">What happened</h2>
+              <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#737685]">What happened</h2>
               <p className="text-sm leading-relaxed text-[#434654]">{timelinePayloadLine(e.metadata)}</p>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <div className="rounded-sm bg-[#f2f3ff] p-3">
@@ -168,13 +168,13 @@ export const SecurityEventDetailPage = () => {
             </div>
 
             <div className="rounded-sm border border-[#e8eaf4] bg-white p-6 shadow-sm">
-              <h2 className="mb-3 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">Event record</h2>
+              <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#737685]">Event record</h2>
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <span className="break-all font-mono text-xs text-[#434654]">{e.id}</span>
                 <button
                   type="button"
                   onClick={() => void navigator.clipboard.writeText(e.id)}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-[#c3c6d6]/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#1653cc] hover:bg-[#f2f3ff]"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-[#c3c6d6]/40 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-[#1653cc] hover:bg-[#f2f3ff]"
                 >
                   <ClipboardCopy className="h-3.5 w-3.5" aria-hidden />
                   Copy ID
@@ -184,7 +184,7 @@ export const SecurityEventDetailPage = () => {
             </div>
 
             <div className="rounded-sm bg-white p-6 shadow-sm">
-              <h2 className="mb-3 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">Subject</h2>
+              <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#737685]">Subject</h2>
               <p className="text-sm text-[#434654]">
                 <span className="font-semibold text-[#181b25]">Customer / user: </span>
                 {e.user ? (
@@ -197,7 +197,7 @@ export const SecurityEventDetailPage = () => {
                 )}
               </p>
               {e.user?.id ? (
-                <p className="mt-2 font-mono text-[11px] text-[#737685]">
+                <p className="mt-2 font-mono text-xs text-[#737685]">
                   Customer ID: <span className="text-[#181b25]">{e.user.id}</span>
                 </p>
               ) : null}
@@ -212,7 +212,7 @@ export const SecurityEventDetailPage = () => {
 
           <div className="lg:col-span-4">
             <div className="rounded-xl bg-[#1a1d27] p-6 text-white shadow-lg">
-              <h2 className="mb-4 text-[0.65rem] font-bold uppercase tracking-widest text-slate-500">Actions</h2>
+              <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-slate-500">Actions</h2>
               <p className="mb-4 text-xs text-slate-400">
                 Mark this event resolved once mitigation or review is complete. This is recorded on the audit trail.
               </p>
@@ -220,7 +220,7 @@ export const SecurityEventDetailPage = () => {
                 type="button"
                 disabled={notifyMut.isPending}
                 onClick={() => notifyMut.mutate()}
-                className="mb-2 flex w-full items-center justify-center gap-2 rounded-md border border-slate-600 py-2.5 text-[0.7rem] font-bold hover:bg-white/5 disabled:opacity-50"
+                className="mb-2 flex w-full items-center justify-center gap-2 rounded-md border border-slate-600 py-2.5 text-xs font-bold hover:bg-white/5 disabled:opacity-50"
               >
                 <Bell className="h-4 w-4" aria-hidden />
                 Notify (follow-up alert)
@@ -230,7 +230,7 @@ export const SecurityEventDetailPage = () => {
                 disabled={ipBlockMut.isPending || !pickIpFromMetadata(e.metadata)}
                 title={pickIpFromMetadata(e.metadata) ? "Record IP block request on this event" : "No IP on event metadata"}
                 onClick={() => ipBlockMut.mutate()}
-                className="mb-4 flex w-full items-center justify-center gap-2 rounded-md border border-[#ba1a1a]/50 py-2.5 text-[0.7rem] font-bold text-[#fecaca] hover:bg-[#ba1a1a]/20 disabled:opacity-40"
+                className="mb-4 flex w-full items-center justify-center gap-2 rounded-md border border-[#ba1a1a]/50 py-2.5 text-xs font-bold text-[#fecaca] hover:bg-[#ba1a1a]/20 disabled:opacity-40"
               >
                 <Ban className="h-4 w-4" aria-hidden />
                 Request IP block
@@ -239,12 +239,12 @@ export const SecurityEventDetailPage = () => {
                 type="button"
                 disabled={resolveMut.isPending || e.status === "RESOLVED"}
                 onClick={() => resolveMut.mutate()}
-                className="w-full rounded-md bg-[#006b2d] py-2.5 text-[0.7rem] font-bold hover:brightness-110 disabled:opacity-50"
+                className="w-full rounded-md bg-[#006b2d] py-2.5 text-xs font-bold hover:brightness-110 disabled:opacity-50"
               >
                 Mark resolved
               </button>
               {e.resolvedAt ? (
-                <p className="mt-3 text-[0.65rem] text-slate-400">Resolved at {formatAdminDateTimeLong(e.resolvedAt)}</p>
+                <p className="mt-3 text-xs text-slate-400">Resolved at {formatAdminDateTimeLong(e.resolvedAt)}</p>
               ) : null}
             </div>
           </div>

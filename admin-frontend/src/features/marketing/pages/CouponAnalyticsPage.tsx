@@ -169,7 +169,7 @@ export const CouponAnalyticsPage = () => {
 
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div className="flex flex-wrap items-center gap-2 rounded-xl bg-white p-2 shadow-sm">
-          <span className="px-2 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Window</span>
+          <span className="px-2 text-xs font-bold uppercase tracking-wider text-[#737685]">Window</span>
           {PERIOD_OPTIONS.map((d) => (
             <button
               key={d}
@@ -218,7 +218,7 @@ export const CouponAnalyticsPage = () => {
         <>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div className="group relative overflow-hidden rounded-xl border-l-4 border-[#1653cc] bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#737685]">Redemptions (window)</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-[#737685]">Redemptions (window)</p>
               <div className="flex items-baseline gap-2">
                 <h3 className="font-headline text-3xl font-bold tracking-tight text-[#181b25]">
                   {data.redemptionsInPeriod.toLocaleString()}
@@ -230,13 +230,13 @@ export const CouponAnalyticsPage = () => {
               />
             </div>
             <div className="group relative overflow-hidden rounded-xl border-l-4 border-[#006b2d] bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#737685]">Est. discount (window)</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-[#737685]">Est. discount (window)</p>
               <div className="flex items-baseline gap-2">
                 <h3 className="font-headline text-3xl font-bold tracking-tight text-[#181b25]">
                   {formatCentsMoney(data.estimatedDiscountGivenCentsInPeriod)}
                 </h3>
               </div>
-              <p className="mt-2 text-[11px] text-[#737685]">
+              <p className="mt-2 text-xs text-[#737685]">
                 Modeled from order lines tied to redemptions (not payment-settled promo lines).
               </p>
               <MaterialIcon
@@ -245,13 +245,13 @@ export const CouponAnalyticsPage = () => {
               />
             </div>
             <div className="group relative overflow-hidden rounded-xl border-l-4 border-[#3b6de6] bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#737685]">Revenue attributed</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-[#737685]">Revenue attributed</p>
               <div className="flex items-baseline gap-2">
                 <h3 className="font-headline text-3xl font-bold tracking-tight text-[#181b25]">
                   {formatCentsMoney(data.estimatedRevenueAttributedCentsInPeriod)}
                 </h3>
               </div>
-              <p className="mt-2 text-[11px] text-[#737685]">
+              <p className="mt-2 text-xs text-[#737685]">
                 Merchandise subtotals on coupon-linked orders; top-code &quot;revenue&quot; uses proportional allocation.
               </p>
               <MaterialIcon
@@ -260,7 +260,7 @@ export const CouponAnalyticsPage = () => {
               />
             </div>
             <div className="group relative overflow-hidden rounded-xl border-l-4 border-[#737685] bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-[#737685]">Avg order (coupon orders)</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-[#737685]">Avg order (coupon orders)</p>
               <div className="flex items-baseline gap-2">
                 <h3 className="font-headline text-3xl font-bold tracking-tight text-[#181b25]">
                   {data.averageOrderValueCouponCentsInPeriod != null
@@ -268,7 +268,7 @@ export const CouponAnalyticsPage = () => {
                     : "—"}
                 </h3>
               </div>
-              <p className="mt-2 text-[11px] font-medium text-[#737685]">Active SKUs in catalog: {activeCoupons}</p>
+              <p className="mt-2 text-xs font-medium text-[#737685]">Active SKUs in catalog: {activeCoupons}</p>
               <MaterialIcon
                 name="shopping_bag"
                 className="pointer-events-none absolute -right-2.5 -top-2.5 text-8xl text-[#737685] opacity-[0.06]"

@@ -44,7 +44,7 @@ const statusPill = (status: string) => {
   const open = status !== "RESOLVED";
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-bold uppercase ${
         open ? "border border-red-200 bg-red-50 text-red-800" : "border border-emerald-200 bg-emerald-50 text-emerald-800"
       }`}
     >
@@ -169,7 +169,7 @@ export const FinanceExceptionsPage = () => {
     <div className="mx-auto max-w-7xl pb-12">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <nav className="mb-2 flex gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          <nav className="mb-2 flex gap-2 text-xs font-bold uppercase tracking-widest text-slate-500">
             <span>Financials</span>
             <span>/</span>
             <span className="font-bold text-[#1653cc]">Financial Exceptions</span>
@@ -201,8 +201,8 @@ export const FinanceExceptionsPage = () => {
         <div className="group relative overflow-hidden bg-white p-6">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-red-600" />
           <div className="mb-4 flex items-start justify-between">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Open Exceptions</p>
-            <span className="rounded-full bg-[#ffdad6] px-2 py-0.5 text-[10px] font-bold text-[#93000a]">This page view</span>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Open Exceptions</p>
+            <span className="rounded-full bg-[#ffdad6] px-2 py-0.5 text-xs font-bold text-[#93000a]">This page view</span>
           </div>
           <h3 className="font-headline text-4xl font-bold text-slate-900">{kpis.open}</h3>
           <p className="mt-2 text-xs text-slate-400">After local type/status filters</p>
@@ -210,7 +210,7 @@ export const FinanceExceptionsPage = () => {
         <div className="group relative overflow-hidden bg-white p-6">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
           <div className="mb-4 flex items-start justify-between">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Amount discrepancy</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Amount discrepancy</p>
             <MaterialIcon name="account_balance_wallet" className="text-[#1653cc]" />
           </div>
           <div className="flex items-baseline gap-1">
@@ -228,8 +228,8 @@ export const FinanceExceptionsPage = () => {
         <div className="group relative overflow-hidden bg-white p-6">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#006b2d]" />
           <div className="mb-4 flex items-start justify-between">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Resolved (page)</p>
-            <span className="rounded-full bg-[#00873b] px-2 py-0.5 text-[10px] font-bold text-white">Slice</span>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Resolved (page)</p>
+            <span className="rounded-full bg-[#00873b] px-2 py-0.5 text-xs font-bold text-white">Slice</span>
           </div>
           <h3 className="font-headline text-4xl font-bold text-slate-900">{kpis.resolvedWeek}</h3>
           <p className="mt-2 text-xs text-slate-400">Rows with status RESOLVED in current filter</p>
@@ -238,7 +238,7 @@ export const FinanceExceptionsPage = () => {
 
       <div className="mb-6 flex flex-wrap items-center gap-4 border-b border-[#e6e7f6] bg-white px-6 py-4">
         <div className="flex items-center gap-2">
-          <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-400">Type</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Type</span>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
@@ -254,7 +254,7 @@ export const FinanceExceptionsPage = () => {
           </select>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-400">Status</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Status</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -296,7 +296,7 @@ export const FinanceExceptionsPage = () => {
                 ).map((h) => (
                   <th
                     key={h}
-                    className={`px-6 py-4 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500 ${
+                    className={`px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500 ${
                       ["Expected", "Actual", "Discrepancy"].includes(h) ? "text-right" : ""
                     } ${h === "Actions" ? "text-center" : ""}`}
                   >
@@ -321,7 +321,7 @@ export const FinanceExceptionsPage = () => {
                     <tr key={row.id} className="transition-colors hover:bg-[#f2f3ff]">
                       <td className="px-6 py-4 font-mono text-xs font-semibold text-slate-900">{exceptionRefLabel(row.id)}</td>
                       <td className="px-6 py-4">
-                        <span className="rounded-full border border-red-200 px-2 py-0.5 text-[10px] font-bold uppercase text-red-700">
+                        <span className="rounded-full border border-red-200 px-2 py-0.5 text-xs font-bold uppercase text-red-700">
                           {row.exceptionType.replace(/_/g, " ")}
                         </span>
                       </td>
@@ -335,7 +335,7 @@ export const FinanceExceptionsPage = () => {
                             "—"
                           )}
                         </div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="text-xs text-slate-400">
                           {row.paymentId ? (
                             <Link className="text-[#1653cc] hover:underline" to={`/admin/payments/${row.paymentId}`}>
                               {row.paymentId.slice(0, 12)}…

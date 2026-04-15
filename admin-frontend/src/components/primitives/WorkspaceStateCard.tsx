@@ -1,7 +1,10 @@
+import type { ReactNode } from "react";
+
 type WorkspaceStateCardProps = {
   eyebrow?: string;
   title: string;
   description: string;
+  icon?: ReactNode;
   primaryActionLabel?: string;
   secondaryActionLabel?: string;
   onPrimaryAction?: () => void;
@@ -12,6 +15,7 @@ export const WorkspaceStateCard = ({
   eyebrow = "Admin workspace",
   title,
   description,
+  icon,
   primaryActionLabel,
   secondaryActionLabel,
   onPrimaryAction,
@@ -19,7 +23,12 @@ export const WorkspaceStateCard = ({
 }: WorkspaceStateCardProps) => (
   <div className="flex min-h-screen items-center justify-center bg-[#f8f9fb] p-6">
     <div className="w-full max-w-lg rounded-2xl border border-[#e0e2f0] bg-white p-8 shadow-sm">
-      <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#737685]">{eyebrow}</p>
+      {icon ? (
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#f2f3ff] text-[#1653cc]">
+          {icon}
+        </div>
+      ) : null}
+      <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#737685]">{eyebrow}</p>
       <h1 className="mt-2 font-headline text-2xl font-bold tracking-tight text-[#181b25]">{title}</h1>
       <p className="mt-3 text-sm leading-relaxed text-[#5b5e68]">{description}</p>
       {(primaryActionLabel || secondaryActionLabel) && (

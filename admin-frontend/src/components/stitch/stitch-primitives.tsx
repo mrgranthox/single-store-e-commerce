@@ -17,14 +17,14 @@ export const StitchFilterPanel = ({
   </div>
 );
 
-/** Stitch uppercase label (0.6875rem / 11px) */
+/** Stitch uppercase label — 12px minimum (text-xs) */
 export const StitchFieldLabel = ({
   children,
   className
 }: PropsWithChildren<{ className?: string }>) => (
   <span
     className={clsx(
-      "mb-2 block text-[11px] font-bold uppercase tracking-wider text-[#737685]",
+      "mb-2 block text-xs font-bold uppercase tracking-wider text-[#737685]",
       className
     )}
   >
@@ -46,7 +46,7 @@ const breadcrumbLinkDefault = "text-[#737685] transition-colors hover:text-[#165
 const breadcrumbLinkEmphasis =
   "font-semibold text-[#1653cc] underline decoration-[#1653cc]/50 underline-offset-2 transition-colors hover:text-[#0f3d99] hover:decoration-[#1653cc]";
 
-/** Detail hero breadcrumb row */
+/** Detail hero breadcrumb row — uses --text-11 intentionally per Stitch spec */
 export const StitchBreadcrumbs = ({
   items,
   emphasizeLinks = false
@@ -56,7 +56,8 @@ export const StitchBreadcrumbs = ({
   emphasizeLinks?: boolean;
 }) => (
   <nav
-    className="mb-2 flex flex-wrap items-center gap-y-1 text-[10px] font-semibold uppercase tracking-widest text-[#737685]"
+    className="mb-2 flex flex-wrap items-center gap-y-1 font-semibold uppercase tracking-widest text-[#737685]"
+    style={{ fontSize: "var(--text-11)" }}
     aria-label="Breadcrumb"
   >
     {items.map((item, i) => (
@@ -117,18 +118,20 @@ export const StitchKpiMicro = ({
   label,
   value,
   footer,
-  barClass
+  barClass,
+  className
 }: {
   label: string;
   value: ReactNode;
   footer?: ReactNode;
   barClass: string;
+  className?: string;
 }) => (
-  <div className="relative flex min-w-[140px] flex-col justify-between overflow-hidden rounded-xl bg-white p-4 shadow-sm">
+  <div className={clsx("relative flex min-w-[140px] flex-col justify-between overflow-hidden rounded-xl bg-white p-4 shadow-sm", className)}>
     <div className={clsx("absolute bottom-0 left-0 top-0 w-1", barClass)} />
-    <span className="text-[11px] font-bold uppercase tracking-wider text-[#737685]">{label}</span>
+    <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">{label}</span>
     <span className="mt-1 font-headline text-2xl font-bold text-[#181b25]">{value}</span>
-    {footer ? <div className="mt-1 self-end text-[11px]">{footer}</div> : null}
+    {footer ? <div className="mt-1 self-end text-xs text-[#434654]">{footer}</div> : null}
   </div>
 );
 
@@ -142,4 +145,28 @@ export const StitchCodePanel = ({ children, title }: { title?: string; children:
     ) : null}
     <div className="p-4">{children}</div>
   </section>
+);
+
+/**
+ * DisabledTooltipWrapper — wraps any control that should be visually disabled
+ * with a hover tooltip explaining the reason. Replaces bare `disabled + title` patterns.
+ */
+export const DisabledTooltipWrapper = ({
+  children,
+  reason,
+  className
+}: PropsWithChildren<{ reason: string; className?: string }>) => (
+  <span
+    className={clsx("group relative inline-flex cursor-not-allowed opacity-50", className)}
+    tabIndex={0}
+    aria-label={reason}
+  >
+    <span className="pointer-events-none">{children}</span>
+    <span
+      className="absolute bottom-full left-1/2 z-50 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-[#181b25] px-2.5 py-1.5 text-xs text-white shadow-lg group-hover:block group-focus:block"
+      role="tooltip"
+    >
+      {reason}
+    </span>
+  </span>
 );

@@ -182,3 +182,40 @@ export const truncate = (str: string | null | undefined, max = 40): string => {
   if (!str) return "—";
   return str.length > max ? `${str.slice(0, max - 1)}…` : str;
 };
+
+// ---------------------------------------------------------------------------
+// Numeric helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Format an integer count with locale-aware thousands separators.
+ * @example formatCount(12345) → "12,345"
+ */
+export const formatCount = (n: number | null | undefined): string => {
+  if (n == null) return "—";
+  try {
+    return new Intl.NumberFormat(undefined).format(n);
+  } catch {
+    return String(n);
+  }
+};
+
+/**
+ * Format a ratio (0–1) as a percentage string.
+ * @example formatPercent(0.1234) → "12.3%"
+ */
+export const formatPercent = (
+  ratio: number | null | undefined,
+  fractionDigits = 1
+): string => {
+  if (ratio == null) return "—";
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "percent",
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits
+    }).format(ratio);
+  } catch {
+    return `${(ratio * 100).toFixed(fractionDigits)}%`;
+  }
+};

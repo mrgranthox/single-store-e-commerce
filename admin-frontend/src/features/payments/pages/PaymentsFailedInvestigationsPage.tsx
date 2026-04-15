@@ -117,7 +117,7 @@ export const PaymentsFailedInvestigationsPage = () => {
           : "bg-red-600";
     const label = row.latestTransactionStatus?.replace(/_/g, " ") || "Payment failed";
     return (
-      <span className="inline-flex items-center gap-1.5 rounded border border-slate-200 px-2 py-0.5 text-[10px] font-medium text-[#181b25]">
+      <span className="inline-flex items-center gap-1.5 rounded border border-slate-200 px-2 py-0.5 text-xs font-medium text-[#181b25]">
         <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
         {label}
       </span>
@@ -155,7 +155,7 @@ export const PaymentsFailedInvestigationsPage = () => {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <div className="flex h-32 flex-col justify-between rounded-xl border-l-4 border-red-600 bg-white p-5">
-          <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-[#5b5e68]">Failed (this page)</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#5b5e68]">Failed (this page)</span>
           <div className="flex items-baseline gap-2">
             <span className="font-headline text-3xl font-bold">{displayItems.length}</span>
             <span className="text-xs font-medium text-red-600">visible rows</span>
@@ -165,15 +165,15 @@ export const PaymentsFailedInvestigationsPage = () => {
           </div>
         </div>
         <div className="flex h-32 flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-5">
-          <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-[#5b5e68]">Catalog total</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#5b5e68]">Catalog total</span>
           <div className="flex items-baseline gap-2">
             <span className="font-headline text-3xl font-bold">{totalCatalog}</span>
             <span className="text-xs font-medium text-[#006b2d]">matching query</span>
           </div>
-          <p className="text-[10px] italic text-[#737685]">Paged list from admin API</p>
+          <p className="text-xs italic text-[#737685]">Paged list from admin API</p>
         </div>
         <div className="flex h-32 flex-col justify-between rounded-xl border-l-4 border-[#006b2d] bg-white p-5">
-          <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-[#5b5e68]">Gateway</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#5b5e68]">Gateway</span>
           <div className="flex items-baseline gap-2">
             <span className="font-headline text-3xl font-bold">{PAYSTACK_GATEWAY_NAME}</span>
           </div>
@@ -184,7 +184,7 @@ export const PaymentsFailedInvestigationsPage = () => {
           </div>
         </div>
         <div className="flex h-32 flex-col justify-between rounded-xl border-l-4 border-orange-500 bg-white p-5">
-          <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-[#5b5e68]">Revenue at risk (page)</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#5b5e68]">Revenue at risk (page)</span>
           <div className="flex items-baseline gap-2">
             <span className="font-headline text-3xl font-bold font-mono tracking-tight text-[#181b25]">
               {displayItems.length ? formatMoney(volumeOnPage, cur) : "—"}
@@ -207,12 +207,12 @@ export const PaymentsFailedInvestigationsPage = () => {
               </div>
             </div>
           </div>
-          <p className="text-center text-[10px] text-slate-500">Segments are illustrative; see Latest signal per row.</p>
+          <p className="text-center text-xs text-slate-500">Segments are illustrative; see Latest signal per row.</p>
         </div>
         <div className="rounded-xl bg-white p-6 lg:col-span-2">
           <div className="mb-6 flex items-center justify-between">
             <h3 className="text-sm font-bold text-[#181b25]">Failures by provider</h3>
-            <span className="rounded bg-[#ecedfb] px-2 py-1 text-[10px] font-bold">LIVE FEED</span>
+            <span className="rounded bg-[#ecedfb] px-2 py-1 text-xs font-bold">LIVE FEED</span>
           </div>
           <div className="space-y-6">
             <div className="space-y-2">
@@ -231,7 +231,7 @@ export const PaymentsFailedInvestigationsPage = () => {
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <label className="flex min-w-[200px] flex-1 flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Gateway scope</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Gateway scope</span>
           <select
             value={providerDraft.trim().toLowerCase() === PAYSTACK_PROVIDER_QUERY_VALUE ? PAYSTACK_PROVIDER_QUERY_VALUE : ""}
             onChange={(e) => setProviderDraft(e.target.value)}
@@ -308,7 +308,7 @@ export const PaymentsFailedInvestigationsPage = () => {
                   ).map((h) => (
                     <th
                       key={h}
-                      className={`px-6 py-3 text-[0.6875rem] font-semibold uppercase tracking-wider text-[#5b5e68] ${
+                      className={`px-6 py-3 text-xs font-semibold uppercase tracking-wider text-[#5b5e68] ${
                         h === "Retries" ? "text-center" : h === "Actions" ? "text-right" : ""
                       }`}
                     >
@@ -333,15 +333,15 @@ export const PaymentsFailedInvestigationsPage = () => {
                         <td className="px-6 py-4">
                           <Link
                             to={`/admin/payments/${encodeURIComponent(row.id)}`}
-                            className="font-mono text-[11px] font-medium text-[#1653cc] hover:underline"
+                            className="font-mono text-xs font-medium text-[#1653cc] hover:underline"
                           >
                             {paymentRefLabel(row.id)}
                           </Link>
                         </td>
-                        <td className="px-6 py-4 font-mono text-[11px] text-[#5b5e68]">{row.orderNumber}</td>
+                        <td className="px-6 py-4 font-mono text-xs text-[#5b5e68]">{row.orderNumber}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            <div className="flex h-6 w-6 items-center justify-center rounded bg-slate-200 text-[10px] font-bold">
+                            <div className="flex h-6 w-6 items-center justify-center rounded bg-slate-200 text-xs font-bold">
                               {initials}
                             </div>
                             <span className="text-xs font-semibold">{customer}</span>
@@ -350,9 +350,9 @@ export const PaymentsFailedInvestigationsPage = () => {
                         <td className="px-6 py-4 font-mono text-xs font-bold">{formatMoney(row.amountCents, row.currency)}</td>
                         <td className="px-6 py-4 text-xs font-semibold">{formatPaymentGatewayLabel(row.provider)}</td>
                         <td className="px-6 py-4">{reasonChip(row)}</td>
-                        <td className="px-6 py-4 text-[11px] text-[#5b5e68]">{formatTimeUtc(row.updatedAt)}</td>
+                        <td className="px-6 py-4 text-xs text-[#5b5e68]">{formatTimeUtc(row.updatedAt)}</td>
                         <td className="px-6 py-4 text-center">
-                          <span className="rounded bg-[#ecedfb] px-2 py-0.5 text-[10px] font-bold">—</span>
+                          <span className="rounded bg-[#ecedfb] px-2 py-0.5 text-xs font-bold">—</span>
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex justify-end gap-2">
@@ -380,7 +380,7 @@ export const PaymentsFailedInvestigationsPage = () => {
             </table>
           </div>
           {meta ? (
-            <div className="flex flex-col gap-2 border-t border-[#ecedfb] bg-[#f2f3ff] px-6 py-3 text-[11px] text-[#5b5e68] sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 border-t border-[#ecedfb] bg-[#f2f3ff] px-6 py-3 text-xs text-[#5b5e68] sm:flex-row sm:items-center sm:justify-between">
               <span>
                 {displayItems.length !== items.length ? (
                   <>Showing {displayItems.length} filtered of {items.length} on page · {meta.totalItems} total</>

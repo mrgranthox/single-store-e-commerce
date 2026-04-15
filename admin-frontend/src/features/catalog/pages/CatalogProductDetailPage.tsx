@@ -231,7 +231,7 @@ export const CatalogProductDetailPage = () => {
               <div className="mt-4 overflow-x-auto">
                 <table className="min-w-full border-collapse text-left text-sm">
                   <thead>
-                    <tr className="border-b border-slate-200 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                    <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wide text-slate-500">
                       <th className="py-2 pr-4">Variant</th>
                       <th className="py-2 pr-4">SKU</th>
                       <th className="py-2 pr-4">Price</th>
@@ -371,7 +371,7 @@ export const CatalogProductDetailPage = () => {
                     )}
                   </dd>
                 </div>
-                <p className="pt-2 text-[11px] text-slate-400">
+                <p className="pt-2 text-xs text-slate-400">
                   Per-warehouse reorder levels roll up here. Adjust stock targets on the Inventory tab.
                 </p>
               </dl>

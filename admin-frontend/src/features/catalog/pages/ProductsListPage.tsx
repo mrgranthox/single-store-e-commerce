@@ -4,9 +4,11 @@ import { ChevronDown, MoreHorizontal, Search } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
+import { BulkActionBar } from "@/components/primitives/BulkActionBar";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { QueryError } from "@/components/primitives/QueryError";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
+import { StitchFilterPanel, StitchFieldLabel } from "@/components/stitch";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
@@ -74,7 +76,7 @@ const BulkDeleteDisabled = () => (
     <span
       id="bulk-delete-hint"
       role="tooltip"
-      className="pointer-events-none invisible absolute bottom-full left-1/2 z-40 mb-2 w-max max-w-[240px] -translate-x-1/2 rounded-lg bg-slate-900 px-3 py-2 text-left text-[11px] leading-snug text-white opacity-0 shadow-lg transition group-hover/del:visible group-hover/del:opacity-100 group-focus-within/del:visible group-focus-within/del:opacity-100"
+      className="pointer-events-none invisible absolute bottom-full left-1/2 z-40 mb-2 w-max max-w-[240px] -translate-x-1/2 rounded-lg bg-slate-900 px-3 py-2 text-left text-xs leading-snug text-white opacity-0 shadow-lg transition group-hover/del:visible group-hover/del:opacity-100 group-focus-within/del:visible group-focus-within/del:opacity-100"
     >
       Bulk product delete is not available in the API. Use Archive, or clear inventory from the Inventory tab.
     </span>
@@ -85,7 +87,7 @@ const Thumb = memo(({ url, title }: { url: string | null; title: string }) => {
   if (!url) {
     return (
       <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-slate-100 text-[10px] font-medium text-slate-400"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-slate-100 text-xs font-medium text-slate-400"
         aria-hidden
       >
         —
@@ -241,13 +243,13 @@ const ProductTableRow = memo(({
               <span className="hidden opacity-0 transition-opacity group-hover:opacity-100 sm:inline-flex sm:gap-1">
                 <Link
                   to={`/admin/catalog/products/${product.id}/edit`}
-                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50"
+                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
                 >
                   Edit
                 </Link>
                 <Link
                   to={`/admin/catalog/products/${product.id}/analytics`}
-                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50"
+                  className="rounded border border-slate-200 bg-white px-2 py-0.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
                 >
                   Analytics
                 </Link>
@@ -499,13 +501,13 @@ export const ProductsListPage = () => {
         }
       />
 
-      <div className="rounded-xl bg-white p-4 shadow-sm">
+      <StitchFilterPanel>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <label className="md:col-span-2">
-            <span className="mb-1.5 block text-xs font-medium text-slate-400">Search</span>
+            <StitchFieldLabel>Search</StitchFieldLabel>
             <div className="relative">
               <Search
-                className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#737685]"
                 strokeWidth={2}
                 aria-hidden
               />
@@ -518,19 +520,19 @@ export const ProductsListPage = () => {
                   }
                 }}
                 placeholder="Name or SKU"
-                className="h-11 w-full rounded-md border border-slate-200 py-2 pl-9 pr-3 text-sm text-slate-800 outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
+                className="h-10 w-full rounded-lg border-0 bg-[#f2f3ff] py-2 pl-9 pr-3 text-xs text-[#181b25] placeholder:text-[#737685]/80 outline-none focus:ring-2 focus:ring-[#1653cc]/25"
               />
             </div>
           </label>
           <label>
-            <span className="mb-1.5 block text-xs font-medium text-slate-400">Status</span>
+            <StitchFieldLabel>Status</StitchFieldLabel>
             <select
               value={filters.status}
               onChange={(e) => {
                 set("status", e.target.value);
                 setSelected(new Set());
               }}
-              className="h-11 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
+              className="h-10 w-full rounded-lg border-0 bg-[#f2f3ff] px-3 text-xs text-[#181b25] outline-none focus:ring-2 focus:ring-[#1653cc]/25"
             >
               {STATUS_OPTIONS.map((s) => (
                 <option key={s.value || "all"} value={s.value}>
@@ -540,14 +542,14 @@ export const ProductsListPage = () => {
             </select>
           </label>
           <label>
-            <span className="mb-1.5 block text-xs font-medium text-slate-400">Category</span>
+            <StitchFieldLabel>Category</StitchFieldLabel>
             <select
               value={filters.categoryId}
               onChange={(e) => {
                 set("categoryId", e.target.value);
                 setSelected(new Set());
               }}
-              className="h-11 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
+              className="h-10 w-full rounded-lg border-0 bg-[#f2f3ff] px-3 text-xs text-[#181b25] outline-none focus:ring-2 focus:ring-[#1653cc]/25"
             >
               <option value="">All categories</option>
               {categories.map((c) => (
@@ -558,14 +560,14 @@ export const ProductsListPage = () => {
             </select>
           </label>
           <label>
-            <span className="mb-1.5 block text-xs font-medium text-slate-400">Brand</span>
+            <StitchFieldLabel>Brand</StitchFieldLabel>
             <select
               value={filters.brandId}
               onChange={(e) => {
                 set("brandId", e.target.value);
                 setSelected(new Set());
               }}
-              className="h-11 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
+              className="h-10 w-full rounded-lg border-0 bg-[#f2f3ff] px-3 text-xs text-[#181b25] outline-none focus:ring-2 focus:ring-[#1653cc]/25"
             >
               <option value="">All brands</option>
               {brands.map((b) => (
@@ -577,7 +579,7 @@ export const ProductsListPage = () => {
           </label>
           <div className="grid grid-cols-2 gap-2">
             <label>
-              <span className="mb-1.5 block text-xs font-medium text-slate-400">From</span>
+              <StitchFieldLabel>From</StitchFieldLabel>
               <input
                 type="date"
                 value={filters.dateFrom}
@@ -585,11 +587,11 @@ export const ProductsListPage = () => {
                   set("dateFrom", e.target.value);
                   setSelected(new Set());
                 }}
-                className="h-11 w-full rounded-md border border-slate-200 px-2 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
+                className="h-10 w-full rounded-lg border-0 bg-[#f2f3ff] px-2 text-xs text-[#181b25] outline-none focus:ring-2 focus:ring-[#1653cc]/25"
               />
             </label>
             <label>
-              <span className="mb-1.5 block text-xs font-medium text-slate-400">To</span>
+              <StitchFieldLabel>To</StitchFieldLabel>
               <input
                 type="date"
                 value={filters.dateTo}
@@ -597,7 +599,7 @@ export const ProductsListPage = () => {
                   set("dateTo", e.target.value);
                   setSelected(new Set());
                 }}
-                className="h-11 w-full rounded-md border border-slate-200 px-2 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
+                className="h-10 w-full rounded-lg border-0 bg-[#f2f3ff] px-2 text-xs text-[#181b25] outline-none focus:ring-2 focus:ring-[#1653cc]/25"
               />
             </label>
           </div>
@@ -606,15 +608,15 @@ export const ProductsListPage = () => {
           <button
             type="button"
             onClick={applyFilters}
-            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            className="rounded-lg bg-[#1653cc] px-4 py-2 text-xs font-semibold text-white hover:bg-[#1653cc]/90"
           >
             Apply filters
           </button>
-          <button type="button" onClick={clearFilters} className="text-sm font-semibold text-[#4f7ef8] hover:underline">
+          <button type="button" onClick={clearFilters} className="text-xs font-semibold text-[#1653cc] hover:underline">
             Clear filters
           </button>
         </div>
-      </div>
+      </StitchFilterPanel>
 
       {productsQuery.isError ? (
         <div className="space-y-2" role="alert">
@@ -625,36 +627,34 @@ export const ProductsListPage = () => {
         </div>
       ) : null}
 
-      {selected.size > 0 ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-[#e8edfc] px-4 py-3 text-sm">
-          <span className="font-semibold text-slate-800">{selected.size} selected</span>
-          <button
-            type="button"
-            disabled={bulkBusy}
-            onClick={() => setBulkConfirmAction("publish")}
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-50"
-          >
-            Publish
-          </button>
-          <button
-            type="button"
-            disabled={bulkBusy}
-            onClick={() => setBulkConfirmAction("unpublish")}
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-50"
-          >
-            Unpublish
-          </button>
-          <button
-            type="button"
-            disabled={bulkBusy}
-            onClick={() => setBulkConfirmAction("archive")}
-            className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-medium hover:bg-slate-50 disabled:opacity-50"
-          >
-            Archive
-          </button>
-          <BulkDeleteDisabled />
-        </div>
-      ) : null}
+      <BulkActionBar count={selected.size}>
+        <span className="text-xs font-semibold text-[#434654]">{selected.size} selected</span>
+        <button
+          type="button"
+          disabled={bulkBusy}
+          onClick={() => setBulkConfirmAction("publish")}
+          className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50 disabled:opacity-50"
+        >
+          Publish
+        </button>
+        <button
+          type="button"
+          disabled={bulkBusy}
+          onClick={() => setBulkConfirmAction("unpublish")}
+          className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50 disabled:opacity-50"
+        >
+          Unpublish
+        </button>
+        <button
+          type="button"
+          disabled={bulkBusy}
+          onClick={() => setBulkConfirmAction("archive")}
+          className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50 disabled:opacity-50"
+        >
+          Archive
+        </button>
+        <BulkDeleteDisabled />
+      </BulkActionBar>
 
       {productsQuery.isLoading ? (
         <StitchOperationalTableSkeleton rowCount={10} columnCount={7} />
@@ -678,28 +678,28 @@ export const ProductsListPage = () => {
                       className="h-4 w-4 rounded border-slate-300"
                     />
                   </th>
-                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Product
                   </th>
-                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Category
                   </th>
-                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Brand
                   </th>
-                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Price
                   </th>
-                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Stock
                   </th>
-                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Status
                   </th>
-                  <th className="px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Visibility
                   </th>
-                  <th className="px-3 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                  <th className="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Actions
                   </th>
                 </tr>
@@ -760,7 +760,8 @@ export const ProductsListPage = () => {
       <ConfirmDialog
         open={singleArchiveId !== null}
         title="Archive this product?"
-        body="Archived products cannot be republished from the list and will be hidden from storefront flows."
+        body="Archived products will be hidden from storefront flows."
+        impactSummary="Cannot be republished from the list view — use the product edit page."
         confirmLabel="Archive product"
         danger
         onClose={() => setSingleArchiveId(null)}

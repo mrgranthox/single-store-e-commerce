@@ -224,7 +224,7 @@ export const WebhooksListPage = () => {
           to={`/admin/system/webhooks/${w.id}`}
           onMouseEnter={() => prefetchWebhook(w.id)}
           onFocus={() => prefetchWebhook(w.id)}
-          className="text-[11px] font-bold uppercase text-[#1653cc] hover:underline"
+          className="text-xs font-bold uppercase text-[#1653cc] hover:underline"
         >
           View
         </Link>
@@ -233,12 +233,12 @@ export const WebhooksListPage = () => {
             type="button"
             disabled={retryMut.isPending || retryMut.blocked}
             onClick={() => retryMut.run(w.id)}
-            className="text-[11px] font-bold uppercase text-[#434654] underline decoration-dotted hover:text-[#1653cc] disabled:opacity-50"
+            className="text-xs font-bold uppercase text-[#434654] underline decoration-dotted hover:text-[#1653cc] disabled:opacity-50"
           >
             Replay
           </button>
         ) : (
-          <span className="text-[10px] font-bold uppercase text-[#737685]">—</span>
+          <span className="text-xs font-bold uppercase text-[#737685]">—</span>
         )}
       </div>
     ];

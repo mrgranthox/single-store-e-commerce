@@ -265,26 +265,26 @@ export const CustomerDetailPage = () => {
 
           <section className="mb-2 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
             <div className="flex h-28 flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-sm">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Total orders</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Total orders</p>
               <p className="font-headline text-2xl font-bold">{e.counts.orders}</p>
-              <span className="text-[10px] font-bold uppercase text-slate-400">Lifetime</span>
+              <span className="text-xs font-bold uppercase text-slate-400">Lifetime</span>
             </div>
             <div className="flex h-28 flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-sm">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Lifetime value</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Lifetime value</p>
               <p className="font-headline text-xl font-bold leading-tight">
                 {formatMinorCurrency(e.lifetimeValueCents, "GHS")}
               </p>
-              <span className="text-[10px] font-bold text-slate-400">Paid + partial refunds</span>
+              <span className="text-xs font-bold text-slate-400">Paid + partial refunds</span>
             </div>
             <div className="flex h-28 flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-sm">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Avg. order</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Avg. order</p>
               <p className="font-headline text-xl font-bold leading-tight">
                 {e.averageOrderValueCents != null ? formatMinorCurrency(e.averageOrderValueCents, "GHS") : "—"}
               </p>
-              <span className="text-[10px] font-bold text-slate-400">LTV ÷ orders</span>
+              <span className="text-xs font-bold text-slate-400">LTV ÷ orders</span>
             </div>
             <div className="flex h-28 flex-col justify-between rounded-xl border-l-4 border-slate-300 bg-white p-4 shadow-sm">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Last order</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Last order</p>
               {e.lastOrder ? (
                 <>
                   <Link
@@ -293,26 +293,26 @@ export const CustomerDetailPage = () => {
                   >
                     {e.lastOrder.orderNumber}
                   </Link>
-                  <span className="text-[10px] font-bold uppercase text-slate-400">
+                  <span className="text-xs font-bold uppercase text-slate-400">
                     {formatDateTime(e.lastOrder.createdAt)}
                   </span>
                 </>
               ) : (
                 <>
                   <p className="font-headline text-2xl font-bold text-slate-400">—</p>
-                  <span className="text-[10px] font-bold text-slate-400">No orders yet</span>
+                  <span className="text-xs font-bold text-slate-400">No orders yet</span>
                 </>
               )}
             </div>
             <div className="flex h-28 flex-col justify-between rounded-xl border-l-4 border-[#ba1a1a] bg-white p-4 shadow-sm">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Refunds</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Refunds</p>
               <p className="font-headline text-2xl font-bold text-[#ba1a1a]">{e.counts.refunds}</p>
-              <span className="text-[10px] font-bold uppercase text-slate-400">All time</span>
+              <span className="text-xs font-bold uppercase text-slate-400">All time</span>
             </div>
             <div className="flex h-28 flex-col justify-between rounded-xl border-l-4 border-[#ba1a1a] bg-white p-4 shadow-sm">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Returns</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Returns</p>
               <p className="font-headline text-2xl font-bold text-[#ba1a1a]">{e.counts.returns}</p>
-              <span className="text-[10px] font-bold uppercase text-slate-400">All time</span>
+              <span className="text-xs font-bold uppercase text-slate-400">All time</span>
             </div>
           </section>
 
@@ -326,36 +326,36 @@ export const CustomerDetailPage = () => {
                 </div>
                 <div className="grid gap-6 p-6 sm:grid-cols-2">
                   <div>
-                    <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Display name</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Display name</p>
                     <p className="text-sm font-medium">{displayCustomerName(e)}</p>
                   </div>
                   <div>
-                    <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Email</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Email</p>
                     <p className="text-sm font-medium">{e.email ?? "—"}</p>
                   </div>
                   <div>
-                    <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Phone</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Phone</p>
                     <p className="text-sm font-medium">{e.phoneNumber ?? "—"}</p>
                   </div>
                   <div>
-                    <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Date of birth</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Date of birth</p>
                     <p className="text-sm font-medium">{formatDob(e.dateOfBirth)}</p>
                   </div>
                   <div>
-                    <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Open support tickets</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Open support tickets</p>
                     <p className="text-sm font-medium">{e.counts.openSupportTickets}</p>
                   </div>
                   <div>
-                    <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Reviews posted</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Reviews posted</p>
                     <p className="text-sm font-medium">{e.counts.reviews}</p>
                   </div>
                   <div>
-                    <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Last profile update</p>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">Last profile update</p>
                     <p className="text-sm font-medium">{formatDateTime(e.updatedAt)}</p>
                   </div>
                   {e.addresses.length > 0 ? (
                     <div className="sm:col-span-2">
-                      <p className="mb-2 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">
+                      <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-400">
                         Saved addresses
                       </p>
                       <ul className="space-y-3">
@@ -376,7 +376,7 @@ export const CustomerDetailPage = () => {
                               {a.city}, {a.region} {a.postalCode ?? ""} · {a.country}
                             </p>
                             {a.phoneNumber ? <p className="text-xs text-slate-500">{a.phoneNumber}</p> : null}
-                            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                            <p className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400">
                               {a.isDefaultShipping ? "Default shipping" : ""}
                               {a.isDefaultShipping && a.isDefaultBilling ? " · " : ""}
                               {a.isDefaultBilling ? "Default billing" : ""}
@@ -387,7 +387,7 @@ export const CustomerDetailPage = () => {
                     </div>
                   ) : (
                     <div className="sm:col-span-2">
-                      <p className="mb-1 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">
+                      <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">
                         Saved addresses
                       </p>
                       <p className="text-sm text-slate-500">No addresses on file.</p>
@@ -475,7 +475,7 @@ export const CustomerDetailPage = () => {
               <ul className="space-y-3">
                 {e.notes.map((n) => (
                   <li key={n.id} className="rounded-lg border border-[var(--color-border-light)] bg-[var(--color-bg-content)] p-3">
-                    <p className="text-[10px] text-[var(--color-text-muted)]">
+                    <p className="text-xs text-[var(--color-text-muted)]">
                       {formatDateTime(n.createdAt)}
                       {n.actorAdmin?.email ? ` · ${n.actorAdmin.email}` : ""}
                     </p>

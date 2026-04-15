@@ -165,7 +165,7 @@ export const WebhookDetailPage = () => {
             <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {businessLines.map((line) => (
                 <div key={line.label} className="rounded-sm border border-[#e0e2f0]/50 bg-[#fafbff] px-3 py-2">
-                  <dt className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">{line.label}</dt>
+                  <dt className="text-xs font-bold uppercase tracking-wider text-[#737685]">{line.label}</dt>
                   <dd className="mt-1 text-sm font-medium text-[#181b25]">{line.value}</dd>
                 </div>
               ))}
@@ -178,7 +178,7 @@ export const WebhookDetailPage = () => {
               Signature: {raw.signatureValid ? "Verified" : "Failed or not verified"}
             </span>
             <span className="text-xs text-[#737685]">Received {formatDateTime(raw.receivedAt)}</span>
-            <span className="font-mono text-[10px] text-[#5b5e68]">Ref {raw.id.slice(0, 13)}…</span>
+            <span className="font-mono text-xs text-[#5b5e68]">Ref {raw.id.slice(0, 13)}…</span>
           </div>
 
           <SurfaceCard title="Replay">
@@ -210,7 +210,7 @@ export const WebhookDetailPage = () => {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[480px] text-left text-xs">
                   <thead>
-                    <tr className="border-b border-[#e0e2f0] text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+                    <tr className="border-b border-[#e0e2f0] text-xs font-bold uppercase tracking-wider text-[#737685]">
                       <th className="pb-2 pr-2">#</th>
                       <th className="pb-2 pr-2">Status</th>
                       <th className="pb-2 pr-2">Started</th>
@@ -228,9 +228,9 @@ export const WebhookDetailPage = () => {
                         <td className="py-2 pr-2 text-[#374151]">{formatDateTime(a.startedAt)}</td>
                         <td className="py-2 pr-2 text-[#374151]">{a.finishedAt ? formatDateTime(a.finishedAt) : "—"}</td>
                         <td className="py-2 align-top text-[#374151]">
-                          <span className="font-mono text-[11px] text-[#5b5e68]">{a.retryCount ?? 0}</span>
+                          <span className="font-mono text-xs text-[#5b5e68]">{a.retryCount ?? 0}</span>
                           {humanizeAttemptError(a.error) ? (
-                            <p className="mt-1 max-w-[220px] text-[11px] leading-snug text-[#ba1a1a]">
+                            <p className="mt-1 max-w-[220px] text-xs leading-snug text-[#ba1a1a]">
                               {humanizeAttemptError(a.error)}
                             </p>
                           ) : null}

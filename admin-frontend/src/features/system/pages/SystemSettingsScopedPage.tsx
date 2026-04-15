@@ -139,7 +139,7 @@ export const SystemSettingsScopedPage = ({ scope, title, description, eyebrow }:
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             {eyebrow ? (
-              <div className="mb-1 flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+              <div className="mb-1 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#737685]">
                 <span className="text-[#1653cc]">{eyebrow[0]}</span>
                 <span className="text-[#737685]">/</span>
                 <span className="text-[#434654]">{eyebrow[1]}</span>
@@ -180,7 +180,7 @@ export const SystemSettingsScopedPage = ({ scope, title, description, eyebrow }:
             </StitchGradientButton>
             </div>
             {hideTechnicalTable ? (
-              <p className="max-w-md text-right text-[11px] text-[#737685]">
+              <p className="max-w-md text-right text-xs text-[#737685]">
                 Checkout settings save automatically when you change a control above.
               </p>
             ) : null}
@@ -242,7 +242,7 @@ export const SystemSettingsScopedPage = ({ scope, title, description, eyebrow }:
               Summary: <span className="font-medium text-[#181b25]">{summarizeSettingValue(selected.value)}</span>
             </p>
             <details className="mb-3 rounded-lg border border-slate-200 bg-[#f8f9fb]">
-              <summary className="cursor-pointer px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+              <summary className="cursor-pointer px-3 py-2 text-xs font-bold uppercase tracking-wider text-[#737685]">
                 Edit as structured text
               </summary>
               <div className="border-t border-slate-200 p-3">

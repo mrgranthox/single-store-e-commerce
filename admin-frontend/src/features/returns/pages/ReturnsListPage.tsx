@@ -7,6 +7,8 @@ import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { QueryError } from "@/components/primitives/QueryError";
 import { SkeletonTable } from "@/components/primitives/Skeleton";
+import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
+import { StitchFilterPanel } from "@/components/stitch";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminReturnDetail, listAdminReturns, type ReturnListItem } from "@/features/returns/api/admin-returns.api";
@@ -39,39 +41,28 @@ const formatQueueWhen = (iso: string) => {
 
 const returnRef = (r: ReturnListItem) => `R-${r.id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
-const statusPill = (status: string) => {
+const returnStatusTone = (status: string): StatusBadgeTone => {
   const u = status.toUpperCase();
-  let dot = "bg-amber-500";
-  if (u === "APPROVED") dot = "bg-blue-500";
-  if (u === "COMPLETED") dot = "bg-[#006b2d]";
-  if (u === "REJECTED") dot = "bg-[#ba1a1a]";
-  if (u === "RECEIVED") dot = "bg-[#1653cc]";
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(115,118,133,0.2)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-tight text-[#181b25]">
-      <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-      {status.replace(/_/g, " ")}
-    </span>
-  );
+  if (u === "COMPLETED") return "success";
+  if (u === "REJECTED") return "danger";
+  if (u === "APPROVED" || u === "RECEIVED") return "info";
+  return "pending";
+};
+
+const statusPill = (status: string) => (
+  <StatusBadge label={status.replace(/_/g, " ")} tone={returnStatusTone(status)} />
+);
+
+const refundStateTone = (st: string): StatusBadgeTone => {
+  if (!st) return "pending";
+  if (st === "COMPLETED" || st === "SUCCEEDED" || st === "PAID") return "success";
+  if (st === "FAILED") return "danger";
+  return "pending";
 };
 
 const refundPill = (r: ReturnListItem) => {
   const st = r.refunds[0]?.state?.toUpperCase() ?? "";
-  if (!st) {
-    return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(115,118,133,0.2)] px-2 py-0.5 text-[10px] font-semibold text-[#181b25]">
-        <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
-        Pending
-      </span>
-    );
-  }
-  const ok = st === "COMPLETED" || st === "SUCCEEDED" || st === "PAID";
-  const dot = ok ? "bg-[#006b2d]" : st === "FAILED" ? "bg-[#ba1a1a]" : "bg-amber-500";
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(115,118,133,0.2)] px-2 py-0.5 text-[10px] font-semibold text-[#181b25]">
-      <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
-      {st.replace(/_/g, " ")}
-    </span>
-  );
+  return <StatusBadge label={st ? st.replace(/_/g, " ") : "Pending"} tone={refundStateTone(st)} />;
 };
 
 export const ReturnsListPage = () => {
@@ -241,9 +232,9 @@ export const ReturnsListPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 rounded-xl border border-[#c3c6d6]/10 bg-white p-4 shadow-sm">
+      <StitchFilterPanel className="flex flex-wrap items-center gap-4">
         <div className="min-w-[200px] flex-1">
-          <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Status</label>
+          <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Status</label>
           <select
             value={statusDraft}
             onChange={(e) => setStatusDraft(e.target.value)}
@@ -257,7 +248,7 @@ export const ReturnsListPage = () => {
           </select>
         </div>
         <div className="min-w-[200px] flex-1">
-          <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Reason</label>
+          <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Reason</label>
           <select
             value={reasonDraft}
             onChange={(e) => setReasonDraft(e.target.value)}
@@ -271,7 +262,7 @@ export const ReturnsListPage = () => {
           </select>
         </div>
         <div className="min-w-[200px] flex-1">
-          <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Customer search</label>
+          <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Customer search</label>
           <input
             value={customerDraft}
             onChange={(e) => setCustomerDraft(e.target.value)}
@@ -281,7 +272,7 @@ export const ReturnsListPage = () => {
           />
         </div>
         <div className="min-w-[200px] flex-1">
-          <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Date range</label>
+          <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">Date range</label>
           <div
             className="flex cursor-not-allowed items-center gap-2 rounded bg-[#f2f3ff] px-3 py-2 opacity-60"
             title="Date range filter is not available on the API yet."
@@ -298,7 +289,7 @@ export const ReturnsListPage = () => {
         >
           <MaterialIcon name="filter_list" />
         </button>
-      </div>
+      </StitchFilterPanel>
 
       {listQuery.isError ? (
         <QueryError label="returns" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
@@ -323,15 +314,15 @@ export const ReturnsListPage = () => {
                         className="rounded-sm border-slate-300 text-[#1653cc] focus:ring-[#1653cc]/30"
                       />
                     </th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Return #</th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Order #</th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Customer</th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Items</th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Reason</th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Status</th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Refund</th>
-                    <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-slate-500">Created</th>
-                    <th className="px-4 py-3 text-right text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Return #</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Order #</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Customer</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Items</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Reason</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Status</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Refund</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Created</th>
+                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-widest text-slate-500">
                       Actions
                     </th>
                   </tr>
@@ -420,7 +411,7 @@ export const ReturnsListPage = () => {
             </div>
             {meta ? (
               <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#c3c6d6]/15 bg-[#f2f3ff] px-4 py-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Showing {items.length ? `${from}-${to}` : "0"} of {meta.totalItems} returns
                 </p>
                 <div className="flex items-center gap-1">
@@ -461,28 +452,28 @@ export const ReturnsListPage = () => {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-5 shadow-sm">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Approval rate (page)</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Approval rate (page)</span>
           <div className="mt-2 flex items-end justify-between">
             <h3 className="font-mono text-3xl font-bold text-[#181b25]">{kpiApproval}</h3>
-            <span className="flex items-center text-[10px] font-bold text-[#006b2d]">
+            <span className="flex items-center text-xs font-bold text-[#006b2d]">
               <MaterialIcon name="trending_up" className="text-xs" /> snapshot
             </span>
           </div>
         </div>
         <div className="flex flex-col justify-between rounded-xl border-l-4 border-amber-500 bg-white p-5 shadow-sm">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Avg processing time</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Avg processing time</span>
           <div className="mt-2 flex items-end justify-between">
             <h3 className="font-mono text-3xl font-bold text-[#181b25]">—</h3>
-            <span className="flex items-center text-[10px] font-bold text-[#ba1a1a]">
+            <span className="flex items-center text-xs font-bold text-[#ba1a1a]">
               <MaterialIcon name="trending_up" className="text-xs" /> n/a
             </span>
           </div>
         </div>
         <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#006b2d] bg-white p-5 shadow-sm">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Refund volume (page)</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Refund volume (page)</span>
           <div className="mt-2 flex items-end justify-between">
             <h3 className="font-mono text-3xl font-bold text-[#181b25]">{kpiRefundVolume}</h3>
-            <span className="flex items-center text-[10px] font-bold text-[#006b2d]">
+            <span className="flex items-center text-xs font-bold text-[#006b2d]">
               <MaterialIcon name="trending_down" className="text-xs" /> partial
             </span>
           </div>

@@ -24,13 +24,13 @@ const leftPanels: Record<
           {["A", "B", "C"].map((letter) => (
             <div
               key={letter}
-              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#13161e] bg-slate-700 text-[10px] font-semibold text-slate-200"
+              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#13161e] bg-slate-700 text-xs font-semibold text-slate-200"
             >
               {letter}
             </div>
           ))}
         </div>
-        <span className="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500">
+        <span className="font-mono text-xs font-medium uppercase tracking-wider text-slate-500">
           Active operators online
         </span>
       </div>

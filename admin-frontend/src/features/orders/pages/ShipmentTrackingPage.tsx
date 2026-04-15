@@ -345,7 +345,7 @@ export const ShipmentTrackingPage = () => {
                             </div>
                             <div className="flex flex-wrap items-center gap-3">
                               <span
-                                className={`rounded border px-2.5 py-1 text-[10px] font-bold uppercase tracking-tight ${
+                                className={`rounded border px-2.5 py-1 text-xs font-bold uppercase tracking-tight ${
                                   manual
                                     ? "border-[#c3c6d6]/30 bg-[#e0e2f0] text-[#444650]"
                                     : "border-[#1653cc]/20 bg-[#dbe1ff] text-[#003ea7]"
@@ -405,7 +405,7 @@ export const ShipmentTrackingPage = () => {
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex flex-col items-center">
                     <div className="mb-1 h-2 w-2 rounded-full bg-[#1653cc]" />
-                    <span className="text-[10px] font-mono font-bold text-[#5b5e68]">{routeMeta.origin}</span>
+                    <span className="text-xs font-mono font-bold text-[#5b5e68]">{routeMeta.origin}</span>
                   </div>
                   <div className="relative mx-4 flex-1 border-t-2 border-dashed border-[#c3c6d6]/30">
                     <MaterialIcon
@@ -415,7 +415,7 @@ export const ShipmentTrackingPage = () => {
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="mb-1 h-2 w-2 rounded-full bg-[#006b2d]" />
-                    <span className="text-[10px] font-mono font-bold text-[#5b5e68]">{routeMeta.dest}</span>
+                    <span className="text-xs font-mono font-bold text-[#5b5e68]">{routeMeta.dest}</span>
                   </div>
                 </div>
                 <p className="text-center text-xs font-medium uppercase tracking-[0.2em] text-[#737685]">

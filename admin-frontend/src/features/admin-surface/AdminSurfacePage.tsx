@@ -155,8 +155,8 @@ export const AdminSurfacePage = ({ screenId }: AdminSurfacePageProps) => {
                 </div>
                 <details className="mt-3 rounded-lg border border-[var(--color-border-light)] bg-[var(--color-bg-content)] px-3 py-2 text-xs">
                   <summary className="cursor-pointer font-semibold text-[var(--color-text-muted)]">API reference</summary>
-                  <p className="mt-2 font-mono text-[10px] text-[var(--color-text-body)]">{entry.endpointId}</p>
-                  <p className="mt-1 break-all font-mono text-[10px] text-[var(--color-text-muted)]">
+                  <p className="mt-2 font-mono text-xs text-[var(--color-text-body)]">{entry.endpointId}</p>
+                  <p className="mt-1 break-all font-mono text-xs text-[var(--color-text-muted)]">
                     {entry.pathTemplate}
                   </p>
                 </details>
@@ -171,7 +171,7 @@ export const AdminSurfacePage = ({ screenId }: AdminSurfacePageProps) => {
                 <p className="text-sm text-red-700">Missing query state for this endpoint.</p>
                 <details className="mt-3 rounded-lg border border-[var(--color-border-light)] bg-[var(--color-bg-content)] px-3 py-2 text-xs">
                   <summary className="cursor-pointer font-semibold text-[var(--color-text-muted)]">API reference</summary>
-                  <p className="mt-2 font-mono text-[10px] text-[var(--color-text-body)]">{entry.endpointId}</p>
+                  <p className="mt-2 font-mono text-xs text-[var(--color-text-body)]">{entry.endpointId}</p>
                 </details>
               </SurfaceCard>
             );
@@ -181,8 +181,8 @@ export const AdminSurfacePage = ({ screenId }: AdminSurfacePageProps) => {
             <SurfaceCard key={entry.endpointId} title={entry.purpose} description={`${entry.module} · ${entry.method}`}>
               <details className="mb-3 rounded-lg border border-[var(--color-border-light)] bg-[var(--color-bg-content)] px-3 py-2 text-xs">
                 <summary className="cursor-pointer font-semibold text-[var(--color-text-muted)]">API reference</summary>
-                <p className="mt-2 font-mono text-[10px] text-[var(--color-text-body)]">{entry.endpointId}</p>
-                <p className="mt-1 break-all font-mono text-[10px] text-[var(--color-text-muted)]">{entry.resolvedPath}</p>
+                <p className="mt-2 font-mono text-xs text-[var(--color-text-body)]">{entry.endpointId}</p>
+                <p className="mt-1 break-all font-mono text-xs text-[var(--color-text-muted)]">{entry.resolvedPath}</p>
               </details>
 
               {query.isLoading ? (
@@ -219,7 +219,7 @@ export const AdminSurfacePage = ({ screenId }: AdminSurfacePageProps) => {
                 <span key={`u-${endpoint.id}`} className="text-sm text-[var(--color-text-body)]">
                   {endpoint.purpose}
                 </span>,
-                <span key={`p-${endpoint.id}`} className="break-all font-mono text-[10px] text-[var(--color-text-muted)]">
+                <span key={`p-${endpoint.id}`} className="break-all font-mono text-xs text-[var(--color-text-muted)]">
                   {endpoint.path}
                 </span>
               ])}

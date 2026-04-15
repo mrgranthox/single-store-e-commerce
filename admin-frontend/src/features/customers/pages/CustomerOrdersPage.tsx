@@ -75,20 +75,20 @@ export const CustomerOrdersPage = () => {
 
           <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Orders in view</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">Orders in view</p>
               <p className="font-headline text-2xl font-bold">{meta?.totalItems ?? items.length}</p>
-              <p className="mt-1 text-[10px] text-slate-400">Paginated list</p>
+              <p className="mt-1 text-xs text-slate-400">Paginated list</p>
             </div>
             <div className="rounded-xl border-l-4 border-[#3b6de6] bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">This page</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">This page</p>
               <p className="font-headline text-2xl font-bold">{items.length}</p>
             </div>
             <div className="rounded-xl border-l-4 border-[#00873b] bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Lifetime (profile)</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">Lifetime (profile)</p>
               <p className="font-headline text-2xl font-bold">{entity?.counts.orders ?? "—"}</p>
             </div>
             <div className="rounded-xl border-l-4 border-slate-300 bg-white p-5 shadow-sm">
-              <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Page</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">Page</p>
               <p className="font-headline text-2xl font-bold">
                 {meta ? `${meta.page} / ${meta.totalPages}` : "—"}
               </p>
@@ -109,19 +109,19 @@ export const CustomerOrdersPage = () => {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="bg-[#ecedfb]/50">
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Order</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Placed</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Items</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Summary</th>
-                      <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Order</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Placed</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Items</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Summary</th>
+                      <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-widest text-slate-500">
                         Total
                       </th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Payment</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Payment</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">
                         Fulfillment
                       </th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</th>
-                      <th className="px-6 py-3 text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Status</th>
+                      <th className="px-6 py-3 text-center text-xs font-bold uppercase tracking-widest text-slate-500">
                         Open
                       </th>
                     </tr>

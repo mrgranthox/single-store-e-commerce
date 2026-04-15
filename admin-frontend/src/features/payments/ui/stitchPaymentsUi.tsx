@@ -49,7 +49,7 @@ export const StitchPaymentStatusPill = ({ paymentState }: { paymentState: string
             : "bg-amber-400";
 
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-tight text-slate-700">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-2 py-1 text-xs font-bold uppercase tracking-tight text-slate-700">
       <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
       {label}
     </span>

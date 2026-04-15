@@ -160,7 +160,7 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
           return [
             <span
               key={`pr-${row.id}`}
-              className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold ${
+              className={`inline-flex rounded-full px-2 py-0.5 text-xs font-bold ${
                 critical ? "bg-red-600 text-white" : "bg-slate-200 text-slate-700"
               }`}
             >
@@ -230,7 +230,7 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
             </span>,
             <span key={`oa-${row.id}`} className="text-sm text-slate-700">
               <span className="font-headline text-lg font-bold tabular-nums">{row.ordersAffectedCount ?? 0}</span>
-              <span className="mt-0.5 block text-[10px] text-slate-500">
+              <span className="mt-0.5 block text-xs text-slate-500">
                 Open orders (CONFIRMED/PROCESSING) with this SKU
               </span>
               <Link to="/admin/orders" className="mt-1 inline-block text-xs font-semibold text-[#1653cc] hover:underline">
@@ -365,38 +365,38 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
           <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6">
             <div className="absolute bottom-0 left-0 top-0 w-1 bg-red-600" />
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Critical alerts</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Critical alerts</p>
             <h4 className="font-headline text-3xl font-bold">{criticalCount}</h4>
-            <p className="mt-1 text-[10px] text-slate-500">&lt; 5 units on this page</p>
+            <p className="mt-1 text-xs text-slate-500">&lt; 5 units on this page</p>
           </div>
           <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6">
             <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Queue depth</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Queue depth</p>
             <h4 className="font-headline text-3xl font-bold">{meta?.totalItems ?? items.length}</h4>
-            <p className="mt-1 text-[10px] text-slate-500">Global low-stock lines</p>
+            <p className="mt-1 text-xs text-slate-500">Global low-stock lines</p>
           </div>
           <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6">
             <div className="absolute bottom-0 left-0 top-0 w-1 bg-violet-600" />
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Replenishment (est.)</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Replenishment (est.)</p>
             <h4 className="font-headline text-2xl font-bold">{formatMoney(replenishmentPageCents)}</h4>
-            <p className="mt-1 text-[10px] text-slate-500">This page · cost or list price × shortfall</p>
+            <p className="mt-1 text-xs text-slate-500">This page · cost or list price × shortfall</p>
           </div>
           <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6">
             <div className="absolute bottom-0 left-0 top-0 w-1 bg-violet-600" />
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Merch in transit</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">Merch in transit</p>
             <h4 className="font-headline text-2xl font-bold text-[#181b25]">
               {meta?.inTransitMerchandiseValueCents !== undefined
                 ? formatMoney(meta.inTransitMerchandiseValueCents)
                 : "—"}
             </h4>
-            <p className="mt-1 text-[10px] text-slate-500">
+            <p className="mt-1 text-xs text-slate-500">
               {filters.warehouseId ? "Scoped warehouse shipments · " : "All warehouses · "}
               DISPATCHED / IN_TRANSIT · order line totals
             </p>
           </div>
           <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white p-6">
             <div className="absolute bottom-0 left-0 top-0 w-1 bg-slate-500" />
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">This page</p>
+            <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">This page</p>
             <h4 className="font-headline text-3xl font-bold">{items.length}</h4>
           </div>
         </div>
@@ -405,25 +405,25 @@ export const InventoryQueuePage = ({ mode }: InventoryQueuePageProps) => {
       {mode === "out" && meta ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           <div className="flex min-h-[8rem] flex-col justify-between rounded-xl border-l-4 border-red-600 bg-white p-5">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total OOS SKUs</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Total OOS SKUs</span>
             <span className="font-headline text-3xl font-bold">{meta.totalItems}</span>
-            <span className="text-[10px] text-slate-500">Across all pages</span>
+            <span className="text-xs text-slate-500">Across all pages</span>
           </div>
           <div className="flex min-h-[8rem] flex-col justify-between rounded-xl border-l-4 border-amber-600 bg-white p-5">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Revenue at risk (est.)</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Revenue at risk (est.)</span>
             <span className="font-headline text-2xl font-bold text-amber-800">{formatMoney(revenueAtRiskPageCents)}</span>
-            <span className="text-[10px] text-slate-500">This page · 1 unit list price proxy</span>
+            <span className="text-xs text-slate-500">This page · 1 unit list price proxy</span>
           </div>
           <div className="flex min-h-[8rem] flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-5">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">On this page</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">On this page</span>
             <span className="font-headline text-3xl font-bold">{items.length}</span>
           </div>
           <div className="flex min-h-[8rem] flex-col justify-between rounded-xl border-l-4 border-slate-400 bg-white p-5">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Orders impacted</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Orders impacted</span>
             <span className="font-headline text-3xl font-bold tabular-nums">
               {meta.openOrdersDistinctForOosVariants ?? "—"}
             </span>
-            <span className="text-[10px] text-slate-500">
+            <span className="text-xs text-slate-500">
               Distinct open orders with a line for any OOS variant
               {filters.warehouseId ? " (this warehouse)" : ""}
             </span>

@@ -120,7 +120,7 @@ export const ProfileSecurityPage = () => {
                   </button>
                 </div>
                 <div className="text-center">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider text-slate-600">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-600">
                     <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
                     {roles[0]?.name ?? "Administrator"}
                   </span>
@@ -129,7 +129,7 @@ export const ProfileSecurityPage = () => {
               <div className="flex-1 space-y-5">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
                       Full Name
                     </label>
                     <input
@@ -140,7 +140,7 @@ export const ProfileSecurityPage = () => {
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500">
+                    <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
                       Role (Read-Only)
                     </label>
                     <input
@@ -152,7 +152,7 @@ export const ProfileSecurityPage = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
                     Email Address
                   </label>
                   <input
@@ -184,7 +184,7 @@ export const ProfileSecurityPage = () => {
             </h2>
             <div className="max-w-xl space-y-5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Current Password
                 </label>
                 <input
@@ -196,7 +196,7 @@ export const ProfileSecurityPage = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
                     New Password
                   </label>
                   <input
@@ -206,7 +206,7 @@ export const ProfileSecurityPage = () => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
                     Confirm New Password
                   </label>
                   <input
@@ -287,7 +287,7 @@ export const ProfileSecurityPage = () => {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <p
-                            className={`font-mono text-[0.7rem] font-medium ${
+                            className={`font-mono text-xs font-medium ${
                               sessionItem.current ? "text-[var(--color-primary)]" : "text-slate-500"
                             }`}
                           >
@@ -296,7 +296,7 @@ export const ProfileSecurityPage = () => {
                           {!sessionItem.current ? (
                             <button
                               type="button"
-                              className="text-[0.65rem] font-bold uppercase tracking-tighter text-red-600 opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-40"
+                              className="text-xs font-bold uppercase tracking-tighter text-red-600 opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-40"
                               disabled={revokeOne.isPending || revokeOne.blocked}
                               onClick={() => revokeOne.run(sessionItem.id)}
                             >

@@ -367,7 +367,7 @@ export const DashboardOverviewPage = () => {
                   className={`flex min-h-[110px] flex-col justify-between rounded-[12px] border border-slate-200 border-l-4 bg-white p-5 shadow-sm ${kpi.border}`}
                 >
                   <div className="flex items-start justify-between">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.05em] text-[#434654]">{kpi.label}</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.05em] text-[#434654]">{kpi.label}</p>
                     <Icon className={`h-5 w-5 ${kpi.iconClass}`} strokeWidth={2} aria-hidden />
                   </div>
                   <div className="mt-2 flex items-end justify-between">
@@ -377,9 +377,9 @@ export const DashboardOverviewPage = () => {
                         {kpi.delta}
                       </span>
                     ) : kpi.deltaStyle === "muted" ? (
-                      <span className="mb-1 max-w-[120px] text-right text-[10px] font-bold text-slate-400">{kpi.delta}</span>
+                      <span className="mb-1 max-w-[120px] text-right text-xs font-bold text-slate-400">{kpi.delta}</span>
                     ) : (
-                      <span className="mb-1 flex items-center gap-0.5 text-[10px] font-bold text-[#006b2d]">
+                      <span className="mb-1 flex items-center gap-0.5 text-xs font-bold text-[#006b2d]">
                         <TrendingUp className="h-3 w-3" strokeWidth={2} aria-hidden />
                         {kpi.delta}
                       </span>
@@ -397,7 +397,7 @@ export const DashboardOverviewPage = () => {
           <section className="rounded-[12px] border border-slate-200 bg-white p-6 shadow-sm">
             <div className="mb-4">
               <h3 className="font-headline text-base font-bold text-[#181b25]">Revenue trend</h3>
-              <p className="mt-1 text-[10px] font-medium uppercase tracking-wider text-slate-400">
+              <p className="mt-1 text-xs font-medium uppercase tracking-wider text-slate-400">
                 Last 30 days · net revenue (area)
               </p>
             </div>
@@ -430,7 +430,7 @@ export const DashboardOverviewPage = () => {
               <h3 className="font-headline text-base font-bold text-[#181b25]">Recent Orders</h3>
               <Link
                 to="/admin/orders"
-                className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
+                className="text-xs font-bold uppercase tracking-wider text-[var(--color-primary)] hover:underline"
               >
                 View All Records
               </Link>
@@ -458,7 +458,7 @@ export const DashboardOverviewPage = () => {
                       {["Order #", "Customer", "Amount", "Status", "Age"].map((h) => (
                         <th
                           key={h}
-                          className={`h-11 px-6 text-[10px] font-bold uppercase tracking-wider text-slate-500 ${
+                          className={`h-11 px-6 text-xs font-bold uppercase tracking-wider text-slate-500 ${
                             h === "Age" ? "text-right" : "text-left"
                           }`}
                         >
@@ -482,12 +482,12 @@ export const DashboardOverviewPage = () => {
                           <td className="h-11 px-6 align-middle text-xs font-medium text-[#181b25]">{customer}</td>
                           <td className="h-11 px-6 align-middle font-mono text-xs">{formatMoney(amt)}</td>
                           <td className="h-11 px-6 align-middle">
-                            <span className={`flex items-center gap-2 text-[10px] font-bold ${st.text}`}>
+                            <span className={`flex items-center gap-2 text-xs font-bold ${st.text}`}>
                               <span className={`h-1.5 w-1.5 rounded-full ${st.dot}`} />
                               {humanizeOrderStatus(row.status)}
                             </span>
                           </td>
-                          <td className="h-11 px-6 text-right align-middle text-[10px] text-slate-400">
+                          <td className="h-11 px-6 text-right align-middle text-xs text-slate-400">
                             {formatTimeAgo(row.createdAt)}
                           </td>
                         </tr>
@@ -533,12 +533,12 @@ export const DashboardOverviewPage = () => {
                         <span className="block truncate font-mono text-[9px] text-slate-500">{row.sub}</span>
                       </div>
                     </div>
-                    <span className="shrink-0 font-mono text-[10px] text-slate-400">{row.ok ? "OK" : "Check"}</span>
+                    <span className="shrink-0 font-mono text-xs text-slate-400">{row.ok ? "OK" : "Check"}</span>
                   </div>
                 ))}
                 <div className="border-t border-white/10 pt-3">
                   {healthRuntime ? (
-                    <p className="text-[10px] leading-relaxed text-slate-500">
+                    <p className="text-xs leading-relaxed text-slate-500">
                       Process{" "}
                       <span className="font-mono text-slate-300">
                         {formatProcessUptime(healthRuntime.uptimeSeconds)}
@@ -547,7 +547,7 @@ export const DashboardOverviewPage = () => {
                       {healthRuntime.environment}
                     </p>
                   ) : null}
-                  <div className="mt-2 flex items-center justify-between text-[10px] text-slate-500">
+                  <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
                     <span>Failed jobs (24h)</span>
                     <span
                       className={`font-mono text-xs font-bold ${
@@ -595,7 +595,7 @@ export const DashboardOverviewPage = () => {
                   <div key={`${row.productId}-${row.sku}`} className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <p className="text-xs font-bold text-[#181b25]">{row.productTitle}</p>
-                      <p className="font-mono text-[10px] text-slate-400">{row.sku}</p>
+                      <p className="font-mono text-xs text-slate-400">{row.sku}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs font-bold text-[#ba1a1a]">{row.onHand} left</p>
@@ -633,7 +633,7 @@ export const DashboardOverviewPage = () => {
                 {urgentTickets.map((t) => (
                   <div key={t.id} className="rounded border-l-2 border-slate-200 bg-slate-50 p-3">
                     <div className="mb-1 flex items-start justify-between">
-                      <span className="font-mono text-[10px] font-bold text-slate-400">
+                      <span className="font-mono text-xs font-bold text-slate-400">
                         #{t.id.slice(0, 8).toUpperCase()}
                       </span>
                       <span
@@ -643,7 +643,7 @@ export const DashboardOverviewPage = () => {
                       </span>
                     </div>
                     <p className="truncate text-xs font-bold text-[#181b25]">{t.subject}</p>
-                    <p className="mt-0.5 text-[10px] text-slate-400">Opened {formatTimeAgo(t.createdAt)}</p>
+                    <p className="mt-0.5 text-xs text-slate-400">Opened {formatTimeAgo(t.createdAt)}</p>
                     <Link
                       to={`/admin/support/tickets/${t.id}`}
                       className="mt-1 inline-block text-[9px] font-bold uppercase tracking-tighter text-[var(--color-primary)] hover:underline"
@@ -695,15 +695,15 @@ export const DashboardOverviewPage = () => {
                         <div className="min-w-0">
                           <p className="text-xs font-bold text-[#181b25]">
                             {humanizeToken(row.eventType)}
-                            <span className="ml-2 text-[10px] uppercase tracking-wider text-slate-400">
+                            <span className="ml-2 text-xs uppercase tracking-wider text-slate-400">
                               {humanizeToken(row.entityType)}
                             </span>
                           </p>
-                          <p className="mt-1 line-clamp-2 text-[11px] text-[#434654]">
+                          <p className="mt-1 line-clamp-2 text-xs text-[#434654]">
                             {summary !== "—" ? summary : `${humanizeToken(row.actorType)} activity on ${row.entityId.slice(0, 8)}`}
                           </p>
                         </div>
-                        <span className="shrink-0 text-[10px] text-slate-400">{formatTimeAgo(row.occurredAt ?? row.createdAt)}</span>
+                        <span className="shrink-0 text-xs text-slate-400">{formatTimeAgo(row.occurredAt ?? row.createdAt)}</span>
                       </div>
                     </div>
                   );

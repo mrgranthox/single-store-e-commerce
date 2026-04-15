@@ -174,7 +174,7 @@ export const SecurityUserActivityPage = () => {
               className={`${stitchInputClass} pl-10 font-mono text-xs`}
             />
           </div>
-          <p className="text-[10px] text-[#737685]">Apply filters to query the server. Results stay newest-first within the window.</p>
+          <p className="text-xs text-[#737685]">Apply filters to query the server. Results stay newest-first within the window.</p>
         </div>
         <div className="md:col-span-12 lg:col-span-3">
           <StitchFieldLabel>Activity type</StitchFieldLabel>
@@ -234,7 +234,7 @@ export const SecurityUserActivityPage = () => {
                     "IP address",
                     "Device"
                   ].map((h) => (
-                    <th key={h} className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#737685]">
+                    <th key={h} className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[#737685]">
                       {h}
                     </th>
                   ))}
@@ -282,7 +282,7 @@ export const SecurityUserActivityPage = () => {
                             <span className="text-xs text-[#737685]">—</span>
                           )}
                         </td>
-                        <td className="px-6 py-3 font-mono text-[11px] text-[#5b5e68]">{ip ?? "—"}</td>
+                        <td className="px-6 py-3 font-mono text-xs text-[#5b5e68]">{ip ?? "—"}</td>
                         <td className="max-w-[200px] truncate px-6 py-3 text-xs text-[#737685]" title={dev ?? ""}>
                           {dev ?? "—"}
                         </td>

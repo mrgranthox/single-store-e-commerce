@@ -100,10 +100,10 @@ const ProductSalesTrendChart = ({
         strokeDasharray="6 4"
         strokeLinejoin="round"
       />
-      <text x={padL} y={12} className="fill-[#1653cc] text-[10px] font-semibold">
+      <text x={padL} y={12} className="fill-[#1653cc] text-xs font-semibold">
         Revenue
       </text>
-      <text x={w - padR} y={12} textAnchor="end" className="fill-slate-600 text-[10px] font-semibold">
+      <text x={w - padR} y={12} textAnchor="end" className="fill-slate-600 text-xs font-semibold">
         Units sold
       </text>
       <text x={padL} y={h - 8} className="fill-[#94a3b8] font-mono text-[9px]">
@@ -251,7 +251,7 @@ export const CatalogProductAnalyticsPage = () => {
           ]}
         />
         <div className="flex shrink-0 flex-col gap-1 lg:items-end">
-          <label className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
+          <label className="text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
             Date range
           </label>
           <select

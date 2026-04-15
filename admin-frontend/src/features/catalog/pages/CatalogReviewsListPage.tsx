@@ -203,7 +203,7 @@ const ReviewModerationDrawer = ({
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
           <section className="rounded-xl border border-slate-100 bg-slate-50/80 p-4 space-y-2 text-sm">
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Product</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Product</span>
               <div className="mt-1 font-semibold text-slate-900">
                 {review.product ? (
                   <Link
@@ -222,15 +222,15 @@ const ReviewModerationDrawer = ({
               ) : null}
             </div>
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Reviewer</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Reviewer</span>
               <p className="mt-1 text-slate-800">{authorLine}</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Rating</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Rating</span>
               <Stars rating={review.rating} />
             </div>
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Current status</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Current status</span>
               <div className="mt-1">
                 <StatusBadge label={moderationStatusLabel(review.status)} tone={tone(review.status)} />
               </div>
@@ -238,7 +238,7 @@ const ReviewModerationDrawer = ({
           </section>
 
           <section>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Customer comment</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Customer comment</span>
             <p className="mt-2 whitespace-pre-wrap rounded-lg border border-slate-100 bg-white p-3 text-sm leading-relaxed text-slate-700">
               {review.body?.trim() ? review.body : "No written comment was provided."}
             </p>
@@ -246,13 +246,13 @@ const ReviewModerationDrawer = ({
 
           {review.moderationNote ? (
             <section>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Previous staff note</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Previous staff note</span>
               <p className="mt-2 text-sm text-slate-600">{review.moderationNote}</p>
             </section>
           ) : null}
 
           <label className="block">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Staff note (optional)</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Staff note (optional)</span>
             <textarea
               value={moderationNote}
               onChange={(e) => setModerationNote(e.target.value)}

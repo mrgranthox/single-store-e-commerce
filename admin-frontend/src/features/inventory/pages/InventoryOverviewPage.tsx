@@ -42,7 +42,7 @@ const stockStatusBadge = (row: InventoryStockRow) => {
   const out = row.health?.outOfStock;
   if (out) {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-700">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-red-700">
         <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
         Out of Stock
       </span>
@@ -50,14 +50,14 @@ const stockStatusBadge = (row: InventoryStockRow) => {
   }
   if (low) {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-amber-800">
         <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
         Low Stock
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-800">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-emerald-800">
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
       In Stock
     </span>
@@ -289,7 +289,7 @@ export const InventoryOverviewPage = () => {
             <article className="relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-xl border border-[var(--color-border-light)] bg-white p-6 shadow-card">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
               <div className="flex items-start justify-between gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total SKUs</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Total SKUs</p>
                 <div className="flex items-center gap-2">
                   <MiniSparkline
                     stroke="#1653cc"
@@ -307,8 +307,8 @@ export const InventoryOverviewPage = () => {
                     {entity.trackedLineCount.toLocaleString()}
                   </span>
                 </div>
-                <p className="mt-1 text-[10px] font-medium text-slate-400">Tracked warehouse × variant lines</p>
-                <p className="mt-1 text-[10px] font-semibold text-slate-500">
+                <p className="mt-1 text-xs font-medium text-slate-400">Tracked warehouse × variant lines</p>
+                <p className="mt-1 text-xs font-semibold text-slate-500">
                   {d ? (
                     <>
                       {formatDeltaPct(d.trackedLineCountPct) ?? "—"} vs prior 24h
@@ -325,7 +325,7 @@ export const InventoryOverviewPage = () => {
             <article className="relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-xl border border-[var(--color-border-light)] bg-white p-6 shadow-card">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-emerald-600" />
               <div className="flex items-start justify-between gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">In Stock</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">In Stock</p>
                 <div className="flex items-center gap-2">
                   <MiniSparkline
                     stroke="#059669"
@@ -344,8 +344,8 @@ export const InventoryOverviewPage = () => {
                   </span>
                   <span className="text-xs font-semibold text-emerald-700">{pctHealthy}% of lines</span>
                 </div>
-                <p className="mt-1 text-[10px] font-medium text-slate-500">Healthy lines (above reorder, in stock)</p>
-                <p className="mt-1 text-[10px] font-semibold text-slate-600">
+                <p className="mt-1 text-xs font-medium text-slate-500">Healthy lines (above reorder, in stock)</p>
+                <p className="mt-1 text-xs font-semibold text-slate-600">
                   {d ? `${formatDeltaPct(d.healthyStockCountPct) ?? "—"} vs prior 24h` : "—"}
                 </p>
               </div>
@@ -353,7 +353,7 @@ export const InventoryOverviewPage = () => {
             <article className="relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-xl border border-[var(--color-border-light)] bg-white p-6 shadow-card">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-amber-500" />
               <div className="flex items-start justify-between gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Low Stock</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Low Stock</p>
                 <div className="flex items-center gap-2">
                   <MiniSparkline
                     stroke="#d97706"
@@ -372,8 +372,8 @@ export const InventoryOverviewPage = () => {
                   </span>
                   <span className="text-xs font-semibold text-amber-800">{pctLowOfTracked}% of SKUs</span>
                 </div>
-                <p className="mt-1 text-[10px] font-bold text-amber-700">Below reorder · action required</p>
-                <p className="mt-1 text-[10px] font-semibold text-slate-600">
+                <p className="mt-1 text-xs font-bold text-amber-700">Below reorder · action required</p>
+                <p className="mt-1 text-xs font-semibold text-slate-600">
                   {d ? `${formatDeltaPct(d.lowStockCountPct) ?? "—"} vs prior 24h` : "—"}
                 </p>
               </div>
@@ -381,7 +381,7 @@ export const InventoryOverviewPage = () => {
             <article className="relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-xl border border-[var(--color-border-light)] bg-white p-6 shadow-card">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-red-500" />
               <div className="flex items-start justify-between gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Out of Stock</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Out of Stock</p>
                 <div className="flex items-center gap-2">
                   <MiniSparkline
                     stroke="#dc2626"
@@ -400,8 +400,8 @@ export const InventoryOverviewPage = () => {
                   </span>
                   <span className="text-xs font-semibold text-red-700">{pctOutOfTracked}% of SKUs</span>
                 </div>
-                <p className="mt-1 text-[10px] font-bold text-red-700">Critical · zero available</p>
-                <p className="mt-1 text-[10px] font-semibold text-slate-600">
+                <p className="mt-1 text-xs font-bold text-red-700">Critical · zero available</p>
+                <p className="mt-1 text-xs font-semibold text-slate-600">
                   {d ? `${formatDeltaPct(d.outOfStockCountPct) ?? "—"} vs prior 24h` : "—"}
                 </p>
               </div>
@@ -409,7 +409,7 @@ export const InventoryOverviewPage = () => {
             <article className="relative flex min-h-[8.5rem] flex-col justify-between overflow-hidden rounded-xl border border-[var(--color-border-light)] bg-white p-6 shadow-card">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-violet-600" />
               <div className="flex items-start justify-between gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Merch in transit</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Merch in transit</p>
                 <div className="flex items-center gap-2">
                   <MiniSparkline
                     stroke="#7c3aed"
@@ -429,10 +429,10 @@ export const InventoryOverviewPage = () => {
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className="font-headline text-2xl font-bold text-[#0f1117]">{formatMoney(inTransitCents)}</span>
                 </div>
-                <p className="mt-1 text-[10px] font-medium text-slate-500">
+                <p className="mt-1 text-xs font-medium text-slate-500">
                   Line value on CONFIRMED/PROCESSING orders with DISPATCHED or IN_TRANSIT shipments
                 </p>
-                <p className="mt-1 text-[10px] font-semibold text-slate-600">
+                <p className="mt-1 text-xs font-semibold text-slate-600">
                   {d ? `${formatDeltaPct(d.inTransitMerchandiseValueCentsPct) ?? "—"} vs prior 24h` : "—"}
                 </p>
               </div>
@@ -499,7 +499,7 @@ export const InventoryOverviewPage = () => {
 
           {advancedOpen ? (
             <div className="rounded-xl border border-[var(--color-border-light)] bg-[#f8f9fb] p-4 shadow-inner">
-              <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-500">
                 Available quantity range
               </p>
               <div className="flex flex-wrap items-end gap-4">
@@ -578,7 +578,7 @@ export const InventoryOverviewPage = () => {
 
           {stockMeta && stockMeta.totalPages > 1 ? (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--color-border-light)] bg-[#f8f9fb] px-6 py-4 text-sm">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
                 Page {stockMeta.page} of {stockMeta.totalPages} · {stockMeta.totalItems} SKUs
               </span>
               <div className="flex gap-2">

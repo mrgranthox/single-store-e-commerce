@@ -124,7 +124,7 @@ export const JobDetailPage = () => {
               </div>
               <div>
                 <dt className="text-[var(--color-text-muted)]">Run id</dt>
-                <dd className="mt-1 font-mono text-[10px] break-all">{row.id}</dd>
+                <dd className="mt-1 font-mono text-xs break-all">{row.id}</dd>
               </div>
             </dl>
             {canRetry ? (

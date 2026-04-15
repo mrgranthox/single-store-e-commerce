@@ -32,7 +32,7 @@ const ObjectFieldPreview = ({
       <div className="grid gap-2 sm:grid-cols-2">
         {shown.map((key) => (
           <div key={key} className="rounded-md border border-slate-100 bg-[#f8f9fc] px-3 py-2">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">{humanizeKey(key)}</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-[#737685]">{humanizeKey(key)}</div>
             <div className="mt-1 break-words text-sm text-[#181b25]">
               <UnknownValue value={record[key]} depth={0} />
             </div>
@@ -67,7 +67,7 @@ const ArrayFieldPreview = ({ items, max = 25 }: { items: unknown[]; max?: number
 export const SerializedInterchangeDetails = ({
   data,
   summaryLabel = "Interchange format (copy for support or tools)",
-  preClassName = "max-h-48 overflow-auto border-t border-slate-200 bg-[#13161e] p-3 text-[11px] leading-relaxed text-slate-100"
+  preClassName = "max-h-48 overflow-auto border-t border-slate-200 bg-[#13161e] p-3 text-xs leading-relaxed text-slate-100"
 }: {
   data: unknown;
   summaryLabel?: string;
@@ -83,7 +83,7 @@ export const SerializedInterchangeDetails = ({
 
   return (
     <details className="rounded-md border border-slate-200 bg-slate-50/90">
-      <summary className="cursor-pointer select-none px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+      <summary className="cursor-pointer select-none px-3 py-2 text-xs font-bold uppercase tracking-wider text-[#737685]">
         {summaryLabel}
       </summary>
       <pre className={preClassName}>{text}</pre>
@@ -111,7 +111,7 @@ export const TechnicalJsonDisclosure = ({
       <summary
         className={
           summaryClassName ??
-          "cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]"
+          "cursor-pointer select-none px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]"
         }
       >
         {label}
@@ -139,7 +139,7 @@ export const TechnicalJsonDisclosure = ({
           )}
         </div>
         <div className="border-t border-slate-100 px-4 pb-4">
-          <SerializedInterchangeDetails data={data} preClassName="max-h-72 overflow-auto border-t border-slate-200 bg-[#13161e] p-3 text-[11px] leading-relaxed text-slate-100" />
+          <SerializedInterchangeDetails data={data} preClassName="max-h-72 overflow-auto border-t border-slate-200 bg-[#13161e] p-3 text-xs leading-relaxed text-slate-100" />
         </div>
       </div>
     </details>
@@ -234,7 +234,7 @@ export const RecordFieldGrid = ({
             key={key}
             className="rounded-xl border border-slate-100 bg-[#f8f9fc] px-4 py-3 shadow-sm"
           >
-            <div className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">{humanizeKey(key)}</div>
+            <div className="text-xs font-bold uppercase tracking-wider text-[#737685]">{humanizeKey(key)}</div>
             <div className="mt-1 break-words text-sm text-[#181b25]">
               <UnknownValue value={record[key]} depth={0} />
             </div>
@@ -249,7 +249,7 @@ export const RecordFieldGrid = ({
       <SerializedInterchangeDetails
         data={record}
         summaryLabel="Interchange format (full record for support or tools)"
-        preClassName="max-h-72 overflow-auto border-t border-slate-200 bg-[#13161e] p-3 text-[11px] leading-relaxed text-slate-100"
+        preClassName="max-h-72 overflow-auto border-t border-slate-200 bg-[#13161e] p-3 text-xs leading-relaxed text-slate-100"
       />
     </div>
   );
@@ -293,7 +293,7 @@ export const AdminResponseBodyView = ({
           <RecordFieldGrid record={record.entity as Record<string, unknown>} title="Record" />
           {meta && Object.keys(meta).length > 0 ? (
             <div className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Pagination</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-[#737685]">Pagination</p>
               <dl className="mt-2 flex flex-wrap gap-4 text-sm text-slate-700">
                 {typeof meta.page === "number" ? (
                   <div>

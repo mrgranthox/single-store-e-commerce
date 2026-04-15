@@ -33,7 +33,7 @@ const categoryStatusPill = (status: string) => {
   const s = status.toUpperCase();
   if (s === "ACTIVE") {
     return (
-      <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/30 px-2.5 py-1 text-[10px] font-bold uppercase text-emerald-700">
+      <span className="flex items-center gap-1.5 rounded-full border border-emerald-500/30 px-2.5 py-1 text-xs font-bold uppercase text-emerald-700">
         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
         Active
       </span>
@@ -41,14 +41,14 @@ const categoryStatusPill = (status: string) => {
   }
   if (s === "ARCHIVED") {
     return (
-      <span className="flex items-center gap-1.5 rounded-full border border-slate-200 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-500">
+      <span className="flex items-center gap-1.5 rounded-full border border-slate-200 px-2.5 py-1 text-xs font-bold uppercase text-slate-500">
         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
         Archived
       </span>
     );
   }
   return (
-    <span className="flex items-center gap-1.5 rounded-full border border-slate-200 px-2.5 py-1 text-[10px] font-bold uppercase text-slate-400">
+    <span className="flex items-center gap-1.5 rounded-full border border-slate-200 px-2.5 py-1 text-xs font-bold uppercase text-slate-400">
       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-slate-300" />
       Draft
     </span>

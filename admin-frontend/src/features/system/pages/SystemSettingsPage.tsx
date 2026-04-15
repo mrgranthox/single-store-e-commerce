@@ -105,7 +105,7 @@ export const SystemSettingsPage = () => {
           .toUpperCase() ?? "AD";
       return [
         <div key={`u-${log.id}`} className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#dedfeb] text-[10px] font-bold text-[#60626c]">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#dedfeb] text-xs font-bold text-[#60626c]">
             {initials}
           </div>
           <span className="text-[13px] font-medium text-[#374151]">{log.adminUser?.email ?? "System"}</span>
@@ -120,7 +120,7 @@ export const SystemSettingsPage = () => {
         <span key={`t-${log.id}`} className="text-xs text-[#737685]">
           {formatRelative(log.createdAt)}
         </span>,
-        <span key={`i-${log.id}`} className="text-right font-mono text-[10px] text-[#5b5e68]">
+        <span key={`i-${log.id}`} className="text-right font-mono text-xs text-[#5b5e68]">
           {log.entityId ? `${log.entityId.slice(0, 8)}…` : "—"}
         </span>
       ];
@@ -175,7 +175,7 @@ export const SystemSettingsPage = () => {
         </div>
         <div className="mb-2 flex items-center justify-between gap-2">
           <h2 className="font-headline text-sm font-bold text-gray-500">{title}</h2>
-          <span className="rounded bg-[#ecedfb] px-2 py-0.5 text-[10px] font-bold tracking-tight text-gray-500">
+          <span className="rounded bg-[#ecedfb] px-2 py-0.5 text-xs font-bold tracking-tight text-gray-500">
             {badge}
           </span>
         </div>
@@ -261,7 +261,7 @@ export const SystemSettingsPage = () => {
           </h2>
           <Link
             to="/admin/security/admin-actions"
-            className="text-[10px] font-bold uppercase tracking-tight text-[#1653cc] hover:text-[#3b6de6]"
+            className="text-xs font-bold uppercase tracking-tight text-[#1653cc] hover:text-[#3b6de6]"
           >
             View Full Audit Log
           </Link>
@@ -282,7 +282,7 @@ export const SystemSettingsPage = () => {
         )}
       </div>
 
-      <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-[#e0e2f0]/50 bg-white px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+      <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-[#e0e2f0]/50 bg-white px-6 py-4 text-xs font-bold uppercase tracking-wider text-[#737685]">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <div className="flex items-center">
             <span
@@ -325,7 +325,7 @@ export const SystemSettingsPage = () => {
       </footer>
 
       <details className="group rounded-xl border border-slate-200 bg-white shadow-sm">
-        <summary className="cursor-pointer select-none px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+        <summary className="cursor-pointer select-none px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">
           All setting keys
         </summary>
         <div className="space-y-4 border-t border-slate-100 p-4">

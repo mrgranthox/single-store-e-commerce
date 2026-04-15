@@ -53,27 +53,27 @@ const scoreBarColor = (score: number) => {
 const statusChip = (reviewed: boolean, score: number) => {
   if (reviewed) {
     return (
-      <span className="rounded border border-[#737685]/30 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-tighter text-[#5b5e68]">
+      <span className="rounded border border-[#737685]/30 px-2 py-0.5 text-xs font-bold uppercase tracking-tighter text-[#5b5e68]">
         Reviewed
       </span>
     );
   }
   if (score >= 90) {
     return (
-      <span className="rounded border border-[#ba1a1a] px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-tighter text-[#ba1a1a]">
+      <span className="rounded border border-[#ba1a1a] px-2 py-0.5 text-xs font-bold uppercase tracking-tighter text-[#ba1a1a]">
         Critical
       </span>
     );
   }
   if (score >= 70) {
     return (
-      <span className="rounded border border-orange-500 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-tighter text-orange-600">
+      <span className="rounded border border-orange-500 px-2 py-0.5 text-xs font-bold uppercase tracking-tighter text-orange-600">
         High
       </span>
     );
   }
   return (
-    <span className="rounded border border-amber-500 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-tighter text-amber-600">
+    <span className="rounded border border-amber-500 px-2 py-0.5 text-xs font-bold uppercase tracking-tighter text-amber-600">
       Medium
     </span>
   );
@@ -186,7 +186,7 @@ export const SecurityRiskSignalsPage = () => {
         </div>
       </div>
 
-      <p className="text-[10px] font-medium uppercase tracking-wider text-[#737685]">
+      <p className="text-xs font-medium uppercase tracking-wider text-[#737685]">
         KPI tiles mirror security dashboard aggregates (studio-wide).
       </p>
 
@@ -194,13 +194,13 @@ export const SecurityRiskSignalsPage = () => {
         <div className="relative flex h-32 flex-col justify-between overflow-hidden rounded-sm bg-white p-6 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#ba1a1a]" />
           <div className="flex items-start justify-between">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#737685]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">
               Unreviewed · score 70+
             </span>
           </div>
           <div className="flex items-end justify-between">
             <span className="font-headline text-4xl font-bold text-[#181b25]">{kpis.elevated}</span>
-            <span className="flex items-center rounded bg-[#ffdad6]/40 px-2 py-0.5 font-mono text-[0.6875rem] text-[#ba1a1a]">
+            <span className="flex items-center rounded bg-[#ffdad6]/40 px-2 py-0.5 font-mono text-xs text-[#ba1a1a]">
               <ArrowUp className="mr-1 h-3 w-3" aria-hidden />
               watchlist
             </span>
@@ -209,13 +209,13 @@ export const SecurityRiskSignalsPage = () => {
         <div className="relative flex h-32 flex-col justify-between overflow-hidden rounded-sm bg-white p-6 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
           <div className="flex items-start justify-between">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#737685]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">
               Unreviewed (all)
             </span>
           </div>
           <div className="flex items-end justify-between">
             <span className="font-headline text-4xl font-bold text-[#181b25]">{kpis.unreviewed}</span>
-            <span className="rounded border border-[#c3c6d6] px-2 py-0.5 font-mono text-[0.6875rem] text-[#5b5e68]">
+            <span className="rounded border border-[#c3c6d6] px-2 py-0.5 font-mono text-xs text-[#5b5e68]">
               queue
             </span>
           </div>
@@ -223,11 +223,11 @@ export const SecurityRiskSignalsPage = () => {
         <div className="relative flex h-32 flex-col justify-between overflow-hidden rounded-sm bg-white p-6 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#006b2d]" />
           <div className="flex items-start justify-between">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#737685]">New (24h)</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">New (24h)</span>
           </div>
           <div className="flex items-end justify-between">
             <span className="font-headline text-4xl font-bold text-[#181b25]">{kpis.volume24h}</span>
-            <span className="flex items-center text-[0.6875rem] text-[#5b5e68]">
+            <span className="flex items-center text-xs text-[#5b5e68]">
               <TrendingUp className="mr-1 h-3 w-3" aria-hidden />
               signals
             </span>
@@ -308,7 +308,7 @@ export const SecurityRiskSignalsPage = () => {
                   ].map((h) => (
                     <th
                       key={h}
-                      className={`px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-[#737685] ${
+                      className={`px-6 py-4 text-xs font-bold uppercase tracking-wider text-[#737685] ${
                         h === "Actions" ? "text-right" : ""
                       }`}
                     >
@@ -346,7 +346,7 @@ export const SecurityRiskSignalsPage = () => {
                               className={`absolute left-0 top-0 h-full rounded-full ${scoreBarColor(score)}`}
                               style={{ width: `${score}%` }}
                             />
-                            <span className="absolute -top-5 right-0 font-mono text-[0.65rem] font-bold text-[#181b25]">
+                            <span className="absolute -top-5 right-0 font-mono text-xs font-bold text-[#181b25]">
                               {r.score != null ? score : "—"}
                             </span>
                           </div>
@@ -372,7 +372,7 @@ export const SecurityRiskSignalsPage = () => {
                               type="button"
                               disabled={reviewed || reviewMut.isPending}
                               onClick={() => reviewMut.mutate({ id: r.id, disposition: "reviewed" })}
-                              className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[#006b2d] underline decoration-[#006b2d]/40 underline-offset-2 disabled:opacity-30"
+                              className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-[#006b2d] underline decoration-[#006b2d]/40 underline-offset-2 disabled:opacity-30"
                             >
                               <CheckCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
                               Mark reviewed
@@ -381,7 +381,7 @@ export const SecurityRiskSignalsPage = () => {
                               type="button"
                               disabled={reviewMut.isPending}
                               onClick={() => reviewMut.mutate({ id: r.id, disposition: "escalated" })}
-                              className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[#ba1a1a] underline decoration-[#ba1a1a]/40 underline-offset-2 disabled:opacity-30"
+                              className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-[#ba1a1a] underline decoration-[#ba1a1a]/40 underline-offset-2 disabled:opacity-30"
                             >
                               <TrendingUp className="h-3.5 w-3.5 shrink-0" aria-hidden />
                               Escalate

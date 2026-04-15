@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { BusinessMetadataSection } from "@/features/security/components/BusinessMetadataSection";
+import { ActionSafetyGate } from "@/components/primitives/ActionSafetyGate";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { StitchBreadcrumbs, StitchPageBody } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
@@ -183,7 +184,7 @@ export const IncidentDetailPage = () => {
                   {incidentId.slice(0, 8).toUpperCase()}…
                 </span>
                 <StatusBadge label={e.status.replace(/_/g, " ")} tone={tone(e.status)} />
-                <span className="rounded border border-[#ba1a1a]/30 px-2 py-0.5 text-[10px] font-bold uppercase text-[#ba1a1a]">
+                <span className="rounded border border-[#ba1a1a]/30 px-2 py-0.5 text-xs font-bold uppercase text-[#ba1a1a]">
                   Sev · {incidentSeverityFromMetadata(e.metadata)}
                 </span>
               </div>
@@ -206,45 +207,45 @@ export const IncidentDetailPage = () => {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
             <div className="space-y-6 lg:col-span-8">
               <div className="rounded-xl border border-[#e8eaf4] bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">At a glance</h2>
+                <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-[#737685]">At a glance</h2>
                 <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">Full incident ID</dt>
+                    <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">Full incident ID</dt>
                     <dd className="mt-1 break-all font-mono text-xs text-[#181b25]">{e.id}</dd>
                   </div>
                   <div>
-                    <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">Severity</dt>
+                    <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">Severity</dt>
                     <dd className="mt-1 text-sm font-semibold text-[#181b25]">{incidentSeverityFromMetadata(e.metadata)}</dd>
                   </div>
                   <div>
-                    <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">Opened</dt>
+                    <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">Opened</dt>
                     <dd className="mt-1 text-sm text-[#434654]">{formatAdminDateTimeLong(e.createdAt)}</dd>
                   </div>
                   <div>
-                    <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">Last activity</dt>
+                    <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">Last activity</dt>
                     <dd className="mt-1 text-sm text-[#434654]">
                       {relativeShort(e.updatedAt)} · {formatAdminDateTimeLong(e.updatedAt)}
                     </dd>
                   </div>
                   {e.closedAt ? (
                     <div>
-                      <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">Closed</dt>
+                      <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">Closed</dt>
                       <dd className="mt-1 text-sm text-[#434654]">{formatAdminDateTimeLong(e.closedAt)}</dd>
                     </div>
                   ) : null}
                   <div>
-                    <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">Investigation notes</dt>
+                    <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">Investigation notes</dt>
                     <dd className="mt-1 text-sm font-semibold text-[#181b25]">{notes.length} saved</dd>
                   </div>
                   {pickIpFromMetadata(e.metadata) ? (
                     <div className="sm:col-span-2">
-                      <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">IP hint (from context)</dt>
+                      <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">IP hint (from context)</dt>
                       <dd className="mt-1 font-mono text-sm text-[#181b25]">{pickIpFromMetadata(e.metadata)}</dd>
                     </div>
                   ) : null}
                   {pickDeviceFromPayload(e.metadata) ? (
                     <div className="sm:col-span-2">
-                      <dt className="text-[0.65rem] font-bold uppercase tracking-wide text-[#737685]">Device hint</dt>
+                      <dt className="text-xs font-bold uppercase tracking-wide text-[#737685]">Device hint</dt>
                       <dd className="mt-1 break-words text-sm text-[#434654]">{pickDeviceFromPayload(e.metadata)}</dd>
                     </div>
                   ) : null}
@@ -253,7 +254,7 @@ export const IncidentDetailPage = () => {
 
               <div className="flex flex-col gap-6 rounded-xl bg-white p-6 shadow-sm">
                 <div>
-                  <h2 className="mb-3 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">
+                  <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#737685]">
                     Incident description
                   </h2>
                   <p className="text-sm leading-relaxed text-[#434654]">
@@ -265,10 +266,10 @@ export const IncidentDetailPage = () => {
 
               <div className="rounded-xl bg-white p-6">
                 <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <h2 className="text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">
+                  <h2 className="text-xs font-bold uppercase tracking-widest text-[#737685]">
                     Investigation workspace
                   </h2>
-                  <span className="text-[0.65rem] font-medium text-[#9ca3af]">Notes are saved to the incident record</span>
+                  <span className="text-xs font-medium text-[#9ca3af]">Notes are saved to the incident record</span>
                 </div>
                 <div className="space-y-3">
                   {notes.length === 0 ? (
@@ -277,7 +278,7 @@ export const IncidentDetailPage = () => {
                     <ul className="space-y-3 border-l-2 border-[#1653cc]/20 pl-4">
                       {notes.map((n, idx) => (
                         <li key={`${n.at}-${idx}`}>
-                          <p className="font-mono text-[0.65rem] text-[#737685]">{formatAdminDateTimeLong(n.at)}</p>
+                          <p className="font-mono text-xs text-[#737685]">{formatAdminDateTimeLong(n.at)}</p>
                           <p className="text-sm text-[#181b25]">{n.text}</p>
                         </li>
                       ))}
@@ -308,7 +309,7 @@ export const IncidentDetailPage = () => {
               </div>
 
               <div className="rounded-xl bg-white p-6">
-                <h2 className="mb-6 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">
+                <h2 className="mb-6 text-xs font-bold uppercase tracking-widest text-[#737685]">
                   Incident lifecycle
                 </h2>
                 <div className="relative space-y-6 before:absolute before:bottom-2 before:left-2 before:top-2 before:w-px before:bg-[#c3c6d6]/40">
@@ -317,7 +318,7 @@ export const IncidentDetailPage = () => {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="text-xs font-bold uppercase tracking-tight">Opened</p>
-                        <p className="mt-0.5 text-[0.7rem] text-[#737685]">Incident record created</p>
+                        <p className="mt-0.5 text-xs text-[#737685]">Incident record created</p>
                       </div>
                       <span className="font-mono text-[0.6rem] text-[#737685]">{formatAdminDateTimeLong(e.createdAt)}</span>
                     </div>
@@ -327,7 +328,7 @@ export const IncidentDetailPage = () => {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="text-xs font-bold uppercase tracking-tight">Last activity</p>
-                        <p className="mt-0.5 text-[0.7rem] text-[#737685]">Status · {humanizeEnumLabel(e.status)}</p>
+                        <p className="mt-0.5 text-xs text-[#737685]">Status · {humanizeEnumLabel(e.status)}</p>
                       </div>
                       <span className="font-mono text-[0.6rem] text-[#737685]">{relativeShort(e.updatedAt)}</span>
                     </div>
@@ -338,7 +339,7 @@ export const IncidentDetailPage = () => {
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <p className="text-xs font-bold uppercase tracking-tight">Closed</p>
-                          <p className="mt-0.5 text-[0.7rem] text-[#737685]">Incident marked closed</p>
+                          <p className="mt-0.5 text-xs text-[#737685]">Incident marked closed</p>
                         </div>
                         <span className="font-mono text-[0.6rem] text-[#737685]">{formatAdminDateTimeLong(e.closedAt)}</span>
                       </div>
@@ -357,7 +358,7 @@ export const IncidentDetailPage = () => {
 
             <aside className="space-y-6 lg:col-span-4">
               <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">Ownership</h2>
+                <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-[#737685]">Ownership</h2>
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1653cc]/10 text-sm font-bold text-[#1653cc]">
                     {actorAdminEmail(e.createdBy) !== "—"
@@ -374,7 +375,7 @@ export const IncidentDetailPage = () => {
               </div>
 
               <div className="rounded-xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
-                <h2 className="mb-3 text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">Status</h2>
+                <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#737685]">Status</h2>
                 <div className="flex flex-col gap-2">
                   <button
                     type="button"
@@ -398,7 +399,7 @@ export const IncidentDetailPage = () => {
               </div>
 
               <div className="rounded-xl bg-[#1a1d27] p-6 text-white shadow-xl">
-                <h2 className="mb-4 text-[0.65rem] font-bold uppercase tracking-widest text-slate-500">Close incident</h2>
+                <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-slate-500">Close incident</h2>
                 {canClose ? (
                   <div className="space-y-3">
                     <textarea
@@ -408,15 +409,16 @@ export const IncidentDetailPage = () => {
                       rows={4}
                       className="w-full rounded-lg border-none bg-[#13161e] p-3 text-xs text-white placeholder:text-slate-500 focus:ring-1 focus:ring-[#1653cc]"
                     />
-                    <button
-                      type="button"
-                      disabled={closeMut.isPending || !canManageIncidents}
-                      onClick={() => closeMut.mutate()}
-                      className="w-full rounded-md bg-[#ba1a1a]/90 py-2 text-[0.7rem] font-bold text-white hover:bg-[#ba1a1a] disabled:opacity-50"
-                      title={canManageIncidents ? undefined : "Requires security.incidents.manage permission"}
-                    >
-                      Close incident
-                    </button>
+                    <ActionSafetyGate
+                      label="Close incident"
+                      title="Close this security incident?"
+                      body="This will mark the incident as resolved and write the closing note to the audit trail."
+                      impactSummary="Closed incidents cannot be re-opened from this screen."
+                      onConfirm={() => closeMut.mutate()}
+                      pending={closeMut.isPending}
+                      blocked={!canManageIncidents}
+                      className="w-full"
+                    />
                   </div>
                 ) : (
                   <p className="text-sm text-slate-400">This incident is already closed.</p>

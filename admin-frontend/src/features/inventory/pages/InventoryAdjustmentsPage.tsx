@@ -203,7 +203,7 @@ export const InventoryAdjustmentsPage = () => {
                             {p.thumbnailUrl ? (
                               <img src={p.thumbnailUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
                             ) : (
-                              <div className="flex h-full w-full items-center justify-center text-[10px] font-bold text-slate-400">
+                              <div className="flex h-full w-full items-center justify-center text-xs font-bold text-slate-400">
                                 —
                               </div>
                             )}
@@ -292,7 +292,7 @@ export const InventoryAdjustmentsPage = () => {
                           {active ? <CheckCircle2 className="h-5 w-5 text-[#1653cc]" /> : null}
                         </div>
                         <div className="mt-auto flex items-end justify-between">
-                          <span className="text-[10px] font-bold uppercase tracking-tight text-slate-500">
+                          <span className="text-xs font-bold uppercase tracking-tight text-slate-500">
                             Current on hand
                           </span>
                           <span className="font-mono text-xl font-bold text-[#181b25]">{whStock}</span>
@@ -312,7 +312,7 @@ export const InventoryAdjustmentsPage = () => {
                 </div>
                 <div className="grid grid-cols-1 gap-6 rounded-xl bg-[#f2f3ff] p-6 md:grid-cols-4">
                   <div>
-                    <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">
                       Operation
                     </label>
                     <select
@@ -326,7 +326,7 @@ export const InventoryAdjustmentsPage = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">
                       Quantity
                     </label>
                     <input
@@ -338,7 +338,7 @@ export const InventoryAdjustmentsPage = () => {
                     />
                   </div>
                   <div className="flex flex-col justify-center rounded-lg border border-dashed border-slate-300 bg-white p-4 md:col-span-2">
-                    <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <p className="text-center text-xs font-bold uppercase tracking-widest text-slate-500">
                       Projected on hand
                     </p>
                     <p className="text-center font-mono text-2xl font-bold text-[#1653cc]">
@@ -359,7 +359,7 @@ export const InventoryAdjustmentsPage = () => {
                   <h2 className="font-headline text-lg font-bold text-[#181b25]">Justification</h2>
                 </div>
                 <div>
-                  <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Reason
                   </label>
                   <select
@@ -375,7 +375,7 @@ export const InventoryAdjustmentsPage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-500">
                     Operational notes
                   </label>
                   <textarea
@@ -502,13 +502,13 @@ export const InventoryAdjustmentsPage = () => {
                             {pos ? "+" : ""}
                             {mv.deltaOnHand}
                           </span>
-                          <span className="ml-1 text-[10px] uppercase text-slate-500">
+                          <span className="ml-1 text-xs uppercase text-slate-500">
                             {mv.movementType.replace(/_/g, " ")}
                           </span>
                         </div>
                         <div className="text-right text-xs text-slate-300">
                           {formatWhen(mv.createdAt)}
-                          <span className="mt-1 block text-[10px] text-slate-500">{mv.warehouse.code}</span>
+                          <span className="mt-1 block text-xs text-slate-500">{mv.warehouse.code}</span>
                         </div>
                       </div>
                     );

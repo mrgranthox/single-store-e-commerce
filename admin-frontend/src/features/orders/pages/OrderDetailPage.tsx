@@ -13,6 +13,7 @@ import {
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { timelinePayloadLine } from "@/features/security/lib/securityUiHelpers";
@@ -33,7 +34,7 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { orderKeys } from "@/lib/query-keys";
-import { formatDateTime, formatMoney } from "@/lib/format";
+import { formatDateTime, formatMoney, humanize, initials } from "@/lib/format";
 
 const ORDER_STATUSES: AdminOrderStatus[] = [
   "DRAFT",
@@ -45,65 +46,29 @@ const ORDER_STATUSES: AdminOrderStatus[] = [
   "CLOSED"
 ];
 
-
-
-const humanize = (raw: string | null | undefined) => (raw ?? "—").replace(/_/g, " ");
-
-const customerInitials = (entity: AdminOrderDetailEntity["customer"]) => {
-  const base = (entity.name ?? entity.email ?? "Guest").trim();
-  const parts = base.split(/\s+/).filter(Boolean);
-  if (parts.length >= 2) {
-    return `${parts[0]!.slice(0, 1)}${parts[1]!.slice(0, 1)}`.toUpperCase();
-  }
-  return base.slice(0, 2).toUpperCase() || "—";
-};
-
-const HeaderStatusChip = ({ status }: { status: string }) => {
+const orderStatusTone = (status: string): StatusBadgeTone => {
   const u = status.toUpperCase();
-  const isTerminalOk = u === "COMPLETED" || u === "CLOSED";
-  const isCancelled = u === "CANCELLED";
-  const dot = isCancelled ? "bg-[#ba1a1a]" : isTerminalOk ? "bg-[#006b2d]" : "bg-[#006b2d]";
-  const text = isCancelled ? "text-[#ba1a1a]" : "text-[#006b2d]";
-  return (
-    <span
-      className={`inline-flex items-center rounded-full border border-[#c3c6d6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter ${text}`}
-    >
-      <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${dot}`} />
-      {humanize(status)}
-    </span>
-  );
+  if (u === "COMPLETED" || u === "CLOSED") return "success";
+  if (u === "CANCELLED") return "danger";
+  if (u === "CONFIRMED" || u === "PROCESSING") return "info";
+  return "draft";
 };
 
-const PaymentStateChip = ({ state }: { state: string }) => {
+const paymentStateTone = (state: string): StatusBadgeTone => {
   const u = state.toUpperCase();
-  const dot =
-    u === "PAID" || u === "CAPTURED" || u === "SUCCEEDED"
-      ? "bg-[#006b2d]"
-      : u === "FAILED" || u === "CANCELLED"
-        ? "bg-[#ba1a1a]"
-        : "bg-amber-500";
-  const text =
-    u === "PAID" || u === "CAPTURED" || u === "SUCCEEDED"
-      ? "text-[#006b2d]"
-      : u === "FAILED" || u === "CANCELLED"
-        ? "text-[#ba1a1a]"
-        : "text-amber-800";
-  return (
-    <span
-      className={`inline-flex items-center rounded-full border border-[#c3c6d6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter ${text}`}
-    >
-      <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${dot}`} />
-      {humanize(state)}
-    </span>
-  );
+  if (u === "PAID" || u === "CAPTURED" || u === "SUCCEEDED") return "active";
+  if (u === "FAILED" || u === "CANCELLED") return "danger";
+  if (u.includes("REFUND")) return "neutral";
+  return "pending";
 };
 
-const FulfillmentStateChip = ({ status }: { status: string }) => (
-  <span className="inline-flex items-center rounded-full border border-[#c3c6d6] px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter text-[#5b5e68]">
-    <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-[#5b5e68]" />
-    {humanize(status)}
-  </span>
-);
+const fulfillmentStateTone = (status: string): StatusBadgeTone => {
+  const u = status.toUpperCase();
+  if (u === "DELIVERED") return "active";
+  if (u === "IN_TRANSIT" || u === "DISPATCHED") return "info";
+  if (u === "UNFULFILLED") return "pending";
+  return "draft";
+};
 
 const downloadCsv = (filename: string, rows: string[][]) => {
   const esc = (cell: string) => `"${cell.replace(/"/g, '""')}"`;
@@ -426,7 +391,7 @@ export const OrderDetailPage = () => {
         {entity ? (
           <>
             <div className="mb-2">
-              <nav className="mb-2 flex text-[10px] font-semibold uppercase tracking-widest text-[#737685]">
+              <nav className="mb-2 flex text-xs font-semibold uppercase tracking-widest text-[#737685]">
                 <Link className="transition-colors hover:text-[#1653cc]" to="/admin/orders">
                   Orders
                 </Link>
@@ -439,7 +404,7 @@ export const OrderDetailPage = () => {
                     <h2 className="font-headline text-2xl font-bold tracking-tight text-[#181b25]">
                       Order #<span className="font-mono text-xl text-[#1653cc]">{entity.orderNumber}</span>
                     </h2>
-                    <HeaderStatusChip status={entity.status} />
+                    <StatusBadge label={humanize(entity.status)} tone={orderStatusTone(entity.status)} />
                   </div>
                   <p className="text-sm text-slate-500">Placed on {formatDateTime(entity.createdAt)} (UTC)</p>
                 </div>
@@ -464,12 +429,12 @@ export const OrderDetailPage = () => {
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
-                <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                   Customer information
                 </h3>
                 <div className="flex items-start gap-4">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ecedfb] text-sm font-bold text-[#1653cc]">
-                    {customerInitials(entity.customer)}
+                    {initials(entity.customer.name ?? entity.customer.email)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="font-bold text-slate-900">
@@ -492,7 +457,7 @@ export const OrderDetailPage = () => {
               </div>
 
               <div className="rounded-xl border-l-4 border-[#006b2d] bg-white p-6 shadow-sm">
-                <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                   Payment summary
                 </h3>
                 <div className="space-y-3">
@@ -500,7 +465,7 @@ export const OrderDetailPage = () => {
                     <span className="font-mono text-2xl font-bold text-slate-900">
                       {formatMoney(entity.payment.amountCents, entity.payment.currency)}
                     </span>
-                    <PaymentStateChip state={entity.payment.paymentState} />
+                    <StatusBadge label={humanize(entity.payment.paymentState)} tone={paymentStateTone(entity.payment.paymentState)} />
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">Method</span>
@@ -524,7 +489,7 @@ export const OrderDetailPage = () => {
               </div>
 
               <div className="rounded-xl border-l-4 border-[#5b5e68] bg-white p-6 shadow-sm">
-                <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                   Fulfillment details
                 </h3>
                 <div className="space-y-3">
@@ -537,7 +502,7 @@ export const OrderDetailPage = () => {
                           : "Unassigned"}
                       </span>
                     </div>
-                    <FulfillmentStateChip status={entity.fulfillment.status} />
+                    <StatusBadge label={humanize(entity.fulfillment.status)} tone={fulfillmentStateTone(entity.fulfillment.status)} />
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">Shipment</span>
@@ -565,7 +530,7 @@ export const OrderDetailPage = () => {
                 <h3 className="text-sm font-bold text-slate-900">
                   Line items ({entity.items?.length ?? 0})
                 </h3>
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
                   Variant identifiers are system references
                 </span>
               </div>
@@ -582,7 +547,7 @@ export const OrderDetailPage = () => {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               <div className="space-y-6 lg:col-span-2">
                 <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <h3 className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                  <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                     Internal operational notes
                   </h3>
                   <textarea
@@ -592,14 +557,14 @@ export const OrderDetailPage = () => {
                     aria-readonly="true"
                   />
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-[10px] italic text-slate-400">
+                    <p className="text-xs italic text-slate-400">
                       Notes are visible only to enterprise staff members. Posting from this screen is not enabled yet —
                       use order actions and audit trails.
                     </p>
                     <button
                       type="button"
                       disabled
-                      className="cursor-not-allowed rounded bg-slate-300 px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white"
+                      className="cursor-not-allowed rounded bg-slate-300 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white"
                       title="Not available — use existing workflows that write to the audit trail."
                     >
                       Post note
@@ -610,12 +575,12 @@ export const OrderDetailPage = () => {
                 {canViewAudit ? (
                   <div className="rounded-xl bg-white p-6 shadow-sm">
                     <div className="mb-4 flex items-center justify-between gap-3">
-                      <h3 className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+                      <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500">
                         Entity timeline preview
                       </h3>
                       <Link
                         to={`/admin/orders/${orderId}/timeline`}
-                        className="text-[10px] font-bold uppercase tracking-wider text-[#1653cc] hover:underline"
+                        className="text-xs font-bold uppercase tracking-wider text-[#1653cc] hover:underline"
                       >
                         Full timeline
                       </Link>
@@ -641,7 +606,7 @@ export const OrderDetailPage = () => {
                                   {timelinePayloadLine(event.payload)}
                                 </p>
                               </div>
-                              <span className="shrink-0 text-[10px] text-slate-400">
+                              <span className="shrink-0 text-xs text-slate-400">
                                 {formatDateTime(event.occurredAt)}
                               </span>
                             </div>
@@ -668,7 +633,7 @@ export const OrderDetailPage = () => {
 
               <div className="flex flex-col justify-between rounded-xl bg-[#0f1117] p-8 text-white shadow-sm">
                 <div>
-                  <h3 className="mb-6 text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+                  <h3 className="mb-6 text-xs font-semibold uppercase tracking-widest text-slate-400">
                     Financial reconciliation
                   </h3>
                   <div className="space-y-4 text-sm">
@@ -692,7 +657,7 @@ export const OrderDetailPage = () => {
                 </div>
                 <div className="mt-8 border-t border-white/10 pt-6">
                   <div className="flex items-end justify-between">
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
                       Grand total
                     </span>
                     <span className="font-mono text-3xl font-bold text-[#dbe1ff]">
@@ -967,6 +932,7 @@ export const OrderDetailPage = () => {
         open={confirmAction !== null}
         title={confirmTitle}
         body={confirmBody}
+        impactSummary={confirmAction === "cancel" ? "Irreversible — this order cannot be un-cancelled." : undefined}
         confirmLabel={confirmLabel}
         danger={confirmAction === "cancel"}
         confirmDisabled={confirmDisabled}

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
+import { StitchKpiMicro } from "@/components/stitch";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { ApiError, getAdminPaymentDetail, listAdminPayments, type AdminPaymentListItem } from "@/features/payments/api/admin-payments.api";
@@ -172,48 +173,38 @@ export const PaymentsListPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-          <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-5 shadow-sm">
-            <div className="flex items-start justify-between">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Total Processed</p>
-              <span className="text-xs font-bold text-[#3b6de6]">Live</span>
-            </div>
-            <h3 className="mt-2 font-headline text-2xl font-bold text-slate-900">
-              {pageKpis.n ? formatMoney(pageKpis.volume, pageKpis.cur) : "—"}
-            </h3>
-            <p className="mt-1 font-label text-[0.65rem] text-slate-400">Current result page (after local refinements)</p>
-          </div>
-          <div className="rounded-xl border-l-4 border-emerald-700 bg-white p-5 shadow-sm">
-            <div className="flex items-start justify-between">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Success Rate</p>
-              <MaterialIcon name="check_circle" className="text-sm text-emerald-700" />
-            </div>
-            <h3 className="mt-2 font-headline text-2xl font-bold text-slate-900">{pageKpis.successRate}%</h3>
-            <p className="mt-1 font-label text-[0.65rem] text-slate-400">Real-time throughput (page)</p>
-          </div>
-          <div className="rounded-xl border-l-4 border-red-600 bg-white p-5 shadow-sm">
-            <div className="flex items-start justify-between">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Failed Count</p>
-              <MaterialIcon name="error" className="text-sm text-red-600" />
-            </div>
-            <h3 className="mt-2 font-headline text-2xl font-bold text-slate-900">{pageKpis.failed}</h3>
-            <p className="mt-1 font-label text-[0.65rem] text-slate-400">Matching filters on this page</p>
-          </div>
-          <div className="rounded-xl border-l-4 border-orange-400 bg-white p-5 shadow-sm">
-            <div className="flex items-start justify-between">
-              <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Pending Count</p>
-              <MaterialIcon name="pending" className="text-sm text-orange-400" />
-            </div>
-            <h3 className="mt-2 font-headline text-2xl font-bold text-slate-900">{pageKpis.pending}</h3>
-            <p className="mt-1 font-label text-[0.65rem] text-slate-400">Awaiting verification</p>
-          </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          <StitchKpiMicro
+            label="Total Processed"
+            value={pageKpis.n ? formatMoney(pageKpis.volume, pageKpis.cur) : "—"}
+            footer="Current page"
+            barClass="bg-[#1653cc]"
+          />
+          <StitchKpiMicro
+            label="Success Rate"
+            value={`${pageKpis.successRate}%`}
+            footer="Throughput"
+            barClass="bg-emerald-700"
+          />
+          <StitchKpiMicro
+            label="Failed"
+            value={pageKpis.failed}
+            footer="Current page"
+            barClass="bg-red-600"
+          />
+          <StitchKpiMicro
+            label="Pending"
+            value={pageKpis.pending}
+            footer="Awaiting verification"
+            barClass="bg-orange-400"
+          />
         </div>
       </div>
 
       <div className="space-y-4 rounded-xl bg-white p-6 shadow-sm">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6">
           <div className="relative md:col-span-2">
-            <label className="mb-1.5 block text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-slate-400">
               Search Reference
             </label>
             <div className="relative">
@@ -231,7 +222,7 @@ export const PaymentsListPage = () => {
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-slate-400">
               Provider
             </label>
             <select
@@ -249,7 +240,7 @@ export const PaymentsListPage = () => {
             </select>
           </div>
           <div>
-            <label className="mb-1.5 block text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">Status</label>
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-slate-400">Status</label>
             <select
               value={filters.paymentState}
               onChange={(e) => set("paymentState", e.target.value)}
@@ -268,7 +259,7 @@ export const PaymentsListPage = () => {
             </select>
           </div>
           <div>
-            <label className="mb-1.5 block text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-slate-400">
               Amount Range
             </label>
             <div className="flex gap-2">
@@ -287,7 +278,7 @@ export const PaymentsListPage = () => {
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-slate-400">
               Date Range
             </label>
             <input
@@ -299,7 +290,7 @@ export const PaymentsListPage = () => {
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-          <p className="text-[0.65rem] text-slate-400">
+          <p className="text-xs text-slate-400">
             Amount and date refine the loaded page. Provider options mirror checkout rails; the ledger lists the gateway
             (Paystack) — open a row for card vs mobile money detail.
           </p>
@@ -314,7 +305,7 @@ export const PaymentsListPage = () => {
             <button
               type="button"
               onClick={clearFilters}
-              className="flex items-center gap-1 text-[0.6875rem] font-bold uppercase tracking-widest text-[#1653cc] hover:underline"
+              className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-[#1653cc] hover:underline"
             >
               <MaterialIcon name="filter_alt_off" className="text-sm" />
               Clear Filters
@@ -355,7 +346,7 @@ export const PaymentsListPage = () => {
                 ).map((col) => (
                   <th
                     key={col}
-                    className={`px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500 ${
+                    className={`px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 ${
                       col === "Amount" ? "text-right" : ""
                     } ${col === "Actions" ? "text-center" : ""}`}
                   >
@@ -392,7 +383,7 @@ export const PaymentsListPage = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-[0.65rem] font-bold text-slate-700">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700">
                             {initials}
                           </div>
                           <span className="text-xs font-semibold text-slate-700">{cust}</span>
@@ -410,7 +401,7 @@ export const PaymentsListPage = () => {
                       <td className="px-6 py-4">
                         <StitchPaymentStatusPill paymentState={p.paymentState} />
                       </td>
-                      <td className="px-6 py-4 text-[0.7rem] text-slate-500">{formatDateTime(p.createdAt)}</td>
+                      <td className="px-6 py-4 text-xs text-slate-500">{formatDateTime(p.createdAt)}</td>
                       <td className="px-6 py-4 text-center">
                         <StitchTableActions detailTo={`/admin/payments/${p.id}`} orderTo={`/admin/orders/${p.orderId}`} />
                       </td>

@@ -6,6 +6,7 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { z } from "zod";
 
 import { ProductAdminNav } from "@/components/catalog/ProductAdminNav";
+import { ActionSafetyGate } from "@/components/primitives/ActionSafetyGate";
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
@@ -425,14 +426,17 @@ export const CatalogProductEditPage = () => {
                 Archiving hides the product from merchandising flows. Re-publish is not available for archived items
                 from this screen.
               </p>
-              <button
-                type="button"
-                disabled={statusBusy || entity.status === "ARCHIVED"}
-                onClick={() => runStatus("archive")}
-                className="mt-4 rounded-lg border-2 border-red-600 bg-white px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50"
-              >
-                Archive product
-              </button>
+              <div className="mt-4">
+                <ActionSafetyGate
+                  label="Archive product"
+                  title="Archive this product?"
+                  body="Archiving hides the product from all merchandising and storefront flows."
+                  impactSummary="Re-publish is not available from this screen once archived."
+                  onConfirm={() => runStatus("archive")}
+                  pending={statusBusy}
+                  blocked={entity.status === "ARCHIVED"}
+                />
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -493,7 +497,7 @@ export const CatalogProductEditPage = () => {
                   className="h-11 rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
                 />
               </label>
-              <p className="mt-2 text-[11px] text-slate-400">
+              <p className="mt-2 text-xs text-slate-400">
                 Clear the field and save to remove the schedule. Visibility still follows manual publish until a worker
                 runs.
               </p>

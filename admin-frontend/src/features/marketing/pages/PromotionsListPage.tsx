@@ -71,7 +71,7 @@ const StatusDot = ({ status }: { status: string }) => {
   return (
     <div className={`flex items-center gap-2 ${text}`}>
       <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} />
-      <span className="text-[11px] font-semibold uppercase tracking-wider">{humanizeLabel(status)}</span>
+      <span className="text-xs font-semibold uppercase tracking-wider">{humanizeLabel(status)}</span>
     </div>
   );
 };
@@ -295,12 +295,12 @@ export const PromotionsListPage = () => {
           >
             {p.name}
           </button>
-          <p className="font-mono text-[11px] tracking-tighter text-slate-500">PRM-{p.id.slice(0, 8).toUpperCase()}</p>
+          <p className="font-mono text-xs tracking-tighter text-slate-500">PRM-{p.id.slice(0, 8).toUpperCase()}</p>
         </div>
       </div>,
       <span
         key={`ty-${p.id}`}
-        className="inline-flex rounded border border-slate-200/80 bg-[#ecedfb] px-2 py-0.5 text-[10px] font-bold text-[#434654]"
+        className="inline-flex rounded border border-slate-200/80 bg-[#ecedfb] px-2 py-0.5 text-xs font-bold text-[#434654]"
       >
         {type}
       </span>,
@@ -374,24 +374,24 @@ export const PromotionsListPage = () => {
 
       <div className="grid grid-cols-12 gap-6">
         <div className="relative col-span-12 overflow-hidden rounded-xl border-l-4 border-[#1653cc] bg-white p-5 shadow-sm lg:col-span-3">
-          <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-[#434654]">Active campaigns (live)</p>
+          <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#434654]">Active campaigns (live)</p>
           <div className="flex items-end justify-between">
             <span className="font-headline text-3xl font-bold text-[#181b25]">
               {pulse?.activeCampaignsCount ?? "—"}
             </span>
-            <span className="flex items-center gap-1 rounded-full bg-[#006b2d]/15 px-2 py-0.5 font-mono text-[10px] font-medium text-[#006b2d]">
+            <span className="flex items-center gap-1 rounded-full bg-[#006b2d]/15 px-2 py-0.5 font-mono text-xs font-medium text-[#006b2d]">
               Store
               <MaterialIcon name="trending_up" className="text-xs" />
             </span>
           </div>
         </div>
         <div className="relative col-span-12 overflow-hidden rounded-xl border-l-4 border-[#00873b] bg-white p-5 shadow-sm lg:col-span-3">
-          <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-[#434654]">Order coupon rate (30d)</p>
+          <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#434654]">Order coupon rate (30d)</p>
           <div className="flex items-end justify-between">
             <span className="font-headline text-3xl font-bold text-[#181b25]">
               {pulse != null ? `${pulse.orderCouponRedemptionRatePercent30d}%` : "—"}
             </span>
-            <span className="max-w-[8rem] text-right text-[10px] font-medium leading-tight text-[#434654]">
+            <span className="max-w-[8rem] text-right text-xs font-medium leading-tight text-[#434654]">
               {pulse != null
                 ? `${pulse.ordersWithCoupon30d.toLocaleString()} / ${pulse.ordersTotal30d.toLocaleString()} orders`
                 : "—"}
@@ -488,7 +488,7 @@ export const PromotionsListPage = () => {
                     >
                       {p.name}
                     </button>
-                    <p className="font-mono text-[11px] text-slate-500">PRM-{p.id.slice(0, 8).toUpperCase()}</p>
+                    <p className="font-mono text-xs text-slate-500">PRM-{p.id.slice(0, 8).toUpperCase()}</p>
                     <div className="mt-3">
                       <StatusDot status={p.status} />
                     </div>

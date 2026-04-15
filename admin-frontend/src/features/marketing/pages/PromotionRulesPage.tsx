@@ -71,7 +71,7 @@ const RuleCard = ({
       </div>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-center justify-between gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#737685]">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#737685]">
             {humanizeLabel(rule.ruleType)}
           </span>
           <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">

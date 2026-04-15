@@ -267,7 +267,7 @@ export const CatalogProductVariantsPage = () => {
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-card">
           <table className="w-full min-w-[880px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50/90 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              <tr className="border-b border-slate-200 bg-slate-50/90 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 <th className="w-10 px-4 py-3">
                   <input
                     type="checkbox"

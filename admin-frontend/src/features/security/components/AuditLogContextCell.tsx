@@ -1,7 +1,7 @@
 import { auditMetadataPreviewLine, metadataToBusinessRows } from "@/features/security/lib/securityUiHelpers";
 
 const summaryBtnClass =
-  "cursor-pointer list-none text-[10px] font-bold uppercase tracking-wider text-[#1653cc] underline decoration-[#1653cc]/45 underline-offset-2 marker:hidden hover:text-[#0f3d99] [&::-webkit-details-marker]:hidden";
+  "cursor-pointer list-none text-xs font-bold uppercase tracking-wider text-[#1653cc] underline decoration-[#1653cc]/45 underline-offset-2 marker:hidden hover:text-[#0f3d99] [&::-webkit-details-marker]:hidden";
 
 type Props = { metadata: unknown };
 
@@ -27,7 +27,7 @@ export const AuditLogContextCell = ({ metadata }: Props) => {
             {rows.map((r, i) => (
               <div key={`${r.label}-${i}`}>
                 <dt className="text-[0.6rem] font-bold uppercase tracking-wide text-[#737685]">{r.label}</dt>
-                <dd className="break-words text-[11px] text-[#181b25]">{r.value}</dd>
+                <dd className="break-words text-xs text-[#181b25]">{r.value}</dd>
               </div>
             ))}
           </dl>

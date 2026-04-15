@@ -6,7 +6,7 @@ export const stitchVisibleLinkClass =
 
 /** Compact “open record” control — smaller than full text links for dense tables. */
 export const stitchRecordLinkClass =
-  "inline-flex max-w-full items-center gap-0.5 rounded-md border border-[#1653cc]/20 bg-[#f4f6ff] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0f3d99] shadow-[0_1px_0_rgba(22,83,204,0.06)] transition-colors hover:border-[#1653cc]/45 hover:bg-[#e8ebfc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1653cc]";
+  "inline-flex max-w-full items-center gap-0.5 rounded-md border border-[#1653cc]/20 bg-[#f4f6ff] px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#0f3d99] shadow-[0_1px_0_rgba(22,83,204,0.06)] transition-colors hover:border-[#1653cc]/45 hover:bg-[#e8ebfc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1653cc]";
 
 /** Wrapper: horizontal scroll for wide data tables on small viewports. */
 export const securityTableScrollClass = "-mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-x-auto sm:px-0";

@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 :root {
-  /* Typography scale (DESIGN.md) */
-  --text-xs: 0.6875rem;
+  /* Typography scale (DESIGN.md) — floor is 12px (--text-xs) */
+  --text-11: 0.6875rem;  /* intentional 11px only: breadcrumb separators, Stitch-spec overrides */
+  --text-xs: 0.75rem;    /* 12px — minimum body/label text size */
   --text-sm: 0.8125rem;
   --text-base: 0.875rem;
   --text-md: 1rem;
@@ -15,7 +16,12 @@
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
+  --space-5: 20px;
   --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  /* Focus ring — uniform across all interactive controls */
+  --focus-ring: 0 0 0 2px rgba(79, 126, 248, 0.45);
   /* Radius & elevation */
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -146,7 +152,21 @@ select {
 .stitch-admin-scope textarea:focus,
 .stitch-admin-scope select:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgb(22 83 204 / 0.25);
+  box-shadow: var(--focus-ring);
+}
+
+/* Global focus ring — uniform keyboard navigation affordance */
+.stitch-admin-scope *:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Responsive detail rail — collapses to full-width below 1280px */
+@media (max-width: 1280px) {
+  .detail-rail {
+    position: static !important;
+    width: 100% !important;
+  }
 }
 
 @media print {

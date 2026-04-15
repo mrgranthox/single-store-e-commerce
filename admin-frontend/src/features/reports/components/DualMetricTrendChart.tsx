@@ -100,7 +100,7 @@ export const DualMetricTrendChart = ({
           {points[points.length - 1]?.date ?? ""}
         </text>
       </svg>
-      <div className="mt-3 flex flex-wrap gap-4 text-[11px] font-medium text-[#60626c]">
+      <div className="mt-3 flex flex-wrap gap-4 text-xs font-medium text-[#60626c]">
         <span className="flex items-center gap-2">
           <span className="h-2 w-4 rounded-sm bg-[#64748b]" /> Gross revenue
         </span>

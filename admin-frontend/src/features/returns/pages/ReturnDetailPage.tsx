@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
+import { StatusBadge } from "@/components/primitives/StatusBadge";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { WorkspaceStateCard } from "@/components/primitives/WorkspaceStateCard";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -183,10 +184,10 @@ export const ReturnDetailPage = () => {
                   <MaterialIcon name="calendar_today" className="mr-1 text-sm" />
                   Created {formatDateTime(e.requestedAt)}
                 </div>
-                <div className="flex items-center rounded-full border border-[#c3c6d6] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider">
-                  <span className="mr-2 h-1.5 w-1.5 rounded-full bg-[#006b2d]" />
-                  {e.status.replace(/_/g, " ")}
-                </div>
+                <StatusBadge
+                  label={e.status.replace(/_/g, " ")}
+                  tone={e.status === "COMPLETED" ? "success" : e.status === "REJECTED" ? "danger" : "pending"}
+                />
               </div>
             </div>
           </div>
@@ -206,7 +207,7 @@ export const ReturnDetailPage = () => {
                     <p className="text-sm text-[#5b5e68]">{e.customer.email ?? "—"}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] font-bold uppercase text-[#737685]">Account</span>
+                    <span className="text-xs font-bold uppercase text-[#737685]">Account</span>
                     <p className="text-sm font-semibold text-[#006b2d]">{e.customer.guest ? "Guest" : "Registered"}</p>
                   </div>
                 </div>
@@ -219,11 +220,11 @@ export const ReturnDetailPage = () => {
                 <table className="w-full border-collapse text-left">
                   <thead>
                     <tr className="bg-[#f2f3ff]">
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Product</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Variant / SKU</th>
-                      <th className="px-6 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-[#737685]">Qty</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Reason</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Condition</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Product</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Variant / SKU</th>
+                      <th className="px-6 py-3 text-center text-xs font-bold uppercase tracking-wider text-[#737685]">Qty</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Reason</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Condition</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -231,7 +232,7 @@ export const ReturnDetailPage = () => {
                       <tr key={it.id} className="transition-colors hover:bg-[#f2f3ff]">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded border border-slate-100 bg-[#ecedfb] text-[10px] font-bold text-[#1653cc]">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded border border-slate-100 bg-[#ecedfb] text-xs font-bold text-[#1653cc]">
                               {it.productTitle.slice(0, 2).toUpperCase()}
                             </div>
                             <span className="text-sm font-medium">{it.productTitle}</span>
@@ -300,7 +301,7 @@ export const ReturnDetailPage = () => {
                       <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full border-4 border-[#006b2d] bg-white" />
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-sm font-semibold">Return requested</p>
-                        <span className="font-mono text-[10px] text-[#737685]">{formatDateTime(e.requestedAt)}</span>
+                        <span className="font-mono text-xs text-[#737685]">{formatDateTime(e.requestedAt)}</span>
                       </div>
                       <p className="mt-1 text-xs text-[#5b5e68]">Logged when the customer submitted the return.</p>
                     </div>
@@ -310,7 +311,7 @@ export const ReturnDetailPage = () => {
                         <p className={`text-sm font-medium ${e.approvedAt ? "text-[#181b25]" : "text-slate-400"}`}>
                           {e.rejectedAt ? "Rejected" : e.approvedAt ? "Approved" : "Awaiting approval"}
                         </p>
-                        <span className="font-mono text-[10px] text-[#737685]">
+                        <span className="font-mono text-xs text-[#737685]">
                           {e.rejectedAt
                             ? formatDateTime(e.rejectedAt)
                             : e.approvedAt
@@ -351,7 +352,7 @@ export const ReturnDetailPage = () => {
                         </div>
                         <div>
                           <p className={`text-sm font-bold ${active ? "text-[#1653cc]" : ""}`}>{step.label}</p>
-                          <p className="text-[11px] text-[#5b5e68]">{step.sub}</p>
+                          <p className="text-xs text-[#5b5e68]">{step.sub}</p>
                         </div>
                       </div>
                     );

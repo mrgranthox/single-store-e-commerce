@@ -54,7 +54,7 @@ export const PageActionsMenu = ({ items, triggerLabel = "Actions" }: PageActions
           item.kind === "section" ? (
             <div
               key={item.id}
-              className="px-4 pb-1 pt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-muted)]"
+              className="px-4 pb-1 pt-3 text-xs font-bold uppercase tracking-[0.14em] text-[var(--color-text-muted)]"
               role="presentation"
             >
               {item.label}

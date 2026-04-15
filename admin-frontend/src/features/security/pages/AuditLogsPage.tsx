@@ -240,7 +240,7 @@ export const AuditLogsPage = () => {
                   ].map((h) => (
                     <th
                       key={h}
-                      className={`whitespace-nowrap px-3 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685] sm:px-4 ${
+                      className={`whitespace-nowrap px-3 py-3 text-xs font-bold uppercase tracking-wider text-[#737685] sm:px-4 ${
                         h === "Context" || h === "Open" ? "text-right" : ""
                       }`}
                     >
@@ -265,24 +265,24 @@ export const AuditLogsPage = () => {
                         : null;
                     return (
                       <tr key={log.id} className="align-top transition-colors hover:bg-[#faf8ff]/80">
-                        <td className="whitespace-nowrap px-3 py-3 font-mono text-[11px] text-[#5b5e68] sm:px-4">
+                        <td className="whitespace-nowrap px-3 py-3 font-mono text-xs text-[#5b5e68] sm:px-4">
                           {formatAdminDateTimeLong(log.createdAt)}
                         </td>
                         <td className="max-w-[140px] px-3 py-3 text-xs font-semibold text-[#181b25] sm:max-w-[180px] sm:px-4">
                           <span className="break-words">{actorAdminEmail(log.actorAdmin)}</span>
                         </td>
                         <td className="px-3 py-3 sm:px-4">
-                          <span className="inline-flex rounded border border-[#1653cc]/20 px-2 py-0.5 text-[10px] font-bold text-[#1653cc]">
+                          <span className="inline-flex rounded border border-[#1653cc]/20 px-2 py-0.5 text-xs font-bold text-[#1653cc]">
                             {humanizeEnumLabel(log.actorType)}
                           </span>
                         </td>
                         <td className="max-w-[200px] break-words px-3 py-3 text-xs font-bold text-[#181b25] sm:px-4">
                           {log.actionCode}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-3 text-[11px] font-medium text-[#5b5e68] sm:px-4">
+                        <td className="whitespace-nowrap px-3 py-3 text-xs font-medium text-[#5b5e68] sm:px-4">
                           {log.entityType}
                         </td>
-                        <td className="max-w-[160px] px-3 py-3 font-mono text-[11px] sm:max-w-[200px] sm:px-4">
+                        <td className="max-w-[160px] px-3 py-3 font-mono text-xs sm:max-w-[200px] sm:px-4">
                           {log.entityId.trim() && filterHref ? (
                             <Link className={stitchVisibleLinkClass} title={log.entityId} to={filterHref}>
                               <span className="truncate">{log.entityId.length > 14 ? `${log.entityId.slice(0, 14)}…` : log.entityId}</span>
@@ -292,7 +292,7 @@ export const AuditLogsPage = () => {
                             "—"
                           )}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-3 font-mono text-[11px] text-[#60626c] sm:px-4">
+                        <td className="whitespace-nowrap px-3 py-3 font-mono text-xs text-[#60626c] sm:px-4">
                           {pickIpFromMetadata(log.metadata) ?? "—"}
                         </td>
                         <td className="px-3 py-3 text-center text-xs text-[#181b25] sm:px-4">

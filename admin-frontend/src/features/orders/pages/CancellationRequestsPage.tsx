@@ -319,7 +319,7 @@ export const CancellationRequestsPage = () => {
                     ].map((col) => (
                       <th
                         key={col}
-                        className={`px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500 ${
+                        className={`px-6 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 ${
                           col === "Actions" ? "text-right" : ""
                         }`}
                       >
@@ -350,7 +350,7 @@ export const CancellationRequestsPage = () => {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-2">
-                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-500">
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-500">
                                 {initialsFromCustomer(row)}
                               </div>
                               <span className="text-xs font-semibold text-slate-900">{displayCustomerName(row)}</span>
@@ -364,7 +364,7 @@ export const CancellationRequestsPage = () => {
                           </td>
                           <td className="px-6 py-4">
                             <span
-                              className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold ${os.wrap}`}
+                              className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold ${os.wrap}`}
                             >
                               <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${os.dot}`} />
                               {os.label}
@@ -372,12 +372,12 @@ export const CancellationRequestsPage = () => {
                           </td>
                           <td className="px-6 py-4">
                             <span
-                              className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold ${rs.wrap}`}
+                              className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-bold ${rs.wrap}`}
                             >
                               {rs.label}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-[11px] text-slate-400">{formatWhenTable(row.createdAt)}</td>
+                          <td className="px-6 py-4 text-xs text-slate-400">{formatWhenTable(row.createdAt)}</td>
                           <td className="px-6 py-4 text-right">
                             {pending ? (
                               <div className="flex justify-end gap-1 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
@@ -407,7 +407,7 @@ export const CancellationRequestsPage = () => {
                                 </button>
                               </div>
                             ) : (
-                              <span className="text-[11px] text-slate-400">
+                              <span className="text-xs text-slate-400">
                                 {row.resolvedAt ? formatWhenTable(row.resolvedAt) : "—"}
                               </span>
                             )}
@@ -421,7 +421,7 @@ export const CancellationRequestsPage = () => {
             </div>
             {meta ? (
               <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/50 px-6 py-4">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
                   {meta.totalItems === 0
                     ? "No requests"
                     : `Showing ${startRow}-${endRow} of ${meta.totalItems} total requests`}
@@ -452,34 +452,34 @@ export const CancellationRequestsPage = () => {
             <div className="relative flex min-h-[140px] flex-col justify-between overflow-hidden rounded-xl bg-white p-6 shadow-sm">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
               <div>
-                <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Avg response time</p>
+                <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">Avg response time</p>
                 <p className="font-headline text-3xl font-bold text-slate-900">{avgLabel}</p>
               </div>
               <div className="flex items-center gap-1 self-end text-[#006b2d]">
                 <MaterialIcon name="trending_down" className="text-xs" />
-                <span className="text-[10px] font-bold uppercase tracking-wider">Rolling 200 resolves</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Rolling 200 resolves</span>
               </div>
             </div>
             <div className="relative flex min-h-[140px] flex-col justify-between overflow-hidden rounded-xl bg-white p-6 shadow-sm">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#ba1a1a]" />
               <div>
-                <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Fulfillment locked</p>
+                <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">Fulfillment locked</p>
                 <p className="font-headline text-3xl font-bold text-slate-900">{locked}</p>
               </div>
               <div className="flex items-center gap-1 self-end text-[#ba1a1a]">
                 <MaterialIcon name="priority_high" className="text-xs" />
-                <span className="text-[10px] font-bold uppercase tracking-wider">Action required</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Action required</span>
               </div>
             </div>
             <div className="relative flex min-h-[140px] flex-col justify-between overflow-hidden rounded-xl bg-white p-6 shadow-sm">
               <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#006b2d]" />
               <div>
-                <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">Resolved today</p>
+                <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-500">Resolved today</p>
                 <p className="font-headline text-3xl font-bold text-slate-900">{stats?.resolvedToday ?? 0}</p>
               </div>
               <div className="flex items-center gap-1 self-end text-[#006b2d]">
                 <MaterialIcon name="trending_up" className="text-xs" />
-                <span className="text-[10px] font-bold uppercase tracking-wider">{successLabel}</span>
+                <span className="text-xs font-bold uppercase tracking-wider">{successLabel}</span>
               </div>
             </div>
           </div>
@@ -498,6 +498,11 @@ export const CancellationRequestsPage = () => {
               {resolveTarget.action === "approve" ? "Approve cancellation" : "Reject cancellation"}
             </h2>
             <p className="mt-1 text-xs text-slate-500">Optional note stored on the resolution record.</p>
+            {resolveTarget.action === "reject" ? (
+              <div className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-medium text-rose-800">
+                Rejection notifies the customer and blocks auto-cancellation for this order.
+              </div>
+            ) : null}
             <textarea
               value={resolveNote}
               onChange={(e) => setResolveNote(e.target.value)}

@@ -52,7 +52,7 @@ export const PageHeader = ({
       <div className="max-w-3xl">
         {crumbs.length > 0 ? (
           <nav
-            className="mb-2 flex flex-wrap items-center text-[10px] font-semibold uppercase tracking-widest text-[#737685]"
+            className="mb-2 flex flex-wrap items-center text-xs font-semibold uppercase tracking-widest text-[#737685]"
             aria-label="Breadcrumb"
           >
             {crumbs.map((c, i) => (
@@ -70,7 +70,7 @@ export const PageHeader = ({
           </nav>
         ) : null}
         {eyebrow ? (
-          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">{eyebrow}</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{eyebrow}</div>
         ) : null}
         <h1
           className={

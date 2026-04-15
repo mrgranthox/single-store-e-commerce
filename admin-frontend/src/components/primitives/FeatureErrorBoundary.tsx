@@ -46,7 +46,7 @@ const CardErrorFallback = ({
     className="flex flex-col items-start gap-4 rounded-2xl border border-red-200 bg-red-50 p-6"
   >
     <div>
-      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-red-400">Error</p>
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-red-400">Error</p>
       <h2 className="mt-1 text-lg font-bold text-red-900">{feature} failed to load</h2>
       <p className="mt-1 text-sm text-red-700">
         This section encountered an unexpected error. Your data is safe — try reloading.

@@ -30,7 +30,7 @@ const refundStatusStitch = (state: string) => {
         : "bg-amber-500";
   const label = state.replace(/_/g, " ");
   return (
-    <span className={`inline-flex items-center text-[10px] font-bold uppercase tracking-tight text-slate-700`}>
+    <span className={`inline-flex items-center text-xs font-bold uppercase tracking-tight text-slate-700`}>
       <span className={`mr-2 h-1.5 w-1.5 rounded-full ${dot}`} />
       {label}
     </span>
@@ -130,7 +130,7 @@ export const PaymentDetailPage = () => {
         <>
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <nav className="mb-2 flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <nav className="mb-2 flex items-center text-xs font-bold uppercase tracking-widest text-slate-500">
                 <Link className="transition-colors hover:text-[#1653cc]" to="/admin/payments">
                   Payments
                 </Link>
@@ -167,7 +167,7 @@ export const PaymentDetailPage = () => {
                       <MaterialIcon name={summaryIcon} className="text-3xl" />
                     </div>
                     <div>
-                      <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Amount</p>
+                      <p className="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500">Total Amount</p>
                       <h2 className="font-headline text-3xl font-bold text-slate-900">
                         {formatMoney(entity.amountCents, entity.currency)}{" "}
                         <span className="text-lg font-medium text-slate-400">{entity.currency.toUpperCase()}</span>
@@ -180,21 +180,21 @@ export const PaymentDetailPage = () => {
                 </div>
                 <div className="grid grid-cols-1 gap-6 border-t border-slate-50 pt-6 sm:grid-cols-3">
                   <div>
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">Provider</p>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Provider</p>
                     <div className="flex items-center">
                       <MaterialIcon name="account_balance" className="mr-2 text-slate-400" />
                       <span className="text-sm font-semibold">{formatPaymentGatewayLabel(entity.provider)}</span>
                     </div>
                   </div>
                   <div>
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">Method</p>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Method</p>
                     <div className="flex items-center">
                       <MaterialIcon name="credit_card" className="mr-2 text-slate-400" />
                       <span className="text-sm font-semibold">{methodLine}</span>
                     </div>
                   </div>
                   <div>
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">Reference #</p>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-500">Reference #</p>
                     <span className="rounded bg-slate-100 px-2 py-1 font-mono text-xs text-slate-700">
                       {entity.providerPaymentRef?.trim() || "—"}
                     </span>
@@ -204,7 +204,7 @@ export const PaymentDetailPage = () => {
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="rounded-lg border-l-4 border-[#1653cc] bg-white p-5 shadow-sm">
-                  <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Order Context</p>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">Order Context</p>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-slate-500">Order ID</span>
@@ -228,7 +228,7 @@ export const PaymentDetailPage = () => {
                   </div>
                 </div>
                 <div className="rounded-lg bg-white p-5 shadow-sm">
-                  <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Customer Profile</p>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">Customer Profile</p>
                   <div className="flex items-center">
                     <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700">
                       {customerInitials(entity.customer.name, entity.customer.email)}
@@ -237,7 +237,7 @@ export const PaymentDetailPage = () => {
                       <p className="text-sm font-bold">
                         {entity.customer.name ?? entity.customer.email ?? (entity.customer.guest ? "Guest" : "—")}
                       </p>
-                      <p className="text-[10px] text-slate-500">{entity.customer.email ?? "—"}</p>
+                      <p className="text-xs text-slate-500">{entity.customer.email ?? "—"}</p>
                     </div>
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export const PaymentDetailPage = () => {
               <div className="overflow-hidden rounded-lg bg-white shadow-sm">
                 <div className="flex items-center justify-between border-b border-slate-50 px-6 py-4">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Refund History</h3>
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600">
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-600">
                     {refundRows.length} {refundRows.length === 1 ? "Entry" : "Entries"}
                   </span>
                 </div>
@@ -256,7 +256,7 @@ export const PaymentDetailPage = () => {
                       {(["Refund #", "Amount", "Date", "Status"] as const).map((h) => (
                         <th
                           key={h}
-                          className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400"
+                          className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-400"
                         >
                           {h}
                         </th>
@@ -329,7 +329,7 @@ export const PaymentDetailPage = () => {
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="text-xs font-bold">{e.title}</p>
-                          <p className="text-[10px] text-slate-400">{e.when}</p>
+                          <p className="text-xs text-slate-400">{e.when}</p>
                         </div>
                       </div>
                     ))
@@ -337,7 +337,7 @@ export const PaymentDetailPage = () => {
                 </div>
                 <Link
                   to={`/admin/payments/${paymentId}/transactions`}
-                  className="mt-4 inline-block text-[10px] font-bold uppercase tracking-widest text-[#1653cc] hover:underline"
+                  className="mt-4 inline-block text-xs font-bold uppercase tracking-widest text-[#1653cc] hover:underline"
                 >
                   Full transaction ledger →
                 </Link>
@@ -347,10 +347,10 @@ export const PaymentDetailPage = () => {
                 <div className="pointer-events-none absolute -right-4 -top-4 opacity-10">
                   <MaterialIcon name="account_balance" className="text-8xl text-white" />
                 </div>
-                <h3 className="mb-6 text-[10px] font-bold uppercase tracking-wider text-slate-400">Provider Metadata</h3>
+                <h3 className="mb-6 text-xs font-bold uppercase tracking-wider text-slate-400">Provider Metadata</h3>
                 <div className="space-y-4">
                   <div>
-                    <p className="mb-1 text-[10px] uppercase tracking-widest text-slate-500">Paystack reference</p>
+                    <p className="mb-1 text-xs uppercase tracking-widest text-slate-500">Paystack reference</p>
                     <p className="break-all font-mono text-xs text-blue-300">
                       {entity.providerPaymentRef?.trim() || "—"}
                     </p>
@@ -361,11 +361,11 @@ export const PaymentDetailPage = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-slate-400">Idempotency</span>
-                    <span className="break-all font-mono text-[10px] font-bold text-slate-200">{entity.idempotencyKey}</span>
+                    <span className="break-all font-mono text-xs font-bold text-slate-200">{entity.idempotencyKey}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-slate-400">Internal id</span>
-                    <span className="break-all font-mono text-[10px] text-slate-300">{entity.id}</span>
+                    <span className="break-all font-mono text-xs text-slate-300">{entity.id}</span>
                   </div>
                 </div>
               </div>

@@ -158,12 +158,12 @@ export const BrandsListPage = () => {
       </div>
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-[#181b25]">{b.name}</p>
-        <p className="text-[11px] text-slate-400">—</p>
+        <p className="text-xs text-slate-400">—</p>
       </div>
     </div>,
     <span
       key={`s-${b.id}`}
-      className="inline-block rounded bg-slate-50 px-2 py-1 font-mono text-[11px] text-slate-500"
+      className="inline-block rounded bg-slate-50 px-2 py-1 font-mono text-xs text-slate-500"
     >
       {b.slug}
     </span>,

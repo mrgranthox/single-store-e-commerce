@@ -199,7 +199,7 @@ export const PromotionRuleFormPanel = ({
             <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{localError}</div>
           ) : null}
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Rule type</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Rule type</span>
             <input
               list="promotion-rule-type-suggestions"
               value={ruleType}
@@ -214,7 +214,7 @@ export const PromotionRuleFormPanel = ({
             </datalist>
           </label>
           <label className="block">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">
               Minimum order (optional, store currency)
             </span>
             <input
@@ -226,13 +226,13 @@ export const PromotionRuleFormPanel = ({
             />
           </label>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Who or what this rule applies to</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Who or what this rule applies to</span>
             <p className="mt-1 text-xs text-[#737685]">
               Add one row per field the storefront expects (for example product IDs, category IDs, or segment codes). For lists
               or nested data, paste structured text in the value column (JSON is accepted).
             </p>
             <div className="mt-3 space-y-2 rounded-xl border border-[#e5e7eb] bg-[#f8f9fb] p-3">
-              <div className="grid grid-cols-[1fr_1.2fr_auto] gap-2 text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+              <div className="grid grid-cols-[1fr_1.2fr_auto] gap-2 text-xs font-bold uppercase tracking-wider text-[#737685]">
                 <span>Field name</span>
                 <span>Value</span>
                 <span className="w-8 text-center" aria-hidden />

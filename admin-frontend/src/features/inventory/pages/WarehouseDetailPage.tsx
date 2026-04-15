@@ -233,18 +233,18 @@ export const WarehouseDetailPage = () => {
             <section className="rounded-xl border-l-4 border-[#1653cc] bg-white p-6 shadow-card ring-1 ring-slate-200">
               <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Facility code</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Facility code</p>
                   <p className="mt-1 font-mono text-sm font-semibold">{e.code}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Status</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Status</p>
                   <div className="mt-1 flex items-center gap-2 text-sm font-medium">
                     <span className={`h-1.5 w-1.5 rounded-full ${opStatusLabel(e.operationalStatus).dot}`} />
                     {opStatusLabel(e.operationalStatus).label}
                   </div>
                 </div>
                 <div className="col-span-2">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Location</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Location</p>
                   <p className="mt-1 text-sm text-slate-600">
                     {e.locationLabel?.trim() ? e.locationLabel : "No address in warehouse metadata."}
                   </p>
@@ -257,7 +257,7 @@ export const WarehouseDetailPage = () => {
                   ) : null}
                 </div>
                 <div className="col-span-4">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Last updated</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Last updated</p>
                   <p className="mt-1 text-sm text-slate-600">
                     {new Intl.DateTimeFormat(undefined, { dateStyle: "full", timeStyle: "short" }).format(
                       new Date(e.updatedAt)
@@ -325,22 +325,22 @@ export const WarehouseDetailPage = () => {
           <div className="col-span-12 space-y-6 lg:col-span-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total SKUs</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Total SKUs</p>
                 <p className="mt-1 font-headline text-2xl font-bold">{summary.inventoryItemCount}</p>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total units</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Total units</p>
                 <p className="mt-1 font-headline text-2xl font-bold">{summary.totals.onHand.toLocaleString()}</p>
               </div>
               <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Reserved</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Reserved</p>
                 <p className="mt-1 font-headline text-2xl font-bold">{summary.totals.reserved.toLocaleString()}</p>
-                <p className="mt-2 text-[10px] font-medium text-slate-500">Locked in orders</p>
+                <p className="mt-2 text-xs font-medium text-slate-500">Locked in orders</p>
               </div>
               <div className="rounded-xl border border-red-200 bg-red-50/50 p-5 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-red-700">Low stock</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-red-700">Low stock</p>
                 <p className="mt-1 font-headline text-2xl font-bold text-red-700">{summary.lowStockCount}</p>
-                <p className="mt-2 flex items-center gap-1 text-[10px] font-bold text-red-700">
+                <p className="mt-2 flex items-center gap-1 text-xs font-bold text-red-700">
                   Action required
                 </p>
               </div>

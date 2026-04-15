@@ -81,12 +81,12 @@ export const CustomerSupportPage = () => {
                 <table className="w-full text-left">
                   <thead>
                     <tr className="bg-[#ecedfb]/50">
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Ticket</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Subject</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Priority</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Updated</th>
-                      <th className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Order</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Ticket</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Subject</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Status</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Priority</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Updated</th>
+                      <th className="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">Order</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#c3c6d6]/10">

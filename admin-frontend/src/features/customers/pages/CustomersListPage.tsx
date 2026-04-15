@@ -221,31 +221,31 @@ export const CustomersListPage = () => {
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="flex items-center gap-4 rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-sm">
           <div className="flex flex-col">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Matching accounts</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Matching accounts</span>
             <span className="font-headline text-2xl font-bold">{totalMatching}</span>
-            <span className="text-[10px] text-slate-400">All filters applied</span>
+            <span className="text-xs text-slate-400">All filters applied</span>
           </div>
         </div>
         <div className="flex items-center gap-4 rounded-xl border-l-4 border-[#006b2d] bg-white p-4 shadow-sm">
           <div className="flex flex-col">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Active</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Active</span>
             <span className="font-headline text-2xl font-bold">{activeMatching}</span>
           </div>
         </div>
         <div className="flex items-center gap-4 rounded-xl border-l-4 border-[#ba1a1a] bg-white p-4 shadow-sm">
           <div className="flex flex-col">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Restricted</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Restricted</span>
             <span className="font-headline text-2xl font-bold">{restrictedMatching}</span>
           </div>
         </div>
         <div className="flex items-center gap-4 rounded-xl border-l-4 border-[#3b6de6] bg-white p-4 shadow-sm">
           <div className="flex flex-col">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">Pending verification</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Pending verification</span>
             <span className="font-headline text-2xl font-bold">{pendingMatching}</span>
           </div>
         </div>
       </div>
-      <p className="text-[10px] font-medium uppercase tracking-wider text-slate-400">
+      <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
         KPI strip reflects every account that matches the current filters (not just this page).
       </p>
 
@@ -378,15 +378,15 @@ export const CustomersListPage = () => {
               <table className="w-full border-collapse text-left">
                 <thead>
                   <tr className="bg-[#f2f3ff]">
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Customer</th>
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Contact</th>
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</th>
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Orders</th>
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Open tickets</th>
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Reviews</th>
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Joined</th>
-                    <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Updated</th>
-                    <th className="px-4 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Customer</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Contact</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Status</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Orders</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Open tickets</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Reviews</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Joined</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-widest text-slate-500">Updated</th>
+                    <th className="px-4 py-4 text-right text-xs font-bold uppercase tracking-widest text-slate-500">
                       Actions
                     </th>
                   </tr>
@@ -400,7 +400,7 @@ export const CustomersListPage = () => {
                     >
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#b4c5ff] text-[11px] font-bold text-[#003ea7]">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#b4c5ff] text-xs font-bold text-[#003ea7]">
                             {listInitials(c)}
                           </div>
                           <div className="min-w-0">
@@ -411,7 +411,7 @@ export const CustomersListPage = () => {
                             >
                               {displayCustomerName(c)}
                             </Link>
-                            <span className="font-mono text-[10px] text-slate-400">{c.id.slice(0, 8)}…</span>
+                            <span className="font-mono text-xs text-slate-400">{c.id.slice(0, 8)}…</span>
                           </div>
                         </div>
                       </td>

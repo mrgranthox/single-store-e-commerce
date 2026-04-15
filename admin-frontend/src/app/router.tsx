@@ -32,7 +32,7 @@ const RouterErrorPage = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f8f9fb] p-6">
       <div className="w-full max-w-lg rounded-2xl border border-[#e0e2f0] bg-white p-8 shadow-sm">
-        <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#737685]">Admin workspace</p>
+        <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#737685]">Admin workspace</p>
         <h1 className="mt-2 font-headline text-2xl font-bold tracking-tight text-[#181b25]">
           Something interrupted this screen
         </h1>

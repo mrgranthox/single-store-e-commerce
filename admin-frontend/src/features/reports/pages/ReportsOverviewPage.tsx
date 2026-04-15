@@ -170,7 +170,7 @@ export const ReportsOverviewPage = () => {
                     <Icon className="h-6 w-6" aria-hidden />
                   </div>
                   {card.disabled ? (
-                    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-slate-500">
                       Soon
                     </span>
                   ) : null}

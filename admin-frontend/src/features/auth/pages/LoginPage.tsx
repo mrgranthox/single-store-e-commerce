@@ -102,7 +102,7 @@ export const LoginPage = () => {
         <span
           className={`h-1.5 w-1.5 rounded-full ${frontendEnv.isDev ? "bg-amber-500" : "bg-[#006b2d]"}`}
         />
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-[#434654]">
+        <span className="font-mono text-xs font-semibold uppercase tracking-widest text-[#434654]">
           {envLabel}
         </span>
       </div>
@@ -116,7 +116,7 @@ export const LoginPage = () => {
       <form className="space-y-6" onSubmit={onFormSubmit} noValidate>
         <div className="space-y-2">
           <label
-            className="ml-1 text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500"
+            className="ml-1 text-xs font-bold uppercase tracking-wider text-slate-500"
             htmlFor="admin-login-email"
           >
             Email Address
@@ -151,14 +151,14 @@ export const LoginPage = () => {
         <div className="space-y-2">
           <div className="ml-1 flex items-end justify-between gap-2">
             <label
-              className="text-[0.6875rem] font-bold uppercase tracking-wider text-slate-500"
+              className="text-xs font-bold uppercase tracking-wider text-slate-500"
               htmlFor="admin-login-password"
             >
               Security key
             </label>
             <Link
               to="/admin/forgot-password"
-              className="text-[11px] font-semibold text-[var(--color-primary)] hover:underline"
+              className="text-xs font-semibold text-[var(--color-primary)] hover:underline"
             >
               Forgot password?
             </Link>

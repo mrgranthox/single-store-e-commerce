@@ -35,7 +35,7 @@ export const BannerLinkSelect = ({
         </option>
       ))}
     </select>
-    {hint ? <span className="mt-1 block text-[11px] font-normal text-[#737685]">{hint}</span> : null}
-    {loading ? <span className="mt-1 block text-[11px] font-normal text-[#737685]/80">Loading banners…</span> : null}
+    {hint ? <span className="mt-1 block text-xs font-normal text-[#737685]">{hint}</span> : null}
+    {loading ? <span className="mt-1 block text-xs font-normal text-[#737685]/80">Loading banners…</span> : null}
   </label>
 );

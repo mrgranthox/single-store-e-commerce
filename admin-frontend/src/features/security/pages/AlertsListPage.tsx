@@ -257,10 +257,10 @@ export const AlertsListPage = () => {
       <div className="rounded-sm border border-[#e5e7eb] border-l-4 border-l-[#1653cc] bg-white p-5 shadow-[0px_8px_24px_rgba(24,27,37,0.06)] sm:p-6">
         <div className="flex flex-col gap-3 border-b border-[#f1f3f9] pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-[0.6875rem] font-bold uppercase tracking-widest text-[#737685]">Bulk operations</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#737685]">Bulk operations</h2>
             <p className="mt-1 text-sm text-[#5b5e68]">Runs on every alert selected on this page. Adds an optional note to the audit trail.</p>
           </div>
-          <span className="inline-flex w-fit items-center rounded-full border border-[#1653cc]/20 bg-[#f4f6ff] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#0f3d99]">
+          <span className="inline-flex w-fit items-center rounded-full border border-[#1653cc]/20 bg-[#f4f6ff] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#0f3d99]">
             {selected.size} selected
           </span>
         </div>
@@ -310,7 +310,7 @@ export const AlertsListPage = () => {
         {bulkErr ? <p className="mt-3 text-sm font-medium text-red-700">{bulkErr}</p> : null}
       </div>
 
-      <p className="text-[10px] font-medium uppercase tracking-wider text-[#737685]">
+      <p className="text-xs font-medium uppercase tracking-wider text-[#737685]">
         Severity tiles reflect open / acknowledged / assigned alerts studio-wide (security dashboard). Table respects filters below.
       </p>
 

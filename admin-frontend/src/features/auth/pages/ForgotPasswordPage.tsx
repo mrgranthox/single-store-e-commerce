@@ -78,7 +78,7 @@ export const ForgotPasswordPage = () => {
         <form className="space-y-6" onSubmit={onFormSubmit} noValidate>
           <div className="space-y-2">
             <label
-              className="text-[0.6875rem] font-semibold uppercase tracking-widest text-slate-500"
+              className="text-xs font-semibold uppercase tracking-widest text-slate-500"
               htmlFor="admin-forgot-email"
             >
               Email Address

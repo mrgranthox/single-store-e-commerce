@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 
+import { ActionSafetyGate } from "@/components/primitives/ActionSafetyGate";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { CustomerWorkspaceNav } from "@/components/stitch/CustomerWorkspaceNav";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
@@ -203,7 +204,7 @@ export const CustomerActionsPage = () => {
             <StatusBadge label={entity.status.replace(/_/g, " ")} tone={userStatusTone(entity.status)} />
             <span className="text-sm text-slate-600">{entity.email ?? "No email on file"}</span>
           </div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+          <div className="text-xs font-bold uppercase tracking-widest text-slate-400">
             Use documented reasons — actions are audited
           </div>
         </div>
@@ -241,17 +242,15 @@ export const CustomerActionsPage = () => {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <h3 className="font-headline text-lg font-semibold text-[#181b25]">Suspend account</h3>
-              <button
-                type="button"
-                disabled={suspendM.isPending || !reason.trim() || !canSuspend}
-                onClick={() => {
-                  setMsg(null);
-                  suspendM.mutate();
-                }}
-                className="rounded-sm bg-[#ba1a1a] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white hover:opacity-90 disabled:opacity-50"
-              >
-                Suspend
-              </button>
+              <ActionSafetyGate
+                label="Suspend account"
+                title="Suspend this customer account?"
+                body="This will block checkout and sign-in until the account is restored."
+                impactSummary="The customer will be immediately locked out."
+                onConfirm={() => { setMsg(null); suspendM.mutate(); }}
+                pending={suspendM.isPending}
+                blocked={!reason.trim() || !canSuspend}
+              />
             </div>
             <p className="mt-2 text-sm text-slate-600">Blocks checkout and sign-in until restored.</p>
             {!canSuspend ? <p className="mt-2 text-xs italic text-slate-500">Not available for this status.</p> : null}

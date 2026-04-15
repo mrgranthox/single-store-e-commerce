@@ -182,15 +182,15 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
           <div className="flex flex-wrap gap-4 rounded-xl border border-[#c3c6d6]/10 bg-white p-4 shadow-sm md:max-w-none md:shrink-0">
             <div className="flex items-center gap-2 border-r border-[#c3c6d6]/30 pr-4">
               <span className="h-3 w-3 rounded-full bg-[#ba1a1a]" />
-              <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#181b25]">Breached SLA</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#181b25]">Breached SLA</span>
             </div>
             <div className="flex items-center gap-2 border-r border-[#c3c6d6]/30 pr-4">
               <span className="h-3 w-3 rounded-full bg-amber-500" />
-              <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#181b25]">&lt;1h Remaining</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#181b25]">&lt;1h Remaining</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="h-3 w-3 rounded-full bg-[#006b2d]" />
-              <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#181b25]">On Track</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#181b25]">On Track</span>
             </div>
           </div>
         </div>
@@ -228,7 +228,7 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
                     ].map((h) => (
                       <th
                         key={h}
-                        className={`px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-[#60626c] ${
+                        className={`px-6 py-4 text-xs font-bold uppercase tracking-[0.05em] text-[#60626c] ${
                           h === "Priority" ? "text-center" : ""
                         } ${h === "Actions" ? "text-right" : ""}`}
                       >
@@ -253,7 +253,7 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
               </table>
             </div>
             <div className="flex items-center justify-between border-t border-[#c3c6d6]/10 px-6 py-4">
-              <p className="text-[11px] font-medium uppercase tracking-wider text-[#5b5e68]">
+              <p className="text-xs font-medium uppercase tracking-wider text-[#5b5e68]">
                 Showing {slaItems.length} ticket{slaItems.length === 1 ? "" : "s"} needing attention
               </p>
             </div>
@@ -426,7 +426,7 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
               <Filter className="h-4 w-4 text-[#1653cc]" aria-hidden />
               Sort: <span className="font-semibold text-[#1653cc]">Newest activity</span>
             </span>
-            <span className="text-[10px] text-[#60626c]">Guests on this page: {guestOnPage}</span>
+            <span className="text-xs text-[#60626c]">Guests on this page: {guestOnPage}</span>
           </div>
         </StitchFilterPanel>
 
@@ -454,7 +454,7 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
                       ].map((h) => (
                         <th
                           key={h}
-                          className={`px-6 py-4 text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-[#737685] ${
+                          className={`px-6 py-4 text-xs font-bold uppercase tracking-[0.05em] text-[#737685] ${
                             h === "Actions" ? "text-right" : ""
                           }`}
                         >
@@ -701,7 +701,7 @@ export const SupportQueuePage = ({ mode }: { mode: SupportQueueMode }) => {
                       (h) => (
                         <th
                           key={h}
-                          className={`px-4 py-4 text-[0.6875rem] font-bold uppercase tracking-wider text-[#737685] ${
+                          className={`px-4 py-4 text-xs font-bold uppercase tracking-wider text-[#737685] ${
                             h === "Priority" || h === "Status" ? "text-center" : ""
                           } ${h === "Ticket #" ? "pl-6" : ""} ${h === "Actions" ? "pr-6 text-right" : ""}`}
                         >
@@ -778,9 +778,9 @@ const KpiCard = ({
   return (
     <div className={`relative overflow-hidden rounded-xl border-l-4 ${b} bg-white p-6 shadow-sm`}>
       <div className="flex h-full flex-col justify-between">
-        <span className="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-[#737685]">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.05em] text-[#737685]">{label}</span>
         <h3 className="mt-2 font-mono text-2xl font-bold text-[#181b25]">{value}</h3>
-        {sub ? <p className="mt-1 text-[10px] text-[#60626c]">{sub}</p> : null}
+        {sub ? <p className="mt-1 text-xs text-[#60626c]">{sub}</p> : null}
       </div>
     </div>
   );
@@ -811,7 +811,7 @@ const SlaQueueRow = memo(({ t, index }: { t: SupportTicketListItem; index: numbe
     <td className="px-6 py-3 text-sm text-[#5b5e68]">{t.customer.name ?? t.customer.email ?? "—"}</td>
     <td className="px-6 py-3 text-center">
       <span
-        className={`rounded-sm px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-tighter ${priorityChipClass(t.priority)}`}
+        className={`rounded-sm px-2 py-0.5 text-xs font-extrabold uppercase tracking-tighter ${priorityChipClass(t.priority)}`}
       >
         {t.priority}
       </span>
@@ -819,14 +819,14 @@ const SlaQueueRow = memo(({ t, index }: { t: SupportTicketListItem; index: numbe
     <td className="px-6 py-3">
       <div className="flex items-center gap-1.5">
         <span className={`h-1.5 w-1.5 rounded-full ${statusDotClass(t.status)}`} />
-        <span className="text-[11px] font-semibold text-[#181b25]">{t.status.replace(/_/g, " ")}</span>
+        <span className="text-xs font-semibold text-[#181b25]">{t.status.replace(/_/g, " ")}</span>
       </div>
     </td>
     <td className="px-6 py-3">
       {t.assignee ? (
         <span className="text-xs font-medium text-[#434654]">{t.assignee.email ?? "Assigned"}</span>
       ) : (
-        <span className="rounded border border-amber-200 bg-amber-100 px-2 py-1 text-[10px] font-bold text-amber-800">
+        <span className="rounded border border-amber-200 bg-amber-100 px-2 py-1 text-xs font-bold text-amber-800">
           Unassigned
         </span>
       )}
@@ -858,14 +858,14 @@ const PrePurchaseRow = memo(({ t }: { t: SupportTicketListItem }) => {
       </td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1653cc]/10 text-[10px] font-bold text-[#1653cc]">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1653cc]/10 text-xs font-bold text-[#1653cc]">
             {guest ? <span className="text-[#737685]">?</span> : initials}
           </div>
           <div className="min-w-0 flex flex-col">
             <span className="truncate text-sm font-semibold text-[#181b25]">
               {guest ? `Guest — ${t.customer.email ?? "unknown"}` : (t.customer.name ?? t.customer.email ?? "—")}
             </span>
-            <span className="text-[10px] text-[#5b5e68]">
+            <span className="text-xs text-[#5b5e68]">
               {guest ? "No account associated" : (t.customer.email ?? "")}
             </span>
           </div>
@@ -886,7 +886,7 @@ const PrePurchaseRow = memo(({ t }: { t: SupportTicketListItem }) => {
       <td className="px-6 py-4">
         <div className="flex items-center gap-2">
           <span className={`h-1.5 w-1.5 rounded-full ${statusDotClass(t.status)}`} />
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#1653cc]">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1653cc]">
             {t.status.replace(/_/g, " ")}
           </span>
         </div>
@@ -915,17 +915,17 @@ const ComplaintRow = memo(({ t }: { t: SupportTicketListItem }) => {
       </td>
       <td className="px-4 py-2 text-sm font-medium text-[#181b25]">{t.customer.name ?? t.customer.email ?? "—"}</td>
       <td className="px-4 py-2">
-        <span className="flex w-fit items-center rounded border border-[#ba1a1a]/30 bg-[#ffdad6]/30 px-2 py-0.5 text-[10px] font-bold text-[#ba1a1a]">
+        <span className="flex w-fit items-center rounded border border-[#ba1a1a]/30 bg-[#ffdad6]/30 px-2 py-0.5 text-xs font-bold text-[#ba1a1a]">
           <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-[#ba1a1a]" />
           {humanizeSupportType(t.supportType)}
         </span>
       </td>
       <td className="px-4 py-2 font-mono text-[0.75rem] text-[#737685]">{t.order?.orderNumber ?? "—"}</td>
       <td className="px-4 py-2 text-center">
-        <span className="text-[10px] font-bold uppercase tracking-tighter text-[#ba1a1a]">{t.priority}</span>
+        <span className="text-xs font-bold uppercase tracking-tighter text-[#ba1a1a]">{t.priority}</span>
       </td>
       <td className="px-4 py-2 text-center">
-        <span className="rounded-full border border-[#c3c6d6] px-2 py-0.5 text-[10px] font-bold text-[#737685]">
+        <span className="rounded-full border border-[#c3c6d6] px-2 py-0.5 text-xs font-bold text-[#737685]">
           {t.status.replace(/_/g, " ")}
         </span>
       </td>

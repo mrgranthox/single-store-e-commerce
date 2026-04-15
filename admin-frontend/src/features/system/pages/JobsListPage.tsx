@@ -196,7 +196,7 @@ export const JobsListPage = () => {
       </div>
 
       <StitchFilterPanel className="mb-0 flex flex-wrap items-end gap-4">
-        <label className="flex min-w-[200px] flex-1 flex-col gap-1 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
+        <label className="flex min-w-[200px] flex-1 flex-col gap-1 text-xs font-bold uppercase tracking-wider text-[#737685]">
           Filter by job name
           <input
             value={filters.job_name}
@@ -206,7 +206,7 @@ export const JobsListPage = () => {
           />
         </label>
         <label className="flex w-48 flex-col gap-1">
-          <StitchFieldLabel className="mb-0 text-[11px]">Status</StitchFieldLabel>
+          <StitchFieldLabel className="mb-0 text-xs">Status</StitchFieldLabel>
           <select
             value={filters.status}
             onChange={(e) => set("status", e.target.value)}
@@ -220,7 +220,7 @@ export const JobsListPage = () => {
           </select>
         </label>
         <label className="flex min-w-[160px] flex-col gap-1">
-          <StitchFieldLabel className="mb-0 text-[11px]">Started after</StitchFieldLabel>
+          <StitchFieldLabel className="mb-0 text-xs">Started after</StitchFieldLabel>
           <input
             type="datetime-local"
             value={startedAfterDraft}
@@ -229,7 +229,7 @@ export const JobsListPage = () => {
           />
         </label>
         <label className="flex min-w-[160px] flex-col gap-1">
-          <StitchFieldLabel className="mb-0 text-[11px]">Started before</StitchFieldLabel>
+          <StitchFieldLabel className="mb-0 text-xs">Started before</StitchFieldLabel>
           <input
             type="datetime-local"
             value={startedBeforeDraft}

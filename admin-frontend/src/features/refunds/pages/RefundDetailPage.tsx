@@ -319,7 +319,7 @@ export const RefundDetailPage = () => {
               <section className="relative grid grid-cols-2 gap-6 overflow-hidden rounded-xl bg-white p-6 shadow-sm md:grid-cols-4">
                 <div className="absolute left-0 top-0 h-full w-1 bg-[#1653cc]" />
                 <div className="space-y-1">
-                  <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Amount</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Amount</div>
                   <div className="font-mono text-lg font-bold">{money(e.amountCents, e.currency)}</div>
                   <div className="text-xs italic text-slate-400">
                     {e.approvedAmountCents != null && e.approvedAmountCents !== e.amountCents
@@ -328,19 +328,19 @@ export const RefundDetailPage = () => {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Reason</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Reason</div>
                   <div className="text-sm font-medium">{reasonPrimary}</div>
                   <div className="line-clamp-1 text-xs text-slate-400">{reasonSecondary}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Requested By</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Requested By</div>
                   <div className="text-sm font-medium">
                     {e.order.customer.name ?? e.order.customer.email ?? "Guest"} (Customer)
                   </div>
                   <div className="text-xs text-slate-400">Via portal · {formatDateTime(e.createdAt)}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Original Payment</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">Original Payment</div>
                   <div className="font-mono text-sm font-medium">{e.payment.providerPaymentRef?.trim() || e.payment.id.slice(0, 12)}</div>
                   <Link to={`/admin/payments/${e.payment.id}`} className="cursor-pointer text-xs italic text-[#1653cc] underline">
                     View payment
@@ -408,12 +408,12 @@ export const RefundDetailPage = () => {
                 <div className="relative space-y-6 before:absolute before:bottom-2 before:left-[11px] before:top-2 before:w-px before:bg-[#c3c6d6]">
                   <div className="relative pl-8">
                     <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full border-4 border-white bg-[#dbe1ff]">
-                      <MaterialIcon name="check" className="text-[10px] text-[#1653cc]" filled />
+                      <MaterialIcon name="check" className="text-xs text-[#1653cc]" filled />
                     </div>
                     <div className="flex flex-col">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold">Request recorded</span>
-                        <span className="text-[10px] text-slate-400">{formatDateTime(e.createdAt)}</span>
+                        <span className="text-xs text-slate-400">{formatDateTime(e.createdAt)}</span>
                       </div>
                       <p className="mt-1 text-xs text-slate-500">Refund request created and linked to the order payment.</p>
                     </div>
@@ -421,12 +421,12 @@ export const RefundDetailPage = () => {
                   {e.state === "PENDING_APPROVAL" ? (
                     <div className="relative pl-8">
                       <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full border-4 border-white bg-[#e6e7f6]">
-                        <MaterialIcon name="pending" className="text-[10px] text-slate-400" filled />
+                        <MaterialIcon name="pending" className="text-xs text-slate-400" filled />
                       </div>
                       <div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-bold">Pending manager approval</span>
-                          <span className="text-[10px] text-slate-400">Awaiting…</span>
+                          <span className="text-xs text-slate-400">Awaiting…</span>
                         </div>
                         <p className="mt-1 text-xs text-slate-500">Manual review required before Paystack refund is released.</p>
                       </div>
@@ -435,12 +435,12 @@ export const RefundDetailPage = () => {
                   {e.approvedAt ? (
                     <div className="relative pl-8">
                       <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full border-4 border-white bg-[#dbe1ff]">
-                        <MaterialIcon name="verified" className="text-[10px] text-[#1653cc]" filled />
+                        <MaterialIcon name="verified" className="text-xs text-[#1653cc]" filled />
                       </div>
                       <div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-bold">Approved</span>
-                          <span className="text-[10px] text-slate-400">{formatDateTime(e.approvedAt)}</span>
+                          <span className="text-xs text-slate-400">{formatDateTime(e.approvedAt)}</span>
                         </div>
                         <p className="mt-1 text-xs text-slate-500">Refund approved for provider processing.</p>
                       </div>
@@ -449,7 +449,7 @@ export const RefundDetailPage = () => {
                   {e.state === "REJECTED" ? (
                     <div className="relative pl-8">
                       <div className="absolute left-0 top-1 flex h-6 w-6 items-center justify-center rounded-full border-4 border-white bg-red-100">
-                        <MaterialIcon name="cancel" className="text-[10px] text-red-700" filled />
+                        <MaterialIcon name="cancel" className="text-xs text-red-700" filled />
                       </div>
                       <div>
                         <span className="text-sm font-bold text-red-800">Rejected</span>
@@ -465,7 +465,7 @@ export const RefundDetailPage = () => {
                   <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-900">Line allocation</h3>
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-slate-100 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                      <tr className="border-b border-slate-100 text-xs font-bold uppercase tracking-widest text-slate-400">
                         <th className="py-2">Order line</th>
                         <th className="py-2 text-right">Refund portion</th>
                       </tr>
@@ -486,7 +486,7 @@ export const RefundDetailPage = () => {
                 <div className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#1653cc]/20 blur-3xl" />
                 <div className="relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
                   <div>
-                    <h3 className="mb-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-400">
+                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
                       Provider Refund Engine
                     </h3>
                     <div className="mb-1 flex items-center gap-2 text-xl font-bold">
@@ -496,7 +496,7 @@ export const RefundDetailPage = () => {
                     <p className="text-xs text-slate-400">{providerEngineCopy.sub}</p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">Provider ID</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Provider ID</span>
                     <span className="mt-1 rounded bg-slate-800 px-2 py-1 font-mono text-sm">
                       {e.providerRefundRef?.trim() || "—"}
                     </span>
@@ -543,7 +543,7 @@ export const RefundDetailPage = () => {
                       </div>
                       <div className={step.done && !step.current ? "" : step.current ? "" : "opacity-40"}>
                         <div className={`text-sm font-bold ${step.current ? "text-[#1653cc]" : ""}`}>{step.label}</div>
-                        <div className="text-[10px] text-slate-400">{step.when}</div>
+                        <div className="text-xs text-slate-400">{step.when}</div>
                       </div>
                     </div>
                     );
@@ -553,7 +553,7 @@ export const RefundDetailPage = () => {
 
               <div className="flex flex-col gap-3 rounded-xl bg-white p-6 shadow-sm">
                 <h3 className="mb-2 text-sm font-bold uppercase tracking-wider text-slate-900">Executive Actions</h3>
-                <label className="flex flex-col gap-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                <label className="flex flex-col gap-1 text-xs font-bold uppercase tracking-widest text-slate-500">
                   Note (approve / complete)
                   <textarea
                     value={note}
@@ -594,7 +594,7 @@ export const RefundDetailPage = () => {
                 ) : null}
                 {e.state === "APPROVED" || e.state === "PENDING_PROVIDER" ? (
                   <>
-                    <label className="flex flex-col gap-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <label className="flex flex-col gap-1 text-xs font-bold uppercase tracking-widest text-slate-500">
                       Provider refund reference
                       <input
                         value={providerRef}
@@ -616,9 +616,9 @@ export const RefundDetailPage = () => {
                   </>
                 ) : null}
                 {e.state !== "PENDING_APPROVAL" && e.state !== "APPROVED" && e.state !== "PENDING_PROVIDER" ? (
-                  <p className="text-center text-[10px] text-slate-400">No workflow actions for this state.</p>
+                  <p className="text-center text-xs text-slate-400">No workflow actions for this state.</p>
                 ) : null}
-                <p className="mt-2 px-4 text-center text-[10px] text-slate-400">
+                <p className="mt-2 px-4 text-center text-xs text-slate-400">
                   Actions are logged. High-value refunds may require additional controls per policy.
                 </p>
               </div>
@@ -630,16 +630,16 @@ export const RefundDetailPage = () => {
                   </div>
                   <div>
                     <div className="text-sm font-bold">{e.order.customer.name ?? e.order.customer.email ?? "Guest"}</div>
-                    <div className="text-[10px] font-medium text-slate-500">{e.order.customer.email ?? "—"}</div>
+                    <div className="text-xs font-medium text-slate-500">{e.order.customer.email ?? "—"}</div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="rounded-lg bg-[#faf8ff] p-3 text-center">
-                    <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-400">Refund state</div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Refund state</div>
                     <div className="text-lg font-bold text-slate-900">{e.state.replace(/_/g, " ")}</div>
                   </div>
                   <div className="rounded-lg bg-[#faf8ff] p-3 text-center">
-                    <div className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-400">Updated</div>
+                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Updated</div>
                     <div className="text-lg font-bold text-slate-900">{formatDateTime(e.updatedAt)}</div>
                   </div>
                 </div>

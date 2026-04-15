@@ -338,7 +338,7 @@ export const ProductCreatePage = () => {
                 className="h-11 rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-[#4f7ef8] focus:ring-1 focus:ring-[#4f7ef8]"
               />
             </label>
-            <p className="mt-2 text-[11px] text-slate-400">
+            <p className="mt-2 text-xs text-slate-400">
               Stored as UTC on save. A worker can promote draft → published when due.
             </p>
           </div>

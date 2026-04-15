@@ -121,7 +121,7 @@ export const CustomerActivityPage = () => {
           <CustomerWorkspaceNav customerId={customerId} />
 
           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#c3c6d6]/30 bg-white px-4 py-3 shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Visible range</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Visible range</span>
             <label className="flex items-center gap-2 text-xs text-slate-600">
               From
               <input

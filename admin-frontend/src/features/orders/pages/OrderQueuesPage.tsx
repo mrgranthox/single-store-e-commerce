@@ -130,7 +130,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
         <div className="flex flex-col space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <nav className="mb-1 flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-[#737685]">
+              <nav className="mb-1 flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-[#737685]">
                 <span>Operations</span>
                 <MaterialIcon name="chevron_right" className="text-xs" />
                 <span className="text-[#1653cc]">Fulfillment queue</span>
@@ -161,7 +161,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-sm">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">
                 Awaiting fulfillment
               </span>
               <div className="mt-1 flex items-baseline gap-2">
@@ -170,7 +170,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
               </div>
             </div>
             <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#ba1a1a] bg-white p-4 shadow-sm">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">
                 At risk (&gt;24h)
               </span>
               <div className="mt-1 flex items-baseline gap-2">
@@ -179,7 +179,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
               </div>
             </div>
             <div className="flex flex-col justify-between rounded-xl border-l-4 border-amber-500 bg-white p-4 shadow-sm">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">
                 Unassigned warehouse
               </span>
               <div className="mt-1 flex items-baseline gap-2">
@@ -190,7 +190,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
               </div>
             </div>
             <div className="flex flex-col justify-between rounded-xl border-l-4 border-[#006b2d] bg-white p-4 shadow-sm">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Completed today</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Completed today</span>
               <div className="mt-1 flex items-baseline gap-2">
                 <span className="font-headline text-2xl font-bold text-[#006b2d]">—</span>
                 <span className="text-xs text-[#434654]">Not tracked in this view</span>
@@ -246,18 +246,18 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                     <th className="w-10 px-6 py-3">
                       <input type="checkbox" disabled className="rounded-sm border-[#c3c6d6] text-[#1653cc]" />
                     </th>
-                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+                    <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">
                       Priority
                     </th>
-                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Order #</th>
-                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Placed at</th>
-                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Customer</th>
-                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Items</th>
-                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+                    <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Order #</th>
+                    <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Placed at</th>
+                    <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Customer</th>
+                    <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Items</th>
+                    <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">
                       Warehouse assignment
                     </th>
-                    <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]">Status</th>
-                    <th className="px-6 py-3 text-right text-[10px] font-bold uppercase tracking-wider text-[#737685]">
+                    <th className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]">Status</th>
+                    <th className="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-[#737685]">
                       Actions
                     </th>
                   </tr>
@@ -317,7 +317,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                                 {order.assignedWarehouse.code ?? order.assignedWarehouse.name}
                               </span>
                             ) : (
-                              <span className="flex items-center rounded bg-[#fef3c7] px-2 py-0.5 text-[11px] font-semibold text-amber-600">
+                              <span className="flex items-center rounded bg-[#fef3c7] px-2 py-0.5 text-xs font-semibold text-amber-600">
                                 <MaterialIcon name="warning" className="mr-1 text-sm" />
                                 No warehouse
                               </span>
@@ -326,7 +326,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1.5">
                               <div className={`h-1.5 w-1.5 rounded-full ${st.dot}`} />
-                              <span className={`text-[11px] font-bold uppercase tracking-tight ${st.text}`}>
+                              <span className={`text-xs font-bold uppercase tracking-tight ${st.text}`}>
                                 {st.label}
                               </span>
                             </div>
@@ -343,7 +343,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                               ) : (
                                 <Link
                                   to={`/admin/orders/${order.id}`}
-                                  className="rounded bg-[#1653cc] px-3 py-1 text-[11px] font-bold text-white hover:opacity-90"
+                                  className="rounded bg-[#1653cc] px-3 py-1 text-xs font-bold text-white hover:opacity-90"
                                 >
                                   Start fulfillment
                                 </Link>
@@ -375,7 +375,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
               </div>
               <div className="mt-6 flex flex-wrap gap-8">
                 <div>
-                  <span className="mb-1 block text-[10px] font-bold uppercase text-gray-500">Average wait (page)</span>
+                  <span className="mb-1 block text-xs font-bold uppercase text-gray-500">Average wait (page)</span>
                   <span className="font-mono text-xl font-bold">
                     {items.length
                       ? `${(items.reduce((a, o) => a + hoursSince(o.createdAt), 0) / items.length).toFixed(1)}h`
@@ -383,7 +383,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                   </span>
                 </div>
                 <div>
-                  <span className="mb-1 block text-[10px] font-bold uppercase text-gray-500">Queue depth</span>
+                  <span className="mb-1 block text-xs font-bold uppercase text-gray-500">Queue depth</span>
                   <span className="font-mono text-xl font-bold">{meta?.totalItems ?? 0}</span>
                 </div>
               </div>
@@ -404,7 +404,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
             <p className="text-xs text-[#434654]">Use order detail for warehouse assignment and shipment creation.</p>
             <Link
               to="/admin/orders"
-              className="rounded-lg border border-[#1653cc]/20 px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-[#1653cc] hover:bg-[#1653cc]/5"
+              className="rounded-lg border border-[#1653cc]/20 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#1653cc] hover:bg-[#1653cc]/5"
             >
               Orders list
             </Link>
@@ -427,7 +427,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
 
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <nav className="mb-2 flex text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+          <nav className="mb-2 flex text-xs font-semibold uppercase tracking-widest text-slate-400">
             <span>Orders</span>
             <span className="mx-2">/</span>
             <span className="font-bold text-[#1653cc]">Dispatch queue</span>
@@ -449,7 +449,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
       <div className="mb-8 grid grid-cols-12 gap-6">
         <div className="col-span-12 flex flex-wrap items-center gap-4 rounded-sm border border-[rgba(115,118,133,0.15)] bg-white p-5 lg:col-span-9">
           <div className="min-w-[240px] flex-1">
-            <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-500">Search context</label>
+            <label className="mb-1.5 block text-xs font-bold uppercase text-slate-500">Search context</label>
             <input
               value={searchDraft}
               onChange={(e) => setSearchDraft(e.target.value)}
@@ -463,13 +463,13 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-500">Status</label>
+            <label className="mb-1.5 block text-xs font-bold uppercase text-slate-500">Status</label>
             <select disabled className="rounded-sm border border-slate-200 bg-slate-50 py-2 pl-3 pr-10 text-sm">
               <option>All statuses</option>
             </select>
           </div>
           <div>
-            <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-500">Warehouse</label>
+            <label className="mb-1.5 block text-xs font-bold uppercase text-slate-500">Warehouse</label>
             <select disabled className="rounded-sm border border-slate-200 bg-slate-50 py-2 pl-3 pr-10 text-sm">
               <option>All warehouses</option>
             </select>
@@ -493,11 +493,11 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
         <div className="relative col-span-12 overflow-hidden rounded-sm border border-[rgba(115,118,133,0.15)] bg-white p-5 lg:col-span-3">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
           <div className="flex items-start justify-between">
-            <span className="text-[10px] font-bold uppercase text-slate-500">Queue priority</span>
-            <span className="rounded-sm bg-[#ffdad6] px-1.5 py-0.5 text-[10px] font-bold text-[#ba1a1a]">CRITICAL</span>
+            <span className="text-xs font-bold uppercase text-slate-500">Queue priority</span>
+            <span className="rounded-sm bg-[#ffdad6] px-1.5 py-0.5 text-xs font-bold text-[#ba1a1a]">CRITICAL</span>
           </div>
           <h3 className="mt-2 font-headline text-3xl font-bold">{meta?.totalItems ?? 0}</h3>
-          <p className="mt-1 text-[10px] uppercase tracking-tight text-slate-400">Orders pending handoff</p>
+          <p className="mt-1 text-xs uppercase tracking-tight text-slate-400">Orders pending handoff</p>
         </div>
       </div>
 
@@ -519,13 +519,13 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                     <th className="w-10 px-6 py-4">
                       <input type="checkbox" disabled className="rounded-sm border-slate-300 text-[#1653cc]" />
                     </th>
-                    <th className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Order #</th>
-                    <th className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Customer</th>
-                    <th className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Items</th>
-                    <th className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Warehouse</th>
-                    <th className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Carrier</th>
-                    <th className="px-4 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">Status</th>
-                    <th className="px-6 py-4 text-right text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Order #</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Customer</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Items</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Warehouse</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Carrier</th>
+                    <th className="px-4 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
+                    <th className="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
                       Actions
                     </th>
                   </tr>
@@ -552,13 +552,13 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                             <p className="text-sm font-semibold">
                               {order.customer.name ?? order.customer.email ?? "Guest"}
                             </p>
-                            <p className="text-[11px] text-slate-400">
+                            <p className="text-xs text-slate-400">
                               {order.customer.guest ? "Guest checkout" : "Registered customer"}
                             </p>
                           </td>
                           <td className="px-4 py-4">
                             <div className="flex items-center gap-2">
-                              <span className="rounded-sm bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">
+                              <span className="rounded-sm bg-slate-100 px-1.5 py-0.5 text-xs font-bold text-slate-600">
                                 {order.itemCount}
                               </span>
                               <span className="max-w-[120px] truncate text-xs text-slate-600">Order lines</span>
@@ -572,7 +572,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                           </td>
                           <td className="px-4 py-4">
                             <span
-                              className={`inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-[10px] font-bold uppercase tracking-tight ${du.wrap}`}
+                              className={`inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-bold uppercase tracking-tight ${du.wrap}`}
                             >
                               <span className={`h-1.5 w-1.5 rounded-full ${du.dot}`} />
                               {du.label}
@@ -581,7 +581,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
                           <td className="px-6 py-4 text-right">
                             <Link
                               to={`/admin/orders/${order.id}`}
-                              className="text-[10px] font-bold uppercase tracking-widest text-[#1653cc] hover:underline"
+                              className="text-xs font-bold uppercase tracking-widest text-[#1653cc] hover:underline"
                             >
                               Open order
                             </Link>
@@ -595,7 +595,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
             </div>
             {meta ? (
               <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4">
-                <p className="text-[11px] font-medium text-slate-500">
+                <p className="text-xs font-medium text-slate-500">
                   Showing {items.length} of {meta.totalItems} entries in dispatch queue
                 </p>
                 <div className="flex items-center gap-2">
@@ -630,7 +630,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
           <MaterialIcon name="info" className="text-[#5b5e68]" />
           <div>
             <h4 className="text-xs font-bold text-[#60626c]">Carrier integration</h4>
-            <p className="mt-1 text-[11px] text-[#60626c]/80">
+            <p className="mt-1 text-xs text-[#60626c]/80">
               Tracking and labels are confirmed via webhooks. Enter carrier data on the order shipment workflow.
             </p>
           </div>
@@ -639,7 +639,7 @@ export const OrderQueuesPage = ({ mode }: OrderQueuesPageProps) => {
           <MaterialIcon name="speed" className="text-[#1653cc]" />
           <div>
             <h4 className="text-xs font-bold text-[#1653cc]">Throughput</h4>
-            <p className="mt-1 text-[11px] text-[#1653cc]/80">
+            <p className="mt-1 text-xs text-[#1653cc]/80">
               {meta?.totalItems ?? 0} orders currently in the dispatch-facing queue for this page scope.
             </p>
           </div>

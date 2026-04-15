@@ -106,7 +106,7 @@ export const SupportAnalyticsPage = () => {
               hint="Tickets touched in this window with admin reply"
               icon={<Timer className="h-5 w-5 text-[#1653cc]" />}
               accent="bg-[#1653cc]"
-              footer={<span className="text-[0.6875rem] text-slate-400">Period-scoped</span>}
+              footer={<span className="text-xs text-slate-400">Period-scoped</span>}
             />
             <AnalyticsKpi
               label="Avg resolution time"
@@ -114,7 +114,7 @@ export const SupportAnalyticsPage = () => {
               hint="Tickets closed during this window"
               icon={<CheckCircle2 className="h-5 w-5 text-[#3b6de6]" />}
               accent="bg-[#3b6de6]"
-              footer={<span className="text-[0.6875rem] text-slate-400">Created → closed</span>}
+              footer={<span className="text-xs text-slate-400">Created → closed</span>}
             />
             <AnalyticsKpi
               label="CSAT score"
@@ -122,7 +122,7 @@ export const SupportAnalyticsPage = () => {
               hint={data?.csat.note ?? "No survey pipeline"}
               icon={<Star className="h-5 w-5 fill-amber-500 text-amber-500" />}
               accent="bg-amber-400"
-              footer={<span className="text-[0.6875rem] text-slate-400">Placeholder until stored</span>}
+              footer={<span className="text-xs text-slate-400">Placeholder until stored</span>}
             />
             <AnalyticsKpi
               label="First-response SLA"
@@ -136,12 +136,12 @@ export const SupportAnalyticsPage = () => {
               accent="bg-[#006b2d]"
               footer={
                 totals.total > 0 ? (
-                  <span className="flex items-center text-[0.6875rem] font-medium text-[#006b2d]">
+                  <span className="flex items-center text-xs font-medium text-[#006b2d]">
                     <TrendingUp className="mr-1 h-4 w-4" />
                     Resolution rate (all-time): {totals.resolutionRateLabel}
                   </span>
                 ) : (
-                  <span className="text-[0.6875rem] text-slate-400">No tickets yet</span>
+                  <span className="text-xs text-slate-400">No tickets yet</span>
                 )
               }
             />
@@ -151,7 +151,7 @@ export const SupportAnalyticsPage = () => {
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h3 className="font-headline text-lg font-bold text-[#1a1d27]">Ticket volume by priority</h3>
-                <p className="mt-1 text-[0.6875rem] font-medium uppercase tracking-wider text-slate-400">
+                <p className="mt-1 text-xs font-medium uppercase tracking-wider text-slate-400">
                   All-time counts (not limited to the period above)
                 </p>
               </div>
@@ -202,7 +202,7 @@ export const SupportAnalyticsPage = () => {
                       <span>{row.priority}</span>
                       <span className="font-mono">
                         {row.compliancePercent != null ? `${row.compliancePercent}%` : "—"}
-                        <span className="ml-2 font-sans text-[10px] font-normal normal-case text-slate-400">
+                        <span className="ml-2 font-sans text-xs font-normal normal-case text-slate-400">
                           n={row.sampleSize}
                         </span>
                       </span>
@@ -296,7 +296,7 @@ const AnalyticsKpi = ({
   <div className="group relative overflow-hidden rounded-[12px] bg-white p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
     <div className={`absolute bottom-0 left-0 top-0 w-1 ${accent}`} />
     <div className="mb-4 flex items-start justify-between">
-      <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-400">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</span>
       {icon}
     </div>
     <div className="font-headline text-3xl font-bold text-[#1a1d27]">{value}</div>
@@ -329,7 +329,7 @@ const PriorityVolumeBars = ({ byPriority }: { byPriority: { priority: string; co
               style={{ height: `${pct}%` }}
               title={`${p}: ${n}`}
             />
-            <span className="text-[10px] font-bold uppercase text-[#737685]">{p}</span>
+            <span className="text-xs font-bold uppercase text-[#737685]">{p}</span>
           </div>
         );
       })}
@@ -350,7 +350,7 @@ const StatusBacklogBar = ({ byStatus }: { byStatus: { status: string; count: num
         return (
           <div
             key={row.status}
-            className={`${bg} flex items-center justify-center text-[10px] font-bold text-white`}
+            className={`${bg} flex items-center justify-center text-xs font-bold text-white`}
             style={{ width: `${pct}%` }}
             title={`${statusLabel(row.status)}: ${row.count}`}
           >

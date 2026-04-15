@@ -15,6 +15,7 @@ import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { QueryError } from "@/components/primitives/QueryError";
 import { SkeletonTable } from "@/components/primitives/Skeleton";
+import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import {
   StitchFieldLabel,
   StitchFilterPanel,
@@ -256,7 +257,7 @@ export const SupportTicketsListPage = () => {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <div className="group relative flex h-24 flex-col justify-between overflow-hidden border-l-4 border-[#1653cc] bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-[#5b5e68]">Open tickets</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#5b5e68]">Open tickets</span>
             <DraftingCompass
               className="absolute -bottom-2 -right-2 h-10 w-10 text-[#1653cc]/20 transition-transform group-hover:scale-110"
               aria-hidden
@@ -266,7 +267,7 @@ export const SupportTicketsListPage = () => {
         </div>
         <div className="group relative flex h-24 flex-col justify-between overflow-hidden border-l-4 border-[#ba1a1a] bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-[#5b5e68]">Urgent priority</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#5b5e68]">Urgent priority</span>
             <Inbox
               className="absolute -bottom-2 -right-2 h-10 w-10 text-[#ba1a1a]/20 transition-transform group-hover:scale-110"
               aria-hidden
@@ -276,7 +277,7 @@ export const SupportTicketsListPage = () => {
         </div>
         <div className="group relative flex h-24 flex-col justify-between overflow-hidden border-l-4 border-amber-500 bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-[#5b5e68]">SLA attention</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#5b5e68]">SLA attention</span>
             <AlarmClock
               className="absolute -bottom-2 -right-2 h-10 w-10 text-amber-500/25 transition-transform group-hover:scale-110"
               aria-hidden
@@ -285,7 +286,7 @@ export const SupportTicketsListPage = () => {
           <div className="font-headline text-2xl font-bold text-[#181b25]">
             {rep?.openSlaBreachedCount ?? "—"}
             {rep?.openSlaSampleCapped ? (
-              <span className="ml-2 text-[10px] font-medium normal-case text-amber-700">(sample cap)</span>
+              <span className="ml-2 text-xs font-medium normal-case text-amber-700">(sample cap)</span>
             ) : (
               <span className="ml-2 text-xs font-medium normal-case text-[#60626c]">open breaches</span>
             )}
@@ -293,7 +294,7 @@ export const SupportTicketsListPage = () => {
         </div>
         <div className="group relative flex h-24 flex-col justify-between overflow-hidden border-l-4 border-[#006b2d] bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between">
-            <span className="text-[0.6875rem] font-bold uppercase tracking-widest text-[#5b5e68]">Closed (all time)</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-[#5b5e68]">Closed (all time)</span>
             <CheckCircle2
               className="absolute -bottom-2 -right-2 h-10 w-10 text-[#006b2d]/20 transition-transform group-hover:scale-110"
               aria-hidden
@@ -301,7 +302,7 @@ export const SupportTicketsListPage = () => {
           </div>
           <div className="font-headline text-2xl font-bold text-[#181b25]">{closedTotal ?? "—"}</div>
           {allTotal != null ? (
-            <p className="text-[10px] text-[#60626c]">of {allTotal} total tickets</p>
+            <p className="text-xs text-[#60626c]">of {allTotal} total tickets</p>
           ) : null}
         </div>
       </div>
@@ -457,7 +458,7 @@ export const SupportTicketsListPage = () => {
                 setBulkAssigneeId(actor?.id ?? "");
                 setAssignModalOpen(true);
               }}
-              className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-[#181b25] shadow-sm disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#181b25] shadow-sm disabled:opacity-40"
             >
               <UserPlus className="h-4 w-4" aria-hidden />
               Assign selected
@@ -466,7 +467,7 @@ export const SupportTicketsListPage = () => {
               type="button"
               disabled={selected.size === 0 || bulkCloseMut.isPending}
               onClick={() => setBulkCloseDialogOpen(true)}
-              className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-[#181b25] shadow-sm disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#181b25] shadow-sm disabled:opacity-40"
             >
               Close selected
             </button>
@@ -522,7 +523,7 @@ export const SupportTicketsListPage = () => {
                 {["Ticket #", "Subject", "Customer", "Priority", "Status", "SLA due", "Actions"].map((h) => (
                   <th
                     key={h}
-                    className={`p-4 text-left text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-[#5b5e68] ${h === "Actions" ? "text-right" : ""}`}
+                    className={`p-4 text-left text-xs font-bold uppercase tracking-[0.05em] text-[#5b5e68] ${h === "Actions" ? "text-right" : ""}`}
                   >
                     {h}
                   </th>
@@ -576,17 +577,30 @@ export const SupportTicketsListPage = () => {
                     </td>
                     <td className="p-4 text-sm text-[#181b25]">{t.customer.name ?? t.customer.email ?? "—"}</td>
                     <td className="p-4">
-                      <div
-                        className={`inline-flex items-center gap-1.5 rounded-full border border-[#c3c6d6]/30 px-2 py-0.5 text-[10px] font-bold uppercase ${priorityChipClass(t.priority)}`}
-                      >
-                        <span className={`h-1.5 w-1.5 rounded-full ${priorityDotClass(t.priority)}`} />
-                        {t.priority}
-                      </div>
+                      <StatusBadge
+                        label={t.priority}
+                        tone={
+                          (t.priority?.toUpperCase() === "CRITICAL" || t.priority?.toUpperCase() === "HIGH"
+                            ? "danger"
+                            : t.priority?.toUpperCase() === "MEDIUM"
+                              ? "warning"
+                              : "neutral") as StatusBadgeTone
+                        }
+                      />
                     </td>
                     <td className="p-4">
-                      <div className="inline-flex items-center rounded border border-[#c3c6d6]/30 px-2 py-0.5 text-[10px] font-bold uppercase text-[#434654]">
-                        {t.status.replace(/_/g, " ")}
-                      </div>
+                      <StatusBadge
+                        label={t.status.replace(/_/g, " ")}
+                        tone={
+                          (t.status === "CLOSED"
+                            ? "success"
+                            : t.status === "IN_PROGRESS"
+                              ? "info"
+                              : t.status === "PENDING_CUSTOMER"
+                                ? "pending"
+                                : "draft") as StatusBadgeTone
+                        }
+                      />
                     </td>
                     <td className="p-4">
                       <SlaDueCell t={t} />

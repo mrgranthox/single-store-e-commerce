@@ -78,7 +78,7 @@ const navMaterialIcon = (screenId: string, group: AdminScreenGroup) =>
 const navLinkClass = (isActive: boolean, collapsed: boolean) =>
   clsx(
     "flex items-center border-l-4 transition-colors duration-200",
-    collapsed ? "justify-center px-2 py-2.5" : "gap-3 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider",
+    collapsed ? "justify-center px-2 py-2.5" : "gap-3 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider",
     isActive
       ? "border-[#1653cc] bg-[#1653cc]/15 text-white"
       : "border-transparent text-[#c5cee0] hover:bg-white/[0.06] hover:text-white"
@@ -223,7 +223,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
               return (
               <section key={group.id}>
                 {!sidebarCollapsed ? (
-                  <p className="mb-1.5 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#7d8aa3]">
+                  <p className="mb-1.5 px-3 text-xs font-bold uppercase tracking-[0.14em] text-[#7d8aa3]">
                     {group.title}
                   </p>
                 ) : null}
@@ -269,7 +269,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
               sidebarCollapsed ? "justify-center px-0" : "gap-3 px-3"
             )}
           >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#3d4558] bg-[#1e2433] text-[10px] font-bold text-[#e2e8f4]">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#3d4558] bg-[#1e2433] text-xs font-bold text-[#e2e8f4]">
               {initials}
             </div>
             {!sidebarCollapsed ? (
@@ -277,7 +277,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
                 <p className="truncate text-xs font-bold text-white">
                   {effectiveActor?.fullName ?? effectiveActor?.email ?? "Admin User"}
                 </p>
-                <p className="truncate text-[10px] uppercase tracking-tighter text-[#7d8aa3]">
+                <p className="truncate text-xs uppercase tracking-tighter text-[#7d8aa3]">
                   {(effectiveActor?.roles?.[0] ?? "Enterprise").replace(/_/g, " ")} admin
                 </p>
               </div>
@@ -295,7 +295,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
                 className={({ isActive }) =>
                   clsx(
                     "flex items-center justify-center rounded-lg text-[#c5cee0] transition-colors hover:bg-white/10 hover:text-white",
-                    sidebarCollapsed ? "p-2" : "flex-1 gap-2 px-2 py-2 text-[10px] font-semibold uppercase tracking-wider",
+                    sidebarCollapsed ? "p-2" : "flex-1 gap-2 px-2 py-2 text-xs font-semibold uppercase tracking-wider",
                     isActive && "bg-white/10 text-white"
                   )
                 }
@@ -311,7 +311,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
               onClick={() => void handleLogout()}
               className={clsx(
                 "flex items-center justify-center rounded-lg text-[#c5cee0] transition-colors hover:bg-red-500/15 hover:text-red-200",
-                sidebarCollapsed ? "p-2" : "flex-1 gap-2 px-2 py-2 text-[10px] font-semibold uppercase tracking-wider"
+                sidebarCollapsed ? "p-2" : "flex-1 gap-2 px-2 py-2 text-xs font-semibold uppercase tracking-wider"
               )}
               title="Sign out"
             >
@@ -403,11 +403,11 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
                 <p className="text-xs font-bold leading-none text-slate-900">
                   {effectiveActor?.fullName ?? effectiveActor?.email ?? "Admin"}
                 </p>
-                <p className="max-w-[140px] truncate text-[10px] font-medium text-slate-500">
+                <p className="max-w-[140px] truncate text-xs font-medium text-slate-500">
                   {(effectiveActor?.roles?.[0] ?? "Admin").replace(/_/g, " ")}
                 </p>
               </div>
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-white bg-slate-200 text-[10px] font-bold text-slate-700 shadow-sm">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-white bg-slate-200 text-xs font-bold text-slate-700 shadow-sm">
                 {initials}
               </div>
             </div>

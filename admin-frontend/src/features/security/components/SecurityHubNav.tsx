@@ -42,7 +42,7 @@ const HUB_ITEMS: { to: string; label: string; match: (path: string) => boolean }
 ];
 
 const baseTab =
-  "inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-[11px] font-bold uppercase tracking-wider transition-colors sm:px-3.5";
+  "inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold uppercase tracking-wider transition-colors sm:px-3.5";
 const idleTab = "border-transparent bg-[#f2f3ff]/80 text-[#1653cc] hover:border-[#1653cc]/25 hover:bg-white";
 const activeTab = "border-[#1653cc] bg-white text-[#0f3d99] shadow-sm ring-1 ring-[#1653cc]/15";
 
@@ -54,7 +54,7 @@ export const SecurityHubNav = () => {
 
   return (
     <div className="w-full min-w-0">
-      <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-[#737685]">Security workspace</p>
+      <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#737685]">Security workspace</p>
       <div className="-mx-1 flex gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin sm:flex-wrap sm:overflow-visible">
         {HUB_ITEMS.map((item) => {
           const active = item.match(pathname);

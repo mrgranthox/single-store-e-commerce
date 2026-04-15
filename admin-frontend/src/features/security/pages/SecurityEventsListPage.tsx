@@ -86,7 +86,7 @@ export const SecurityEventsListPage = () => {
   };
 
   const pillClass = (active: boolean) =>
-    `rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors ${
+    `rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider transition-colors ${
       active ? "border-[#1653cc] bg-[#1653cc]/10 text-[#1653cc]" : "border-[#e5e7eb] bg-white text-[#737685] hover:border-[#c3c6d6]"
     }`;
 
@@ -116,7 +116,7 @@ export const SecurityEventsListPage = () => {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Severity</span>
+        <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Severity</span>
         {SEVERITY_OPTS.map((s) => (
           <button
             key={s || "all"}
@@ -190,7 +190,7 @@ export const SecurityEventsListPage = () => {
                   ].map((h) => (
                     <th
                       key={h}
-                      className={`px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400 ${
+                      className={`px-6 py-3 text-xs font-bold uppercase tracking-[0.1em] text-slate-400 ${
                         h === "Actions" ? "text-right" : ""
                       }`}
                     >
@@ -217,14 +217,14 @@ export const SecurityEventsListPage = () => {
                           {formatAdminDateTimeLong(ev.createdAt)}
                         </td>
                         <td className="px-6 py-4">
-                          <span className="whitespace-nowrap rounded border border-[#1653cc]/10 bg-[#1653cc]/5 px-2 py-0.5 text-[10px] font-bold text-[#1653cc]">
+                          <span className="whitespace-nowrap rounded border border-[#1653cc]/10 bg-[#1653cc]/5 px-2 py-0.5 text-xs font-bold text-[#1653cc]">
                             {humanizeEnumLabel(ev.type.replace(/[._]/g, " ")).toUpperCase()}
                           </span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-1.5">
                             <span className={`h-1.5 w-1.5 rounded-full ${sevDot(ev.severity)}`} />
-                            <span className="text-[11px] font-bold text-[#181b25]">{ev.severity}</span>
+                            <span className="text-xs font-bold text-[#181b25]">{ev.severity}</span>
                           </div>
                         </td>
                         <td className="max-w-xs truncate px-6 py-4 font-medium text-[#181b25]" title={desc}>
@@ -243,9 +243,9 @@ export const SecurityEventsListPage = () => {
                             <span className="italic text-slate-400">Unlinked</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 font-mono text-[11px] text-slate-500">{ip ?? "—"}</td>
+                        <td className="px-6 py-4 font-mono text-xs text-slate-500">{ip ?? "—"}</td>
                         <td className="px-6 py-4">
-                          <span className="text-[11px] font-bold uppercase text-orange-600">{ev.status.replace(/_/g, " ")}</span>
+                          <span className="text-xs font-bold uppercase text-orange-600">{ev.status.replace(/_/g, " ")}</span>
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
@@ -257,7 +257,7 @@ export const SecurityEventsListPage = () => {
                                 type="button"
                                 disabled={busy}
                                 onClick={() => notifyMut.mutate(ev.id)}
-                                className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[#1653cc] underline decoration-[#1653cc]/40 underline-offset-2 disabled:opacity-40"
+                                className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-[#1653cc] underline decoration-[#1653cc]/40 underline-offset-2 disabled:opacity-40"
                               >
                                 <Bell className="h-3.5 w-3.5 shrink-0" aria-hidden />
                                 Notify
@@ -266,7 +266,7 @@ export const SecurityEventsListPage = () => {
                                 type="button"
                                 disabled={busy || ev.resolvedAt != null}
                                 onClick={() => resolveMut.mutate(ev.id)}
-                                className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-[#006b2d] underline decoration-[#006b2d]/40 underline-offset-2 disabled:opacity-40"
+                                className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-[#006b2d] underline decoration-[#006b2d]/40 underline-offset-2 disabled:opacity-40"
                               >
                                 <CheckCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
                                 Resolve

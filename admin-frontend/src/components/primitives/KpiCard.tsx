@@ -31,7 +31,7 @@ export const KpiCard = ({
   <article className="rounded-xl border border-[var(--color-border-light)] bg-white px-5 py-5 shadow-card">
     <div className="flex items-start justify-between gap-3">
       <div>
-        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+        <div className="text-xs font-medium uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
           {label}
         </div>
         <div className="mt-3 font-headline text-[28px] font-bold leading-none text-[var(--color-text-dark)]">
@@ -43,7 +43,7 @@ export const KpiCard = ({
     </div>
 
     {detail || delta ? (
-      <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+      <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
         {delta ? (
           <span className="rounded-md bg-slate-100 px-2 py-1 font-medium text-slate-700">{delta}</span>
         ) : null}

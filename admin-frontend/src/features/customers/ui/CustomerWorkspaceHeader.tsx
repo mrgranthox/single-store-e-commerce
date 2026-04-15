@@ -10,7 +10,7 @@ export const CustomerWorkspaceHeader = ({
   tabLabel: string;
 }) => (
   <div className="mb-8">
-    <nav className="mb-2 flex flex-wrap items-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
+    <nav className="mb-2 flex flex-wrap items-center text-xs font-bold uppercase tracking-widest text-slate-500">
       <Link to="/admin/customers" className="hover:text-[#1653cc]">
         Customers
       </Link>

@@ -59,11 +59,11 @@ export const ForbiddenPage = () => {
             </button>
           </div>
           <details className="mt-12 border-t border-[#c3c6d6]/10 pt-8 text-left">
-            <summary className="cursor-pointer text-center text-[0.6875rem] font-medium uppercase tracking-wider text-[#737685]">
+            <summary className="cursor-pointer text-center text-xs font-medium uppercase tracking-wider text-[#737685]">
               Advanced details
             </summary>
             <div className="mt-4 flex flex-col items-center gap-2">
-              <span className="font-mono text-[0.6875rem] uppercase tracking-[0.05em] text-[#737685]">
+              <span className="font-mono text-xs uppercase tracking-[0.05em] text-[#737685]">
                 Reference Code
               </span>
               <code className="rounded-md bg-[#ecedfb] px-3 py-1 font-mono text-sm text-[#5b5e68]">

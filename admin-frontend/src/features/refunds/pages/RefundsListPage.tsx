@@ -6,6 +6,8 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { QueryError } from "@/components/primitives/QueryError";
 import { SkeletonTable } from "@/components/primitives/Skeleton";
+import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
+import { StitchFieldLabel, StitchFilterPanel } from "@/components/stitch";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { getAdminRefundDetail, listAdminRefunds, type RefundListItem } from "@/features/refunds/api/admin-refunds.api";
@@ -50,39 +52,16 @@ const parseMoney = (raw: string): number | null => {
   return Math.round(n * 100);
 };
 
-const RefundStatusPill = ({ state }: { state: string }) => {
-  const label = state.replace(/_/g, " ");
-  if (state === "PENDING_APPROVAL") {
-    return (
-      <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-        <span className="text-[10px] font-bold uppercase tracking-tight text-amber-700">Pending Approval</span>
-      </div>
-    );
-  }
-  if (state === "COMPLETED") {
-    return (
-      <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
-        <span className="text-[10px] font-bold uppercase tracking-tight text-emerald-800">Completed</span>
-      </div>
-    );
-  }
-  if (state === "REJECTED" || state === "FAILED") {
-    return (
-      <div className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2 py-0.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
-        <span className="text-[10px] font-bold uppercase tracking-tight text-red-800">{label}</span>
-      </div>
-    );
-  }
-  return (
-    <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5">
-      <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
-      <span className="text-[10px] font-bold uppercase tracking-tight text-slate-700">{label}</span>
-    </div>
-  );
+const refundStatusTone = (state: string): StatusBadgeTone => {
+  if (state === "PENDING_APPROVAL") return "pending";
+  if (state === "COMPLETED") return "success";
+  if (state === "REJECTED" || state === "FAILED") return "danger";
+  return "draft";
 };
+
+const RefundStatusPill = ({ state }: { state: string }) => (
+  <StatusBadge label={state.replace(/_/g, " ")} tone={refundStatusTone(state)} />
+);
 
 const STATE_OPTIONS: Array<{ value: string; label: string }> = [
   { value: "", label: "All Statuses" },
@@ -264,10 +243,10 @@ export const RefundsListPage = () => {
         </div>
       </div>
 
-      <div className="space-y-4 rounded-xl bg-white p-4 shadow-sm">
+      <StitchFilterPanel className="space-y-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-5">
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Status</label>
             <select
               value={filters.state}
               onChange={(e) => set("state", e.target.value)}
@@ -281,7 +260,7 @@ export const RefundsListPage = () => {
             </select>
           </div>
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Date Range</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Date Range</label>
             <div className="relative">
               <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
                 <MaterialIcon name="calendar_today" className="text-sm" />
@@ -295,7 +274,7 @@ export const RefundsListPage = () => {
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Amount Range</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Amount Range</label>
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center text-slate-400">
@@ -317,7 +296,7 @@ export const RefundsListPage = () => {
             </div>
           </div>
           <div className="space-y-1.5 lg:col-span-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Customer Search</label>
+            <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Customer Search</label>
             <div className="relative">
               <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
                 <MaterialIcon name="person_search" className="text-sm" />
@@ -344,7 +323,7 @@ export const RefundsListPage = () => {
             Clear filters
           </button>
         </div>
-      </div>
+      </StitchFilterPanel>
 
       {listQuery.isError ? (
         <QueryError label="refunds" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
@@ -400,7 +379,7 @@ export const RefundsListPage = () => {
                     "Actions"
                   ] as const
                 ).map((h) => (
-                  <th key={h} className={`p-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 ${h === "Actions" ? "text-right" : ""}`}>
+                  <th key={h} className={`p-4 text-xs font-bold uppercase tracking-widest text-slate-400 ${h === "Actions" ? "text-right" : ""}`}>
                     {h}
                   </th>
                 ))}
@@ -446,25 +425,25 @@ export const RefundsListPage = () => {
                         <div className="flex flex-col">
                           <Link
                             to={`/admin/orders/${r.order.id}`}
-                            className="font-mono text-[11px] text-slate-700 hover:text-[#1653cc]"
+                            className="font-mono text-xs text-slate-700 hover:text-[#1653cc]"
                           >
                             {r.order.orderNumber}
                           </Link>
                           {r.return ? (
                             <Link
                               to={`/admin/returns/${r.return.id}`}
-                              className="font-mono text-[11px] text-slate-400 hover:text-[#1653cc]"
+                              className="font-mono text-xs text-slate-400 hover:text-[#1653cc]"
                             >
                               {returnRefLabel(r.return.id)}
                             </Link>
                           ) : (
-                            <span className="font-mono text-[11px] text-slate-400">—</span>
+                            <span className="font-mono text-xs text-slate-400">—</span>
                           )}
                         </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-[10px] font-bold text-slate-700">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700">
                             {initials}
                           </div>
                           <span className="text-xs font-semibold text-[#0f1117]">{customer}</span>
@@ -505,7 +484,7 @@ export const RefundsListPage = () => {
             </tbody>
           </table>
           {meta ? (
-            <div className="flex flex-col gap-2 border-t border-slate-100 px-6 py-3 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 border-t border-slate-100 px-6 py-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
               <span>
                 {displayItems.length !== items.length ? (
                   <>

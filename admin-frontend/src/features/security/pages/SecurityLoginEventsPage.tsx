@@ -27,12 +27,12 @@ import {
 
 const outcomeChip = (success: boolean) =>
   success ? (
-    <span className="inline-flex items-center gap-1 rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-emerald-800">
+    <span className="inline-flex items-center gap-1 rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-bold uppercase tracking-tight text-emerald-800">
       <ShieldCheck className="h-3 w-3" aria-hidden />
       Success
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1 rounded border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-red-800">
+    <span className="inline-flex items-center gap-1 rounded border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-bold uppercase tracking-tight text-red-800">
       <ShieldAlert className="h-3 w-3" aria-hidden />
       Failed
     </span>
@@ -147,17 +147,17 @@ export const SecurityLoginEventsPage = () => {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         <div className="relative flex h-28 flex-col justify-between overflow-hidden rounded-sm bg-white p-6 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#006b2d]" />
-          <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#737685]">Success on page</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Success on page</span>
           <span className="font-headline text-4xl font-bold text-[#181b25]">{kpis.successCount}</span>
         </div>
         <div className="relative flex h-28 flex-col justify-between overflow-hidden rounded-sm bg-white p-6 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#ba1a1a]" />
-          <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#737685]">Failures on page</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Failures on page</span>
           <span className="font-headline text-4xl font-bold text-[#181b25]">{kpis.failureCount}</span>
         </div>
         <div className="relative flex h-28 flex-col justify-between overflow-hidden rounded-sm bg-white p-6 shadow-sm">
           <div className="absolute bottom-0 left-0 top-0 w-1 bg-[#1653cc]" />
-          <span className="text-[0.6875rem] font-bold uppercase tracking-wider text-[#737685]">Unique emails</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-[#737685]">Unique emails</span>
           <span className="font-headline text-4xl font-bold text-[#181b25]">{kpis.uniqueEmails}</span>
         </div>
       </div>
@@ -217,7 +217,7 @@ export const SecurityLoginEventsPage = () => {
               {(["Email", "Outcome", "Failure reason", "Location", "Actor", "Created"] as const).map((header) => (
                 <th
                   key={header}
-                  className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-[#737685]"
+                  className="px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#737685]"
                 >
                   {header}
                 </th>
@@ -243,7 +243,7 @@ export const SecurityLoginEventsPage = () => {
                   <td className="px-4 py-3">
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-[#181b25]">{item.email}</span>
-                      <span className="font-mono text-[11px] text-[#737685]">{item.id.slice(0, 10)}…</span>
+                      <span className="font-mono text-xs text-[#737685]">{item.id.slice(0, 10)}…</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">{outcomeChip(item.success)}</td>
@@ -255,7 +255,7 @@ export const SecurityLoginEventsPage = () => {
                   <td className="px-4 py-3">
                     <div className="flex flex-col">
                       <span className="text-xs text-[#434654]">{formatDateTime(item.createdAt)}</span>
-                      <span className="text-[11px] text-[#737685]">{relativeShort(item.createdAt)}</span>
+                      <span className="text-xs text-[#737685]">{relativeShort(item.createdAt)}</span>
                     </div>
                   </td>
                 </tr>
