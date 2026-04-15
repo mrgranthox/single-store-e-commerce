@@ -1,7 +1,7 @@
 import { getCustomerScreen } from "@/lib/contracts/customer-screen-catalog";
 import { fetchCustomerRuntimeConfig } from "@/integrations/backend-config";
 import { submitProductInquiry, submitSupportContact } from "@/integrations/support";
-import { commerceFetchJson, getBackendBaseUrl } from "@/lib/api/commerce-fetch";
+import { commerceFetchJson, getBackendBaseUrl, resolveCommerceUrl } from "@/lib/api/commerce-fetch";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 
 export type HomepageProductCard = {
@@ -130,7 +130,7 @@ export type CustomerHomepagePayload = {
 };
 
 const readHomepageEntity = async () => {
-  const response = await fetch(new URL("/api/content/homepage", getBackendBaseUrl()), {
+  const response = await fetch(resolveCommerceUrl("/api/content/homepage"), {
     headers: { accept: "application/json" }
   });
   const payload = (await response.json()) as { success?: boolean; data?: { entity: CustomerHomepagePayload } };
@@ -144,12 +144,32 @@ export const customerApi = {
   getHomepage: async () => ({ entity: await readHomepageEntity() }),
 
   getRuntimeConfig: async () => {
+    const base = getBackendBaseUrl();
+    if (!base) {
+      return {
+        surface: "customer" as const,
+        api: { baseUrl: "", restBasePath: "/api" },
+        routes: {
+          support: {
+            contactPath: "/api/support/contact",
+            productInquiryPathTemplate: "/api/products/:slug/questions",
+            abuseChallenge: {
+              enabled: false,
+              provider: "none",
+              siteKey: null,
+              tokenField: "captchaToken",
+              supportedActions: []
+            }
+          }
+        }
+      };
+    }
     try {
-      return await fetchCustomerRuntimeConfig(getBackendBaseUrl());
+      return await fetchCustomerRuntimeConfig(base);
     } catch {
       return {
         surface: "customer" as const,
-        api: { baseUrl: getBackendBaseUrl(), restBasePath: "/api" },
+        api: { baseUrl: base, restBasePath: "/api" },
         routes: {
           support: {
             contactPath: "/api/support/contact",

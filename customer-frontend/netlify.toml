@@ -1,4 +1,8 @@
 # Netlify: set this site’s “Base directory” to `customer-frontend` (repo root stays the Git root).
+#
+# Required for API calls: set VITE_BACKEND_BASE_URL in Netlify UI (Site → Environment variables),
+# to your **Express** origin, e.g. https://api.yourdomain.com — no trailing slash. Then **redeploy**
+# so Vite embeds it in the bundle. Without it, /api/* would hit Netlify and return 404.
 [build]
   command = "npm ci && npm run build"
   publish = "dist"

@@ -1,7 +1,50 @@
 import { clearAuthTokens, getAccessToken, getOrCreateSessionId } from "@/lib/api/commerce-session";
 
-export const getBackendBaseUrl = () =>
-  import.meta.env.VITE_BACKEND_BASE_URL?.trim() || (typeof window !== "undefined" ? window.location.origin : "");
+/**
+ * Express API origin (no trailing slash).
+ * - **Development:** falls back to `window.location.origin` so Vite’s `/api` proxy works.
+ * - **Production:** must set `VITE_BACKEND_BASE_URL` at **build** time. Do not use the static site
+ *   host (e.g. `*.netlify.app`) — there is no Express there, so `/api/*` returns 404 HTML.
+ */
+export const getBackendBaseUrl = (): string => {
+  const fromEnv = import.meta.env.VITE_BACKEND_BASE_URL?.trim();
+  if (fromEnv) {
+    return fromEnv.replace(/\/$/, "");
+  }
+  if (import.meta.env.DEV && typeof window !== "undefined") {
+    return window.location.origin;
+  }
+  if (import.meta.env.PROD) {
+    if (typeof window !== "undefined") {
+      console.error(
+        "[customer-frontend] Missing VITE_BACKEND_BASE_URL. Set it in your host’s build env and redeploy " +
+          "(Netlify: Site configuration → Environment variables → VITE_BACKEND_BASE_URL = https://your-api-host, no trailing slash)."
+      );
+    }
+    return "";
+  }
+  return typeof window !== "undefined" ? window.location.origin : "";
+};
+
+/** Resolves a path like `/api/...` against the configured API origin. */
+export const resolveCommerceUrl = (path: string): URL => {
+  if (path.startsWith("http")) {
+    return new URL(path);
+  }
+  const base = getBackendBaseUrl();
+  if (!base) {
+    throw new CommerceApiError(
+      import.meta.env.PROD
+        ? "VITE_BACKEND_BASE_URL is not set. Rebuild with your Express API origin (e.g. https://api.example.com). On Netlify: Site settings → Environment variables → add VITE_BACKEND_BASE_URL → redeploy."
+        : "Could not resolve API base URL (missing window in this environment).",
+      0,
+      "MISSING_BACKEND_BASE_URL",
+      null,
+      null
+    );
+  }
+  return new URL(path, base);
+};
 
 export type CommerceSuccess<T> = { data: T; meta?: Record<string, unknown> };
 
@@ -52,8 +95,7 @@ export const commerceFetchJson = async <T>(
   path: string,
   options: CommerceFetchOptions = {}
 ): Promise<CommerceSuccess<T>> => {
-  const base = getBackendBaseUrl();
-  const url = path.startsWith("http") ? new URL(path) : new URL(path, base);
+  const url = resolveCommerceUrl(path);
   const { json, session = true, auth = true, headers: initHeaders, ...rest } = options;
 
   const headers = new Headers(initHeaders);
