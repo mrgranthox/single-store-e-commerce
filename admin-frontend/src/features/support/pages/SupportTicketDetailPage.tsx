@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Archive,
   Bold,
@@ -24,6 +24,7 @@ import { PageHeader } from "@/components/primitives/PageHeader";
 import { StitchBreadcrumbs, StitchPageBody } from "@/components/stitch";
 import { SupportWorkspaceNav } from "@/features/support/components/SupportWorkspaceNav";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import {
   addSupportTicketInternalNote,
   ApiError,
@@ -81,7 +82,6 @@ const safeAttachmentUrl = (value: string) => {
 export const SupportTicketDetailPage = () => {
   const { ticketId = "" } = useParams<{ ticketId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
-  const queryClient = useQueryClient();
 
   const [replyBody, setReplyBody] = useState("");
   const [internalNote, setInternalNote] = useState("");
@@ -136,12 +136,9 @@ export const SupportTicketDetailPage = () => {
     }
   }, [e?.csatScore, e?.id]);
 
-  const invalidate = () => {
-    void queryClient.invalidateQueries({ queryKey: ["admin-support-ticket", ticketId] });
-    void queryClient.invalidateQueries({ queryKey: ["admin-support-tickets"] });
-  };
+  const supportInvalidateKeys = [["admin-support-ticket", ticketId], ["admin-support-tickets"]] as const;
 
-  const replyMut = useMutation({
+  const replyMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -151,14 +148,15 @@ export const SupportTicketDetailPage = () => {
     onSuccess: () => {
       setReplyBody("");
       setMsg({ type: "ok", text: "Reply sent to customer." });
-      invalidate();
     },
     onError: (err: unknown) => {
       setMsg({ type: "err", text: err instanceof ApiError ? err.message : "Reply failed." });
-    }
+    },
+    isAllowed: e?.allowedActions.canReply ?? true,
+    invalidate: [...supportInvalidateKeys]
   });
 
-  const noteMut = useMutation({
+  const noteMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -168,14 +166,15 @@ export const SupportTicketDetailPage = () => {
     onSuccess: () => {
       setInternalNote("");
       setMsg({ type: "ok", text: "Internal note added." });
-      invalidate();
     },
     onError: (err: unknown) => {
       setMsg({ type: "err", text: err instanceof ApiError ? err.message : "Note failed." });
-    }
+    },
+    isAllowed: e?.allowedActions.canAddInternalNote ?? true,
+    invalidate: [...supportInvalidateKeys]
   });
 
-  const assignMut = useMutation({
+  const assignMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -187,14 +186,15 @@ export const SupportTicketDetailPage = () => {
     },
     onSuccess: () => {
       setMsg({ type: "ok", text: "Assignment updated." });
-      invalidate();
     },
     onError: (err: unknown) => {
       setMsg({ type: "err", text: err instanceof ApiError ? err.message : "Assign failed." });
-    }
+    },
+    isAllowed: e?.allowedActions.canAssign ?? true,
+    invalidate: [...supportInvalidateKeys]
   });
 
-  const csatMut = useMutation({
+  const csatMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -203,14 +203,15 @@ export const SupportTicketDetailPage = () => {
     },
     onSuccess: () => {
       setMsg({ type: "ok", text: "CSAT score saved." });
-      invalidate();
     },
     onError: (err: unknown) => {
       setMsg({ type: "err", text: err instanceof ApiError ? err.message : "Could not save CSAT." });
-    }
+    },
+    isAllowed: e?.allowedActions.canRecordCsat !== false,
+    invalidate: [...supportInvalidateKeys]
   });
 
-  const statusMut = useMutation({
+  const statusMut = useAdminAction({
     mutationFn: (next: SupportTicketStatus) => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -224,11 +225,12 @@ export const SupportTicketDetailPage = () => {
       setStatusPick(next);
       setStatusNote("");
       setMsg({ type: "ok", text: "Ticket status updated." });
-      invalidate();
     },
     onError: (err: unknown) => {
       setMsg({ type: "err", text: err instanceof ApiError ? err.message : "Status update failed." });
-    }
+    },
+    isAllowed: e?.allowedActions.canUpdateStatus ?? true,
+    invalidate: [...supportInvalidateKeys]
   });
 
   const feedItems: FeedItem[] = useMemo(() => {
@@ -312,7 +314,7 @@ export const SupportTicketDetailPage = () => {
         onClose={() => setArchiveDialogOpen(false)}
         onConfirm={() => {
           setArchiveDialogOpen(false);
-          statusMut.mutate("CLOSED");
+          statusMut.run("CLOSED");
         }}
       />
 
@@ -336,8 +338,8 @@ export const SupportTicketDetailPage = () => {
             </button>
             <button
               type="button"
-              disabled={statusMut.isPending || !e.allowedActions.canUpdateStatus || e.status === "CLOSED"}
-              onClick={() => statusMut.mutate("CLOSED")}
+              disabled={statusMut.isPending || statusMut.blocked || !e.allowedActions.canUpdateStatus || e.status === "CLOSED"}
+              onClick={() => statusMut.run("CLOSED")}
               className="flex items-center gap-2 rounded-lg bg-[#ba1a1a] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#ba1a1a]/90 disabled:opacity-50"
             >
               <XCircle className="h-4 w-4" aria-hidden />
@@ -539,8 +541,8 @@ export const SupportTicketDetailPage = () => {
                   <div className="mt-2 flex justify-end">
                     <button
                       type="button"
-                      disabled={replyMut.isPending || !replyBody.trim()}
-                      onClick={() => replyMut.mutate()}
+                      disabled={replyMut.isPending || replyMut.blocked || !replyBody.trim()}
+                      onClick={() => replyMut.run(undefined)}
                       className="flex items-center gap-2 rounded-lg bg-[#1653cc] px-6 py-2 text-sm font-bold text-white shadow-md transition-all hover:bg-[#1653cc]/90 active:scale-[0.98] disabled:opacity-50"
                     >
                       Send Response
@@ -686,8 +688,8 @@ export const SupportTicketDetailPage = () => {
                     />
                     <button
                       type="button"
-                      disabled={assignMut.isPending || !e.allowedActions.canAssign}
-                      onClick={() => assignMut.mutate()}
+                      disabled={assignMut.isPending || assignMut.blocked || !e.allowedActions.canAssign}
+                      onClick={() => assignMut.run(undefined)}
                       className="mt-2 rounded-lg border border-[#c3c6d6] bg-white px-3 py-1.5 text-xs font-semibold disabled:opacity-50"
                     >
                       {assignMut.isPending ? "Saving…" : "Save assignment"}
@@ -704,8 +706,8 @@ export const SupportTicketDetailPage = () => {
                 />
                 <button
                   type="button"
-                  disabled={statusMut.isPending || !e.allowedActions.canUpdateStatus}
-                  onClick={() => statusMut.mutate(statusPick)}
+                  disabled={statusMut.isPending || statusMut.blocked || !e.allowedActions.canUpdateStatus}
+                  onClick={() => statusMut.run(statusPick)}
                   className="w-full rounded-lg border border-[#c3c6d6] bg-white py-2 text-sm font-semibold disabled:opacity-50"
                 >
                   {statusMut.isPending ? "Saving…" : "Update status"}
@@ -760,8 +762,8 @@ export const SupportTicketDetailPage = () => {
                   </select>
                   <button
                     type="button"
-                    disabled={csatMut.isPending || e.allowedActions.canRecordCsat === false}
-                    onClick={() => csatMut.mutate()}
+                    disabled={csatMut.isPending || csatMut.blocked || e.allowedActions.canRecordCsat === false}
+                    onClick={() => csatMut.run(undefined)}
                     className="w-full rounded-lg bg-[#1653cc] py-2 text-sm font-semibold text-white disabled:opacity-50"
                   >
                     {csatMut.isPending ? "Saving…" : "Save CSAT"}
@@ -782,8 +784,8 @@ export const SupportTicketDetailPage = () => {
               />
               <button
                 type="button"
-                disabled={noteMut.isPending || !internalNote.trim() || !e.allowedActions.canAddInternalNote}
-                onClick={() => noteMut.mutate()}
+                disabled={noteMut.isPending || noteMut.blocked || !internalNote.trim() || !e.allowedActions.canAddInternalNote}
+                onClick={() => noteMut.run(undefined)}
                 className="mt-2 w-full rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
               >
                 {noteMut.isPending ? "Saving…" : "Add internal note"}
@@ -825,8 +827,8 @@ export const SupportTicketDetailPage = () => {
             <div className="flex flex-col gap-3">
               <button
                 type="button"
-                disabled={statusMut.isPending || !e.allowedActions.canUpdateStatus || e.status === "CLOSED"}
-                onClick={() => statusMut.mutate("CLOSED")}
+                disabled={statusMut.isPending || statusMut.blocked || !e.allowedActions.canUpdateStatus || e.status === "CLOSED"}
+                onClick={() => statusMut.run("CLOSED")}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00873b] py-3 font-bold text-white shadow-lg shadow-[#00873b]/20 transition-transform hover:-translate-y-0.5 disabled:opacity-50"
               >
                 <CheckCircle2 className="h-5 w-5" aria-hidden />
@@ -834,7 +836,7 @@ export const SupportTicketDetailPage = () => {
               </button>
               <button
                 type="button"
-                disabled={statusMut.isPending || !e.allowedActions.canUpdateStatus || e.status === "CLOSED"}
+                disabled={statusMut.isPending || statusMut.blocked || !e.allowedActions.canUpdateStatus || e.status === "CLOSED"}
                 title="Archiving closes the ticket (same as resolve)."
                 onClick={() => setArchiveDialogOpen(true)}
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#c3c6d6] bg-white py-3 font-bold text-[#5b5e68] transition-colors hover:bg-[#ecedfb] disabled:opacity-50"

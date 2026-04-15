@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { ApiError, listAdminFinanceExceptions, resolveAdminFinanceException, type FinancialExceptionRow } from "@/features/payments/api/admin-finance.api";
 
 const exceptionRefLabel = (id: string) => `EX-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -58,11 +60,13 @@ const statusPill = (status: string) => {
 
 export const FinanceExceptionsPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [typeFilter, setTypeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const canResolveException = adminHasAnyPermission(actorPermissions, ["payments.read"]);
 
   const queryKey = useMemo(() => ["admin-finance-exceptions", page] as const, [page]);
 
@@ -77,14 +81,15 @@ export const FinanceExceptionsPage = () => {
     enabled: Boolean(accessToken)
   });
 
-  const resolveMut = useMutation({
+  const resolveMut = useAdminAction({
     mutationFn: ({ id, note }: { id: string; note: string }) => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return resolveAdminFinanceException(accessToken, id, { note });
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-finance-exceptions"] })
+    isAllowed: canResolveException,
+    invalidate: [["admin-finance-exceptions"]]
   });
 
   const items = listQuery.data?.data.items ?? [];
@@ -367,8 +372,8 @@ export const FinanceExceptionsPage = () => {
                             />
                             <button
                               type="button"
-                              disabled={resolveMut.isPending || !note.trim()}
-                              onClick={() => resolveMut.mutate({ id: row.id, note: note.trim() })}
+                              disabled={resolveMut.isPending || resolveMut.blocked || !note.trim()}
+                              onClick={() => resolveMut.run({ id: row.id, note: note.trim() })}
                               className="rounded-sm bg-[#006b2d] px-2 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                             >
                               Resolve

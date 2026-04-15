@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -26,6 +26,7 @@ import {
   bulkAssignSupportTickets,
   bulkStatusSupportTickets,
   getSupportReports,
+  getSupportTicketDetail,
   listSupportTickets,
   type SupportTicketListItem
 } from "@/features/support/api/admin-support.api";
@@ -38,6 +39,8 @@ import {
   priorityDotClass,
   totalTickets
 } from "@/features/support/lib/supportPresentation";
+
+const TICKET_DETAIL_STALE_MS = 20_000;
 
 const STATUSES = ["", "OPEN", "IN_PROGRESS", "PENDING_CUSTOMER", "CLOSED"] as const;
 const PRIORITIES = ["", "LOW", "MEDIUM", "HIGH", "URGENT"] as const;
@@ -108,6 +111,20 @@ export const SupportTicketsListPage = () => {
     },
     enabled: Boolean(accessToken)
   });
+
+  const prefetchTicketDetail = useCallback(
+    (id: string) => {
+      if (!accessToken) {
+        return;
+      }
+      void queryClient.prefetchQuery({
+        queryKey: ["admin-support-ticket", id],
+        queryFn: () => getSupportTicketDetail(accessToken, id),
+        staleTime: TICKET_DETAIL_STALE_MS
+      });
+    },
+    [accessToken, queryClient]
+  );
 
   const reportsQuery = useQuery({
     queryKey: ["admin-support-reports", "tickets-list-kpis", "weekly"],
@@ -535,7 +552,11 @@ export const SupportTicketsListPage = () => {
                 </tr>
               ) : (
                 items.map((t) => (
-                  <tr key={t.id} className="group transition-colors hover:bg-[#f2f3ff]">
+                  <tr
+                    key={t.id}
+                    className="group transition-colors hover:bg-[#f2f3ff]"
+                    onMouseEnter={() => prefetchTicketDetail(t.id)}
+                  >
                     <td className="p-4">
                       <input
                         type="checkbox"
@@ -549,6 +570,7 @@ export const SupportTicketsListPage = () => {
                       <Link
                         to={`/admin/support/tickets/${t.id}`}
                         className="font-mono text-sm font-medium text-[#1653cc] hover:underline"
+                        onFocus={() => prefetchTicketDetail(t.id)}
                       >
                         {formatTicketNumber(t.id)}
                       </Link>

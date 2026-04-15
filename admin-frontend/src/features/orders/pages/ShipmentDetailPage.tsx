@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
@@ -12,6 +12,7 @@ import {
   updateAdminShipment,
   type ShipmentTrackingEventApi
 } from "@/features/orders/api/admin-orders.api";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
@@ -95,7 +96,7 @@ export const ShipmentDetailPage = () => {
   const terminal = e ? ["DELIVERED", "CANCELLED"].includes(e.status.toUpperCase()) : true;
   const canUpdateShipment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment"]);
 
-  const updateMutation = useMutation({
+  const updateMutation = useAdminAction({
     mutationFn: async () => {
       if (!accessToken || !shipmentId || !e) {
         throw new Error("Missing context.");
@@ -110,12 +111,12 @@ export const ShipmentDetailPage = () => {
     },
     onSuccess: () => {
       setActionMessage("Shipment updated.");
-      void queryClient.invalidateQueries({ queryKey: ["admin-shipment-detail", shipmentId] });
-      void queryClient.invalidateQueries({ queryKey: ["admin-shipment-tracking", shipmentId] });
     },
     onError: (error: unknown) => {
       setActionMessage(error instanceof ApiError ? error.message : "Shipment update failed.");
-    }
+    },
+    isAllowed: canUpdateShipment,
+    invalidate: [["admin-shipment-detail", shipmentId], ["admin-shipment-tracking", shipmentId]]
   });
 
   const phases = useMemo((): Phase[] => {
@@ -368,8 +369,8 @@ export const ShipmentDetailPage = () => {
                     {actionMessage ? <p className="text-xs text-[#434654]">{actionMessage}</p> : null}
                     <AsyncActionButton
                       pending={updateMutation.isPending}
-                      blocked={!canUpdateShipment}
-                      onClick={() => updateMutation.mutate()}
+                      blocked={updateMutation.blocked || !canUpdateShipment}
+                      onClick={() => updateMutation.run(undefined)}
                       title={canUpdateShipment ? undefined : "Requires orders.override_fulfillment permission"}
                     >
                       Save shipment changes

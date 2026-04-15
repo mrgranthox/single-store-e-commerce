@@ -1,3 +1,10 @@
+/**
+ * Legacy admin URL shapes kept for backwards compatibility. Canonical handlers and paths live on
+ * the primary `/api/v1/admin/...` routers (catalog, support, orders, etc.). New clients must use
+ * those routes only; the admin frontend contract verifier fails on compat path usage.
+ *
+ * Removal policy: delete this module once no callers remain (verified via admin contract checks and access logs).
+ */
 import { ReviewStatus } from "@prisma/client";
 import { Router } from "express";
 import { z } from "zod";

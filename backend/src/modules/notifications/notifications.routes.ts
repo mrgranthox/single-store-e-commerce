@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import type { RouteModule } from "../../app/route.types";
+import { rateLimit, rateLimitKeyFromActorOrIp } from "../../common/middleware/rate-limit.middleware";
 import { validateRequest } from "../../common/validation/validate-request";
 import { requireCustomerActor } from "../auth/auth.middleware";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
@@ -19,6 +20,22 @@ import {
 } from "./notifications.schemas";
 
 const router = Router();
+
+const adminNotificationCreateRateLimit = rateLimit({
+  keyPrefix: "rl:admin:notifications:create",
+  maxRequests: 30,
+  windowSeconds: 300,
+  failClosed: true,
+  keyResolver: rateLimitKeyFromActorOrIp
+});
+
+const adminNotificationRetryRateLimit = rateLimit({
+  keyPrefix: "rl:admin:notifications:retry",
+  maxRequests: 40,
+  windowSeconds: 300,
+  failClosed: true,
+  keyResolver: rateLimitKeyFromActorOrIp
+});
 
 router.get(
   "/notifications",
@@ -45,6 +62,7 @@ router.post(
   "/admin/notifications",
   requireAdminActor,
   requirePermissions(["notifications.write"]),
+  adminNotificationCreateRateLimit,
   validateRequest({ body: createNotificationBodySchema }),
   createNotificationAdmin
 );
@@ -52,6 +70,7 @@ router.post(
   "/admin/notifications/:notificationId/retry",
   requireAdminActor,
   requirePermissions(["notifications.write"]),
+  adminNotificationRetryRateLimit,
   validateRequest({ params: notificationIdParamsSchema }),
   retryNotificationAdmin
 );

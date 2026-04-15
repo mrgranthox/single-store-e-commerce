@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import type { RouteModule } from "../../app/route.types";
-import { rateLimit } from "../../common/middleware/rate-limit.middleware";
+import { rateLimit, rateLimitKeyFromActorOrIp } from "../../common/middleware/rate-limit.middleware";
 import { validateRequest } from "../../common/validation/validate-request";
 import { requireAdminStepUp } from "../auth/admin-step-up.middleware";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
@@ -40,7 +40,24 @@ const adminInvitationRateLimit = rateLimit({
   keyPrefix: "rl:admin:admin-invitations",
   maxRequests: 20,
   windowSeconds: 600,
-  failClosed: true
+  failClosed: true,
+  keyResolver: rateLimitKeyFromActorOrIp
+});
+
+const adminInvitationRevokeRateLimit = rateLimit({
+  keyPrefix: "rl:admin:admin-invitations:revoke",
+  maxRequests: 15,
+  windowSeconds: 600,
+  failClosed: true,
+  keyResolver: rateLimitKeyFromActorOrIp
+});
+
+const adminSessionRevokeRateLimit = rateLimit({
+  keyPrefix: "rl:admin:admin-users:session-revoke",
+  maxRequests: 30,
+  windowSeconds: 300,
+  failClosed: true,
+  keyResolver: rateLimitKeyFromActorOrIp
 });
 
 router.get(
@@ -88,6 +105,7 @@ router.post(
   requireAdminActor,
   requirePermissions(["admin.users.invitations.manage"]),
   requireAdminStepUp(),
+  adminInvitationRevokeRateLimit,
   validateRequest({ params: adminInvitationIdParamsSchema, body: revokeAdminInvitationBodySchema }),
   revokeAdminInvitationController
 );
@@ -141,6 +159,7 @@ router.post(
   requireAdminActor,
   requirePermissions(["admin.users.sessions.revoke"]),
   requireAdminStepUp(),
+  adminSessionRevokeRateLimit,
   validateRequest({ params: adminUserSessionParamsSchema, body: adminStatusMutationBodySchema }),
   revokeAdminUserSessionController
 );

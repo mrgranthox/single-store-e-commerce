@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CheckCheck,
   ChevronRight,
@@ -28,6 +28,7 @@ import {
   type AdminOrderStatus
 } from "@/features/orders/api/admin-orders.api";
 import { getEntityTimeline } from "@/features/security/api/admin-audit.api";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
@@ -206,13 +207,13 @@ export const OrderDetailPage = () => {
     typeof entity?.totals?.grandTotalCents === "number" ? entity.totals.grandTotalCents : linesSubtotalCents;
   const currency = entity?.totals?.currency ?? entity?.payment.currency ?? entity?.items[0]?.unitPriceCurrency;
 
-  const invalidateOrder = () => {
-    void queryClient.invalidateQueries({ queryKey: ["admin-order-detail", orderId] });
-    void queryClient.invalidateQueries({ queryKey: ["admin-order-timeline", orderId] });
-    void queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
-  };
+  const orderInvalidateKeys = [["admin-order-detail", orderId], ["admin-order-timeline", orderId], ["admin-orders"]] as const;
+  const canUpdateOrder = adminHasAnyPermission(actorPermissions, ["orders.update"]);
+  const canOverrideFulfillment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment", "orders.update"]);
+  const canCancelOrder = adminHasAnyPermission(actorPermissions, ["orders.cancel"]);
+  const canViewAudit = adminHasAnyPermission(actorPermissions, ["security.audit.read"]);
 
-  const statusMut = useMutation({
+  const statusMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -225,17 +226,18 @@ export const OrderDetailPage = () => {
     },
     onSuccess: () => {
       setActionMsg({ type: "ok", text: "Order status updated." });
-      invalidateOrder();
     },
     onError: (err: unknown) => {
       setActionMsg({
         type: "err",
         text: err instanceof ApiError ? err.message : "Status update failed."
       });
-    }
+    },
+    isAllowed: canUpdateOrder,
+    invalidate: [...orderInvalidateKeys]
   });
 
-  const assignMut = useMutation({
+  const assignMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -247,17 +249,18 @@ export const OrderDetailPage = () => {
     },
     onSuccess: () => {
       setActionMsg({ type: "ok", text: "Warehouse assigned." });
-      invalidateOrder();
     },
     onError: (err: unknown) => {
       setActionMsg({
         type: "err",
         text: err instanceof ApiError ? err.message : "Assign warehouse failed."
       });
-    }
+    },
+    isAllowed: canOverrideFulfillment,
+    invalidate: [...orderInvalidateKeys]
   });
 
-  const cancelMut = useMutation({
+  const cancelMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -269,17 +272,18 @@ export const OrderDetailPage = () => {
     },
     onSuccess: () => {
       setActionMsg({ type: "ok", text: "Cancellation recorded." });
-      invalidateOrder();
     },
     onError: (err: unknown) => {
       setActionMsg({
         type: "err",
         text: err instanceof ApiError ? err.message : "Cancel order failed."
       });
-    }
+    },
+    isAllowed: canCancelOrder,
+    invalidate: [...orderInvalidateKeys]
   });
 
-  const shipMut = useMutation({
+  const shipMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -293,17 +297,18 @@ export const OrderDetailPage = () => {
     },
     onSuccess: () => {
       setActionMsg({ type: "ok", text: "Shipment created." });
-      invalidateOrder();
     },
     onError: (err: unknown) => {
       setActionMsg({
         type: "err",
         text: err instanceof ApiError ? err.message : "Create shipment failed."
       });
-    }
+    },
+    isAllowed: canOverrideFulfillment,
+    invalidate: [...orderInvalidateKeys]
   });
 
-  const campaignMut = useMutation({
+  const campaignMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -315,14 +320,15 @@ export const OrderDetailPage = () => {
     },
     onSuccess: () => {
       setActionMsg({ type: "ok", text: "Campaign attribution updated." });
-      invalidateOrder();
     },
     onError: (err: unknown) => {
       setActionMsg({
         type: "err",
         text: err instanceof ApiError ? err.message : "Campaign attribution update failed."
       });
-    }
+    },
+    isAllowed: canUpdateOrder,
+    invalidate: [...orderInvalidateKeys]
   });
 
   const itemRows = useMemo(
@@ -376,11 +382,6 @@ export const OrderDetailPage = () => {
     ? humanize(entity.payment.provider)
     : "Not specified";
 
-  const canUpdateOrder = adminHasAnyPermission(actorPermissions, ["orders.update"]);
-  const canOverrideFulfillment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment", "orders.update"]);
-  const canCancelOrder = adminHasAnyPermission(actorPermissions, ["orders.cancel"]);
-  const canViewAudit = adminHasAnyPermission(actorPermissions, ["security.audit.read"]);
-
   const railBtn =
     "group relative flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-[#1653cc] hover:text-white";
 
@@ -419,32 +420,32 @@ export const OrderDetailPage = () => {
 
   const confirmDisabled =
     confirmAction === "status"
-      ? statusMut.isPending
+      ? statusMut.isPending || statusMut.blocked
       : confirmAction === "assign"
-        ? assignMut.isPending
+        ? assignMut.isPending || assignMut.blocked
         : confirmAction === "ship"
-          ? shipMut.isPending
+          ? shipMut.isPending || shipMut.blocked
           : confirmAction === "cancel"
-            ? cancelMut.isPending
+            ? cancelMut.isPending || cancelMut.blocked
             : false;
 
   const submitConfirmedAction = () => {
     const action = confirmAction;
     setConfirmAction(null);
     if (action === "status") {
-      statusMut.mutate();
+      statusMut.run(undefined);
       return;
     }
     if (action === "assign") {
-      assignMut.mutate();
+      assignMut.run(undefined);
       return;
     }
     if (action === "ship") {
-      shipMut.mutate();
+      shipMut.run(undefined);
       return;
     }
     if (action === "cancel") {
-      cancelMut.mutate();
+      cancelMut.run(undefined);
     }
   };
 
@@ -810,7 +811,7 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={statusMut.isPending || !canUpdateOrder}
+                    disabled={statusMut.isPending || statusMut.blocked || !canUpdateOrder}
                     onClick={() => setConfirmAction("status")}
                     className="rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
                     title={canUpdateOrder ? undefined : "Requires orders.update permission"}
@@ -840,7 +841,7 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={assignMut.isPending || !warehouseId.trim() || !canOverrideFulfillment}
+                    disabled={assignMut.isPending || assignMut.blocked || !warehouseId.trim() || !canOverrideFulfillment}
                     onClick={() => setConfirmAction("assign")}
                     className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
                     title={canOverrideFulfillment ? undefined : "Requires orders.override_fulfillment permission"}
@@ -886,7 +887,7 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={shipMut.isPending || !shipWarehouseId.trim() || !canOverrideFulfillment}
+                    disabled={shipMut.isPending || shipMut.blocked || !shipWarehouseId.trim() || !canOverrideFulfillment}
                     onClick={() => setConfirmAction("ship")}
                     className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
                     title={canOverrideFulfillment ? undefined : "Requires orders.override_fulfillment permission"}
@@ -917,8 +918,8 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={campaignMut.isPending || !canUpdateOrder}
-                    onClick={() => campaignMut.mutate()}
+                    disabled={campaignMut.isPending || campaignMut.blocked || !canUpdateOrder}
+                    onClick={() => campaignMut.run(undefined)}
                     className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
                     title={canUpdateOrder ? undefined : "Requires orders.update permission"}
                   >
@@ -948,7 +949,7 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={cancelMut.isPending || !cancelReason.trim() || !canCancelOrder}
+                    disabled={cancelMut.isPending || cancelMut.blocked || !cancelReason.trim() || !canCancelOrder}
                     onClick={() => setConfirmAction("cancel")}
                     className="rounded-lg bg-rose-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
                     title={canCancelOrder ? undefined : "Requires orders.cancel permission"}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { createContext, createElement, useContext, useEffect, useMemo, type PropsWithChildren } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { fetchCurrentAdmin } from "@/features/auth/auth.api";
@@ -15,6 +15,15 @@ export type AdminBootstrapState =
   | "session-expired"
   | "offline-degraded";
 
+export type AdminBootstrapResult = {
+  state: AdminBootstrapState;
+  shell: Awaited<ReturnType<typeof fetchCurrentAdmin>>["data"] | null;
+  refetch: ReturnType<typeof useQuery>["refetch"];
+  clearSession: () => void;
+};
+
+const AdminBootstrapContext = createContext<AdminBootstrapResult | null>(null);
+
 const shellToActor = (shell: NonNullable<Awaited<ReturnType<typeof fetchCurrentAdmin>>["data"]>): AdminActor => ({
   id: shell.admin.id,
   email: shell.admin.email,
@@ -29,7 +38,7 @@ const shellToActor = (shell: NonNullable<Awaited<ReturnType<typeof fetchCurrentA
   }
 });
 
-export const useAdminBootstrap = () => {
+const useAdminBootstrapValue = (): AdminBootstrapResult => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
   const hydrated = useAdminAuthStore((state) => state.hydrated);
   const hydrate = useAdminAuthStore((state) => state.hydrate);
@@ -90,6 +99,9 @@ export const useAdminBootstrap = () => {
       return "offline-degraded";
     }
     if (meQuery.data?.data) {
+      if (meQuery.isFetching && !meQuery.isPending) {
+        return "auth-refreshing";
+      }
       return "authenticated";
     }
     return "cold";
@@ -101,4 +113,14 @@ export const useAdminBootstrap = () => {
     refetch: meQuery.refetch,
     clearSession
   };
+};
+
+export const AdminBootstrapProvider = ({ children }: PropsWithChildren) => {
+  const value = useAdminBootstrapValue();
+  return createElement(AdminBootstrapContext.Provider, { value }, children);
+};
+
+export const useAdminBootstrap = () => {
+  const context = useContext(AdminBootstrapContext);
+  return context ?? useAdminBootstrapValue();
 };

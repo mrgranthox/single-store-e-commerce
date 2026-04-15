@@ -13,6 +13,7 @@ import {
   archiveAdminCatalogProduct,
   listAdminCatalogBrands,
   listAdminCatalogCategories,
+  getAdminCatalogProduct,
   listAdminCatalogProducts,
   publishAdminCatalogProduct,
   unpublishAdminCatalogProduct,
@@ -20,6 +21,8 @@ import {
 } from "@/features/catalog/api/admin-catalog.api";
 import { formatProductListPrice } from "@/features/catalog/lib/format-money";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+
+const PRODUCT_DETAIL_STALE_MS = 20_000;
 
 const STATUS_OPTIONS: { value: string; label: string }[] = [
   { value: "", label: "All statuses" },
@@ -282,6 +285,20 @@ export const ProductsListPage = () => {
 
   const items = productsQuery.data?.data.items ?? [];
   const meta = productsQuery.data?.meta;
+
+  const prefetchProductDetail = useCallback(
+    (productId: string) => {
+      if (!accessToken) {
+        return;
+      }
+      void queryClient.prefetchQuery({
+        queryKey: ["admin-catalog-product", productId],
+        queryFn: () => getAdminCatalogProduct(accessToken, productId),
+        staleTime: PRODUCT_DETAIL_STALE_MS
+      });
+    },
+    [accessToken, queryClient]
+  );
 
   useEffect(() => {
     if (items.length === 0) {
@@ -642,7 +659,10 @@ export const ProductsListPage = () => {
                 ) : (
                   items.map((product) => (
                     <Fragment key={product.id}>
-                    <tr className="group transition-colors hover:bg-[#e6e7f6]/80">
+                    <tr
+                      className="group transition-colors hover:bg-[#e6e7f6]/80"
+                      onMouseEnter={() => prefetchProductDetail(product.id)}
+                    >
                       <td className="px-3 py-2 align-middle">
                         <input
                           type="checkbox"
@@ -674,6 +694,7 @@ export const ProductsListPage = () => {
                               <Link
                                 to={`/admin/catalog/products/${product.id}`}
                                 className="font-semibold text-[#4f7ef8] hover:underline"
+                                onFocus={() => prefetchProductDetail(product.id)}
                               >
                                 {product.title}
                               </Link>

@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { TechnicalJsonDisclosure } from "@/components/primitives/DataPresentation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import {
   ApiError,
@@ -60,7 +61,6 @@ export const RefundDetailPage = () => {
   const { refundId = "" } = useParams<{ refundId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
-  const queryClient = useQueryClient();
   const [note, setNote] = useState("");
   const [rejectNote, setRejectNote] = useState("");
   const [providerRef, setProviderRef] = useState("");
@@ -77,38 +77,41 @@ export const RefundDetailPage = () => {
     enabled: Boolean(accessToken) && Boolean(refundId)
   });
 
-  const inv = () => {
-    void queryClient.invalidateQueries({ queryKey: ["admin-refund-detail", refundId] });
-    void queryClient.invalidateQueries({ queryKey: ["admin-refunds"] });
-    if (e?.payment.id) {
-      void queryClient.invalidateQueries({ queryKey: ["admin-payment-detail", e.payment.id] });
-    }
-    if (e?.order.id) {
-      void queryClient.invalidateQueries({ queryKey: ["admin-order-detail", e.order.id] });
-    }
-  };
+  const e = detailQuery.data?.data.entity;
+  const canManageRefund = adminHasAnyPermission(actorPermissions, ["refunds.approve"]);
 
-  const approveMut = useMutation({
+  const refundInvalidateKeys = [
+    ["admin-refund-detail", refundId],
+    ["admin-refunds"],
+    ...(e?.payment.id ? ([["admin-payment-detail", e.payment.id]] as const) : []),
+    ...(e?.order.id ? ([["admin-order-detail", e.order.id]] as const) : [])
+  ] as const;
+
+  const approveMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return approveAdminRefund(accessToken, refundId, { note: note.trim() || undefined });
     },
-    onSuccess: inv
+    isAllowed: canManageRefund,
+    isAvailable: e?.state === "PENDING_APPROVAL",
+    invalidate: [...refundInvalidateKeys]
   });
 
-  const rejectMut = useMutation({
+  const rejectMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return rejectAdminRefund(accessToken, refundId, { note: rejectNote.trim() || "Rejected" });
     },
-    onSuccess: inv
+    isAllowed: canManageRefund,
+    isAvailable: e?.state === "PENDING_APPROVAL",
+    invalidate: [...refundInvalidateKeys]
   });
 
-  const completeMut = useMutation({
+  const completeMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
@@ -118,20 +121,19 @@ export const RefundDetailPage = () => {
         ...(providerRef.trim() ? { providerRefundRef: providerRef.trim() } : {})
       });
     },
-    onSuccess: inv
+    isAllowed: canManageRefund,
+    isAvailable: e?.state === "APPROVED" || e?.state === "PENDING_PROVIDER",
+    invalidate: [...refundInvalidateKeys]
   });
 
-  const e = detailQuery.data?.data.entity;
   const err =
     detailQuery.error instanceof ApiError
       ? detailQuery.error.message
       : detailQuery.error instanceof Error
         ? detailQuery.error.message
         : null;
-
   const reasonPrimary = e?.return?.customerReason?.trim() || "No shopper reason on file.";
   const reasonSecondary = e?.internalNote?.trim() || "—";
-  const canManageRefund = adminHasAnyPermission(actorPermissions, ["refunds.approve"]);
   const confirmTitle =
     confirmAction === "approve"
       ? "Approve this refund?"
@@ -150,26 +152,26 @@ export const RefundDetailPage = () => {
           : undefined;
   const confirmDisabled =
     confirmAction === "approve"
-      ? approveMut.isPending
+      ? approveMut.isPending || approveMut.blocked
       : confirmAction === "reject"
-        ? rejectMut.isPending || !rejectNote.trim()
+        ? rejectMut.isPending || rejectMut.blocked || !rejectNote.trim()
         : confirmAction === "complete"
-          ? completeMut.isPending
+          ? completeMut.isPending || completeMut.blocked
           : false;
 
   const submitConfirmedAction = () => {
     const action = confirmAction;
     setConfirmAction(null);
     if (action === "approve") {
-      approveMut.mutate();
+      approveMut.run(undefined);
       return;
     }
     if (action === "reject") {
-      rejectMut.mutate();
+      rejectMut.run(undefined);
       return;
     }
     if (action === "complete") {
-      completeMut.mutate();
+      completeMut.run(undefined);
     }
   };
 
@@ -539,7 +541,7 @@ export const RefundDetailPage = () => {
                   <>
                     <button
                       type="button"
-                      disabled={approveMut.isPending || !canManageRefund}
+                      disabled={approveMut.isPending || approveMut.blocked || !canManageRefund}
                       onClick={() => setConfirmAction("approve")}
                       className="group flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-br from-[#006b2d] to-[#00873b] py-3 px-4 font-bold text-white transition-all hover:opacity-90 active:scale-[0.98]"
                       title={canManageRefund ? undefined : "Requires refunds.approve permission"}
@@ -555,7 +557,7 @@ export const RefundDetailPage = () => {
                     />
                     <button
                       type="button"
-                      disabled={rejectMut.isPending || !rejectNote.trim() || !canManageRefund}
+                      disabled={rejectMut.isPending || rejectMut.blocked || !rejectNote.trim() || !canManageRefund}
                       onClick={() => setConfirmAction("reject")}
                       className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-red-600 bg-transparent py-3 px-4 font-bold text-red-600 transition-all hover:bg-red-50 active:scale-[0.98] disabled:opacity-50"
                       title={canManageRefund ? undefined : "Requires refunds.approve permission"}
@@ -578,7 +580,7 @@ export const RefundDetailPage = () => {
                     </label>
                     <button
                       type="button"
-                      disabled={completeMut.isPending || !canManageRefund}
+                      disabled={completeMut.isPending || completeMut.blocked || !canManageRefund}
                       onClick={() => setConfirmAction("complete")}
                       className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 py-3 px-4 font-bold text-white hover:bg-slate-800 disabled:opacity-50"
                       title={canManageRefund ? undefined : "Requires refunds.approve permission"}

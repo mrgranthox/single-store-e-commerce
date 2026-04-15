@@ -14,6 +14,7 @@ import {
 import { findAdminScreenByPathname } from "@/lib/admin-paths/matchAdminScreen";
 import { adminMayAccessScreen } from "@/lib/admin-rbac/screenAccess";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminBootstrap } from "@/features/auth/useAdminBootstrap";
 
 const SIDEBAR_COLLAPSED_KEY = "admin-sidebar-collapsed";
 
@@ -84,6 +85,7 @@ const navLinkClass = (isActive: boolean, collapsed: boolean) =>
   );
 
 export const AdminShell = ({ children }: PropsWithChildren) => {
+  const { state: bootstrapState, shell } = useAdminBootstrap();
   const navigate = useNavigate();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const clearSession = useAdminAuthStore((s) => s.clearSession);
@@ -106,11 +108,26 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
 
   const location = useLocation();
   const actor = useAdminAuthStore((state) => state.actor);
+  const effectiveActor = actor ?? (shell
+    ? {
+        id: shell.admin.id,
+        email: shell.admin.email,
+        fullName: shell.admin.email.split("@")[0]?.replace(/[._-]+/g, " ") ?? null,
+        status: shell.admin.status,
+        roles: shell.roles.map((role) => role.code),
+        permissions: shell.permissions,
+        sessionSummary: {
+          sessionId: shell.session?.sessionId ?? null,
+          totalSessions: shell.security.totalSessions,
+          activeSessions: shell.security.activeSessions
+        }
+      }
+    : null);
   const currentScreen = findAdminScreenByPathname(location.pathname);
   const breadcrumbTrail = [currentScreen?.group?.replace(/-/g, " "), currentScreen?.title].filter(Boolean);
 
   const initials = (() => {
-    const n = actor?.fullName ?? actor?.email ?? "A";
+    const n = effectiveActor?.fullName ?? effectiveActor?.email ?? "A";
     const parts = n.split(/\s+/).filter(Boolean);
     if (parts.length >= 2) {
       return `${parts[0]![0]!}${parts[1]![0]!}`.toUpperCase();
@@ -119,9 +136,9 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
   })();
 
   const mayOpenProfile = adminMayAccessScreen(
-    actor?.permissions,
+    effectiveActor?.permissions,
     adminScreenLookup["admin-profile-security"]!.permissionHints,
-    actor?.roles
+    effectiveActor?.roles
   );
 
   const handleLogout = async () => {
@@ -141,6 +158,16 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="min-h-screen stitch-canvas antialiased">
+      {bootstrapState === "auth-refreshing" ? (
+        <div
+          className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-0.5 overflow-hidden bg-[#1653cc]/20"
+          role="status"
+          aria-live="polite"
+          aria-label="Refreshing admin session"
+        >
+          <div className="h-full w-full animate-pulse bg-[#1653cc]" />
+        </div>
+      ) : null}
       {mobileNavOpen ? (
         <button
           type="button"
@@ -188,7 +215,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
           <div className="space-y-5">
             {adminSidebarGroups.map((group) => {
               const visibleScreens = group.screens.filter((screenItem) =>
-                adminMayAccessScreen(actor?.permissions, screenItem.permissionHints, actor?.roles)
+                adminMayAccessScreen(effectiveActor?.permissions, screenItem.permissionHints, effectiveActor?.roles)
               );
               if (visibleScreens.length === 0) {
                 return null;
@@ -236,7 +263,11 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
         </nav>
 
         <div className="shrink-0 space-y-0.5 border-t border-white/[0.08] px-2 py-4">
-          {adminMayAccessScreen(actor?.permissions, adminScreenLookup["system-settings"].permissionHints, actor?.roles) ? (
+          {adminMayAccessScreen(
+            effectiveActor?.permissions,
+            adminScreenLookup["system-settings"].permissionHints,
+            effectiveActor?.roles
+          ) ? (
             <Link
               to="/admin/system/settings"
               className={clsx(
@@ -275,10 +306,10 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
             {!sidebarCollapsed ? (
               <div className="min-w-0 flex-1 overflow-hidden">
                 <p className="truncate text-xs font-bold text-white">
-                  {actor?.fullName ?? actor?.email ?? "Admin User"}
+                  {effectiveActor?.fullName ?? effectiveActor?.email ?? "Admin User"}
                 </p>
                 <p className="truncate text-[10px] uppercase tracking-tighter text-[#7d8aa3]">
-                  {(actor?.roles?.[0] ?? "Enterprise").replace(/_/g, " ")} admin
+                  {(effectiveActor?.roles?.[0] ?? "Enterprise").replace(/_/g, " ")} admin
                 </p>
               </div>
             ) : null}
@@ -408,10 +439,10 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
             <div className="flex items-center gap-3 border-l border-slate-200 pl-3 sm:pl-4">
               <div className="hidden text-right sm:block">
                 <p className="text-xs font-bold leading-none text-slate-900">
-                  {actor?.fullName ?? actor?.email ?? "Admin"}
+                  {effectiveActor?.fullName ?? effectiveActor?.email ?? "Admin"}
                 </p>
                 <p className="max-w-[140px] truncate text-[10px] font-medium text-slate-500">
-                  {(actor?.roles?.[0] ?? "Admin").replace(/_/g, " ")}
+                  {(effectiveActor?.roles?.[0] ?? "Admin").replace(/_/g, " ")}
                 </p>
               </div>
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-white bg-slate-200 text-[10px] font-bold text-slate-700 shadow-sm">

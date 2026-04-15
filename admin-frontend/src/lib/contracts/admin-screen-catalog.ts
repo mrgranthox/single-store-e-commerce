@@ -239,8 +239,8 @@ const catalogScreens = [
     group: "catalog",
     path: "/admin/catalog/products/:productId/variants",
     purpose: "Variant creation and mutation workspace with availability and pricing adjacency.",
-    endpointIds: ["catalog.variants.list", "catalog.variants.create", "catalog.variants.update"],
-    actions: ["Create variant", "Edit variant", "Inspect stock and price per variant"],
+    endpointIds: ["catalog.variants.list", "catalog.variants.create", "catalog.variants.update", "catalog.variants.bulkArchive"],
+    actions: ["Create variant", "Edit variant", "Bulk archive variants", "Inspect stock and price per variant"],
     permissionHints: ["catalog.variants.read", "catalog.variants.mutate"]
   }),
   screen({
@@ -261,8 +261,14 @@ const catalogScreens = [
     group: "catalog",
     path: "/admin/catalog/products/:productId/pricing",
     purpose: "Price, compare-at price, merchandising state, and publish-readiness workspace.",
-    endpointIds: ["catalog.pricing.detail", "catalog.pricing.update", "catalog.products.publish", "catalog.products.unpublish"],
-    actions: ["Update price", "Update compare-at price", "Publish or unpublish product"],
+    endpointIds: [
+      "catalog.pricing.detail",
+      "catalog.pricing.update",
+      "catalog.pricing.scheduledApply",
+      "catalog.products.publish",
+      "catalog.products.unpublish"
+    ],
+    actions: ["Update price", "Update compare-at price", "Apply scheduled pricing", "Publish or unpublish product"],
     permissionHints: ["catalog.products.change_price", "catalog.products.publish"]
   }),
   screen({

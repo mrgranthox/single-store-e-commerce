@@ -1,15 +1,16 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 import {
   fetchAdminSessions,
-  fetchCurrentAdmin,
   revokeAdminSession,
   revokeAllAdminSessions
 } from "@/features/auth/auth.api";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminBootstrap } from "@/features/auth/useAdminBootstrap";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 
 const formatLastActive = (iso: string | null | undefined, isCurrent: boolean) => {
   if (isCurrent) {
@@ -49,13 +50,7 @@ const deviceSummary = (userAgent: string | null) => {
 
 export const ProfileSecurityPage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
-  const queryClient = useQueryClient();
-
-  const meQuery = useQuery({
-    queryKey: ["admin-me", accessToken],
-    queryFn: () => fetchCurrentAdmin(accessToken!),
-    enabled: Boolean(accessToken)
-  });
+  const { shell } = useAdminBootstrap();
 
   const sessionsQuery = useQuery({
     queryKey: ["admin-sessions", accessToken],
@@ -63,7 +58,7 @@ export const ProfileSecurityPage = () => {
     enabled: Boolean(accessToken)
   });
 
-  const revokeOne = useMutation({
+  const revokeOne = useAdminAction({
     mutationFn: async (sessionId: string) => {
       const stepUpToken = await requestAdminStepUpToken({
         accessToken: accessToken!,
@@ -71,12 +66,10 @@ export const ProfileSecurityPage = () => {
       });
       return revokeAdminSession(accessToken!, sessionId, stepUpToken);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["admin-sessions"] });
-    }
+    invalidate: [["admin-sessions"]]
   });
 
-  const revokeAll = useMutation({
+  const revokeAll = useAdminAction({
     mutationFn: async () => {
       const stepUpToken = await requestAdminStepUpToken({
         accessToken: accessToken!,
@@ -84,13 +77,11 @@ export const ProfileSecurityPage = () => {
       });
       return revokeAllAdminSessions(accessToken!, stepUpToken);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["admin-sessions"] });
-    }
+    invalidate: [["admin-sessions"]]
   });
 
-  const admin = meQuery.data?.data.admin;
-  const roles = meQuery.data?.data.roles ?? [];
+  const admin = shell?.admin;
+  const roles = shell?.roles ?? [];
   const roleLabel = roles.map((r) => r.name).join(", ") || "—";
   const email = admin?.email ?? "—";
   const fullName = email.includes("@") ? email.split("@")[0]?.replace(/\./g, " ") ?? "—" : email;
@@ -306,8 +297,8 @@ export const ProfileSecurityPage = () => {
                             <button
                               type="button"
                               className="text-[0.65rem] font-bold uppercase tracking-tighter text-red-600 opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-40"
-                              disabled={revokeOne.isPending}
-                              onClick={() => revokeOne.mutate(sessionItem.id)}
+                              disabled={revokeOne.isPending || revokeOne.blocked}
+                              onClick={() => revokeOne.run(sessionItem.id)}
                             >
                               Revoke
                             </button>
@@ -324,9 +315,9 @@ export const ProfileSecurityPage = () => {
                 type="button"
                 className="w-full rounded-lg border border-red-600/20 py-2.5 text-sm font-bold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
                 disabled={
-                  revokeAll.isPending || !(sessionsQuery.data?.data.items ?? []).some((s) => !s.current)
+                  revokeAll.isPending || revokeAll.blocked || !(sessionsQuery.data?.data.items ?? []).some((s) => !s.current)
                 }
-                onClick={() => revokeAll.mutate()}
+                onClick={() => revokeAll.run(undefined)}
               >
                 Revoke all other sessions
               </button>

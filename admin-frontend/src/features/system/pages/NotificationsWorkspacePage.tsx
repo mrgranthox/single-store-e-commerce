@@ -119,8 +119,8 @@ export const NotificationsWorkspacePage = () => {
       <button
         type="button"
         className="text-xs font-semibold text-[#434654] underline decoration-dotted hover:text-[#1653cc]"
-        onClick={() => retryMutation.mutate(item.id)}
-        disabled={retryMutation.isPending}
+        onClick={() => retryMutation.run(item.id)}
+        disabled={retryMutation.isPending || retryMutation.blocked}
       >
         Retry
       </button>
@@ -181,7 +181,7 @@ export const NotificationsWorkspacePage = () => {
             placeholder="recipient@example.com"
             className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
           />
-          <AsyncActionButton pending={createMutation.isPending} onClick={() => createMutation.mutate(undefined)}>
+          <AsyncActionButton pending={createMutation.isPending} blocked={createMutation.blocked} onClick={() => createMutation.run(undefined)}>
             Queue notification
           </AsyncActionButton>
         </div>

@@ -105,10 +105,10 @@ export const AdminUserInvitationsPage = () => {
     <span key={`status-${item.id}`} className="text-xs font-semibold uppercase text-[#5b5e68]">{item.status}</span>,
     <span key={`expires-${item.id}`} className="text-xs text-[#737685]">{formatWhen(item.expiresAt)}</span>,
     <div key={`actions-${item.id}`} className="flex gap-2">
-      <button type="button" className="text-xs font-semibold text-[#1653cc] underline" onClick={() => resendMutation.mutate(item.id)} disabled={resendMutation.isPending || item.status === "ACCEPTED"}>
+      <button type="button" className="text-xs font-semibold text-[#1653cc] underline" onClick={() => resendMutation.run(item.id)} disabled={resendMutation.isPending || resendMutation.blocked || item.status === "ACCEPTED"}>
         Resend
       </button>
-      <button type="button" className="text-xs font-semibold text-[#ba1a1a] underline" onClick={() => revokeMutation.mutate(item.id)} disabled={revokeMutation.isPending || item.status !== "PENDING"}>
+      <button type="button" className="text-xs font-semibold text-[#ba1a1a] underline" onClick={() => revokeMutation.run(item.id)} disabled={revokeMutation.isPending || revokeMutation.blocked || item.status !== "PENDING"}>
         Revoke
       </button>
     </div>
@@ -153,7 +153,7 @@ export const AdminUserInvitationsPage = () => {
           ))}
         </div>
         <div className="mt-4">
-          <AsyncActionButton pending={createMutation.isPending} onClick={() => createMutation.mutate(undefined)}>
+          <AsyncActionButton pending={createMutation.isPending} blocked={createMutation.blocked} onClick={() => createMutation.run(undefined)}>
             Send invitation
           </AsyncActionButton>
         </div>

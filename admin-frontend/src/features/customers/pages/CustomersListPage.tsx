@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -6,7 +6,12 @@ import { PageHeader } from "@/components/primitives/PageHeader";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, listAdminCustomers, type AdminCustomerListItem } from "@/features/customers/api/admin-customers.api";
+import {
+  ApiError,
+  getAdminCustomerDetail,
+  listAdminCustomers,
+  type AdminCustomerListItem
+} from "@/features/customers/api/admin-customers.api";
 import { displayCustomerName } from "@/features/customers/lib/customerDisplay";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { StitchFilterPanel } from "@/components/stitch";
@@ -77,6 +82,8 @@ const parseOptionalInt = (value: string) => {
   const parsed = parseInt(trimmed, 10);
   return Number.isFinite(parsed) ? parsed : undefined;
 };
+
+const CUSTOMER_DETAIL_STALE_MS = 20_000;
 
 const parseOptionalLtvCents = (value: string) => {
   const trimmed = value.trim();
@@ -159,6 +166,20 @@ export const CustomersListPage = () => {
     },
     enabled: Boolean(accessToken)
   });
+
+  const prefetchCustomerDetail = useCallback(
+    (customerId: string) => {
+      if (!accessToken) {
+        return;
+      }
+      void queryClient.prefetchQuery({
+        queryKey: ["admin-customer-detail", customerId],
+        queryFn: () => getAdminCustomerDetail(accessToken, customerId),
+        staleTime: CUSTOMER_DETAIL_STALE_MS
+      });
+    },
+    [accessToken, queryClient]
+  );
 
   const items = customersQuery.data?.data.items ?? [];
   const meta = customersQuery.data?.meta;
@@ -379,7 +400,11 @@ export const CustomersListPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#c3c6d6]/20">
                   {items.map((c) => (
-                    <tr key={c.id} className="transition-colors hover:bg-[#faf8ff]">
+                    <tr
+                      key={c.id}
+                      className="transition-colors hover:bg-[#faf8ff]"
+                      onMouseEnter={() => prefetchCustomerDetail(c.id)}
+                    >
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#b4c5ff] text-[11px] font-bold text-[#003ea7]">
@@ -389,6 +414,7 @@ export const CustomersListPage = () => {
                             <Link
                               to={`/admin/customers/${c.id}`}
                               className="block truncate font-semibold text-[#1653cc] hover:underline"
+                              onFocus={() => prefetchCustomerDetail(c.id)}
                             >
                               {displayCustomerName(c)}
                             </Link>

@@ -9,6 +9,8 @@
  * 4) every runtime admin API path matches a backend route metadata entry
  * 5) every screen endpoint id is backed by at least one runtime client call
  * 6) known compat-only paths are not used from the frontend runtime
+ * 7) every permission string in backend route metadata exists in rbac.constants.ts
+ * 8) screen permission hints overlap backend route metadata permissions for each referenced endpoint
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -23,8 +25,6 @@ const backendPermissionsPath = path.join(repoRoot, "backend/src/modules/roles-pe
 
 const permissionAliasMap = {
   "catalog.products.mutate": ["catalog.products.write"],
-  "catalog.products.create": ["catalog.products.write"],
-  "catalog.products.update": ["catalog.products.write"],
   "catalog.variants.mutate": ["catalog.products.write"],
   "catalog.variants.read": ["catalog.products.read"],
   "catalog.media.mutate": ["catalog.products.write"],
@@ -39,20 +39,26 @@ const permissionAliasMap = {
   "marketing.coupons.mutate": ["marketing.coupons.write"],
   "marketing.promotions.mutate": ["marketing.promotions.write"],
   "customers.note": ["customers.write_notes"],
-  "customers.suspend": ["customers.update_status"],
-  "customers.reactivate": ["customers.update_status"],
   "customers.restore": ["customers.update_status"],
+  "operations.dashboard.read": ["reports.read", "inventory.read", "orders.read"],
+  "support.analytics.read": ["support.read"],
+  "security.dashboard.read": ["security.events.read"],
+  "system.observability.read": ["system.jobs.read", "integrations.webhooks.read"],
   "security.read": ["security.events.read", "security.audit.read"],
   "security.alerts.read": ["security.events.read"],
-  "security.alerts.manage": ["security.events.read"],
-  "security.events.manage": ["security.events.read"],
-  "security.incidents.read": ["security.incidents.manage"],
+  "security.alerts.manage": ["security.events.read", "security.incidents.manage"],
+  "security.events.manage": ["security.events.read", "security.incidents.manage"],
+  "security.incidents.read": ["security.incidents.manage", "security.events.read"],
   "security.incidents.create": ["security.incidents.manage"],
   "security.risk.read": ["security.events.read"],
-  "security.risk.review": ["security.events.read"],
+  "security.risk.review": ["security.events.read", "security.incidents.manage"],
   "payments.investigate": ["payments.read"],
+  "inventory.read": ["catalog.products.read"],
   "inventory.warehouses.read": ["inventory.read"],
   "inventory.warehouses.mutate": ["inventory.manage_warehouses"],
+  "inventory.adjust": ["inventory.read"],
+  "orders.update": ["orders.override_fulfillment"],
+  "reports.sales.read": ["reports.read"],
   "support.escalate": ["support.assign"],
   "marketing.promotions.rules.mutate": ["marketing.promotions.write"],
   "reports.products.read": ["reports.read"],
@@ -61,8 +67,13 @@ const permissionAliasMap = {
   "reports.support.read": ["reports.read"],
   "reports.post_purchase.read": ["reports.read"],
   "reports.marketing.read": ["reports.read"],
-  "marketing.analytics.read": ["reports.read"],
-  "catalog.analytics.read": ["reports.read"],
+  "marketing.analytics.read": ["reports.read", "marketing.coupons.read", "marketing.promotions.read"],
+  "catalog.analytics.read": ["reports.read", "catalog.products.read"],
+  "catalog.products.create": ["catalog.products.write", "catalog.categories.read", "catalog.brands.read"],
+  "catalog.products.update": ["catalog.products.write", "catalog.products.read", "catalog.categories.read", "catalog.brands.read"],
+  "catalog.products.change_price": ["catalog.products.read"],
+  "customers.suspend": ["customers.update_status", "customers.write_notes"],
+  "customers.reactivate": ["customers.update_status", "customers.write_notes"],
   "system.integrations.read": ["integrations.webhooks.read"],
   "system.notifications.retry": ["notifications.write"]
 };
@@ -322,6 +333,44 @@ const backendPermissions = new Set(
   [...read(backendPermissionsPath).matchAll(/code:\s*"([^"]+)"/g)].map((match) => match[1])
 );
 
+const extractBackendRouteMetadataPermissionCodes = () => {
+  const routeFiles = walk(path.join(repoRoot, "backend/src/modules"), (fullPath) => fullPath.endsWith(".routes.ts"));
+  const references = [];
+  for (const filePath of routeFiles) {
+    const text = read(filePath);
+    const relative = toPosix(path.relative(repoRoot, filePath));
+    for (const match of text.matchAll(/permissions:\s*\[([^\]]*)\]/g)) {
+      const inner = match[1];
+      for (const codeMatch of inner.matchAll(/"([^"]+)"/g)) {
+        references.push({ code: codeMatch[1], sourceFile: relative });
+      }
+    }
+  }
+  return references;
+};
+
+const extractBackendRouteMetadataEntries = () => {
+  const routeFiles = walk(path.join(repoRoot, "backend/src/modules"), (fullPath) => fullPath.endsWith(".routes.ts"));
+  const entries = [];
+  for (const filePath of routeFiles) {
+    const text = read(filePath);
+    const relative = toPosix(path.relative(repoRoot, filePath));
+    for (const match of text.matchAll(/\{\s*method:\s*"([A-Z]+)"[\s\S]*?path:\s*"([^"]+)"([\s\S]*?)\}/g)) {
+      const [, method, routePath, tail] = match;
+      const permissionsMatch = tail.match(/permissions:\s*\[([^\]]*)\]/);
+      const permissions = permissionsMatch ? [...permissionsMatch[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]) : [];
+      entries.push({
+        method,
+        path: routePath,
+        normalizedKey: normalizeRouteKey(method, routePath),
+        permissions,
+        sourceFile: relative
+      });
+    }
+  }
+  return entries;
+};
+
 const backendRoutes = extractBackendRouteMetadata();
 const endpointCatalog = extractEndpointCatalog();
 const screenCatalog = extractScreenCatalog();
@@ -330,10 +379,33 @@ const runtimePaths = extractRuntimeAdminPaths();
 const backendRouteKeySet = new Set(backendRoutes.map((route) => route.normalizedKey));
 const runtimePathKeySet = new Set(runtimePaths.map((route) => route.normalizedKey));
 const endpointById = new Map(endpointCatalog.map((endpoint) => [endpoint.id, endpoint]));
+const backendMetadataPermissionRefs = extractBackendRouteMetadataPermissionCodes();
+const backendMetadataEntries = extractBackendRouteMetadataEntries();
+const backendPermissionsByRouteKey = new Map();
+
+for (const entry of backendMetadataEntries) {
+  if (!entry.permissions.length) {
+    continue;
+  }
+  const existing = backendPermissionsByRouteKey.get(entry.normalizedKey) ?? new Set();
+  for (const permission of entry.permissions) {
+    existing.add(permission);
+  }
+  backendPermissionsByRouteKey.set(entry.normalizedKey, existing);
+}
 
 const errors = [];
 
+for (const { code, sourceFile } of backendMetadataPermissionRefs) {
+  if (!backendPermissions.has(code)) {
+    errors.push(`[rbac] route metadata references unknown permission "${code}" in ${sourceFile}.`);
+  }
+}
+
 for (const screen of screenCatalog) {
+  const expandedScreenHints = new Set(
+    screen.permissionHints.flatMap((hint) => expandedPermissionsFor(hint))
+  );
   for (const endpointId of screen.endpointIds) {
     if (!endpointById.has(endpointId)) {
       errors.push(`[contracts] screen "${screen.id}" references unknown endpoint id "${endpointId}".`);
@@ -344,6 +416,19 @@ for (const screen of screenCatalog) {
       errors.push(
         `[contracts] screen "${screen.id}" references endpoint "${endpointId}" (${endpoint.method} ${endpoint.path}) but no runtime admin client call matches it.`
       );
+    }
+    if (endpoint) {
+      const backendRequiredPermissions = backendPermissionsByRouteKey.get(endpoint.normalizedKey);
+      if (backendRequiredPermissions && backendRequiredPermissions.size > 0) {
+        const hasOverlap = [...backendRequiredPermissions].some((permission) =>
+          expandedScreenHints.has(permission)
+        );
+        if (!hasOverlap) {
+          errors.push(
+            `[rbac] screen "${screen.id}" endpoint "${endpointId}" (${endpoint.method} ${endpoint.path}) requires one of [${[...backendRequiredPermissions].join(", ")}] but screen permission hints are [${screen.permissionHints.join(", ")}].`
+          );
+        }
+      }
     }
   }
 
@@ -389,5 +474,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Admin contracts OK: ${screenCatalog.length} screens, ${endpointCatalog.length} endpoint ids, ${runtimePaths.length} runtime admin calls, ${backendRoutes.length} backend metadata routes checked.`
+  `Admin contracts OK: ${screenCatalog.length} screens, ${endpointCatalog.length} endpoint ids, ${runtimePaths.length} runtime admin calls, ${backendRoutes.length} backend metadata routes checked, ${backendMetadataPermissionRefs.length} backend metadata permission refs validated, ${backendMetadataEntries.length} backend metadata entries RBAC-aligned.`
 );

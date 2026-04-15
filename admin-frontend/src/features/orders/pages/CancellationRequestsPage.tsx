@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { PageActionsMenu } from "@/components/primitives/PageActionsMenu";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import {
   ApiError,
   approveAdminCancellationRequest,
@@ -153,6 +155,7 @@ const exportPageCsv = (items: CancellationRequestListItem[]) => {
 
 export const CancellationRequestsPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [statusDraft, setStatusDraft] = useState("");
@@ -161,6 +164,7 @@ export const CancellationRequestsPage = () => {
     { id: string; action: "approve" | "reject" } | null
   >(null);
   const [resolveNote, setResolveNote] = useState("");
+  const canResolveCancellation = adminHasAnyPermission(actorPermissions, ["orders.cancel"]);
 
   const queryKey = useMemo(
     () => ["admin-cancellation-requests", page, statusDraft] as const,
@@ -182,29 +186,31 @@ export const CancellationRequestsPage = () => {
     enabled: Boolean(accessToken)
   });
 
-  const approveMut = useMutation({
+  const approveMut = useAdminAction({
     mutationFn: async ({ id, note }: { id: string; note?: string }) => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return approveAdminCancellationRequest(accessToken, id, { note });
     },
+    isAllowed: canResolveCancellation,
+    invalidate: [["admin-cancellation-requests"]],
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-cancellation-requests"] });
       setResolveTarget(null);
       setResolveNote("");
     }
   });
 
-  const rejectMut = useMutation({
+  const rejectMut = useAdminAction({
     mutationFn: async ({ id, note }: { id: string; note?: string }) => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return rejectAdminCancellationRequest(accessToken, id, { note });
     },
+    isAllowed: canResolveCancellation,
+    invalidate: [["admin-cancellation-requests"]],
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-cancellation-requests"] });
       setResolveTarget(null);
       setResolveNote("");
     }
@@ -391,7 +397,7 @@ export const CancellationRequestsPage = () => {
                                 <button
                                   type="button"
                                   title="Approve"
-                                  disabled={approveMut.isPending || rejectMut.isPending}
+                                  disabled={approveMut.isPending || rejectMut.isPending || approveMut.blocked || rejectMut.blocked}
                                   onClick={() => {
                                     setResolveNote("");
                                     setResolveTarget({ id: row.id, action: "approve" });
@@ -403,7 +409,7 @@ export const CancellationRequestsPage = () => {
                                 <button
                                   type="button"
                                   title="Reject"
-                                  disabled={approveMut.isPending || rejectMut.isPending}
+                                  disabled={approveMut.isPending || rejectMut.isPending || approveMut.blocked || rejectMut.blocked}
                                   onClick={() => {
                                     setResolveNote("");
                                     setResolveTarget({ id: row.id, action: "reject" });
@@ -540,13 +546,13 @@ export const CancellationRequestsPage = () => {
               </button>
               <button
                 type="button"
-                disabled={approveMut.isPending || rejectMut.isPending}
+                disabled={approveMut.isPending || rejectMut.isPending || approveMut.blocked || rejectMut.blocked}
                 onClick={() => {
                   const note = resolveNote.trim() || undefined;
                   if (resolveTarget.action === "approve") {
-                    approveMut.mutate({ id: resolveTarget.id, note });
+                    approveMut.run({ id: resolveTarget.id, note });
                   } else {
-                    rejectMut.mutate({ id: resolveTarget.id, note });
+                    rejectMut.run({ id: resolveTarget.id, note });
                   }
                 }}
                 className={`rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:opacity-50 ${

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import {
   ApiError,
   approveAdminReturn,
@@ -34,7 +35,6 @@ const formatMoney = (cents: number, cur: string) => {
 export const ReturnDetailPage = () => {
   const { returnId = "" } = useParams<{ returnId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
-  const queryClient = useQueryClient();
   const [rejectNote, setRejectNote] = useState("");
   const [actionNote, setActionNote] = useState("");
   const [internalNoteDraft, setInternalNoteDraft] = useState("");
@@ -50,49 +50,53 @@ export const ReturnDetailPage = () => {
     enabled: Boolean(accessToken) && Boolean(returnId)
   });
 
-  const inv = () => queryClient.invalidateQueries({ queryKey: ["admin-return-detail", returnId] });
+  const e = detailQuery.data?.data.entity;
+  const status = e?.status ?? "";
 
-  const approveMut = useMutation({
+  const approveMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return approveAdminReturn(accessToken, returnId, { note: actionNote.trim() || undefined });
     },
-    onSuccess: inv
+    invalidate: [["admin-return-detail", returnId], ["admin-returns"]],
+    isAvailable: status === "REQUESTED"
   });
 
-  const rejectMut = useMutation({
+  const rejectMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return rejectAdminReturn(accessToken, returnId, { note: rejectNote.trim() || "Rejected" });
     },
-    onSuccess: inv
+    invalidate: [["admin-return-detail", returnId], ["admin-returns"]],
+    isAvailable: status === "REQUESTED"
   });
 
-  const receivedMut = useMutation({
+  const receivedMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return markReturnReceivedAdmin(accessToken, returnId, { note: actionNote.trim() || undefined });
     },
-    onSuccess: inv
+    invalidate: [["admin-return-detail", returnId], ["admin-returns"]],
+    isAvailable: status === "APPROVED"
   });
 
-  const completeMut = useMutation({
+  const completeMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return completeAdminReturn(accessToken, returnId, { note: actionNote.trim() || undefined });
     },
-    onSuccess: inv
+    invalidate: [["admin-return-detail", returnId], ["admin-returns"]],
+    isAvailable: status === "RECEIVED"
   });
 
-  const e = detailQuery.data?.data.entity;
   const err =
     detailQuery.error instanceof ApiError
       ? detailQuery.error.message
@@ -101,8 +105,6 @@ export const ReturnDetailPage = () => {
         : null;
 
   const primaryRefund = e?.refunds[0];
-  const status = e?.status ?? "";
-
   const stepActive = (() => {
     if (status === "REQUESTED") {
       return 0;
@@ -356,8 +358,8 @@ export const ReturnDetailPage = () => {
                     <>
                       <button
                         type="button"
-                        disabled={approveMut.isPending}
-                        onClick={() => approveMut.mutate()}
+                        disabled={approveMut.isPending || approveMut.blocked}
+                        onClick={() => approveMut.run(undefined)}
                         className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#006b2d] py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                       >
                         <MaterialIcon name="check_circle" className="text-lg" />
@@ -371,8 +373,8 @@ export const ReturnDetailPage = () => {
                       />
                       <button
                         type="button"
-                        disabled={rejectMut.isPending || !rejectNote.trim()}
-                        onClick={() => rejectMut.mutate()}
+                        disabled={rejectMut.isPending || rejectMut.blocked || !rejectNote.trim()}
+                        onClick={() => rejectMut.run(undefined)}
                         className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#ba1a1a] py-3 text-sm font-bold text-[#ba1a1a] transition-colors hover:bg-[#ffdad6] disabled:opacity-50"
                       >
                         <MaterialIcon name="cancel" className="text-lg" />
@@ -383,8 +385,8 @@ export const ReturnDetailPage = () => {
                   {e.status === "APPROVED" ? (
                     <button
                       type="button"
-                      disabled={receivedMut.isPending}
-                      onClick={() => receivedMut.mutate()}
+                      disabled={receivedMut.isPending || receivedMut.blocked}
+                      onClick={() => receivedMut.run(undefined)}
                       className="w-full rounded-lg bg-[#ecedfb] py-2.5 text-xs font-semibold text-[#181b25] disabled:opacity-50"
                     >
                       Mark as received
@@ -393,8 +395,8 @@ export const ReturnDetailPage = () => {
                   {e.status === "RECEIVED" ? (
                     <button
                       type="button"
-                      disabled={completeMut.isPending}
-                      onClick={() => completeMut.mutate()}
+                      disabled={completeMut.isPending || completeMut.blocked}
+                      onClick={() => completeMut.run(undefined)}
                       className="w-full rounded-lg bg-[#ecedfb] py-2.5 text-xs font-semibold text-[#181b25] disabled:opacity-50"
                     >
                       Complete

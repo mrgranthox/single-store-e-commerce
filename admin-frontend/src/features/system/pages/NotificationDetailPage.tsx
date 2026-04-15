@@ -47,7 +47,11 @@ export const NotificationDetailPage = () => {
         title={entity ? `Notification ${entity.type}` : "Notification detail"}
         description="Inspect payload, recipient, delivery attempts, and retry state."
         actions={
-          <AsyncActionButton pending={retryMutation.isPending} onClick={() => retryMutation.mutate(undefined)}>
+          <AsyncActionButton
+            pending={retryMutation.isPending}
+            blocked={retryMutation.blocked}
+            onClick={() => retryMutation.run(undefined)}
+          >
             Retry notification
           </AsyncActionButton>
         }

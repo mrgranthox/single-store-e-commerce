@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQueries } from "@tanstack/react-query";
 
@@ -71,7 +71,18 @@ export const AdminUserDetailPage = () => {
 
   const entity = detailQ.data?.data.entity;
   const roleOptions = rolesQ.data?.data.availableRoles ?? [];
-  const selectedSet = useMemo(() => new Set(selectedRoleCodes.length > 0 ? selectedRoleCodes : entity?.roles.map((role) => role.code) ?? []), [entity?.roles, selectedRoleCodes]);
+  const selectedSet = useMemo(() => new Set(selectedRoleCodes), [selectedRoleCodes]);
+
+  useEffect(() => {
+    if (!entity) {
+      return;
+    }
+    setEditForm({
+      firstName: entity.firstName ?? "",
+      lastName: entity.lastName ?? ""
+    });
+    setSelectedRoleCodes(entity.roles.map((role) => role.code));
+  }, [entity]);
 
   const updateProfileMutation = useAdminAction({
     mutationFn: async () => {
@@ -135,8 +146,8 @@ export const AdminUserDetailPage = () => {
       key={`revoke-${session.id}`}
       type="button"
       className="text-xs font-semibold text-[#ba1a1a] underline decoration-dotted disabled:opacity-50"
-      disabled={Boolean(session.revokedAt) || revokeSessionMutation.isPending}
-      onClick={() => revokeSessionMutation.mutate(session.id)}
+      disabled={Boolean(session.revokedAt) || revokeSessionMutation.isPending || revokeSessionMutation.blocked}
+      onClick={() => revokeSessionMutation.run(session.id)}
     >
       Revoke
     </button>
@@ -149,11 +160,11 @@ export const AdminUserDetailPage = () => {
         description="Profile metadata, role assignment, status control, and operator session management."
         actions={
           entity?.status === "ACTIVE" ? (
-            <DestructiveActionButton pending={suspendMutation.isPending} onClick={() => setConfirmAction("suspend")}>
+            <DestructiveActionButton pending={suspendMutation.isPending} blocked={suspendMutation.blocked} onClick={() => setConfirmAction("suspend")}>
               Suspend admin
             </DestructiveActionButton>
           ) : (
-            <AsyncActionButton pending={reactivateMutation.isPending} onClick={() => setConfirmAction("reactivate")}>
+            <AsyncActionButton pending={reactivateMutation.isPending} blocked={reactivateMutation.blocked} onClick={() => setConfirmAction("reactivate")}>
               Reactivate admin
             </AsyncActionButton>
           )
@@ -166,13 +177,13 @@ export const AdminUserDetailPage = () => {
         <>
           <SurfaceCard title="Profile metadata">
             <div className="grid gap-4 md:grid-cols-2">
-              <input value={editForm.firstName || entity.firstName || ""} onChange={(event) => setEditForm((current) => ({ ...current, firstName: event.target.value }))} placeholder="First name" className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm" />
-              <input value={editForm.lastName || entity.lastName || ""} onChange={(event) => setEditForm((current) => ({ ...current, lastName: event.target.value }))} placeholder="Last name" className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm" />
+              <input value={editForm.firstName} onChange={(event) => setEditForm((current) => ({ ...current, firstName: event.target.value }))} placeholder="First name" className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm" />
+              <input value={editForm.lastName} onChange={(event) => setEditForm((current) => ({ ...current, lastName: event.target.value }))} placeholder="Last name" className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm" />
               <input value={entity.email} readOnly className="rounded-lg border border-[#e0e2f0] bg-[#f8f9fb] px-3 py-2 text-sm" />
               <input value={entity.status} readOnly className="rounded-lg border border-[#e0e2f0] bg-[#f8f9fb] px-3 py-2 text-sm" />
             </div>
             <div className="mt-4">
-              <AsyncActionButton pending={updateProfileMutation.isPending} onClick={() => updateProfileMutation.mutate(undefined)}>
+              <AsyncActionButton pending={updateProfileMutation.isPending} blocked={updateProfileMutation.blocked} onClick={() => updateProfileMutation.run(undefined)}>
                 Save profile
               </AsyncActionButton>
             </div>
@@ -196,7 +207,7 @@ export const AdminUserDetailPage = () => {
               ))}
             </div>
             <div className="mt-4">
-              <AsyncActionButton pending={updateRolesMutation.isPending} onClick={() => updateRolesMutation.mutate(undefined)}>
+              <AsyncActionButton pending={updateRolesMutation.isPending} blocked={updateRolesMutation.blocked} onClick={() => updateRolesMutation.run(undefined)}>
                 Update roles
               </AsyncActionButton>
             </div>
@@ -219,9 +230,9 @@ export const AdminUserDetailPage = () => {
         onClose={() => setConfirmAction(null)}
         onConfirm={() => {
           if (confirmAction === "suspend") {
-            suspendMutation.mutate(undefined);
+            suspendMutation.run(undefined);
           } else if (confirmAction === "reactivate") {
-            reactivateMutation.mutate(undefined);
+            reactivateMutation.run(undefined);
           }
           setConfirmAction(null);
         }}

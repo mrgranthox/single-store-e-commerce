@@ -637,21 +637,35 @@ export const DashboardOverviewPage = () => {
           </section>
 
           <section className="space-y-4 rounded-[12px] bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <h3 className="text-xs font-bold uppercase tracking-[0.05em] text-[#434654]">Recent Activity</h3>
-              <Link
-                to="/admin/security/user-activity"
-                className="text-[9px] font-bold uppercase tracking-tighter text-[var(--color-primary)] hover:underline"
-              >
-                Full timeline
-              </Link>
+              <div className="flex shrink-0 items-center gap-2">
+                {activityQ.isFetching && !activityQ.isPending && activityQ.data ? (
+                  <span className="text-[9px] font-semibold uppercase tracking-tighter text-slate-400">Refreshing…</span>
+                ) : null}
+                <Link
+                  to="/admin/security/user-activity"
+                  className="text-[9px] font-bold uppercase tracking-tighter text-[var(--color-primary)] hover:underline"
+                >
+                  Full timeline
+                </Link>
+              </div>
             </div>
             {activityQ.isLoading ? (
               <p className="text-xs text-slate-500">Loading operational activity…</p>
             ) : activityQ.isError ? (
-              <p className="text-xs text-amber-800">
-                {activityQ.error instanceof ApiError ? activityQ.error.message : "Recent activity unavailable."}
-              </p>
+              <div className="space-y-2">
+                <p className="text-xs text-amber-800">
+                  {activityQ.error instanceof ApiError ? activityQ.error.message : "Recent activity unavailable."}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void activityQ.refetch()}
+                  className="rounded border border-amber-300 bg-white px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-900 hover:bg-amber-50"
+                >
+                  Retry
+                </button>
+              </div>
             ) : recentActivity.length === 0 ? (
               <p className="text-xs text-slate-500">No recent activity recorded yet.</p>
             ) : (

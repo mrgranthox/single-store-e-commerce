@@ -14,7 +14,12 @@ import {
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
-import { listAdminOrders, ApiError, type AdminOrderListItem } from "@/features/orders/api/admin-orders.api";
+import {
+  ApiError,
+  getAdminOrderDetail,
+  listAdminOrders,
+  type AdminOrderListItem
+} from "@/features/orders/api/admin-orders.api";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
@@ -122,6 +127,8 @@ const orderStatusPill = (status: string) => {
   return <GhostPill dotClass="bg-[#1653cc]" label={status.replace(/_/g, " ")} textClass="text-[#1653cc]" />;
 };
 
+const ORDER_DETAIL_STALE_MS = 20_000;
+
 export const OrdersListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
@@ -154,6 +161,20 @@ export const OrdersListPage = () => {
     },
     enabled: Boolean(accessToken)
   });
+
+  const prefetchOrderDetail = useCallback(
+    (orderId: string) => {
+      if (!accessToken) {
+        return;
+      }
+      void queryClient.prefetchQuery({
+        queryKey: ["admin-order-detail", orderId],
+        queryFn: () => getAdminOrderDetail(accessToken, orderId),
+        staleTime: ORDER_DETAIL_STALE_MS
+      });
+    },
+    [accessToken, queryClient]
+  );
 
   const items = ordersQuery.data?.data.items ?? [];
   const meta = ordersQuery.data?.meta;
@@ -525,7 +546,11 @@ export const OrdersListPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#e6e7f6]">
                   {items.map((order) => (
-                    <tr key={order.id} className="transition-colors hover:bg-[#e6e7f6]/80">
+                    <tr
+                      key={order.id}
+                      className="transition-colors hover:bg-[#e6e7f6]/80"
+                      onMouseEnter={() => prefetchOrderDetail(order.id)}
+                    >
                       <td className="px-6 py-4">
                         <input
                           type="checkbox"

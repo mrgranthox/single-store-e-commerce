@@ -148,7 +148,7 @@ export const AdminUsersPage = () => {
           ))}
         </div>
         <div className="mt-4">
-          <AsyncActionButton pending={createMutation.isPending} onClick={() => createMutation.mutate(undefined)}>
+          <AsyncActionButton pending={createMutation.isPending} blocked={createMutation.blocked} onClick={() => createMutation.run(undefined)}>
             Create admin user
           </AsyncActionButton>
         </div>

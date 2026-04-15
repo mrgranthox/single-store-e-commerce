@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import {
   ApiError,
   getAdminWebhookEvent,
@@ -73,8 +74,8 @@ export const WebhookDetailPage = () => {
   const { webhookEventId = "" } = useParams<{ webhookEventId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
-  const queryClient = useQueryClient();
   const [retryOpen, setRetryOpen] = useState(false);
+  const canRetryByPermission = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
 
   const detailQuery = useQuery({
     queryKey: ["admin-webhook-event", webhookEventId],
@@ -87,17 +88,15 @@ export const WebhookDetailPage = () => {
     enabled: Boolean(accessToken) && Boolean(webhookEventId)
   });
 
-  const retryMut = useMutation({
+  const retryMut = useAdminAction({
     mutationFn: () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return retryAdminWebhookEvent(accessToken, webhookEventId);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["admin-webhook-event", webhookEventId] });
-      void queryClient.invalidateQueries({ queryKey: ["admin-webhooks"] });
-    }
+    isAllowed: canRetryByPermission,
+    invalidate: [["admin-webhook-event", webhookEventId], ["admin-webhooks"]]
   });
 
   const raw = detailQuery.data?.data as WebhookDetail | undefined;
@@ -108,7 +107,6 @@ export const WebhookDetailPage = () => {
         ? detailQuery.error.message
         : null;
 
-  const canRetryByPermission = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
   const canRetry = raw?.signatureValid === true && canRetryByPermission;
 
   const attempts = [...(raw?.attempts ?? [])].sort((a, b) => b.attemptNo - a.attemptNo);
@@ -168,7 +166,7 @@ export const WebhookDetailPage = () => {
             </p>
             <button
               type="button"
-              disabled={!canRetry || retryMut.isPending}
+              disabled={!canRetry || retryMut.isPending || retryMut.blocked}
               onClick={() => setRetryOpen(true)}
               className="rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
             >
@@ -235,7 +233,7 @@ export const WebhookDetailPage = () => {
         onClose={() => setRetryOpen(false)}
         onConfirm={() => {
           setRetryOpen(false);
-          retryMut.mutate();
+          retryMut.run(undefined);
         }}
       />
     </div>

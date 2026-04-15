@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Lock, LogIn, Mail, AlertCircle } from "lucide-react";
@@ -25,8 +25,21 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 const envLabel = resolveFrontendEnvironmentLabel();
 
+const resolvePostAuthPath = (value: unknown) => {
+  if (typeof value !== "string" || !value.startsWith("/admin")) {
+    return "/admin/dashboard";
+  }
+  return value;
+};
+
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const postAuthPath = resolvePostAuthPath(
+    typeof location.state === "object" && location.state !== null && "from" in location.state
+      ? (location.state as { from?: unknown }).from
+      : null
+  );
   const setSession = useAdminAuthStore((state) => state.setSession);
   const [serverError, setServerError] = useState<string | null>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -52,7 +65,7 @@ export const LoginPage = () => {
         actor: adminLoginPayloadToActor(payload),
         remember: rememberDevice
       });
-      navigate("/admin/dashboard", { replace: true });
+      navigate(postAuthPath, { replace: true });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "We couldn’t sign you in. Please try again.";

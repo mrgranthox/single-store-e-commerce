@@ -4,18 +4,19 @@ import { AdminShell } from "@/components/layout/AdminShell";
 import { AdminShellSkeleton } from "@/components/primitives/AdminShellSkeleton";
 import { WorkspaceStateCard } from "@/components/primitives/WorkspaceStateCard";
 import { AdminRoutePermissionGate } from "@/components/routing/AdminRoutePermissionGate";
-import { useAdminBootstrap } from "@/features/auth/useAdminBootstrap";
+import { AdminBootstrapProvider, useAdminBootstrap } from "@/features/auth/useAdminBootstrap";
 
-export const ProtectedAdminLayout = () => {
+const ProtectedAdminLayoutContent = () => {
   const location = useLocation();
   const { state, refetch, clearSession } = useAdminBootstrap();
+  const loginReturnPath = `${location.pathname}${location.search}${location.hash}`;
 
-  if (state === "hydrating-storage" || state === "auth-loading" || state === "auth-refreshing") {
+  if (state === "hydrating-storage" || state === "auth-loading") {
     return <AdminShellSkeleton />;
   }
 
   if (state === "cold" || state === "session-expired") {
-    return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/admin/login" replace state={{ from: loginReturnPath }} />;
   }
 
   if (state === "forbidden") {
@@ -43,3 +44,9 @@ export const ProtectedAdminLayout = () => {
     </AdminShell>
   );
 };
+
+export const ProtectedAdminLayout = () => (
+  <AdminBootstrapProvider>
+    <ProtectedAdminLayoutContent />
+  </AdminBootstrapProvider>
+);

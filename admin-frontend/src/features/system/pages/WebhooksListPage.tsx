@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
@@ -13,6 +13,7 @@ import {
 } from "@/components/stitch";
 import { stitchSelectClass } from "@/components/stitch/stitch-primitives";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import {
   ApiError,
   listAdminWebhooks,
@@ -124,17 +125,17 @@ export const WebhooksListPage = () => {
     enabled: Boolean(accessToken)
   });
 
-  const retryMut = useMutation({
+  const canRetryWebhook = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
+
+  const retryMut = useAdminAction({
     mutationFn: (id: string) => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
       return retryAdminWebhookEvent(accessToken, id);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["admin-webhooks"] });
-      void queryClient.invalidateQueries({ queryKey: ["admin-webhooks-health-strip"] });
-    }
+    isAllowed: canRetryWebhook,
+    invalidate: [["admin-webhooks"], ["admin-webhooks-health-strip"]]
   });
 
   const items = listQuery.data?.data.items ?? [];
@@ -162,8 +163,6 @@ export const WebhooksListPage = () => {
       retryQ: pending
     };
   }, [healthQuery.data?.data]);
-
-  const canRetryWebhook = adminHasAnyPermission(actorPermissions, ["system.webhooks.retry", "integrations.webhooks.write"]);
 
   const rows = items.map((w) => {
     const ms = attemptDurationMs(w);
@@ -199,8 +198,8 @@ export const WebhooksListPage = () => {
         {canRetryRow ? (
           <button
             type="button"
-            disabled={retryMut.isPending}
-            onClick={() => retryMut.mutate(w.id)}
+            disabled={retryMut.isPending || retryMut.blocked}
+            onClick={() => retryMut.run(w.id)}
             className="text-[11px] font-bold uppercase text-[#434654] underline decoration-dotted hover:text-[#1653cc] disabled:opacity-50"
           >
             Replay

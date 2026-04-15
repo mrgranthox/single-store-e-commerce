@@ -8,6 +8,7 @@ import {
   adminScreenLookup,
   protectedAdminScreens
 } from "@/lib/contracts/admin-screen-catalog";
+import { WorkspaceRouteSkeleton } from "@/components/primitives/WorkspaceRouteSkeleton";
 import { captureFrontendException } from "@/lib/observability/sentry";
 
 const stripAdminPrefix = (path: string) => path.replace(/^\/admin\/?/, "");
@@ -49,13 +50,7 @@ const renderLazyRoute = (
   const Component = getLazyNamedComponent(modulePath, exportName);
 
   return (
-    <Suspense
-      fallback={
-        <div className="rounded-xl border border-[#e0e2f0] bg-white p-10 text-center text-sm text-[#737685]">
-          Loading screen…
-        </div>
-      }
-    >
+    <Suspense fallback={<WorkspaceRouteSkeleton />}>
       <Component {...(props ?? {})} />
     </Suspense>
   );

@@ -657,8 +657,11 @@ export const IntegrationsHealthPage = () => {
                       </dl>
                       <div className="rounded-sm bg-[#f2f3ff] px-3 py-3 text-xs text-[#374151]">
                         <span className="font-bold text-[#1653cc]">Operator note: </span>
-                        Retry from the notifications workspace when your permissions allow; otherwise escalate to the team
-                        owning Brevo templates.
+                        Retry from the{" "}
+                        <Link to="/admin/system/notifications" className="font-semibold text-[#1653cc] hover:underline">
+                          notifications workspace
+                        </Link>{" "}
+                        when your permissions allow; otherwise escalate to the team owning Brevo templates.
                       </div>
                     </div>
                   ) : null}
