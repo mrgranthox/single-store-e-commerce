@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { marketingKeys } from "@/lib/query-keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { MarketingWorkspaceNav, StitchPageBody } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
@@ -28,6 +30,16 @@ import {
 } from "@/features/marketing/lib/marketingPresentation";
 import { downloadCsv } from "@/lib/csvDownload";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const COUPON_LIST_DEFAULTS = {
+  q: "",
+  status: "",
+  discount_type: "",
+  active_from: "",
+  active_to: "",
+  usage_floor: ""
+};
 
 const STATUSES = ["", "ACTIVE", "DISABLED", "EXPIRED"] as const;
 const DISCOUNT_TYPES = ["", "PERCENTAGE", "FIXED_AMOUNT", "FREE_SHIPPING"] as const;
@@ -121,49 +133,47 @@ const CouponStatusCell = ({ status }: { status: string }) => {
 export const CouponsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
+  const { filters, page, set, setPage, setMany, reset } = useListFilters({ defaults: COUPON_LIST_DEFAULTS });
   const [couponPanel, setCouponPanel] = useState<"closed" | "create" | "edit">("closed");
   const [editCoupon, setEditCoupon] = useState<CouponListItem | null>(null);
   const [deleteCouponTarget, setDeleteCouponTarget] = useState<CouponListItem | null>(null);
   const [deleteCouponErr, setDeleteCouponErr] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
   const [qDraft, setQDraft] = useState("");
-  const [q, setQ] = useState("");
-  const [status, setStatus] = useState("");
-  const [discountType, setDiscountType] = useState<"" | (typeof DISCOUNT_TYPES)[number]>("");
-  const [activeFrom, setActiveFrom] = useState("");
-  const [activeTo, setActiveTo] = useState("");
-  const [usageFloor, setUsageFloor] = useState(0);
+
+  const usageFloorNum = Math.min(100, Math.max(0, Number(filters.usage_floor) || 0));
+
+  useEffect(() => {
+    setQDraft(filters.q);
+  }, [filters.q]);
 
   const queryKey = useMemo(
     () =>
       [
         marketingKeys.coupons()[0],
         page,
-        q,
-        status,
-        discountType,
-        activeFrom,
-        activeTo,
-        usageFloor
+        filters.q,
+        filters.status,
+        filters.discount_type,
+        filters.active_from,
+        filters.active_to,
+        filters.usage_floor
       ] as const,
-    [page, q, status, discountType, activeFrom, activeTo, usageFloor]
+    [page, filters.q, filters.status, filters.discount_type, filters.active_from, filters.active_to, filters.usage_floor]
   );
 
-  const listQuery = useAuthedQuery(
-  queryKey,
-  (token) => {
+  const listQuery = useAuthedQuery(queryKey, (token) => {
+    const dt = filters.discount_type as (typeof DISCOUNT_TYPES)[number];
     return listAdminCoupons(token, {
-            page,
-            page_size: 20,
-            ...(q.trim() ? { q: q.trim() } : {}),
-            ...(status ? { status } : {}),
-            ...(discountType ? { discount_type: discountType } : {}),
-            ...(activeFrom.trim() ? { active_from: activeFrom.trim() } : {}),
-            ...(activeTo.trim() ? { active_to: activeTo.trim() } : {}),
-            ...(usageFloor > 0 ? { usage_ratio_min: usageFloor, usage_ratio_max: 100 } : {})
-          });
-  }
-);
+      page,
+      page_size: 20,
+      ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+      ...(filters.status ? { status: filters.status } : {}),
+      ...(dt ? { discount_type: dt } : {}),
+      ...(filters.active_from.trim() ? { active_from: filters.active_from.trim() } : {}),
+      ...(filters.active_to.trim() ? { active_to: filters.active_to.trim() } : {}),
+      ...(usageFloorNum > 0 ? { usage_ratio_min: usageFloorNum, usage_ratio_max: 100 } : {})
+    });
+  });
 
   const analyticsKpi = useAuthedQuery(
   ["admin-marketing-coupon-analytics-kpi"],
@@ -202,13 +212,6 @@ export const CouponsListPage = () => {
   const redemptionTotal = analyticsKpi.data?.data.redemptionCount ?? 0;
   const lifetimeSavingsCents = analyticsKpi.data?.data.lifetimeEstimatedDiscountCents ?? 0;
   const avgUsage = analyticsKpi.data?.data.averageUsageRatePercent;
-
-  const errorMessage =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
 
   const openEditCoupon = (c: CouponListItem) => {
     setEditCoupon(c);
@@ -418,11 +421,8 @@ export const CouponsListPage = () => {
         <label className="flex flex-col gap-1">
           <span className="text-[10px] font-bold uppercase text-slate-500">Status</span>
           <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
+            value={filters.status}
+            onChange={(e) => set("status", e.target.value)}
             className="rounded-lg border-none bg-[#f8f9fb] text-xs font-medium text-[#181b25] focus:ring-1 focus:ring-[#1653cc]"
           >
             {STATUSES.map((s) => (
@@ -435,11 +435,8 @@ export const CouponsListPage = () => {
         <label className="flex flex-col gap-1">
           <span className="text-[10px] font-bold uppercase text-slate-500">Type</span>
           <select
-            value={discountType}
-            onChange={(e) => {
-              setDiscountType(e.target.value as (typeof DISCOUNT_TYPES)[number]);
-              setPage(1);
-            }}
+            value={filters.discount_type}
+            onChange={(e) => set("discount_type", e.target.value)}
             className="rounded-lg border-none bg-[#f8f9fb] text-xs font-medium text-[#181b25] focus:ring-1 focus:ring-[#1653cc]"
           >
             <option value="">All types</option>
@@ -460,8 +457,7 @@ export const CouponsListPage = () => {
               onChange={(e) => setQDraft(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  setPage(1);
-                  setQ(qDraft);
+                  setMany({ q: qDraft.trim() });
                 }
               }}
               placeholder="Filter by code…"
@@ -473,11 +469,8 @@ export const CouponsListPage = () => {
           <span className="text-[10px] font-bold uppercase text-slate-500">Active from</span>
           <input
             type="date"
-            value={activeFrom}
-            onChange={(e) => {
-              setActiveFrom(e.target.value);
-              setPage(1);
-            }}
+            value={filters.active_from}
+            onChange={(e) => set("active_from", e.target.value)}
             className="rounded-lg border-none bg-[#f8f9fb] px-2 py-2 text-xs font-medium text-[#181b25] focus:ring-1 focus:ring-[#1653cc]"
           />
         </label>
@@ -485,27 +478,21 @@ export const CouponsListPage = () => {
           <span className="text-[10px] font-bold uppercase text-slate-500">Active through</span>
           <input
             type="date"
-            value={activeTo}
-            onChange={(e) => {
-              setActiveTo(e.target.value);
-              setPage(1);
-            }}
+            value={filters.active_to}
+            onChange={(e) => set("active_to", e.target.value)}
             className="rounded-lg border-none bg-[#f8f9fb] px-2 py-2 text-xs font-medium text-[#181b25] focus:ring-1 focus:ring-[#1653cc]"
           />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-[10px] font-bold uppercase text-slate-500">
-            Min usage of cap ({usageFloor}%)
+            Min usage of cap ({usageFloorNum}%)
           </span>
           <input
             type="range"
             min={0}
             max={100}
-            value={usageFloor}
-            onChange={(e) => {
-              setUsageFloor(Number(e.target.value));
-              setPage(1);
-            }}
+            value={usageFloorNum}
+            onChange={(e) => set("usage_floor", e.target.value)}
             className="mt-2 h-1 w-full accent-[#1653cc]"
           />
         </label>
@@ -513,14 +500,8 @@ export const CouponsListPage = () => {
           <button
             type="button"
             onClick={() => {
-              setPage(1);
-              setQ("");
+              reset();
               setQDraft("");
-              setStatus("");
-              setDiscountType("");
-              setActiveFrom("");
-              setActiveTo("");
-              setUsageFloor(0);
             }}
             className="rounded-lg bg-slate-100 px-4 py-2 text-xs font-bold text-slate-600 transition-colors hover:bg-slate-200"
           >
@@ -529,12 +510,12 @@ export const CouponsListPage = () => {
         </div>
       </div>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {listQuery.isError ? (
+        <QueryError label="coupons" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
       ) : null}
 
       {listQuery.isLoading ? (
-        <p className="text-sm text-slate-500">Loading coupons…</p>
+        <SkeletonTable rows={8} cols={8} label="Loading coupons" />
       ) : (
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
           <DataTableShell
@@ -557,7 +538,7 @@ export const CouponsListPage = () => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border border-slate-200 bg-white px-3 py-1 disabled:opacity-40"
             >
               Previous
@@ -565,7 +546,7 @@ export const CouponsListPage = () => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border border-slate-200 bg-white px-3 py-1 disabled:opacity-40"
             >
               Next

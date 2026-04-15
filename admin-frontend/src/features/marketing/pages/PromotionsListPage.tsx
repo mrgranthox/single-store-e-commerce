@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { marketingKeys } from "@/lib/query-keys";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { Link } from "react-router-dom";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { Shimmer, SkeletonTable } from "@/components/primitives/Skeleton";
 import { MarketingWorkspaceNav, StitchPageBody } from "@/components/stitch";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
@@ -23,6 +25,9 @@ import { formatAdminDate, formatCentsMoney, humanizeLabel } from "@/features/mar
 import { downloadCsv } from "@/lib/csvDownload";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const PROMO_LIST_DEFAULTS = { status: "", view: "list" };
 
 const STATUSES = ["", "ACTIVE", "DISABLED", "ARCHIVED"] as const;
 
@@ -74,9 +79,8 @@ const StatusDot = ({ status }: { status: string }) => {
 export const PromotionsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState("");
-  const [view, setView] = useState<"grid" | "list">("list");
+  const { filters, page, set, setPage } = useListFilters({ defaults: PROMO_LIST_DEFAULTS });
+  const viewMode: "grid" | "list" = filters.view === "grid" ? "grid" : "list";
   const [promoPanel, setPromoPanel] = useState<"closed" | "create" | "edit" | "view">("closed");
   const [panelPromotion, setPanelPromotion] = useState<PromotionListItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PromotionListItem | null>(null);
@@ -216,12 +220,13 @@ export const PromotionsListPage = () => {
     );
   };
 
-  const q = useAuthedQuery(
-    ["admin-promotions-contract", page, statusFilter],
-    (token) => listContractPromotions(token, {
-      page,
-      page_size: 20,
-      ...(statusFilter ? { status: statusFilter } : {})
+  const promotionsQuery = useAuthedQuery(
+    ["admin-promotions-contract", page, filters.status],
+    (token) =>
+      listContractPromotions(token, {
+        page,
+        page_size: 20,
+        ...(filters.status ? { status: filters.status } : {})
       })
   );
 
@@ -232,15 +237,13 @@ export const PromotionsListPage = () => {
       queryFnFor: (id: string) => listPromotionRules(accessToken!, id),
     });
 
-  const items = q.data?.data.items ?? [];
+  const items = promotionsQuery.data?.data.items ?? [];
 
   useEffect(() => {
     prefetchManyPromotionRules(items.map((p) => p.id), 2);
   }, [items, prefetchManyPromotionRules]);
-  const meta = q.data?.meta;
+  const meta = promotionsQuery.data?.meta;
   const pulse = meta?.pulse;
-  const err =
-    q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;
 
   const activeOnPage = useMemo(
     () => items.filter((p) => p.status === "ACTIVE" || p.status === "PUBLISHED").length,
@@ -352,15 +355,15 @@ export const PromotionsListPage = () => {
             <div className="flex rounded-lg bg-[#e0e2f0] p-1">
               <button
                 type="button"
-                onClick={() => setView("grid")}
-                className={`rounded-md px-4 py-1.5 text-xs font-semibold transition-all ${view === "grid" ? "bg-white text-[#181b25] shadow-sm" : "text-slate-500"}`}
+                onClick={() => set("view", "grid")}
+                className={`rounded-md px-4 py-1.5 text-xs font-semibold transition-all ${viewMode === "grid" ? "bg-white text-[#181b25] shadow-sm" : "text-slate-500"}`}
               >
                 Grid
               </button>
               <button
                 type="button"
-                onClick={() => setView("list")}
-                className={`rounded-md px-4 py-1.5 text-xs font-semibold transition-all ${view === "list" ? "bg-white text-[#181b25] shadow-sm" : "text-slate-500"}`}
+                onClick={() => set("view", "list")}
+                className={`rounded-md px-4 py-1.5 text-xs font-semibold transition-all ${viewMode === "list" ? "bg-white text-[#181b25] shadow-sm" : "text-slate-500"}`}
               >
                 List
               </button>
@@ -398,11 +401,8 @@ export const PromotionsListPage = () => {
         <div className="col-span-12 flex flex-wrap items-center gap-4 rounded-xl bg-[#1a1d27] p-4 lg:col-span-6">
           <div className="flex min-w-0 flex-1 flex-wrap gap-2">
             <select
-              value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
-                setPage(1);
-              }}
+              value={filters.status}
+              onChange={(e) => set("status", e.target.value)}
               className="min-w-[120px] rounded-lg border-none bg-white/5 px-3 py-2 text-xs text-white outline-none focus:ring-1 focus:ring-[#3b6de6]"
             >
               {STATUSES.map((s) => (
@@ -444,13 +444,29 @@ export const PromotionsListPage = () => {
         </p>
       ) : null}
 
-      {err ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
+      {promotionsQuery.isError ? (
+        <QueryError
+          label="promotions"
+          error={promotionsQuery.error}
+          onRetry={() => void promotionsQuery.refetch()}
+        />
       ) : null}
 
-      {q.isLoading ? (
-        <p className="text-sm text-slate-500">Loading promotions…</p>
-      ) : view === "grid" ? (
+      {promotionsQuery.isLoading ? (
+        viewMode === "grid" ? (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading promotions">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="relative overflow-hidden rounded-xl border border-[#eef1f8] bg-white p-5">
+                <Shimmer className="h-12 w-12 rounded-lg" />
+                <Shimmer className="mt-4 h-5 w-3/4 rounded" />
+                <Shimmer className="mt-2 h-3 w-1/2 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <SkeletonTable rows={8} cols={7} label="Loading promotions" />
+        )
+      ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {items.map((p, index) => {
             const tone = promotionToneIcon(p.name, index);
@@ -522,7 +538,7 @@ export const PromotionsListPage = () => {
             type="button"
             disabled={page <= 1}
             className="rounded-lg border border-slate-200 bg-white px-3 py-1 disabled:opacity-40"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            onClick={() => setPage(Math.max(1, page - 1))}
           >
             Previous
           </button>
@@ -533,7 +549,7 @@ export const PromotionsListPage = () => {
             type="button"
             disabled={page >= meta.totalPages}
             className="rounded-lg border border-slate-200 bg-white px-3 py-1 disabled:opacity-40"
-            onClick={() => setPage((p) => p + 1)}
+            onClick={() => setPage(page + 1)}
           >
             Next
           </button>

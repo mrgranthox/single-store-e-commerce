@@ -5,6 +5,8 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { PageActionGroup } from "@/components/primitives/PageActionGroup";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
@@ -12,8 +14,8 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
-import { useQuery } from "@tanstack/react-query";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useListFilters } from "@/lib/hooks/useListFilters";
 import {
   ApiError,
   createAdminUser,
@@ -21,12 +23,12 @@ import {
   listAdminUsers
 } from "@/features/system/api/admin-users.api";
 
+const ADMIN_USERS_DEFAULTS = { q: "", status: "" };
+
 export const AdminUsersPage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
   const actorEmail = useAdminAuthStore((state) => state.actor?.email ?? null);
-  const [page, setPage] = useState(1);
-  const [q, setQ] = useState("");
-  const [status, setStatus] = useState("");
+  const { filters, page, set, setPage, setDebounced } = useListFilters({ defaults: ADMIN_USERS_DEFAULTS });
   const [form, setForm] = useState({
     clerkAdminUserId: "",
     email: "",
@@ -36,13 +38,14 @@ export const AdminUsersPage = () => {
   });
   const [flash, setFlash] = useState<string | null>(null);
 
-  const query = useAuthedQuery(
-    ["admin-users", page, q, status],
-    (token) => listAdminUsers(token, {
-      page,
-      page_size: 20,
-      q: q || undefined,
-      status: status || undefined
+  const usersQuery = useAuthedQuery(
+    ["admin-users", page, filters.q, filters.status],
+    (token) =>
+      listAdminUsers(token, {
+        page,
+        page_size: 20,
+        q: filters.q || undefined,
+        status: filters.status || undefined
       })
   );
 
@@ -74,9 +77,9 @@ export const AdminUsersPage = () => {
     }
   });
 
-  const items = query.data?.data.items ?? [];
-  const roles = query.data?.data.availableRoles ?? [];
-  const meta = query.data?.meta;
+  const items = usersQuery.data?.data.items ?? [];
+  const roles = usersQuery.data?.data.availableRoles ?? [];
+  const meta = usersQuery.data?.meta;
   const { prefetch: prefetchAdminUser, prefetchMany: prefetchAdminUsers } = useAdminDetailPrefetch({
     enabled: Boolean(accessToken),
     ...CACHE.OPERATIONAL,
@@ -126,8 +129,17 @@ export const AdminUsersPage = () => {
 
       <SurfaceCard title="Filters" description="Search and narrow the admin operator list.">
         <div className="grid gap-4 md:grid-cols-3">
-          <input value={q} onChange={(event) => setQ(event.target.value)} placeholder="Search email or name" className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm" />
-          <select value={status} onChange={(event) => setStatus(event.target.value)} className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm">
+          <input
+            value={filters.q}
+            onChange={(event) => setDebounced("q", event.target.value)}
+            placeholder="Search email or name"
+            className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
+          />
+          <select
+            value={filters.status}
+            onChange={(event) => set("status", event.target.value)}
+            className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
+          >
             <option value="">All statuses</option>
             <option value="ACTIVE">Active</option>
             <option value="SUSPENDED">Suspended</option>
@@ -170,13 +182,40 @@ export const AdminUsersPage = () => {
       </SurfaceCard>
 
       <SurfaceCard title="Directory">
-        {query.error instanceof ApiError ? <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{query.error.message}</div> : null}
-        <DataTableShell columns={["Admin", "Email", "Roles", "Status", "Created"]} rows={rows} emptyState={query.isLoading ? "Loading admin users…" : "No admin users matched this filter."} variant="stitchOperational" />
+        {usersQuery.isError ? (
+          <QueryError label="admin users" error={usersQuery.error} onRetry={() => void usersQuery.refetch()} />
+        ) : null}
+        {usersQuery.isLoading ? (
+          <SkeletonTable rows={8} cols={5} label="Loading admin users" />
+        ) : (
+          <DataTableShell
+            columns={["Admin", "Email", "Roles", "Status", "Created"]}
+            rows={rows}
+            emptyState="No admin users matched this filter."
+            variant="stitchOperational"
+          />
+        )}
         <div className="mt-4 flex items-center justify-between text-sm text-[#5b5e68]">
-          <span>Page {meta?.page ?? page} of {meta?.totalPages ?? 1}</span>
+          <span>
+            Page {meta?.page ?? page} of {meta?.totalPages ?? 1}
+          </span>
           <div className="flex gap-2">
-            <button type="button" className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50" disabled={(meta?.page ?? page) <= 1} onClick={() => setPage((current) => Math.max(1, current - 1))}>Previous</button>
-            <button type="button" className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50" disabled={(meta?.page ?? page) >= (meta?.totalPages ?? 1)} onClick={() => setPage((current) => current + 1)}>Next</button>
+            <button
+              type="button"
+              className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
+              disabled={(meta?.page ?? page) <= 1}
+              onClick={() => setPage(Math.max(1, page - 1))}
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
+              disabled={(meta?.page ?? page) >= (meta?.totalPages ?? 1)}
+              onClick={() => setPage(page + 1)}
+            >
+              Next
+            </button>
           </div>
         </div>
       </SurfaceCard>

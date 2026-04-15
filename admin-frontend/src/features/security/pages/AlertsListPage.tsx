@@ -15,10 +15,11 @@ import {
   stitchSelectClass
 } from "@/components/stitch";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import {
-  ApiError,
   bulkAcknowledgeAdminAlerts,
   bulkAssignAdminAlerts,
   getAdminAlertDetail,
@@ -34,6 +35,9 @@ import {
   stitchRecordLinkClass,
   stitchVisibleLinkClass
 } from "@/features/security/lib/securityUiHelpers";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const ALERT_LIST_DEFAULTS = { status: "", severity: "", type: "" };
 
 const STATUSES = ["", "OPEN", "ACKNOWLEDGED", "ASSIGNED", "RESOLVED"] as const;
 const SEVERITIES = ["", "INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL"] as const;
@@ -63,18 +67,20 @@ export const AlertsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
-  const [status, setStatus] = useState("");
-  const [severity, setSeverity] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
+  const { filters, page, set, setPage, setDebounced } = useListFilters({ defaults: ALERT_LIST_DEFAULTS });
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [bulkNote, setBulkNote] = useState("");
   const [assigneeBulkId, setAssigneeBulkId] = useState("");
 
   const queryKey = useMemo(
-    () => securityKeys.alertList({ page, status, severity, typeFilter }),
-
-    [page, status, severity, typeFilter]
+    () =>
+      securityKeys.alertList({
+        page,
+        status: filters.status,
+        severity: filters.severity,
+        typeFilter: filters.type
+      }),
+    [page, filters.status, filters.severity, filters.type]
   );
 
   const dashQuery = useAuthedQuery(
@@ -82,15 +88,14 @@ export const AlertsListPage = () => {
   (token) => getSecurityDashboard(token)
 );
 
-  const listQuery = useAuthedQuery(
-    queryKey,
-    (token) =>
-      listAdminAlerts(token, {
-        page,
-        page_size: 20,
-        ...(status ? { status } : {}),
-        ...(severity ? { severity } : {}),
-        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}) }),
+  const listQuery = useAuthedQuery(queryKey, (token) =>
+    listAdminAlerts(token, {
+      page,
+      page_size: 20,
+      ...(filters.status ? { status: filters.status } : {}),
+      ...(filters.severity ? { severity: filters.severity } : {}),
+      ...(filters.type.trim() ? { type: filters.type.trim() } : {})
+    })
   );
 
   const bulkAckMut = useMutation({
@@ -210,13 +215,6 @@ export const AlertsListPage = () => {
       ])
     );
   };
-
-  const errorMessage =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
 
   const bulkErr =
     bulkAckMut.error instanceof Error
@@ -351,11 +349,8 @@ export const AlertsListPage = () => {
         <div className="min-w-0">
           <StitchFieldLabel>Type</StitchFieldLabel>
           <input
-            value={typeFilter}
-            onChange={(e) => {
-              setTypeFilter(e.target.value);
-              setPage(1);
-            }}
+            value={filters.type}
+            onChange={(e) => setDebounced("type", e.target.value)}
             placeholder="Filter by alert type code…"
             className={stitchInputClass}
           />
@@ -363,11 +358,8 @@ export const AlertsListPage = () => {
         <div className="min-w-0">
           <StitchFieldLabel>Severity</StitchFieldLabel>
           <select
-            value={severity}
-            onChange={(e) => {
-              setSeverity(e.target.value);
-              setPage(1);
-            }}
+            value={filters.severity}
+            onChange={(e) => set("severity", e.target.value)}
             className={stitchSelectClass}
           >
             {SEVERITIES.map((s) => (
@@ -380,11 +372,8 @@ export const AlertsListPage = () => {
         <div className="min-w-0">
           <StitchFieldLabel>Status</StitchFieldLabel>
           <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
+            value={filters.status}
+            onChange={(e) => set("status", e.target.value)}
             className={stitchSelectClass}
           >
             {STATUSES.map((s) => (
@@ -396,12 +385,12 @@ export const AlertsListPage = () => {
         </div>
       </StitchFilterPanel>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {listQuery.isError ? (
+        <QueryError label="alerts" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
       ) : null}
 
       {listQuery.isLoading ? (
-        <p className="text-sm text-[#60626c]">Loading…</p>
+        <SkeletonTable rows={8} cols={7} label="Loading alerts" />
       ) : (
         <div className={securityTableScrollClass}>
           <div className="overflow-hidden rounded-xl bg-white shadow-sm">
@@ -491,7 +480,7 @@ export const AlertsListPage = () => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border px-3 py-1 disabled:opacity-40"
             >
               Previous
@@ -499,7 +488,7 @@ export const AlertsListPage = () => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border px-3 py-1 disabled:opacity-40"
             >
               Next

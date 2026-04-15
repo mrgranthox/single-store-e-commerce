@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
@@ -12,13 +12,10 @@ import {
   stitchInputClass,
   stitchSelectClass
 } from "@/components/stitch";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import {
-  ApiError,
-  listSecurityEvents,
-  notifySecurityEvent,
-  postSecurityEventStatus
-} from "@/features/security/api/admin-security.api";
+import { listSecurityEvents, notifySecurityEvent, postSecurityEventStatus } from "@/features/security/api/admin-security.api";
 import { SecurityHubNav } from "@/features/security/components/SecurityHubNav";
 import {
   formatAdminDateTimeLong,
@@ -30,31 +27,32 @@ import {
   summarizeUserRef,
   timelinePayloadLine
 } from "@/features/security/lib/securityUiHelpers";
+import { useListFilters } from "@/lib/hooks/useListFilters";
 
 const SEVERITY_OPTS = ["", "CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"] as const;
+
+const SECURITY_EVENT_FILTER_DEFAULTS = { severity: "", status: "", type: "" };
 
 export const SecurityEventsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
-  const [severity, setSeverity] = useState("");
-  const [status, setStatus] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
+  const { filters, page, setPage, set, setDebounced } = useListFilters({
+    defaults: SECURITY_EVENT_FILTER_DEFAULTS,
+  });
 
   const queryKey = useMemo(
-    () => ["admin-security-events", page, severity, status, typeFilter] as const,
-    [page, severity, status, typeFilter]
+    () => ["admin-security-events", page, filters.severity, filters.status, filters.type] as const,
+    [page, filters.severity, filters.status, filters.type],
   );
 
-  const q = useAuthedQuery(
-    queryKey,
-    (token) =>
-      listSecurityEvents(token, {
-        page,
-        page_size: 20,
-        ...(severity ? { severity } : {}),
-        ...(status.trim() ? { status: status.trim() } : {}),
-        ...(typeFilter.trim() ? { type: typeFilter.trim() } : {}) }),
+  const eventsQuery = useAuthedQuery(queryKey, (token) =>
+    listSecurityEvents(token, {
+      page,
+      page_size: 20,
+      ...(filters.severity ? { severity: filters.severity } : {}),
+      ...(filters.status.trim() ? { status: filters.status.trim() } : {}),
+      ...(filters.type.trim() ? { type: filters.type.trim() } : {}),
+    }),
   );
 
   const notifyMut = useMutation({
@@ -77,10 +75,8 @@ export const SecurityEventsListPage = () => {
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["admin-security-events"] })
   });
 
-  const items = q.data?.data.items ?? [];
-  const meta = q.data?.meta;
-  const err =
-    q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;
+  const items = eventsQuery.data?.data.items ?? [];
+  const meta = eventsQuery.data?.meta;
 
   const sevDot = (s: string) => {
     if (s === "CRITICAL") return "bg-[#ba1a1a]";
@@ -125,11 +121,8 @@ export const SecurityEventsListPage = () => {
           <button
             key={s || "all"}
             type="button"
-            className={pillClass(severity === s)}
-            onClick={() => {
-              setSeverity(s);
-              setPage(1);
-            }}
+            className={pillClass(filters.severity === s)}
+            onClick={() => set("severity", s)}
           >
             {s || "All"}
           </button>
@@ -140,11 +133,8 @@ export const SecurityEventsListPage = () => {
         <div className="min-w-0 flex-1 lg:min-w-[200px]">
           <StitchFieldLabel>Event type</StitchFieldLabel>
           <input
-            value={typeFilter}
-            onChange={(e) => {
-              setTypeFilter(e.target.value);
-              setPage(1);
-            }}
+            value={filters.type}
+            onChange={(e) => setDebounced("type", e.target.value)}
             placeholder="Contains / equals type code…"
             className={stitchInputClass}
           />
@@ -152,11 +142,8 @@ export const SecurityEventsListPage = () => {
         <div className="min-w-0 sm:min-w-[140px]">
           <StitchFieldLabel>Severity</StitchFieldLabel>
           <select
-            value={severity}
-            onChange={(e) => {
-              setSeverity(e.target.value);
-              setPage(1);
-            }}
+            value={filters.severity}
+            onChange={(e) => set("severity", e.target.value)}
             className={stitchSelectClass}
           >
             {SEVERITY_OPTS.map((s) => (
@@ -169,23 +156,22 @@ export const SecurityEventsListPage = () => {
         <div className="min-w-0 sm:min-w-[140px]">
           <StitchFieldLabel>Status</StitchFieldLabel>
           <input
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
+            value={filters.status}
+            onChange={(e) => setDebounced("status", e.target.value)}
             placeholder="e.g. OPEN"
             className={stitchInputClass}
           />
         </div>
       </StitchFilterPanel>
 
-      {err ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
+      {eventsQuery.isError ? (
+        <QueryError label="security events" error={eventsQuery.error} onRetry={() => void eventsQuery.refetch()} />
       ) : null}
 
-      {q.isLoading ? (
-        <p className="text-sm text-[#60626c]">Loading…</p>
+      {eventsQuery.isLoading ? (
+        <div className="rounded-xl border border-[#c3c6d6]/20 bg-white p-4">
+          <SkeletonTable rows={8} cols={8} label="Loading security events" />
+        </div>
       ) : (
         <div className="overflow-hidden rounded-xl bg-white shadow-[0px_24px_48px_rgba(24,27,37,0.04)]">
           <div className={securityTableScrollClass}>
@@ -304,7 +290,7 @@ export const SecurityEventsListPage = () => {
             type="button"
             disabled={page <= 1}
             className="rounded-lg border px-3 py-1 disabled:opacity-40"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            onClick={() => setPage(Math.max(1, page - 1))}
           >
             Previous
           </button>
@@ -315,7 +301,7 @@ export const SecurityEventsListPage = () => {
             type="button"
             disabled={page >= meta.totalPages}
             className="rounded-lg border px-3 py-1 disabled:opacity-40"
-            onClick={() => setPage((p) => p + 1)}
+            onClick={() => setPage(page + 1)}
           >
             Next
           </button>

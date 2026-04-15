@@ -4,12 +4,23 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, getAdminRefundDetail, listAdminRefunds, type RefundListItem } from "@/features/refunds/api/admin-refunds.api";
+import { getAdminRefundDetail, listAdminRefunds, type RefundListItem } from "@/features/refunds/api/admin-refunds.api";
 import { customerInitials } from "@/features/payments/ui/stitchPaymentsUi";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const REFUND_FILTER_DEFAULTS = {
+  q: "",
+  state: "",
+  date_from: "",
+  amount_min: "",
+  amount_max: "",
+};
 
 const refundRefLabel = (id: string) => `REF-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 const returnRefLabel = (id: string) => `RET-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
@@ -86,32 +97,31 @@ const STATE_OPTIONS: Array<{ value: string; label: string }> = [
 export const RefundsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const { filters, page, setPage, set, setMany, reset } = useListFilters({ defaults: REFUND_FILTER_DEFAULTS });
   const [qDraft, setQDraft] = useState("");
-  const [q, setQ] = useState("");
-  const [state, setState] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [amountMin, setAmountMin] = useState("");
-  const [amountMax, setAmountMax] = useState("");
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
 
-  const queryKey = useMemo(() => ["admin-refunds", page, q, state] as const, [page, q, state]);
+  useEffect(() => {
+    setQDraft(filters.q);
+  }, [filters.q]);
+
+  const queryKey = useMemo(
+    () => ["admin-refunds", page, filters.q, filters.state] as const,
+    [page, filters.q, filters.state],
+  );
 
   useEffect(() => {
     setSelected(new Set());
-  }, [page, q, state]);
+  }, [page, filters.q, filters.state]);
 
-  const listQuery = useAuthedQuery(
-  queryKey,
-  (token) => {
-    return listAdminRefunds(token, {
-            page,
-            page_size: 20,
-            ...(q.trim() ? { q: q.trim() } : {}),
-            ...(state ? { state } : {})
-          });
-  }
-);
+  const listQuery = useAuthedQuery(queryKey, (token) =>
+    listAdminRefunds(token, {
+      page,
+      page_size: 20,
+      ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+      ...(filters.state ? { state: filters.state } : {}),
+    }),
+  );
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
@@ -129,29 +139,22 @@ export const RefundsListPage = () => {
 
   const displayItems = useMemo(() => {
     let r = items;
-    const minC = parseMoney(amountMin);
-    const maxC = parseMoney(amountMax);
+    const minC = parseMoney(filters.amount_min);
+    const maxC = parseMoney(filters.amount_max);
     if (minC != null) r = r.filter((x) => x.amountCents >= minC);
     if (maxC != null) r = r.filter((x) => x.amountCents <= maxC);
-    if (dateFrom.trim()) {
-      const d0 = new Date(dateFrom);
+    if (filters.date_from.trim()) {
+      const d0 = new Date(filters.date_from);
       r = r.filter((x) => new Date(x.createdAt) >= d0);
     }
     return r;
-  }, [items, amountMin, amountMax, dateFrom]);
+  }, [items, filters.amount_min, filters.amount_max, filters.date_from]);
 
   const pendingApproval = useMemo(() => displayItems.filter((r) => r.state === "PENDING_APPROVAL").length, [displayItems]);
   const stale48 = useMemo(
     () => displayItems.filter((r) => r.state === "PENDING_APPROVAL" && hoursSince(r.createdAt) > 48).length,
     [displayItems]
   );
-
-  const errorMessage =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
 
   const allOnPageSelected = displayItems.length > 0 && displayItems.every((r) => selected.has(r.id));
 
@@ -205,18 +208,12 @@ export const RefundsListPage = () => {
   };
 
   const applyFilters = () => {
-    setPage(1);
-    setQ(qDraft);
+    setMany({ q: qDraft.trim() });
   };
 
   const clearFilters = () => {
+    reset();
     setQDraft("");
-    setQ("");
-    setState("");
-    setDateFrom("");
-    setAmountMin("");
-    setAmountMax("");
-    setPage(1);
   };
 
   const urgentRow = (r: RefundListItem) => r.state === "PENDING_APPROVAL" && hoursSince(r.createdAt) > 48;
@@ -272,11 +269,8 @@ export const RefundsListPage = () => {
           <div className="space-y-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</label>
             <select
-              value={state}
-              onChange={(e) => {
-                setState(e.target.value);
-                setPage(1);
-              }}
+              value={filters.state}
+              onChange={(e) => set("state", e.target.value)}
               className="w-full rounded-md border-none bg-slate-50 py-2 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
             >
               {STATE_OPTIONS.map((o) => (
@@ -294,8 +288,8 @@ export const RefundsListPage = () => {
               </span>
               <input
                 type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
+                value={filters.date_from}
+                onChange={(e) => set("date_from", e.target.value)}
                 className="w-full rounded-md border-none bg-slate-50 py-2 pl-9 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
               />
             </div>
@@ -308,15 +302,15 @@ export const RefundsListPage = () => {
                   <MaterialIcon name="payments" className="text-sm" />
                 </span>
                 <input
-                  value={amountMin}
-                  onChange={(e) => setAmountMin(e.target.value)}
+                  value={filters.amount_min}
+                  onChange={(e) => set("amount_min", e.target.value)}
                   placeholder="Min"
                   className="w-full rounded-md border-none bg-slate-50 py-2 pl-8 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
                 />
               </div>
               <input
-                value={amountMax}
-                onChange={(e) => setAmountMax(e.target.value)}
+                value={filters.amount_max}
+                onChange={(e) => set("amount_max", e.target.value)}
                 placeholder="Max"
                 className="w-1/2 rounded-md border-none bg-slate-50 py-2 text-xs focus:ring-2 focus:ring-[#1653cc]/20"
               />
@@ -352,12 +346,14 @@ export const RefundsListPage = () => {
         </div>
       </div>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {listQuery.isError ? (
+        <QueryError label="refunds" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
       ) : null}
 
       {listQuery.isLoading ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">Loading refunds…</div>
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <SkeletonTable rows={10} cols={9} label="Loading refunds" />
+        </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
@@ -526,7 +522,7 @@ export const RefundsListPage = () => {
                 <button
                   type="button"
                   disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => setPage(Math.max(1, page - 1))}
                   className="rounded border border-slate-200 px-3 py-1 disabled:opacity-40"
                 >
                   Previous
@@ -535,7 +531,7 @@ export const RefundsListPage = () => {
                 <button
                   type="button"
                   disabled={page >= meta.totalPages}
-                  onClick={() => setPage((p) => p + 1)}
+                  onClick={() => setPage(page + 1)}
                   className="rounded border border-slate-200 px-3 py-1 disabled:opacity-40"
                 >
                   Next

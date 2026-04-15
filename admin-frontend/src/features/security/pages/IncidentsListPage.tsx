@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useListFilters } from "@/lib/hooks/useListFilters";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { securityKeys } from "@/lib/query-keys";
 import { Link } from "react-router-dom";
@@ -14,10 +15,12 @@ import {
   stitchInputClass,
   stitchSelectClass
 } from "@/components/stitch";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
-import { ApiError, createAdminIncident, getAdminIncidentDetail, listAdminIncidents } from "@/features/security/api/admin-incidents.api";
+import { createAdminIncident, getAdminIncidentDetail, listAdminIncidents } from "@/features/security/api/admin-incidents.api";
 import { getSecurityDashboard } from "@/features/security/api/admin-security.api";
 import { SecurityHubNav } from "@/features/security/components/SecurityHubNav";
 import {
@@ -32,6 +35,8 @@ import {
 } from "@/features/security/lib/securityUiHelpers";
 
 const INCIDENT_STATUSES = ["", "OPEN", "INVESTIGATING", "RESOLVED", "CLOSED"] as const;
+
+const INCIDENT_FILTER_DEFAULTS = { q: "", status: "" };
 const SEVERITY_PRESETS = ["MEDIUM", "HIGH", "CRITICAL"] as const;
 
 const tone = (s: string): StatusBadgeTone => {
@@ -55,10 +60,8 @@ export const IncidentsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const { filters, page, setPage, set, setMany } = useListFilters({ defaults: INCIDENT_FILTER_DEFAULTS });
   const [qDraft, setQDraft] = useState("");
-  const [q, setQ] = useState("");
-  const [status, setStatus] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newSummary, setNewSummary] = useState("");
@@ -72,21 +75,27 @@ export const IncidentsListPage = () => {
       queryFnFor: (id: string) => getAdminIncidentDetail(accessToken!, id),
     });
 
-  const queryKey = useMemo(() => securityKeys.incidentList({ page, q, status }), [page, q, status]);
+  const queryKey = useMemo(
+    () => securityKeys.incidentList({ page, q: filters.q, status: filters.status }),
+    [page, filters.q, filters.status],
+  );
+
+  useEffect(() => {
+    setQDraft(filters.q);
+  }, [filters.q]);
 
   const dashQuery = useAuthedQuery(
   ["admin-security-dashboard-metrics"],
   (token) => getSecurityDashboard(token)
 );
 
-  const listQuery = useAuthedQuery(
-    queryKey,
-    (token) =>
-      listAdminIncidents(token, {
-        page,
-        page_size: 20,
-        ...(q.trim() ? { q: q.trim() } : {}),
-        ...(status ? { status } : {}) }),
+  const listQuery = useAuthedQuery(queryKey, (token) =>
+    listAdminIncidents(token, {
+      page,
+      page_size: 20,
+      ...(filters.q.trim() ? { q: filters.q.trim() } : {}),
+      ...(filters.status ? { status: filters.status } : {}),
+    }),
   );
 
   const createMut = useMutation({
@@ -125,12 +134,6 @@ export const IncidentsListPage = () => {
   }, [items, prefetchManyIncidentDetails]);
   const ops = dashQuery.data?.data.metrics.incidentsOps;
 
-  const errorMessage =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
   const canCreateIncidents = adminHasAnyPermission(actorPermissions, ["security.incidents.create"]);
 
   const exportCsv = () => {
@@ -287,8 +290,7 @@ export const IncidentsListPage = () => {
             onChange={(e) => setQDraft(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setPage(1);
-                setQ(qDraft);
+                setMany({ q: qDraft.trim() });
               }
             }}
             placeholder="Title or keywords…"
@@ -298,11 +300,8 @@ export const IncidentsListPage = () => {
         <div className="flex min-w-0 flex-col gap-1 md:max-w-[220px]">
           <StitchFieldLabel>Status</StitchFieldLabel>
           <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
+            value={filters.status}
+            onChange={(e) => set("status", e.target.value)}
             className={stitchSelectClass}
           >
             {INCIDENT_STATUSES.map((s) => (
@@ -315,8 +314,7 @@ export const IncidentsListPage = () => {
         <button
           type="button"
           onClick={() => {
-            setPage(1);
-            setQ(qDraft);
+            setMany({ q: qDraft.trim() });
           }}
           className="rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white md:self-stretch md:px-6"
         >
@@ -324,12 +322,14 @@ export const IncidentsListPage = () => {
         </button>
       </StitchFilterPanel>
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {listQuery.isError ? (
+        <QueryError label="incidents" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
       ) : null}
 
       {listQuery.isLoading ? (
-        <p className="text-sm text-[#60626c]">Loading…</p>
+        <div className="rounded-xl border border-[#c3c6d6]/20 bg-white p-4">
+          <SkeletonTable rows={8} cols={8} label="Loading incidents" />
+        </div>
       ) : (
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
           <div className={securityTableScrollClass}>
@@ -422,7 +422,7 @@ export const IncidentsListPage = () => {
             <button
               type="button"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => setPage(Math.max(1, page - 1))}
               className="rounded-lg border px-3 py-1 disabled:opacity-40"
             >
               Previous
@@ -430,7 +430,7 @@ export const IncidentsListPage = () => {
             <button
               type="button"
               disabled={page >= meta.totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => setPage(page + 1)}
               className="rounded-lg border px-3 py-1 disabled:opacity-40"
             >
               Next

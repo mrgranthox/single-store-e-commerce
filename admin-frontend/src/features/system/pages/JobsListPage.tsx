@@ -1,13 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueries } from "@tanstack/react-query";
+import { type UseQueryResult } from "@tanstack/react-query";
+import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
-import { useAdminAuthStore } from "@/features/auth/auth.store";
-import { ApiError, listAdminJobRuns } from "@/features/system/api/admin-jobs.api";
+import { listAdminJobRuns, type JobRunsListResponse } from "@/features/system/api/admin-jobs.api";
 import {
   StitchFieldLabel,
   StitchFilterPanel,
@@ -18,8 +20,23 @@ import {
 import { stitchSelectClass } from "@/components/stitch/stitch-primitives";
 import { formatDateTime } from "@/lib/format";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const JOB_LIST_DEFAULTS = { job_name: "", status: "", started_after: "", started_before: "" };
 
 const STATUSES = ["", "QUEUED", "RUNNING", "SUCCEEDED", "FAILED"] as const;
+
+const isoToDatetimeLocal = (iso: string) => {
+  if (!iso.trim()) {
+    return "";
+  }
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) {
+    return "";
+  }
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
 const tone = (s: string): StatusBadgeTone => {
   switch (s) {
@@ -56,41 +73,48 @@ const formatJobRunDuration = (startedAt: string, finishedAt: string | null) => {
 };
 
 export const JobsListPage = () => {
-  const accessToken = useAdminAuthStore((s) => s.accessToken);
-  const [page, setPage] = useState(1);
-  const [status, setStatus] = useState("");
-  const [jobName, setJobName] = useState("");
+  const { filters, page, set, setPage, setMany, setDebounced } = useListFilters({ defaults: JOB_LIST_DEFAULTS });
   const [startedAfterDraft, setStartedAfterDraft] = useState("");
   const [startedBeforeDraft, setStartedBeforeDraft] = useState("");
-  const [appliedStartedAfter, setAppliedStartedAfter] = useState("");
-  const [appliedStartedBefore, setAppliedStartedBefore] = useState("");
+
+  useEffect(() => {
+    setStartedAfterDraft(isoToDatetimeLocal(filters.started_after));
+    setStartedBeforeDraft(isoToDatetimeLocal(filters.started_before));
+  }, [filters.started_after, filters.started_before]);
 
   const queryKey = useMemo(
-    () => ["admin-job-runs", page, status, jobName, appliedStartedAfter, appliedStartedBefore] as const,
-    [page, status, jobName, appliedStartedAfter, appliedStartedBefore]
+    () =>
+      [
+        "admin-job-runs",
+        page,
+        filters.job_name,
+        filters.status,
+        filters.started_after,
+        filters.started_before
+      ] as const,
+    [page, filters.job_name, filters.status, filters.started_after, filters.started_before]
   );
 
-  const listQuery = useAuthedQuery(
-  queryKey,
-  (token) => {
-    return listAdminJobRuns(token, {
-            page,
-            pageSize: 20,
-            ...(status ? { status } : {}),
-            ...(jobName.trim() ? { jobName: jobName.trim() } : {}),
-            ...(appliedStartedAfter.trim() ? { startedAfter: appliedStartedAfter.trim() } : {}),
-            ...(appliedStartedBefore.trim() ? { startedBefore: appliedStartedBefore.trim() } : {})
-          });
-  }
-);
+  const listQuery = useAuthedQuery(queryKey, (token) =>
+    listAdminJobRuns(token, {
+      page,
+      pageSize: 20,
+      ...(filters.status ? { status: filters.status } : {}),
+      ...(filters.job_name.trim() ? { jobName: filters.job_name.trim() } : {}),
+      ...(filters.started_after.trim() ? { startedAfter: filters.started_after.trim() } : {}),
+      ...(filters.started_before.trim() ? { startedBefore: filters.started_before.trim() } : {})
+    })
+  );
 
-  const countQueries = useQueries({
-    queries: (["SUCCEEDED", "FAILED", "RUNNING", "QUEUED"] as const).map((st) => ({
+  type JobRunCountQuery = UseQueryResult<JobRunsListResponse, Error>;
+
+  const countQueries = useAuthedQueries((token) =>
+    (["SUCCEEDED", "FAILED", "RUNNING", "QUEUED"] as const).map((st) => ({
       queryKey: ["admin-job-runs-count", st],
-      queryFn: () => listAdminJobRuns(accessToken!, { page: 1, pageSize: 1, status: st }),
-      enabled: Boolean(accessToken),
-      ...CACHE.OPERATIONAL}))
-  });
+      queryFn: () => listAdminJobRuns(token, { page: 1, pageSize: 1, status: st }),
+      ...CACHE.OPERATIONAL
+    }))
+  ) as [JobRunCountQuery, JobRunCountQuery, JobRunCountQuery, JobRunCountQuery];
 
   const [succT, failT, runT, queueT] = countQueries.map((q) => q.data?.meta.total ?? 0);
   const jobSuccessPct =
@@ -99,13 +123,6 @@ export const JobsListPage = () => {
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
   const totalPages = meta ? Math.max(1, Math.ceil(meta.total / meta.pageSize)) : 1;
-
-  const err =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
 
   const rows = items.map((row) => [
     <Link
@@ -182,11 +199,8 @@ export const JobsListPage = () => {
         <label className="flex min-w-[200px] flex-1 flex-col gap-1 text-[11px] font-bold uppercase tracking-wider text-[#737685]">
           Filter by job name
           <input
-            value={jobName}
-            onChange={(e) => {
-              setJobName(e.target.value);
-              setPage(1);
-            }}
+            value={filters.job_name}
+            onChange={(e) => setDebounced("job_name", e.target.value)}
             placeholder="e.g. SyncOrderWorker"
             className={stitchSelectClass}
           />
@@ -194,11 +208,8 @@ export const JobsListPage = () => {
         <label className="flex w-48 flex-col gap-1">
           <StitchFieldLabel className="mb-0 text-[11px]">Status</StitchFieldLabel>
           <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
+            value={filters.status}
+            onChange={(e) => set("status", e.target.value)}
             className={stitchSelectClass}
           >
             {STATUSES.map((s) => (
@@ -237,9 +248,10 @@ export const JobsListPage = () => {
                 const t = new Date(local).getTime();
                 return Number.isNaN(t) ? "" : new Date(t).toISOString();
               };
-              setAppliedStartedAfter(toIso(startedAfterDraft));
-              setAppliedStartedBefore(toIso(startedBeforeDraft));
-              setPage(1);
+              setMany({
+                started_after: toIso(startedAfterDraft),
+                started_before: toIso(startedBeforeDraft)
+              });
             }}
           >
             Apply Filters
@@ -247,10 +259,12 @@ export const JobsListPage = () => {
         </div>
       </StitchFilterPanel>
 
-      {err ? <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div> : null}
+      {listQuery.isError ? (
+        <QueryError label="job runs" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
+      ) : null}
 
       {listQuery.isLoading ? (
-        <p className="text-sm text-[#737685]">Loading…</p>
+        <SkeletonTable rows={8} cols={8} label="Loading job runs" />
       ) : (
         <>
           <div className="overflow-hidden rounded-xl bg-white shadow-sm">
@@ -272,7 +286,7 @@ export const JobsListPage = () => {
                 <button
                   type="button"
                   disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => setPage(Math.max(1, page - 1))}
                   className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-semibold disabled:opacity-40"
                 >
                   Previous
@@ -280,7 +294,7 @@ export const JobsListPage = () => {
                 <button
                   type="button"
                   disabled={page >= totalPages}
-                  onClick={() => setPage((p) => p + 1)}
+                  onClick={() => setPage(page + 1)}
                   className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-semibold disabled:opacity-40"
                 >
                   Next

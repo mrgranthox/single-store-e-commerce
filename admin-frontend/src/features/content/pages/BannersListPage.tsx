@@ -6,6 +6,8 @@ import { ImageIcon, X } from "lucide-react";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { QueryError } from "@/components/primitives/QueryError";
+import { Shimmer } from "@/components/primitives/Skeleton";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
@@ -21,6 +23,9 @@ import {
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { ContentWorkspaceNav, StitchFieldLabel, StitchPageBody, stitchInputClass } from "@/components/stitch";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const BANNER_LIST_DEFAULTS = { status: "", placement: "" };
 
 const ACCEPT = "image/jpeg,image/png,image/webp";
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -70,8 +75,7 @@ type PanelMode = "closed" | "create" | "edit" | "view";
 export const BannersListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [statusFilter, setStatusFilter] = useState("");
-  const [placementFilter, setPlacementFilter] = useState("");
+  const { filters, set, reset } = useListFilters({ defaults: BANNER_LIST_DEFAULTS });
   const [panelMode, setPanelMode] = useState<PanelMode>("closed");
   const [panelBanner, setPanelBanner] = useState<BannerListItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<BannerListItem | null>(null);
@@ -109,26 +113,19 @@ export const BannersListPage = () => {
 
   const filtered = useMemo(() => {
     return items.filter((b) => {
-      if (statusFilter && b.status !== statusFilter) {
+      if (filters.status && b.status !== filters.status) {
         return false;
       }
-      if (placementFilter && (b.placement || "DEFAULT") !== placementFilter) {
+      if (filters.placement && (b.placement || "DEFAULT") !== filters.placement) {
         return false;
       }
       return true;
     });
-  }, [items, statusFilter, placementFilter]);
+  }, [items, filters.status, filters.placement]);
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
   };
-
-  const errorMessage =
-    listQuery.error instanceof ApiError
-      ? listQuery.error.message
-      : listQuery.error instanceof Error
-        ? listQuery.error.message
-        : null;
 
   const openCreate = () => {
     setPanelBanner(null);
@@ -170,16 +167,16 @@ export const BannersListPage = () => {
         }
       />
 
-      {errorMessage ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{errorMessage}</div>
+      {listQuery.isError ? (
+        <QueryError label="banners" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
       ) : null}
 
       <div className="flex flex-wrap items-center gap-6 rounded-sm border border-[#737685]/15 bg-white p-4 shadow-sm">
         <div className="flex min-w-[160px] flex-col gap-1">
           <label className="px-1 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400">Filter by Status</label>
           <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            value={filters.status}
+            onChange={(e) => set("status", e.target.value)}
             className="cursor-pointer border-none bg-transparent text-sm font-medium text-[#181b25] focus:ring-0"
           >
             <option value="">All Statuses</option>
@@ -191,8 +188,8 @@ export const BannersListPage = () => {
         <div className="flex min-w-[180px] flex-col gap-1">
           <label className="px-1 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400">Position Placement</label>
           <select
-            value={placementFilter}
-            onChange={(e) => setPlacementFilter(e.target.value)}
+            value={filters.placement}
+            onChange={(e) => set("placement", e.target.value)}
             className="cursor-pointer border-none bg-transparent text-sm font-medium text-[#181b25] focus:ring-0"
           >
             {placements.map((p) => (
@@ -205,10 +202,7 @@ export const BannersListPage = () => {
         <div className="flex-1" />
         <button
           type="button"
-          onClick={() => {
-            setStatusFilter("");
-            setPlacementFilter("");
-          }}
+          onClick={() => reset()}
           className="flex items-center text-xs font-semibold uppercase tracking-wider text-slate-400 transition-colors hover:text-[#181b25]"
         >
           <MaterialIcon name="filter_alt_off" className="mr-1 text-sm" />
@@ -217,7 +211,19 @@ export const BannersListPage = () => {
       </div>
 
       {listQuery.isLoading ? (
-        <p className="text-sm text-slate-500">Loading banners…</p>
+        <div
+          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+          aria-busy="true"
+          aria-label="Loading banners"
+        >
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex min-h-[200px] flex-col gap-3 rounded-sm border border-[#eef1f8] bg-white p-4">
+              <Shimmer className="h-40 w-full rounded-md" />
+              <Shimmer className="h-4 w-3/4 rounded" />
+              <Shimmer className="h-3 w-1/2 rounded" />
+            </div>
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <div className="rounded-sm border border-dashed border-slate-200 bg-white py-16 text-center text-sm text-slate-500">
           No banners match the current filters.

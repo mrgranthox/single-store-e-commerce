@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { type UseQueryResult } from "@tanstack/react-query";
 import { useAuthedQueries } from "@/lib/api/useAuthedQueries";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
@@ -12,7 +13,6 @@ import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { formatDateTime } from "@/lib/format";
-import { useQueries } from "@tanstack/react-query";
 import {
   ApiError,
   getAdminUser,
@@ -22,7 +22,10 @@ import {
   revokeAdminUserSession,
   suspendAdminUser,
   updateAdminUser,
-  updateAdminUserRoles
+  updateAdminUserRoles,
+  type AdminUserDetailResponse,
+  type AdminUsersListResponse,
+  type AdminUserSessionsResponse
 } from "@/features/system/api/admin-users.api";
 
 
@@ -35,25 +38,27 @@ export const AdminUserDetailPage = () => {
   const [confirmAction, setConfirmAction] = useState<"suspend" | "reactivate" | null>(null);
 
   const token = accessToken ?? "";
-  const [detailQ, rolesQ, sessionsQ] = useQueries({
-    queries: [
-      {
-        queryKey: ["admin-user-detail", adminUserId],
-        queryFn: async () => getAdminUser(token, adminUserId),
-        enabled: Boolean(accessToken && adminUserId),
-      },
-      {
-        queryKey: ["admin-user-role-options"],
-        queryFn: async () => listAdminUsers(token, { page: 1, page_size: 1 }),
-        enabled: Boolean(accessToken),
-      },
-      {
-        queryKey: ["admin-user-sessions", adminUserId],
-        queryFn: async () => listAdminUserSessions(token, adminUserId),
-        enabled: Boolean(accessToken && adminUserId),
-      },
-    ],
-  });
+
+  type DetailQuery = UseQueryResult<AdminUserDetailResponse, Error>;
+  type RolesQuery = UseQueryResult<AdminUsersListResponse, Error>;
+  type SessionsQuery = UseQueryResult<AdminUserSessionsResponse, Error>;
+
+  const [detailQ, rolesQ, sessionsQ] = useAuthedQueries((t) => [
+    {
+      queryKey: ["admin-user-detail", adminUserId],
+      queryFn: async () => getAdminUser(t, adminUserId),
+      enabled: Boolean(adminUserId)
+    },
+    {
+      queryKey: ["admin-user-role-options"],
+      queryFn: async () => listAdminUsers(t, { page: 1, page_size: 1 })
+    },
+    {
+      queryKey: ["admin-user-sessions", adminUserId],
+      queryFn: async () => listAdminUserSessions(t, adminUserId),
+      enabled: Boolean(adminUserId)
+    }
+  ]) as [DetailQuery, RolesQuery, SessionsQuery];
 
   const entity = detailQ.data?.data.entity;
   const roleOptions = rolesQ.data?.data.availableRoles ?? [];

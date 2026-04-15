@@ -5,6 +5,8 @@ import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
@@ -21,6 +23,9 @@ import { CmsPageFormPanel } from "@/features/content/pages/CmsPageFormPanel";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { ContentWorkspaceNav, StitchPageBody } from "@/components/stitch";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const CONTENT_PAGES_DEFAULTS = { status: "" };
 
 const tone = (s: string): StatusBadgeTone => {
   if (s === "PUBLISHED") {
@@ -66,24 +71,21 @@ const PublishedPill = ({ status }: { status: string }) => {
 export const ContentPagesListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
-  const [statusFilter, setStatusFilter] = useState("");
+  const { filters, set } = useListFilters({ defaults: CONTENT_PAGES_DEFAULTS });
   const [panel, setPanel] = useState<"closed" | "create" | "edit" | "view">("closed");
   const [panelPage, setPanelPage] = useState<ContentPageListItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<ContentPageListItem | null>(null);
   const [deleteErr, setDeleteErr] = useState<string | null>(null);
 
-  const q = useAuthedQuery(
-  ["admin-content-pages"],
-  (token) => listAdminContentPages(token)
-);
+  const pagesQuery = useAuthedQuery(["admin-content-pages"], (token) => listAdminContentPages(token));
 
-  const items = q.data?.data.items ?? [];
+  const items = pagesQuery.data?.data.items ?? [];
   const filtered = useMemo(() => {
-    if (!statusFilter) {
+    if (!filters.status) {
       return items;
     }
-    return items.filter((p) => p.status === statusFilter);
-  }, [items, statusFilter]);
+    return items.filter((p) => p.status === filters.status);
+  }, [items, filters.status]);
 
   const invalidate = () => {
     void queryClient.invalidateQueries({ queryKey: ["admin-content-pages"] });
@@ -142,9 +144,6 @@ export const ContentPagesListPage = () => {
       setDeleteErr(e instanceof ApiError ? e.message : e instanceof Error ? e.message : "Delete failed.");
     }
   });
-
-  const err =
-    q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;
 
   const rows = filtered.map((p) => [
     <button
@@ -283,8 +282,8 @@ export const ContentPagesListPage = () => {
         <label className="flex flex-col gap-1">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#737685]">Status</span>
           <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            value={filters.status}
+            onChange={(e) => set("status", e.target.value)}
             className="rounded-lg border-none bg-[#f8f9fb] text-sm font-medium text-[#181b25] focus:ring-1 focus:ring-[#1653cc]"
           >
             <option value="">All</option>
@@ -295,11 +294,11 @@ export const ContentPagesListPage = () => {
         </label>
       </div>
 
-      {err ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
+      {pagesQuery.isError ? (
+        <QueryError label="pages" error={pagesQuery.error} onRetry={() => void pagesQuery.refetch()} />
       ) : null}
-      {q.isLoading ? (
-        <p className="text-sm text-slate-500">Loading pages…</p>
+      {pagesQuery.isLoading ? (
+        <SkeletonTable rows={8} cols={5} label="Loading pages" />
       ) : (
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
           <DataTableShell

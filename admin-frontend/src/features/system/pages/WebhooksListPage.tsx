@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import {
   StitchFieldLabel,
@@ -31,6 +33,27 @@ import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { formatDateTime } from "@/lib/format";
 import { CACHE } from "@/lib/api/cache-strategy";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const WEBHOOK_LIST_DEFAULTS = {
+  provider: "",
+  event_type: "",
+  status: "",
+  received_after: "",
+  received_before: ""
+};
+
+const isoToDatetimeLocal = (iso: string) => {
+  if (!iso.trim()) {
+    return "";
+  }
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) {
+    return "";
+  }
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
 const tone = (s: string): StatusBadgeTone => {
   if (s === "PROCESSED") {
@@ -76,44 +99,46 @@ export const WebhooksListPage = () => {
   const actorEmail = useAdminAuthStore((s) => s.actor?.email ?? null);
   const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions);
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+  const { filters, page, setPage, setMany } = useListFilters({ defaults: WEBHOOK_LIST_DEFAULTS });
   const [providerDraft, setProviderDraft] = useState("");
   const [eventDraft, setEventDraft] = useState("");
-  const [status, setStatus] = useState("");
-  const [appliedProvider, setAppliedProvider] = useState("");
-  const [appliedEvent, setAppliedEvent] = useState("");
-  const [appliedStatus, setAppliedStatus] = useState("");
+  const [statusDraft, setStatusDraft] = useState("");
   const [receivedAfterDraft, setReceivedAfterDraft] = useState("");
   const [receivedBeforeDraft, setReceivedBeforeDraft] = useState("");
-  const [appliedReceivedAfter, setAppliedReceivedAfter] = useState("");
-  const [appliedReceivedBefore, setAppliedReceivedBefore] = useState("");
 
-  const healthQuery = useQuery({
-    queryKey: ["admin-webhooks-health-strip"],
-    queryFn: () => adminJsonGet<HealthAgg>("/api/admin/integrations/health", accessToken),
-    enabled: Boolean(accessToken),
-    ...CACHE.OPERATIONAL,
-    retry: false
-  });
+  useEffect(() => {
+    setProviderDraft(filters.provider);
+    setEventDraft(filters.event_type);
+    setStatusDraft(filters.status);
+    setReceivedAfterDraft(isoToDatetimeLocal(filters.received_after));
+    setReceivedBeforeDraft(isoToDatetimeLocal(filters.received_before));
+  }, [filters.provider, filters.event_type, filters.status, filters.received_after, filters.received_before]);
+
+  const healthQuery = useAuthedQuery(
+    ["admin-webhooks-health-strip"],
+    (token) => adminJsonGet<HealthAgg>("/api/admin/integrations/health", token),
+    { ...CACHE.OPERATIONAL, retry: false }
+  );
 
   const listQuery = useAuthedQuery(
     [
       "admin-webhooks",
       page,
-      appliedProvider,
-      appliedEvent,
-      appliedStatus,
-      appliedReceivedAfter,
-      appliedReceivedBefore
+      filters.provider,
+      filters.event_type,
+      filters.status,
+      filters.received_after,
+      filters.received_before
     ],
-    (token) => listAdminWebhooks(token, {
-      page,
-      pageSize: 20,
-      ...(appliedStatus ? { status: appliedStatus } : {}),
-      ...(appliedProvider.trim() ? { provider: appliedProvider.trim() } : {}),
-      ...(appliedEvent.trim() ? { eventType: appliedEvent.trim() } : {}),
-      ...(appliedReceivedAfter.trim() ? { receivedAfter: appliedReceivedAfter.trim() } : {}),
-      ...(appliedReceivedBefore.trim() ? { receivedBefore: appliedReceivedBefore.trim() } : {})
+    (token) =>
+      listAdminWebhooks(token, {
+        page,
+        pageSize: 20,
+        ...(filters.status ? { status: filters.status } : {}),
+        ...(filters.provider.trim() ? { provider: filters.provider.trim() } : {}),
+        ...(filters.event_type.trim() ? { eventType: filters.event_type.trim() } : {}),
+        ...(filters.received_after.trim() ? { receivedAfter: filters.received_after.trim() } : {}),
+        ...(filters.received_before.trim() ? { receivedBefore: filters.received_before.trim() } : {})
       })
   );
 
@@ -145,9 +170,6 @@ export const WebhooksListPage = () => {
   useEffect(() => {
     prefetchWebhooks(items.map((item) => item.id), 2);
   }, [items, prefetchWebhooks]);
-
-  const err =
-    listQuery.error instanceof ApiError ? listQuery.error.message : listQuery.error instanceof Error ? listQuery.error.message : null;
 
   const kpis = useMemo(() => {
     const byStatus = healthQuery.data?.data?.webhookEvents?.byStatus ?? [];
@@ -232,8 +254,8 @@ export const WebhooksListPage = () => {
         actionMenuItems={[refreshDataMenuItem(queryClient, ["admin-webhooks", "admin-webhooks-health-strip"])]}
       />
 
-      {err ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
+      {listQuery.isError ? (
+        <QueryError label="webhooks" error={listQuery.error} onRetry={() => void listQuery.refetch()} />
       ) : null}
       {retryMut.isError ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
@@ -294,7 +316,7 @@ export const WebhooksListPage = () => {
         </label>
         <label className="flex min-w-[140px] flex-col gap-1">
           <StitchFieldLabel className="mb-0">Status</StitchFieldLabel>
-          <select value={status} onChange={(e) => setStatus(e.target.value)} className={stitchSelectClass}>
+          <select value={statusDraft} onChange={(e) => setStatusDraft(e.target.value)} className={stitchSelectClass}>
             {WEBHOOK_STATUSES.map((s) => (
               <option key={s || "all"} value={s}>
                 {s ? s.replace(/_/g, " ") : "All statuses"}
@@ -324,9 +346,6 @@ export const WebhooksListPage = () => {
           <StitchGradientButton
             type="button"
             onClick={() => {
-              setAppliedProvider(providerDraft);
-              setAppliedEvent(eventDraft);
-              setAppliedStatus(status);
               const toIso = (local: string) => {
                 if (!local.trim()) {
                   return "";
@@ -334,9 +353,13 @@ export const WebhooksListPage = () => {
                 const t = new Date(local).getTime();
                 return Number.isNaN(t) ? "" : new Date(t).toISOString();
               };
-              setAppliedReceivedAfter(toIso(receivedAfterDraft));
-              setAppliedReceivedBefore(toIso(receivedBeforeDraft));
-              setPage(1);
+              setMany({
+                provider: providerDraft.trim(),
+                event_type: eventDraft.trim(),
+                status: statusDraft,
+                received_after: toIso(receivedAfterDraft),
+                received_before: toIso(receivedBeforeDraft)
+              });
             }}
           >
             Apply Filters
@@ -345,7 +368,7 @@ export const WebhooksListPage = () => {
       </StitchFilterPanel>
 
       {listQuery.isLoading ? (
-        <p className="text-sm text-[#737685]">Loading…</p>
+        <SkeletonTable rows={8} cols={8} label="Loading webhooks" />
       ) : (
         <>
           <div className="overflow-hidden rounded-xl bg-white shadow-sm">
@@ -373,7 +396,7 @@ export const WebhooksListPage = () => {
                 type="button"
                 disabled={page <= 1}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[13px] font-semibold disabled:opacity-40"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => setPage(Math.max(1, page - 1))}
               >
                 Previous
               </button>
@@ -384,7 +407,7 @@ export const WebhooksListPage = () => {
                 type="button"
                 disabled={page >= totalPages}
                 className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[13px] font-semibold disabled:opacity-40"
-                onClick={() => setPage((p) => p + 1)}
+                onClick={() => setPage(page + 1)}
               >
                 Next
               </button>

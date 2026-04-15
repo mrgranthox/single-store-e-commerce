@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { RefreshCw, Search } from "lucide-react";
@@ -7,6 +7,8 @@ import clsx from "clsx";
 
 import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
+import { QueryError } from "@/components/primitives/QueryError";
+import { SkeletonTable } from "@/components/primitives/Skeleton";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import {
   CatalogWorkspaceNav,
@@ -23,6 +25,9 @@ import {
   restoreAdminCatalogBrand,
   type AdminBrandRow
 } from "@/features/catalog/api/admin-catalog.api";
+import { useListFilters } from "@/lib/hooks/useListFilters";
+
+const BRAND_LIST_DEFAULTS = { q: "", status: "" };
 
 const statusLabel = (s: string) => {
   if (s === "ACTIVE") {
@@ -64,16 +69,16 @@ const brandStatusCell = (status: string) => {
 export const BrandsListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
+  const { filters, set, setMany, reset } = useListFilters({ defaults: BRAND_LIST_DEFAULTS });
   const [searchDraft, setSearchDraft] = useState("");
-  const [appliedSearch, setAppliedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
   const [rowErr, setRowErr] = useState<string | null>(null);
   const [pendingArchive, setPendingArchive] = useState<{ id: string; name: string } | null>(null);
 
-  const q = useAuthedQuery(
-  ["admin-catalog-brands"],
-  (token) => listAdminCatalogBrands(token)
-);
+  useEffect(() => {
+    setSearchDraft(filters.q);
+  }, [filters.q]);
+
+  const brandsQuery = useAuthedQuery(["admin-catalog-brands"], (token) => listAdminCatalogBrands(token));
 
   const archiveMut = useMutation({
     mutationFn: async (brandId: string) => {
@@ -107,9 +112,7 @@ export const BrandsListPage = () => {
     }
   });
 
-  const items = q.data?.data.items ?? [];
-  const err =
-    q.error instanceof ApiError ? q.error.message : q.error instanceof Error ? q.error.message : null;
+  const items = brandsQuery.data?.data.items ?? [];
 
   const kpi = useMemo(() => {
     const total = items.length;
@@ -119,9 +122,9 @@ export const BrandsListPage = () => {
   }, [items]);
 
   const filtered = useMemo(() => {
-    const needle = appliedSearch.trim().toLowerCase();
+    const needle = filters.q.trim().toLowerCase();
     return items.filter((b: AdminBrandRow) => {
-      if (statusFilter && b.status !== statusFilter) {
+      if (filters.status && b.status !== filters.status) {
         return false;
       }
       if (!needle) {
@@ -129,16 +132,15 @@ export const BrandsListPage = () => {
       }
       return b.name.toLowerCase().includes(needle) || b.slug.toLowerCase().includes(needle);
     });
-  }, [items, appliedSearch, statusFilter]);
+  }, [items, filters.q, filters.status]);
 
   const applyFilters = () => {
-    setAppliedSearch(searchDraft);
+    setMany({ q: searchDraft.trim() });
   };
 
   const clearFilters = () => {
+    reset();
     setSearchDraft("");
-    setAppliedSearch("");
-    setStatusFilter("");
   };
 
   const onArchive = (b: AdminBrandRow) => {
@@ -219,9 +221,9 @@ export const BrandsListPage = () => {
             type="button"
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50"
             aria-label="Refresh brands"
-            onClick={() => void q.refetch()}
+            onClick={() => void brandsQuery.refetch()}
           >
-            <RefreshCw className={clsx("h-4 w-4", q.isFetching && "animate-spin")} />
+            <RefreshCw className={clsx("h-4 w-4", brandsQuery.isFetching && "animate-spin")} />
           </button>
           <Link
             to="/admin/catalog/brands/new"
@@ -278,8 +280,8 @@ export const BrandsListPage = () => {
           <label>
             <StitchFieldLabel>Status</StitchFieldLabel>
             <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              value={filters.status}
+              onChange={(e) => set("status", e.target.value)}
               className="h-11 w-full rounded-lg border-0 bg-[#f2f3ff] px-3 text-xs text-[#181b25] focus:outline-none focus:ring-2 focus:ring-[#1653cc]/25"
             >
               <option value="">All statuses</option>
@@ -307,16 +309,16 @@ export const BrandsListPage = () => {
         </div>
       </StitchFilterPanel>
 
-      {err ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{err}</div>
+      {brandsQuery.isError ? (
+        <QueryError label="brands" error={brandsQuery.error} onRetry={() => void brandsQuery.refetch()} />
       ) : null}
       {rowErr ? (
         <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           {rowErr}
         </div>
       ) : null}
-      {q.isLoading ? (
-        <p className="text-sm text-[var(--color-text-muted)]">Loading…</p>
+      {brandsQuery.isLoading ? (
+        <SkeletonTable rows={8} cols={5} label="Loading brands" />
       ) : (
         <DataTableShell
           variant="stitchOperational"
