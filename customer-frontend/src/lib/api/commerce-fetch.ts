@@ -1,4 +1,5 @@
 import { clearAuthTokens, getAccessToken, getOrCreateSessionId } from "@/lib/api/commerce-session";
+import { useCustomerStore } from "@/lib/store/customer-store";
 
 /**
  * Express API origin (no trailing slash).
@@ -118,6 +119,10 @@ export const commerceFetchJson = async <T>(
     headers,
     body: json !== undefined ? JSON.stringify(json) : rest.body
   });
+
+  if (auth && response.status === 401) {
+    useCustomerStore.getState().signOut();
+  }
 
   const payload = (await parseJson(response)) as JsonEnvelope | Record<string, unknown> | null;
 
