@@ -4,6 +4,7 @@ import type { RouteModule } from "../../app/route.types";
 import { rateLimit, rateLimitKeyFromActorOrIp } from "../../common/middleware/rate-limit.middleware";
 import { validateRequest } from "../../common/validation/validate-request";
 import {
+  completeCheckoutController,
   createOrderController,
   getCheckoutEligibilityController,
   getCheckoutPaymentReturnController,
@@ -12,6 +13,7 @@ import {
 } from "./checkout.controller";
 import {
   checkoutPaymentReturnQuerySchema,
+  completeCheckoutBodySchema,
   createOrderBodySchema,
   initializePaymentBodySchema,
   validateCheckoutBodySchema
@@ -53,6 +55,12 @@ router.post(
   createOrderController
 );
 router.post(
+  "/checkout/complete",
+  checkoutMutationRateLimit,
+  validateRequest({ body: completeCheckoutBodySchema }),
+  completeCheckoutController
+);
+router.post(
   "/checkout/initialize-payment",
   checkoutMutationRateLimit,
   validateRequest({ body: initializePaymentBodySchema }),
@@ -65,6 +73,13 @@ export const checkoutRouteModule: RouteModule = {
     { method: "GET", path: "/api/v1/checkout/eligibility", summary: "Get checkout eligibility for the current cart.", tags: ["checkout"], auth: "public" },
     { method: "POST", path: "/api/v1/checkout/validate", summary: "Validate checkout for the current cart.", tags: ["checkout"], auth: "public" },
     { method: "POST", path: "/api/v1/checkout/create-order", summary: "Create an order from the current cart.", tags: ["checkout"], auth: "public" },
+    {
+      method: "POST",
+      path: "/api/v1/checkout/complete",
+      summary: "Create pending-payment order and initialize payment in one request (recommended for storefronts).",
+      tags: ["checkout"],
+      auth: "public"
+    },
     { method: "POST", path: "/api/v1/checkout/initialize-payment", summary: "Initialize payment for an order pending payment.", tags: ["checkout"], auth: "public" },
     {
       method: "GET",

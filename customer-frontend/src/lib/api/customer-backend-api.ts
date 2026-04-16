@@ -119,6 +119,10 @@ export const customerBackendApi = {
   createOrder: async (body: unknown) =>
     commerceFetchJson<{ entity: unknown }>("/api/checkout/create-order", { method: "POST", json: body }),
 
+  /** Single request: create `PENDING_PAYMENT` order + initialize Paystack (avoids session drift between create and init). */
+  completeCheckout: async (body: unknown) =>
+    commerceFetchJson<{ order: unknown; payment: unknown }>("/api/checkout/complete", { method: "POST", json: body }),
+
   initializePayment: async (body: unknown) =>
     commerceFetchJson<{ entity: unknown }>("/api/checkout/initialize-payment", { method: "POST", json: body }),
 

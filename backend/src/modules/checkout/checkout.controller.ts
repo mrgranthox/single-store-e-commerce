@@ -5,11 +5,13 @@ import { asyncHandler } from "../../common/middleware/async-handler";
 import { readValidatedBody, readValidatedQuery } from "../../common/validation/validate-request";
 import {
   checkoutPaymentReturnQuerySchema,
+  completeCheckoutBodySchema,
   createOrderBodySchema,
   initializePaymentBodySchema,
   validateCheckoutBodySchema
 } from "./checkout.schemas";
 import {
+  completeCheckoutAndInitializePayment,
   createOrderFromCheckout,
   getCheckoutEligibility,
   getCheckoutPaymentReturnSummary,
@@ -48,6 +50,18 @@ export const initializePaymentController = asyncHandler(async (request, response
   const body = readValidatedBody<z.infer<typeof initializePaymentBodySchema>>(request);
   const data = await initializeCheckoutPayment(buildContext(request), body);
   return sendSuccess(response, { data: { entity: data } });
+});
+
+export const completeCheckoutController = asyncHandler(async (request, response) => {
+  const body = readValidatedBody<z.infer<typeof completeCheckoutBodySchema>>(request);
+  const { order, payment } = await completeCheckoutAndInitializePayment(buildContext(request), body);
+  return sendSuccess(response, {
+    statusCode: 201,
+    data: {
+      order,
+      payment
+    }
+  });
 });
 
 export const getCheckoutPaymentReturnController = asyncHandler(async (request, response) => {

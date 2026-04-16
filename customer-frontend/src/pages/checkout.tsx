@@ -765,17 +765,18 @@ export const CheckoutReviewPage = () => {
     setBusy(true);
     setErr(null);
     try {
-      await customerBackendApi.validateCheckout({
-        address: d.address,
-        shippingMethodCode: d.shippingMethodCode
-      });
       const checkoutIdempotencyKey = getOrCreateCheckoutIdempotencyKey();
-      const { data } = await customerBackendApi.createOrder({
+      const paymentIdempotencyKey =
+        typeof crypto !== "undefined" && "randomUUID" in crypto ? `pay_${crypto.randomUUID()}` : `pay_${Date.now()}`;
+      const { data } = await customerBackendApi.completeCheckout({
         checkoutIdempotencyKey,
         address: d.address,
-        shippingMethodCode: d.shippingMethodCode
+        shippingMethodCode: d.shippingMethodCode,
+        paymentIdempotencyKey,
+        channel: d.payment.channel,
+        mobileMoney: d.payment.mobileMoney
       });
-      const entity = data.entity as { id: string; orderNumber: string; status?: string };
+      const entity = data.order as { id: string; orderNumber: string; status?: string };
       writeCheckoutResult({
         orderId: entity.id,
         orderNumber: entity.orderNumber,
@@ -795,15 +796,7 @@ export const CheckoutReviewPage = () => {
         return;
       }
 
-      const paymentIdempotencyKey =
-        typeof crypto !== "undefined" && "randomUUID" in crypto ? `pay_${crypto.randomUUID()}` : `pay_${Date.now()}`;
-      const init = await customerBackendApi.initializePayment({
-        orderId: entity.id,
-        paymentIdempotencyKey,
-        channel: d.payment.channel,
-        mobileMoney: d.payment.mobileMoney
-      });
-      const pay = init.data.entity as { redirectUrl?: string | null; paymentState?: string };
+      const pay = data.payment as { redirectUrl?: string | null; paymentState?: string };
       if (pay.paymentState === "PAID" && !pay.redirectUrl) {
         clearCheckoutDraft();
         navigate("/checkout/success", { replace: true });

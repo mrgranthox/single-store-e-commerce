@@ -167,6 +167,59 @@ const buildPaymentCallbackUrl = (orderId: string, paymentId: string) => {
   return `${baseUrl}${separator}orderId=${encodeURIComponent(orderId)}&paymentId=${encodeURIComponent(paymentId)}`;
 };
 
+const assertActorCanAccessOrderForCheckout = (
+  context: CartActorContext,
+  order: {
+    userId: string | null;
+    guestTrackingKey: string | null;
+  },
+  checkoutSession: { guestTrackingKey: string | null; userId: string | null } | null | undefined
+) => {
+  if (context.actor.kind === "admin" || context.actor.kind === "system") {
+    throw notFoundError("The requested order was not found.");
+  }
+
+  const cs = checkoutSession ?? null;
+
+  if (context.actor.kind === "customer") {
+    const uid = context.actor.userId;
+    if (!uid) {
+      throw notFoundError("The requested order was not found.");
+    }
+    if (order.userId === uid) {
+      return;
+    }
+    if (
+      !order.userId &&
+      order.guestTrackingKey &&
+      context.sessionId &&
+      order.guestTrackingKey === context.sessionId
+    ) {
+      return;
+    }
+    if (cs?.userId === uid) {
+      return;
+    }
+    if (!cs?.userId && cs?.guestTrackingKey && context.sessionId && cs.guestTrackingKey === context.sessionId) {
+      return;
+    }
+    throw notFoundError("The requested order was not found.");
+  }
+
+  if (context.actor.kind === "anonymous") {
+    if (!context.sessionId || order.userId) {
+      throw notFoundError("The requested order was not found.");
+    }
+    if (order.guestTrackingKey === context.sessionId) {
+      return;
+    }
+    if (cs?.guestTrackingKey === context.sessionId) {
+      return;
+    }
+    throw notFoundError("The requested order was not found.");
+  }
+};
+
 const readInitializationDetails = async (
   transaction: Prisma.TransactionClient,
   paymentId: string
@@ -287,13 +340,14 @@ export const createOrderFromCheckout = async (
       );
     }
 
-    if (
-      cart.appliedCouponCode &&
-      evaluation.couponOutcome &&
+    const couponMsg = evaluation.couponOutcome?.message?.toLowerCase() ?? "";
+    const shouldStripStaleCartCoupon =
+      Boolean(cart.appliedCouponCode) &&
+      evaluation.couponOutcome != null &&
       !evaluation.couponOutcome.valid &&
-      typeof evaluation.couponOutcome.message === "string" &&
-      evaluation.couponOutcome.message.includes("already been used")
-    ) {
+      (couponMsg.includes("already been used") || couponMsg.includes("minimum order"));
+
+    if (shouldStripStaleCartCoupon) {
       await transaction.cart.update({
         where: {
           id: cart.id
@@ -467,6 +521,53 @@ export const createOrderFromCheckout = async (
     return serializeOrderEntity(order, evaluation, checkoutSession.id);
   });
 
+export const completeCheckoutAndInitializePayment = async (
+  context: CartActorContext,
+  input: {
+    checkoutIdempotencyKey: string;
+    address: {
+      fullName: string;
+      email?: string;
+      phone: string;
+      country: string;
+      region: string;
+      city: string;
+      line1: string;
+      line2?: string;
+      postalCode: string;
+    };
+    shippingMethodCode: string;
+    campaignId?: string;
+    paymentIdempotencyKey: string;
+    provider?: string;
+    channel: "card" | "mobile_money";
+    mobileMoney?: {
+      phone: string;
+      provider: string;
+    };
+  }
+) => {
+  const order = await createOrderFromCheckout(context, {
+    checkoutIdempotencyKey: input.checkoutIdempotencyKey,
+    address: input.address,
+    shippingMethodCode: input.shippingMethodCode,
+    campaignId: input.campaignId
+  });
+
+  const payment = await initializeCheckoutPayment(context, {
+    orderId: order.id,
+    paymentIdempotencyKey: input.paymentIdempotencyKey,
+    provider: input.provider,
+    channel: input.channel,
+    mobileMoney: input.mobileMoney
+  });
+
+  return {
+    order,
+    payment
+  };
+};
+
 export const initializeCheckoutPayment = async (
   context: CartActorContext,
   input: {
@@ -495,14 +596,7 @@ export const initializeCheckoutPayment = async (
       throw notFoundError("The requested order was not found.");
     }
 
-    if (
-      (context.actor.kind === "customer" && order.userId !== context.actor.userId) ||
-      (context.actor.kind === "anonymous" && order.guestTrackingKey !== context.sessionId) ||
-      context.actor.kind === "admin" ||
-      context.actor.kind === "system"
-    ) {
-      throw notFoundError("The requested order was not found.");
-    }
+    assertActorCanAccessOrderForCheckout(context, order, order.checkoutSession);
 
     if (order.status !== "PENDING_PAYMENT") {
       const settledPayment = await transaction.payment.findFirst({
@@ -876,7 +970,8 @@ export const getCheckoutPaymentReturnSummary = async (
           id: input.paymentId
         },
         take: 1
-      }
+      },
+      checkoutSession: true
     }
   });
 
@@ -884,14 +979,7 @@ export const getCheckoutPaymentReturnSummary = async (
     throw notFoundError("The requested order or payment was not found.");
   }
 
-  if (
-    (context.actor.kind === "customer" && order.userId !== context.actor.userId) ||
-    (context.actor.kind === "anonymous" && order.guestTrackingKey !== context.sessionId) ||
-    context.actor.kind === "admin" ||
-    context.actor.kind === "system"
-  ) {
-    throw notFoundError("The requested order was not found.");
-  }
+  assertActorCanAccessOrderForCheckout(context, order, order.checkoutSession);
 
   const payment = order.payments[0]!;
 

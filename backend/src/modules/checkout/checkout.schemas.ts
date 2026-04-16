@@ -50,3 +50,25 @@ export const initializePaymentBodySchema = z.object({
     });
   }
 });
+
+/** Atomically create the pending-payment order and initialize Paystack (same session as one HTTP call). */
+export const completeCheckoutBodySchema = z
+  .object({
+    checkoutIdempotencyKey: checkoutIdempotencyKeySchema,
+    address: addressSchema,
+    shippingMethodCode: z.string().trim().min(1).max(50).default("STANDARD"),
+    campaignId: z.string().uuid().optional(),
+    paymentIdempotencyKey: checkoutIdempotencyKeySchema,
+    provider: z.string().trim().min(1).max(60).optional(),
+    channel: z.enum(["card", "mobile_money"]).default("card"),
+    mobileMoney: mobileMoneyDetailsSchema.optional()
+  })
+  .superRefine((value, context) => {
+    if (value.channel === "mobile_money" && !value.mobileMoney) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["mobileMoney"],
+        message: "mobileMoney is required when channel is mobile_money."
+      });
+    }
+  });
