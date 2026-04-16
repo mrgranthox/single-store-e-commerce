@@ -19,6 +19,7 @@ import {
   labelForShippingMethodCode,
   readCheckoutDraft,
   readCheckoutResult,
+  resetCheckoutAttemptClientState,
   resetCheckoutIdempotencyKey,
   writeCheckoutDraft,
   writeCheckoutResult
@@ -863,6 +864,15 @@ export const CheckoutReviewPage = () => {
     if (placeOrderInFlight.current) {
       return;
     }
+    // Abandoned Paystack (closed tab / no callback): stale result + cko would replay the same hosted payment.
+    const staleDeferred = readCheckoutResult();
+    if (
+      staleDeferred?.checkoutPaymentIntentId &&
+      staleDeferred?.paymentId &&
+      !staleDeferred?.orderNumber
+    ) {
+      resetCheckoutAttemptClientState();
+    }
     placeOrderInFlight.current = true;
     setBusy(true);
     setErr(null);
@@ -939,7 +949,7 @@ export const CheckoutReviewPage = () => {
         return;
       }
       if (hostedPayUrl) {
-        clearCheckoutDraft();
+        // Keep draft until success so Paystack cancel/return still has address + payment method for retry.
         window.location.assign(hostedPayUrl);
         return;
       }
@@ -1062,6 +1072,7 @@ export const CheckoutPaymentResultPage = () => {
 
   useEffect(() => {
     if (!paymentId || (!orderId && !checkoutPaymentIntentId)) {
+      resetCheckoutAttemptClientState();
       setPhase("failed");
       setMessage("This return link is missing checkout or payment details.");
       return;
@@ -1102,11 +1113,12 @@ export const CheckoutPaymentResultPage = () => {
           setPhase("pending");
         }
         if (data.paymentState === "FAILED" || data.paymentState === "CANCELLED") {
+          resetCheckoutAttemptClientState();
           setPhase("failed");
           setMessage(
             data.paymentState === "FAILED"
               ? "Payment was not completed. You can try again from your cart or contact support with your order number."
-              : "This payment was cancelled."
+              : "This payment was cancelled. You can return to checkout to pay with a different method or an updated cart."
           );
           return;
         }
@@ -1121,11 +1133,13 @@ export const CheckoutPaymentResultPage = () => {
       } catch (e) {
         if (cancelled) return;
         if (e instanceof CommerceApiError && (e.status === 401 || e.status === 403)) {
+          resetCheckoutAttemptClientState();
           setPhase("auth");
           setMessage("Sign in to the same account you used for checkout, or open this page in the same browser session.");
           return;
         }
         if (e instanceof CommerceApiError && e.status === 404) {
+          resetCheckoutAttemptClientState();
           setPhase("failed");
           setMessage(
             "We could not load this order with your current session. Open this link in the same browser you used for checkout, or track your order with your email."
@@ -1169,7 +1183,15 @@ export const CheckoutPaymentResultPage = () => {
           </p>
         ) : null}
         {message ? <p className="text-sm text-on-surface-variant leading-relaxed">{message}</p> : null}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 flex-wrap">
+          {phase === "failed" ? (
+            <Link
+              to="/checkout/review"
+              className="text-secondary font-bold text-sm underline underline-offset-4"
+            >
+              Return to checkout
+            </Link>
+          ) : null}
           <Link
             to="/track-order"
             className="text-secondary font-bold text-sm underline underline-offset-4"

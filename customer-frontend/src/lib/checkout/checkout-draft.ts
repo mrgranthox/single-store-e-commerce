@@ -99,3 +99,9 @@ export const readCheckoutResult = (): CheckoutResultSnapshot | null => {
 export const clearCheckoutResult = () => {
   sessionStorage.removeItem(RESULT_KEY);
 };
+
+/** After Paystack cancel/fail or abandoning a hosted session — next `complete` uses a new checkout idempotency key. */
+export const resetCheckoutAttemptClientState = () => {
+  clearCheckoutResult();
+  resetCheckoutIdempotencyKey();
+};
