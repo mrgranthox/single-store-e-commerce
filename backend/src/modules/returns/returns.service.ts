@@ -139,6 +139,14 @@ type RefundRecord = Prisma.RefundGetPayload<{
   include: typeof refundInclude;
 }>;
 
+const assertRefundHasOrder = (refund: RefundRecord) => {
+  const order = refund.payment.order;
+  if (!order) {
+    throw invalidStateTransitionError("Refunds require a captured order linked to the payment.");
+  }
+  return order;
+};
+
 const refundablePaymentStates = new Set<PaymentState>([
   PaymentState.PAID,
   PaymentState.PARTIALLY_REFUNDED,
@@ -166,7 +174,18 @@ const readAddressSnapshot = (value: Prisma.JsonValue) => {
   };
 };
 
-const buildCustomerSummary = (order: ReturnRecord["order"] | RefundRecord["payment"]["order"]) => {
+const buildCustomerSummary = (
+  order: ReturnRecord["order"] | RefundRecord["payment"]["order"] | null
+) => {
+  if (!order) {
+    return {
+      id: null,
+      email: null,
+      guest: true,
+      name: null as string | null
+    };
+  }
+
   const address = readAddressSnapshot(order.addressSnapshot);
   const nameParts = [order.user?.firstName, order.user?.lastName].filter(Boolean);
 
@@ -236,43 +255,47 @@ const serializeReturnDetail = (record: ReturnRecord) => ({
   items: serializeReturnItems(record.items)
 });
 
-const serializeRefundDetail = (refund: RefundRecord) => ({
-  id: refund.id,
-  state: refund.state,
-  amountCents: refund.amountCents,
-  approvedAmountCents: refund.approvedAmountCents,
-  currency: refund.currency,
-  providerRefundRef: refund.providerRefundRef,
-  providerPayload: refund.providerPayload,
-  internalNote: refund.internalNote,
-  approvedAt: refund.approvedAt,
-  createdAt: refund.createdAt,
-  updatedAt: refund.updatedAt,
-  payment: {
-    id: refund.payment.id,
-    paymentState: refund.payment.paymentState,
-    provider: refund.payment.provider,
-    providerPaymentRef: refund.payment.providerPaymentRef
-  },
-  order: {
-    id: refund.payment.order.id,
-    orderNumber: refund.payment.order.orderNumber,
-    status: refund.payment.order.status,
-    customer: buildCustomerSummary(refund.payment.order)
-  },
-  return: refund.return
-    ? {
-        id: refund.return.id,
-        status: refund.return.status,
-        customerReason: refund.return.customerReason
-      }
-    : null,
-  items: refund.items.map((item) => ({
-    id: item.id,
-    orderItemId: item.orderItemId,
-    amountCents: item.amountCents
-  }))
-});
+const serializeRefundDetail = (refund: RefundRecord) => {
+  const refundOrder = assertRefundHasOrder(refund);
+
+  return {
+    id: refund.id,
+    state: refund.state,
+    amountCents: refund.amountCents,
+    approvedAmountCents: refund.approvedAmountCents,
+    currency: refund.currency,
+    providerRefundRef: refund.providerRefundRef,
+    providerPayload: refund.providerPayload,
+    internalNote: refund.internalNote,
+    approvedAt: refund.approvedAt,
+    createdAt: refund.createdAt,
+    updatedAt: refund.updatedAt,
+    payment: {
+      id: refund.payment.id,
+      paymentState: refund.payment.paymentState,
+      provider: refund.payment.provider,
+      providerPaymentRef: refund.payment.providerPaymentRef
+    },
+    order: {
+      id: refundOrder.id,
+      orderNumber: refundOrder.orderNumber,
+      status: refundOrder.status,
+      customer: buildCustomerSummary(refundOrder)
+    },
+    return: refund.return
+      ? {
+          id: refund.return.id,
+          status: refund.return.status,
+          customerReason: refund.return.customerReason
+        }
+      : null,
+    items: refund.items.map((item) => ({
+      id: item.id,
+      orderItemId: item.orderItemId,
+      amountCents: item.amountCents
+    }))
+  };
+};
 
 const loadReturnForCustomerOrThrow = async (customerUserId: string, returnId: string) => {
   const record = await prisma.return.findFirst({
@@ -1380,7 +1403,7 @@ export const approveAdminRefund = async (input: {
       actionCode: "refunds.approve",
       entityType: "REFUND",
       entityId: refund.id,
-      orderId: refund.payment.order.id,
+      orderId: assertRefundHasOrder(refund).id,
       note: input.note,
       before: {
         state: refund.state
@@ -1466,7 +1489,7 @@ export const rejectAdminRefund = async (input: {
       actionCode: "refunds.reject",
       entityType: "REFUND",
       entityId: refund.id,
-      orderId: refund.payment.order.id,
+      orderId: assertRefundHasOrder(refund).id,
       note: input.note,
       before: {
         state: refund.state
@@ -1572,7 +1595,7 @@ export const completeAdminRefund = async (input: {
       actionCode: "refunds.complete",
       entityType: "REFUND",
       entityId: refund.id,
-      orderId: refund.payment.order.id,
+      orderId: assertRefundHasOrder(refund).id,
       note: input.note,
       before: {
         state: refund.state

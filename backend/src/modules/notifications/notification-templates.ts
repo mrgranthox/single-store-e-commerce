@@ -668,7 +668,7 @@ export const renderNotificationEmail = async (input: {
       const refundId = typeof payload.refundId === "string" ? payload.refundId : null;
       const refund = refundId ? await loadRefundRecord(refundId) : null;
       const orderNumber =
-        refund?.payment.order.orderNumber ??
+        refund?.payment.order?.orderNumber ??
         (typeof payload.orderNumber === "string" ? payload.orderNumber : "your order");
 
       const document = buildEmailDocument({

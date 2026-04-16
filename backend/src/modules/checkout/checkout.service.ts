@@ -845,6 +845,8 @@ export const completeCheckoutAndInitializePayment = async (
       cartId: cart.id
     });
 
+    const materializationPayloadJson = toPrismaJsonValue(materializationPayload)!;
+
     const intent =
       existingIntent?.status === CheckoutPaymentIntentStatus.AWAITING_PAYMENT
         ? await transaction.checkoutPaymentIntent.update({
@@ -852,14 +854,14 @@ export const completeCheckoutAndInitializePayment = async (
               id: existingIntent.id
             },
             data: {
-              materializationPayload
+              materializationPayload: materializationPayloadJson
             }
           })
         : await transaction.checkoutPaymentIntent.create({
             data: {
               checkoutSessionId: checkoutSession.id,
               checkoutIdempotencyKey: input.checkoutIdempotencyKey,
-              materializationPayload,
+              materializationPayload: materializationPayloadJson,
               status: CheckoutPaymentIntentStatus.AWAITING_PAYMENT
             }
           });

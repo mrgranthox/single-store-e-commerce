@@ -532,7 +532,7 @@ const applyResolvedPaymentState = async (input: {
       await createAlert({
         type: "PAYMENT_FAILED",
         severity: SecuritySeverity.MEDIUM,
-        relatedOrderId: input.payment.orderId,
+        relatedOrderId: input.payment.orderId ?? undefined,
         relatedPaymentId: input.payment.id,
         metadata: {
           provider: input.payment.provider,
@@ -642,7 +642,7 @@ const ensurePaymentReconciliationAlert = async (
   return createAlert({
     type: "PAYMENT_RECONCILIATION_FAILURE",
     severity: SecuritySeverity.MEDIUM,
-    relatedOrderId: payment.orderId,
+    relatedOrderId: payment.orderId ?? undefined,
     relatedPaymentId: payment.id,
     metadata: {
       provider: payment.provider,
