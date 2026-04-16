@@ -24,7 +24,7 @@ import {
   writeCheckoutResult
 } from "@/lib/checkout/checkout-draft";
 import { mapCartEvaluationToOrderSummary } from "@/lib/checkout/map-cart-evaluation";
-import { useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
+import { CUSTOMER_CART_QUERY_ROOT, useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 /* ─────────────────────────────────────────────
@@ -281,6 +281,7 @@ const shippingSchema = z.object({
 
 export const CheckoutShippingPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const cartQueryKey = useCustomerCartQueryKey();
   const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
   const [selectedMethod, setSelectedMethod] = useState<"standard" | "express">("standard");
@@ -314,6 +315,31 @@ export const CheckoutShippingPage = () => {
     price: l.price,
     image: l.image
   }));
+
+  const checkoutAuthFlipRef = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    if (checkoutAuthFlipRef.current === undefined) {
+      checkoutAuthFlipRef.current = isAuthenticated;
+      return;
+    }
+    if (checkoutAuthFlipRef.current === isAuthenticated) {
+      return;
+    }
+    checkoutAuthFlipRef.current = isAuthenticated;
+    const draft = readCheckoutDraft();
+    void queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
+    if (!draft) {
+      return;
+    }
+    void customerBackendApi
+      .validateCheckout({
+        address: draft.address,
+        shippingMethodCode: draft.shippingMethodCode
+      })
+      .catch(() => {
+        return null;
+      });
+  }, [isAuthenticated, queryClient]);
 
   return (
     <div className="bg-background font-body text-on-background antialiased">
@@ -466,7 +492,9 @@ export const CheckoutShippingPage = () => {
 ───────────────────────────────────────────── */
 export const CheckoutPaymentPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const cartQueryKey = useCustomerCartQueryKey();
+  const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
   const [method, setMethod] = useState<"paystack_card" | "paystack_mobile_money">("paystack_card");
   const [billingSame, setBillingSame] = useState(true);
   const [mmNetwork, setMmNetwork] = useState<"mtn" | "telecel" | "airteltigo">("mtn");
@@ -494,6 +522,31 @@ export const CheckoutPaymentPage = () => {
       navigate("/checkout/shipping", { replace: true });
     }
   }, [navigate]);
+
+  const checkoutAuthFlipRef = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    if (checkoutAuthFlipRef.current === undefined) {
+      checkoutAuthFlipRef.current = isAuthenticated;
+      return;
+    }
+    if (checkoutAuthFlipRef.current === isAuthenticated) {
+      return;
+    }
+    checkoutAuthFlipRef.current = isAuthenticated;
+    const draft = readCheckoutDraft();
+    void queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
+    if (!draft) {
+      return;
+    }
+    void customerBackendApi
+      .validateCheckout({
+        address: draft.address,
+        shippingMethodCode: draft.shippingMethodCode
+      })
+      .catch(() => {
+        return null;
+      });
+  }, [isAuthenticated, queryClient]);
 
   return (
     <div className="bg-surface text-on-surface antialiased">
@@ -714,7 +767,9 @@ const ORDER_STATUSES_ALREADY_PAID = new Set(["CONFIRMED", "PROCESSING", "COMPLET
 
 export const CheckoutReviewPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const cartQueryKey = useCustomerCartQueryKey();
+  const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const placeOrderInFlight = useRef(false);
@@ -742,6 +797,31 @@ export const CheckoutReviewPage = () => {
       navigate("/checkout/shipping", { replace: true });
     }
   }, [navigate]);
+
+  const checkoutAuthFlipRef = useRef<boolean | undefined>(undefined);
+  useEffect(() => {
+    if (checkoutAuthFlipRef.current === undefined) {
+      checkoutAuthFlipRef.current = isAuthenticated;
+      return;
+    }
+    if (checkoutAuthFlipRef.current === isAuthenticated) {
+      return;
+    }
+    checkoutAuthFlipRef.current = isAuthenticated;
+    const d = readCheckoutDraft();
+    void queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
+    if (!d) {
+      return;
+    }
+    void customerBackendApi
+      .validateCheckout({
+        address: d.address,
+        shippingMethodCode: d.shippingMethodCode
+      })
+      .catch(() => {
+        return null;
+      });
+  }, [isAuthenticated, queryClient]);
 
   const shipBlock = draft
     ? `${draft.address.fullName}\n${draft.address.line1}\n${draft.address.city}, ${draft.address.postalCode}\n${draft.address.country}`
@@ -802,6 +882,7 @@ export const CheckoutReviewPage = () => {
 
       if (entity?.status && ORDER_STATUSES_ALREADY_PAID.has(entity.status)) {
         clearCheckoutDraft();
+        resetCheckoutIdempotencyKey();
         navigate("/checkout/success", { replace: true });
         return;
       }
@@ -813,6 +894,7 @@ export const CheckoutReviewPage = () => {
 
       if (pay.paymentState === "PAID" && !pay.redirectUrl) {
         clearCheckoutDraft();
+        resetCheckoutIdempotencyKey();
         navigate("/checkout/success", { replace: true });
         return;
       }
@@ -822,6 +904,7 @@ export const CheckoutReviewPage = () => {
         return;
       }
       clearCheckoutDraft();
+      resetCheckoutIdempotencyKey();
       navigate("/checkout/success");
     } catch (e) {
       setErr(e instanceof CommerceApiError ? e.message : "Checkout failed.");
@@ -961,6 +1044,8 @@ export const CheckoutPaymentResultPage = () => {
         });
         if (data.paymentState === "PAID") {
           if (data.orderNumber) {
+            clearCheckoutDraft();
+            resetCheckoutIdempotencyKey();
             navigate("/checkout/success", { replace: true });
             return;
           }

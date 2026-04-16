@@ -189,6 +189,42 @@ const assertActorCanAccessDeferredCheckoutSession = (
   );
 };
 
+type CheckoutSessionIdentitySlice = {
+  id: string;
+  userId: string | null;
+  guestTrackingKey: string | null;
+};
+
+/**
+ * Guest checkout rows keep `userId: null` and `guestTrackingKey`. After sign-in, the same customer
+ * should be able to continue (and poll payment-return) using `userId` even if `x-session-id` is missing.
+ */
+const attachCustomerUserIdToGuestCheckoutSession = async (
+  transaction: Pick<Prisma.TransactionClient, "checkoutSession">,
+  context: CartActorContext,
+  session: CheckoutSessionIdentitySlice
+): Promise<CheckoutSessionIdentitySlice> => {
+  if (context.actor.kind !== "customer" || !context.actor.userId) {
+    return session;
+  }
+  const uid = context.actor.userId;
+  if (session.userId === uid) {
+    return session;
+  }
+  if (session.userId != null && session.userId !== uid) {
+    throw notFoundError("The requested order was not found.");
+  }
+  await transaction.checkoutSession.update({
+    where: {
+      id: session.id
+    },
+    data: {
+      userId: uid
+    }
+  });
+  return { ...session, userId: uid };
+};
+
 const buildDeferredPaymentResponse = async (
   transaction: Prisma.TransactionClient,
   input: {
@@ -750,6 +786,11 @@ export const completeCheckoutAndInitializePayment = async (
 
     if (existingIntent?.status === CheckoutPaymentIntentStatus.FULFILLED && existingIntent.order) {
       assertActorCanAccessDeferredCheckoutSession(context, existingIntent.checkoutSession);
+      await attachCustomerUserIdToGuestCheckoutSession(transaction, context, {
+        id: existingIntent.checkoutSession.id,
+        userId: existingIntent.checkoutSession.userId,
+        guestTrackingKey: existingIntent.checkoutSession.guestTrackingKey
+      });
 
       const pay =
         existingIntent.payments[0] ??
@@ -793,6 +834,11 @@ export const completeCheckoutAndInitializePayment = async (
 
     if (existingIntent?.status === CheckoutPaymentIntentStatus.AWAITING_PAYMENT) {
       assertActorCanAccessDeferredCheckoutSession(context, existingIntent.checkoutSession);
+      await attachCustomerUserIdToGuestCheckoutSession(transaction, context, {
+        id: existingIntent.checkoutSession.id,
+        userId: existingIntent.checkoutSession.userId,
+        guestTrackingKey: existingIntent.checkoutSession.guestTrackingKey
+      });
 
       const latestPayment =
         existingIntent.payments[0] ??
@@ -963,7 +1009,7 @@ export const completeCheckoutAndInitializePayment = async (
 
     const identity = buildCheckoutIdentity(context, input.address);
 
-    const checkoutSession =
+    let checkoutSession =
       checkoutSessionRow ??
       (await transaction.checkoutSession.create({
         data: {
@@ -973,6 +1019,13 @@ export const completeCheckoutAndInitializePayment = async (
           checkoutIdempotencyKey: input.checkoutIdempotencyKey
         }
       }));
+
+    const upgradedCheckoutSession = await attachCustomerUserIdToGuestCheckoutSession(transaction, context, {
+      id: checkoutSession.id,
+      userId: checkoutSession.userId,
+      guestTrackingKey: checkoutSession.guestTrackingKey
+    });
+    checkoutSession = { ...checkoutSession, ...upgradedCheckoutSession };
 
     await transaction.checkoutValidationSnapshot.create({
       data: {
@@ -1778,6 +1831,11 @@ export const getCheckoutPaymentReturnSummary = async (
       context,
       payment.checkoutPaymentIntent.checkoutSession
     );
+    await attachCustomerUserIdToGuestCheckoutSession(prisma, context, {
+      id: payment.checkoutPaymentIntent.checkoutSession.id,
+      userId: payment.checkoutPaymentIntent.checkoutSession.userId,
+      guestTrackingKey: payment.checkoutPaymentIntent.checkoutSession.guestTrackingKey
+    });
   } else if (payment.order) {
     if (input.orderId && input.orderId !== payment.order.id) {
       throw notFoundError("The requested order or payment was not found.");

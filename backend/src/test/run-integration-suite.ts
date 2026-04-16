@@ -749,6 +749,105 @@ export const runIntegrationSuite = async () => {
       }
     });
 
+    // Guest→signed-in checkout matrix (automates one path): guest deferred complete → same x-session-id + Bearer resume
+    // (browser checks: guest-only flow; guest then login before Paystack; signed-in only; payment-return with Bearer).
+    step("deferred checkout: guest session then signed-in customer attaches CheckoutSession.userId");
+    const deferredGuestSession = `guest-def-${runId}`;
+    const deferredCkoKey = `deferred-cko-${runId}`;
+    const deferredPayKeyGuest = `deferred-payg-${runId}`;
+    const deferredCheckoutAddress = {
+      fullName: "Integration Customer",
+      email: customerEmail,
+      phone: "+233500000000",
+      country: "Ghana",
+      region: "Greater Accra",
+      city: "Accra",
+      line1: "1 Ring Road",
+      postalCode: "GA-001-1001"
+    };
+
+    const guestCartAdd = await requestJson({
+      baseUrl,
+      method: "POST",
+      path: "/api/cart/items",
+      headers: {
+        "x-session-id": deferredGuestSession
+      },
+      body: {
+        variantId: variant.id,
+        quantity: 1
+      }
+    });
+    assert.equal(guestCartAdd.statusCode, 201);
+
+    const guestValidateCheckout = await requestJson({
+      baseUrl,
+      method: "POST",
+      path: "/api/checkout/validate",
+      headers: {
+        "x-session-id": deferredGuestSession
+      },
+      body: {
+        address: deferredCheckoutAddress,
+        shippingMethodCode: "STANDARD"
+      }
+    });
+    assert.equal(guestValidateCheckout.statusCode, 200);
+
+    const guestDeferredComplete = await requestJson({
+      baseUrl,
+      method: "POST",
+      path: "/api/checkout/complete",
+      headers: {
+        "x-session-id": deferredGuestSession
+      },
+      body: {
+        checkoutIdempotencyKey: deferredCkoKey,
+        paymentIdempotencyKey: deferredPayKeyGuest,
+        address: deferredCheckoutAddress,
+        shippingMethodCode: "STANDARD",
+        channel: "card"
+      }
+    });
+    assert.equal(guestDeferredComplete.statusCode, 201);
+
+    const sessionAfterGuest = await prisma.checkoutSession.findFirstOrThrow({
+      where: {
+        checkoutIdempotencyKey: deferredCkoKey
+      }
+    });
+    assert.equal(sessionAfterGuest.userId, null);
+
+    const customerResumeDeferred = await requestJson({
+      baseUrl,
+      method: "POST",
+      path: "/api/checkout/complete",
+      headers: {
+        "x-session-id": deferredGuestSession,
+        authorization: `Bearer ${accessToken}`
+      },
+      body: {
+        checkoutIdempotencyKey: deferredCkoKey,
+        paymentIdempotencyKey: deferredPayKeyGuest,
+        address: deferredCheckoutAddress,
+        shippingMethodCode: "STANDARD",
+        channel: "card"
+      }
+    });
+    assert.equal(customerResumeDeferred.statusCode, 201);
+
+    const sessionAfterCustomer = await prisma.checkoutSession.findUniqueOrThrow({
+      where: {
+        id: sessionAfterGuest.id
+      }
+    });
+    const deferredCustomerUser = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: customerEmail
+      }
+    });
+    assert.equal(sessionAfterCustomer.userId, deferredCustomerUser.id);
+
     step("add cart item");
     const addCartItemResponse = await requestJson({
       baseUrl,
