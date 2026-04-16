@@ -55,11 +55,16 @@ export const LoginPage = () => {
   const queryClient = useQueryClient();
   const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = handleSubmit(async (data) => {
+    if (isSubmitting) {
+      return;
+    }
+    setIsSubmitting(true);
     setSubmitError(null);
     try {
       await customerAuthApi.login({ email: data.email, password: data.password });
@@ -68,6 +73,8 @@ export const LoginPage = () => {
       navigate(returnToSafe ?? "/account");
     } catch (error) {
       setSubmitError(error instanceof CommerceApiError ? error.message : "Sign in failed.");
+    } finally {
+      setIsSubmitting(false);
     }
   });
 
@@ -170,9 +177,10 @@ export const LoginPage = () => {
               </div>
               <button
                 type="submit"
-                className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all active:scale-[0.99] shadow-lg shadow-primary/10 mt-2"
+                disabled={isSubmitting}
+                className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all active:scale-[0.99] shadow-lg shadow-primary/10 mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Sign In
+                {isSubmitting ? "Signing in..." : "Sign In"}
               </button>
             </form>
 
@@ -219,6 +227,7 @@ export const RegisterPage = () => {
   const queryClient = useQueryClient();
   const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
   });
@@ -227,6 +236,10 @@ export const RegisterPage = () => {
   const strength = Math.min(Math.floor((pwd.length / 12) * 4), 4);
 
   const onSubmit = handleSubmit(async (data) => {
+    if (isSubmitting) {
+      return;
+    }
+    setIsSubmitting(true);
     setSubmitError(null);
     const parts = data.fullName.trim().split(/\s+/).filter(Boolean);
     const firstName = parts[0] ?? "Customer";
@@ -246,6 +259,8 @@ export const RegisterPage = () => {
       navigate(returnToSafe ?? "/account");
     } catch (error) {
       setSubmitError(error instanceof CommerceApiError ? error.message : "Registration failed.");
+    } finally {
+      setIsSubmitting(false);
     }
   });
 
@@ -367,8 +382,12 @@ export const RegisterPage = () => {
                 {errors.terms && <p className="text-xs text-error">{errors.terms.message}</p>}
               </div>
 
-              <button type="submit" className="w-full mt-8 py-4 bg-primary text-on-primary font-headline font-bold text-base rounded-md hover:bg-secondary transition-all transform active:scale-[0.98] shadow-lg shadow-primary/10">
-                Create Account
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full mt-8 py-4 bg-primary text-on-primary font-headline font-bold text-base rounded-md hover:bg-secondary transition-all transform active:scale-[0.98] shadow-lg shadow-primary/10 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Creating account..." : "Create Account"}
               </button>
 
               <div className="relative py-6 flex items-center justify-center">
