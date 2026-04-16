@@ -219,6 +219,128 @@ const buildDeferredPaymentResponse = async (
   };
 };
 
+/**
+ * Legacy path used `POST /checkout/create-order`, which attached a `PENDING_PAYMENT` order to the session.
+ * Deferred checkout (`/checkout/complete`) never uses that; clear a stale unpaid legacy link so Pay-before-order can proceed.
+ */
+const detachLegacyPendingOrderFromCheckoutSession = async (
+  transaction: Prisma.TransactionClient,
+  session: {
+    id: string;
+    orderId: string | null;
+    order: { id: string; status: string } | null;
+    checkoutPaymentIntent: { id: string } | null;
+  }
+) => {
+  if (!session.orderId || !session.order || session.checkoutPaymentIntent) {
+    return transaction.checkoutSession.findUniqueOrThrow({
+      where: {
+        id: session.id
+      },
+      include: {
+        order: true,
+        checkoutPaymentIntent: true
+      }
+    });
+  }
+
+  const legacyOrder = session.order;
+
+  if (legacyOrder.status !== "PENDING_PAYMENT") {
+    throw invalidInputError(
+      "This checkout is linked to an order that is no longer awaiting payment. Start a new checkout."
+    );
+  }
+
+  const paidPayment = await transaction.payment.findFirst({
+    where: {
+      orderId: legacyOrder.id,
+      paymentState: PaymentState.PAID
+    }
+  });
+
+  if (paidPayment) {
+    throw invalidStateTransitionError("This checkout session references a paid order.");
+  }
+
+  const inFlightLegacyPayment = await transaction.payment.findFirst({
+    where: {
+      orderId: legacyOrder.id,
+      paymentState: {
+        in: [
+          PaymentState.PENDING_INITIALIZATION,
+          PaymentState.INITIALIZED,
+          PaymentState.AWAITING_CUSTOMER_ACTION
+        ]
+      }
+    }
+  });
+
+  if (inFlightLegacyPayment) {
+    throw invalidInputError(
+      "A previous payment attempt is still open for this checkout. Complete or abandon it in Paystack, then try again."
+    );
+  }
+
+  await releaseOrderReservations(transaction, {
+    orderId: legacyOrder.id,
+    releaseReason: "legacy_pending_order_superseded_by_pay_before_order_checkout"
+  });
+
+  await transaction.order.update({
+    where: {
+      id: legacyOrder.id
+    },
+    data: {
+      status: "CANCELLED"
+    }
+  });
+
+  await transaction.orderStatusHistory.create({
+    data: {
+      orderId: legacyOrder.id,
+      fromStatus: legacyOrder.status,
+      toStatus: "CANCELLED",
+      reason: "superseded_by_pay_before_order_checkout",
+      metadata: toPrismaJsonValue({
+        checkoutSessionId: session.id
+      })
+    }
+  });
+
+  await transaction.timelineEvent.create({
+    data: {
+      entityType: "ORDER",
+      entityId: legacyOrder.id,
+      eventType: "ORDER_CANCELLED",
+      actorType: "SYSTEM",
+      payload: toPrismaJsonValue({
+        checkoutSessionId: session.id,
+        reason: "superseded_by_pay_before_order_checkout"
+      })
+    }
+  });
+
+  await transaction.checkoutSession.update({
+    where: {
+      id: session.id
+    },
+    data: {
+      orderId: null
+    }
+  });
+
+  return transaction.checkoutSession.findUniqueOrThrow({
+    where: {
+      id: session.id
+    },
+    include: {
+      order: true,
+      checkoutPaymentIntent: true
+    }
+  });
+};
+
 const assertActorCanAccessOrderForCheckout = (
   context: CartActorContext,
   order: {
@@ -737,13 +859,11 @@ export const completeCheckoutAndInitializePayment = async (
 
     let checkoutSessionRow = existingSession;
 
-    if (checkoutSessionRow && checkoutSessionRow.cartId !== cart.id) {
-      if (checkoutSessionRow.orderId && checkoutSessionRow.order && !checkoutSessionRow.checkoutPaymentIntent) {
-        throw invalidInputError(
-          "This checkout session already has a pending order. Use initialize-payment for that order or start a new checkout."
-        );
-      }
+    if (checkoutSessionRow) {
+      checkoutSessionRow = await detachLegacyPendingOrderFromCheckoutSession(transaction, checkoutSessionRow);
+    }
 
+    if (checkoutSessionRow && checkoutSessionRow.cartId !== cart.id) {
       const sessionIntentId =
         checkoutSessionRow.checkoutPaymentIntent?.id ?? existingIntent?.id ?? null;
 
@@ -802,12 +922,6 @@ export const completeCheckoutAndInitializePayment = async (
           checkoutPaymentIntent: true
         }
       });
-    }
-
-    if (checkoutSessionRow?.orderId && checkoutSessionRow.order && !checkoutSessionRow.checkoutPaymentIntent) {
-      throw invalidInputError(
-        "This checkout session already has a pending order. Use initialize-payment for that order or start a new checkout."
-      );
     }
 
     if (input.campaignId) {
