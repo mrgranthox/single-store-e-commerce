@@ -29,7 +29,22 @@ export type CheckoutResultSnapshot = {
   orderId: string;
   orderNumber: string;
   createdAt?: string;
+  /** Snapshot of shipping address lines at order placement (no PII beyond what user entered). */
+  shipToLines?: string[];
+  shippingMethodLabel?: string;
+  /** Shown instead of a fabricated delivery date range. */
+  fulfillmentNote?: string;
 };
+
+export const formatShipToLinesFromAddress = (address: CheckoutAddressDraft): string[] => {
+  const line2 = address.line2?.trim();
+  const mid = [address.line1, line2].filter(Boolean).join(", ");
+  const cityLine = [address.city, address.region, address.postalCode].filter(Boolean).join(", ");
+  return [address.fullName.trim(), mid, cityLine, address.country.trim()].filter((s) => s.length > 0);
+};
+
+export const labelForShippingMethodCode = (code: string) =>
+  code.trim().toUpperCase() === "STANDARD" ? "Standard shipping" : code.trim() || "Shipping";
 
 export const readCheckoutDraft = (): CheckoutDraft | null => {
   try {

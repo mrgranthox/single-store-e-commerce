@@ -14,7 +14,9 @@ import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import {
   clearCheckoutDraft,
+  formatShipToLinesFromAddress,
   getOrCreateCheckoutIdempotencyKey,
+  labelForShippingMethodCode,
   readCheckoutDraft,
   readCheckoutResult,
   resetCheckoutIdempotencyKey,
@@ -22,7 +24,7 @@ import {
   writeCheckoutResult
 } from "@/lib/checkout/checkout-draft";
 import { mapCartEvaluationToOrderSummary } from "@/lib/checkout/map-cart-evaluation";
-import { useCustomerCartQueryKey, CUSTOMER_CART_QUERY_ROOT } from "@/hooks/use-cart-summary";
+import { useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 /* ─────────────────────────────────────────────
@@ -41,7 +43,7 @@ export const CartPage = () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 5_000
+    staleTime: 30_000
   });
 
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
@@ -58,23 +60,20 @@ export const CartPage = () => {
   const patchQty = useMutation({
     mutationFn: async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
       if (quantity < 1) {
-        await customerBackendApi.deleteCartItem(itemId);
-      } else {
-        await customerBackendApi.patchCartItem(itemId, { quantity });
+        return customerBackendApi.deleteCartItem(itemId);
       }
+      return customerBackendApi.patchCartItem(itemId, { quantity });
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
+    onSuccess: (data) => {
+      queryClient.setQueryData(cartQueryKey, data);
     }
   });
 
   const applyCouponMut = useMutation({
-    mutationFn: async (code: string) => {
-      await customerBackendApi.applyCartCoupon(code.trim());
-    },
-    onSuccess: async () => {
+    mutationFn: async (code: string) => customerBackendApi.applyCartCoupon(code.trim()),
+    onSuccess: (data) => {
       setCouponErr(null);
-      await queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
+      queryClient.setQueryData(cartQueryKey, data);
     },
     onError: (e) => {
       setCouponErr(e instanceof CommerceApiError ? e.message : "Invalid coupon.");
@@ -305,7 +304,7 @@ export const CheckoutShippingPage = () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 5_000
+    staleTime: 30_000
   });
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
   const orderLines = summary.lines.map((l) => ({
@@ -479,7 +478,7 @@ export const CheckoutPaymentPage = () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 5_000
+    staleTime: 30_000
   });
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
   const orderLines = summary.lines.map((l) => ({
@@ -727,7 +726,7 @@ export const CheckoutReviewPage = () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 5_000
+    staleTime: 30_000
   });
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
   const orderLines = summary.lines.map((l) => ({
@@ -777,7 +776,13 @@ export const CheckoutReviewPage = () => {
         shippingMethodCode: d.shippingMethodCode
       });
       const entity = data.entity as { id: string; orderNumber: string; status?: string };
-      writeCheckoutResult({ orderId: entity.id, orderNumber: entity.orderNumber });
+      writeCheckoutResult({
+        orderId: entity.id,
+        orderNumber: entity.orderNumber,
+        shipToLines: formatShipToLinesFromAddress(d.address),
+        shippingMethodLabel: labelForShippingMethodCode(d.shippingMethodCode),
+        fulfillmentNote: "We will email tracking and updates as your order moves through fulfillment."
+      });
 
       if (entity.status && ORDER_STATUSES_ALREADY_PAID.has(entity.status)) {
         clearCheckoutDraft();
@@ -923,14 +928,22 @@ export const CheckoutPaymentResultPage = () => {
 
     let cancelled = false;
     let attempts = 0;
-    const maxAttempts = 45;
+    const maxAttempts = 50;
+    const pollMs = 500;
     const tick = async () => {
       if (cancelled) return;
       attempts += 1;
       try {
         const { data } = await customerBackendApi.getCheckoutPaymentReturn({ orderId, paymentId });
         if (cancelled) return;
-        writeCheckoutResult({ orderId: data.orderId, orderNumber: data.orderNumber });
+        const prev = readCheckoutResult();
+        writeCheckoutResult({
+          orderId: data.orderId,
+          orderNumber: data.orderNumber,
+          shipToLines: prev?.shipToLines,
+          shippingMethodLabel: prev?.shippingMethodLabel,
+          fulfillmentNote: prev?.fulfillmentNote
+        });
         if (data.paymentState === "PAID") {
           navigate("/checkout/success", { replace: true });
           return;
@@ -951,7 +964,7 @@ export const CheckoutPaymentResultPage = () => {
           );
           return;
         }
-        window.setTimeout(tick, 2_000);
+        window.setTimeout(tick, pollMs);
       } catch (e) {
         if (cancelled) return;
         if (e instanceof CommerceApiError && (e.status === 401 || e.status === 403)) {
@@ -969,7 +982,7 @@ export const CheckoutPaymentResultPage = () => {
         setPhase("pending");
         setMessage(e instanceof CommerceApiError ? e.message : "Could not confirm payment.");
         if (attempts < maxAttempts) {
-          window.setTimeout(tick, 3_000);
+          window.setTimeout(tick, pollMs * 2);
         }
       }
     };
@@ -1035,6 +1048,11 @@ export const OrderSuccessPage = () => {
   const trackHref =
     rawNum.length > 0 ? `/track-order?order=${encodeURIComponent(rawNum)}` : "/track-order";
   const accountOrderHref = result?.orderId ? `/account/orders/${result.orderId}` : "/account/orders";
+  const shipLines = result?.shipToLines?.filter((l) => l.trim().length > 0) ?? [];
+  const shipMethod = result?.shippingMethodLabel?.trim() || null;
+  const fulfillmentNote =
+    result?.fulfillmentNote?.trim() ||
+    "We will email you when your order ships and when tracking is available.";
 
   return (
   <div className="bg-surface font-body text-on-surface antialiased">
@@ -1064,8 +1082,8 @@ export const OrderSuccessPage = () => {
               <p className="text-2xl font-headline font-bold text-on-background">{orderLabel}</p>
             </div>
             <div className="bg-surface-container-low p-8 rounded-xl space-y-2">
-              <p className="text-xs font-label uppercase tracking-widest text-on-primary-container font-bold">Estimated Arrival</p>
-              <p className="text-2xl font-headline font-bold text-on-background">Oct 24 — Oct 26</p>
+              <p className="text-xs font-label uppercase tracking-widest text-on-primary-container font-bold">What happens next</p>
+              <p className="text-base font-body font-medium text-on-background leading-relaxed">{fulfillmentNote}</p>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -1084,11 +1102,31 @@ export const OrderSuccessPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
               <div className="space-y-1">
                 <p className="font-bold text-on-background">Delivery Address</p>
-                <p className="text-outline">Julianne Sterling<br />1248 North Highland Ave<br />Los Angeles, CA 90038<br />United States</p>
+                {shipLines.length > 0 ? (
+                  <p className="text-outline whitespace-pre-line">{shipLines.join("\n")}</p>
+                ) : (
+                  <p className="text-outline">
+                    The address you used at checkout is saved on this order.{" "}
+                    {isAuthenticated ? (
+                      <Link to={accountOrderHref} className="text-secondary font-semibold underline underline-offset-4">
+                        View full details
+                      </Link>
+                    ) : (
+                      <>
+                        <Link to={trackHref} className="text-secondary font-semibold underline underline-offset-4">
+                          Track this order
+                        </Link>{" "}
+                        with your email to see shipping details.
+                      </>
+                    )}
+                  </p>
+                )}
               </div>
               <div className="space-y-1">
                 <p className="font-bold text-on-background">Shipping Method</p>
-                <p className="text-outline">Premium Express (2-3 Business Days)<br />Fully insured and tracked</p>
+                <p className="text-outline">
+                  {shipMethod ?? "Shipping and delivery timing follow the option you selected at checkout."}
+                </p>
               </div>
             </div>
           </div>

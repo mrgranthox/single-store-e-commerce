@@ -27,7 +27,7 @@ export const useCartItemCount = () => {
     queryKey,
     queryFn: cartEvaluationQueryFn,
     select: (data) => cartItemCountFromEvaluation(data),
-    staleTime: 5_000,
+    staleTime: 30_000,
     retry: 1
   });
   return query.data ?? 0;
@@ -38,7 +38,7 @@ export const useCartEvaluationQuery = () => {
   return useQuery({
     queryKey,
     queryFn: cartEvaluationQueryFn,
-    staleTime: 5_000,
+    staleTime: 30_000,
     retry: 1
   });
 };

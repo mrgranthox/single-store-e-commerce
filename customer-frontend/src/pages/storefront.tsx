@@ -18,7 +18,7 @@ import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
 import type { Product } from "@/lib/data/customer-mock";
 import { neutralFieldClass } from "@/lib/form-field-styles";
-import { CUSTOMER_CART_QUERY_ROOT } from "@/hooks/use-cart-summary";
+import { useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
 import { useWishlistActions } from "@/hooks/use-wishlist-actions";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
@@ -866,6 +866,7 @@ export const CategoryPage = () => {
 export const ProductDetailPage = () => {
   const { productSlug } = useParams();
   const queryClient = useQueryClient();
+  const cartQueryKey = useCustomerCartQueryKey();
   const addRecentlyViewed = useCustomerStore((s) => s.addRecentlyViewed);
   const { inWishlist, toggle } = useWishlistActions();
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
@@ -1123,8 +1124,11 @@ export const ProductDetailPage = () => {
                     setCartBusy(true);
                     setCartErr(null);
                     try {
-                      await customerBackendApi.addCartItem({ variantId: selectedVariantId, quantity: 1 });
-                      await queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
+                      const { data } = await customerBackendApi.addCartItem({
+                        variantId: selectedVariantId,
+                        quantity: 1
+                      });
+                      queryClient.setQueryData(cartQueryKey, data);
                     } catch (e) {
                       setCartErr(e instanceof CommerceApiError ? e.message : "Could not add to bag.");
                     } finally {

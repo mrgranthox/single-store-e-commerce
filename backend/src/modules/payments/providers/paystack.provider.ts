@@ -160,6 +160,30 @@ const normalizeMobileMoneyProvider = (value: string) => {
   return normalizedValue;
 };
 
+/** Paystack MoMo expects local-style numbers for many channels (e.g. Ghana `0XXXXXXXXX`). */
+const normalizePaystackMobileMoneyPhone = (raw: string, currency: string) => {
+  let digits = raw.replace(/[\s()-]/g, "").trim();
+  const cur = currency.toUpperCase();
+
+  if (cur === "GHS") {
+    if (digits.startsWith("+233")) {
+      digits = `0${digits.slice(4)}`;
+    } else if (digits.startsWith("233") && digits.length >= 12) {
+      digits = `0${digits.slice(3)}`;
+    }
+  }
+
+  if (cur === "NGN") {
+    if (digits.startsWith("+234")) {
+      digits = `0${digits.slice(4)}`;
+    } else if (digits.startsWith("234") && digits.length >= 13) {
+      digits = `0${digits.slice(3)}`;
+    }
+  }
+
+  return digits.replace(/^\+/, "");
+};
+
 const assertChannelAllowed = (channel: "card" | "mobile_money") => {
   if (!env.paystackAllowedChannels.includes(channel)) {
     throw invalidInputError("The requested Paystack channel is not enabled for this environment.", {
@@ -386,6 +410,69 @@ export class PaystackPaymentProvider implements PaymentProvider {
       });
     }
 
+    const currency = String(input.currency ?? env.PAYSTACK_DEFAULT_CURRENCY).toUpperCase();
+    const normalizedPhone = normalizePaystackMobileMoneyPhone(input.mobileMoney.phone, currency);
+    if (normalizedPhone.length < 8) {
+      throw invalidInputError("Enter a valid mobile money number including country or leading zero.");
+    }
+
+    const callbackUrl = input.callbackUrl?.trim() || env.PAYSTACK_CALLBACK_URL?.trim() || null;
+
+    if (callbackUrl) {
+      try {
+        const hosted = await callPaystackApi<{
+          authorization_url?: string;
+          access_code?: string;
+          reference: string;
+        }>("/transaction/initialize", {
+          method: "POST",
+          body: {
+            email: input.customerEmail,
+            amount: Math.trunc(input.amountCents),
+            currency,
+            reference: input.reference,
+            callback_url: callbackUrl,
+            channels: ["mobile_money"],
+            mobile_money: {
+              phone: normalizedPhone,
+              provider: mobileMoneyProvider
+            },
+            metadata
+          }
+        });
+
+        if (hosted.data.authorization_url && hosted.data.reference) {
+          return {
+            providerPaymentRef: hosted.data.reference,
+            paymentState: PaymentState.AWAITING_CUSTOMER_ACTION,
+            requiresRedirect: true,
+            redirectUrl: hosted.data.authorization_url,
+            providerPayload: {
+              provider: "paystack",
+              channel: "mobile_money",
+              flow: "hosted_initialize",
+              accessCode: hosted.data.access_code ?? null,
+              authorizationUrl: hosted.data.authorization_url,
+              reference: hosted.data.reference,
+              phone: normalizedPhone,
+              mobileMoneyProvider
+            }
+          };
+        }
+      } catch (error) {
+        logger.warn(
+          { error: error instanceof Error ? error.message : error },
+          "Paystack mobile_money hosted initialize unavailable; falling back to direct charge."
+        );
+        if (isAppError(error) && error.statusCode === 409) {
+          throw error;
+        }
+        if (!isAppError(error)) {
+          throw error;
+        }
+      }
+    }
+
     const response = await callPaystackApi<{
       reference: string;
       status: string;
@@ -395,11 +482,11 @@ export class PaystackPaymentProvider implements PaymentProvider {
       body: {
         email: input.customerEmail,
         amount: Math.trunc(input.amountCents),
-        currency: String(input.currency ?? env.PAYSTACK_DEFAULT_CURRENCY).toUpperCase(),
+        currency,
         reference: input.reference,
         metadata,
         mobile_money: {
-          phone: input.mobileMoney.phone,
+          phone: normalizedPhone,
           provider: mobileMoneyProvider
         }
       }
@@ -413,10 +500,13 @@ export class PaystackPaymentProvider implements PaymentProvider {
       providerPayload: {
         provider: "paystack",
         channel: "mobile_money",
+        flow: "direct_charge",
         reference: response.data.reference,
         status: response.data.status,
         displayText:
-          typeof response.data.display_text === "string" ? response.data.display_text : null
+          typeof response.data.display_text === "string" ? response.data.display_text : null,
+        phone: normalizedPhone,
+        mobileMoneyProvider
       }
     };
   }

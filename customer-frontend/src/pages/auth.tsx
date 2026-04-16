@@ -202,15 +202,9 @@ export const LoginPage = () => {
 /* ─────────────────────────────────────────────
    REGISTER PAGE — matches register/code.html
 ───────────────────────────────────────────── */
-const e164Phone = z
-  .string()
-  .trim()
-  .regex(/^\+[1-9]\d{7,14}$/, "Use international format with + and country code (e.g. +233241234567).");
-
 const registerSchema = z.object({
   fullName: z.string().min(2, "Name required"),
   email: z.string().email("Invalid email"),
-  phoneNumber: e164Phone,
   password: z.string().min(8, "Min 8 characters"),
   confirmPassword: z.string(),
   newsletter: z.boolean().optional(),
@@ -242,7 +236,6 @@ export const RegisterPage = () => {
         firstName,
         lastName,
         email: data.email,
-        phoneNumber: data.phoneNumber.trim(),
         password: data.password,
         marketingOptIn: Boolean(data.newsletter),
         acceptTerms: true
@@ -317,26 +310,6 @@ export const RegisterPage = () => {
                   )}
                 </div>
               ))}
-
-              <div className="space-y-1.5">
-                <label className="block text-xs font-label font-bold uppercase tracking-wider text-outline" htmlFor="phoneNumber">
-                  Mobile number
-                </label>
-                <input
-                  {...register("phoneNumber")}
-                  id="phoneNumber"
-                  className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`}
-                  placeholder="+233241234567"
-                  type="tel"
-                  autoComplete="tel"
-                />
-                <p className="text-[11px] text-on-surface-variant leading-snug">
-                  Include country code with + (required for account security).
-                </p>
-                {errors.phoneNumber ? (
-                  <p className="text-xs text-error">{String(errors.phoneNumber.message ?? "")}</p>
-                ) : null}
-              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[

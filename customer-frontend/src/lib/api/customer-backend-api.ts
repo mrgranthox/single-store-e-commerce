@@ -100,18 +100,18 @@ export const customerBackendApi = {
   getCart: async () => commerceFetchJson<CartEvaluation>("/api/cart", { method: "GET" }),
 
   addCartItem: async (body: { variantId: string; quantity: number }) =>
-    commerceFetchJson<unknown>("/api/cart/items", { method: "POST", json: body }),
+    commerceFetchJson<CartEvaluation>("/api/cart/items", { method: "POST", json: body }),
 
   patchCartItem: async (itemId: string, body: { quantity: number }) =>
-    commerceFetchJson<unknown>(`/api/cart/items/${encodeURIComponent(itemId)}`, { method: "PATCH", json: body }),
+    commerceFetchJson<CartEvaluation>(`/api/cart/items/${encodeURIComponent(itemId)}`, { method: "PATCH", json: body }),
 
   deleteCartItem: async (itemId: string) =>
-    commerceFetchJson<unknown>(`/api/cart/items/${encodeURIComponent(itemId)}`, { method: "DELETE" }),
+    commerceFetchJson<CartEvaluation>(`/api/cart/items/${encodeURIComponent(itemId)}`, { method: "DELETE" }),
 
   applyCartCoupon: async (code: string) =>
-    commerceFetchJson<unknown>("/api/cart/coupon", { method: "POST", json: { code } }),
+    commerceFetchJson<CartEvaluation>("/api/cart/coupon", { method: "POST", json: { code } }),
 
-  removeCartCoupon: async () => commerceFetchJson<unknown>("/api/cart/coupon", { method: "DELETE" }),
+  removeCartCoupon: async () => commerceFetchJson<CartEvaluation>("/api/cart/coupon", { method: "DELETE" }),
 
   validateCheckout: async (body: unknown) =>
     commerceFetchJson<unknown>("/api/checkout/validate", { method: "POST", json: body }),
