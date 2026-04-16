@@ -224,8 +224,6 @@ export const RegisterPage = () => {
   const [searchParams] = useSearchParams();
   const returnToSafe = sanitizeReturnTo(searchParams.get("returnTo"));
   const loginHref = returnToSafe ? `/login?returnTo=${encodeURIComponent(returnToSafe)}` : "/login";
-  const queryClient = useQueryClient();
-  const hydrateAuth = useCustomerStore((s) => s.hydrateAuth);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
@@ -253,10 +251,7 @@ export const RegisterPage = () => {
         marketingOptIn: Boolean(data.newsletter),
         acceptTerms: true
       });
-      await customerAuthApi.login({ email: data.email, password: data.password });
-      hydrateAuth();
-      await queryClient.invalidateQueries();
-      navigate(returnToSafe ?? "/account");
+      navigate(`/verify-email?email=${encodeURIComponent(data.email)}`);
     } catch (error) {
       setSubmitError(error instanceof CommerceApiError ? error.message : "Registration failed.");
     } finally {
@@ -577,9 +572,12 @@ export const ResetPasswordPage = () => {
 export const VerifyEmailPage = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token") ?? "";
-  const [email, setEmail] = useState("");
+  const emailFromQuery = searchParams.get("email")?.trim() ?? "";
+  const [email, setEmail] = useState(emailFromQuery);
   const [status, setStatus] = useState<"idle" | "busy" | "done" | "error">("idle");
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(
+    emailFromQuery ? `Verification email sent to ${emailFromQuery}.` : null
+  );
   const autoVerifiedToken = useRef<string | null>(null);
 
   const verify = async (t: string) => {
