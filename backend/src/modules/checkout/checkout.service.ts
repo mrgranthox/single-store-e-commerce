@@ -431,7 +431,35 @@ export const initializeCheckoutPayment = async (
     }
 
     if (order.status !== "PENDING_PAYMENT") {
-      throw invalidStateTransitionError("Payment can only be initialized for orders pending payment.");
+      const settledPayment = await transaction.payment.findFirst({
+        where: {
+          orderId: order.id,
+          paymentState: PaymentState.PAID
+        },
+        orderBy: {
+          createdAt: "desc"
+        }
+      });
+
+      if (!settledPayment || !order.checkoutSession) {
+        throw invalidStateTransitionError("Payment can only be initialized for orders pending payment.");
+      }
+
+      return {
+        response: {
+          id: settledPayment.id,
+          orderId: order.id,
+          paymentState: settledPayment.paymentState,
+          provider: settledPayment.provider,
+          amountCents: settledPayment.amountCents,
+          currency: settledPayment.currency,
+          checkoutSessionId: order.checkoutSession.id,
+          requiresRedirect: false,
+          redirectUrl: null,
+          providerPayload: null
+        },
+        notificationContext: null
+      };
     }
 
     if (!order.checkoutSession) {

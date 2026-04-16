@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,7 @@ import {
   getOrCreateCheckoutIdempotencyKey,
   readCheckoutDraft,
   readCheckoutResult,
+  resetCheckoutIdempotencyKey,
   writeCheckoutDraft,
   writeCheckoutResult
 } from "@/lib/checkout/checkout-draft";
@@ -710,11 +711,14 @@ export const CheckoutPaymentPage = () => {
 /* ─────────────────────────────────────────────
    CHECKOUT REVIEW — final confirmation before submit
 ───────────────────────────────────────────── */
+const ORDER_STATUSES_ALREADY_PAID = new Set(["CONFIRMED", "PROCESSING", "COMPLETED"]);
+
 export const CheckoutReviewPage = () => {
   const navigate = useNavigate();
   const cartQueryKey = useCustomerCartQueryKey();
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const placeOrderInFlight = useRef(false);
   const draft = readCheckoutDraft();
 
   const cartQuery = useQuery({
@@ -755,6 +759,10 @@ export const CheckoutReviewPage = () => {
       navigate("/checkout/shipping");
       return;
     }
+    if (placeOrderInFlight.current) {
+      return;
+    }
+    placeOrderInFlight.current = true;
     setBusy(true);
     setErr(null);
     try {
@@ -768,8 +776,20 @@ export const CheckoutReviewPage = () => {
         address: d.address,
         shippingMethodCode: d.shippingMethodCode
       });
-      const entity = data.entity as { id: string; orderNumber: string };
+      const entity = data.entity as { id: string; orderNumber: string; status?: string };
       writeCheckoutResult({ orderId: entity.id, orderNumber: entity.orderNumber });
+
+      if (entity.status && ORDER_STATUSES_ALREADY_PAID.has(entity.status)) {
+        clearCheckoutDraft();
+        navigate("/checkout/success", { replace: true });
+        return;
+      }
+
+      if (entity.status && entity.status !== "PENDING_PAYMENT") {
+        setErr("This checkout is tied to an order that can no longer accept payment. Return to your cart to start again.");
+        return;
+      }
+
       const paymentIdempotencyKey =
         typeof crypto !== "undefined" && "randomUUID" in crypto ? `pay_${crypto.randomUUID()}` : `pay_${Date.now()}`;
       const init = await customerBackendApi.initializePayment({
@@ -778,7 +798,12 @@ export const CheckoutReviewPage = () => {
         channel: d.payment.channel,
         mobileMoney: d.payment.mobileMoney
       });
-      const pay = init.data.entity as { redirectUrl?: string | null };
+      const pay = init.data.entity as { redirectUrl?: string | null; paymentState?: string };
+      if (pay.paymentState === "PAID" && !pay.redirectUrl) {
+        clearCheckoutDraft();
+        navigate("/checkout/success", { replace: true });
+        return;
+      }
       if (pay.redirectUrl) {
         clearCheckoutDraft();
         window.location.assign(pay.redirectUrl);
@@ -789,6 +814,7 @@ export const CheckoutReviewPage = () => {
     } catch (e) {
       setErr(e instanceof CommerceApiError ? e.message : "Checkout failed.");
     } finally {
+      placeOrderInFlight.current = false;
       setBusy(false);
     }
   };
@@ -1000,6 +1026,10 @@ export const CheckoutPaymentResultPage = () => {
 export const OrderSuccessPage = () => {
   const result = readCheckoutResult();
   const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
+
+  useEffect(() => {
+    resetCheckoutIdempotencyKey();
+  }, []);
   const orderLabel = result?.orderNumber ? `#${result.orderNumber}` : "your order";
   const rawNum = result?.orderNumber?.replace(/^#/, "").trim() ?? "";
   const trackHref =
