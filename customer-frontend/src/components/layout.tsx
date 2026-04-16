@@ -126,18 +126,9 @@ export const TopNavBar = () => {
           aria-label="Main"
         >
           <div className="flex items-center justify-between gap-3 w-full min-h-[3.5rem] sm:min-h-16 px-3 sm:px-6 md:px-8 max-w-screen-2xl mx-auto py-2 sm:py-3">
-            {/* Left: menu + brand */}
-            <div className="flex items-center gap-1 sm:gap-3 min-w-0 shrink-0">
-              <button
-                type="button"
-                className={`md:hidden ${topNavIconBtn}`}
-                aria-expanded={menuOpen}
-                aria-label="Open menu"
-                onClick={() => setMenuOpen(true)}
-              >
-                <Icon name="menu" className="text-[22px]" />
-              </button>
-              <StoreBrandLink to="/" onClick={closeMenu} className="pr-1" />
+            {/* Left: brand (mobile menu control is on the right) */}
+            <div className="flex items-center gap-1 sm:gap-3 min-w-0 shrink-0 flex-1 md:flex-initial">
+              <StoreBrandLink to="/" onClick={closeMenu} className="pr-1 min-w-0" />
             </div>
 
             {/* Center: primary destinations (desktop) */}
@@ -211,6 +202,15 @@ export const TopNavBar = () => {
                   </button>
                 )}
               </div>
+              <button
+                type="button"
+                className={`md:hidden ${topNavIconBtn} shrink-0`}
+                aria-expanded={menuOpen}
+                aria-label="Open menu"
+                onClick={() => setMenuOpen(true)}
+              >
+                <Icon name="menu" className="text-[22px]" />
+              </button>
             </div>
           </div>
         </nav>
