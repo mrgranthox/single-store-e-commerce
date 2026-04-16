@@ -1086,7 +1086,7 @@ export const CheckoutPaymentResultPage = () => {
           orderId: data.orderId ?? undefined,
           orderNumber: data.orderNumber ?? undefined,
           checkoutPaymentIntentId:
-            (data.checkoutPaymentIntentId ?? checkoutPaymentIntentId || prev?.checkoutPaymentIntentId) || undefined,
+            (data.checkoutPaymentIntentId ?? checkoutPaymentIntentId) || prev?.checkoutPaymentIntentId || undefined,
           paymentId: data.paymentId,
           shipToLines: prev?.shipToLines,
           shippingMethodLabel: prev?.shippingMethodLabel,
