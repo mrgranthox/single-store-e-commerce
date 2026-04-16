@@ -1,11 +1,13 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Icon } from "@/components/Icon";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL, STORE_NAME_SHORT } from "@/lib/brand";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 import { useCartItemCount } from "@/hooks/use-cart-summary";
 import { useCustomerSignOut } from "@/hooks/use-customer-sign-out";
+import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const topNavIconBtn =
@@ -612,12 +614,43 @@ export const AccountMobileNav = () => (
 
 export const AccountSidebar = () => {
   const signOut = useCustomerSignOut();
+  const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
+  const { data: profileData } = useQuery({
+    queryKey: ["account", "profile", "sidebar"],
+    queryFn: async () => {
+      const res = await customerBackendApi.getProfile();
+      return res.data as {
+        entity: {
+          firstName: string | null;
+          lastName: string | null;
+          createdAt?: string | Date | null;
+        };
+      };
+    },
+    enabled: isAuthenticated
+  });
+  const profile = profileData?.entity;
+  const displayName = [profile?.firstName, profile?.lastName].filter(Boolean).join(" ").trim();
+  const memberSinceYear = (() => {
+    if (!profile?.createdAt) {
+      return null;
+    }
+    const parsed = new Date(profile.createdAt);
+    if (Number.isNaN(parsed.getTime())) {
+      return null;
+    }
+    return parsed.getUTCFullYear();
+  })();
 
   return (
     <aside className="hidden md:flex flex-col w-64 shrink-0 border-r border-outline-variant/20 bg-surface-container-low/80 p-6 space-y-8 sticky top-[calc(4rem+env(safe-area-inset-top,0px))] self-start max-h-[calc(100dvh-5rem-env(safe-area-inset-top,0px))] overflow-y-auto">
       <div className="space-y-1">
-        <div className="text-lg font-headline font-extrabold text-on-background tracking-tight">Welcome back, Julian</div>
-        <div className="text-xs text-on-surface-variant font-label">Premium member since 2023</div>
+        {displayName ? (
+          <div className="text-lg font-headline font-extrabold text-on-background tracking-tight">Welcome back, {displayName}</div>
+        ) : null}
+        {memberSinceYear ? (
+          <div className="text-xs text-on-surface-variant font-label">Member since {memberSinceYear}</div>
+        ) : null}
       </div>
       <nav className="flex-grow space-y-1">
         {accountLinks.map(({ to, label, icon, exact }) => (
