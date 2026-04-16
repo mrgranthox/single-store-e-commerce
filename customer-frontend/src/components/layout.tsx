@@ -158,9 +158,9 @@ export const TopNavBar = () => {
               </div>
             </div>
 
-            {/* Right: search (all breakpoints) + wishlist / bag / account icons (tablet/desktop only — mobile uses bottom nav + drawer) */}
+            {/* Right: search (md+ only; mobile uses bottom nav Search tab) + wishlist / bag / account icons (tablet/desktop) */}
             <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 min-w-0">
-              <div className="relative w-full max-w-[10.5rem] sm:max-w-xs md:max-w-[13rem] lg:w-56 xl:w-64 lg:max-w-none min-w-0">
+              <div className="hidden md:block relative w-full max-w-[10.5rem] sm:max-w-xs md:max-w-[13rem] lg:w-56 xl:w-64 lg:max-w-none min-w-0">
                 <Icon
                   name="search"
                   className="pointer-events-none absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-outline text-sm sm:text-base"
