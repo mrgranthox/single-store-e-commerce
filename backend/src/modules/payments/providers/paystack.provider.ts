@@ -3,11 +3,14 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { PaymentState } from "@prisma/client";
 
 import {
+  duplicateProcessingError,
   invalidInputError,
+  isAppError,
   providerFailureError,
   serviceUnavailableError
 } from "../../../common/errors/app-error";
 import { env } from "../../../config/env";
+import { logger } from "../../../config/logger";
 import type {
   PaymentInitializationInput,
   PaymentInitializationResult,
@@ -172,6 +175,61 @@ const ensurePaystackConfigured = () => {
   }
 };
 
+const throwMappedPaystackFailure = (input: {
+  path: string;
+  httpStatus: number;
+  paystackMessage: string;
+  payloadSnippet?: unknown;
+}): never => {
+  const msg = input.paystackMessage.trim() || "Request failed.";
+  const low = msg.toLowerCase();
+
+  logger.warn(
+    { paystackPath: input.path, httpStatus: input.httpStatus, paystackMessage: msg },
+    "Paystack API request failed"
+  );
+
+  if (low.includes("invalid email")) {
+    throw invalidInputError(
+      "Paystack rejected the customer email used for checkout. Use a valid email address on the shipping step."
+    );
+  }
+
+  if (low.includes("invalid key") || low.includes("invalid authorization") || low.includes("bearer")) {
+    throw invalidInputError(
+      "Paystack rejected the server API key. Set PAYSTACK_SECRET_KEY on Render to the secret key from the same Paystack mode (test vs live) as your dashboard."
+    );
+  }
+
+  if (low.includes("callback") || low.includes("redirect url") || low.includes("redirect_url")) {
+    throw invalidInputError(
+      "Paystack rejected the payment callback URL. Set PAYSTACK_CALLBACK_URL to a public https URL (or set CUSTOMER_APP_URL so the default return URL is reachable)."
+    );
+  }
+
+  if (low.includes("currency")) {
+    throw invalidInputError(`Paystack rejected the charge currency: ${msg}`);
+  }
+
+  if (low.includes("amount") || low.includes("minimum")) {
+    throw invalidInputError(`Paystack rejected the charge amount: ${msg}`);
+  }
+
+  if (low.includes("duplicate") && low.includes("reference")) {
+    throw duplicateProcessingError(
+      "This payment reference was already used with Paystack. Retry checkout to start a new payment."
+    );
+  }
+
+  throw providerFailureError("Paystack returned an unsuccessful API response.", {
+    path: input.path,
+    statusCode: input.httpStatus,
+    message: msg,
+    endpoint: `${env.PAYSTACK_API_BASE_URL}${input.path}`,
+    payloadSnippet: input.payloadSnippet
+  });
+};
+
 const callPaystackApi = async <T>(
   path: string,
   input?: {
@@ -199,22 +257,35 @@ const callPaystackApi = async <T>(
     });
 
     const payloadText = await response.text();
-    const payload = payloadText
-      ? (JSON.parse(payloadText) as PaystackResponse<T>)
-      : ({ status: false, message: "Paystack returned an empty response.", data: {} as T });
-
-    if (!response.ok || !payload.status) {
-      throw providerFailureError("Paystack returned an unsuccessful API response.", {
+    let payload: PaystackResponse<T>;
+    try {
+      payload = payloadText
+        ? (JSON.parse(payloadText) as PaystackResponse<T>)
+        : ({ status: false, message: "Paystack returned an empty response.", data: {} as T });
+    } catch {
+      throw providerFailureError("Paystack returned a response that was not valid JSON.", {
         path,
         statusCode: response.status,
-        message: payload.message,
         endpoint: `${env.PAYSTACK_API_BASE_URL}${path}`,
-        payload
+        bodySnippet: payloadText.slice(0, 240)
+      });
+    }
+
+    if (!response.ok || !payload.status) {
+      throwMappedPaystackFailure({
+        path,
+        httpStatus: response.status,
+        paystackMessage: typeof payload.message === "string" ? payload.message : response.statusText,
+        payloadSnippet: payload
       });
     }
 
     return payload;
   } catch (error) {
+    if (isAppError(error)) {
+      throw error;
+    }
+
     if (error instanceof Error && error.name === "AbortError") {
       throw serviceUnavailableError("Paystack request timed out.", {
         path,
@@ -249,6 +320,13 @@ export class PaystackPaymentProvider implements PaymentProvider {
     };
 
     if (input.channel === "card") {
+      const callbackUrl = input.callbackUrl ?? env.PAYSTACK_CALLBACK_URL?.trim();
+      if (!callbackUrl) {
+        throw invalidInputError(
+          "A Paystack callback URL is required for card checkout. Set PAYSTACK_CALLBACK_URL or CUSTOMER_APP_URL (used to build the default return URL)."
+        );
+      }
+
       const response = await callPaystackApi<{
         authorization_url: string;
         access_code: string;
@@ -257,10 +335,10 @@ export class PaystackPaymentProvider implements PaymentProvider {
         method: "POST",
         body: {
           email: input.customerEmail,
-          amount: input.amountCents,
-          currency: input.currency,
+          amount: Math.trunc(input.amountCents),
+          currency: String(input.currency ?? env.PAYSTACK_DEFAULT_CURRENCY).toUpperCase(),
           reference: input.reference,
-          callback_url: input.callbackUrl ?? env.PAYSTACK_CALLBACK_URL,
+          callback_url: callbackUrl,
           channels: ["card"],
           metadata
         }
@@ -302,8 +380,8 @@ export class PaystackPaymentProvider implements PaymentProvider {
       method: "POST",
       body: {
         email: input.customerEmail,
-        amount: input.amountCents,
-        currency: input.currency,
+        amount: Math.trunc(input.amountCents),
+        currency: String(input.currency ?? env.PAYSTACK_DEFAULT_CURRENCY).toUpperCase(),
         reference: input.reference,
         metadata,
         mobile_money: {
