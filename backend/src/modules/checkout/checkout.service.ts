@@ -23,7 +23,8 @@ import {
   getCartState,
   getReservationWindowMinutes,
   type CartActorContext,
-  type CheckoutEvaluation
+  type CheckoutEvaluation,
+  type NormalizedTotals
 } from "../cart/cart.shared";
 
 const buildOrderNumber = () => {
@@ -70,22 +71,54 @@ const assertCheckoutIdentity = (
   }
 };
 
-const serializeOrderEntity = (order: {
-  id: string;
-  orderNumber: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
-}, evaluation: CheckoutEvaluation, checkoutSessionId: string) => ({
+const serializeOrderEntity = (
+  order: {
+    id: string;
+    orderNumber: string;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
+    addressSnapshot: Prisma.JsonValue;
+  },
+  evaluation: CheckoutEvaluation,
+  checkoutSessionId: string,
+  totalsOverride?: NormalizedTotals | null
+) => ({
   id: order.id,
   orderNumber: order.orderNumber,
   status: order.status,
   checkoutSessionId,
-  totals: evaluation.normalizedTotals,
+  totals: totalsOverride ?? evaluation.normalizedTotals,
   paymentState: PaymentState.PENDING_INITIALIZATION,
   createdAt: order.createdAt,
   updatedAt: order.updatedAt
 });
+
+const readNormalizedTotalsFromAddressSnapshot = (addressSnapshot: Prisma.JsonValue): NormalizedTotals | null => {
+  if (!addressSnapshot || typeof addressSnapshot !== "object" || Array.isArray(addressSnapshot)) {
+    return null;
+  }
+
+  const record = addressSnapshot as Record<string, unknown>;
+  const nt = record.normalizedTotals;
+  if (!nt || typeof nt !== "object" || Array.isArray(nt)) {
+    return null;
+  }
+
+  const t = nt as Record<string, unknown>;
+  if (typeof t.grandTotalCents !== "number" || !Number.isFinite(t.grandTotalCents)) {
+    return null;
+  }
+
+  return {
+    subtotalCents: typeof t.subtotalCents === "number" ? Math.trunc(t.subtotalCents) : 0,
+    discountCents: typeof t.discountCents === "number" ? Math.trunc(t.discountCents) : 0,
+    shippingCents: typeof t.shippingCents === "number" ? Math.trunc(t.shippingCents) : 0,
+    taxCents: typeof t.taxCents === "number" ? Math.trunc(t.taxCents) : 0,
+    grandTotalCents: Math.trunc(t.grandTotalCents),
+    currency: typeof t.currency === "string" ? t.currency : null
+  };
+};
 
 const readGrandTotalFromSnapshot = (value: Prisma.JsonValue) => {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -225,7 +258,7 @@ export const createOrderFromCheckout = async (
   }
 ) =>
   runInTransaction(async (transaction) => {
-    const { cart, evaluation } = await getCartState(transaction, context, {
+    let { cart, evaluation } = await getCartState(transaction, context, {
       requireGuestSession: false
     });
 
@@ -234,7 +267,6 @@ export const createOrderFromCheckout = async (
     }
 
     assertCheckoutIdentity(context, evaluation, input.address);
-    assertCartCanCheckout(evaluation);
 
     const existingSession = await transaction.checkoutSession.findUnique({
       where: {
@@ -246,8 +278,41 @@ export const createOrderFromCheckout = async (
     });
 
     if (existingSession?.order) {
-      return serializeOrderEntity(existingSession.order, evaluation, existingSession.id);
+      const snapshotTotals = readNormalizedTotalsFromAddressSnapshot(existingSession.order.addressSnapshot);
+      return serializeOrderEntity(
+        existingSession.order,
+        evaluation,
+        existingSession.id,
+        snapshotTotals ?? evaluation.normalizedTotals
+      );
     }
+
+    if (
+      cart.appliedCouponCode &&
+      evaluation.couponOutcome &&
+      !evaluation.couponOutcome.valid &&
+      typeof evaluation.couponOutcome.message === "string" &&
+      evaluation.couponOutcome.message.includes("already been used")
+    ) {
+      await transaction.cart.update({
+        where: {
+          id: cart.id
+        },
+        data: {
+          appliedCouponCode: null
+        }
+      });
+      const refreshed = await getCartState(transaction, context, {
+        requireGuestSession: false
+      });
+      if (!refreshed.cart) {
+        throw orderNotEligibleError("The current cart could not be found.");
+      }
+      cart = refreshed.cart;
+      evaluation = refreshed.evaluation;
+    }
+
+    assertCartCanCheckout(evaluation);
 
     if (existingSession && existingSession.cartId !== cart.id) {
       throw invalidInputError("This checkout idempotency key is already bound to a different cart.");
@@ -387,6 +452,15 @@ export const createOrderFromCheckout = async (
       },
       data: {
         orderId: order.id
+      }
+    });
+
+    await transaction.cart.update({
+      where: {
+        id: cart.id
+      },
+      data: {
+        appliedCouponCode: null
       }
     });
 
