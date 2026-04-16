@@ -27,7 +27,7 @@ import {
   type CheckoutEvaluation,
   type NormalizedTotals
 } from "../cart/cart.shared";
-import { isPaymentStateFinal } from "../orders/orders.service";
+import { isPaymentStateFinal, releaseOrderReservations } from "../orders/orders.service";
 import { buildDeferredMaterializationPayload } from "./checkout-deferred.service";
 
 const buildOrderNumber = () => {
@@ -629,10 +629,6 @@ export const completeCheckoutAndInitializePayment = async (
     if (existingIntent?.status === CheckoutPaymentIntentStatus.FULFILLED && existingIntent.order) {
       assertActorCanAccessDeferredCheckoutSession(context, existingIntent.checkoutSession);
 
-      if (existingIntent.checkoutSession.cartId !== cart.id) {
-        throw invalidInputError("This checkout idempotency key is already bound to a different cart.");
-      }
-
       const pay =
         existingIntent.payments[0] ??
         (await transaction.payment.findFirst({
@@ -675,10 +671,6 @@ export const completeCheckoutAndInitializePayment = async (
 
     if (existingIntent?.status === CheckoutPaymentIntentStatus.AWAITING_PAYMENT) {
       assertActorCanAccessDeferredCheckoutSession(context, existingIntent.checkoutSession);
-
-      if (existingIntent.checkoutSession.cartId !== cart.id) {
-        throw invalidInputError("This checkout idempotency key is already bound to a different cart.");
-      }
 
       const latestPayment =
         existingIntent.payments[0] ??
@@ -743,11 +735,76 @@ export const completeCheckoutAndInitializePayment = async (
       }
     });
 
-    if (existingSession && existingSession.cartId !== cart.id) {
-      throw invalidInputError("This checkout idempotency key is already bound to a different cart.");
+    let checkoutSessionRow = existingSession;
+
+    if (checkoutSessionRow && checkoutSessionRow.cartId !== cart.id) {
+      if (checkoutSessionRow.orderId && checkoutSessionRow.order && !checkoutSessionRow.checkoutPaymentIntent) {
+        throw invalidInputError(
+          "This checkout session already has a pending order. Use initialize-payment for that order or start a new checkout."
+        );
+      }
+
+      const sessionIntentId =
+        checkoutSessionRow.checkoutPaymentIntent?.id ?? existingIntent?.id ?? null;
+
+      if (sessionIntentId) {
+        const blockingPayment = await transaction.payment.findFirst({
+          where: {
+            checkoutPaymentIntentId: sessionIntentId,
+            paymentState: {
+              in: [
+                PaymentState.PENDING_INITIALIZATION,
+                PaymentState.INITIALIZED,
+                PaymentState.AWAITING_CUSTOMER_ACTION
+              ]
+            }
+          }
+        });
+
+        if (blockingPayment) {
+          throw invalidInputError(
+            "Your cart changed while a payment was in progress. Complete that payment or wait for it to finish, then try again."
+          );
+        }
+
+        const intentPayments = await transaction.payment.findMany({
+          where: {
+            checkoutPaymentIntentId: sessionIntentId
+          },
+          select: {
+            id: true
+          }
+        });
+
+        for (const intentPayment of intentPayments) {
+          await releaseOrderReservations(transaction, {
+            paymentId: intentPayment.id,
+            releaseReason: "checkout_cart_rebound_before_retry"
+          });
+        }
+      }
+
+      await transaction.checkoutSession.update({
+        where: {
+          id: checkoutSessionRow.id
+        },
+        data: {
+          cartId: cart.id
+        }
+      });
+
+      checkoutSessionRow = await transaction.checkoutSession.findUniqueOrThrow({
+        where: {
+          id: checkoutSessionRow.id
+        },
+        include: {
+          order: true,
+          checkoutPaymentIntent: true
+        }
+      });
     }
 
-    if (existingSession?.orderId && existingSession.order && !existingSession.checkoutPaymentIntent) {
+    if (checkoutSessionRow?.orderId && checkoutSessionRow.order && !checkoutSessionRow.checkoutPaymentIntent) {
       throw invalidInputError(
         "This checkout session already has a pending order. Use initialize-payment for that order or start a new checkout."
       );
@@ -793,7 +850,7 @@ export const completeCheckoutAndInitializePayment = async (
     const identity = buildCheckoutIdentity(context, input.address);
 
     const checkoutSession =
-      existingSession ??
+      checkoutSessionRow ??
       (await transaction.checkoutSession.create({
         data: {
           cartId: cart.id,
