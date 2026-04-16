@@ -763,6 +763,28 @@ export const CheckoutPaymentPage = () => {
 /* ─────────────────────────────────────────────
    CHECKOUT REVIEW — final confirmation before submit
 ───────────────────────────────────────────── */
+
+/** Paystack / provider may expose the hosted URL as `redirectUrl` or only under `providerPayload`. */
+const extractPaymentHostedUrl = (payment: unknown): string | null => {
+  if (!payment || typeof payment !== "object" || Array.isArray(payment)) {
+    return null;
+  }
+  const p = payment as Record<string, unknown>;
+  const direct = p.redirectUrl ?? p.redirect_url;
+  if (typeof direct === "string" && direct.trim().length > 0) {
+    return direct.trim();
+  }
+  const rawPayload = p.providerPayload ?? p.provider_payload;
+  if (rawPayload && typeof rawPayload === "object" && !Array.isArray(rawPayload)) {
+    const pl = rawPayload as Record<string, unknown>;
+    const auth = pl.authorizationUrl ?? pl.authorization_url;
+    if (typeof auth === "string" && auth.trim().length > 0) {
+      return auth.trim();
+    }
+  }
+  return null;
+};
+
 const ORDER_STATUSES_ALREADY_PAID = new Set(["CONFIRMED", "PROCESSING", "COMPLETED"]);
 
 export const CheckoutReviewPage = () => {
@@ -858,7 +880,21 @@ export const CheckoutReviewPage = () => {
       });
       const entity = data.order as { id: string; orderNumber: string; status?: string } | null;
       const checkoutPaymentIntentId = data.checkoutPaymentIntentId as string;
-      const pay = data.payment as { id: string; redirectUrl?: string | null; paymentState?: string };
+      const pay = data.payment;
+      if (!entity && (pay === null || pay === undefined)) {
+        setErr("Checkout could not start payment. Please try again.");
+        return;
+      }
+      const payRecord = pay && typeof pay === "object" && !Array.isArray(pay) ? (pay as Record<string, unknown>) : null;
+      const payId = typeof payRecord?.id === "string" ? payRecord.id : "";
+      const paymentState =
+        typeof payRecord?.paymentState === "string"
+          ? payRecord.paymentState
+          : typeof payRecord?.payment_state === "string"
+            ? payRecord.payment_state
+            : undefined;
+      const hostedPayUrl = extractPaymentHostedUrl(pay);
+      const requiresRedirect = Boolean(payRecord?.requiresRedirect ?? payRecord?.requires_redirect);
 
       const baseResult = {
         shipToLines: formatShipToLinesFromAddress(d.address),
@@ -873,10 +909,14 @@ export const CheckoutReviewPage = () => {
           orderNumber: entity.orderNumber
         });
       } else {
+        if (!payId) {
+          setErr("Checkout response was missing payment details. Please try again.");
+          return;
+        }
         writeCheckoutResult({
           ...baseResult,
           checkoutPaymentIntentId,
-          paymentId: pay.id
+          paymentId: payId
         });
       }
 
@@ -892,15 +932,25 @@ export const CheckoutReviewPage = () => {
         return;
       }
 
-      if (pay.paymentState === "PAID" && !pay.redirectUrl) {
+      if (paymentState === "PAID" && !hostedPayUrl) {
         clearCheckoutDraft();
         resetCheckoutIdempotencyKey();
         navigate("/checkout/success", { replace: true });
         return;
       }
-      if (pay.redirectUrl) {
+      if (hostedPayUrl) {
         clearCheckoutDraft();
-        window.location.assign(pay.redirectUrl);
+        window.location.assign(hostedPayUrl);
+        return;
+      }
+      const awaitingProvider =
+        paymentState === "AWAITING_CUSTOMER_ACTION" ||
+        paymentState === "INITIALIZED" ||
+        paymentState === "PENDING_INITIALIZATION";
+      if (requiresRedirect || awaitingProvider) {
+        setErr(
+          "We could not open the secure payment page. Check your connection and try again, or use a different browser if the problem continues."
+        );
         return;
       }
       clearCheckoutDraft();
