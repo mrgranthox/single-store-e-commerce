@@ -622,29 +622,31 @@ export const VerifyEmailPage = () => {
               />
             </div>
           ) : null}
-          <button
-            type="button"
-            disabled={status === "busy"}
-            onClick={async () => {
-              if (token) {
-                await verify(token);
-                return;
-              }
-              setStatus("busy");
-              setMessage(null);
-              try {
-                await customerAuthApi.resendVerification(email.trim());
-                setStatus("done");
-                setMessage("If that email is registered, a new link was sent.");
-              } catch (err) {
-                setStatus("error");
-                setMessage(err instanceof CommerceApiError ? err.message : "Could not resend.");
-              }
-            }}
-            className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all disabled:opacity-60"
-          >
-            {token ? (status === "busy" ? "Verifying…" : "Retry verification") : "Resend Email"}
-          </button>
+          {status !== "done" ? (
+            <button
+              type="button"
+              disabled={status === "busy"}
+              onClick={async () => {
+                if (token) {
+                  await verify(token);
+                  return;
+                }
+                setStatus("busy");
+                setMessage(null);
+                try {
+                  await customerAuthApi.resendVerification(email.trim());
+                  setStatus("done");
+                  setMessage("If that email is registered, a new link was sent.");
+                } catch (err) {
+                  setStatus("error");
+                  setMessage(err instanceof CommerceApiError ? err.message : "Could not resend.");
+                }
+              }}
+              className="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:bg-on-surface transition-all disabled:opacity-60"
+            >
+              {token ? (status === "busy" ? "Verifying…" : "Retry verification") : "Resend Email"}
+            </button>
+          ) : null}
           <Link className="block text-sm text-secondary hover:underline" to="/login">Back to Sign In</Link>
         </div>
       </main>
