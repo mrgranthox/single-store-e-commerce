@@ -79,6 +79,12 @@ enum PaymentState {
   REFUNDED
 }
 
+enum CheckoutPaymentIntentStatus {
+  AWAITING_PAYMENT
+  FULFILLED
+  FAILED
+}
+
 enum RefundState {
   PENDING_APPROVAL
   APPROVED
@@ -868,6 +874,7 @@ model CheckoutSession {
 
   checkoutValidationSnapshots CheckoutValidationSnapshot[]
   reservations       StockReservation[]
+  checkoutPaymentIntent CheckoutPaymentIntent?
 
   cart   Cart @relation(fields: [cartId], references: [id])
   user   User? @relation(fields: [userId], references: [id])
@@ -876,6 +883,22 @@ model CheckoutSession {
 
   @@index([userId])
   @@index([guestTrackingKey])
+}
+
+model CheckoutPaymentIntent {
+  id                     String @id @default(uuid())
+  storeId                String?
+  status                 CheckoutPaymentIntentStatus @default(AWAITING_PAYMENT)
+  checkoutSessionId      String @unique
+  checkoutIdempotencyKey String @unique
+  materializationPayload Json
+  orderId                String? @unique
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  checkoutSession CheckoutSession @relation(fields: [checkoutSessionId], references: [id], onDelete: Cascade)
+  order             Order? @relation(fields: [orderId], references: [id])
+  payments          Payment[]
 }
 
 model CheckoutValidationSnapshot {
@@ -921,6 +944,7 @@ model Order {
   supportTickets   SupportTicket[]
   couponRedemptions CouponRedemption[]
   checkoutSession  CheckoutSession?
+  checkoutPaymentIntent CheckoutPaymentIntent?
   campaign         Campaign? @relation(fields: [campaignId], references: [id])
 
   user             User? @relation(fields: [userId], references: [id])
@@ -990,7 +1014,7 @@ model CancellationRequest {
 model Payment {
   id                   String @id @default(uuid())
   storeId              String?
-  orderId              String
+  orderId              String?
 
   provider             String
   providerCustomerRef String?
@@ -1001,24 +1025,28 @@ model Payment {
   currency             String
 
   // Idempotency key for initialization/settlement writes
-  idempotencyKey       String
+  idempotencyKey       String @unique
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
   checkoutSessionId    String?
   checkoutSession      CheckoutSession? @relation(fields: [checkoutSessionId], references: [id])
 
+  checkoutPaymentIntentId String?
+  checkoutPaymentIntent   CheckoutPaymentIntent? @relation(fields: [checkoutPaymentIntentId], references: [id])
+
   attempts             PaymentAttempt[]
   transactions         PaymentTransaction[]
   refunds              Refund[]
   reservations         StockReservation[]
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  @@unique([orderId, idempotencyKey])
   @@unique([provider, providerPaymentRef])
   @@index([paymentState])
   @@index([providerPaymentRef])
+  @@index([orderId])
+  @@index([checkoutPaymentIntentId])
 }
 
 model PaymentAttempt {

@@ -54,13 +54,10 @@ export const initializePaymentController = asyncHandler(async (request, response
 
 export const completeCheckoutController = asyncHandler(async (request, response) => {
   const body = readValidatedBody<z.infer<typeof completeCheckoutBodySchema>>(request);
-  const { order, payment } = await completeCheckoutAndInitializePayment(buildContext(request), body);
+  const data = await completeCheckoutAndInitializePayment(buildContext(request), body);
   return sendSuccess(response, {
     statusCode: 201,
-    data: {
-      order,
-      payment
-    }
+    data
   });
 });
 

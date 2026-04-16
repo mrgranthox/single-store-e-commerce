@@ -479,14 +479,24 @@ const loadAdminOrderOrThrow = async (orderId: string) => {
 export const releaseOrderReservations = async (
   db: DatabaseClient,
   input: {
-    orderId: string;
+    orderId?: string;
+    paymentId?: string;
     releaseReason: string;
   }
 ) => {
+  if (!input.orderId && !input.paymentId) {
+    throw invalidInputError("A reservation release target requires an orderId or paymentId.");
+  }
+
   const reservations = await db.stockReservation.findMany({
     where: {
       releasedAt: null,
-      OR: [{ orderId: input.orderId }, { payment: { is: { orderId: input.orderId } } }]
+      OR: [
+        ...(input.orderId
+          ? [{ orderId: input.orderId }, { payment: { is: { orderId: input.orderId } } }]
+          : []),
+        ...(input.paymentId ? [{ paymentId: input.paymentId }] : [])
+      ]
     }
   });
 

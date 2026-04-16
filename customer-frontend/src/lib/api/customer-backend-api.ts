@@ -119,23 +119,40 @@ export const customerBackendApi = {
   createOrder: async (body: unknown) =>
     commerceFetchJson<{ entity: unknown }>("/api/checkout/create-order", { method: "POST", json: body }),
 
-  /** Single request: create `PENDING_PAYMENT` order + initialize Paystack (avoids session drift between create and init). */
+  /** Single request: initialize Paystack; order is created after PSP success (deferred materialization). */
   completeCheckout: async (body: unknown) =>
-    commerceFetchJson<{ order: unknown; payment: unknown }>("/api/checkout/complete", { method: "POST", json: body }),
+    commerceFetchJson<{
+      order: unknown | null;
+      checkoutPaymentIntentId: string;
+      payment: unknown;
+    }>("/api/checkout/complete", { method: "POST", json: body }),
 
   initializePayment: async (body: unknown) =>
     commerceFetchJson<{ entity: unknown }>("/api/checkout/initialize-payment", { method: "POST", json: body }),
 
-  getCheckoutPaymentReturn: async (params: { orderId: string; paymentId: string }) =>
+  getCheckoutPaymentReturn: async (params: {
+    paymentId: string;
+    orderId?: string;
+    checkoutPaymentIntentId?: string;
+  }) =>
     commerceFetchJson<{
-      orderId: string;
-      orderNumber: string;
-      orderStatus: string;
+      orderId: string | null;
+      orderNumber: string | null;
+      orderStatus: string | null;
+      checkoutPaymentIntentId: string | null;
       paymentId: string;
       paymentState: string;
-    }>(`/api/checkout/payment-return${qs({ orderId: params.orderId, paymentId: params.paymentId })}`, {
-      method: "GET"
-    }),
+      pendingMaterialization?: boolean;
+    }>(
+      `/api/checkout/payment-return${qs({
+        paymentId: params.paymentId,
+        ...(params.orderId ? { orderId: params.orderId } : {}),
+        ...(params.checkoutPaymentIntentId ? { checkoutPaymentIntentId: params.checkoutPaymentIntentId } : {})
+      })}`,
+      {
+        method: "GET"
+      }
+    ),
 
   trackGuestOrder: async (body: { orderNumber: string; email: string }) =>
     commerceFetchJson<{ entity: unknown }>("/api/orders/track", { method: "POST", json: body, auth: false }),

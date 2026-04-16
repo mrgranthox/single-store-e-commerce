@@ -30,10 +30,21 @@ export const createOrderBodySchema = z.object({
   campaignId: z.string().uuid().optional()
 });
 
-export const checkoutPaymentReturnQuerySchema = z.object({
-  orderId: z.string().uuid(),
-  paymentId: z.string().uuid()
-});
+export const checkoutPaymentReturnQuerySchema = z
+  .object({
+    paymentId: z.string().uuid(),
+    orderId: z.string().uuid().optional(),
+    checkoutPaymentIntentId: z.string().uuid().optional()
+  })
+  .superRefine((value, ctx) => {
+    if (!value.orderId && !value.checkoutPaymentIntentId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["checkoutPaymentIntentId"],
+        message: "Provide orderId (legacy) or checkoutPaymentIntentId together with paymentId."
+      });
+    }
+  });
 
 export const initializePaymentBodySchema = z.object({
   orderId: z.string().uuid(),

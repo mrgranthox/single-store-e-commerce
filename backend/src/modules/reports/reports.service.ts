@@ -290,7 +290,9 @@ export const getSalesReport = async (input: { from?: Date; to?: Date }) => {
     const key = toIsoDate(payment.createdAt);
     const entry = seriesMap.get(key) ?? { orderCount: 0, revenueCents: 0, orderIds: new Set<string>() };
     entry.revenueCents += payment.amountCents;
-    entry.orderIds.add(payment.orderId);
+    if (payment.orderId) {
+      entry.orderIds.add(payment.orderId);
+    }
     seriesMap.set(key, entry);
   }
 

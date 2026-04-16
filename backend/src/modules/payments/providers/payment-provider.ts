@@ -1,7 +1,8 @@
 import { PaymentState } from "@prisma/client";
 
 export type PaymentInitializationInput = {
-  orderId: string;
+  /** Present for legacy checkout-after-order; omitted when the order is materialized after PSP success. */
+  orderId?: string | null;
   paymentId: string;
   reference: string;
   amountCents: number;

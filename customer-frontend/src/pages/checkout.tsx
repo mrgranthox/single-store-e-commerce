@@ -776,27 +776,41 @@ export const CheckoutReviewPage = () => {
         channel: d.payment.channel,
         mobileMoney: d.payment.mobileMoney
       });
-      const entity = data.order as { id: string; orderNumber: string; status?: string };
-      writeCheckoutResult({
-        orderId: entity.id,
-        orderNumber: entity.orderNumber,
+      const entity = data.order as { id: string; orderNumber: string; status?: string } | null;
+      const checkoutPaymentIntentId = data.checkoutPaymentIntentId as string;
+      const pay = data.payment as { id: string; redirectUrl?: string | null; paymentState?: string };
+
+      const baseResult = {
         shipToLines: formatShipToLinesFromAddress(d.address),
         shippingMethodLabel: labelForShippingMethodCode(d.shippingMethodCode),
         fulfillmentNote: "We will email tracking and updates as your order moves through fulfillment."
-      });
+      };
 
-      if (entity.status && ORDER_STATUSES_ALREADY_PAID.has(entity.status)) {
+      if (entity) {
+        writeCheckoutResult({
+          ...baseResult,
+          orderId: entity.id,
+          orderNumber: entity.orderNumber
+        });
+      } else {
+        writeCheckoutResult({
+          ...baseResult,
+          checkoutPaymentIntentId,
+          paymentId: pay.id
+        });
+      }
+
+      if (entity?.status && ORDER_STATUSES_ALREADY_PAID.has(entity.status)) {
         clearCheckoutDraft();
         navigate("/checkout/success", { replace: true });
         return;
       }
 
-      if (entity.status && entity.status !== "PENDING_PAYMENT") {
+      if (entity?.status && entity.status !== "PENDING_PAYMENT") {
         setErr("This checkout is tied to an order that can no longer accept payment. Return to your cart to start again.");
         return;
       }
 
-      const pay = data.payment as { redirectUrl?: string | null; paymentState?: string };
       if (pay.paymentState === "PAID" && !pay.redirectUrl) {
         clearCheckoutDraft();
         navigate("/checkout/success", { replace: true });
@@ -895,12 +909,13 @@ export const CheckoutReviewPage = () => {
 };
 
 /* ─────────────────────────────────────────────
-   PAYSTACK RETURN — Paystack appends reference/trxref; we need orderId + paymentId from callback_url.
+   PAYSTACK RETURN — callback_url carries paymentId + checkoutPaymentIntentId (or legacy orderId + paymentId).
 ───────────────────────────────────────────── */
 export const CheckoutPaymentResultPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const orderId = searchParams.get("orderId")?.trim() ?? "";
+  const checkoutPaymentIntentId = searchParams.get("checkoutPaymentIntentId")?.trim() ?? "";
   const paymentId = searchParams.get("paymentId")?.trim() ?? "";
   const [phase, setPhase] = useState<"loading" | "pending" | "failed" | "auth">("loading");
   const [message, setMessage] = useState<string | null>(null);
@@ -913,9 +928,9 @@ export const CheckoutPaymentResultPage = () => {
         : "Confirming your payment";
 
   useEffect(() => {
-    if (!orderId || !paymentId) {
+    if (!paymentId || (!orderId && !checkoutPaymentIntentId)) {
       setPhase("failed");
-      setMessage("This return link is missing order or payment details.");
+      setMessage("This return link is missing checkout or payment details.");
       return;
     }
 
@@ -927,19 +942,29 @@ export const CheckoutPaymentResultPage = () => {
       if (cancelled) return;
       attempts += 1;
       try {
-        const { data } = await customerBackendApi.getCheckoutPaymentReturn({ orderId, paymentId });
+        const { data } = await customerBackendApi.getCheckoutPaymentReturn({
+          paymentId,
+          ...(orderId ? { orderId } : {}),
+          ...(checkoutPaymentIntentId ? { checkoutPaymentIntentId } : {})
+        });
         if (cancelled) return;
         const prev = readCheckoutResult();
         writeCheckoutResult({
-          orderId: data.orderId,
-          orderNumber: data.orderNumber,
+          orderId: data.orderId ?? undefined,
+          orderNumber: data.orderNumber ?? undefined,
+          checkoutPaymentIntentId:
+            (data.checkoutPaymentIntentId ?? checkoutPaymentIntentId || prev?.checkoutPaymentIntentId) || undefined,
+          paymentId: data.paymentId,
           shipToLines: prev?.shipToLines,
           shippingMethodLabel: prev?.shippingMethodLabel,
           fulfillmentNote: prev?.fulfillmentNote
         });
         if (data.paymentState === "PAID") {
-          navigate("/checkout/success", { replace: true });
-          return;
+          if (data.orderNumber) {
+            navigate("/checkout/success", { replace: true });
+            return;
+          }
+          setPhase("pending");
         }
         if (data.paymentState === "FAILED" || data.paymentState === "CANCELLED") {
           setPhase("failed");
@@ -984,7 +1009,7 @@ export const CheckoutPaymentResultPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [navigate, orderId, paymentId]);
+  }, [navigate, orderId, checkoutPaymentIntentId, paymentId]);
 
   return (
     <div className="bg-surface text-on-surface antialiased min-h-screen flex flex-col">

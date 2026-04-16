@@ -26,8 +26,12 @@ export type CheckoutDraft = {
 };
 
 export type CheckoutResultSnapshot = {
-  orderId: string;
-  orderNumber: string;
+  /** Present after Paystack success + order materialization (or legacy pre-deferred checkout). */
+  orderId?: string;
+  orderNumber?: string;
+  /** Set when checkout completes before an order row exists (Pay-before-order). */
+  checkoutPaymentIntentId?: string;
+  paymentId?: string;
   createdAt?: string;
   /** Snapshot of shipping address lines at order placement (no PII beyond what user entered). */
   shipToLines?: string[];

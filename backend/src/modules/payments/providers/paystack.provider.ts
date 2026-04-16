@@ -351,7 +351,7 @@ export class PaystackPaymentProvider implements PaymentProvider {
     }
 
     const metadata = {
-      orderId: input.orderId,
+      ...(input.orderId ? { orderId: input.orderId } : {}),
       paymentId: input.paymentId,
       paymentChannel: input.channel,
       ...input.metadata

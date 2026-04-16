@@ -23,6 +23,7 @@ import { queueNames, queues } from "../../config/queue";
 import { prisma } from "../../config/prisma";
 import { env } from "../../config/env";
 import { createAlert } from "../alerts-incidents/alerts-incidents.service";
+import { materializeDeferredCheckoutPaymentInTransaction } from "../checkout/checkout-deferred.service";
 import { initializeCheckoutPayment } from "../checkout/checkout.service";
 import { jobRunService } from "../jobs-workers/job-run.service";
 import { webhookRecorderService } from "../jobs-workers/webhook-recorder.service";
@@ -51,6 +52,12 @@ const paymentInclude = {
       }
     }
   },
+  checkoutPaymentIntent: {
+    select: {
+      id: true,
+      materializationPayload: true
+    }
+  },
   transactions: {
     orderBy: {
       createdAt: "desc" as const
@@ -60,7 +67,7 @@ const paymentInclude = {
 
 type PaymentRecord = {
   id: string;
-  orderId: string;
+  orderId: string | null;
   provider: string;
   providerPaymentRef: string | null;
   paymentState: PaymentState;
@@ -80,7 +87,11 @@ type PaymentRecord = {
       firstName: string | null;
       lastName: string | null;
     } | null;
-  };
+  } | null;
+  checkoutPaymentIntent: {
+    id: string;
+    materializationPayload: Prisma.JsonValue;
+  } | null;
   transactions: Array<{
     id: string;
     providerEventType: string | null;
@@ -95,7 +106,7 @@ type PaymentRecord = {
 
 type PaymentProcessingTarget = {
   id: string;
-  orderId: string;
+  orderId: string | null;
   provider: string;
   providerPaymentRef: string | null;
   paymentState: PaymentState;
@@ -110,14 +121,18 @@ type PaymentProcessingTarget = {
       id: string;
       email: string | null;
     } | null;
-  };
+  } | null;
+  checkoutPaymentIntent: {
+    id: string;
+    materializationPayload: Prisma.JsonValue;
+  } | null;
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const readAddressEmail = (value: Prisma.JsonValue) => {
-  const record = isRecord(value) ? value : {};
+const readAddressEmail = (value: Prisma.JsonValue | null | undefined) => {
+  const record = value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
 
   if (typeof record.contactEmail === "string" && record.contactEmail.trim()) {
     return record.contactEmail;
@@ -125,6 +140,31 @@ const readAddressEmail = (value: Prisma.JsonValue) => {
 
   if (typeof record.email === "string" && record.email.trim()) {
     return record.email;
+  }
+
+  return null;
+};
+
+const readEmailFromDeferredIntentPayload = (payload: Prisma.JsonValue | null | undefined): string | null => {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return null;
+  }
+
+  const root = payload as Record<string, unknown>;
+  const identity = root.identity;
+  if (identity && typeof identity === "object" && !Array.isArray(identity)) {
+    const contactEmail = (identity as Record<string, unknown>).contactEmail;
+    if (typeof contactEmail === "string" && contactEmail.trim()) {
+      return contactEmail.trim();
+    }
+  }
+
+  const address = root.address;
+  if (address && typeof address === "object" && !Array.isArray(address)) {
+    const email = (address as Record<string, unknown>).email;
+    if (typeof email === "string" && email.trim()) {
+      return email.trim();
+    }
   }
 
   return null;
@@ -175,6 +215,17 @@ const deriveTransactionStatus = (
 };
 
 const buildCustomerSummary = (payment: PaymentRecord) => {
+  if (!payment.order) {
+    const email = readEmailFromDeferredIntentPayload(payment.checkoutPaymentIntent?.materializationPayload ?? null);
+
+    return {
+      id: null,
+      email,
+      guest: true,
+      name: null
+    };
+  }
+
   const nameParts = [payment.order.user?.firstName, payment.order.user?.lastName].filter(Boolean);
 
   return {
@@ -188,8 +239,8 @@ const buildCustomerSummary = (payment: PaymentRecord) => {
 const serializePaymentListItem = (payment: PaymentRecord) => ({
   id: payment.id,
   orderId: payment.orderId,
-  orderNumber: payment.order.orderNumber,
-  orderStatus: payment.order.status,
+  orderNumber: payment.order?.orderNumber ?? null,
+  orderStatus: payment.order?.status ?? null,
   provider: payment.provider,
   providerPaymentRef: payment.providerPaymentRef,
   paymentState: payment.paymentState,
@@ -204,8 +255,8 @@ const serializePaymentListItem = (payment: PaymentRecord) => ({
 const serializePaymentDetail = (payment: PaymentRecord) => ({
   id: payment.id,
   orderId: payment.orderId,
-  orderNumber: payment.order.orderNumber,
-  orderStatus: payment.order.status,
+  orderNumber: payment.order?.orderNumber ?? null,
+  orderStatus: payment.order?.status ?? null,
   provider: payment.provider,
   providerPaymentRef: payment.providerPaymentRef,
   paymentState: payment.paymentState,
@@ -248,121 +299,152 @@ const applyPaymentOutcome = async (input: {
   providerPaymentRef: string | null;
   providerEventType: string;
 }) =>
-  runInTransaction(async (transaction) => {
-    const payment = await transaction.payment.findUnique({
-      where: {
-        id: input.paymentId
-      },
-      include: {
-        order: true
-      }
-    });
-
-    if (!payment) {
-      throw notFoundError("The referenced payment was not found.");
-    }
-
-    if (payment.paymentState === input.nextPaymentState) {
-      return {
-        paymentStateChanged: false,
-        orderStateChanged: false
-      };
-    }
-
-    if (isPaymentStateFinal(payment.paymentState) && payment.paymentState !== input.nextPaymentState) {
-      await transaction.financialException.create({
-        data: {
-          exceptionType: "PAYMENT_STATE_MISMATCH",
-          orderId: payment.orderId,
-          paymentId: payment.id,
-          mismatchSummary: toPrismaJsonValue({
-            currentPaymentState: payment.paymentState,
-            incomingPaymentState: input.nextPaymentState,
-            providerEventType: input.providerEventType,
-            providerPaymentRef: input.providerPaymentRef
-          })!
+  runInTransaction(
+    async (transaction) => {
+      let payment = await transaction.payment.findUnique({
+        where: {
+          id: input.paymentId
+        },
+        include: {
+          order: true,
+          checkoutPaymentIntent: true
         }
       });
 
-      return {
-        paymentStateChanged: false,
-        orderStateChanged: false
-      };
-    }
-
-    await transaction.payment.update({
-      where: {
-        id: payment.id
-      },
-      data: {
-        paymentState: input.nextPaymentState,
-        ...(input.providerPaymentRef ? { providerPaymentRef: input.providerPaymentRef } : {})
+      if (!payment) {
+        throw notFoundError("The referenced payment was not found.");
       }
-    });
 
-    let orderStateChanged = false;
+      if (payment.paymentState === input.nextPaymentState) {
+        return {
+          paymentStateChanged: false,
+          orderStateChanged: false
+        };
+      }
 
-    if (input.nextPaymentState === PaymentState.PAID && payment.order.status === "PENDING_PAYMENT") {
-      orderStateChanged = true;
+      if (isPaymentStateFinal(payment.paymentState) && payment.paymentState !== input.nextPaymentState) {
+        await transaction.financialException.create({
+          data: {
+            exceptionType: "PAYMENT_STATE_MISMATCH",
+            orderId: payment.orderId,
+            paymentId: payment.id,
+            mismatchSummary: toPrismaJsonValue({
+              currentPaymentState: payment.paymentState,
+              incomingPaymentState: input.nextPaymentState,
+              providerEventType: input.providerEventType,
+              providerPaymentRef: input.providerPaymentRef
+            })!
+          }
+        });
 
-      await transaction.order.update({
+        return {
+          paymentStateChanged: false,
+          orderStateChanged: false
+        };
+      }
+
+      if (input.nextPaymentState === PaymentState.PAID && !payment.orderId) {
+        await materializeDeferredCheckoutPaymentInTransaction(transaction, payment.id);
+        payment = await transaction.payment.findUnique({
+          where: {
+            id: payment.id
+          },
+          include: {
+            order: true,
+            checkoutPaymentIntent: true
+          }
+        });
+
+        if (!payment?.orderId || !payment.order) {
+          throw invalidInputError("Deferred checkout materialization did not produce an order.");
+        }
+      }
+
+      await transaction.payment.update({
         where: {
-          id: payment.orderId
+          id: payment.id
         },
         data: {
-          status: "CONFIRMED"
+          paymentState: input.nextPaymentState,
+          ...(input.providerPaymentRef ? { providerPaymentRef: input.providerPaymentRef } : {})
         }
       });
 
-      await transaction.orderStatusHistory.create({
+      let orderStateChanged = false;
+
+      if (
+        input.nextPaymentState === PaymentState.PAID &&
+        payment.order &&
+        payment.order.status === "PENDING_PAYMENT"
+      ) {
+        orderStateChanged = true;
+
+        await transaction.order.update({
+          where: {
+            id: payment.orderId!
+          },
+          data: {
+            status: "CONFIRMED"
+          }
+        });
+
+        await transaction.orderStatusHistory.create({
+          data: {
+            orderId: payment.orderId!,
+            fromStatus: payment.order.status,
+            toStatus: "CONFIRMED",
+            reason: "verified_payment_webhook",
+            metadata: toPrismaJsonValue({
+              paymentId: payment.id,
+              providerEventType: input.providerEventType
+            })
+          }
+        });
+      }
+
+      if (
+        input.nextPaymentState === PaymentState.FAILED ||
+        input.nextPaymentState === PaymentState.CANCELLED
+      ) {
+        await releaseOrderReservations(transaction, {
+          ...(payment.orderId ? { orderId: payment.orderId } : {}),
+          paymentId: payment.id,
+          releaseReason: "payment_failed_or_cancelled"
+        });
+      }
+
+      const timelineEntityId = payment.orderId ?? payment.id;
+      const timelineEntityType = payment.orderId ? "ORDER" : "PAYMENT";
+
+      await transaction.timelineEvent.create({
         data: {
-          orderId: payment.orderId,
-          fromStatus: payment.order.status,
-          toStatus: "CONFIRMED",
-          reason: "verified_payment_webhook",
-          metadata: toPrismaJsonValue({
+          entityType: timelineEntityType,
+          entityId: timelineEntityId,
+          eventType:
+            input.nextPaymentState === PaymentState.PAID
+              ? "PAYMENT_CONFIRMED"
+              : input.nextPaymentState === PaymentState.FAILED
+                ? "PAYMENT_FAILED"
+                : "PAYMENT_UPDATED",
+          actorType: "SYSTEM",
+          payload: toPrismaJsonValue({
             paymentId: payment.id,
-            providerEventType: input.providerEventType
+            paymentState: input.nextPaymentState,
+            providerEventType: input.providerEventType,
+            providerPaymentRef: input.providerPaymentRef
           })
         }
       });
+
+      return {
+        paymentStateChanged: true,
+        orderStateChanged
+      };
+    },
+    {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable
     }
-
-    if (
-      input.nextPaymentState === PaymentState.FAILED ||
-      input.nextPaymentState === PaymentState.CANCELLED
-    ) {
-      await releaseOrderReservations(transaction, {
-        orderId: payment.orderId,
-        releaseReason: "payment_failed_or_cancelled"
-      });
-    }
-
-    await transaction.timelineEvent.create({
-      data: {
-        entityType: "ORDER",
-        entityId: payment.orderId,
-        eventType:
-          input.nextPaymentState === PaymentState.PAID
-            ? "PAYMENT_CONFIRMED"
-            : input.nextPaymentState === PaymentState.FAILED
-              ? "PAYMENT_FAILED"
-              : "PAYMENT_UPDATED",
-        actorType: "SYSTEM",
-        payload: toPrismaJsonValue({
-          paymentId: payment.id,
-          paymentState: input.nextPaymentState,
-          providerEventType: input.providerEventType,
-          providerPaymentRef: input.providerPaymentRef
-        })
-      }
-    });
-
-    return {
-      paymentStateChanged: true,
-      orderStateChanged
-    };
-  });
+  );
 
 const assertVerifiedReferenceMatchesPayment = (
   payment: PaymentProcessingTarget,
@@ -373,7 +455,10 @@ const assertVerifiedReferenceMatchesPayment = (
   },
   providerPaymentRef: string
 ) => {
-  const customerEmail = payment.order.user?.email ?? readAddressEmail(payment.order.addressSnapshot);
+  const customerEmail =
+    payment.order?.user?.email ??
+    readAddressEmail(payment.order?.addressSnapshot ?? null) ??
+    readEmailFromDeferredIntentPayload(payment.checkoutPaymentIntent?.materializationPayload ?? null);
 
   if (
     verifiedReference.amountCents !== null &&
@@ -458,18 +543,49 @@ const applyResolvedPaymentState = async (input: {
     }
   }
 
-  const recipientEmail = input.payment.order.user?.email ?? readAddressEmail(input.payment.order.addressSnapshot);
+  const paymentFresh = await prisma.payment.findUnique({
+    where: {
+      id: input.payment.id
+    },
+    include: {
+      order: {
+        select: {
+          id: true,
+          orderNumber: true,
+          status: true,
+          addressSnapshot: true,
+          user: {
+            select: {
+              id: true,
+              email: true
+            }
+          }
+        }
+      },
+      checkoutPaymentIntent: {
+        select: {
+          id: true,
+          materializationPayload: true
+        }
+      }
+    }
+  });
+
+  const recipientEmail =
+    paymentFresh?.order?.user?.email ??
+    readAddressEmail(paymentFresh?.order?.addressSnapshot ?? null) ??
+    readEmailFromDeferredIntentPayload(paymentFresh?.checkoutPaymentIntent?.materializationPayload ?? null);
 
   if (recipientEmail && outcomeApplication.paymentStateChanged) {
-    if (input.resolvedPaymentState === PaymentState.PAID) {
+    if (input.resolvedPaymentState === PaymentState.PAID && paymentFresh?.order) {
       await enqueueNotification({
         type: "ORDER_CONFIRMED",
         recipientEmail,
-        recipientType: input.payment.order.user ? "USER" : "GUEST",
-        recipientUserId: input.payment.order.user?.id,
+        recipientType: paymentFresh.order.user ? "USER" : "GUEST",
+        recipientUserId: paymentFresh.order.user?.id,
         payload: {
-          orderId: input.payment.orderId,
-          orderNumber: input.payment.order.orderNumber,
+          orderId: paymentFresh.order.id,
+          orderNumber: paymentFresh.order.orderNumber,
           paymentId: input.payment.id,
           provider: input.payment.provider,
           providerPaymentRef: input.providerPaymentRef,
@@ -486,11 +602,11 @@ const applyResolvedPaymentState = async (input: {
       await enqueueNotification({
         type: "PAYMENT_FAILED",
         recipientEmail,
-        recipientType: input.payment.order.user ? "USER" : "GUEST",
-        recipientUserId: input.payment.order.user?.id,
+        recipientType: paymentFresh?.order?.user ? "USER" : "GUEST",
+        recipientUserId: paymentFresh?.order?.user?.id,
         payload: {
-          orderId: input.payment.orderId,
-          orderNumber: input.payment.order.orderNumber,
+          orderId: paymentFresh?.order?.id ?? null,
+          orderNumber: paymentFresh?.order?.orderNumber ?? null,
           paymentId: input.payment.id,
           provider: input.payment.provider,
           providerPaymentRef: input.providerPaymentRef,
@@ -558,9 +674,42 @@ const loadPaymentByProviderReference = async (provider: string, providerPaymentR
             }
           }
         }
+      },
+      checkoutPaymentIntent: {
+        select: {
+          id: true,
+          materializationPayload: true
+        }
       }
     }
   });
+
+const mapLoadedPaymentToProcessingTarget = (
+  payment: NonNullable<Awaited<ReturnType<typeof loadPaymentByProviderReference>>>
+): PaymentProcessingTarget => ({
+  id: payment.id,
+  orderId: payment.orderId,
+  provider: payment.provider,
+  providerPaymentRef: payment.providerPaymentRef,
+  paymentState: payment.paymentState,
+  amountCents: payment.amountCents,
+  currency: payment.currency,
+  order: payment.order
+    ? {
+        id: payment.order.id,
+        orderNumber: payment.order.orderNumber,
+        status: payment.order.status,
+        addressSnapshot: payment.order.addressSnapshot,
+        user: payment.order.user
+      }
+    : null,
+  checkoutPaymentIntent: payment.checkoutPaymentIntent
+    ? {
+        id: payment.checkoutPaymentIntent.id,
+        materializationPayload: payment.checkoutPaymentIntent.materializationPayload
+      }
+    : null
+});
 
 export const initializePublicPayment = async (
   context: Parameters<typeof initializeCheckoutPayment>[0],
@@ -854,13 +1003,15 @@ export const processPaymentWebhookJob = async (job: Job<{ webhookEventId: string
       throw invalidInputError("The payment webhook payload did not include a provider reference.");
     }
 
-    const payment = await loadPaymentByProviderReference(webhookEvent.provider, outcome.providerPaymentRef);
+    const paymentRow = await loadPaymentByProviderReference(webhookEvent.provider, outcome.providerPaymentRef);
 
-    if (!payment) {
+    if (!paymentRow) {
       throw providerFailureError("The webhook could not be matched to a known payment.", {
         providerPaymentRef: outcome.providerPaymentRef
       });
     }
+
+    const payment = mapLoadedPaymentToProcessingTarget(paymentRow);
 
     let verifiedReference: Awaited<ReturnType<typeof provider.verifyPaymentReference>> | null = null;
 
@@ -974,6 +1125,12 @@ export const processPendingPaymentReconciliationJob = async (
             }
           }
         }
+      },
+      checkoutPaymentIntent: {
+        select: {
+          id: true,
+          materializationPayload: true
+        }
       }
     },
     orderBy: {
@@ -986,12 +1143,16 @@ export const processPendingPaymentReconciliationJob = async (
   let unchanged = 0;
   let failed = 0;
 
-  for (const payment of payments) {
-    try {
-      const provider = getPaymentProvider(payment.provider);
-      const verifiedReference = await provider.verifyPaymentReference(payment.providerPaymentRef!);
+  for (const paymentRow of payments) {
+    const paymentForAlert = mapLoadedPaymentToProcessingTarget(
+      paymentRow as NonNullable<Awaited<ReturnType<typeof loadPaymentByProviderReference>>>
+    );
 
-      assertVerifiedReferenceMatchesPayment(payment, verifiedReference, payment.providerPaymentRef!);
+    try {
+      const provider = getPaymentProvider(paymentRow.provider);
+      const verifiedReference = await provider.verifyPaymentReference(paymentRow.providerPaymentRef!);
+
+      assertVerifiedReferenceMatchesPayment(paymentForAlert, verifiedReference, paymentRow.providerPaymentRef!);
 
       const resolvedPaymentState = mapProviderVerificationStatusToPaymentState(verifiedReference.status);
       const resolvedTransactionStatus = deriveTransactionStatus(
@@ -1000,7 +1161,7 @@ export const processPendingPaymentReconciliationJob = async (
       );
 
       const outcomeApplication = await applyResolvedPaymentState({
-        payment,
+        payment: paymentForAlert,
         providerEventType: "RECONCILIATION_VERIFY",
         providerPaymentRef: verifiedReference.reference,
         resolvedPaymentState,
@@ -1022,7 +1183,7 @@ export const processPendingPaymentReconciliationJob = async (
       failed += 1;
 
       await ensurePaymentReconciliationAlert(
-        payment,
+        paymentForAlert,
         error instanceof Error ? error.message : "Payment reconciliation failed."
       );
     }
