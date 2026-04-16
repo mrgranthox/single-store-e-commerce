@@ -18,6 +18,7 @@ import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import { mockImages } from "@/lib/data/mock-images";
 import type { Product } from "@/lib/data/customer-mock";
 import { neutralFieldClass } from "@/lib/form-field-styles";
+import { CUSTOMER_CART_QUERY_ROOT } from "@/hooks/use-cart-summary";
 import { useWishlistActions } from "@/hooks/use-wishlist-actions";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
@@ -606,6 +607,98 @@ export const HomePage = () => {
 };
 
 /* ─────────────────────────────────────────────
+   CATEGORIES DIRECTORY — `/categories` (API-driven slugs)
+───────────────────────────────────────────── */
+export const CategoriesIndexPage = () => {
+  const query = useQuery({
+    queryKey: ["customer-categories-index"],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listCategories();
+      return data as {
+        items?: Array<{
+          id: string;
+          slug: string;
+          name: string;
+          productCount?: number;
+          imageUrl?: string | null;
+        }>;
+      };
+    },
+    staleTime: 60_000
+  });
+
+  const items = query.data?.items ?? [];
+
+  return (
+    <ShellMain>
+      <nav className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-label tracking-widest uppercase text-outline mb-6 md:mb-10">
+        <Link className="hover:text-secondary transition-colors" to="/">
+          Home
+        </Link>
+        <Icon name="chevron_right" className="text-[10px]" />
+        <span className="text-on-surface">Categories</span>
+      </nav>
+      <header className="mb-10 md:mb-16">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-background mb-4">
+          Categories
+        </h1>
+        <p className="text-on-surface-variant max-w-xl">Browse by department — each card links to that category&apos;s products.</p>
+      </header>
+      {query.isPending ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-40 rounded-xl bg-surface-container-high" />
+          ))}
+        </div>
+      ) : query.isError ? (
+        <p className="text-error text-sm">Could not load categories.</p>
+      ) : items.length === 0 ? (
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-8 text-center">
+          <p className="text-on-surface-variant mb-4">No categories are published yet.</p>
+          <Link to="/shop" className="text-secondary font-label font-bold text-sm uppercase tracking-widest underline">
+            Shop all
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {items.map((c) => (
+            <Link
+              key={c.id}
+              to={`/categories/${encodeURIComponent(c.slug)}`}
+              className="group rounded-2xl border border-outline-variant/20 bg-surface-container-lowest overflow-hidden hover:border-secondary/30 transition-colors"
+            >
+              <div className="aspect-[16/9] bg-surface-container-low overflow-hidden">
+                {c.imageUrl ? (
+                  <img
+                    src={c.imageUrl}
+                    alt=""
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-outline">
+                    <Icon name="category" className="text-5xl" />
+                  </div>
+                )}
+              </div>
+              <div className="p-5">
+                <h2 className="font-headline font-bold text-lg text-on-background group-hover:text-secondary transition-colors">
+                  {c.name}
+                </h2>
+                {typeof c.productCount === "number" ? (
+                  <p className="text-sm text-on-surface-variant mt-1">{c.productCount} products</p>
+                ) : null}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </ShellMain>
+  );
+};
+
+/* ─────────────────────────────────────────────
    SHOP ALL PAGE
 ───────────────────────────────────────────── */
 export const ShopAllPage = () => {
@@ -730,6 +823,10 @@ export const CategoryPage = () => {
     <ShellMain>
         <nav className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs font-label tracking-widest uppercase text-outline mb-6 md:mb-10">
           <Link className="hover:text-secondary transition-colors" to="/">Home</Link>
+          <Icon name="chevron_right" className="text-[10px]" />
+          <Link className="hover:text-secondary transition-colors" to="/categories">
+            Categories
+          </Link>
           <Icon name="chevron_right" className="text-[10px]" />
           <span className="text-on-surface">{displayName}</span>
         </nav>
@@ -1027,7 +1124,7 @@ export const ProductDetailPage = () => {
                     setCartErr(null);
                     try {
                       await customerBackendApi.addCartItem({ variantId: selectedVariantId, quantity: 1 });
-                      await queryClient.invalidateQueries({ queryKey: ["customer-cart-eval"] });
+                      await queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
                     } catch (e) {
                       setCartErr(e instanceof CommerceApiError ? e.message : "Could not add to bag.");
                     } finally {

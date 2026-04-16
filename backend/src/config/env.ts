@@ -179,6 +179,8 @@ const envSchema = z.object({
   CLERK_PUBLISHABLE_KEY: z.string().optional(),
   CLERK_SECRET_KEY: z.string().optional(),
   CLERK_WEBHOOK_SECRET: z.string().optional(),
+  /** When true, customer register sends `legalAcceptedAt` to Clerk (needed only if Dashboard → Legal requires express consent). */
+  CLERK_SEND_LEGAL_ACCEPTED_AT_ON_CUSTOMER_REGISTER: booleanFromString.default(false),
   SENTRY_DSN: z.string().optional(),
   SENTRY_ENABLED: booleanFromString.default(false),
   SENTRY_ENVIRONMENT: z.string().trim().min(1).optional(),

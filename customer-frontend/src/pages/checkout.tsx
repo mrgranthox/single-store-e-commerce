@@ -21,6 +21,7 @@ import {
   writeCheckoutResult
 } from "@/lib/checkout/checkout-draft";
 import { mapCartEvaluationToOrderSummary } from "@/lib/checkout/map-cart-evaluation";
+import { useCustomerCartQueryKey, CUSTOMER_CART_QUERY_ROOT } from "@/hooks/use-cart-summary";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 /* ─────────────────────────────────────────────
@@ -29,16 +30,17 @@ import { useCustomerStore } from "@/lib/store/customer-store";
 export const CartPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const cartQueryKey = useCustomerCartQueryKey();
   const [coupon, setCoupon] = useState("");
   const [couponErr, setCouponErr] = useState<string | null>(null);
 
   const cartQuery = useQuery({
-    queryKey: ["customer-cart-eval"],
+    queryKey: cartQueryKey,
     queryFn: async () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 10_000
+    staleTime: 5_000
   });
 
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
@@ -61,7 +63,7 @@ export const CartPage = () => {
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["customer-cart-eval"] });
+      await queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
     }
   });
 
@@ -71,7 +73,7 @@ export const CartPage = () => {
     },
     onSuccess: async () => {
       setCouponErr(null);
-      await queryClient.invalidateQueries({ queryKey: ["customer-cart-eval"] });
+      await queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
     },
     onError: (e) => {
       setCouponErr(e instanceof CommerceApiError ? e.message : "Invalid coupon.");
@@ -279,6 +281,7 @@ const shippingSchema = z.object({
 
 export const CheckoutShippingPage = () => {
   const navigate = useNavigate();
+  const cartQueryKey = useCustomerCartQueryKey();
   const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
   const [selectedMethod, setSelectedMethod] = useState<"standard" | "express">("standard");
   const prior = readCheckoutDraft();
@@ -296,12 +299,12 @@ export const CheckoutShippingPage = () => {
   });
 
   const cartQuery = useQuery({
-    queryKey: ["customer-cart-eval"],
+    queryKey: cartQueryKey,
     queryFn: async () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 10_000
+    staleTime: 5_000
   });
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
   const orderLines = summary.lines.map((l) => ({
@@ -463,18 +466,19 @@ export const CheckoutShippingPage = () => {
 ───────────────────────────────────────────── */
 export const CheckoutPaymentPage = () => {
   const navigate = useNavigate();
+  const cartQueryKey = useCustomerCartQueryKey();
   const [method, setMethod] = useState<"paystack_card" | "paystack_mobile_money">("paystack_card");
   const [billingSame, setBillingSame] = useState(true);
   const [mmNetwork, setMmNetwork] = useState<"mtn" | "telecel" | "airteltigo">("mtn");
   const [mmPhone, setMmPhone] = useState("");
 
   const cartQuery = useQuery({
-    queryKey: ["customer-cart-eval"],
+    queryKey: cartQueryKey,
     queryFn: async () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 10_000
+    staleTime: 5_000
   });
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
   const orderLines = summary.lines.map((l) => ({
@@ -708,17 +712,18 @@ export const CheckoutPaymentPage = () => {
 ───────────────────────────────────────────── */
 export const CheckoutReviewPage = () => {
   const navigate = useNavigate();
+  const cartQueryKey = useCustomerCartQueryKey();
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const draft = readCheckoutDraft();
 
   const cartQuery = useQuery({
-    queryKey: ["customer-cart-eval"],
+    queryKey: cartQueryKey,
     queryFn: async () => {
       const { data } = await customerBackendApi.getCart();
       return data;
     },
-    staleTime: 10_000
+    staleTime: 5_000
   });
   const summary = mapCartEvaluationToOrderSummary(cartQuery.data);
   const orderLines = summary.lines.map((l) => ({

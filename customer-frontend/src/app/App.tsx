@@ -14,6 +14,7 @@ import { useCustomerStore } from "@/lib/store/customer-store";
 // Storefront
 const HomePage = lazy(() => import("@/pages/storefront").then((m) => ({ default: m.HomePage })));
 const ShopAllPage = lazy(() => import("@/pages/storefront").then((m) => ({ default: m.ShopAllPage })));
+const CategoriesIndexPage = lazy(() => import("@/pages/storefront").then((m) => ({ default: m.CategoriesIndexPage })));
 const CategoryPage = lazy(() => import("@/pages/storefront").then((m) => ({ default: m.CategoryPage })));
 const ProductDetailPage = lazy(() => import("@/pages/storefront").then((m) => ({ default: m.ProductDetailPage })));
 const SearchPage = lazy(() => import("@/pages/storefront").then((m) => ({ default: m.SearchPage })));
@@ -112,6 +113,7 @@ export const App = () => (
           {/* Storefront */}
           <Route path="/" element={<HomePage />} />
           <Route path="/shop" element={<ShopAllPage />} />
+          <Route path="/categories" element={<CategoriesIndexPage />} />
           <Route path="/categories/:categorySlug" element={<CategoryPage />} />
           <Route path="/categories/:categorySlug/:subcategorySlug" element={<SubcategoryPage />} />
           <Route path="/brands" element={<BrandsIndexPage />} />

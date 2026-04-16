@@ -98,8 +98,8 @@ const reviewsQuerySchema = z.object({
 
 const storefrontQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
-  page_size: z.coerce.number().int().min(1).max(100).optional(),
-  limit: z.coerce.number().int().min(1).max(100).optional(),
+  page_size: z.coerce.number().int().min(1).max(200).optional(),
+  limit: z.coerce.number().int().min(1).max(200).optional(),
   q: z.string().trim().min(1).max(200).optional(),
   query: z.string().trim().min(1).max(200).optional(),
   categoryId: z.string().uuid().optional(),

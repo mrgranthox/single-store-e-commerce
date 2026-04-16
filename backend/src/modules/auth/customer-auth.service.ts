@@ -12,6 +12,7 @@ import {
 } from "../../common/errors/app-error";
 import { env } from "../../config/env";
 import { clerkClient } from "../../config/clerk";
+import { logger } from "../../config/logger";
 import { prisma } from "../../config/prisma";
 import { enqueueNotification } from "../notifications/notifications.service";
 import {
@@ -54,8 +55,29 @@ const normalizeEmail = (email: string) => email.trim().toLowerCase();
 /** Single client-facing message for failed login to reduce account state enumeration. */
 const CUSTOMER_LOGIN_REJECTED_MESSAGE = "Invalid email or password.";
 
+type ClerkApiErrEntry = { code?: string; message?: string; longMessage?: string };
+
+const readClerkApiErrorEntries = (error: unknown): ClerkApiErrEntry[] => {
+  if (!error || typeof error !== "object") return [];
+  const r = error as Record<string, unknown>;
+  if (Array.isArray(r.errors)) return r.errors as ClerkApiErrEntry[];
+  if (Array.isArray(r.clerkErrors)) return r.clerkErrors as ClerkApiErrEntry[];
+  return [];
+};
+
+const clerkErrorBlob = (error: unknown): string => {
+  const fromEntries = readClerkApiErrorEntries(error)
+    .flatMap((e) => [e.code, e.message, e.longMessage].filter(Boolean) as string[])
+    .join(" ");
+  try {
+    return `${fromEntries} ${JSON.stringify(error)}`.toLowerCase();
+  } catch {
+    return fromEntries.toLowerCase();
+  }
+};
+
 const clerkErrorContains = (error: unknown, pattern: string) =>
-  JSON.stringify(error).toLowerCase().includes(pattern.toLowerCase());
+  clerkErrorBlob(error).includes(pattern.toLowerCase());
 
 const findClerkUserByEmail = async (email: string) => {
   const result = await clerkClient.users.getUserList({
@@ -359,9 +381,25 @@ export const registerCustomer = async (input: {
       password: input.password,
       firstName: input.firstName,
       lastName: input.lastName,
-      legalAcceptedAt: new Date()
+      ...(env.CLERK_SEND_LEGAL_ACCEPTED_AT_ON_CUSTOMER_REGISTER ? { legalAcceptedAt: new Date() } : {})
     });
   } catch (error) {
+    const clerkCodes = readClerkApiErrorEntries(error)
+      .map((e) => e.code)
+      .filter(Boolean)
+      .join(",");
+
+    logger.warn(
+      {
+        clerkRegisterFailureCodes: clerkCodes || undefined,
+        clerkRegisterFailureMessages: readClerkApiErrorEntries(error).map((e) => ({
+          code: e.code,
+          message: e.message
+        }))
+      },
+      "Clerk users.createUser failed during customer registration"
+    );
+
     if (!input.phoneNumber && clerkErrorContains(error, "phone_number")) {
       throw invalidInputError(
         "A phone number is required to register with the current identity configuration."
@@ -377,6 +415,49 @@ export const registerCustomer = async (input: {
     if (clerkErrorContains(error, "unsupported_country_code")) {
       throw invalidInputError(
         "The supplied phone number country is not supported by the current identity configuration."
+      );
+    }
+
+    if (
+      clerkErrorContains(error, "legal_accepted") ||
+      clerkErrorContains(error, "express_consent") ||
+      clerkErrorContains(error, "skip_legal_checks")
+    ) {
+      throw invalidInputError(
+        "Registration blocked by Clerk legal/consent settings. Set CLERK_SEND_LEGAL_ACCEPTED_AT_ON_CUSTOMER_REGISTER=true if your Clerk instance requires recorded legal acceptance, or adjust Legal settings in the Clerk Dashboard."
+      );
+    }
+
+    if (
+      clerkErrorContains(error, "identifier_exists") ||
+      clerkErrorContains(error, "form_identifier_exists") ||
+      clerkErrorContains(error, "already exists") ||
+      clerkErrorContains(error, "duplicate_record")
+    ) {
+      throw conflictError("Registration could not be completed with the supplied information.");
+    }
+
+    if (
+      clerkErrorContains(error, "phone") &&
+      (clerkErrorContains(error, "disabled") ||
+        clerkErrorContains(error, "not enabled") ||
+        clerkErrorContains(error, "unsupported") ||
+        clerkErrorContains(error, "invalid"))
+    ) {
+      throw invalidInputError(
+        "The phone number was rejected by the identity provider. Use a valid E.164 number (+country code), or remove the phone field if your Clerk instance does not use phone sign-up."
+      );
+    }
+
+    if (clerkErrorContains(error, "username")) {
+      throw invalidInputError(
+        "Clerk rejected the profile fields for this instance. Check User & authentication settings in the Clerk Dashboard (e.g. username or required attributes)."
+      );
+    }
+
+    if (clerkErrorContains(error, "form_password") || clerkErrorContains(error, "password")) {
+      throw invalidInputError(
+        "The password does not meet the requirements enforced by the identity provider."
       );
     }
 

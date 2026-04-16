@@ -7,6 +7,7 @@ import { formatGhs } from "@/lib/currency";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
+import { CUSTOMER_CART_QUERY_ROOT } from "@/hooks/use-cart-summary";
 import { useWishlistActions } from "@/hooks/use-wishlist-actions";
 import type { Product } from "@/lib/data/customer-mock";
 
@@ -73,7 +74,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
             setCartError(null);
             try {
               await customerBackendApi.addCartItem({ variantId, quantity: 1 });
-              await queryClient.invalidateQueries({ queryKey: ["customer-cart-eval"] });
+              await queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
             } catch (error) {
               const message = error instanceof CommerceApiError ? error.message : "Could not add to bag.";
               setCartError(message);

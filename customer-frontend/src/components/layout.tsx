@@ -144,7 +144,7 @@ export const TopNavBar = () => {
                 <NavLink to="/shop" className={desktopNavClass}>
                   Shop
                 </NavLink>
-                <NavLink to="/categories/apparel" className={desktopNavClass}>
+                <NavLink to="/categories" className={desktopNavClass}>
                   Categories
                 </NavLink>
                 <NavLink to="/brands" className={desktopNavClass}>
@@ -246,7 +246,7 @@ export const TopNavBar = () => {
                 )}
               </NavLink>
               <NavLink
-                to="/categories/apparel"
+                to="/categories"
                 onClick={closeMenu}
                 className={({ isActive }) => (isActive ? drawerLinkActive : drawerLinkIdle)}
               >
