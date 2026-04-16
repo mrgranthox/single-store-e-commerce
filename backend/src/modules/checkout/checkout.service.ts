@@ -759,3 +759,45 @@ export const initializeCheckoutPayment = async (
 
     return result.response;
   });
+
+export const getCheckoutPaymentReturnSummary = async (
+  context: CartActorContext,
+  input: { orderId: string; paymentId: string }
+) => {
+  const order = await prisma.order.findUnique({
+    where: {
+      id: input.orderId
+    },
+    include: {
+      payments: {
+        where: {
+          id: input.paymentId
+        },
+        take: 1
+      }
+    }
+  });
+
+  if (!order || order.payments.length === 0) {
+    throw notFoundError("The requested order or payment was not found.");
+  }
+
+  if (
+    (context.actor.kind === "customer" && order.userId !== context.actor.userId) ||
+    (context.actor.kind === "anonymous" && order.guestTrackingKey !== context.sessionId) ||
+    context.actor.kind === "admin" ||
+    context.actor.kind === "system"
+  ) {
+    throw notFoundError("The requested order was not found.");
+  }
+
+  const payment = order.payments[0]!;
+
+  return {
+    orderId: order.id,
+    orderNumber: order.orderNumber,
+    orderStatus: order.status,
+    paymentId: payment.id,
+    paymentState: payment.paymentState
+  };
+};

@@ -221,6 +221,20 @@ const throwMappedPaystackFailure = (input: {
     );
   }
 
+  if (
+    low.includes("mobile money") ||
+    low.includes("mobile_money") ||
+    low.includes("momo") ||
+    (low.includes("phone") && (low.includes("invalid") || low.includes("format"))) ||
+    low.includes("network") ||
+    low.includes("operator") ||
+    low.includes("not enabled for")
+  ) {
+    throw invalidInputError(
+      `Paystack could not start this mobile money charge: ${msg}. Check the phone number and network, then try again.`
+    );
+  }
+
   throw providerFailureError("Paystack returned an unsuccessful API response.", {
     path: input.path,
     statusCode: input.httpStatus,

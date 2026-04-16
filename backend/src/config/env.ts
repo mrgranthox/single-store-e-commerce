@@ -196,7 +196,8 @@ const envSchema = z.object({
   PAYSTACK_API_BASE_URL: z.string().trim().url(),
   PAYSTACK_REQUEST_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(60_000).default(10_000),
   PAYSTACK_ALLOWED_CHANNELS: z.string().default("card,mobile_money"),
-  PAYSTACK_ALLOWED_WEBHOOK_IPS: z.string().default("52.31.139.75,52.49.173.169,52.214.14.220"),
+  /** Comma-separated allowlist. Empty = do not enforce client IP (rely on `x-paystack-signature` + raw body). Safer behind reverse proxies. */
+  PAYSTACK_ALLOWED_WEBHOOK_IPS: z.string().default(""),
   PAYSTACK_ALLOWED_MOBILE_MONEY_PROVIDERS: z.string().default("mtn,tgo,vod"),
   PAYSTACK_DEFAULT_CURRENCY: z
     .string()

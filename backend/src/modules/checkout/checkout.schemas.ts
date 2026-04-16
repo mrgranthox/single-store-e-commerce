@@ -30,6 +30,11 @@ export const createOrderBodySchema = z.object({
   campaignId: z.string().uuid().optional()
 });
 
+export const checkoutPaymentReturnQuerySchema = z.object({
+  orderId: z.string().uuid(),
+  paymentId: z.string().uuid()
+});
+
 export const initializePaymentBodySchema = z.object({
   orderId: z.string().uuid(),
   paymentIdempotencyKey: checkoutIdempotencyKeySchema,

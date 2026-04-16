@@ -871,6 +871,130 @@ export const CheckoutReviewPage = () => {
 };
 
 /* ─────────────────────────────────────────────
+   PAYSTACK RETURN — Paystack appends reference/trxref; we need orderId + paymentId from callback_url.
+───────────────────────────────────────────── */
+export const CheckoutPaymentResultPage = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const orderId = searchParams.get("orderId")?.trim() ?? "";
+  const paymentId = searchParams.get("paymentId")?.trim() ?? "";
+  const [phase, setPhase] = useState<"loading" | "pending" | "failed" | "auth">("loading");
+  const [message, setMessage] = useState<string | null>(null);
+
+  const title =
+    phase === "failed"
+      ? "Payment could not be confirmed"
+      : phase === "auth"
+        ? "Session required"
+        : "Confirming your payment";
+
+  useEffect(() => {
+    if (!orderId || !paymentId) {
+      setPhase("failed");
+      setMessage("This return link is missing order or payment details.");
+      return;
+    }
+
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 45;
+    const tick = async () => {
+      if (cancelled) return;
+      attempts += 1;
+      try {
+        const { data } = await customerBackendApi.getCheckoutPaymentReturn({ orderId, paymentId });
+        if (cancelled) return;
+        writeCheckoutResult({ orderId: data.orderId, orderNumber: data.orderNumber });
+        if (data.paymentState === "PAID") {
+          navigate("/checkout/success", { replace: true });
+          return;
+        }
+        if (data.paymentState === "FAILED" || data.paymentState === "CANCELLED") {
+          setPhase("failed");
+          setMessage(
+            data.paymentState === "FAILED"
+              ? "Payment was not completed. You can try again from your cart or contact support with your order number."
+              : "This payment was cancelled."
+          );
+          return;
+        }
+        setPhase("pending");
+        if (attempts >= maxAttempts) {
+          setMessage(
+            "We have not received final confirmation yet. If Paystack charged you, your order will update shortly — use order tracking with your email."
+          );
+          return;
+        }
+        window.setTimeout(tick, 2_000);
+      } catch (e) {
+        if (cancelled) return;
+        if (e instanceof CommerceApiError && (e.status === 401 || e.status === 403)) {
+          setPhase("auth");
+          setMessage("Sign in to the same account you used for checkout, or open this page in the same browser session.");
+          return;
+        }
+        if (e instanceof CommerceApiError && e.status === 404) {
+          setPhase("failed");
+          setMessage(
+            "We could not load this order with your current session. Open this link in the same browser you used for checkout, or track your order with your email."
+          );
+          return;
+        }
+        setPhase("pending");
+        setMessage(e instanceof CommerceApiError ? e.message : "Could not confirm payment.");
+        if (attempts < maxAttempts) {
+          window.setTimeout(tick, 3_000);
+        }
+      }
+    };
+
+    void tick();
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate, orderId, paymentId]);
+
+  return (
+    <div className="bg-surface text-on-surface antialiased min-h-screen flex flex-col">
+      <CheckoutHeader />
+      <main className="flex-1 max-w-lg mx-auto px-6 py-16 text-center space-y-6">
+        <Icon name="payments" className="text-5xl text-secondary mx-auto" />
+        <h1 className="font-headline text-2xl font-extrabold tracking-tight">{title}</h1>
+        {phase === "loading" ? (
+          <p className="text-on-surface-variant text-sm">One moment while we sync with Paystack…</p>
+        ) : null}
+        {phase === "pending" ? (
+          <p className="text-on-surface-variant text-sm">
+            Payment is still processing on our side. This page will redirect when we receive confirmation.
+          </p>
+        ) : null}
+        {phase === "auth" ? (
+          <p className="text-on-surface-variant text-sm">
+            <Link to="/login" className="text-secondary font-bold underline underline-offset-4">
+              Sign in
+            </Link>{" "}
+            if you checked out while logged in, or use the same device and browser as when you paid.
+          </p>
+        ) : null}
+        {message ? <p className="text-sm text-on-surface-variant leading-relaxed">{message}</p> : null}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+          <Link
+            to="/track-order"
+            className="text-secondary font-bold text-sm underline underline-offset-4"
+          >
+            Track order
+          </Link>
+          <Link to="/cart" className="text-on-surface-variant font-medium text-sm underline underline-offset-4">
+            Back to cart
+          </Link>
+        </div>
+      </main>
+      <CheckoutFooter />
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────
    ORDER SUCCESS — matches order_success/code.html
 ───────────────────────────────────────────── */
 export const OrderSuccessPage = () => {

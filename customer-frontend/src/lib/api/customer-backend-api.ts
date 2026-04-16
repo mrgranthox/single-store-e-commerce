@@ -122,6 +122,17 @@ export const customerBackendApi = {
   initializePayment: async (body: unknown) =>
     commerceFetchJson<{ entity: unknown }>("/api/checkout/initialize-payment", { method: "POST", json: body }),
 
+  getCheckoutPaymentReturn: async (params: { orderId: string; paymentId: string }) =>
+    commerceFetchJson<{
+      orderId: string;
+      orderNumber: string;
+      orderStatus: string;
+      paymentId: string;
+      paymentState: string;
+    }>(`/api/checkout/payment-return${qs({ orderId: params.orderId, paymentId: params.paymentId })}`, {
+      method: "GET"
+    }),
+
   trackGuestOrder: async (body: { orderNumber: string; email: string }) =>
     commerceFetchJson<{ entity: unknown }>("/api/orders/track", { method: "POST", json: body, auth: false }),
 

@@ -6,10 +6,12 @@ import { validateRequest } from "../../common/validation/validate-request";
 import {
   createOrderController,
   getCheckoutEligibilityController,
+  getCheckoutPaymentReturnController,
   initializePaymentController,
   validateCheckoutController
 } from "./checkout.controller";
 import {
+  checkoutPaymentReturnQuerySchema,
   createOrderBodySchema,
   initializePaymentBodySchema,
   validateCheckoutBodySchema
@@ -32,6 +34,12 @@ const checkoutMutationRateLimit = rateLimit({
 });
 
 router.get("/checkout/eligibility", checkoutReadRateLimit, getCheckoutEligibilityController);
+router.get(
+  "/checkout/payment-return",
+  checkoutReadRateLimit,
+  validateRequest({ query: checkoutPaymentReturnQuerySchema }),
+  getCheckoutPaymentReturnController
+);
 router.post(
   "/checkout/validate",
   checkoutMutationRateLimit,
@@ -57,6 +65,13 @@ export const checkoutRouteModule: RouteModule = {
     { method: "GET", path: "/api/v1/checkout/eligibility", summary: "Get checkout eligibility for the current cart.", tags: ["checkout"], auth: "public" },
     { method: "POST", path: "/api/v1/checkout/validate", summary: "Validate checkout for the current cart.", tags: ["checkout"], auth: "public" },
     { method: "POST", path: "/api/v1/checkout/create-order", summary: "Create an order from the current cart.", tags: ["checkout"], auth: "public" },
-    { method: "POST", path: "/api/v1/checkout/initialize-payment", summary: "Initialize payment for an order pending payment.", tags: ["checkout"], auth: "public" }
+    { method: "POST", path: "/api/v1/checkout/initialize-payment", summary: "Initialize payment for an order pending payment.", tags: ["checkout"], auth: "public" },
+    {
+      method: "GET",
+      path: "/api/v1/checkout/payment-return",
+      summary: "Poll order/payment state after Paystack redirect (same session as checkout).",
+      tags: ["checkout"],
+      auth: "public"
+    }
   ]
 };

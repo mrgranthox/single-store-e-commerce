@@ -2,8 +2,9 @@ import { z } from "zod";
 
 import { sendSuccess } from "../../common/http/response";
 import { asyncHandler } from "../../common/middleware/async-handler";
-import { readValidatedBody } from "../../common/validation/validate-request";
+import { readValidatedBody, readValidatedQuery } from "../../common/validation/validate-request";
 import {
+  checkoutPaymentReturnQuerySchema,
   createOrderBodySchema,
   initializePaymentBodySchema,
   validateCheckoutBodySchema
@@ -11,6 +12,7 @@ import {
 import {
   createOrderFromCheckout,
   getCheckoutEligibility,
+  getCheckoutPaymentReturnSummary,
   initializeCheckoutPayment,
   validateCheckout
 } from "./checkout.service";
@@ -46,4 +48,10 @@ export const initializePaymentController = asyncHandler(async (request, response
   const body = readValidatedBody<z.infer<typeof initializePaymentBodySchema>>(request);
   const data = await initializeCheckoutPayment(buildContext(request), body);
   return sendSuccess(response, { data: { entity: data } });
+});
+
+export const getCheckoutPaymentReturnController = asyncHandler(async (request, response) => {
+  const query = readValidatedQuery<z.infer<typeof checkoutPaymentReturnQuerySchema>>(request);
+  const data = await getCheckoutPaymentReturnSummary(buildContext(request), query);
+  return sendSuccess(response, { data });
 });

@@ -35,6 +35,9 @@ const CartPage = lazy(() => import("@/pages/checkout").then((m) => ({ default: m
 const CheckoutShippingPage = lazy(() => import("@/pages/checkout").then((m) => ({ default: m.CheckoutShippingPage })));
 const CheckoutPaymentPage = lazy(() => import("@/pages/checkout").then((m) => ({ default: m.CheckoutPaymentPage })));
 const CheckoutReviewPage = lazy(() => import("@/pages/checkout").then((m) => ({ default: m.CheckoutReviewPage })));
+const CheckoutPaymentResultPage = lazy(() =>
+  import("@/pages/checkout").then((m) => ({ default: m.CheckoutPaymentResultPage }))
+);
 const OrderSuccessPage = lazy(() => import("@/pages/checkout").then((m) => ({ default: m.OrderSuccessPage })));
 const GuestTrackingPage = lazy(() => import("@/pages/checkout").then((m) => ({ default: m.GuestTrackingPage })));
 
@@ -134,6 +137,7 @@ export const App = () => (
           <Route path="/checkout/shipping" element={<CheckoutShippingPage />} />
           <Route path="/checkout/payment" element={<CheckoutPaymentPage />} />
           <Route path="/checkout/review" element={<CheckoutReviewPage />} />
+          <Route path="/checkout/payment/result" element={<CheckoutPaymentResultPage />} />
           <Route path="/checkout/success" element={<OrderSuccessPage />} />
           <Route path="/track-order" element={<GuestTrackingPage />} />
           <Route path="/track" element={<GuestTrackingPage />} />
