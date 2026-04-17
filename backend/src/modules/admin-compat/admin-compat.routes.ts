@@ -105,9 +105,11 @@ import {
   createShipmentAdmin,
   createShipmentTrackingEventAdmin,
   getShipmentAdmin,
-  getShipmentTrackingAdmin
+  getShipmentTrackingAdmin,
+  listShipmentsAdmin
 } from "../shipping/shipping.controller";
 import {
+  adminShipmentsQuerySchema,
   createShipmentBodySchema,
   createTrackingEventBodySchema,
   orderIdParamsSchema as shippingOrderIdParamsSchema,
@@ -324,6 +326,7 @@ router.patch("/admin/warehouses/:warehouseId", requireAdminActor, requirePermiss
 router.get("/admin/warehouses/:warehouseId/inventory", requireAdminActor, requirePermissions(["inventory.read"]), validateRequest({ params: warehouseIdParamsSchema }), getAdminWarehouse);
 
 router.post("/admin/orders/:orderId/create-shipment", requireAdminActor, requirePermissions(["orders.override_fulfillment"]), validateRequest({ params: shippingOrderIdParamsSchema, body: createShipmentBodySchema }), createShipmentAdmin);
+router.get("/admin/shipments", requireAdminActor, requirePermissions(["orders.read"]), validateRequest({ query: adminShipmentsQuerySchema }), listShipmentsAdmin);
 router.get("/admin/shipments/:shipmentId", requireAdminActor, requirePermissions(["orders.read"]), validateRequest({ params: shipmentIdParamsSchema }), getShipmentAdmin);
 router.get("/admin/shipments/:shipmentId/tracking", requireAdminActor, requirePermissions(["orders.read"]), validateRequest({ params: shipmentIdParamsSchema }), getShipmentTrackingAdmin);
 router.post("/admin/shipments/:shipmentId/tracking", requireAdminActor, requirePermissions(["orders.override_fulfillment"]), validateRequest({ params: shipmentIdParamsSchema, body: createTrackingEventBodySchema }), createShipmentTrackingEventAdmin);

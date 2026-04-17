@@ -540,9 +540,9 @@ const orderScreens = [
     path: "/admin/shipments",
     navLabel: "Shipments",
     showInSidebar: true,
-    purpose: "Jump to shipment detail or tracking by id; discover ids from order and queue views.",
-    endpointIds: ["shipments.detail"],
-    actions: ["Paste shipment id", "Open detail", "Open tracking timeline"],
+    purpose: "Operational list of all shipments with search and status filters.",
+    endpointIds: ["shipments.list", "shipments.detail"],
+    actions: ["Search by order or tracking", "Filter by shipment status", "Open detail", "Open tracking"],
     permissionHints: ["orders.read"]
   }),
   screen({

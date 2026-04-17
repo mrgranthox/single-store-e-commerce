@@ -1,6 +1,16 @@
 import { ShipmentStatus } from "@prisma/client";
 import { z } from "zod";
 
+const paginationSchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  page_size: z.coerce.number().int().min(1).max(100).default(20)
+});
+
+export const adminShipmentsQuerySchema = paginationSchema.extend({
+  q: z.string().trim().min(1).max(200).optional(),
+  status: z.nativeEnum(ShipmentStatus).optional()
+});
+
 export const orderIdParamsSchema = z.object({
   orderId: z.string().uuid()
 });

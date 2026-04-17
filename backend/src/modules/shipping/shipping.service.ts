@@ -1,4 +1,5 @@
 import { Prisma, ShipmentStatus } from "@prisma/client";
+import { z } from "zod";
 
 import {
   invalidInputError,
@@ -7,6 +8,7 @@ import {
 } from "../../common/errors/app-error";
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { runInTransaction } from "../../common/database/prisma-transaction";
+import { buildPagination, buildPaginationPayload } from "../../common/http/pagination";
 import { logger } from "../../config/logger";
 import { prisma } from "../../config/prisma";
 import { enqueueNotification } from "../notifications/notifications.service";
@@ -307,6 +309,98 @@ export const getAdminShipmentTracking = async (shipmentId: string) => {
       carrier: shipment.carrier
     },
     items: shipment.trackingEvents.map(serializeTrackingEvent)
+  };
+};
+
+const shipmentListInclude = {
+  order: {
+    select: {
+      id: true,
+      orderNumber: true,
+      status: true
+    }
+  },
+  warehouse: {
+    select: {
+      id: true,
+      code: true,
+      name: true
+    }
+  }
+} satisfies Prisma.ShipmentInclude;
+
+type ShipmentListRecord = Prisma.ShipmentGetPayload<{
+  include: typeof shipmentListInclude;
+}>;
+
+const serializeShipmentListItem = (shipment: ShipmentListRecord) => ({
+  id: shipment.id,
+  orderId: shipment.order.id,
+  orderNumber: shipment.order.orderNumber,
+  orderStatus: shipment.order.status,
+  warehouse: shipment.warehouse,
+  status: shipment.status,
+  trackingNumber: shipment.trackingNumber,
+  carrier: shipment.carrier,
+  createdAt: shipment.createdAt.toISOString(),
+  updatedAt: shipment.updatedAt.toISOString()
+});
+
+export const listAdminShipments = async (input: {
+  page: number;
+  page_size: number;
+  q?: string;
+  status?: ShipmentStatus;
+}) => {
+  const q = input.q?.trim();
+  const qClauses: Prisma.ShipmentWhereInput[] = [];
+
+  if (q) {
+    qClauses.push({
+      order: {
+        orderNumber: {
+          contains: q,
+          mode: "insensitive"
+        }
+      }
+    });
+    qClauses.push({
+      trackingNumber: {
+        contains: q,
+        mode: "insensitive"
+      }
+    });
+    if (z.string().uuid().safeParse(q).success) {
+      qClauses.push({
+        id: q
+      });
+    }
+  }
+
+  const where: Prisma.ShipmentWhereInput = {
+    ...(input.status ? { status: input.status } : {}),
+    ...(qClauses.length > 0
+      ? {
+          OR: qClauses
+        }
+      : {})
+  };
+
+  const [rows, totalItems] = await Promise.all([
+    prisma.shipment.findMany({
+      where,
+      include: shipmentListInclude,
+      orderBy: {
+        createdAt: "desc"
+      },
+      ...buildPagination(input)
+    }),
+    prisma.shipment.count({ where })
+  ]);
+
+  return {
+    items: rows.map(serializeShipmentListItem),
+    pagination: buildPaginationPayload(input, totalItems)
   };
 };
 

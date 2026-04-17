@@ -3,16 +3,18 @@ import { z } from "zod";
 import { requireAdminUserId } from "../../common/http/controller-actor";
 import { sendSuccess } from "../../common/http/response";
 import { asyncHandler } from "../../common/middleware/async-handler";
-import { readValidatedBody, readValidatedParams } from "../../common/validation/validate-request";
+import { readValidatedBody, readValidatedParams, readValidatedQuery } from "../../common/validation/validate-request";
 import {
   createAdminShipment,
   createAdminShipmentTrackingEvent,
   getAdminShipmentDetail,
   getAdminShipmentTracking,
+  listAdminShipments,
   listPublicShippingMethods,
   updateAdminShipment
 } from "./shipping.service";
 import {
+  adminShipmentsQuerySchema,
   createShipmentBodySchema,
   createTrackingEventBodySchema,
   orderIdParamsSchema,
@@ -23,6 +25,18 @@ import {
 export const listShippingMethodsPublic = asyncHandler(async (_request, response) => {
   const data = listPublicShippingMethods();
   return sendSuccess(response, { data });
+});
+
+export const listShipmentsAdmin = asyncHandler(async (request, response) => {
+  const query = readValidatedQuery<z.infer<typeof adminShipmentsQuerySchema>>(request);
+  const data = await listAdminShipments(query);
+
+  return sendSuccess(response, {
+    data: {
+      items: data.items
+    },
+    meta: data.pagination
+  });
 });
 
 export const createShipmentAdmin = asyncHandler(async (request, response) => {

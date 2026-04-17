@@ -8,10 +8,12 @@ import {
   createShipmentTrackingEventAdmin,
   getShipmentAdmin,
   getShipmentTrackingAdmin,
+  listShipmentsAdmin,
   listShippingMethodsPublic,
   updateShipmentAdmin
 } from "./shipping.controller";
 import {
+  adminShipmentsQuerySchema,
   createShipmentBodySchema,
   createTrackingEventBodySchema,
   orderIdParamsSchema,
@@ -29,6 +31,13 @@ router.post(
   requirePermissions(["orders.override_fulfillment"]),
   validateRequest({ params: orderIdParamsSchema, body: createShipmentBodySchema }),
   createShipmentAdmin
+);
+router.get(
+  "/admin/shipments",
+  requireAdminActor,
+  requirePermissions(["orders.read"]),
+  validateRequest({ query: adminShipmentsQuerySchema }),
+  listShipmentsAdmin
 );
 router.get(
   "/admin/shipments/:shipmentId",
@@ -76,6 +85,14 @@ export const shippingRouteModule: RouteModule = {
       tags: ["shipping"],
       auth: "admin",
       permissions: ["orders.override_fulfillment"]
+    },
+    {
+      method: "GET",
+      path: "/api/v1/admin/shipments",
+      summary: "List shipments with search, status filter, and pagination.",
+      tags: ["shipping"],
+      auth: "admin",
+      permissions: ["orders.read"]
     },
     {
       method: "GET",

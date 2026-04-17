@@ -124,6 +124,7 @@ export const adminEndpointCatalog = [
   endpoint("orders.cancellationApprove", "orders", "POST", "/api/admin/orders/cancellation-requests/:cancellationId/approve", "Approve an order cancellation request."),
   endpoint("orders.cancellationReject", "orders", "POST", "/api/admin/orders/cancellation-requests/:cancellationId/reject", "Reject an order cancellation request."),
   endpoint("shipments.create", "orders", "POST", "/api/admin/orders/:orderId/shipments", "Create a shipment for an order."),
+  endpoint("shipments.list", "orders", "GET", "/api/admin/shipments", "List shipments with filters and pagination."),
   endpoint("shipments.detail", "orders", "GET", "/api/admin/shipments/:shipmentId", "Load shipment detail."),
   endpoint("shipments.update", "orders", "PATCH", "/api/admin/shipments/:shipmentId", "Update shipment fields."),
   endpoint("shipments.tracking", "orders", "GET", "/api/admin/shipments/:shipmentId/tracking", "Load shipment tracking events."),
