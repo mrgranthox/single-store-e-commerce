@@ -636,8 +636,8 @@ export const CheckoutShippingPage = () => {
   return (
     <div className="bg-background font-body text-on-background antialiased">
       <CheckoutHeader />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 flex flex-col lg:flex-row lg:gap-16 w-full min-w-0 overflow-x-hidden">
-        <div className="order-1 lg:flex-1 min-w-0">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 flex flex-col lg:flex-row lg:items-start lg:gap-16 w-full min-w-0 overflow-x-hidden">
+        <div className="order-1 min-w-0 w-full lg:flex-1">
           <CheckoutStepBar current={2} />
           <section className="space-y-12">
             <div>
@@ -847,26 +847,26 @@ export const CheckoutShippingPage = () => {
             </div>
           </section>
         </div>
-        <div className="order-2 w-full min-w-0 shrink-0">
-        <CheckoutOrderSummary
-          items={orderLines}
-          subtotal={summary.subtotalGhs}
-          shipping={formatGhs(selectedShippingCents / 100)}
-          tax={summary.taxGhs}
-          total={shippingTotalGhs}
-          showPromoInput={!couponOutcome?.valid}
-          couponDescription={
-            couponOutcome?.valid
-              ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
-                  typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
-                    ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
-                    : ""
-                }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
-              : undefined
-          }
-        />
+        <div className="order-2 w-full min-w-0 shrink-0 lg:w-auto lg:shrink-0">
+          <CheckoutOrderSummary
+            items={orderLines}
+            subtotal={summary.subtotalGhs}
+            shipping={formatGhs(selectedShippingCents / 100)}
+            tax={summary.taxGhs}
+            total={shippingTotalGhs}
+            showPromoInput={!couponOutcome?.valid}
+            couponDescription={
+              couponOutcome?.valid
+                ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
+                    typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
+                      ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
+                      : ""
+                  }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
+                : undefined
+            }
+          />
         </div>
-        <div className="order-3 w-full lg:hidden pt-2">
+        <div className="order-3 w-full shrink-0 lg:hidden pt-2">
           <div className="flex flex-col sm:flex-row justify-stretch sm:justify-end gap-3">
             <button
               type="submit"
@@ -1054,8 +1054,8 @@ export const CheckoutPaymentPage = () => {
     <div className="bg-surface text-on-surface antialiased">
       <CheckoutHeader />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-32 md:pb-20 min-h-screen w-full min-w-0 overflow-x-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-          <div className="order-1 lg:col-span-7 xl:col-span-8 min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 lg:items-start">
+          <div className="min-w-0 lg:col-span-7 xl:col-span-8">
             <section className="mb-12">
               <h1 className="text-4xl md:text-5xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Finalize Payment</h1>
               <p className="text-on-surface-variant text-lg">Pay with card or mobile money. All payments are processed securely by Paystack.</p>
@@ -1238,7 +1238,7 @@ export const CheckoutPaymentPage = () => {
             </div>
           </div>
 
-          <div className="order-2 lg:col-span-5 xl:col-span-4 min-w-0">
+          <div className="min-w-0 lg:col-span-5 xl:col-span-4">
             <CheckoutOrderSummary
               items={orderLines}
               subtotal={summary.subtotalGhs}
@@ -1257,26 +1257,26 @@ export const CheckoutPaymentPage = () => {
               }
             />
           </div>
-          <div className="order-3 col-span-full lg:hidden">
-            <div className="flex flex-col md:flex-row items-center gap-6 pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  continueToReview();
-                }}
-                className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-bold rounded-md shadow-lg shadow-secondary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
-              >
-                <span>Continue to review</span>
-                <Icon name="arrow_forward" className="text-sm" />
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate("/checkout/shipping")}
-                className="text-on-surface-variant font-medium hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-8"
-              >
-                Return to Shipping
-              </button>
-            </div>
+        </div>
+        <div className="lg:hidden">
+          <div className="flex flex-col md:flex-row items-center gap-6 pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                continueToReview();
+              }}
+              className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-bold rounded-md shadow-lg shadow-secondary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+            >
+              <span>Continue to review</span>
+              <Icon name="arrow_forward" className="text-sm" />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/checkout/shipping")}
+              className="text-on-surface-variant font-medium hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-8"
+            >
+              Return to Shipping
+            </button>
           </div>
         </div>
       </main>
@@ -1569,8 +1569,8 @@ export const CheckoutReviewPage = () => {
   return (
     <div className="bg-surface text-on-surface antialiased">
       <CheckoutHeader />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 flex flex-col lg:flex-row lg:gap-16 w-full min-w-0 overflow-x-hidden">
-        <div className="order-1 lg:flex-1 min-w-0">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 flex flex-col lg:flex-row lg:items-start lg:gap-16 w-full min-w-0 overflow-x-hidden">
+        <div className="order-1 min-w-0 w-full lg:flex-1">
           <CheckoutStepBar current={4} />
           <section className="space-y-8">
             <div>
@@ -1606,26 +1606,26 @@ export const CheckoutReviewPage = () => {
             <div className="hidden lg:block">{reviewActions}</div>
           </section>
         </div>
-        <div className="order-2 w-full min-w-0 shrink-0">
-        <CheckoutOrderSummary
-          items={orderLines}
-          subtotal={summary.subtotalGhs}
-          shipping={formatGhs(selectedShippingCents / 100)}
-          tax={summary.taxGhs}
-          total={reviewTotalGhs}
-          showPromoInput={false}
-          couponDescription={
-            couponOutcome?.valid
-              ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
-                  typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
-                    ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
-                    : ""
-                }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
-              : undefined
-          }
-        />
+        <div className="order-2 w-full min-w-0 shrink-0 lg:w-auto lg:shrink-0">
+          <CheckoutOrderSummary
+            items={orderLines}
+            subtotal={summary.subtotalGhs}
+            shipping={formatGhs(selectedShippingCents / 100)}
+            tax={summary.taxGhs}
+            total={reviewTotalGhs}
+            showPromoInput={false}
+            couponDescription={
+              couponOutcome?.valid
+                ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
+                    typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
+                      ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
+                      : ""
+                  }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
+                : undefined
+            }
+          />
         </div>
-        <div className="order-3 w-full lg:hidden pt-2">{reviewActions}</div>
+        <div className="order-3 w-full shrink-0 lg:hidden pt-2">{reviewActions}</div>
       </main>
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-end min-h-[4.25rem] px-1 py-2 safe-area-pb bg-white/80 backdrop-blur-xl border-t border-slate-200/20">
         {[
