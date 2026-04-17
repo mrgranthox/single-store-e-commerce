@@ -896,6 +896,8 @@ export const CheckoutPaymentPage = () => {
   const [billingSame, setBillingSame] = useState(draft?.billingSameAsShipping ?? true);
   const [mmNetwork, setMmNetwork] = useState<"mtn" | "telecel" | "airteltigo">("mtn");
   const [mmPhone, setMmPhone] = useState("");
+  const [cardHolderName, setCardHolderName] = useState(draft?.payment.card?.holderName ?? "");
+  const [cardLast4, setCardLast4] = useState(draft?.payment.card?.last4 ?? "");
   const {
     register: registerBilling,
     getValues: getBillingValues,
@@ -1020,25 +1022,42 @@ export const CheckoutPaymentPage = () => {
               {/* Card Form */}
               {method === "paystack_card" && (
                 <div className="bg-surface-container-low p-8 md:p-10 rounded-xl space-y-6">
-                  {[
-                    { label: "Cardholder Name", placeholder: "ALEXANDER VOGUE", type: "text" },
-                    { label: "Card Number", placeholder: "0000 0000 0000 0000", type: "text" },
-                  ].map(({ label, placeholder, type }) => (
-                    <div key={label} className="space-y-2">
-                      <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">{label}</label>
-                      <input className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} placeholder={placeholder} type={type} />
+                  <div className="space-y-2">
+                    <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Cardholder Name</label>
+                    <input
+                      value={cardHolderName}
+                      onChange={(e) => setCardHolderName(e.target.value)}
+                      className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`}
+                      placeholder="ALEXANDER VOGUE"
+                      type="text"
+                      autoComplete="cc-name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Card ending (optional)</label>
+                    <input
+                      value={cardLast4}
+                      onChange={(e) => setCardLast4(e.target.value.replace(/\D/g, "").slice(-4))}
+                      className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`}
+                      placeholder="1234"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="cc-number"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="rounded-lg border border-outline-variant/20 bg-surface px-4 py-3">
+                      <p className="text-[11px] uppercase tracking-widest font-bold text-outline">Preview</p>
+                      <p className="text-sm font-semibold text-on-surface mt-1">
+                        {cardLast4 ? `Card ending in •••• ${cardLast4}` : "Card ending in •••• 0000"}
+                      </p>
                     </div>
-                  ))}
-                  <div className="grid grid-cols-2 gap-6">
-                    {[
-                      { label: "Expiry Date", placeholder: "MM / YY" },
-                      { label: "CVV", placeholder: "123" },
-                    ].map(({ label, placeholder }) => (
-                      <div key={label} className="space-y-2">
-                        <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">{label}</label>
-                        <input className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} placeholder={placeholder} type="text" />
-                      </div>
-                    ))}
+                    <div className="rounded-lg border border-outline-variant/20 bg-surface px-4 py-3">
+                      <p className="text-[11px] uppercase tracking-widest font-bold text-outline">Security</p>
+                      <p className="text-xs text-on-surface-variant mt-1">
+                        Full card number, CVV, and expiry are entered on Paystack's secure hosted page.
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1172,11 +1191,21 @@ export const CheckoutPaymentPage = () => {
                       channel === "mobile_money"
                         ? { phone: mmPhone.trim(), provider: mmNetwork }
                         : undefined;
+                    const card =
+                      channel === "card"
+                        ? {
+                            holderName: cardHolderName.trim() || undefined,
+                            last4:
+                              cardLast4.trim().length === 4 && /^\d{4}$/.test(cardLast4.trim())
+                                ? cardLast4.trim()
+                                : undefined
+                          }
+                        : undefined;
                     writeCheckoutDraft({
                       ...d,
                       billingSameAsShipping: billingSame,
                       billingAddress: billingSame ? undefined : billingAddress,
-                      payment: { channel, mobileMoney }
+                      payment: { channel, mobileMoney, card }
                     });
                     navigate("/checkout/review");
                   }}
@@ -1359,7 +1388,9 @@ export const CheckoutReviewPage = () => {
       ? `Paystack — Mobile Money (${mobileProviderLabelByCode[(draft.payment.mobileMoney?.provider ?? "").toLowerCase()] ?? "Network"})${
           draft.payment.mobileMoney?.phone ? ` • ${draft.payment.mobileMoney.phone}` : ""
         }`
-      : "Paystack — Card (Visa/Mastercard)";
+      : `Paystack — Card (Visa/Mastercard)${
+          draft?.payment.card?.last4 ? ` • ending in •••• ${draft.payment.card.last4}` : ""
+        }`;
 
   const placeOrder = async () => {
     const d = readCheckoutDraft();

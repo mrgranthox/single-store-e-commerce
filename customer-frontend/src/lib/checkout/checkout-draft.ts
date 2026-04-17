@@ -17,6 +17,10 @@ export type CheckoutAddressDraft = {
 export type CheckoutPaymentDraft = {
   channel: "card" | "mobile_money";
   mobileMoney?: { phone: string; provider: string };
+  card?: {
+    holderName?: string;
+    last4?: string;
+  };
 };
 
 export type CheckoutDraft = {
