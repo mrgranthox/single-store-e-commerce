@@ -636,8 +636,8 @@ export const CheckoutShippingPage = () => {
   return (
     <div className="bg-background font-body text-on-background antialiased">
       <CheckoutHeader />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 lg:flex lg:gap-16 w-full min-w-0 overflow-x-hidden">
-        <div className="lg:flex-1">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 flex flex-col lg:flex-row lg:gap-16 w-full min-w-0 overflow-x-hidden">
+        <div className="order-1 lg:flex-1 min-w-0">
           <CheckoutStepBar current={2} />
           <section className="space-y-12">
             <div>
@@ -645,6 +645,7 @@ export const CheckoutShippingPage = () => {
               <p className="text-on-surface-variant">Enter your destination to see available delivery options.</p>
             </div>
             <form
+              id="checkout-shipping-form"
               onSubmit={handleSubmit((data) => {
                 if (!isAuthenticated && !String(data.email ?? "").trim()) {
                   setError("email", { message: "Email is required for guest checkout." });
@@ -833,19 +834,20 @@ export const CheckoutShippingPage = () => {
                   ))}
                 </div>
               </div>
-
-              <div className="md:col-span-2 pt-8 flex flex-col sm:flex-row justify-stretch sm:justify-end gap-3">
-                <button
-                  type="submit"
-                  className="bg-secondary text-on-secondary px-8 sm:px-12 py-4 rounded-md font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-opacity w-full sm:w-auto"
-                >
-                  Proceed to Payment
-                  <Icon name="arrow_forward" className="text-base" />
-                </button>
-              </div>
             </form>
+            <div className="hidden lg:flex pt-8 flex-col sm:flex-row justify-stretch sm:justify-end gap-3">
+              <button
+                type="submit"
+                form="checkout-shipping-form"
+                className="bg-secondary text-on-secondary px-8 sm:px-12 py-4 rounded-md font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-opacity w-full sm:w-auto"
+              >
+                Proceed to Payment
+                <Icon name="arrow_forward" className="text-base" />
+              </button>
+            </div>
           </section>
         </div>
+        <div className="order-2 w-full min-w-0 shrink-0">
         <CheckoutOrderSummary
           items={orderLines}
           subtotal={summary.subtotalGhs}
@@ -863,6 +865,19 @@ export const CheckoutShippingPage = () => {
               : undefined
           }
         />
+        </div>
+        <div className="order-3 w-full lg:hidden pt-2">
+          <div className="flex flex-col sm:flex-row justify-stretch sm:justify-end gap-3">
+            <button
+              type="submit"
+              form="checkout-shipping-form"
+              className="bg-secondary text-on-secondary px-8 sm:px-12 py-4 rounded-md font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-opacity w-full sm:w-auto"
+            >
+              Proceed to Payment
+              <Icon name="arrow_forward" className="text-base" />
+            </button>
+          </div>
+        </div>
       </main>
       {/* Mobile step nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-end min-h-[4.25rem] px-1 py-2 safe-area-pb bg-white/80 backdrop-blur-xl border-t border-slate-200/20 shadow-[0_-10px_40px_rgba(11,28,48,0.06)]">
@@ -984,12 +999,63 @@ export const CheckoutPaymentPage = () => {
       });
   }, [isAuthenticated, queryClient]);
 
+  const continueToReview = () => {
+    const d = readCheckoutDraft();
+    if (!d) {
+      navigate("/checkout/shipping");
+      return;
+    }
+    let billingAddress = d.billingAddress;
+    if (!billingSame) {
+      const billing = getBillingValues();
+      const requiredFields: Array<keyof typeof billing> = ["fullName", "address", "city", "zip", "phone"];
+      let hasValidationError = false;
+      for (const field of requiredFields) {
+        if (!String(billing[field] ?? "").trim()) {
+          hasValidationError = true;
+          setBillingError(field, { message: "Required" });
+        }
+      }
+      if (hasValidationError) {
+        return;
+      }
+      billingAddress = {
+        fullName: billing.fullName.trim(),
+        email: billing.email.trim() || undefined,
+        phone: billing.phone.trim(),
+        country: d.address.country,
+        region: billing.city.trim(),
+        city: billing.city.trim(),
+        line1: billing.address.trim(),
+        postalCode: billing.zip.trim()
+      };
+    }
+    const channel: "card" | "mobile_money" = method === "paystack_card" ? "card" : "mobile_money";
+    const mobileMoney =
+      channel === "mobile_money" ? { phone: mmPhone.trim(), provider: mmNetwork } : undefined;
+    const card =
+      channel === "card"
+        ? {
+            holderName: cardHolderName.trim() || undefined,
+            last4:
+              cardLast4.trim().length === 4 && /^\d{4}$/.test(cardLast4.trim()) ? cardLast4.trim() : undefined
+          }
+        : undefined;
+    writeCheckoutDraft({
+      ...d,
+      billingSameAsShipping: billingSame,
+      billingAddress: billingSame ? undefined : billingAddress,
+      payment: { channel, mobileMoney, card }
+    });
+    navigate("/checkout/review");
+  };
+
   return (
     <div className="bg-surface text-on-surface antialiased">
       <CheckoutHeader />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-32 md:pb-20 min-h-screen w-full min-w-0 overflow-x-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-          <div className="lg:col-span-7 xl:col-span-8">
+          <div className="order-1 lg:col-span-7 xl:col-span-8 min-w-0">
             <section className="mb-12">
               <h1 className="text-4xl md:text-5xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Finalize Payment</h1>
               <p className="text-on-surface-variant text-lg">Pay with card or mobile money. All payments are processed securely by Paystack.</p>
@@ -1150,82 +1216,29 @@ export const CheckoutPaymentPage = () => {
                   </div>
                 </div>
               ) : null}
-
-              {/* Actions */}
-              <div className="flex flex-col md:flex-row items-center gap-6 pt-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const d = readCheckoutDraft();
-                    if (!d) {
-                      navigate("/checkout/shipping");
-                      return;
-                    }
-                    let billingAddress = d.billingAddress;
-                    if (!billingSame) {
-                      const billing = getBillingValues();
-                      const requiredFields: Array<keyof typeof billing> = ["fullName", "address", "city", "zip", "phone"];
-                      let hasValidationError = false;
-                      for (const field of requiredFields) {
-                        if (!String(billing[field] ?? "").trim()) {
-                          hasValidationError = true;
-                          setBillingError(field, { message: "Required" });
-                        }
-                      }
-                      if (hasValidationError) {
-                        return;
-                      }
-                      billingAddress = {
-                        fullName: billing.fullName.trim(),
-                        email: billing.email.trim() || undefined,
-                        phone: billing.phone.trim(),
-                        country: d.address.country,
-                        region: billing.city.trim(),
-                        city: billing.city.trim(),
-                        line1: billing.address.trim(),
-                        postalCode: billing.zip.trim()
-                      };
-                    }
-                    const channel: "card" | "mobile_money" = method === "paystack_card" ? "card" : "mobile_money";
-                    const mobileMoney =
-                      channel === "mobile_money"
-                        ? { phone: mmPhone.trim(), provider: mmNetwork }
-                        : undefined;
-                    const card =
-                      channel === "card"
-                        ? {
-                            holderName: cardHolderName.trim() || undefined,
-                            last4:
-                              cardLast4.trim().length === 4 && /^\d{4}$/.test(cardLast4.trim())
-                                ? cardLast4.trim()
-                                : undefined
-                          }
-                        : undefined;
-                    writeCheckoutDraft({
-                      ...d,
-                      billingSameAsShipping: billingSame,
-                      billingAddress: billingSame ? undefined : billingAddress,
-                      payment: { channel, mobileMoney, card }
-                    });
-                    navigate("/checkout/review");
-                  }}
-                  className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-bold rounded-md shadow-lg shadow-secondary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
-                >
-                  <span>Continue to review</span>
-                  <Icon name="arrow_forward" className="text-sm" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate("/checkout/shipping")}
-                  className="text-on-surface-variant font-medium hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-8"
-                >
-                  Return to Shipping
-                </button>
-              </div>
+            </div>
+            <div className="hidden lg:flex flex-col md:flex-row items-center gap-6 pt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  continueToReview();
+                }}
+                className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-bold rounded-md shadow-lg shadow-secondary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+              >
+                <span>Continue to review</span>
+                <Icon name="arrow_forward" className="text-sm" />
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/checkout/shipping")}
+                className="text-on-surface-variant font-medium hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-8"
+              >
+                Return to Shipping
+              </button>
             </div>
           </div>
 
-          <div className="lg:col-span-5 xl:col-span-4">
+          <div className="order-2 lg:col-span-5 xl:col-span-4 min-w-0">
             <CheckoutOrderSummary
               items={orderLines}
               subtotal={summary.subtotalGhs}
@@ -1243,6 +1256,27 @@ export const CheckoutPaymentPage = () => {
                   : undefined
               }
             />
+          </div>
+          <div className="order-3 col-span-full lg:hidden">
+            <div className="flex flex-col md:flex-row items-center gap-6 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  continueToReview();
+                }}
+                className="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-bold rounded-md shadow-lg shadow-secondary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+              >
+                <span>Continue to review</span>
+                <Icon name="arrow_forward" className="text-sm" />
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/checkout/shipping")}
+                className="text-on-surface-variant font-medium hover:text-secondary transition-colors underline decoration-outline-variant/30 underline-offset-8"
+              >
+                Return to Shipping
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -1511,11 +1545,32 @@ export const CheckoutReviewPage = () => {
     }
   };
 
+  const reviewActions = (
+    <div className="flex flex-col sm:flex-row gap-4 pt-4">
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() => void placeOrder()}
+        className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-bold rounded-md shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+      >
+        <Icon name="lock" className="text-sm" />
+        {busy ? "Placing order…" : "Place order"}
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate("/checkout/payment")}
+        className="w-full sm:w-auto text-on-surface-variant font-medium hover:text-secondary underline underline-offset-8 py-3"
+      >
+        Edit payment
+      </button>
+    </div>
+  );
+
   return (
     <div className="bg-surface text-on-surface antialiased">
       <CheckoutHeader />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 lg:flex lg:gap-16 w-full min-w-0 overflow-x-hidden">
-        <div className="lg:flex-1">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 pb-28 md:pb-20 flex flex-col lg:flex-row lg:gap-16 w-full min-w-0 overflow-x-hidden">
+        <div className="order-1 lg:flex-1 min-w-0">
           <CheckoutStepBar current={4} />
           <section className="space-y-8">
             <div>
@@ -1548,26 +1603,10 @@ export const CheckoutReviewPage = () => {
               <p className="text-sm leading-relaxed whitespace-pre-line">{billingBlock}</p>
             </div>
             {err ? <p className="text-error text-sm">{err}</p> : null}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => void placeOrder()}
-                className="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-secondary to-secondary-container text-on-secondary font-bold rounded-md shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                <Icon name="lock" className="text-sm" />
-                {busy ? "Placing order…" : "Place order"}
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate("/checkout/payment")}
-                className="w-full sm:w-auto text-on-surface-variant font-medium hover:text-secondary underline underline-offset-8 py-3"
-              >
-                Edit payment
-              </button>
-            </div>
+            <div className="hidden lg:block">{reviewActions}</div>
           </section>
         </div>
+        <div className="order-2 w-full min-w-0 shrink-0">
         <CheckoutOrderSummary
           items={orderLines}
           subtotal={summary.subtotalGhs}
@@ -1585,6 +1624,8 @@ export const CheckoutReviewPage = () => {
               : undefined
           }
         />
+        </div>
+        <div className="order-3 w-full lg:hidden pt-2">{reviewActions}</div>
       </main>
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-end min-h-[4.25rem] px-1 py-2 safe-area-pb bg-white/80 backdrop-blur-xl border-t border-slate-200/20">
         {[
@@ -1770,12 +1811,14 @@ export const CheckoutPaymentResultPage = () => {
    ORDER SUCCESS — matches order_success/code.html
 ───────────────────────────────────────────── */
 export const OrderSuccessPage = () => {
+  const queryClient = useQueryClient();
   const result = readCheckoutResult();
   const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
 
   useEffect(() => {
     resetCheckoutIdempotencyKey();
-  }, []);
+    void queryClient.invalidateQueries({ queryKey: [CUSTOMER_CART_QUERY_ROOT] });
+  }, [queryClient]);
   const orderLabel = result?.orderNumber ? `#${result.orderNumber}` : "your order";
   const rawNum = result?.orderNumber?.replace(/^#/, "").trim() ?? "";
   const trackHref =
