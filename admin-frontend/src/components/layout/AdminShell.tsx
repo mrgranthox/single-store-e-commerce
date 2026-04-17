@@ -50,6 +50,16 @@ const supportGroupScreenIcon: Record<string, string> = {
   "support-analytics": "analytics"
 };
 
+/** Sidebar entries under `orders` (Material Symbols names, same font as other nav maps). */
+const ordersGroupScreenIcon: Record<string, string> = {
+  "orders-list": "receipt_long",
+  "orders-fulfillment-queue": "package_2",
+  "orders-dispatch-queue": "local_shipping",
+  "shipments-hub": "local_shipping",
+  "returns-queue": "assignment_return",
+  "orders-cancellation-requests": "cancel_schedule_send"
+};
+
 const contentGroupScreenIcon: Record<string, string> = {
   "content-banners": "view_carousel",
   "content-pages": "description"
@@ -67,18 +77,20 @@ const marketingGroupScreenIcon: Record<string, string> = {
 const navMaterialIcon = (screenId: string, group: AdminScreenGroup) =>
   group === "payments" && paymentsGroupScreenIcon[screenId]
     ? paymentsGroupScreenIcon[screenId]!
-    : group === "support" && supportGroupScreenIcon[screenId]
-      ? supportGroupScreenIcon[screenId]!
-      : group === "content" && contentGroupScreenIcon[screenId]
-        ? contentGroupScreenIcon[screenId]!
-        : group === "marketing" && marketingGroupScreenIcon[screenId]
-          ? marketingGroupScreenIcon[screenId]!
-          : groupMaterialIcon[group];
+    : group === "orders" && ordersGroupScreenIcon[screenId]
+      ? ordersGroupScreenIcon[screenId]!
+      : group === "support" && supportGroupScreenIcon[screenId]
+        ? supportGroupScreenIcon[screenId]!
+        : group === "content" && contentGroupScreenIcon[screenId]
+          ? contentGroupScreenIcon[screenId]!
+          : group === "marketing" && marketingGroupScreenIcon[screenId]
+            ? marketingGroupScreenIcon[screenId]!
+            : groupMaterialIcon[group];
 
-const navLinkClass = (isActive: boolean, collapsed: boolean) =>
+const navLinkClass = (isActive: boolean, compact: boolean) =>
   clsx(
-    "flex items-center border-l-4 transition-colors duration-200",
-    collapsed ? "justify-center px-2 py-2.5" : "gap-3 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider",
+    "flex items-center border-l-4 transition-colors duration-200 touch-manipulation",
+    compact ? "justify-center px-2 py-2.5" : "gap-3 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider max-md:min-h-[44px]",
     isActive
       ? "border-[#1653cc] bg-[#1653cc]/15 text-white"
       : "border-transparent text-[#c5cee0] hover:bg-white/[0.06] hover:text-white"
@@ -107,6 +119,14 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
   }, [sidebarCollapsed]);
 
   const location = useLocation();
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [location.pathname]);
+
+  /** On small viewports the drawer must stay readable: show labels whenever the mobile menu is open, even if desktop sidebar is collapsed. */
+  const showSidebarText = !sidebarCollapsed || mobileNavOpen;
+  const sidebarLinkCompact = sidebarCollapsed && !mobileNavOpen;
   const actor = useAdminAuthStore((state) => state.actor);
   const effectiveActor = actor ?? (shell
     ? {
@@ -189,13 +209,13 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
         <div
           className={clsx(
             "flex shrink-0 items-center border-b border-white/[0.06]",
-            sidebarCollapsed ? "flex-col gap-2 px-2 py-4" : "flex-row gap-3 px-5 py-4"
+            sidebarLinkCompact ? "flex-col gap-2 px-2 py-4" : "flex-row gap-3 px-5 py-4"
           )}
         >
           <div className="tonal-depth flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white">
             <MaterialIcon name="architecture" className="text-base text-white" />
           </div>
-          {!sidebarCollapsed ? (
+          {showSidebarText ? (
             <span className="min-w-0 flex-1 font-headline text-base font-bold tracking-tight text-white">
               Operational Architect
             </span>
@@ -222,7 +242,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
               }
               return (
               <section key={group.id}>
-                {!sidebarCollapsed ? (
+                {showSidebarText ? (
                   <p className="mb-1.5 px-3 text-xs font-bold uppercase tracking-[0.14em] text-[#7d8aa3]">
                     {group.title}
                   </p>
@@ -232,7 +252,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
                     <NavLink
                       key={screenItem.id}
                       to={screenItem.path}
-                      className={({ isActive }) => navLinkClass(isActive, sidebarCollapsed)}
+                      className={({ isActive }) => navLinkClass(isActive, sidebarLinkCompact)}
                       end={
                         screenItem.path === "/admin/dashboard" ||
                         screenItem.path === "/admin/inventory/overview" ||
@@ -243,14 +263,17 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
                         screenItem.path === "/admin/payments/failed-investigations" ||
                         screenItem.path === "/admin/finance/exceptions"
                       }
-                      title={sidebarCollapsed ? (screenItem.navLabel ?? screenItem.title) : undefined}
+                      title={sidebarLinkCompact ? (screenItem.navLabel ?? screenItem.title) : undefined}
                       onClick={() => setMobileNavOpen(false)}
                     >
                       <MaterialIcon
                         name={navMaterialIcon(screenItem.id, group.id)}
-                        className={clsx("shrink-0 text-current opacity-90", sidebarCollapsed ? "text-[22px]" : "text-[20px]")}
+                        className={clsx(
+                          "shrink-0 text-current opacity-90",
+                          sidebarLinkCompact ? "text-[22px]" : "text-[20px]"
+                        )}
                       />
-                      {!sidebarCollapsed ? (
+                      {showSidebarText ? (
                         <span className="min-w-0 truncate">{screenItem.navLabel ?? screenItem.title}</span>
                       ) : null}
                     </NavLink>
@@ -266,13 +289,13 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
           <div
             className={clsx(
               "mt-3 flex items-center border-t border-white/[0.08] pt-4",
-              sidebarCollapsed ? "justify-center px-0" : "gap-3 px-3"
+              sidebarLinkCompact ? "justify-center px-0" : "gap-3 px-3"
             )}
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#3d4558] bg-[#1e2433] text-xs font-bold text-[#e2e8f4]">
               {initials}
             </div>
-            {!sidebarCollapsed ? (
+            {showSidebarText ? (
               <div className="min-w-0 flex-1 overflow-hidden">
                 <p className="truncate text-xs font-bold text-white">
                   {effectiveActor?.fullName ?? effectiveActor?.email ?? "Admin User"}
@@ -286,7 +309,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
           <div
             className={clsx(
               "mt-2 flex w-full gap-1",
-              sidebarCollapsed ? "flex-col items-center px-0" : "flex-row px-2"
+              sidebarLinkCompact ? "flex-col items-center px-0" : "flex-row px-2"
             )}
           >
             {mayOpenProfile ? (
@@ -294,8 +317,8 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
                 to="/admin/profile/security"
                 className={({ isActive }) =>
                   clsx(
-                    "flex items-center justify-center rounded-lg text-[#c5cee0] transition-colors hover:bg-white/10 hover:text-white",
-                    sidebarCollapsed ? "p-2" : "flex-1 gap-2 px-2 py-2 text-xs font-semibold uppercase tracking-wider",
+                    "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-[#c5cee0] transition-colors hover:bg-white/10 hover:text-white touch-manipulation",
+                    sidebarLinkCompact ? "p-2" : "flex-1 gap-2 px-2 py-2 text-xs font-semibold uppercase tracking-wider",
                     isActive && "bg-white/10 text-white"
                   )
                 }
@@ -303,31 +326,31 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
                 onClick={() => setMobileNavOpen(false)}
               >
                 <User className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
-                {!sidebarCollapsed ? <span>Profile</span> : null}
+                {showSidebarText ? <span>Profile</span> : null}
               </NavLink>
             ) : null}
             <button
               type="button"
               onClick={() => void handleLogout()}
               className={clsx(
-                "flex items-center justify-center rounded-lg text-[#c5cee0] transition-colors hover:bg-red-500/15 hover:text-red-200",
-                sidebarCollapsed ? "p-2" : "flex-1 gap-2 px-2 py-2 text-xs font-semibold uppercase tracking-wider"
+                "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-[#c5cee0] transition-colors hover:bg-red-500/15 hover:text-red-200 touch-manipulation",
+                sidebarLinkCompact ? "p-2" : "flex-1 gap-2 px-2 py-2 text-xs font-semibold uppercase tracking-wider"
               )}
               title="Sign out"
             >
               <LogOut className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
-              {!sidebarCollapsed ? <span>Log out</span> : null}
+              {showSidebarText ? <span>Log out</span> : null}
             </button>
           </div>
         </div>
       </aside>
 
-      <div className={clsx("min-h-screen transition-[margin] duration-200 ease-out", mainOffset)}>
+      <div className={clsx("min-h-screen min-w-0 transition-[margin] duration-200 ease-out", mainOffset)}>
         <header className="no-print sticky top-0 z-40 flex h-[60px] w-full items-center justify-between border-b border-slate-100 bg-white px-4 text-[#0f1117] shadow-[0_1px_4px_rgba(0,0,0,0.06)] md:px-6">
           <div className="flex min-w-0 flex-1 items-center gap-3 md:gap-4">
             <button
               type="button"
-              className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 md:hidden"
+              className="min-h-[44px] min-w-[44px] rounded-lg p-2 text-slate-600 hover:bg-slate-100 touch-manipulation md:hidden"
               aria-expanded={mobileNavOpen}
               aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
               onClick={() => setMobileNavOpen((o) => !o)}
