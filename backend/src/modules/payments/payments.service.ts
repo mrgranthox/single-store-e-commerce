@@ -30,6 +30,7 @@ import { jobRunService } from "../jobs-workers/job-run.service";
 import { webhookRecorderService } from "../jobs-workers/webhook-recorder.service";
 import { enqueueNotification } from "../notifications/notifications.service";
 import {
+  autoAssignWarehouseForConfirmedOrderInTransaction,
   isPaymentStateFinal,
   releaseOrderReservations
 } from "../orders/orders.service";
@@ -450,6 +451,10 @@ const applyPaymentOutcome = async (input: {
           })
         }
       });
+
+      if (input.nextPaymentState === PaymentState.PAID && payment.orderId) {
+        await autoAssignWarehouseForConfirmedOrderInTransaction(transaction, payment.orderId);
+      }
 
       return {
         paymentStateChanged: true,

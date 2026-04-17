@@ -21,6 +21,7 @@ import {
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { runInTransaction } from "../../common/database/prisma-transaction";
 import { prisma } from "../../config/prisma";
+import { logger } from "../../config/logger";
 
 type DatabaseClient = Prisma.TransactionClient | typeof prisma;
 
@@ -991,6 +992,278 @@ export const getAdminOrderTimeline = async (orderId: string) => {
   };
 };
 
+type WarehouseAssignmentActor =
+  | {
+      kind: "admin";
+      adminUserId: string;
+      reason?: string | null;
+      note?: string | null;
+    }
+  | {
+      kind: "system";
+      reason?: string | null;
+      note?: string | null;
+    };
+
+const persistOrderWarehouseAssignmentInTransaction = async (
+  transaction: Prisma.TransactionClient,
+  input: {
+    order: Pick<OrderRecord, "id" | "addressSnapshot" | "shipments">;
+    warehouse: { id: string; code: string; name: string };
+    actor: WarehouseAssignmentActor;
+  }
+) => {
+  const activeShipment = input.order.shipments.find(
+    (shipment) => shipment.status !== ShipmentStatus.CANCELLED
+  );
+
+  if (activeShipment) {
+    throw invalidStateTransitionError(
+      "Warehouse assignment can only be changed before active shipment creation.",
+      {
+        orderId: input.order.id,
+        shipmentId: activeShipment.id
+      }
+    );
+  }
+
+  const existingAddressSnapshot = isRecord(input.order.addressSnapshot) ? input.order.addressSnapshot : {};
+  const beforeAssignment = readAddressSnapshot(input.order.addressSnapshot).fulfillmentAssignment;
+  const assignedByAdminUserId = input.actor.kind === "admin" ? input.actor.adminUserId : null;
+  const fulfillmentAssignment = {
+    warehouse: {
+      id: input.warehouse.id,
+      code: input.warehouse.code,
+      name: input.warehouse.name
+    },
+    assignedAt: new Date().toISOString(),
+    assignedByAdminUserId,
+    reason: input.actor.reason ?? null,
+    note: input.actor.note ?? null
+  };
+
+  await transaction.order.update({
+    where: {
+      id: input.order.id
+    },
+    data: {
+      addressSnapshot: toPrismaJsonValue({
+        ...existingAddressSnapshot,
+        fulfillmentAssignment
+      })!
+    }
+  });
+
+  const auditActorType = input.actor.kind === "admin" ? "ADMIN" : "SYSTEM";
+  const auditAdminUserId = input.actor.kind === "admin" ? input.actor.adminUserId : null;
+
+  const logs: Promise<unknown>[] = [
+    transaction.auditLog.create({
+      data: {
+        actorType: auditActorType,
+        actorAdminUserId: auditAdminUserId,
+        actionCode: "orders.warehouse.assign",
+        entityType: "ORDER",
+        entityId: input.order.id,
+        reason: input.actor.reason ?? undefined,
+        note: input.actor.note ?? undefined,
+        metadata: toPrismaJsonValue({
+          before: beforeAssignment,
+          after: fulfillmentAssignment,
+          ...(input.actor.kind === "system"
+            ? { automation: { strategy: "dominant_reserved_quantity" } }
+            : {})
+        })
+      }
+    }),
+    transaction.timelineEvent.create({
+      data: {
+        entityType: "ORDER",
+        entityId: input.order.id,
+        eventType: "ORDER_WAREHOUSE_ASSIGNED",
+        actorAdminUserId: auditAdminUserId,
+        actorType: auditActorType,
+        payload: toPrismaJsonValue({
+          warehouse: fulfillmentAssignment.warehouse,
+          reason: input.actor.reason,
+          note: input.actor.note
+        })
+      }
+    })
+  ];
+
+  if (input.actor.kind === "admin") {
+    logs.push(
+      transaction.adminActionLog.create({
+        data: {
+          adminUserId: input.actor.adminUserId,
+          screen: "orders.fulfillment",
+          actionCode: "orders.warehouse.assign",
+          entityType: "ORDER",
+          entityId: input.order.id,
+          reason: input.actor.reason ?? undefined,
+          note: input.actor.note ?? undefined,
+          before: toPrismaJsonValue(beforeAssignment),
+          after: toPrismaJsonValue(fulfillmentAssignment)
+        }
+      })
+    );
+  }
+
+  await Promise.all(logs);
+};
+
+/**
+ * Picks the warehouse that holds the largest share of active stock reservations for this order
+ * (same ordering logic as checkout: highest onHand first per variant, reflected in reservation rows).
+ * Idempotent: skips if fulfillment warehouse is already set or order is not CONFIRMED.
+ */
+export const autoAssignWarehouseForConfirmedOrderInTransaction = async (
+  transaction: Prisma.TransactionClient,
+  orderId: string
+): Promise<
+  | { ok: true; warehouseId: string }
+  | { ok: false; reason: "not_confirmed" | "already_assigned" | "no_reservations" | "no_warehouse" }
+> => {
+  try {
+    const order = await transaction.order.findUnique({
+      where: {
+        id: orderId
+      },
+      include: orderInclude
+    });
+
+    if (!order) {
+      return {
+        ok: false,
+        reason: "no_warehouse"
+      };
+    }
+
+    if (order.status !== "CONFIRMED") {
+      return {
+        ok: false,
+        reason: "not_confirmed"
+      };
+    }
+
+    if (readAddressSnapshot(order.addressSnapshot).fulfillmentAssignment?.warehouse?.id) {
+      return {
+        ok: false,
+        reason: "already_assigned"
+      };
+    }
+
+    const reservations = await transaction.stockReservation.findMany({
+      where: {
+        releasedAt: null,
+        OR: [{ orderId }, { payment: { is: { orderId } } }]
+      },
+      include: {
+        inventoryStock: {
+          include: {
+            warehouse: {
+              select: {
+                id: true,
+                code: true,
+                name: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (reservations.length === 0) {
+      return {
+        ok: false,
+        reason: "no_reservations"
+      };
+    }
+
+    const totalsByWarehouse = new Map<string, { reservedQty: number; code: string; name: string }>();
+
+    for (const reservation of reservations) {
+      const warehouse = reservation.inventoryStock.warehouse;
+      const row = totalsByWarehouse.get(warehouse.id) ?? {
+        reservedQty: 0,
+        code: warehouse.code,
+        name: warehouse.name
+      };
+      row.reservedQty += reservation.reservedQuantity;
+      totalsByWarehouse.set(warehouse.id, row);
+    }
+
+    let chosenWarehouseId: string | null = null;
+    let bestQty = -1;
+
+    for (const [warehouseId, row] of totalsByWarehouse) {
+      if (row.reservedQty > bestQty) {
+        bestQty = row.reservedQty;
+        chosenWarehouseId = warehouseId;
+      } else if (row.reservedQty === bestQty && chosenWarehouseId && warehouseId < chosenWarehouseId) {
+        chosenWarehouseId = warehouseId;
+      }
+    }
+
+    if (!chosenWarehouseId) {
+      return {
+        ok: false,
+        reason: "no_warehouse"
+      };
+    }
+
+    const warehouse = await transaction.warehouse.findUnique({
+      where: {
+        id: chosenWarehouseId
+      }
+    });
+
+    if (!warehouse) {
+      return {
+        ok: false,
+        reason: "no_warehouse"
+      };
+    }
+
+    await persistOrderWarehouseAssignmentInTransaction(transaction, {
+      order,
+      warehouse,
+      actor: {
+        kind: "system",
+        reason: "auto_on_confirm_dominant_reservation",
+        note: null
+      }
+    });
+
+    logger.info(
+      {
+        orderId,
+        warehouseId: warehouse.id,
+        strategy: "dominant_reserved_quantity"
+      },
+      "Auto-assigned order warehouse from reservations."
+    );
+
+    return {
+      ok: true,
+      warehouseId: warehouse.id
+    };
+  } catch (error) {
+    logger.error(
+      {
+        orderId,
+        error
+      },
+      "Unexpected failure while auto-assigning warehouse; continuing without assignment."
+    );
+    return {
+      ok: false,
+      reason: "no_warehouse"
+    };
+  }
+};
+
 export const updateAdminOrderStatus = async (input: {
   actorAdminUserId: string;
   orderId: string;
@@ -1093,6 +1366,10 @@ export const updateAdminOrderStatus = async (input: {
       })
     ]);
 
+    if (input.status === "CONFIRMED") {
+      await autoAssignWarehouseForConfirmedOrderInTransaction(transaction, order.id);
+    }
+
     const updatedOrder = await transaction.order.findUnique({
       where: {
         id: order.id
@@ -1176,90 +1453,16 @@ export const assignAdminOrderWarehouse = async (input: {
       throw notFoundError("The requested warehouse was not found.");
     }
 
-    const activeShipment = order.shipments.find(
-      (shipment) => shipment.status !== ShipmentStatus.CANCELLED
-    );
-
-    if (activeShipment) {
-      throw invalidStateTransitionError(
-        "Warehouse assignment can only be changed before active shipment creation.",
-        {
-          orderId: order.id,
-          shipmentId: activeShipment.id
-        }
-      );
-    }
-
-    const existingAddressSnapshot = isRecord(order.addressSnapshot) ? order.addressSnapshot : {};
-    const beforeAssignment = readAddressSnapshot(order.addressSnapshot).fulfillmentAssignment;
-    const fulfillmentAssignment = {
-      warehouse: {
-        id: warehouse.id,
-        code: warehouse.code,
-        name: warehouse.name
-      },
-      assignedAt: new Date().toISOString(),
-      assignedByAdminUserId: input.actorAdminUserId,
-      reason: input.reason ?? null,
-      note: input.note ?? null
-    };
-
-    await transaction.order.update({
-      where: {
-        id: order.id
-      },
-      data: {
-        addressSnapshot: toPrismaJsonValue({
-          ...existingAddressSnapshot,
-          fulfillmentAssignment
-        })!
+    await persistOrderWarehouseAssignmentInTransaction(transaction, {
+      order,
+      warehouse,
+      actor: {
+        kind: "admin",
+        adminUserId: input.actorAdminUserId,
+        reason: input.reason ?? null,
+        note: input.note ?? null
       }
     });
-
-    await Promise.all([
-      transaction.auditLog.create({
-        data: {
-          actorType: "ADMIN",
-          actorAdminUserId: input.actorAdminUserId,
-          actionCode: "orders.warehouse.assign",
-          entityType: "ORDER",
-          entityId: order.id,
-          reason: input.reason,
-          note: input.note,
-          metadata: toPrismaJsonValue({
-            before: beforeAssignment,
-            after: fulfillmentAssignment
-          })
-        }
-      }),
-      transaction.adminActionLog.create({
-        data: {
-          adminUserId: input.actorAdminUserId,
-          screen: "orders.fulfillment",
-          actionCode: "orders.warehouse.assign",
-          entityType: "ORDER",
-          entityId: order.id,
-          reason: input.reason,
-          note: input.note,
-          before: toPrismaJsonValue(beforeAssignment),
-          after: toPrismaJsonValue(fulfillmentAssignment)
-        }
-      }),
-      transaction.timelineEvent.create({
-        data: {
-          entityType: "ORDER",
-          entityId: order.id,
-          eventType: "ORDER_WAREHOUSE_ASSIGNED",
-          actorAdminUserId: input.actorAdminUserId,
-          actorType: "ADMIN",
-          payload: toPrismaJsonValue({
-            warehouse: fulfillmentAssignment.warehouse,
-            reason: input.reason,
-            note: input.note
-          })
-        }
-      })
-    ]);
 
     const updatedOrder = await transaction.order.findUnique({
       where: {
