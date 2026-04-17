@@ -200,7 +200,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
       <aside
         aria-label="Admin navigation"
         className={clsx(
-          "admin-shell-sidebar fixed left-0 top-0 z-50 flex h-screen flex-col bg-[#13161e] text-[#c5cee0] shadow-sidebar transition-[width,transform] duration-200 ease-out md:translate-x-0",
+          "admin-shell-sidebar fixed left-0 top-0 z-50 flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden bg-[#13161e] text-[#c5cee0] shadow-sidebar transition-[width,transform] duration-200 ease-out md:translate-x-0",
           sidebarWidth,
           "w-64 max-md:w-64",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
@@ -285,7 +285,7 @@ export const AdminShell = ({ children }: PropsWithChildren) => {
           </div>
         </nav>
 
-        <div className="shrink-0 space-y-0.5 border-t border-white/[0.08] px-2 py-4">
+        <div className="shrink-0 space-y-0.5 border-t border-white/[0.08] px-2 pb-[max(1rem,env(safe-area-inset-bottom,0px))] pt-4">
           <div
             className={clsx(
               "mt-3 flex items-center border-t border-white/[0.08] pt-4",
