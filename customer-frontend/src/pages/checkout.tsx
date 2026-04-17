@@ -37,6 +37,8 @@ export const CartPage = () => {
   const cartQueryKey = useCustomerCartQueryKey();
   const [coupon, setCoupon] = useState("");
   const [couponErr, setCouponErr] = useState<string | null>(null);
+  const pendingItemIdsRef = useRef<Set<string>>(new Set());
+  const [pendingItemIds, setPendingItemIds] = useState<Set<string>>(new Set());
 
   const cartQuery = useQuery({
     queryKey: cartQueryKey,
@@ -57,6 +59,19 @@ export const CartPage = () => {
   }));
   const couponOutcome = summary.couponOutcome;
   const couponLocked = Boolean(couponOutcome?.valid);
+  const couponDiscountGhs =
+    couponOutcome?.valid && typeof couponOutcome.discountCents === "number" ? couponOutcome.discountCents / 100 : 0;
+  const hiddenDeltaGhs = Math.round((summary.totalGhs - (summary.subtotalGhs - couponDiscountGhs)) * 100) / 100;
+  const showHiddenDeltaHint = Math.abs(hiddenDeltaGhs) >= 0.01;
+
+  const setItemPendingState = (itemId: string, pending: boolean) => {
+    if (pending) {
+      pendingItemIdsRef.current.add(itemId);
+    } else {
+      pendingItemIdsRef.current.delete(itemId);
+    }
+    setPendingItemIds(new Set(pendingItemIdsRef.current));
+  };
 
   const patchQty = useMutation({
     mutationFn: async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
@@ -70,14 +85,37 @@ export const CartPage = () => {
     }
   });
 
+  const mutateCartLineQuantity = async (itemId: string, quantity: number) => {
+    if (pendingItemIdsRef.current.has(itemId)) return;
+    setItemPendingState(itemId, true);
+    try {
+      await patchQty.mutateAsync({ itemId, quantity });
+    } finally {
+      setItemPendingState(itemId, false);
+    }
+  };
+
   const applyCouponMut = useMutation({
     mutationFn: async (code: string) => customerBackendApi.applyCartCoupon(code.trim()),
     onSuccess: (data) => {
       setCouponErr(null);
+      setCoupon((existing) => existing.trim());
       queryClient.setQueryData(cartQueryKey, data);
     },
     onError: (e) => {
       setCouponErr(e instanceof CommerceApiError ? e.message : "Invalid coupon.");
+    }
+  });
+
+  const removeCouponMut = useMutation({
+    mutationFn: async () => customerBackendApi.removeCartCoupon(),
+    onSuccess: (data) => {
+      setCouponErr(null);
+      setCoupon("");
+      queryClient.setQueryData(cartQueryKey, data);
+    },
+    onError: (e) => {
+      setCouponErr(e instanceof CommerceApiError ? e.message : "Could not remove coupon.");
     }
   });
 
@@ -148,58 +186,64 @@ export const CartPage = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 xl:gap-20 items-start">
           <div className="lg:col-span-7 space-y-6 md:space-y-12">
-            {summary.lines.map((item) => (
-              <div key={item.itemId} className="flex flex-row gap-4 sm:gap-6 md:gap-8 group">
-                <div className="w-24 sm:w-28 md:w-48 shrink-0 aspect-[4/5] bg-surface-container-low overflow-hidden rounded-lg">
+            {summary.lines.map((item) => {
+              const itemPending = pendingItemIds.has(item.itemId);
+              return (
+                <div key={item.itemId} className="flex flex-row gap-4 sm:gap-6 md:gap-8 group">
+                  <div className="w-24 sm:w-28 md:w-48 shrink-0 aspect-[4/5] bg-surface-container-low overflow-hidden rounded-lg">
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     src={item.image}
                     alt={item.name} loading="lazy" decoding="async" />
-                </div>
-                <div className="flex flex-col flex-grow min-w-0">
-                  <div className="flex justify-between items-start gap-2 mb-1 md:mb-2">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-secondary block">Item</span>
-                    <button
-                      type="button"
-                      onClick={() => void patchQty.mutateAsync({ itemId: item.itemId, quantity: 0 })}
-                      className="text-outline hover:text-error transition-colors shrink-0"
-                      aria-label={`Remove ${item.name}`}
-                    >
-                      <Icon name="close" className="text-sm" />
-                    </button>
                   </div>
-                  <h3 className="text-base sm:text-lg md:text-2xl font-bold tracking-tight text-on-surface mb-1 line-clamp-2">
-                    {item.name}
-                  </h3>
-                  <div className="mt-auto flex justify-between items-end gap-2 pt-3">
-                    <div className="flex items-center bg-surface-container-high rounded-lg p-0.5 sm:p-1">
+                  <div className="flex flex-col flex-grow min-w-0">
+                    <div className="flex justify-between items-start gap-2 mb-1 md:mb-2">
+                      <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-secondary block">Item</span>
                       <button
                         type="button"
-                        onClick={() => void patchQty.mutateAsync({ itemId: item.itemId, quantity: item.qty - 1 })}
-                        className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-on-surface hover:text-secondary transition-colors"
-                        aria-label="Decrease quantity"
+                        onClick={() => void mutateCartLineQuantity(item.itemId, 0)}
+                        disabled={itemPending}
+                        className="text-outline hover:text-error transition-colors shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
+                        aria-label={`Remove ${item.name}`}
                       >
-                        <Icon name="remove" />
-                      </button>
-                      <span className="w-8 sm:w-10 text-center text-sm sm:text-base font-bold text-on-surface tabular-nums">
-                        {item.qty}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => void patchQty.mutateAsync({ itemId: item.itemId, quantity: item.qty + 1 })}
-                        className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-on-surface hover:text-secondary transition-colors"
-                        aria-label="Increase quantity"
-                      >
-                        <Icon name="add" />
+                        <Icon name="close" className="text-sm" />
                       </button>
                     </div>
-                    <span className="text-base sm:text-lg md:text-xl font-bold text-on-surface tabular-nums shrink-0">
-                      {formatGhs(item.price)}
-                    </span>
+                    <h3 className="text-base sm:text-lg md:text-2xl font-bold tracking-tight text-on-surface mb-1 line-clamp-2">
+                      {item.name}
+                    </h3>
+                    <div className="mt-auto flex justify-between items-end gap-2 pt-3">
+                      <div className="flex items-center bg-surface-container-high rounded-lg p-0.5 sm:p-1">
+                        <button
+                          type="button"
+                          onClick={() => void mutateCartLineQuantity(item.itemId, item.qty - 1)}
+                          disabled={itemPending}
+                          className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-on-surface hover:text-secondary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                          aria-label="Decrease quantity"
+                        >
+                          <Icon name="remove" />
+                        </button>
+                        <span className="w-8 sm:w-10 text-center text-sm sm:text-base font-bold text-on-surface tabular-nums">
+                          {item.qty}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => void mutateCartLineQuantity(item.itemId, item.qty + 1)}
+                          disabled={itemPending}
+                          className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-on-surface hover:text-secondary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                          aria-label="Increase quantity"
+                        >
+                          <Icon name="add" />
+                        </button>
+                      </div>
+                      <span className="text-base sm:text-lg md:text-xl font-bold text-on-surface tabular-nums shrink-0">
+                        {formatGhs(item.price)}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="lg:col-span-5">
@@ -215,6 +259,11 @@ export const CartPage = () => {
                 <span className="text-xl font-bold tracking-tight">Total</span>
                 <span className="text-3xl font-extrabold tracking-tighter text-primary">{formatGhs(summary.totalGhs)}</span>
               </div>
+              {showHiddenDeltaHint ? (
+                <p className="text-[11px] text-on-surface-variant -mt-7 mb-8">
+                  Total includes backend adjustments that are not broken out in this summary.
+                </p>
+              ) : null}
               <div className="mb-8">
                 <label className="text-[10px] uppercase tracking-widest font-bold text-outline block mb-3">Add Coupon</label>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -237,13 +286,23 @@ export const CartPage = () => {
                 </div>
                 {couponOutcome?.valid ? (
                   <p className="text-secondary text-xs mt-2 font-medium">
-                    {`Coupon ${couponOutcome.appliedCode ?? "applied"} • -${formatGhs(
-                      ((couponOutcome.discountCents ?? 0) / 100)
-                    )}`}
+                    {typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
+                      ? `Coupon ${couponOutcome.appliedCode ?? "applied"} • -${formatGhs(couponOutcome.discountCents / 100)}`
+                      : `Coupon ${couponOutcome.appliedCode ?? "applied"} applied`}
                     {couponOutcome.message ? ` — ${couponOutcome.message}` : ""}
                   </p>
                 ) : couponOutcome?.message ? (
                   <p className="text-on-surface-variant text-xs mt-2">{couponOutcome.message}</p>
+                ) : null}
+                {couponLocked ? (
+                  <button
+                    type="button"
+                    onClick={() => void removeCouponMut.mutateAsync()}
+                    disabled={removeCouponMut.isPending}
+                    className="text-xs mt-2 text-on-surface-variant hover:text-on-surface underline underline-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {removeCouponMut.isPending ? "Removing coupon..." : "Remove coupon"}
+                  </button>
                 ) : null}
                 {couponErr ? <p className="text-error text-xs mt-2">{couponErr}</p> : null}
               </div>

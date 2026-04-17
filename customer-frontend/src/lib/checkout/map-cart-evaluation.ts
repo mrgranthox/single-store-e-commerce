@@ -34,6 +34,21 @@ export type CheckoutSummaryCouponOutcome = {
   message?: string;
 };
 
+const stableVariantSignature = (row: {
+  variantId?: string;
+  product?: { title?: string };
+  attributes?: unknown;
+  mediaUrl?: string | null;
+}) => {
+  const attrs = formatAttrs(row.attributes) ?? "";
+  return [
+    typeof row.variantId === "string" ? row.variantId : "",
+    typeof row.product?.title === "string" ? row.product.title : "",
+    typeof row.mediaUrl === "string" ? row.mediaUrl : "",
+    attrs
+  ].join("|");
+};
+
 export const mapCartEvaluationToOrderSummary = (
   evaluation: unknown
 ): {
@@ -63,9 +78,10 @@ export const mapCartEvaluationToOrderSummary = (
     } | null;
   };
   const items = Array.isArray(ev.items) ? ev.items : [];
-  const lines: CheckoutSummaryLine[] = items.map((row) => {
+  const lines: CheckoutSummaryLine[] = items.map((row, index) => {
     const it = row as {
       id?: string;
+      variantId?: string;
       quantity?: number;
       product?: { title?: string };
       mediaUrl?: string | null;
@@ -79,7 +95,10 @@ export const mapCartEvaluationToOrderSummary = (
         ? it.mediaUrl.trim()
         : "https://placehold.co/160x200/e2e8f0/64748b/png?text=Item";
     return {
-      itemId: typeof it.id === "string" ? it.id : `tmp_${Math.random().toString(36).slice(2)}`,
+      itemId:
+        typeof it.id === "string" && it.id.trim()
+          ? it.id
+          : `tmp_${stableVariantSignature(it)}_${index}`,
       name: typeof it.product?.title === "string" ? it.product.title : "Item",
       variant: formatAttrs(it.attributes),
       qty,

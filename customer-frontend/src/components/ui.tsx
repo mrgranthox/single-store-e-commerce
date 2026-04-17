@@ -68,7 +68,8 @@ export const ProductCard = ({ product }: { product: Product }) => {
         <button
           type="button"
           disabled={!variantId || cartBusy}
-          title={cartError ?? (!variantId ? "Open product to choose options" : "Add to bag")}
+          title={cartError ?? (!variantId ? "Open product to choose options" : cartBusy ? "Adding..." : "Add to bag")}
+          aria-busy={cartBusy}
           onClick={async () => {
             if (!variantId) return;
             setCartBusy(true);
@@ -85,7 +86,8 @@ export const ProductCard = ({ product }: { product: Product }) => {
           }}
           className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg disabled:opacity-40"
         >
-          <Icon name="add_shopping_cart" className="text-on-surface" />
+          <Icon name={cartBusy ? "progress_activity" : "add_shopping_cart"} className="text-on-surface" />
+          <span className="sr-only">{cartBusy ? "Adding to cart" : "Add to cart"}</span>
         </button>
       </div>
       <Link to={`/products/${product.slug}`} className="block min-w-0">
