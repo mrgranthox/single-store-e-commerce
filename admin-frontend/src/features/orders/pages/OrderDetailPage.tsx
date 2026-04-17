@@ -165,6 +165,31 @@ export const OrderDetailPage = () => {
     typeof entity?.totals?.grandTotalCents === "number" ? entity.totals.grandTotalCents : linesSubtotalCents;
   const currency = entity?.totals?.currency ?? entity?.payment.currency ?? entity?.items[0]?.unitPriceCurrency;
 
+  const checkoutShippingCents =
+    typeof entity?.totals?.shippingCents === "number" ? entity.totals.shippingCents : null;
+  const checkoutTaxCents = typeof entity?.totals?.taxCents === "number" ? entity.totals.taxCents : null;
+  const checkoutDiscountCents =
+    typeof entity?.totals?.discountCents === "number" ? entity.totals.discountCents : null;
+
+  const appliedCheckoutCoupon = useMemo(() => {
+    const raw = entity?.couponOutcome;
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+      return null;
+    }
+    const o = raw as Record<string, unknown>;
+    if (o.valid !== true) {
+      return null;
+    }
+    const code = typeof o.appliedCode === "string" ? o.appliedCode.trim() : "";
+    if (!code) {
+      return null;
+    }
+    if (typeof o.discountCents !== "number" || !Number.isFinite(o.discountCents)) {
+      return null;
+    }
+    return { appliedCode: code, discountCents: Math.trunc(o.discountCents) };
+  }, [entity?.couponOutcome]);
+
   const orderInvalidateKeys = [orderKeys.detail(orderId), orderKeys.timeline(orderId), orderKeys.all()];
   const canUpdateOrder = adminHasAnyPermission(actorPermissions, ["orders.update"]);
   const canOverrideFulfillment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment", "orders.update"]);
@@ -706,15 +731,27 @@ export const OrderDetailPage = () => {
                     </div>
                     <div className="flex flex-wrap justify-between gap-x-3 gap-y-1">
                       <span className="text-slate-400">Logistics & shipping</span>
-                      <span className="font-mono">—</span>
+                      <span className="font-mono tabular-nums">
+                        {formatMoney(checkoutShippingCents, currency)}
+                      </span>
                     </div>
                     <div className="flex flex-wrap justify-between gap-x-3 gap-y-1">
                       <span className="text-slate-400">Estimated VAT / tax</span>
-                      <span className="font-mono">—</span>
+                      <span className="font-mono tabular-nums">{formatMoney(checkoutTaxCents, currency)}</span>
                     </div>
+                    {appliedCheckoutCoupon ? (
+                      <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-sm italic text-red-300/90">
+                        <span>Coupon ({appliedCheckoutCoupon.appliedCode})</span>
+                        <span className="font-mono not-italic tabular-nums">
+                          {formatMoney(appliedCheckoutCoupon.discountCents, currency)}
+                        </span>
+                      </div>
+                    ) : null}
                     <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-sm italic text-red-300/90">
                       <span>Discounts</span>
-                      <span className="font-mono not-italic">—</span>
+                      <span className="font-mono not-italic tabular-nums">
+                        {formatMoney(checkoutDiscountCents, currency)}
+                      </span>
                     </div>
                   </div>
                 </div>
