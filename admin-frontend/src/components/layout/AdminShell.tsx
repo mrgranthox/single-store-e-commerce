@@ -54,7 +54,7 @@ const supportGroupScreenIcon: Record<string, string> = {
 const ordersGroupScreenIcon: Record<string, string> = {
   "orders-list": "receipt_long",
   "orders-fulfillment-queue": "package_2",
-  "orders-dispatch-queue": "local_shipping",
+  "orders-dispatch-queue": "outbox",
   "shipments-hub": "local_shipping",
   "returns-queue": "assignment_return",
   "orders-cancellation-requests": "cancel_schedule_send"
@@ -62,11 +62,53 @@ const ordersGroupScreenIcon: Record<string, string> = {
 
 const contentGroupScreenIcon: Record<string, string> = {
   "content-banners": "view_carousel",
-  "content-pages": "description"
+  "content-pages": "description",
+  "content-homepage": "home"
+};
+
+const catalogGroupScreenIcon: Record<string, string> = {
+  "catalog-product-list": "format_list_bulleted",
+  "catalog-categories": "category",
+  "catalog-brands": "workspace_premium",
+  "catalog-reviews": "rate_review"
+};
+
+const inventoryGroupScreenIcon: Record<string, string> = {
+  "inventory-overview": "space_dashboard",
+  "inventory-low-stock": "warning_amber",
+  "inventory-out-of-stock": "remove_shopping_cart",
+  "inventory-warehouses": "warehouse",
+  "inventory-movements": "sync_alt",
+  "inventory-adjustments": "edit_attributes"
+};
+
+const reportsGroupScreenIcon: Record<string, string> = {
+  "reports-overview": "insert_chart",
+  "reports-sales": "point_of_sale",
+  "reports-products": "query_stats",
+  "reports-inventory": "table_chart",
+  "reports-customers": "groups",
+  "reports-support": "headset_mic",
+  "reports-refunds-returns": "published_with_changes",
+  "reports-marketing": "campaign"
+};
+
+const customersGroupScreenIcon: Record<string, string> = {
+  "customers-list": "person_search"
+};
+
+const securityGroupScreenIcon: Record<string, string> = {
+  "security-audit-logs": "manage_search"
+};
+
+const systemGroupScreenIcon: Record<string, string> = {
+  "system-settings": "settings",
+  "system-notifications": "notifications",
+  "system-admin-users": "admin_panel_settings"
 };
 
 const marketingGroupScreenIcon: Record<string, string> = {
-  "marketing-coupons": "confirmation_number",
+  "marketing-coupons": "redeem",
   "marketing-coupon-analytics": "analytics",
   "marketing-promotions": "sell",
   "marketing-promotion-rules-hub": "account_tree",
@@ -79,13 +121,25 @@ const navMaterialIcon = (screenId: string, group: AdminScreenGroup) =>
     ? paymentsGroupScreenIcon[screenId]!
     : group === "orders" && ordersGroupScreenIcon[screenId]
       ? ordersGroupScreenIcon[screenId]!
-      : group === "support" && supportGroupScreenIcon[screenId]
-        ? supportGroupScreenIcon[screenId]!
-        : group === "content" && contentGroupScreenIcon[screenId]
-          ? contentGroupScreenIcon[screenId]!
-          : group === "marketing" && marketingGroupScreenIcon[screenId]
-            ? marketingGroupScreenIcon[screenId]!
-            : groupMaterialIcon[group];
+      : group === "catalog" && catalogGroupScreenIcon[screenId]
+        ? catalogGroupScreenIcon[screenId]!
+        : group === "inventory" && inventoryGroupScreenIcon[screenId]
+          ? inventoryGroupScreenIcon[screenId]!
+          : group === "reports" && reportsGroupScreenIcon[screenId]
+            ? reportsGroupScreenIcon[screenId]!
+            : group === "system" && systemGroupScreenIcon[screenId]
+              ? systemGroupScreenIcon[screenId]!
+              : group === "support" && supportGroupScreenIcon[screenId]
+                ? supportGroupScreenIcon[screenId]!
+                : group === "content" && contentGroupScreenIcon[screenId]
+                  ? contentGroupScreenIcon[screenId]!
+                  : group === "marketing" && marketingGroupScreenIcon[screenId]
+                    ? marketingGroupScreenIcon[screenId]!
+                    : group === "customers" && customersGroupScreenIcon[screenId]
+                      ? customersGroupScreenIcon[screenId]!
+                      : group === "security" && securityGroupScreenIcon[screenId]
+                        ? securityGroupScreenIcon[screenId]!
+                        : groupMaterialIcon[group];
 
 const navLinkClass = (isActive: boolean, compact: boolean) =>
   clsx(
