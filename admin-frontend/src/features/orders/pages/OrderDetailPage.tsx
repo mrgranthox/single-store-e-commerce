@@ -122,13 +122,26 @@ export const OrderDetailPage = () => {
     { enabled: Boolean(orderId) },
   );
 
+  const nonCancelledShipments = useMemo(
+    () =>
+      (entity?.shipments ?? []).filter((s) => s.status.toUpperCase() !== "CANCELLED"),
+    [entity?.shipments]
+  );
+
   const latestShipment = useMemo(() => {
-    const s = entity?.shipments ?? [];
-    if (s.length === 0) {
+    if (nonCancelledShipments.length === 0) {
       return null;
     }
-    return [...s].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0] ?? null;
-  }, [entity?.shipments]);
+    return (
+      [...nonCancelledShipments].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )[0] ?? null
+    );
+  }, [nonCancelledShipments]);
+
+  const hasFulfillmentShipment = nonCancelledShipments.length > 0;
+  const hasAssignedWarehouse = Boolean(entity?.assignedWarehouse?.id);
+  const [showWarehouseOverride, setShowWarehouseOverride] = useState(false);
 
   const shippingSnapshotRows = useMemo(() => {
     if (!entity?.addressSnapshot) {
@@ -195,6 +208,15 @@ export const OrderDetailPage = () => {
   const canOverrideFulfillment = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment", "orders.update"]);
   const canCancelOrder = adminHasAnyPermission(actorPermissions, ["orders.cancel"]);
   const canViewAudit = adminHasAnyPermission(actorPermissions, ["security.audit.read"]);
+
+  const warehouseEntryVisible = useMemo(
+    () =>
+      canOverrideFulfillment &&
+      !hasFulfillmentShipment &&
+      (!hasAssignedWarehouse || showWarehouseOverride),
+    [canOverrideFulfillment, hasFulfillmentShipment, hasAssignedWarehouse, showWarehouseOverride]
+  );
+
   const normalizedWarehouseId = warehouseId.trim();
   const normalizedShipWarehouseId = shipWarehouseId.trim();
   const normalizedCampaignId = campaignId.trim();
@@ -211,6 +233,20 @@ export const OrderDetailPage = () => {
     }
     setCampaignId(entity.campaignId ?? "");
   }, [entity?.campaignId, entity?.id]);
+
+  useEffect(() => {
+    if (entity?.assignedWarehouse?.id) {
+      setShowWarehouseOverride(false);
+    }
+  }, [entity?.assignedWarehouse?.id, entity?.id]);
+
+  useEffect(() => {
+    const wid = entity?.assignedWarehouse?.id?.trim();
+    if (!wid) {
+      return;
+    }
+    setShipWarehouseId((prev) => (prev.trim() ? prev : wid));
+  }, [entity?.assignedWarehouse?.id, entity?.id]);
 
   const orderDetailKey = orderKeys.detail(orderId);
 
@@ -279,7 +315,7 @@ export const OrderDetailPage = () => {
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Create shipment failed.",
     isAllowed: canOverrideFulfillment,
-    isAvailable: shipmentCreatable,
+    isAvailable: shipmentCreatable && !hasFulfillmentShipment,
     invalidate: orderInvalidateKeys });
 
   const campaignMut = useAdminAction({
@@ -352,9 +388,9 @@ export const OrderDetailPage = () => {
     confirmAction === "status"
       ? `Apply ${humanize(nextStatus).toLowerCase()} status?`
       : confirmAction === "assign"
-        ? "Assign this warehouse?"
+        ? "Update warehouse assignment?"
         : confirmAction === "ship"
-          ? "Create this shipment?"
+          ? "Create shipment record?"
           : confirmAction === "cancel"
             ? "Cancel this order?"
             : "";
@@ -363,9 +399,9 @@ export const OrderDetailPage = () => {
     confirmAction === "status"
       ? `This will update the order to ${humanize(nextStatus).toLowerCase()}${statusReason.trim() ? ` with reason "${statusReason.trim()}".` : "."}`
       : confirmAction === "assign"
-        ? `This will assign warehouse ${warehouseId.trim()} to the order${assignNote.trim() ? ` with note "${assignNote.trim()}".` : "."}`
+        ? `This will set fulfillment to warehouse ${warehouseId.trim()}${assignNote.trim() ? ` with note "${assignNote.trim()}".` : "."}`
         : confirmAction === "ship"
-          ? `This will create a shipment from warehouse ${shipWarehouseId.trim()}${shipCarrier.trim() ? ` using ${shipCarrier.trim()}` : ""}${shipTracking.trim() ? ` with tracking ${shipTracking.trim()}` : ""}.`
+          ? `This will create a shipment from warehouse ${normalizedShipWarehouseId || "(assigned warehouse)"}${shipCarrier.trim() ? ` using ${shipCarrier.trim()}` : ""}${shipTracking.trim() ? ` with tracking ${shipTracking.trim()}` : ""}.`
           : confirmAction === "cancel"
             ? `This will cancel the order${cancelReason.trim() ? ` for reason "${cancelReason.trim()}".` : "."}`
             : undefined;
@@ -374,9 +410,9 @@ export const OrderDetailPage = () => {
     confirmAction === "status"
       ? "Confirm status update"
       : confirmAction === "assign"
-        ? "Confirm assignment"
+        ? "Confirm warehouse"
         : confirmAction === "ship"
-          ? "Confirm shipment"
+          ? "Confirm create shipment"
           : confirmAction === "cancel"
             ? "Confirm cancellation"
             : "Confirm";
@@ -418,7 +454,7 @@ export const OrderDetailPage = () => {
         <PageHeader
           title={entity ? `Order ${entity.orderNumber}` : "Order detail"}
           titleSize="deck"
-          description="Operational view — manifest, financials, fulfillment context, and allowed mutations."
+          description="Operational view — manifest, financials, fulfillment (warehouse + first shipment are automated on confirm), and allowed mutations."
           autoBreadcrumbs={false}
           actionMenuItems={[refreshDataMenuItem(queryClient, orderKeys.detail(orderId))]}
         />
@@ -587,6 +623,12 @@ export const OrderDetailPage = () => {
                       {latestShipment?.carrier ?? "—"}
                     </span>
                   </div>
+                  {entity.assignedWarehouse?.name ? (
+                    <p className="border-t border-slate-100 pt-3 text-xs leading-relaxed text-slate-500">
+                      Warehouse and first shipment are created automatically when the order confirms (override only if
+                      needed below).
+                    </p>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -770,7 +812,7 @@ export const OrderDetailPage = () => {
 
             <SurfaceCard
               title="Admin operations"
-              description="Actions depend on your role. Invalid transitions are rejected and audited server-side."
+              description="Warehouse and the first shipment are created when the order is confirmed. Status changes and overrides still require permission; invalid transitions are rejected server-side."
               contentClassName="px-4 py-4 sm:px-5 sm:py-5"
             >
               <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
@@ -820,85 +862,212 @@ export const OrderDetailPage = () => {
                 </div>
 
                 <div id="order-admin-assign" className="scroll-mt-28 space-y-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Assign warehouse</h3>
-                  <label className="flex flex-col gap-1 text-xs text-slate-600">
-                    Warehouse ID
-                    <input
-                      value={warehouseId}
-                      onChange={(ev) => setWarehouseId(ev.target.value)}
-                      className="font-mono rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                      placeholder="Paste warehouse ID from inventory"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-1 text-xs text-slate-600">
-                    Note (optional)
-                    <input
-                      value={assignNote}
-                      onChange={(ev) => setAssignNote(ev.target.value)}
-                      className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                    />
-                  </label>
-                  <button
-                    type="button"
-                    disabled={assignMut.isPending || assignMut.blocked || !warehouseId.trim() || !canOverrideFulfillment}
-                    onClick={() => setConfirmAction("assign")}
-                    className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
-                    title={canOverrideFulfillment ? undefined : "Requires orders.override_fulfillment permission"}
-                  >
-                    {assignMut.isPending ? "Assigning…" : "Assign warehouse"}
-                  </button>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Warehouse</h3>
+                  {hasAssignedWarehouse ? (
+                    <p className="text-sm leading-relaxed text-slate-600">
+                      <span className="font-semibold text-slate-900">{entity.assignedWarehouse!.name}</span>
+                      {entity.assignedWarehouse!.code ? ` (${entity.assignedWarehouse!.code})` : ""} — set from
+                      inventory reservations when the order was confirmed.
+                    </p>
+                  ) : (
+                    <p className="text-sm leading-relaxed text-slate-600">
+                      No warehouse on this order yet.
+                      {!canOverrideFulfillment
+                        ? " You need fulfillment permissions to assign one manually."
+                        : " Use the form below if automation did not run (for example, no stock reservations)."}
+                    </p>
+                  )}
+                  {warehouseEntryVisible ? (
+                    <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50/80 p-3">
+                      <label className="flex flex-col gap-1 text-xs text-slate-600">
+                        Warehouse ID
+                        <input
+                          value={warehouseId}
+                          onChange={(ev) => setWarehouseId(ev.target.value)}
+                          className="font-mono rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                          placeholder="Paste warehouse ID from inventory"
+                        />
+                      </label>
+                      <label className="flex flex-col gap-1 text-xs text-slate-600">
+                        Note (optional)
+                        <input
+                          value={assignNote}
+                          onChange={(ev) => setAssignNote(ev.target.value)}
+                          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                        />
+                      </label>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button
+                          type="button"
+                          disabled={assignMut.isPending || assignMut.blocked || !warehouseId.trim()}
+                          onClick={() => setConfirmAction("assign")}
+                          className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
+                        >
+                          {assignMut.isPending ? "Assigning…" : "Apply warehouse"}
+                        </button>
+                        {hasAssignedWarehouse ? (
+                          <button
+                            type="button"
+                            className="text-xs font-semibold text-slate-500 underline decoration-slate-300 hover:text-slate-800"
+                            onClick={() => setShowWarehouseOverride(false)}
+                          >
+                            Cancel override
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : hasAssignedWarehouse && canOverrideFulfillment && !hasFulfillmentShipment ? (
+                    <button
+                      type="button"
+                      className="text-sm font-semibold text-[#1653cc] hover:underline"
+                      onClick={() => setShowWarehouseOverride(true)}
+                    >
+                      Override warehouse…
+                    </button>
+                  ) : null}
                 </div>
 
                 <div id="order-admin-ship" className="scroll-mt-28 space-y-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Create shipment</h3>
-                  <label className="flex flex-col gap-1 text-xs text-slate-600">
-                    Warehouse ID
-                    <input
-                      value={shipWarehouseId}
-                      onChange={(ev) => setShipWarehouseId(ev.target.value)}
-                      className="font-mono rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                      placeholder="Fulfillment warehouse for this shipment"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-1 text-xs text-slate-600">
-                    Carrier (optional)
-                    <input
-                      value={shipCarrier}
-                      onChange={(ev) => setShipCarrier(ev.target.value)}
-                      className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-1 text-xs text-slate-600">
-                    Tracking # (optional)
-                    <input
-                      value={shipTracking}
-                      onChange={(ev) => setShipTracking(ev.target.value)}
-                      className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-1 text-xs text-slate-600">
-                    Note (optional)
-                    <input
-                      value={shipNote}
-                      onChange={(ev) => setShipNote(ev.target.value)}
-                      className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                    />
-                  </label>
-                  <button
-                    type="button"
-                    disabled={shipMut.isPending || shipMut.blocked}
-                    onClick={() => setConfirmAction("ship")}
-                    className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
-                    title={
-                      !canOverrideFulfillment
-                        ? "Requires orders.override_fulfillment permission"
-                        : !shipmentCreatable
-                          ? "Warehouse is required before creating a shipment"
-                          : undefined
-                    }
-                  >
-                    {shipMut.isPending ? "Creating…" : "Create shipment"}
-                  </button>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Shipment</h3>
+                  {hasFulfillmentShipment && latestShipment ? (
+                    <div className="space-y-3">
+                      <p className="text-sm leading-relaxed text-slate-600">
+                        The first shipment was created automatically after the warehouse was set. Continue dispatch and
+                        delivery from the shipment workspace.
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <StatusBadge
+                          label={humanize(latestShipment.status)}
+                          tone={fulfillmentStateTone(latestShipment.status)}
+                        />
+                        <Link
+                          to={`/admin/shipments/${latestShipment.id}`}
+                          className="text-sm font-semibold text-[#1653cc] hover:underline"
+                        >
+                          Open shipment
+                        </Link>
+                        <Link
+                          to={`/admin/shipments/${latestShipment.id}/tracking`}
+                          className="text-xs font-semibold text-slate-500 hover:text-[#1653cc]"
+                        >
+                          Tracking events
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {!hasAssignedWarehouse ? (
+                        <p className="text-sm text-amber-900">
+                          Assign a warehouse before a shipment can exist. Shipment creation uses the same warehouse id
+                          as fulfillment.
+                        </p>
+                      ) : (
+                        <p className="text-sm leading-relaxed text-slate-600">
+                          No active shipment on this order yet. One is normally created right after the warehouse is
+                          assigned. If it is missing, create it here (carrier and tracking are optional).
+                        </p>
+                      )}
+                      {canOverrideFulfillment && !hasFulfillmentShipment && hasAssignedWarehouse ? (
+                        <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50/80 p-3">
+                          <div className="text-xs text-slate-600">
+                            <span className="font-semibold text-slate-800">Warehouse (used for shipment)</span>
+                            <p className="mt-1 font-mono text-[11px] text-slate-700">{entity.assignedWarehouse!.id}</p>
+                            <p className="text-sm font-medium text-slate-900">
+                              {entity.assignedWarehouse!.name}
+                              {entity.assignedWarehouse!.code ? ` · ${entity.assignedWarehouse!.code}` : ""}
+                            </p>
+                          </div>
+                          <label className="flex flex-col gap-1 text-xs text-slate-600">
+                            Carrier (optional)
+                            <input
+                              value={shipCarrier}
+                              onChange={(ev) => setShipCarrier(ev.target.value)}
+                              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                          </label>
+                          <label className="flex flex-col gap-1 text-xs text-slate-600">
+                            Tracking # (optional)
+                            <input
+                              value={shipTracking}
+                              onChange={(ev) => setShipTracking(ev.target.value)}
+                              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                          </label>
+                          <label className="flex flex-col gap-1 text-xs text-slate-600">
+                            Note (optional)
+                            <input
+                              value={shipNote}
+                              onChange={(ev) => setShipNote(ev.target.value)}
+                              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            disabled={shipMut.isPending || shipMut.blocked}
+                            onClick={() => setConfirmAction("ship")}
+                            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
+                            title={
+                              !shipmentCreatable
+                                ? "Warehouse id is required — refresh if the order has a warehouse but the field is empty"
+                                : undefined
+                            }
+                          >
+                            {shipMut.isPending ? "Creating…" : "Create shipment (fallback)"}
+                          </button>
+                        </div>
+                      ) : null}
+                      {canOverrideFulfillment && !hasFulfillmentShipment && !hasAssignedWarehouse ? (
+                        <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50/80 p-3">
+                          <label className="flex flex-col gap-1 text-xs text-slate-600">
+                            Warehouse ID
+                            <input
+                              value={shipWarehouseId}
+                              onChange={(ev) => setShipWarehouseId(ev.target.value)}
+                              className="font-mono rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                              placeholder="Fulfillment warehouse for this shipment"
+                            />
+                          </label>
+                          <label className="flex flex-col gap-1 text-xs text-slate-600">
+                            Carrier (optional)
+                            <input
+                              value={shipCarrier}
+                              onChange={(ev) => setShipCarrier(ev.target.value)}
+                              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                          </label>
+                          <label className="flex flex-col gap-1 text-xs text-slate-600">
+                            Tracking # (optional)
+                            <input
+                              value={shipTracking}
+                              onChange={(ev) => setShipTracking(ev.target.value)}
+                              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                          </label>
+                          <label className="flex flex-col gap-1 text-xs text-slate-600">
+                            Note (optional)
+                            <input
+                              value={shipNote}
+                              onChange={(ev) => setShipNote(ev.target.value)}
+                              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                            />
+                          </label>
+                          <button
+                            type="button"
+                            disabled={shipMut.isPending || shipMut.blocked}
+                            onClick={() => setConfirmAction("ship")}
+                            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
+                            title={
+                              !shipmentCreatable
+                                ? "Enter a warehouse id before creating a shipment"
+                                : undefined
+                            }
+                          >
+                            {shipMut.isPending ? "Creating…" : "Create shipment"}
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
 
                 <div id="order-admin-campaign" className="scroll-mt-28 space-y-3">
@@ -994,21 +1163,35 @@ export const OrderDetailPage = () => {
           <button
             type="button"
             className={railBtn}
-            disabled={!canOverrideFulfillment}
-            title="Assign warehouse"
+            disabled={!canOverrideFulfillment || (Boolean(hasAssignedWarehouse) && Boolean(hasFulfillmentShipment))}
+            title={
+              hasAssignedWarehouse && hasFulfillmentShipment
+                ? "Warehouse is set and shipment exists"
+                : "Warehouse override"
+            }
             onClick={() => scrollToSection("order-admin-assign")}
           >
             <WarehouseIcon className="h-5 w-5" />
           </button>
-          <button
-            type="button"
-            className={railBtn}
-            disabled={!canOverrideFulfillment}
-            title="Create shipment"
-            onClick={() => scrollToSection("order-admin-ship")}
-          >
-            <Truck className="h-5 w-5" />
-          </button>
+          {hasFulfillmentShipment && latestShipment ? (
+            <Link
+              to={`/admin/shipments/${latestShipment.id}`}
+              className={railBtn}
+              title="Open shipment"
+            >
+              <Truck className="h-5 w-5" />
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className={railBtn}
+              disabled={!canOverrideFulfillment}
+              title="Shipment fallback or status"
+              onClick={() => scrollToSection("order-admin-ship")}
+            >
+              <Truck className="h-5 w-5" />
+            </button>
+          )}
           <Link
             to={`/admin/orders/${orderId}/timeline`}
             className={railBtn}
