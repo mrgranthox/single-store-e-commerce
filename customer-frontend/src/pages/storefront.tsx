@@ -17,6 +17,7 @@ import {
 import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import type { Product } from "@/lib/types/product";
 import { neutralFieldClass } from "@/lib/form-field-styles";
+import { applyOptimisticAddCartItem } from "@/lib/checkout/optimistic-cart";
 import { useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
 import { useWishlistActions } from "@/hooks/use-wishlist-actions";
 import { useCustomerStore } from "@/lib/store/customer-store";
@@ -957,6 +958,24 @@ export const ProductDetailPage = () => {
     if (!selectedVariantId) return;
     setCartBusy(true);
     setCartErr(null);
+    const previousCart = queryClient.getQueryData(cartQueryKey);
+    const selectedVariantPriceGhs = selectedVariant?.price ?? product?.price;
+    queryClient.setQueryData(cartQueryKey, (current) =>
+      applyOptimisticAddCartItem(current, {
+        variantId: selectedVariantId,
+        quantity: 1,
+        unitAmountCents: typeof selectedVariantPriceGhs === "number" ? Math.round(selectedVariantPriceGhs * 100) : undefined,
+        mediaUrl: selectedImage ?? product?.imageUrl ?? null,
+        product: product
+          ? {
+              id: product.id,
+              slug: product.slug,
+              title: product.name,
+              status: "PUBLISHED"
+            }
+          : undefined
+      })
+    );
     try {
       const response = await customerBackendApi.addCartItem({
         variantId: selectedVariantId,
@@ -964,6 +983,7 @@ export const ProductDetailPage = () => {
       });
       queryClient.setQueryData(cartQueryKey, response.data);
     } catch (error) {
+      queryClient.setQueryData(cartQueryKey, previousCart);
       setCartErr(error instanceof CommerceApiError ? error.message : "Could not add to bag.");
     } finally {
       setCartBusy(false);

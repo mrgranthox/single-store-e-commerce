@@ -28,6 +28,79 @@ import { mapCartEvaluationToOrderSummary } from "@/lib/checkout/map-cart-evaluat
 import { CUSTOMER_CART_QUERY_ROOT, useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
+type CartEvalItem = {
+  id?: string;
+  quantity?: number;
+  pricing?: {
+    lineSubtotalCents?: number;
+  };
+};
+
+type CartEvalShape = {
+  items?: CartEvalItem[];
+  normalizedTotals?: {
+    subtotalCents?: number;
+    discountCents?: number;
+    shippingCents?: number;
+    taxCents?: number;
+    grandTotalCents?: number;
+  };
+};
+
+const toNonNegativeInt = (value: unknown) => (typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0);
+
+const applyOptimisticCartQuantity = (evaluation: unknown, itemId: string, nextQuantity: number): unknown => {
+  if (!evaluation || typeof evaluation !== "object") return evaluation;
+  const source = evaluation as CartEvalShape;
+  const sourceItems = Array.isArray(source.items) ? source.items : [];
+  const clampedQty = Math.max(0, Math.trunc(nextQuantity));
+  const target = sourceItems.find((item) => item && item.id === itemId);
+  if (!target) return evaluation;
+
+  const currentQty = toNonNegativeInt(target.quantity);
+  const currentLineSubtotal = toNonNegativeInt(target.pricing?.lineSubtotalCents);
+  const unitPriceCents = currentQty > 0 ? Math.round(currentLineSubtotal / currentQty) : 0;
+  const nextLineSubtotal = clampedQty > 0 ? unitPriceCents * clampedQty : 0;
+
+  const nextItems =
+    clampedQty > 0
+      ? sourceItems.map((item) =>
+          item && item.id === itemId
+            ? {
+                ...item,
+                quantity: clampedQty,
+                pricing: {
+                  ...(item.pricing ?? {}),
+                  lineSubtotalCents: nextLineSubtotal
+                }
+              }
+            : item
+        )
+      : sourceItems.filter((item) => !(item && item.id === itemId));
+
+  const totals = source.normalizedTotals ?? {};
+  const currentSubtotal = toNonNegativeInt(totals.subtotalCents);
+  const currentDiscount = toNonNegativeInt(totals.discountCents);
+  const currentShipping = toNonNegativeInt(totals.shippingCents);
+  const currentTax = toNonNegativeInt(totals.taxCents);
+  const subtotalDelta = nextLineSubtotal - currentLineSubtotal;
+  const optimisticSubtotal = Math.max(0, currentSubtotal + subtotalDelta);
+  const discountRate = currentSubtotal > 0 ? currentDiscount / currentSubtotal : 0;
+  const optimisticDiscount = Math.max(0, Math.round(optimisticSubtotal * discountRate));
+  const optimisticGrandTotal = Math.max(0, optimisticSubtotal - optimisticDiscount + currentShipping + currentTax);
+
+  return {
+    ...source,
+    items: nextItems,
+    normalizedTotals: {
+      ...totals,
+      subtotalCents: optimisticSubtotal,
+      discountCents: optimisticDiscount,
+      grandTotalCents: optimisticGrandTotal
+    }
+  } satisfies CartEvalShape;
+};
+
 /* ─────────────────────────────────────────────
    CART PAGE — matches cart_review/code.html
 ───────────────────────────────────────────── */
@@ -79,6 +152,18 @@ export const CartPage = () => {
         return customerBackendApi.deleteCartItem(itemId);
       }
       return customerBackendApi.patchCartItem(itemId, { quantity });
+    },
+    onMutate: async ({ itemId, quantity }) => {
+      await queryClient.cancelQueries({ queryKey: cartQueryKey });
+      const previousCart = queryClient.getQueryData(cartQueryKey);
+      const optimistic = applyOptimisticCartQuantity(previousCart, itemId, quantity);
+      queryClient.setQueryData(cartQueryKey, optimistic);
+      return { previousCart };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previousCart !== undefined) {
+        queryClient.setQueryData(cartQueryKey, context.previousCart);
+      }
     },
     onSuccess: (data) => {
       queryClient.setQueryData(cartQueryKey, data.data);

@@ -7,6 +7,7 @@ import { formatGhs } from "@/lib/currency";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
+import { applyOptimisticAddCartItem } from "@/lib/checkout/optimistic-cart";
 import { useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
 import { useWishlistActions } from "@/hooks/use-wishlist-actions";
 import type { Product } from "@/lib/types/product";
@@ -74,10 +75,26 @@ export const ProductCard = ({ product }: { product: Product }) => {
             if (!variantId) return;
             setCartBusy(true);
             setCartError(null);
+            const previousCart = queryClient.getQueryData(cartQueryKey);
+            queryClient.setQueryData(cartQueryKey, (current) =>
+              applyOptimisticAddCartItem(current, {
+                variantId,
+                quantity: 1,
+                unitAmountCents: Math.round(product.price * 100),
+                mediaUrl: product.imageUrl,
+                product: {
+                  id: product.id,
+                  slug: product.slug,
+                  title: product.name,
+                  status: "PUBLISHED"
+                }
+              })
+            );
             try {
               const response = await customerBackendApi.addCartItem({ variantId, quantity: 1 });
               queryClient.setQueryData(cartQueryKey, response.data);
             } catch (error) {
+              queryClient.setQueryData(cartQueryKey, previousCart);
               const message = error instanceof CommerceApiError ? error.message : "Could not add to bag.";
               setCartError(message);
             } finally {
