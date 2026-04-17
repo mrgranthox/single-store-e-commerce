@@ -1,4 +1,4 @@
-import type { Product } from "@/lib/data/customer-mock";
+import type { Product } from "@/lib/types/product";
 
 /** Normalise for matching (slug fragments, diacritics-safe ASCII). */
 function norm(s: string): string {

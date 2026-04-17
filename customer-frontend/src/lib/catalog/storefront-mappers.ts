@@ -1,4 +1,4 @@
-import type { Product } from "@/lib/data/customer-mock";
+import type { Product } from "@/lib/types/product";
 
 /** Map storefront public product card (from `GET /api/products`) to UI product shape used across customer-frontend. */
 export type UiStorefrontProduct = {
@@ -176,11 +176,23 @@ export const mapPublicProductDetailToProduct = (raw: unknown): Product | null =>
     const v = row as ApiVariantDetail;
     if (typeof v.id !== "string" || typeof v.sku !== "string") continue;
     const attrs = parseVariantAttributes(v.attributes);
-    const inStock = v.availability?.inStock !== false && (v.availability?.availableQuantity ?? 0) > 0;
+    const availableQuantity =
+      typeof v.availability?.availableQuantity === "number"
+        ? Math.max(0, Math.trunc(v.availability.availableQuantity))
+        : 0;
+    const inStock = v.availability?.inStock !== false && availableQuantity > 0;
+    const variantAmountCents =
+      typeof v.pricing?.amountCents === "number"
+        ? v.pricing.amountCents
+        : typeof pricing?.amountCents === "number"
+          ? pricing.amountCents
+          : null;
     pdpVariants.push({
       id: v.id,
       label: variantLabelFromAttrs(attrs, v.sku),
-      inStock
+      inStock,
+      stock: availableQuantity,
+      price: typeof variantAmountCents === "number" ? centsToGhs(variantAmountCents) : undefined
     });
   }
 

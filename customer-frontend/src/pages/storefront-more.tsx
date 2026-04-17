@@ -7,7 +7,7 @@ import { Icon } from "@/components/Icon";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import { mapPublicProductDetailToProduct, mapStorefrontProductCards, mapWishlistApiItemToProduct } from "@/lib/catalog/storefront-mappers";
-import type { Product } from "@/lib/data/customer-mock";
+import type { Product } from "@/lib/types/product";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 const ProductSubpageMissing = () => (
@@ -195,6 +195,18 @@ export const ProductReviewsPage = () => {
   if (productQuery.isError || !product) return <ProductSubpageMissing />;
 
   const rawReviews = reviewsQuery.data ?? [];
+  const totalReviews = rawReviews.length;
+  const averageRating =
+    totalReviews > 0
+      ? Math.round(
+          (rawReviews.reduce((sum, row) => {
+            const rating = typeof row.rating === "number" ? row.rating : 0;
+            return sum + rating;
+          }, 0) /
+            totalReviews) *
+            10
+        ) / 10
+      : product.rating ?? 0;
   const reviews = rawReviews.filter((r) => (filter === "all" ? true : String(r.rating) === filter));
 
   return (
@@ -208,8 +220,8 @@ export const ProductReviewsPage = () => {
           <div>
             <h1 className="text-3xl font-headline font-extrabold tracking-tighter">Reviews</h1>
             <div className="flex items-center gap-2 mt-2">
-              <StarRating rating={product.rating ?? 4} />
-              <span className="text-sm text-outline">({product.reviewCount ?? 0} total)</span>
+              <StarRating rating={averageRating} />
+              <span className="text-sm text-outline">({totalReviews} total)</span>
             </div>
           </div>
           <div className="flex gap-2">
@@ -233,14 +245,19 @@ export const ProductReviewsPage = () => {
           <p className="text-error text-sm">Reviews could not be loaded.</p>
         ) : (
           <ul className="space-y-6">
-            {reviews.map((r) => {
+            {reviews.length === 0 ? (
+              <li className="p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 text-on-surface-variant text-sm">
+                No reviews match this filter yet.
+              </li>
+            ) : (
+              reviews.map((r) => {
               const title =
                 typeof r.body === "string" && r.body.trim().length > 0
                   ? r.body.trim().split("\n")[0]!.slice(0, 80)
                   : "Review";
               const date =
                 typeof r.createdAt === "string"
-                  ? new Date(r.createdAt).toLocaleDateString(undefined, { month: "short", year: "numeric" })
+                  ? new Date(r.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
                   : "";
               return (
                 <li key={r.id ?? title} className="p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
@@ -257,7 +274,8 @@ export const ProductReviewsPage = () => {
                   <p className="text-on-surface-variant leading-relaxed">{r.body}</p>
                 </li>
               );
-            })}
+            })
+            )}
           </ul>
         )}
       </StorefrontMain>

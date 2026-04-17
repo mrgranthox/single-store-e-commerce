@@ -9,7 +9,7 @@ import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import { useCustomerCartQueryKey } from "@/hooks/use-cart-summary";
 import { useWishlistActions } from "@/hooks/use-wishlist-actions";
-import type { Product } from "@/lib/data/customer-mock";
+import type { Product } from "@/lib/types/product";
 
 /* ── input ── */
 export const fieldClass = `w-full rounded-lg px-4 py-4 ${neutralFieldClass}`;

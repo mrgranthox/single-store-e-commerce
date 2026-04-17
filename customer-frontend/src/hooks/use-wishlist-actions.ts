@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Product } from "@/lib/data/customer-mock";
+import type { Product } from "@/lib/types/product";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
