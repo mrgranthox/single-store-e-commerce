@@ -525,9 +525,40 @@ export const CheckoutShippingPage = () => {
   }, [cartQuery.data]);
 
   const effectiveShippingOptions = useMemo(() => {
-    if (shippingOptions.length > 0) return shippingOptions;
+    const normalizedBackendOptions = shippingOptions
+      .map((option) => {
+        const code = option.code.trim().toUpperCase();
+        if (code === "PAY_ON_DELIVERY") {
+          return {
+            code: "PAY_ON_DELIVERY",
+            label: "Pay on delivery",
+            amountCents: 0,
+            estimatedDeliveryWindow: option.estimatedDeliveryWindow
+          };
+        }
+        if (code === "PREPAID") {
+          return {
+            code: "PREPAID",
+            label: "No pay on delivery (Standard delivery)",
+            amountCents: option.amountCents,
+            estimatedDeliveryWindow: option.estimatedDeliveryWindow
+          };
+        }
+        return null;
+      })
+      .filter(
+        (
+          option
+        ): option is { code: "PAY_ON_DELIVERY" | "PREPAID"; label: string; amountCents: number; estimatedDeliveryWindow: string } =>
+          Boolean(option)
+      );
+
+    if (normalizedBackendOptions.length === 2) {
+      return normalizedBackendOptions;
+    }
+
     const subtotalCents = Math.max(0, Math.round(summary.subtotalGhs * 100));
-    const prepaidFeeCents = subtotalCents >= 25_000 ? 2_000 : 3_000;
+    const prepaidFeeCents = subtotalCents > 25_000 ? 2_000 : 3_000;
     return [
       {
         code: "PAY_ON_DELIVERY",
@@ -537,7 +568,7 @@ export const CheckoutShippingPage = () => {
       },
       {
         code: "PREPAID",
-        label: "No pay on delivery",
+        label: "No pay on delivery (Standard delivery)",
         amountCents: prepaidFeeCents,
         estimatedDeliveryWindow: "1-3 business days"
       }
@@ -803,14 +834,12 @@ export const CheckoutShippingPage = () => {
                           <p className="font-bold">{method.label}</p>
                           <p className="text-sm text-on-surface-variant">
                             {method.code === "PAY_ON_DELIVERY"
-                              ? "Pay when your order is delivered."
-                              : `Shipping fee applies (${formatGhs(method.amountCents / 100)}).`}
+                              ? "Pay the courier when your order is delivered."
+                              : `Shipping fee: ${formatGhs(method.amountCents / 100)}.`}
                           </p>
                         </div>
                       </div>
-                      <span className="font-bold text-secondary">
-                        {method.amountCents === 0 ? "Free" : formatGhs(method.amountCents / 100)}
-                      </span>
+                      <span className="font-bold text-secondary">{formatGhs(method.amountCents / 100)}</span>
                     </label>
                   ))}
                 </div>
@@ -831,7 +860,7 @@ export const CheckoutShippingPage = () => {
         <CheckoutOrderSummary
           items={orderLines}
           subtotal={summary.subtotalGhs}
-          shipping={selectedShippingCents === 0 ? "Free" : formatGhs(selectedShippingCents / 100)}
+          shipping={formatGhs(selectedShippingCents / 100)}
           tax={summary.taxGhs}
           total={shippingTotalGhs}
           showPromoInput={!couponOutcome?.valid}

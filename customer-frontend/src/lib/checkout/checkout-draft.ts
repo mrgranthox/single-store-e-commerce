@@ -51,7 +51,7 @@ export const labelForShippingMethodCode = (code: string) =>
   code.trim().toUpperCase() === "PAY_ON_DELIVERY"
     ? "Pay on delivery"
     : code.trim().toUpperCase() === "PREPAID"
-      ? "No pay on delivery"
+      ? "No pay on delivery (Standard delivery)"
       : code.trim() || "Shipping";
 
 export const readCheckoutDraft = (): CheckoutDraft | null => {

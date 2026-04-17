@@ -9,7 +9,7 @@ export const buildShippingMethodOptions = (
 ) => {
   const safeSubtotal = Number.isFinite(subtotalCents) ? Math.max(0, Math.trunc(subtotalCents)) : 0;
   const prepaidShippingFeeCents =
-    safeSubtotal >= GHANA_PREPAID_FREE_THRESHOLD_CENTS
+    safeSubtotal > GHANA_PREPAID_FREE_THRESHOLD_CENTS
       ? GHANA_PREPAID_ABOVE_THRESHOLD_FEE_CENTS
       : GHANA_PREPAID_BELOW_THRESHOLD_FEE_CENTS;
 
@@ -24,7 +24,7 @@ export const buildShippingMethodOptions = (
     },
     {
       code: "PREPAID",
-      label: "No pay on delivery",
+      label: "No pay on delivery (Standard delivery)",
       amountCents: prepaidShippingFeeCents,
       currency: currency ?? DEFAULT_CURRENCY,
       estimatedDeliveryWindow: "1-3 business days",
