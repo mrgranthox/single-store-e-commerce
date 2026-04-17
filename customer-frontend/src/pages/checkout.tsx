@@ -524,8 +524,28 @@ export const CheckoutShippingPage = () => {
       .filter((option): option is { code: string; label: string; amountCents: number; estimatedDeliveryWindow: string } => Boolean(option));
   }, [cartQuery.data]);
 
+  const effectiveShippingOptions = useMemo(() => {
+    if (shippingOptions.length > 0) return shippingOptions;
+    const subtotalCents = Math.max(0, Math.round(summary.subtotalGhs * 100));
+    const prepaidFeeCents = subtotalCents >= 25_000 ? 2_000 : 3_000;
+    return [
+      {
+        code: "PAY_ON_DELIVERY",
+        label: "Pay on delivery",
+        amountCents: 0,
+        estimatedDeliveryWindow: "1-3 business days"
+      },
+      {
+        code: "PREPAID",
+        label: "No pay on delivery",
+        amountCents: prepaidFeeCents,
+        estimatedDeliveryWindow: "1-3 business days"
+      }
+    ];
+  }, [shippingOptions, summary.subtotalGhs]);
+
   const selectedShippingOption =
-    shippingOptions.find((option) => option.code === selectedMethod) ?? shippingOptions[0] ?? null;
+    effectiveShippingOptions.find((option) => option.code === selectedMethod) ?? effectiveShippingOptions[0] ?? null;
   const selectedShippingCents = selectedShippingOption?.amountCents ?? summary.shippingCents;
   const discountGhs =
     couponOutcome?.valid && typeof couponOutcome.discountCents === "number" ? couponOutcome.discountCents / 100 : 0;
@@ -535,10 +555,10 @@ export const CheckoutShippingPage = () => {
   const usingSavedAddress = isAuthenticated && addressMode === "saved" && savedAddresses.length > 0;
 
   useEffect(() => {
-    if (shippingOptions.length === 0) return;
-    if (shippingOptions.some((option) => option.code === selectedMethod)) return;
-    setSelectedMethod(shippingOptions[0].code);
-  }, [shippingOptions, selectedMethod]);
+    if (effectiveShippingOptions.length === 0) return;
+    if (effectiveShippingOptions.some((option) => option.code === selectedMethod)) return;
+    setSelectedMethod(effectiveShippingOptions[0].code);
+  }, [effectiveShippingOptions, selectedMethod]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -638,7 +658,7 @@ export const CheckoutShippingPage = () => {
               })}
               className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8"
             >
-              {isAuthenticated && savedAddresses.length > 0 ? (
+              {isAuthenticated ? (
                 <div className="md:col-span-2 pt-2">
                   <h2 className="font-headline text-xl font-bold tracking-tight mb-4">Address</h2>
                   <div className="flex flex-col sm:flex-row gap-3">
@@ -665,7 +685,7 @@ export const CheckoutShippingPage = () => {
                       Enter new address
                     </button>
                   </div>
-                  {addressMode === "saved" ? (
+                  {addressMode === "saved" && savedAddresses.length > 0 ? (
                     <div className="grid grid-cols-1 gap-3 mt-4">
                       {savedAddresses.map((address) => (
                         <label
@@ -692,6 +712,10 @@ export const CheckoutShippingPage = () => {
                         </label>
                       ))}
                     </div>
+                  ) : addressMode === "saved" ? (
+                    <p className="mt-4 text-sm text-on-surface-variant">
+                      No saved addresses found. Switch to "Enter new address" to continue.
+                    </p>
                   ) : null}
                 </div>
               ) : null}
@@ -756,7 +780,7 @@ export const CheckoutShippingPage = () => {
               <div className="md:col-span-2 pt-8">
                 <h2 className="font-headline text-xl font-bold tracking-tight mb-6">Delivery Method</h2>
                 <div className="grid grid-cols-1 gap-4">
-                  {shippingOptions.map((method) => (
+                  {effectiveShippingOptions.map((method) => (
                     <label
                       key={method.code}
                       className={`group cursor-pointer relative flex items-center justify-between p-6 bg-surface-container-lowest rounded-xl transition-all shadow-sm border-2 ${
