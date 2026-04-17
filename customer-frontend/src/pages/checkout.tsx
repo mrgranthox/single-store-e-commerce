@@ -1196,23 +1196,25 @@ export const CheckoutPaymentPage = () => {
             </div>
           </div>
 
-          <CheckoutOrderSummary
-            items={orderLines}
-            subtotal={summary.subtotalGhs}
-            shipping={formatGhs(selectedShippingCents / 100)}
-            tax={summary.taxGhs}
-            total={paymentTotalGhs}
-            showPromoInput={!couponOutcome?.valid}
-            couponDescription={
-              couponOutcome?.valid
-                ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
-                    typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
-                      ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
-                      : ""
-                  }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
-                : undefined
-            }
-          />
+          <div className="lg:col-span-5 xl:col-span-4">
+            <CheckoutOrderSummary
+              items={orderLines}
+              subtotal={summary.subtotalGhs}
+              shipping={formatGhs(selectedShippingCents / 100)}
+              tax={summary.taxGhs}
+              total={paymentTotalGhs}
+              showPromoInput={!couponOutcome?.valid}
+              couponDescription={
+                couponOutcome?.valid
+                  ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
+                      typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
+                        ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
+                        : ""
+                    }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
+                  : undefined
+              }
+            />
+          </div>
         </div>
       </main>
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-end min-h-[4.25rem] px-1 py-2 safe-area-pb bg-white/80 backdrop-blur-xl border-t border-slate-200/20">
