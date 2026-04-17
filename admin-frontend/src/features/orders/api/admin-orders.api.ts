@@ -78,6 +78,46 @@ export const listAdminOrders = async (
     accessToken
   });
 
+/** Mirrors backend `readAddressSnapshot` / `serializeOrderDetail` shapes. */
+export type AdminOrderAddressSnapshotWarehouse = {
+  id: string;
+  code: string;
+  name: string;
+};
+
+export type AdminOrderAddressSnapshotAssignment = {
+  warehouse: AdminOrderAddressSnapshotWarehouse | null;
+  assignedAt: string | null;
+  assignedByAdminUserId: string | null;
+  reason: string | null;
+  note: string | null;
+};
+
+export type AdminOrderDetailNormalizedTotals = {
+  subtotalCents?: number;
+  discountCents?: number;
+  shippingCents?: number;
+  taxCents?: number;
+  grandTotalCents?: number;
+  currency?: string | null;
+};
+
+export type AdminOrderAddressSnapshot = {
+  fullName: string | null;
+  email: string | null;
+  phone: string | null;
+  country: string | null;
+  region: string | null;
+  city: string | null;
+  line1: string | null;
+  line2: string | null;
+  postalCode: string | null;
+  shippingMethodCode: string | null;
+  normalizedTotals: AdminOrderDetailNormalizedTotals | null;
+  couponOutcome: Record<string, unknown> | null;
+  fulfillmentAssignment: AdminOrderAddressSnapshotAssignment | null;
+};
+
 export type AdminOrderDetailEntity = {
   id: string;
   orderNumber: string;
@@ -133,10 +173,9 @@ export type AdminOrderDetailEntity = {
     name: string;
     code: string;
   } | null;
-  totals: {
-    grandTotalCents?: number | null;
-    currency?: string | null;
-  } | null;
+  addressSnapshot: AdminOrderAddressSnapshot;
+  couponOutcome?: Record<string, unknown> | null;
+  totals: AdminOrderDetailNormalizedTotals | null;
 };
 
 export type AdminOrderDetailResponse = {

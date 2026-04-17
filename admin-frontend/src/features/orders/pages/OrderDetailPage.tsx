@@ -130,6 +130,33 @@ export const OrderDetailPage = () => {
     return [...s].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0] ?? null;
   }, [entity?.shipments]);
 
+  const shippingSnapshotRows = useMemo(() => {
+    if (!entity?.addressSnapshot) {
+      return [] as { label: string; value: string }[];
+    }
+    const s = entity.addressSnapshot;
+    const rows: { label: string; value: string }[] = [];
+    const push = (label: string, v: string | null | undefined) => {
+      const t = v?.trim();
+      if (t) {
+        rows.push({ label, value: t });
+      }
+    };
+    push("Full name", s.fullName);
+    push("Email", s.email);
+    push("Phone", s.phone);
+    push("Country", s.country);
+    push("Region / state", s.region);
+    push("City", s.city);
+    push("Address line 1", s.line1);
+    push("Address line 2", s.line2);
+    push("Postal code", s.postalCode);
+    if (s.shippingMethodCode?.trim()) {
+      rows.push({ label: "Shipping method", value: humanize(s.shippingMethodCode) });
+    }
+    return rows;
+  }, [entity?.addressSnapshot]);
+
   const linesSubtotalCents = useMemo(() => {
     return (entity?.items ?? []).reduce((acc, line) => acc + (line.lineTotalCents ?? 0), 0);
   }, [entity?.items]);
@@ -524,6 +551,26 @@ export const OrderDetailPage = () => {
                 </div>
               </div>
             </div>
+
+            {shippingSnapshotRows.length > 0 ? (
+              <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
+                <h3 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500">
+                  <Truck className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
+                  Shipping address & checkout
+                </h3>
+                <div className="space-y-3">
+                  {shippingSnapshotRows.map((row) => (
+                    <div
+                      key={row.label}
+                      className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-sm"
+                    >
+                      <span className="text-slate-500">{row.label}</span>
+                      <span className="max-w-xl text-right font-medium text-slate-900">{row.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="overflow-hidden rounded-xl border border-[#e0e2f0]/40 bg-white shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e0e2f0]/40 px-6 py-4">
