@@ -8,7 +8,8 @@ import { CheckoutHeader, CheckoutStepBar, CheckoutFooter, StoreBrandLink, Storef
 import { STORE_NAME_FULL } from "@/lib/brand";
 import { formatGhs, FREE_SHIPPING_THRESHOLD_GHS } from "@/lib/currency";
 import { neutralFieldClass } from "@/lib/form-field-styles";
-import { CheckoutOrderSummary } from "@/components/ui";
+import { formatIsoDate } from "@/lib/account/account-ui";
+import { CheckoutOrderSummary, OrderStatusBadge } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
@@ -1957,11 +1958,116 @@ export const OrderSuccessPage = () => {
 /* ─────────────────────────────────────────────
    GUEST TRACKING PAGE
 ───────────────────────────────────────────── */
+
+type GuestTrackAddressSnapshot = {
+  fullName?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  line1?: string | null;
+  line2?: string | null;
+  city?: string | null;
+  region?: string | null;
+  country?: string | null;
+  postalCode?: string | null;
+  shippingMethodCode?: string | null;
+  normalizedTotals?: { grandTotalCents?: number; currency?: string | null } | null;
+};
+
+type GuestTrackPayment = {
+  id: string | null;
+  provider: string | null;
+  providerPaymentRef: string | null;
+  paymentState: string;
+  amountCents: number | null;
+  currency: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+};
+
+type GuestTrackFulfillment = {
+  status: string;
+  shipmentCount: number;
+  trackingAvailable: boolean;
+  latestTrackingNumber: string | null;
+};
+
+type GuestTrackEvent = {
+  id: string;
+  eventType: string;
+  statusLabel: string | null;
+  occurredAt: string;
+  location: string | null;
+};
+
+type GuestTrackShipment = {
+  id: string;
+  status: string;
+  warehouse: { id: string; code: string; name: string } | null;
+  trackingNumber: string | null;
+  carrier: string | null;
+  createdAt: string;
+  updatedAt: string;
+  trackingEvents: GuestTrackEvent[];
+};
+
+type GuestTrackLineItem = {
+  id: string;
+  variantId: string;
+  productTitle: string;
+  unitPriceAmountCents: number;
+  unitPriceCurrency: string;
+  quantity: number;
+  lineTotalCents: number;
+};
+
+type GuestTrackOrderEntity = {
+  id: string;
+  orderNumber: string;
+  status: string;
+  createdAt?: string;
+  items?: GuestTrackLineItem[];
+  payment: GuestTrackPayment;
+  fulfillment: GuestTrackFulfillment;
+  shipments: GuestTrackShipment[];
+  addressSnapshot: GuestTrackAddressSnapshot;
+};
+
+const PAYMENT_STATE_LABEL: Record<string, string> = {
+  PENDING_INITIALIZATION: "Payment pending",
+  INITIALIZED: "Payment started",
+  AWAITING_CUSTOMER_ACTION: "Awaiting your confirmation",
+  PAID: "Paid",
+  FAILED: "Payment failed",
+  CANCELLED: "Payment cancelled",
+  REFUNDED: "Refunded",
+  PARTIALLY_REFUNDED: "Partially refunded",
+  REFUND_PENDING: "Refund pending"
+};
+
+const humanizeShipmentStatus = (status: string) => {
+  if (status === "UNFULFILLED") return "Not shipped yet";
+  return status
+    .toLowerCase()
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+};
+
+const guestAddressLines = (addr: GuestTrackAddressSnapshot) =>
+  [
+    addr.fullName,
+    addr.line1,
+    addr.line2,
+    [addr.city, addr.region, addr.postalCode].filter(Boolean).join(", ") || null,
+    addr.country,
+    addr.phone ? `Phone: ${addr.phone}` : null
+  ].filter((line): line is string => Boolean(line && String(line).trim()));
+
 export const GuestTrackingPage = () => {
   const [searchParams] = useSearchParams();
   const [orderNumber, setOrderNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [entity, setEntity] = useState<unknown>(null);
+  const [entity, setEntity] = useState<GuestTrackOrderEntity | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -1971,12 +2077,23 @@ export const GuestTrackingPage = () => {
     setOrderNumber(fromQuery.replace(/^#/, ""));
   }, [searchParams]);
 
+  const paymentLabel = entity ? PAYMENT_STATE_LABEL[entity.payment.paymentState] ?? entity.payment.paymentState.replace(/_/g, " ") : "";
+  const orderTotalGhs =
+    entity?.payment.amountCents != null
+      ? entity.payment.amountCents / 100
+      : typeof entity?.addressSnapshot.normalizedTotals?.grandTotalCents === "number"
+        ? entity.addressSnapshot.normalizedTotals.grandTotalCents / 100
+        : null;
+  const shipToLines = entity ? guestAddressLines(entity.addressSnapshot) : [];
+
   return (
     <StorefrontShell>
-      <StorefrontMain maxWidth={false} className="max-w-xl mx-auto">
-        <header className="mb-12">
+      <StorefrontMain maxWidth={false} className="max-w-3xl mx-auto">
+        <header className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-headline font-extrabold tracking-tighter mb-3">Track Order</h1>
-          <p className="text-on-surface-variant text-sm sm:text-base">Enter your order number and email to see your shipment status.</p>
+          <p className="text-on-surface-variant text-sm sm:text-base">
+            Enter your order number and the email used at checkout to see status and shipment updates.
+          </p>
         </header>
         {!entity ? (
           <form
@@ -1989,14 +2106,14 @@ export const GuestTrackingPage = () => {
                   orderNumber: orderNumber.trim(),
                   email: email.trim()
                 });
-                setEntity(data.entity);
+                setEntity(data.entity as GuestTrackOrderEntity);
               } catch (error) {
                 setErr(error instanceof CommerceApiError ? error.message : "Could not find that order.");
               } finally {
                 setBusy(false);
               }
             }}
-            className="space-y-6"
+            className="space-y-6 max-w-xl"
           >
             <div className="space-y-2">
               <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant block">Order Number</label>
@@ -2005,7 +2122,7 @@ export const GuestTrackingPage = () => {
                 value={orderNumber}
                 onChange={(e) => setOrderNumber(e.target.value)}
                 className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`}
-                placeholder="TC-88291"
+                placeholder="ORD-20260101-123456"
                 type="text"
               />
             </div>
@@ -2030,32 +2147,183 @@ export const GuestTrackingPage = () => {
             </button>
           </form>
         ) : (
-          <div className="bg-surface-container-low p-8 rounded-xl space-y-6">
-            <div className="flex items-center gap-3">
-              <Icon name="check_circle" filled className="text-secondary text-2xl" />
-              <div>
-                <p className="font-headline font-bold">
-                  Order #
-                  {typeof (entity as { orderNumber?: string }).orderNumber === "string"
-                    ? (entity as { orderNumber: string }).orderNumber
-                    : orderNumber}
-                </p>
-                <p className="text-sm text-on-surface-variant">Status and tracking details from the server.</p>
+          <div className="space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 pb-2 border-b border-outline-variant/20">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-secondary/15 flex items-center justify-center shrink-0">
+                  <Icon name="local_shipping" className="text-secondary text-2xl" />
+                </div>
+                <div>
+                  <h2 className="font-headline text-2xl sm:text-3xl font-extrabold tracking-tight text-on-background">Order #{entity.orderNumber}</h2>
+                  <div className="flex flex-wrap items-center gap-3 mt-2">
+                    <OrderStatusBadge status={entity.status} />
+                    {entity.createdAt ? (
+                      <span className="text-sm text-on-surface-variant">Placed {formatIsoDate(entity.createdAt)}</span>
+                    ) : null}
+                  </div>
+                </div>
               </div>
+              {orderTotalGhs != null ? (
+                <div className="text-right sm:pt-1">
+                  <p className="text-[10px] font-label uppercase tracking-widest text-outline font-bold">Order total</p>
+                  <p className="text-2xl font-extrabold text-on-surface tabular-nums">{formatGhs(orderTotalGhs)}</p>
+                </div>
+              ) : null}
             </div>
-            <pre className="text-xs text-on-surface-variant overflow-x-auto whitespace-pre-wrap break-words">
-              {JSON.stringify(entity, null, 2)}
-            </pre>
-            <button
-              type="button"
-              onClick={() => {
-                setEntity(null);
-                setErr(null);
-              }}
-              className="text-secondary font-bold text-sm uppercase tracking-widest underline"
-            >
-              Track another order
-            </button>
+
+            {entity.items && entity.items.length > 0 ? (
+              <section className="space-y-4">
+                <h3 className="font-headline text-lg font-bold text-on-background">Items</h3>
+                <ul className="space-y-3">
+                  {entity.items.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex flex-wrap items-baseline justify-between gap-3 p-4 sm:p-5 rounded-xl bg-surface-container-low border border-outline-variant/15"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="font-semibold text-on-surface leading-snug">{item.productTitle}</p>
+                        <p className="text-xs text-on-surface-variant mt-1">
+                          Qty {item.quantity} · {formatGhs(item.unitPriceAmountCents / 100)} each
+                        </p>
+                      </div>
+                      <p className="font-bold text-on-surface tabular-nums shrink-0">{formatGhs(item.lineTotalCents / 100)}</p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            <section className="p-5 sm:p-6 rounded-xl bg-surface-container-low border border-outline-variant/15 space-y-3">
+              <h3 className="font-headline text-sm font-bold uppercase tracking-widest text-outline">Ship to</h3>
+              <p className="text-sm text-on-surface leading-relaxed whitespace-pre-line">
+                {shipToLines.length > 0
+                  ? shipToLines.join("\n")
+                  : "Shipping details are stored on this order. If something looks wrong, contact support with your order number."}
+              </p>
+              {entity.addressSnapshot.shippingMethodCode ? (
+                <p className="text-sm text-on-surface-variant pt-1">
+                  <span className="font-semibold text-on-surface">Delivery: </span>
+                  {labelForShippingMethodCode(entity.addressSnapshot.shippingMethodCode)}
+                </p>
+              ) : null}
+            </section>
+
+            <section className="p-5 sm:p-6 rounded-xl bg-surface-container-low border border-outline-variant/15 space-y-3">
+              <h3 className="font-headline text-sm font-bold uppercase tracking-widest text-outline">Payment</h3>
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <div>
+                  <p className="text-[10px] font-label uppercase tracking-widest text-outline font-bold">Status</p>
+                  <p className="font-medium text-on-surface">{paymentLabel}</p>
+                </div>
+                {entity.payment.provider ? (
+                  <div>
+                    <p className="text-[10px] font-label uppercase tracking-widest text-outline font-bold">Provider</p>
+                    <p className="font-medium text-on-surface capitalize">{entity.payment.provider}</p>
+                  </div>
+                ) : null}
+                {entity.payment.providerPaymentRef ? (
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-label uppercase tracking-widest text-outline font-bold">Reference</p>
+                    <p className="font-mono text-xs text-on-surface break-all">{entity.payment.providerPaymentRef}</p>
+                  </div>
+                ) : null}
+              </div>
+            </section>
+
+            <section className="p-5 sm:p-6 rounded-xl bg-surface-container-low border border-outline-variant/15 space-y-2">
+              <h3 className="font-headline text-sm font-bold uppercase tracking-widest text-outline">Fulfillment</h3>
+              <p className="text-sm text-on-surface">
+                <span className="font-semibold">{humanizeShipmentStatus(entity.fulfillment.status)}</span>
+                {entity.fulfillment.shipmentCount > 0 ? (
+                  <span className="text-on-surface-variant">
+                    {" "}
+                    · {entity.fulfillment.shipmentCount} shipment{entity.fulfillment.shipmentCount === 1 ? "" : "s"}
+                  </span>
+                ) : null}
+              </p>
+              {entity.fulfillment.latestTrackingNumber ? (
+                <p className="text-sm">
+                  <span className="text-on-surface-variant">Tracking: </span>
+                  <span className="font-mono font-medium text-on-surface">{entity.fulfillment.latestTrackingNumber}</span>
+                </p>
+              ) : entity.fulfillment.trackingAvailable ? (
+                <p className="text-sm text-on-surface-variant">Tracking details will appear here when the carrier updates your shipment.</p>
+              ) : (
+                <p className="text-sm text-on-surface-variant">Tracking is not available for this order yet.</p>
+              )}
+            </section>
+
+            {entity.shipments.length > 0 ? (
+              <section className="space-y-6">
+                <h3 className="font-headline text-lg font-bold text-on-background">Shipments</h3>
+                {entity.shipments.map((shipment, si) => (
+                  <div
+                    key={shipment.id}
+                    className="p-5 sm:p-6 rounded-xl bg-surface-container-lowest border border-outline-variant/20 space-y-5"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-label uppercase tracking-widest text-outline font-bold">Shipment {si + 1}</p>
+                        <p className="font-headline font-bold text-on-surface mt-1">{humanizeShipmentStatus(shipment.status)}</p>
+                        <p className="text-sm text-on-surface-variant mt-1">
+                          {shipment.carrier ? `${shipment.carrier} · ` : null}
+                          {shipment.trackingNumber ? (
+                            <span className="font-mono text-on-surface">{shipment.trackingNumber}</span>
+                          ) : (
+                            "No tracking number yet"
+                          )}
+                        </p>
+                        {shipment.warehouse?.name ? (
+                          <p className="text-xs text-outline mt-1">Ships from {shipment.warehouse.name}</p>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-headline text-sm font-bold mb-4 text-on-surface">Progress</h4>
+                      {(shipment.trackingEvents?.length ?? 0) > 0 ? (
+                        <div className="space-y-0">
+                          {shipment.trackingEvents.map((ev, i, arr) => (
+                            <div key={ev.id} className="flex gap-4">
+                              <div className="flex flex-col items-center">
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-secondary text-on-secondary">
+                                  <Icon name="check" className="text-sm" />
+                                </div>
+                                {i < arr.length - 1 ? <div className="w-px flex-grow my-1 bg-secondary/40 min-h-[12px]" /> : null}
+                              </div>
+                              <div className="pb-5 min-w-0">
+                                <p className="font-medium text-sm text-on-surface">{ev.statusLabel?.trim() || "Update"}</p>
+                                <p className="text-xs text-outline mt-0.5">{formatIsoDate(ev.occurredAt)}</p>
+                                {ev.location?.trim() ? (
+                                  <p className="text-xs text-on-surface-variant mt-1">{ev.location.trim()}</p>
+                                ) : null}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-on-surface-variant">No carrier scan events yet.</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </section>
+            ) : null}
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setEntity(null);
+                  setErr(null);
+                }}
+                className="text-secondary font-bold text-sm uppercase tracking-widest underline underline-offset-4 text-left"
+              >
+                Track another order
+              </button>
+              <Link to="/shop" className="text-on-surface-variant font-bold text-sm uppercase tracking-widest hover:text-secondary transition-colors">
+                Continue shopping
+              </Link>
+            </div>
           </div>
         )}
       </StorefrontMain>
