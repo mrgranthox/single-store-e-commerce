@@ -87,8 +87,7 @@ export const ReportDatasetPage = ({ segment, title, description }: ReportDataset
   );
 
   const reportQuery = useAuthedQuery(queryKey, (token) => getAdminReportsDataset(token, segment, range), {
-    ...CACHE.ANALYTICS,
-    enabled: Boolean(from.trim() || to.trim()),
+    ...CACHE.ANALYTICS
   });
 
   const compareQuery = useAuthedQuery(
