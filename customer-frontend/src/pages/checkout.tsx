@@ -81,7 +81,7 @@ export const CartPage = () => {
       return customerBackendApi.patchCartItem(itemId, { quantity });
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(cartQueryKey, data);
+      queryClient.setQueryData(cartQueryKey, data.data);
     }
   });
 
@@ -100,7 +100,7 @@ export const CartPage = () => {
     onSuccess: (data) => {
       setCouponErr(null);
       setCoupon((existing) => existing.trim());
-      queryClient.setQueryData(cartQueryKey, data);
+      queryClient.setQueryData(cartQueryKey, data.data);
     },
     onError: (e) => {
       setCouponErr(e instanceof CommerceApiError ? e.message : "Invalid coupon.");
@@ -112,7 +112,7 @@ export const CartPage = () => {
     onSuccess: (data) => {
       setCouponErr(null);
       setCoupon("");
-      queryClient.setQueryData(cartQueryKey, data);
+      queryClient.setQueryData(cartQueryKey, data.data);
     },
     onError: (e) => {
       setCouponErr(e instanceof CommerceApiError ? e.message : "Could not remove coupon.");

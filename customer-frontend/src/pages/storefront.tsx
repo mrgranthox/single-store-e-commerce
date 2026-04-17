@@ -958,11 +958,11 @@ export const ProductDetailPage = () => {
     setCartBusy(true);
     setCartErr(null);
     try {
-      const { data } = await customerBackendApi.addCartItem({
+      const response = await customerBackendApi.addCartItem({
         variantId: selectedVariantId,
         quantity: 1
       });
-      queryClient.setQueryData(cartQueryKey, data);
+      queryClient.setQueryData(cartQueryKey, response.data);
     } catch (error) {
       setCartErr(error instanceof CommerceApiError ? error.message : "Could not add to bag.");
     } finally {

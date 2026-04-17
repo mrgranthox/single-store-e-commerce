@@ -75,8 +75,8 @@ export const ProductCard = ({ product }: { product: Product }) => {
             setCartBusy(true);
             setCartError(null);
             try {
-              const { data } = await customerBackendApi.addCartItem({ variantId, quantity: 1 });
-              queryClient.setQueryData(cartQueryKey, data);
+              const response = await customerBackendApi.addCartItem({ variantId, quantity: 1 });
+              queryClient.setQueryData(cartQueryKey, response.data);
             } catch (error) {
               const message = error instanceof CommerceApiError ? error.message : "Could not add to bag.";
               setCartError(message);
