@@ -4,6 +4,7 @@ import { CheckoutPaymentIntentStatus, Prisma } from "@prisma/client";
 
 import { invalidInputError, notFoundError } from "../../common/errors/app-error";
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
+import { emptyCartLineItemsAfterCheckoutCommit } from "../cart/cart.shared";
 
 type MaterializationPayloadV1 = {
   v: 1;
@@ -352,14 +353,7 @@ export const materializeDeferredCheckoutPaymentInTransaction = async (
     }
   });
 
-  await transaction.cart.update({
-    where: {
-      id: payload.cartId
-    },
-    data: {
-      appliedCouponCode: null
-    }
-  });
+  await emptyCartLineItemsAfterCheckoutCommit(transaction, payload.cartId);
 
   return {
     orderId: order.id,

@@ -337,6 +337,26 @@ const mergeGuestCartIntoUserCart = async (
   });
 };
 
+/** After a successful checkout commit, remove cart lines so GET /cart reflects an empty bag (idempotent). */
+export const emptyCartLineItemsAfterCheckoutCommit = async (
+  transaction: Prisma.TransactionClient,
+  cartId: string
+) => {
+  await transaction.cartItem.deleteMany({
+    where: {
+      cartId
+    }
+  });
+  await transaction.cart.update({
+    where: {
+      id: cartId
+    },
+    data: {
+      appliedCouponCode: null
+    }
+  });
+};
+
 export const resolveCartForContext = async (
   db: DatabaseClient,
   context: CartActorContext,

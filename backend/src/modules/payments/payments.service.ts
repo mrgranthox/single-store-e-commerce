@@ -24,6 +24,7 @@ import { prisma } from "../../config/prisma";
 import { env } from "../../config/env";
 import { createAlert } from "../alerts-incidents/alerts-incidents.service";
 import { materializeDeferredCheckoutPaymentInTransaction } from "../checkout/checkout-deferred.service";
+import { emptyCartLineItemsAfterCheckoutCommit } from "../cart/cart.shared";
 import { initializeCheckoutPayment } from "../checkout/checkout.service";
 import { jobRunService } from "../jobs-workers/job-run.service";
 import { webhookRecorderService } from "../jobs-workers/webhook-recorder.service";
@@ -400,6 +401,20 @@ const applyPaymentOutcome = async (input: {
             })
           }
         });
+
+        if (payment.checkoutSessionId) {
+          const session = await transaction.checkoutSession.findUnique({
+            where: {
+              id: payment.checkoutSessionId
+            },
+            select: {
+              cartId: true
+            }
+          });
+          if (session?.cartId) {
+            await emptyCartLineItemsAfterCheckoutCommit(transaction, session.cartId);
+          }
+        }
       }
 
       if (
