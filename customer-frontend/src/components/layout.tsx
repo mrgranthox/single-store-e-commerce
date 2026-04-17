@@ -364,6 +364,7 @@ export const Footer = () => (
       <div className="flex flex-col gap-4">
         <h4 className="font-headline font-bold text-sm text-on-background mb-2">Support</h4>
         <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/help">Help & Contact</Link>
+        <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/about">About</Link>
         <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/pages/shipping-policy">Shipping & Returns</Link>
       </div>
       <div className="flex flex-col gap-4">

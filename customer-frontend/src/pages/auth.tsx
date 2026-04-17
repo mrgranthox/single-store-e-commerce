@@ -29,7 +29,7 @@ const AuthFooter = () => (
         <p className="text-sm text-slate-500">© 2024 {STORE_NAME_FULL}. All rights reserved.</p>
       </div>
       <nav className="flex flex-wrap justify-center gap-6">
-        {[["Privacy Policy", "/pages/privacy-policy"], ["Terms of Service", "/pages/terms"], ["Shipping Info", "/pages/shipping-policy"], ["Returns", "/pages/returns-policy"]].map(([label, to]) => (
+        {[["About", "/about"], ["Privacy Policy", "/pages/privacy-policy"], ["Terms of Service", "/pages/terms"], ["Shipping Info", "/pages/shipping-policy"], ["Returns", "/pages/returns-policy"]].map(([label, to]) => (
           <Link key={label} className="text-sm text-slate-500 hover:text-slate-800 transition-all" to={to}>{label}</Link>
         ))}
       </nav>
