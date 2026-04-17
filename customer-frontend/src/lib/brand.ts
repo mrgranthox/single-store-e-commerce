@@ -6,6 +6,6 @@ export const LOGO_ALT = `${STORE_NAME_FULL} logo`;
 
 export const SUPPORT_SENDER_LABEL = "Tees Support";
 
-/** Contact emails shown in mock UI (replace with production addresses). */
+/** Contact emails used across customer surfaces. */
 export const STORE_EMAIL_SUPPORT = "support@teescollection.com";
 export const STORE_EMAIL_PRIVACY = "privacy@teescollection.com";

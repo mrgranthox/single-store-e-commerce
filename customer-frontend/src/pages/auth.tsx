@@ -8,12 +8,15 @@ import { z } from "zod";
 import { Icon } from "@/components/Icon";
 import { StoreBrandLink } from "@/components/layout";
 import { LOGO_ALT, LOGO_SRC, STORE_NAME_FULL } from "@/lib/brand";
-import { mockImages } from "@/lib/data/mock-images";
 import { neutralCheckboxClass, neutralFieldClass } from "@/lib/form-field-styles";
 import { customerAuthApi } from "@/lib/api/customer-auth-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import { sanitizeReturnTo } from "@/app/require-customer-auth";
 import { useCustomerStore } from "@/lib/store/customer-store";
+import authPanelImage from "@/assets/images/editorial/auth-panel.svg";
+import authSlide1Image from "@/assets/images/editorial/auth-slide-1.svg";
+import authSlide2Image from "@/assets/images/editorial/auth-slide-2.svg";
+import authSlide3Image from "@/assets/images/editorial/auth-slide-3.svg";
 
 const AuthFooter = () => (
   <footer className="w-full mt-auto py-12 bg-slate-100 border-t border-slate-200">
@@ -37,6 +40,8 @@ const AuthFooter = () => (
     </div>
   </footer>
 );
+
+const REGISTER_SOCIAL_PROOF_IMAGES = [authSlide1Image, authSlide2Image, authSlide3Image] as const;
 
 /* ─────────────────────────────────────────────
    LOGIN PAGE — matches login/code.html
@@ -88,7 +93,10 @@ export const LoginPage = () => {
             <img
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
-              src={mockImages.authPanel} loading="lazy" decoding="async" />
+              src={authPanelImage}
+              loading="lazy"
+              decoding="async"
+            />
             <div className="absolute bottom-12 left-12 right-12 z-20">
               <div className="text-surface-bright mb-4">
                 <span className="font-headline font-bold text-4xl tracking-tighter block mb-2">{STORE_NAME_FULL}</span>
@@ -283,8 +291,15 @@ export const RegisterPage = () => {
             </p>
             <div className="flex items-center gap-4 py-6 border-t border-outline-variant/30">
               <div className="flex -space-x-3">
-                {[mockImages.authSlide1, mockImages.authSlide2, mockImages.authSlide3].map((src, i) => (
-                  <img key={i} className="w-10 h-10 rounded-full border-2 border-surface-container-low object-cover" src={src} alt="" loading="lazy" decoding="async" />
+                {REGISTER_SOCIAL_PROOF_IMAGES.map((src, i) => (
+                  <img
+                    key={i}
+                    className="w-10 h-10 rounded-full border-2 border-surface-container-low object-cover"
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
                 ))}
               </div>
               <p className="text-sm text-outline font-medium italic">Join 12,000+ tastemakers worldwide.</p>

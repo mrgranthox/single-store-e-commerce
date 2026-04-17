@@ -8,8 +8,9 @@ import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import { STORE_EMAIL_PRIVACY, STORE_EMAIL_SUPPORT, STORE_NAME_FULL } from "@/lib/brand";
 import { formatGhs } from "@/lib/currency";
-import { mockImages } from "@/lib/data/mock-images";
 import { neutralFieldClass } from "@/lib/form-field-styles";
+import aboutHeroImage from "@/assets/images/editorial/about-hero.svg";
+import aboutStoryImage from "@/assets/images/editorial/about-story.svg";
 
 const PolicyLayout = ({
   title,
@@ -270,8 +271,11 @@ export const AboutPage = () => {
       <section className="relative min-h-[50dvh] md:h-[600px] md:min-h-0 overflow-hidden bg-primary-container">
         <img
           className="absolute inset-0 w-full h-full object-cover opacity-60"
-          src={mockImages.heroAbout}
-          alt="" loading="lazy" decoding="async" />
+          src={aboutHeroImage}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
         <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/85 md:from-primary-container/80 via-transparent to-transparent" />
         <div className="relative min-h-[50dvh] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center py-12 md:py-0">
           <span className="font-label text-tertiary-fixed tracking-[0.3em] uppercase text-xs mb-4 font-bold block">Our Story</span>
@@ -295,8 +299,11 @@ export const AboutPage = () => {
           <div className="aspect-[4/3] bg-surface-container-low rounded-2xl overflow-hidden">
             <img
               className="w-full h-full object-cover"
-              src={mockImages.aboutStory}
-              alt="Product craftsmanship" loading="lazy" decoding="async" />
+              src={aboutStoryImage}
+              alt="Product craftsmanship"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
 
