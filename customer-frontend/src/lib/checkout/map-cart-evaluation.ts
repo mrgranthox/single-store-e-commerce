@@ -27,6 +27,13 @@ export type CheckoutSummaryLine = {
   image: string;
 };
 
+export type CheckoutSummaryCouponOutcome = {
+  appliedCode?: string;
+  valid: boolean;
+  discountCents?: number;
+  message?: string;
+};
+
 export const mapCartEvaluationToOrderSummary = (
   evaluation: unknown
 ): {
@@ -35,6 +42,7 @@ export const mapCartEvaluationToOrderSummary = (
   taxGhs: number;
   shippingCents: number;
   totalGhs: number;
+  couponOutcome?: CheckoutSummaryCouponOutcome;
 } => {
   if (!evaluation || typeof evaluation !== "object") {
     return { lines: [], subtotalGhs: 0, taxGhs: 0, shippingCents: 0, totalGhs: 0 };
@@ -47,6 +55,12 @@ export const mapCartEvaluationToOrderSummary = (
       shippingCents?: number;
       grandTotalCents?: number;
     };
+    couponOutcome?: {
+      appliedCode?: unknown;
+      valid?: unknown;
+      discountCents?: unknown;
+      message?: unknown;
+    } | null;
   };
   const items = Array.isArray(ev.items) ? ev.items : [];
   const lines: CheckoutSummaryLine[] = items.map((row) => {
@@ -80,5 +94,25 @@ export const mapCartEvaluationToOrderSummary = (
   const shippingCents = typeof nt.shippingCents === "number" ? nt.shippingCents : 0;
   const totalGhs = centsToGhs(typeof nt.grandTotalCents === "number" ? nt.grandTotalCents : 0);
 
-  return { lines, subtotalGhs, taxGhs, shippingCents, totalGhs };
+  const rawCoupon = ev.couponOutcome;
+  const couponOutcome =
+    rawCoupon && typeof rawCoupon === "object"
+      ? {
+          appliedCode:
+            typeof rawCoupon.appliedCode === "string" && rawCoupon.appliedCode.trim()
+              ? rawCoupon.appliedCode.trim()
+              : undefined,
+          valid: Boolean(rawCoupon.valid),
+          discountCents:
+            typeof rawCoupon.discountCents === "number" && Number.isFinite(rawCoupon.discountCents)
+              ? Math.max(0, Math.trunc(rawCoupon.discountCents))
+              : undefined,
+          message:
+            typeof rawCoupon.message === "string" && rawCoupon.message.trim()
+              ? rawCoupon.message.trim()
+              : undefined
+        }
+      : undefined;
+
+  return { lines, subtotalGhs, taxGhs, shippingCents, totalGhs, couponOutcome };
 };

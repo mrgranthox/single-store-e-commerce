@@ -55,8 +55,7 @@ export const CartPage = () => {
     price: l.price,
     image: l.image
   }));
-  const shippingLabel =
-    summary.shippingCents === 0 ? "Free" : formatGhs(Math.round(summary.shippingCents) / 100);
+  const couponOutcome = summary.couponOutcome;
 
   const patchQty = useMutation({
     mutationFn: async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
@@ -210,14 +209,6 @@ export const CartPage = () => {
                   <span className="font-body">Subtotal</span>
                   <span className="font-bold text-on-surface">{formatGhs(summary.subtotalGhs)}</span>
                 </div>
-                <div className="flex justify-between items-center text-on-surface-variant">
-                  <span className="font-body">Shipping</span>
-                  <span className="font-bold text-on-surface">{shippingLabel}</span>
-                </div>
-                <div className="flex justify-between items-center text-on-surface-variant">
-                  <span className="font-body">Tax</span>
-                  <span className="font-bold text-on-surface">{formatGhs(summary.taxGhs)}</span>
-                </div>
               </div>
               <div className="flex justify-between items-center mb-10">
                 <span className="text-xl font-bold tracking-tight">Total</span>
@@ -225,22 +216,32 @@ export const CartPage = () => {
               </div>
               <div className="mb-8">
                 <label className="text-[10px] uppercase tracking-widest font-bold text-outline block mb-3">Add Coupon</label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     value={coupon}
                     onChange={(e) => setCoupon(e.target.value)}
-                    className={`flex-grow rounded-lg px-4 py-3 ${neutralFieldClass}`}
+                    className={`w-full sm:flex-grow rounded-lg px-4 py-3 ${neutralFieldClass}`}
                     placeholder="CODE2024"
                     type="text"
                   />
                   <button
                     type="button"
                     onClick={() => void applyCouponMut.mutateAsync(coupon)}
-                    className="bg-primary text-on-primary px-6 py-3 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
+                    className="w-full sm:w-auto bg-primary text-on-primary px-6 py-3 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
                   >
                     Apply
                   </button>
                 </div>
+                {couponOutcome?.valid ? (
+                  <p className="text-secondary text-xs mt-2 font-medium">
+                    {`Coupon ${couponOutcome.appliedCode ?? "applied"} • -${formatGhs(
+                      ((couponOutcome.discountCents ?? 0) / 100)
+                    )}`}
+                    {couponOutcome.message ? ` — ${couponOutcome.message}` : ""}
+                  </p>
+                ) : couponOutcome?.message ? (
+                  <p className="text-on-surface-variant text-xs mt-2">{couponOutcome.message}</p>
+                ) : null}
                 {couponErr ? <p className="text-error text-xs mt-2">{couponErr}</p> : null}
               </div>
               <button
