@@ -56,6 +56,7 @@ export const CartPage = () => {
     image: l.image
   }));
   const couponOutcome = summary.couponOutcome;
+  const couponLocked = Boolean(couponOutcome?.valid);
 
   const patchQty = useMutation({
     mutationFn: async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
@@ -220,16 +221,18 @@ export const CartPage = () => {
                   <input
                     value={coupon}
                     onChange={(e) => setCoupon(e.target.value)}
+                    disabled={couponLocked}
                     className={`w-full sm:flex-grow rounded-lg px-4 py-3 ${neutralFieldClass}`}
                     placeholder="CODE2024"
                     type="text"
                   />
                   <button
                     type="button"
+                    disabled={couponLocked || applyCouponMut.isPending}
                     onClick={() => void applyCouponMut.mutateAsync(coupon)}
-                    className="w-full sm:w-auto bg-primary text-on-primary px-6 py-3 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity"
+                    className="w-full sm:w-auto bg-primary text-on-primary px-6 py-3 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Apply
+                    {couponLocked ? "Applied" : applyCouponMut.isPending ? "Applying..." : "Apply"}
                   </button>
                 </div>
                 {couponOutcome?.valid ? (
