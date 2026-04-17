@@ -1293,6 +1293,20 @@ export const CheckoutReviewPage = () => {
     price: l.price,
     image: l.image
   }));
+  const couponOutcome = summary.couponOutcome;
+  const effectiveShippingOptions = useMemo(
+    () => buildEffectiveShippingOptions(cartQuery.data, summary.subtotalGhs),
+    [cartQuery.data, summary.subtotalGhs]
+  );
+  const selectedShippingOption =
+    effectiveShippingOptions.find((option) => option.code === draft?.shippingMethodCode) ??
+    effectiveShippingOptions[0] ??
+    null;
+  const selectedShippingCents = selectedShippingOption?.amountCents ?? summary.shippingCents;
+  const discountGhs =
+    couponOutcome?.valid && typeof couponOutcome.discountCents === "number" ? couponOutcome.discountCents / 100 : 0;
+  const reviewTotalGhs =
+    Math.round((summary.subtotalGhs - discountGhs + selectedShippingCents / 100 + summary.taxGhs) * 100) / 100;
 
   useEffect(() => {
     if (!readCheckoutDraft()) {
@@ -1329,10 +1343,23 @@ export const CheckoutReviewPage = () => {
     ? `${draft.address.fullName}\n${draft.address.line1}\n${draft.address.city}, ${draft.address.postalCode}\n${draft.address.country}`
     : "";
 
+  const billingBlock =
+    draft?.billingSameAsShipping === false && draft?.billingAddress
+      ? `${draft.billingAddress.fullName}\n${draft.billingAddress.line1}\n${draft.billingAddress.city}, ${draft.billingAddress.postalCode}\n${draft.billingAddress.country}`
+      : "Same as shipping address";
+
+  const mobileProviderLabelByCode: Record<string, string> = {
+    mtn: "MTN",
+    telecel: "Telecel",
+    airteltigo: "AirtelTigo"
+  };
+
   const payLabel =
     draft?.payment.channel === "mobile_money"
-      ? `Mobile money (${draft.payment.mobileMoney?.provider ?? "network"}) — Paystack`
-      : "Card — Paystack";
+      ? `Paystack — Mobile Money (${mobileProviderLabelByCode[(draft.payment.mobileMoney?.provider ?? "").toLowerCase()] ?? "Network"})${
+          draft.payment.mobileMoney?.phone ? ` • ${draft.payment.mobileMoney.phone}` : ""
+        }`
+      : "Paystack — Card (Visa/Mastercard)";
 
   const placeOrder = async () => {
     const d = readCheckoutDraft();
@@ -1472,11 +1499,22 @@ export const CheckoutReviewPage = () => {
             </div>
             <div className="space-y-4 p-5 sm:p-6 bg-surface-container-low rounded-xl border border-outline-variant/20">
               <h2 className="font-headline font-bold text-sm uppercase tracking-widest text-outline">Delivery</h2>
-              <p className="text-sm">Standard shipping — per server evaluation at payment.</p>
+              <p className="text-sm">
+                {labelForShippingMethodCode(draft?.shippingMethodCode ?? selectedShippingOption?.code ?? "")}
+                {" • "}
+                {formatGhs(selectedShippingCents / 100)}
+                {selectedShippingOption?.estimatedDeliveryWindow
+                  ? ` • ${selectedShippingOption.estimatedDeliveryWindow}`
+                  : ""}
+              </p>
             </div>
             <div className="space-y-4 p-5 sm:p-6 bg-surface-container-low rounded-xl border border-outline-variant/20">
               <h2 className="font-headline font-bold text-sm uppercase tracking-widest text-outline">Payment</h2>
               <p className="text-sm">{payLabel}</p>
+            </div>
+            <div className="space-y-4 p-5 sm:p-6 bg-surface-container-low rounded-xl border border-outline-variant/20">
+              <h2 className="font-headline font-bold text-sm uppercase tracking-widest text-outline">Billing</h2>
+              <p className="text-sm leading-relaxed whitespace-pre-line">{billingBlock}</p>
             </div>
             {err ? <p className="text-error text-sm">{err}</p> : null}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -1502,9 +1540,19 @@ export const CheckoutReviewPage = () => {
         <CheckoutOrderSummary
           items={orderLines}
           subtotal={summary.subtotalGhs}
-          shipping={summary.shippingCents === 0 ? "Free" : formatGhs(summary.shippingCents / 100)}
+          shipping={formatGhs(selectedShippingCents / 100)}
           tax={summary.taxGhs}
-          total={summary.totalGhs}
+          total={reviewTotalGhs}
+          showPromoInput={false}
+          couponDescription={
+            couponOutcome?.valid
+              ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
+                  typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
+                    ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
+                    : ""
+                }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
+              : undefined
+          }
         />
       </main>
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-end min-h-[4.25rem] px-1 py-2 safe-area-pb bg-white/80 backdrop-blur-xl border-t border-slate-200/20">
