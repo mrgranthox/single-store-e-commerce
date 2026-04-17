@@ -272,10 +272,10 @@ export const OrderDetailPage = () => {
   const itemRows = useMemo(
     () =>
       (entity?.items ?? []).map((line) => [
-        <span key={`t-${line.id}`} className="text-[13px] font-bold text-[#181b25]">
+        <span key={`t-${line.id}`} className="block min-w-0 break-words text-[13px] font-bold text-[#181b25]">
           {line.productTitle}
         </span>,
-        <span key={`v-${line.id}`} className="font-mono text-xs text-[#60626c]">
+        <span key={`v-${line.id}`} className="block min-w-0 break-all font-mono text-xs text-[#60626c]">
           {line.variantId}
         </span>,
         <span key={`q-${line.id}`} className="text-center text-sm font-bold tabular-nums text-[#181b25]">
@@ -388,8 +388,8 @@ export const OrderDetailPage = () => {
   };
 
   return (
-    <div className="flex gap-6">
-      <div className="min-w-0 flex-1 space-y-6">
+    <div className="flex min-w-0 gap-4 md:gap-6">
+      <div className="min-w-0 flex-1 space-y-4 sm:space-y-6">
         <PageHeader
           title={entity ? `Order ${entity.orderNumber}` : "Order detail"}
           titleSize="deck"
@@ -425,28 +425,32 @@ export const OrderDetailPage = () => {
                 <span className="mx-2 text-slate-300">/</span>
                 <span className="text-[#181b25]">Detail view</span>
               </nav>
-              <div className="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                  <div className="mb-1 flex flex-wrap items-center gap-3">
-                    <h2 className="font-headline text-2xl font-bold tracking-tight text-[#181b25]">
-                      Order #<span className="font-mono text-xl text-[#1653cc]">{entity.orderNumber}</span>
+              <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+                <div className="min-w-0">
+                  <div className="mb-1 flex flex-wrap items-center gap-2 sm:gap-3">
+                    <h2 className="font-headline text-xl font-bold tracking-tight text-[#181b25] sm:text-2xl">
+                      Order #<span className="font-mono text-lg text-[#1653cc] sm:text-xl">{entity.orderNumber}</span>
                     </h2>
-                    <StatusBadge label={humanize(entity.status)} tone={orderStatusTone(entity.status)} />
+                    <StatusBadge
+                      className="shrink-0"
+                      label={humanize(entity.status)}
+                      tone={orderStatusTone(entity.status)}
+                    />
                   </div>
                   <p className="text-sm text-slate-500">Placed on {formatDateTime(entity.createdAt)} (UTC)</p>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
                   <button
                     type="button"
                     onClick={exportManifest}
-                    className="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-900 transition-colors hover:bg-slate-50"
+                    className="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-900 transition-colors hover:bg-slate-50 sm:min-h-[44px]"
                   >
                     Export manifest
                   </button>
                   <button
                     type="button"
                     onClick={() => window.print()}
-                    className="rounded-md bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-[#1653cc]/20 transition-transform hover:scale-[0.98]"
+                    className="rounded-md bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-[#1653cc]/20 transition-transform hover:scale-[0.98] sm:min-h-[44px]"
                   >
                     Print invoice
                   </button>
@@ -454,8 +458,8 @@ export const OrderDetailPage = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-sm sm:p-6">
                 <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                   Customer information
                 </h3>
@@ -464,10 +468,10 @@ export const OrderDetailPage = () => {
                     {initials(entity.customer.name ?? entity.customer.email)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-slate-900">
+                    <p className="break-words font-bold text-slate-900">
                       {entity.customer.name ?? entity.customer.email ?? (entity.customer.guest ? "Guest" : "—")}
                     </p>
-                    <p className="mb-2 text-sm text-slate-500">{entity.customer.email ?? "—"}</p>
+                    <p className="mb-2 break-words text-sm text-slate-500">{entity.customer.email ?? "—"}</p>
                     {entity.customer.id ? (
                       <Link
                         to={`/admin/customers/${entity.customer.id}`}
@@ -483,24 +487,28 @@ export const OrderDetailPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border-l-4 border-[#006b2d] bg-white p-6 shadow-sm">
+              <div className="rounded-xl border-l-4 border-[#006b2d] bg-white p-4 shadow-sm sm:p-6">
                 <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                   Payment summary
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex items-end justify-between gap-2">
-                    <span className="font-mono text-2xl font-bold text-slate-900">
+                  <div className="flex min-w-0 flex-wrap items-end justify-between gap-2">
+                    <span className="min-w-0 shrink font-mono text-xl font-bold tabular-nums text-slate-900 sm:text-2xl">
                       {formatMoney(entity.payment.amountCents, entity.payment.currency)}
                     </span>
-                    <StatusBadge label={humanize(entity.payment.paymentState)} tone={paymentStateTone(entity.payment.paymentState)} />
+                    <StatusBadge
+                      className="shrink-0"
+                      label={humanize(entity.payment.paymentState)}
+                      tone={paymentStateTone(entity.payment.paymentState)}
+                    />
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Method</span>
-                    <span className="font-medium text-slate-900">{paymentMethodLabel}</span>
+                  <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-sm">
+                    <span className="shrink-0 text-slate-500">Method</span>
+                    <span className="min-w-0 break-words text-right font-medium text-slate-900">{paymentMethodLabel}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Reference</span>
-                    <span className="font-mono text-slate-900">
+                  <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-sm">
+                    <span className="shrink-0 text-slate-500">Reference</span>
+                    <span className="min-w-0 break-all text-right font-mono text-slate-900">
                       {entity.payment.providerPaymentRef ?? "—"}
                     </span>
                   </div>
@@ -515,13 +523,13 @@ export const OrderDetailPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border-l-4 border-[#5b5e68] bg-white p-6 shadow-sm">
+              <div className="rounded-xl border-l-4 border-[#5b5e68] bg-white p-4 shadow-sm sm:p-6 md:col-span-2 lg:col-span-1">
                 <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                   Fulfillment details
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex min-w-0 items-center gap-2">
+                  <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+                    <div className="flex min-w-0 flex-1 items-center gap-2">
                       <WarehouseIcon className="h-5 w-5 shrink-0 text-slate-400" aria-hidden />
                       <span className="truncate font-medium text-slate-900">
                         {entity.assignedWarehouse?.name
@@ -529,14 +537,18 @@ export const OrderDetailPage = () => {
                           : "Unassigned"}
                       </span>
                     </div>
-                    <StatusBadge label={humanize(entity.fulfillment.status)} tone={fulfillmentStateTone(entity.fulfillment.status)} />
+                    <StatusBadge
+                      className="shrink-0"
+                      label={humanize(entity.fulfillment.status)}
+                      tone={fulfillmentStateTone(entity.fulfillment.status)}
+                    />
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Shipment</span>
+                  <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-sm">
+                    <span className="shrink-0 text-slate-500">Shipment</span>
                     {latestShipment ? (
                       <Link
                         to={`/admin/shipments/${latestShipment.id}`}
-                        className="font-mono text-slate-900 hover:text-[#1653cc] hover:underline"
+                        className="min-w-0 break-all text-right font-mono text-slate-900 hover:text-[#1653cc] hover:underline"
                       >
                         {latestShipment.trackingNumber ?? latestShipment.id.slice(0, 8)}
                       </Link>
@@ -544,17 +556,19 @@ export const OrderDetailPage = () => {
                       <span className="font-mono text-slate-900">—</span>
                     )}
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Carrier</span>
-                    <span className="font-medium text-slate-900">{latestShipment?.carrier ?? "—"}</span>
+                  <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-sm">
+                    <span className="shrink-0 text-slate-500">Carrier</span>
+                    <span className="min-w-0 break-words text-right font-medium text-slate-900">
+                      {latestShipment?.carrier ?? "—"}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
             {shippingSnapshotRows.length > 0 ? (
-              <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-6 shadow-sm">
-                <h3 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500">
+              <div className="rounded-xl border-l-4 border-[#1653cc] bg-white p-4 shadow-sm sm:p-6">
+                <h3 className="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500">
                   <Truck className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
                   Shipping address & checkout
                 </h3>
@@ -562,10 +576,12 @@ export const OrderDetailPage = () => {
                   {shippingSnapshotRows.map((row) => (
                     <div
                       key={row.label}
-                      className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-sm"
+                      className="flex flex-col gap-0.5 text-sm sm:flex-row sm:flex-wrap sm:justify-between sm:gap-x-4 sm:gap-y-1"
                     >
-                      <span className="text-slate-500">{row.label}</span>
-                      <span className="max-w-xl text-right font-medium text-slate-900">{row.value}</span>
+                      <span className="shrink-0 text-slate-500">{row.label}</span>
+                      <span className="min-w-0 break-words font-medium text-slate-900 sm:max-w-xl sm:text-right">
+                        {row.value}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -573,11 +589,11 @@ export const OrderDetailPage = () => {
             ) : null}
 
             <div className="overflow-hidden rounded-xl border border-[#e0e2f0]/40 bg-white shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e0e2f0]/40 px-6 py-4">
+              <div className="flex flex-col gap-2 border-b border-[#e0e2f0]/40 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-2 sm:px-6 sm:py-4">
                 <h3 className="text-sm font-bold text-slate-900">
                   Line items ({entity.items?.length ?? 0})
                 </h3>
-                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 sm:max-w-[55%] sm:text-right lg:max-w-none">
                   Variant identifiers are system references
                 </span>
               </div>
@@ -591,9 +607,9 @@ export const OrderDetailPage = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <div className="space-y-6 lg:col-span-2">
-                <div className="rounded-xl bg-white p-6 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3">
+              <div className="space-y-4 sm:space-y-6 lg:col-span-2">
+                <div className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
                   <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
                     Internal operational notes
                   </h3>
@@ -620,14 +636,14 @@ export const OrderDetailPage = () => {
                 </div>
 
                 {canViewAudit ? (
-                  <div className="rounded-xl bg-white p-6 shadow-sm">
-                    <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="rounded-xl bg-white p-4 shadow-sm sm:p-6">
+                    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                       <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500">
                         Entity timeline preview
                       </h3>
                       <Link
                         to={`/admin/orders/${orderId}/timeline`}
-                        className="text-xs font-bold uppercase tracking-wider text-[#1653cc] hover:underline"
+                        className="shrink-0 text-xs font-bold uppercase tracking-wider text-[#1653cc] hover:underline"
                       >
                         Full timeline
                       </Link>
@@ -644,16 +660,16 @@ export const OrderDetailPage = () => {
                       <div className="space-y-3">
                         {(entityTimelineQ.data?.data.items ?? []).map((event) => (
                           <div key={event.id} className="rounded-lg border border-slate-100 bg-slate-50 p-3">
-                            <div className="flex items-start justify-between gap-3">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                               <div className="min-w-0">
                                 <p className="text-xs font-bold uppercase tracking-wider text-[#181b25]">
                                   {humanize(event.eventType)}
                                 </p>
-                                <p className="mt-1 text-sm text-[#434654]">
+                                <p className="mt-1 break-words text-sm text-[#434654]">
                                   {timelinePayloadLine(event.payload)}
                                 </p>
                               </div>
-                              <span className="shrink-0 text-xs text-slate-400">
+                              <span className="shrink-0 text-xs text-slate-400 sm:text-right">
                                 {formatDateTime(event.occurredAt)}
                               </span>
                             </div>
@@ -666,48 +682,48 @@ export const OrderDetailPage = () => {
 
                 <Link
                   to={`/admin/orders/${orderId}/timeline`}
-                  className="group flex cursor-pointer items-center justify-between rounded-lg bg-[#f2f3ff] p-4 transition-colors hover:bg-[#e6e7f6]"
+                  className="group flex min-w-0 cursor-pointer items-center justify-between gap-3 rounded-lg bg-[#f2f3ff] p-4 transition-colors hover:bg-[#e6e7f6]"
                 >
-                  <div className="flex items-center gap-3">
-                    <History className="h-5 w-5 text-[#1653cc]" aria-hidden />
-                    <span className="text-sm font-bold uppercase tracking-tighter text-slate-900">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <History className="h-5 w-5 shrink-0 text-[#1653cc]" aria-hidden />
+                    <span className="min-w-0 break-words text-xs font-bold uppercase tracking-tighter text-slate-900 sm:text-sm">
                       View full transaction audit timeline
                     </span>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-slate-500 transition-transform group-hover:translate-x-1" />
+                  <ChevronRight className="h-5 w-5 shrink-0 text-slate-500 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
 
-              <div className="flex flex-col justify-between rounded-xl bg-[#0f1117] p-8 text-white shadow-sm">
+              <div className="flex flex-col justify-between rounded-xl bg-[#0f1117] p-5 text-white shadow-sm sm:p-8">
                 <div>
-                  <h3 className="mb-6 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                  <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-400 sm:mb-6">
                     Financial reconciliation
                   </h3>
-                  <div className="space-y-4 text-sm">
-                    <div className="flex justify-between">
+                  <div className="space-y-3 text-sm sm:space-y-4">
+                    <div className="flex flex-wrap justify-between gap-x-3 gap-y-1">
                       <span className="text-slate-400">Subtotal (lines)</span>
-                      <span className="font-mono">{formatMoney(linesSubtotalCents, currency)}</span>
+                      <span className="font-mono tabular-nums">{formatMoney(linesSubtotalCents, currency)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Logistics &amp; shipping</span>
+                    <div className="flex flex-wrap justify-between gap-x-3 gap-y-1">
+                      <span className="text-slate-400">Logistics & shipping</span>
                       <span className="font-mono">—</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-x-3 gap-y-1">
                       <span className="text-slate-400">Estimated VAT / tax</span>
                       <span className="font-mono">—</span>
                     </div>
-                    <div className="flex justify-between text-sm italic text-red-300/90">
+                    <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-sm italic text-red-300/90">
                       <span>Discounts</span>
                       <span className="font-mono not-italic">—</span>
                     </div>
                   </div>
                 </div>
-                <div className="mt-8 border-t border-white/10 pt-6">
-                  <div className="flex items-end justify-between">
+                <div className="mt-6 border-t border-white/10 pt-4 sm:mt-8 sm:pt-6">
+                  <div className="flex flex-wrap items-end justify-between gap-2">
                     <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
                       Grand total
                     </span>
-                    <span className="font-mono text-3xl font-bold text-[#dbe1ff]">
+                    <span className="font-mono text-2xl font-bold tabular-nums text-[#dbe1ff] sm:text-3xl">
                       {formatMoney(grandCents, currency)}
                     </span>
                   </div>
@@ -718,8 +734,9 @@ export const OrderDetailPage = () => {
             <SurfaceCard
               title="Admin operations"
               description="Actions depend on your role. Invalid transitions are rejected and audited server-side."
+              contentClassName="px-4 py-4 sm:px-5 sm:py-5"
             >
-              <div className="grid gap-8 lg:grid-cols-2">
+              <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
                 <div id="order-admin-status" className="scroll-mt-28 space-y-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Order status</h3>
                   <label className="flex flex-col gap-1 text-xs text-slate-600">
@@ -922,7 +939,7 @@ export const OrderDetailPage = () => {
 
       {entity ? (
         <aside
-          className="sticky top-24 hidden h-fit shrink-0 flex-col items-center gap-4 self-start rounded-lg border border-white/5 bg-[#13161e] py-6 xl:flex"
+          className="sticky top-24 hidden h-fit shrink-0 flex-col items-center gap-4 self-start rounded-lg border border-white/5 bg-[#13161e] py-6 lg:flex"
           aria-label="Quick actions"
         >
           <button
