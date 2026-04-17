@@ -6,8 +6,10 @@ import { z } from "zod";
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import { DataTableShell } from "@/components/primitives/DataTableShell";
 import { AsyncActionButton } from "@/components/primitives/AsyncActionButton";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { SurfaceCard } from "@/components/primitives/SurfaceCard";
+import { StitchFieldLabel, StitchPageBody, stitchInputClass, stitchSelectClass } from "@/components/stitch";
 import { requestAdminStepUpToken } from "@/features/auth/step-up";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
@@ -37,15 +39,15 @@ const notificationDraftSchema = z.object({
 const SEGMENT_COPY: Record<BroadcastSegment, { label: string; description: string }> = {
   ALL_ACTIVE_CUSTOMERS: {
     label: "All active customers",
-    description: "Every customer user with status ACTIVE (one queued email per user)."
+    description: "Customer accounts with status ACTIVE."
   },
   MARKETING_OPT_IN: {
     label: "Marketing opt-in",
-    description: "ACTIVE users who enabled marketing email in notification preferences."
+    description: "Active customers who enabled marketing email."
   },
   ALL_ACTIVE_ADMINS: {
     label: "All active admins",
-    description: "Every admin operator with status ACTIVE (one queued email per admin email)."
+    description: "Admin operators with status ACTIVE."
   }
 };
 
@@ -69,7 +71,7 @@ const emptyMessageContent = (): MessageContent => ({
   buttonLink: ""
 });
 
-const buildPayloadFromMessageContent = (m: MessageContent): Record<string, unknown> => {
+const buildBasePayload = (m: MessageContent): Record<string, unknown> => {
   const payload: Record<string, unknown> = {};
   const subject = m.emailSubject.trim();
   const heading = m.headline.trim();
@@ -86,13 +88,23 @@ const buildPayloadFromMessageContent = (m: MessageContent): Record<string, unkno
   return payload;
 };
 
-const isAdminBroadcastType = (type: string) => type.trim() === "ADMIN_BROADCAST";
+const parseExtraPayload = (
+  raw: string
+): { ok: true; value: Record<string, unknown> } | { ok: false; message: string } => {
+  const t = raw.trim();
+  if (!t) return { ok: true, value: {} };
+  try {
+    const parsed = JSON.parse(t) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { ok: false, message: "Additional payload must be a JSON object." };
+    }
+    return { ok: true, value: parsed as Record<string, unknown> };
+  } catch {
+    return { ok: false, message: "Additional payload must be valid JSON." };
+  }
+};
 
 const NOTIFICATION_LIST_DEFAULTS = { status: "", type: "", recipient: "" };
-
-const labelClass = "mb-1 block text-xs font-semibold uppercase tracking-wide text-[#5b5e68]";
-const inputClass = "w-full rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm text-[#181b25] placeholder:text-[#9aa3b2]";
-const textAreaClass = `${inputClass} min-h-[88px] resize-y`;
 
 export const NotificationsWorkspacePage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
@@ -103,6 +115,7 @@ export const NotificationsWorkspacePage = () => {
   const [previewCount, setPreviewCount] = useState<number | null>(null);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [broadcastConfirmOpen, setBroadcastConfirmOpen] = useState(false);
   const [typeDraft, setTypeDraft] = useState("");
   const [recipientDraft, setRecipientDraft] = useState("");
   const [form, setForm] = useState({
@@ -110,8 +123,7 @@ export const NotificationsWorkspacePage = () => {
     recipientEmail: ""
   });
   const [messageContent, setMessageContent] = useState<MessageContent>(emptyMessageContent);
-  /** Used when notification type is not ADMIN_BROADCAST (e.g. admin invite) — technical payload. */
-  const [technicalPayloadJson, setTechnicalPayloadJson] = useState("{}");
+  const [extraPayloadJson, setExtraPayloadJson] = useState("{}");
   const [flash, setFlash] = useState<string | null>(null);
 
   useEffect(() => {
@@ -125,43 +137,23 @@ export const NotificationsWorkspacePage = () => {
   }, [broadcastSegment, composeMode]);
 
   const draftValidation = useMemo(() => {
-    const simple = isAdminBroadcastType(form.type);
-
-    let payload: Record<string, unknown>;
-
-    if (simple) {
-      if (!messageContent.emailSubject.trim()) {
-        return { ok: false as const, message: "Email subject is required." };
-      }
-      if (!messageContent.mainMessage.trim()) {
-        return { ok: false as const, message: "Main message is required." };
-      }
-      payload = buildPayloadFromMessageContent(messageContent);
-    } else {
-      const raw = technicalPayloadJson.trim();
-      if (raw.length < 2) {
-        return { ok: false as const, message: "Payload JSON is required for this notification type." };
-      }
-      try {
-        const parsed = JSON.parse(raw) as unknown;
-        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-          return { ok: false as const, message: "Payload must be a JSON object." };
-        }
-        payload = parsed as Record<string, unknown>;
-      } catch {
-        return { ok: false as const, message: "Payload must be valid JSON." };
-      }
+    if (!messageContent.emailSubject.trim()) {
+      return { ok: false as const, message: "Email subject is required." };
     }
+    if (!messageContent.mainMessage.trim()) {
+      return { ok: false as const, message: "Main message is required." };
+    }
+
+    const extraParsed = parseExtraPayload(extraPayloadJson);
+    if (!extraParsed.ok) {
+      return { ok: false as const, message: extraParsed.message };
+    }
+
+    const payload = { ...buildBasePayload(messageContent), ...extraParsed.value };
 
     if (composeMode === "broadcast") {
       if (!form.type.trim()) {
         return { ok: false as const, message: "Notification type is required." };
-      }
-      if (!isAdminBroadcastType(form.type)) {
-        return {
-          ok: false as const,
-          message: "Broadcasts use the simple email form. Set type to ADMIN_BROADCAST, or send other types to one recipient only."
-        };
       }
       return { ok: true as const, payload };
     }
@@ -174,7 +166,7 @@ export const NotificationsWorkspacePage = () => {
       };
     }
     return { ok: true as const, payload };
-  }, [form, composeMode, messageContent, technicalPayloadJson]);
+  }, [form, composeMode, messageContent, extraPayloadJson]);
 
   const query = useAuthedQuery(
     ["admin-notifications", page, filters.status, filters.type, filters.recipient],
@@ -228,14 +220,6 @@ export const NotificationsWorkspacePage = () => {
       }
       if (previewCount === null) {
         throw new Error("Preview the audience size before sending a broadcast.");
-      }
-      if (previewCount > 0) {
-        const ok = window.confirm(
-          `Send this message to ${previewCount} recipient(s) in segment "${SEGMENT_COPY[broadcastSegment].label}"? Each recipient gets a separate queued notification.`
-        );
-        if (!ok) {
-          throw new Error("Broadcast cancelled.");
-        }
       }
       const stepUpToken = await requestAdminStepUpToken({ accessToken, email: actorEmail });
       return broadcastAdminNotifications(
@@ -351,350 +335,354 @@ export const NotificationsWorkspacePage = () => {
     </div>
   ]);
 
-  const showSimpleForm = isAdminBroadcastType(form.type);
+  const canRequestBroadcast =
+    composeMode === "broadcast" && draftValidation.ok && previewCount !== null && previewCount > 0;
 
   return (
-    <div className="mx-auto max-w-[1400px] space-y-6">
+    <div className="mx-auto max-w-[1400px]">
       <PageHeader
         title="Notifications workspace"
-        description="Delivery state, replay controls, single-recipient sends, and segment broadcasts through the same outbox pipeline."
+        description="Outbox, retries, single sends, and segment broadcasts."
       />
 
-      {flash ? (
-        <div className="rounded-xl border border-[#e0e2f0] bg-white px-4 py-3 text-sm text-[#434654] shadow-sm">
-          {flash}
-        </div>
-      ) : null}
-
-      <SurfaceCard title="Outbox filters" description="Reduce delivery noise and isolate failed records.">
-        <div className="grid gap-4 md:grid-cols-3">
-          <input
-            value={typeDraft}
-            onChange={(event) => {
-              const v = event.target.value;
-              setTypeDraft(v);
-              setDebounced("type", v);
-            }}
-            placeholder="Type"
-            className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
-          />
-          <input
-            value={recipientDraft}
-            onChange={(event) => {
-              const v = event.target.value;
-              setRecipientDraft(v);
-              setDebounced("recipient", v);
-            }}
-            placeholder="Recipient email"
-            className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
-          />
-          <select
-            value={filters.status}
-            onChange={(event) => set("status", event.target.value)}
-            className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
-          >
-            <option value="">All statuses</option>
-            <option value="QUEUED">Queued</option>
-            <option value="SENT">Sent</option>
-            <option value="FAILED">Failed</option>
-          </select>
-        </div>
-      </SurfaceCard>
-
-      <SurfaceCard
-        title="Compose notification"
-        description="Send to one email address, or broadcast to a built-in segment (each recipient still gets an individual notification row and delivery job)."
-      >
-        <div className="mb-4 flex flex-wrap gap-2 border-b border-[#e5e7eb] pb-4">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={composeMode === "single"}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-              composeMode === "single"
-                ? "bg-[#1653cc] text-white"
-                : "bg-[#f2f3ff] text-[#434654] hover:bg-[#e8ebff]"
-            }`}
-            onClick={() => setComposeMode("single")}
-          >
-            One recipient
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={composeMode === "broadcast"}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-              composeMode === "broadcast"
-                ? "bg-[#1653cc] text-white"
-                : "bg-[#f2f3ff] text-[#434654] hover:bg-[#e8ebff]"
-            }`}
-            onClick={() => setComposeMode("broadcast")}
-          >
-            Broadcast segment
-          </button>
-          <button
-            type="button"
-            className="ml-auto rounded-lg border border-[#d8dbe8] px-3 py-2 text-xs font-semibold text-[#434654] hover:bg-[#f8f9fc]"
-            onClick={() => {
-              setMessageContent(emptyMessageContent());
-              setTechnicalPayloadJson("{}");
-            }}
-          >
-            Clear message
-          </button>
-        </div>
-
-        {!draftValidation.ok ? (
-          <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-            {draftValidation.message}
+      <StitchPageBody>
+        {flash ? (
+          <div className="rounded-xl border border-[#e0e2f0] bg-white px-4 py-3 text-sm text-[#434654] shadow-sm">
+            {flash}
           </div>
         ) : null}
 
-        <div className="mb-4">
-          <label className={labelClass} htmlFor="notification-type-compose">
-            Notification type
-          </label>
-          <input
-            id="notification-type-compose"
-            value={form.type}
-            onChange={(event) => setForm((current) => ({ ...current, type: event.target.value }))}
-            placeholder="ADMIN_BROADCAST for store announcements"
-            className={inputClass}
-          />
-          <p className="mt-2 text-xs text-[#737685]">
-            Use <span className="font-mono">ADMIN_BROADCAST</span> for the form below. For other types (e.g. invitations), switch
-            the type and use the technical JSON payload.
-          </p>
-        </div>
-
-        {showSimpleForm ? (
-          <div className="rounded-xl border border-[#e5e7eb] bg-[#f8f9fc] p-4 md:p-5">
-            <h3 className="mb-1 text-sm font-bold text-[#181b25]">Email content</h3>
-            <p className="mb-4 text-xs text-[#5b5e68]">
-              This is what recipients see in their inbox. Required fields are marked. Optional fields add a second paragraph or a
-              button link.
-            </p>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="md:col-span-2">
-                <label className={labelClass} htmlFor="msg-subject">
-                  Email subject <span className="text-red-600">*</span>
-                </label>
-                <input
-                  id="msg-subject"
-                  value={messageContent.emailSubject}
-                  onChange={(e) => setMessageContent((c) => ({ ...c, emailSubject: e.target.value }))}
-                  placeholder="e.g. Scheduled maintenance this Sunday"
-                  className={inputClass}
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className={labelClass} htmlFor="msg-headline">
-                  Headline <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
-                </label>
-                <input
-                  id="msg-headline"
-                  value={messageContent.headline}
-                  onChange={(e) => setMessageContent((c) => ({ ...c, headline: e.target.value }))}
-                  placeholder="Large title inside the email; defaults to the subject if left blank"
-                  className={inputClass}
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className={labelClass} htmlFor="msg-main">
-                  Main message <span className="text-red-600">*</span>
-                </label>
-                <textarea
-                  id="msg-main"
-                  value={messageContent.mainMessage}
-                  onChange={(e) => setMessageContent((c) => ({ ...c, mainMessage: e.target.value }))}
-                  placeholder="The opening paragraph customers read first."
-                  className={textAreaClass}
-                  rows={4}
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className={labelClass} htmlFor="msg-extra">
-                  Extra details <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
-                </label>
-                <textarea
-                  id="msg-extra"
-                  value={messageContent.extraDetails}
-                  onChange={(e) => setMessageContent((c) => ({ ...c, extraDetails: e.target.value }))}
-                  placeholder="Optional second paragraph (timelines, links to policy, etc.)"
-                  className={textAreaClass}
-                  rows={3}
-                />
-              </div>
-              <div>
-                <label className={labelClass} htmlFor="msg-cta-label">
-                  Button label <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
-                </label>
-                <input
-                  id="msg-cta-label"
-                  value={messageContent.buttonLabel}
-                  onChange={(e) => setMessageContent((c) => ({ ...c, buttonLabel: e.target.value }))}
-                  placeholder="e.g. View your account"
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className={labelClass} htmlFor="msg-cta-url">
-                  Button link <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
-                </label>
-                <input
-                  id="msg-cta-url"
-                  value={messageContent.buttonLink}
-                  onChange={(e) => setMessageContent((c) => ({ ...c, buttonLink: e.target.value }))}
-                  placeholder="https://…"
-                  className={inputClass}
-                  inputMode="url"
-                />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <label className={labelClass} htmlFor="technical-payload">
-              Technical payload (JSON)
-            </label>
-            <p className="mb-2 text-xs text-[#737685]">
-              This notification type expects structured fields in JSON (for example invite links for{" "}
-              <span className="font-mono">ADMIN_INVITATION</span>). Switch type back to{" "}
-              <span className="font-mono">ADMIN_BROADCAST</span> to use the simple form.
-            </p>
-            <textarea
-              id="technical-payload"
-              value={technicalPayloadJson}
-              onChange={(e) => setTechnicalPayloadJson(e.target.value)}
-              className="min-h-48 w-full rounded-xl border border-[#d8dbe8] bg-[#0f172a] p-4 font-mono text-xs text-slate-100"
-              spellCheck={false}
-              aria-label="Technical notification payload JSON"
-            />
-          </div>
-        )}
-
-        {composeMode === "single" ? (
-          <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto]">
+        <SurfaceCard title="Outbox filters" description="Filter the delivery list.">
+          <div className="grid gap-4 md:grid-cols-3">
             <div>
-              <label className={labelClass} htmlFor="recipient-email">
-                Recipient email
-              </label>
+              <StitchFieldLabel>Type</StitchFieldLabel>
               <input
-                id="recipient-email"
-                value={form.recipientEmail}
-                onChange={(event) => setForm((current) => ({ ...current, recipientEmail: event.target.value }))}
-                placeholder="recipient@example.com"
-                className={inputClass}
+                value={typeDraft}
+                onChange={(event) => {
+                  const v = event.target.value;
+                  setTypeDraft(v);
+                  setDebounced("type", v);
+                }}
+                placeholder="Filter by type"
+                className={stitchInputClass}
               />
             </div>
-            <div className="flex items-end">
-              <AsyncActionButton
-                pending={createMutation.isPending}
-                blocked={createMutation.blocked}
-                onClick={() => createMutation.run(undefined)}
+            <div>
+              <StitchFieldLabel>Recipient email</StitchFieldLabel>
+              <input
+                value={recipientDraft}
+                onChange={(event) => {
+                  const v = event.target.value;
+                  setRecipientDraft(v);
+                  setDebounced("recipient", v);
+                }}
+                placeholder="Filter by recipient"
+                className={stitchInputClass}
+              />
+            </div>
+            <div>
+              <StitchFieldLabel>Status</StitchFieldLabel>
+              <select
+                value={filters.status}
+                onChange={(event) => set("status", event.target.value)}
+                className={stitchSelectClass}
               >
-                Queue notification
-              </AsyncActionButton>
+                <option value="">All statuses</option>
+                <option value="QUEUED">Queued</option>
+                <option value="SENT">Sent</option>
+                <option value="FAILED">Failed</option>
+              </select>
             </div>
           </div>
-        ) : (
-          <div className="mt-6 space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <label className={labelClass} htmlFor="broadcast-segment">
-                  Segment
-                </label>
-                <select
-                  id="broadcast-segment"
-                  value={broadcastSegment}
-                  onChange={(event) => setBroadcastSegment(event.target.value as BroadcastSegment)}
-                  className={inputClass}
-                >
-                  {(Object.keys(SEGMENT_COPY) as BroadcastSegment[]).map((key) => (
-                    <option key={key} value={key}>
-                      {SEGMENT_COPY[key].label}
-                    </option>
-                  ))}
-                </select>
-                <p className="mt-2 text-xs text-[#737685]">{SEGMENT_COPY[broadcastSegment].description}</p>
-              </div>
-              <div className="flex flex-col justify-end">
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-xs font-semibold text-[#434654] hover:bg-white disabled:opacity-50"
-                    disabled={previewLoading || !accessToken}
-                    onClick={() => void loadPreview()}
-                  >
-                    {previewLoading ? "Loading…" : "Preview audience size"}
-                  </button>
-                  {previewCount !== null ? (
-                    <span className="text-sm font-semibold text-[#181b25]">{previewCount} recipients</span>
-                  ) : null}
-                </div>
-                {previewError ? <p className="mt-2 text-xs text-red-700">{previewError}</p> : null}
-              </div>
-            </div>
-            <div className="flex flex-col items-end gap-2 border-t border-[#e5e7eb] pt-4">
-              {previewCount === null ? (
-                <p className="max-w-md text-right text-xs text-[#737685]">
-                  Preview the audience size to confirm how many emails will be queued, then use Queue broadcast.
-                </p>
-              ) : previewCount === 0 ? (
-                <p className="max-w-md text-right text-xs text-amber-800">This segment has no recipients right now.</p>
-              ) : null}
-              <AsyncActionButton
-                pending={broadcastMutation.isPending}
-                blocked={broadcastMutation.blocked}
-                onClick={() => broadcastMutation.run(undefined)}
-              >
-                Queue broadcast
-              </AsyncActionButton>
-            </div>
-          </div>
-        )}
-      </SurfaceCard>
+        </SurfaceCard>
 
-      <SurfaceCard title="Notification delivery records" description="Recent notifications and replay actions.">
-        {query.isError ? (
-          <QueryError label="notifications" error={query.error} onRetry={() => void query.refetch()} />
-        ) : null}
-        {query.isLoading ? (
-          <div className="rounded-lg border border-[#eef1f8] bg-white p-4">
-            <SkeletonTable rows={8} cols={6} label="Loading notifications" />
-          </div>
-        ) : (
-          <DataTableShell
-            columns={["Id", "Type", "Recipient", "Status", "Created", "Actions"]}
-            rows={rows}
-            emptyState="No notification records matched this filter."
-            variant="stitchOperational"
-          />
-        )}
-        <div className="mt-4 flex items-center justify-between text-sm text-[#5b5e68]">
-          <span>
-            Page {meta?.page ?? page} of {meta?.totalPages ?? 1}
-          </span>
-          <div className="flex gap-2">
+        <SurfaceCard
+          title="Compose"
+          description="Same layout for every notification type: email copy first, optional JSON merge for template-specific keys (e.g. invite tokens)."
+        >
+          {!draftValidation.ok ? (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              {draftValidation.message}
+            </div>
+          ) : null}
+
+          <div className="mb-6 inline-flex rounded-lg border border-[#d8dbe8] bg-[#f8f9fc] p-1">
             <button
               type="button"
-              className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
-              disabled={page <= 1}
-              onClick={() => setPage(Math.max(1, page - 1))}
+              role="tab"
+              aria-selected={composeMode === "single"}
+              className={`rounded-md px-4 py-2 text-sm font-semibold transition-colors ${
+                composeMode === "single" ? "bg-white text-[#181b25] shadow-sm" : "text-[#5b5e68] hover:text-[#181b25]"
+              }`}
+              onClick={() => setComposeMode("single")}
             >
-              Previous
+              One recipient
             </button>
             <button
               type="button"
-              className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
-              disabled={page >= (meta?.totalPages ?? 1)}
-              onClick={() => setPage(page + 1)}
+              role="tab"
+              aria-selected={composeMode === "broadcast"}
+              className={`rounded-md px-4 py-2 text-sm font-semibold transition-colors ${
+                composeMode === "broadcast" ? "bg-white text-[#181b25] shadow-sm" : "text-[#5b5e68] hover:text-[#181b25]"
+              }`}
+              onClick={() => setComposeMode("broadcast")}
             >
-              Next
+              Broadcast
             </button>
           </div>
-        </div>
-      </SurfaceCard>
+
+          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <StitchFieldLabel>Notification type</StitchFieldLabel>
+                <input
+                  value={form.type}
+                  onChange={(event) => setForm((current) => ({ ...current, type: event.target.value }))}
+                  placeholder="e.g. ADMIN_BROADCAST, ADMIN_INVITATION, ORDER_CONFIRMED"
+                  className={stitchInputClass}
+                />
+              </div>
+
+              {composeMode === "single" ? (
+                <div className="md:col-span-2">
+                  <StitchFieldLabel>Recipient email</StitchFieldLabel>
+                  <input
+                    value={form.recipientEmail}
+                    onChange={(event) => setForm((current) => ({ ...current, recipientEmail: event.target.value }))}
+                    placeholder="recipient@example.com"
+                    className={stitchInputClass}
+                  />
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <StitchFieldLabel>Segment</StitchFieldLabel>
+                    <select
+                      value={broadcastSegment}
+                      onChange={(event) => setBroadcastSegment(event.target.value as BroadcastSegment)}
+                      className={stitchSelectClass}
+                    >
+                      {(Object.keys(SEGMENT_COPY) as BroadcastSegment[]).map((key) => (
+                        <option key={key} value={key}>
+                          {SEGMENT_COPY[key].label}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="mt-2 text-xs text-[#737685]">{SEGMENT_COPY[broadcastSegment].description}</p>
+                  </div>
+                  <div className="flex flex-col justify-end gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        className="rounded-lg border border-[#d8dbe8] bg-white px-3 py-2 text-xs font-semibold text-[#434654] hover:bg-[#f8f9fc] disabled:opacity-50"
+                        disabled={previewLoading || !accessToken}
+                        onClick={() => void loadPreview()}
+                      >
+                        {previewLoading ? "Loading…" : "Preview audience"}
+                      </button>
+                      {previewCount !== null ? (
+                        <span className="text-sm font-semibold text-[#181b25]">{previewCount} recipients</span>
+                      ) : null}
+                    </div>
+                    {previewError ? <p className="text-xs text-red-700">{previewError}</p> : null}
+                    {previewCount === 0 ? (
+                      <p className="text-xs text-[#737685]">No recipients in this segment.</p>
+                    ) : null}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="border-t border-[#eef1f8] pt-6">
+              <h3 className="mb-1 text-sm font-bold text-[#181b25]">Email content</h3>
+              <p className="mb-4 text-xs text-[#737685]">
+                Shown in the email for types that use these fields. Required: subject and main message.
+              </p>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <StitchFieldLabel>
+                    Email subject <span className="text-red-600">*</span>
+                  </StitchFieldLabel>
+                  <input
+                    value={messageContent.emailSubject}
+                    onChange={(e) => setMessageContent((c) => ({ ...c, emailSubject: e.target.value }))}
+                    placeholder="Subject line in the inbox"
+                    className={stitchInputClass}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <StitchFieldLabel>Headline (optional)</StitchFieldLabel>
+                  <input
+                    value={messageContent.headline}
+                    onChange={(e) => setMessageContent((c) => ({ ...c, headline: e.target.value }))}
+                    placeholder="Large title inside the email"
+                    className={stitchInputClass}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <StitchFieldLabel>
+                    Main message <span className="text-red-600">*</span>
+                  </StitchFieldLabel>
+                  <textarea
+                    value={messageContent.mainMessage}
+                    onChange={(e) => setMessageContent((c) => ({ ...c, mainMessage: e.target.value }))}
+                    placeholder="Opening paragraph"
+                    rows={4}
+                    className={`${stitchInputClass} min-h-[96px] resize-y`}
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <StitchFieldLabel>Extra details (optional)</StitchFieldLabel>
+                  <textarea
+                    value={messageContent.extraDetails}
+                    onChange={(e) => setMessageContent((c) => ({ ...c, extraDetails: e.target.value }))}
+                    placeholder="Optional second paragraph"
+                    rows={3}
+                    className={`${stitchInputClass} min-h-[72px] resize-y`}
+                  />
+                </div>
+                <div>
+                  <StitchFieldLabel>Button label (optional)</StitchFieldLabel>
+                  <input
+                    value={messageContent.buttonLabel}
+                    onChange={(e) => setMessageContent((c) => ({ ...c, buttonLabel: e.target.value }))}
+                    placeholder="e.g. Open store"
+                    className={stitchInputClass}
+                  />
+                </div>
+                <div>
+                  <StitchFieldLabel>Button link (optional)</StitchFieldLabel>
+                  <input
+                    value={messageContent.buttonLink}
+                    onChange={(e) => setMessageContent((c) => ({ ...c, buttonLink: e.target.value }))}
+                    placeholder="https://…"
+                    className={stitchInputClass}
+                    inputMode="url"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <details className="rounded-lg border border-[#eef1f8] bg-white px-4 py-3">
+              <summary className="cursor-pointer text-sm font-semibold text-[#434654]">Additional payload (JSON)</summary>
+              <p className="mt-2 text-xs text-[#737685]">
+                Merged on top of the fields above. Use for keys your notification type expects (e.g.{" "}
+                <span className="font-mono">inviteToken</span>, <span className="font-mono">ctaUrl</span>) — JSON keys
+                here override the same key from the form.
+              </p>
+              <textarea
+                value={extraPayloadJson}
+                onChange={(e) => setExtraPayloadJson(e.target.value)}
+                className="mt-3 min-h-32 w-full rounded-lg border border-[#d8dbe8] bg-[#fafbfc] p-3 font-mono text-xs text-[#181b25]"
+                spellCheck={false}
+                aria-label="Additional JSON payload"
+              />
+            </details>
+
+            <div className="flex flex-wrap items-center justify-end gap-3 border-t border-[#eef1f8] pt-4">
+              <button
+                type="button"
+                className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-xs font-semibold text-[#434654] hover:bg-[#f8f9fc]"
+                onClick={() => {
+                  setMessageContent(emptyMessageContent());
+                  setExtraPayloadJson("{}");
+                }}
+              >
+                Clear
+              </button>
+              {composeMode === "single" ? (
+                <AsyncActionButton
+                  pending={createMutation.isPending}
+                  blocked={createMutation.blocked}
+                  onClick={() => createMutation.run(undefined)}
+                >
+                  Queue notification
+                </AsyncActionButton>
+              ) : (
+                <>
+                  {previewCount === null ? (
+                    <span className="text-xs text-[#737685]">Preview audience before sending.</span>
+                  ) : null}
+                  <AsyncActionButton
+                    pending={broadcastMutation.isPending}
+                    blocked={broadcastMutation.blocked || !canRequestBroadcast}
+                    onClick={() => {
+                      if (canRequestBroadcast) setBroadcastConfirmOpen(true);
+                    }}
+                  >
+                    Queue broadcast
+                  </AsyncActionButton>
+                </>
+              )}
+            </div>
+          </div>
+        </SurfaceCard>
+
+        <SurfaceCard title="Delivery records" description="Recent notifications and retries.">
+          {query.isError ? (
+            <QueryError label="notifications" error={query.error} onRetry={() => void query.refetch()} />
+          ) : null}
+          {query.isLoading ? (
+            <div className="rounded-lg border border-[#eef1f8] bg-white p-4">
+              <SkeletonTable rows={8} cols={6} label="Loading notifications" />
+            </div>
+          ) : (
+            <DataTableShell
+              columns={["Id", "Type", "Recipient", "Status", "Created", "Actions"]}
+              rows={rows}
+              emptyState="No notification records matched this filter."
+              variant="stitchOperational"
+            />
+          )}
+          <div className="mt-4 flex items-center justify-between text-sm text-[#5b5e68]">
+            <span>
+              Page {meta?.page ?? page} of {meta?.totalPages ?? 1}
+            </span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
+                disabled={page <= 1}
+                onClick={() => setPage(Math.max(1, page - 1))}
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                className="rounded-lg border border-[#d8dbe8] px-3 py-1.5 disabled:opacity-50"
+                disabled={page >= (meta?.totalPages ?? 1)}
+                onClick={() => setPage(page + 1)}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </SurfaceCard>
+      </StitchPageBody>
+
+      <ConfirmDialog
+        open={broadcastConfirmOpen}
+        title="Send broadcast?"
+        body={
+          previewCount !== null ? (
+            <>
+              This will queue <strong>{previewCount}</strong> separate notification{previewCount === 1 ? "" : "s"} for
+              segment <strong>{SEGMENT_COPY[broadcastSegment].label}</strong> (type <span className="font-mono">{form.type.trim()}</span>
+              ). Each recipient gets their own email job.
+            </>
+          ) : (
+            "Confirm broadcast."
+          )
+        }
+        confirmLabel="Queue broadcast"
+        confirmDisabled={broadcastMutation.isPending}
+        size="md"
+        onClose={() => setBroadcastConfirmOpen(false)}
+        onConfirm={() => {
+          setBroadcastConfirmOpen(false);
+          broadcastMutation.run(undefined);
+        }}
+      />
     </div>
   );
 };
