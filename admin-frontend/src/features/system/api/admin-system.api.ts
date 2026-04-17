@@ -270,4 +270,46 @@ export const createAdminNotification = async (
     body
   });
 
+export type BroadcastSegment = "ALL_ACTIVE_CUSTOMERS" | "MARKETING_OPT_IN" | "ALL_ACTIVE_ADMINS";
+
+export type BroadcastSegmentPreviewResponse = {
+  success: true;
+  data: { segment: BroadcastSegment; recipientCount: number };
+};
+
+export const getBroadcastSegmentPreview = async (
+  accessToken: string,
+  segment: BroadcastSegment
+): Promise<BroadcastSegmentPreviewResponse> =>
+  apiRequest<BroadcastSegmentPreviewResponse>({
+    path: `/api/admin/notifications/broadcast/segment-preview?segment=${encodeURIComponent(segment)}`,
+    accessToken
+  });
+
+export type BroadcastEnqueueResponse = {
+  success: true;
+  data: {
+    broadcastBatchId: string;
+    segment: BroadcastSegment;
+    type: string;
+    expectedRecipients: number;
+    enqueued: number;
+    failed: number;
+    lastError: string | null;
+  };
+};
+
+export const broadcastAdminNotifications = async (
+  accessToken: string,
+  body: { segment: BroadcastSegment; type?: string; payload: Record<string, unknown> },
+  stepUpToken?: string
+): Promise<BroadcastEnqueueResponse> =>
+  apiRequest<BroadcastEnqueueResponse>({
+    method: "POST",
+    path: "/api/admin/notifications/broadcast",
+    accessToken,
+    headers: stepUpToken ? { "x-admin-step-up-token": stepUpToken } : undefined,
+    body
+  });
+
 export { ApiError };

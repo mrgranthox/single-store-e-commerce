@@ -13,11 +13,15 @@ import {
 } from "../../common/validation/validate-request";
 import {
   adminNotificationsQuerySchema,
+  broadcastNotificationsBodySchema,
+  broadcastSegmentPreviewQuerySchema,
   createNotificationBodySchema,
   notificationIdParamsSchema,
   notificationsQuerySchema
 } from "./notifications.schemas";
 import {
+  broadcastAdminNotifications,
+  countBroadcastRecipients,
   createAdminNotification,
   getAdminNotificationDetail,
   listAdminNotifications,
@@ -50,6 +54,28 @@ export const createNotificationAdmin = asyncHandler(async (request, response) =>
     ...body
   });
   return sendSuccess(response, { statusCode: 201, data });
+});
+
+export const previewBroadcastSegmentAdmin = asyncHandler(async (request, response) => {
+  const query = readValidatedQuery<z.infer<typeof broadcastSegmentPreviewQuerySchema>>(request);
+  const recipientCount = await countBroadcastRecipients(query.segment);
+  return sendSuccess(response, {
+    data: {
+      segment: query.segment,
+      recipientCount
+    }
+  });
+});
+
+export const createBroadcastAdmin = asyncHandler(async (request, response) => {
+  const body = readValidatedBody<z.infer<typeof broadcastNotificationsBodySchema>>(request);
+  const data = await broadcastAdminNotifications({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
+    segment: body.segment,
+    type: body.type,
+    payload: body.payload
+  });
+  return sendSuccess(response, { data });
 });
 
 export const retryNotificationAdmin = asyncHandler(async (request, response) => {

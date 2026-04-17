@@ -31,3 +31,19 @@ export const createNotificationBodySchema = z.object({
   recipientType: z.string().trim().min(1).max(80).optional(),
   payload: jsonRecordSchema.default({})
 });
+
+export const broadcastSegmentSchema = z.enum([
+  "ALL_ACTIVE_CUSTOMERS",
+  "MARKETING_OPT_IN",
+  "ALL_ACTIVE_ADMINS"
+]);
+
+export const broadcastSegmentPreviewQuerySchema = z.object({
+  segment: broadcastSegmentSchema
+});
+
+export const broadcastNotificationsBodySchema = z.object({
+  segment: broadcastSegmentSchema,
+  type: z.string().trim().min(1).max(120).optional(),
+  payload: jsonRecordSchema.default({})
+});

@@ -823,6 +823,26 @@ export const renderNotificationEmail = async (input: {
         ...document
       };
     }
+    case "ADMIN_BROADCAST": {
+      const subject = subjectFromPayload ?? "Message from the store";
+      const heading = readString(payload.heading) ?? subject;
+      const message =
+        readString(payload.message) ?? "Please read the following update from our team.";
+      const document = buildEmailDocument({
+        preheader: subject,
+        title: heading,
+        intro: message,
+        bodyHtml: `${buildParagraphs([readString(payload.detail)])}`,
+        ctaLabel: typeof payload.ctaLabel === "string" ? payload.ctaLabel : undefined,
+        ctaUrl: typeof payload.ctaUrl === "string" ? payload.ctaUrl : null,
+        detailRows: []
+      });
+
+      return {
+        subject,
+        ...document
+      };
+    }
     default: {
       const subject =
         subjectFromPayload ?? "Platform update";

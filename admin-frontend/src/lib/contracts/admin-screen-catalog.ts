@@ -1362,14 +1362,22 @@ const systemScreens = [
     path: "/admin/system/notifications",
     navLabel: "Notifications",
     showInSidebar: true,
-    purpose: "Notification outbox, replay surface, and manual notification authoring.",
+    purpose: "Notification outbox, replay surface, manual sends, and segment broadcasts.",
     endpointIds: [
       "system.notifications.list",
       "system.notifications.detail",
       "system.notifications.create",
+      "system.notifications.broadcastPreview",
+      "system.notifications.broadcast",
       "system.notifications.retry"
     ],
-    actions: ["Inspect notification detail", "Retry failed notification", "Create manual notification"],
+    actions: [
+      "Inspect notification detail",
+      "Retry failed notification",
+      "Create manual notification",
+      "Preview broadcast segment size",
+      "Queue segment broadcast"
+    ],
     permissionHints: ["notifications.read", "notifications.write"]
   }),
   screen({

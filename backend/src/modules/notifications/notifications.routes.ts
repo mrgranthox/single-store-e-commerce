@@ -7,14 +7,18 @@ import { requireAdminStepUp } from "../auth/admin-step-up.middleware";
 import { requireCustomerActor } from "../auth/auth.middleware";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
 import {
+  createBroadcastAdmin,
   createNotificationAdmin,
   getNotificationAdmin,
   listMyNotifications,
   listNotificationsAdmin,
+  previewBroadcastSegmentAdmin,
   retryNotificationAdmin
 } from "./notifications.controller";
 import {
   adminNotificationsQuerySchema,
+  broadcastNotificationsBodySchema,
+  broadcastSegmentPreviewQuerySchema,
   createNotificationBodySchema,
   notificationIdParamsSchema,
   notificationsQuerySchema
@@ -38,6 +42,14 @@ const adminNotificationRetryRateLimit = rateLimit({
   keyResolver: rateLimitKeyFromActorOrIp
 });
 
+const adminNotificationBroadcastRateLimit = rateLimit({
+  keyPrefix: "rl:admin:notifications:broadcast",
+  maxRequests: 5,
+  windowSeconds: 3600,
+  failClosed: true,
+  keyResolver: rateLimitKeyFromActorOrIp
+});
+
 router.get(
   "/notifications",
   requireCustomerActor,
@@ -51,6 +63,22 @@ router.get(
   requirePermissions(["notifications.read"]),
   validateRequest({ query: adminNotificationsQuerySchema }),
   listNotificationsAdmin
+);
+router.get(
+  "/admin/notifications/broadcast/segment-preview",
+  requireAdminActor,
+  requirePermissions(["notifications.read"]),
+  validateRequest({ query: broadcastSegmentPreviewQuerySchema }),
+  previewBroadcastSegmentAdmin
+);
+router.post(
+  "/admin/notifications/broadcast",
+  requireAdminActor,
+  requirePermissions(["notifications.write"]),
+  requireAdminStepUp(),
+  adminNotificationBroadcastRateLimit,
+  validateRequest({ body: broadcastNotificationsBodySchema }),
+  createBroadcastAdmin
 );
 router.get(
   "/admin/notifications/:notificationId",
@@ -83,6 +111,22 @@ export const notificationsRouteModule: RouteModule = {
   metadata: [
     { method: "GET", path: "/api/v1/notifications", summary: "List the authenticated customer's notifications.", tags: ["notifications"], auth: "authenticated" },
     { method: "GET", path: "/api/v1/admin/notifications", summary: "List notifications.", tags: ["notifications"], auth: "admin", permissions: ["notifications.read"] },
+    {
+      method: "GET",
+      path: "/api/v1/admin/notifications/broadcast/segment-preview",
+      summary: "Count recipients for a broadcast segment.",
+      tags: ["notifications"],
+      auth: "admin",
+      permissions: ["notifications.read"]
+    },
+    {
+      method: "POST",
+      path: "/api/v1/admin/notifications/broadcast",
+      summary: "Enqueue one email notification per recipient for a segment.",
+      tags: ["notifications"],
+      auth: "admin",
+      permissions: ["notifications.write"]
+    },
     { method: "GET", path: "/api/v1/admin/notifications/:notificationId", summary: "Fetch notification detail.", tags: ["notifications"], auth: "admin", permissions: ["notifications.read"] },
     { method: "POST", path: "/api/v1/admin/notifications", summary: "Create and enqueue a notification.", tags: ["notifications"], auth: "admin", permissions: ["notifications.write"] },
     { method: "POST", path: "/api/v1/admin/notifications/:notificationId/retry", summary: "Retry notification delivery.", tags: ["notifications"], auth: "admin", permissions: ["notifications.write"] }

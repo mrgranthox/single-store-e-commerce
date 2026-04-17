@@ -279,6 +279,8 @@ export const adminEndpointCatalog = [
   endpoint("system.notifications.list", "system", "GET", "/api/admin/notifications", "Load notification delivery records."),
   endpoint("system.notifications.detail", "system", "GET", "/api/admin/notifications/:notificationId", "Load notification detail."),
   endpoint("system.notifications.create", "system", "POST", "/api/admin/notifications", "Create a manual admin notification."),
+  endpoint("system.notifications.broadcastPreview", "system", "GET", "/api/admin/notifications/broadcast/segment-preview", "Count recipients for a broadcast segment."),
+  endpoint("system.notifications.broadcast", "system", "POST", "/api/admin/notifications/broadcast", "Enqueue one email per recipient for a broadcast segment."),
   endpoint("system.notifications.retry", "system", "POST", "/api/admin/notifications/:notificationId/retry", "Retry a notification delivery."),
   endpoint("system.adminUsers.list", "system", "GET", "/api/admin/admin-users", "List admin operators."),
   endpoint("system.adminUsers.create", "system", "POST", "/api/admin/admin-users", "Create an admin operator."),

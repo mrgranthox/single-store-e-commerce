@@ -1,5 +1,7 @@
+import { randomUUID } from "node:crypto";
+
 import type { Job } from "bullmq";
-import { NotificationStatus, Prisma } from "@prisma/client";
+import { AdminStatus, NotificationStatus, Prisma, UserStatus } from "@prisma/client";
 
 import { invalidInputError, notFoundError } from "../../common/errors/app-error";
 import {
@@ -325,6 +327,217 @@ export const getAdminNotificationDetail = async (notificationId: string) => {
 
   return {
     entity: serializeNotification(notification)
+  };
+};
+
+export type BroadcastSegment = "ALL_ACTIVE_CUSTOMERS" | "MARKETING_OPT_IN" | "ALL_ACTIVE_ADMINS";
+
+const BROADCAST_RECIPIENT_PAGE = 250;
+const BROADCAST_MAX_RECIPIENTS = 50_000;
+
+export const countBroadcastRecipients = async (segment: BroadcastSegment): Promise<number> => {
+  switch (segment) {
+    case "ALL_ACTIVE_CUSTOMERS":
+      return prisma.user.count({
+        where: {
+          status: UserStatus.ACTIVE
+        }
+      });
+    case "MARKETING_OPT_IN":
+      return prisma.user.count({
+        where: {
+          status: UserStatus.ACTIVE,
+          notificationPreference: {
+            is: {
+              marketingEmailEnabled: true
+            }
+          }
+        }
+      });
+    case "ALL_ACTIVE_ADMINS":
+      return prisma.adminUser.count({
+        where: {
+          status: AdminStatus.ACTIVE
+        }
+      });
+    default: {
+      const exhaustive: never = segment;
+      return exhaustive;
+    }
+  }
+};
+
+export const broadcastAdminNotifications = async (input: {
+  actorAdminUserId: string;
+  segment: BroadcastSegment;
+  type?: string;
+  payload: Record<string, unknown>;
+}) => {
+  const total = await countBroadcastRecipients(input.segment);
+  if (total > BROADCAST_MAX_RECIPIENTS) {
+    throw invalidInputError(
+      `This segment has ${total} recipients, which exceeds the maximum of ${BROADCAST_MAX_RECIPIENTS}. Narrow the audience or contact operations.`
+    );
+  }
+
+  const type = (input.type?.trim() || "ADMIN_BROADCAST").slice(0, 120);
+  const broadcastBatchId = randomUUID();
+  let enqueued = 0;
+  let failed = 0;
+  let lastError: string | null = null;
+
+  const enqueueOne = async (fn: () => Promise<unknown>) => {
+    try {
+      await fn();
+      enqueued += 1;
+    } catch (error) {
+      failed += 1;
+      lastError = error instanceof Error ? error.message : "enqueue failed";
+      logger.warn(
+        {
+          broadcastBatchId,
+          segment: input.segment,
+          error: lastError
+        },
+        "Broadcast enqueue failed for one recipient; continuing."
+      );
+    }
+  };
+
+  if (input.segment === "ALL_ACTIVE_ADMINS") {
+    let cursor: string | undefined;
+    while (true) {
+      const batch = await prisma.adminUser.findMany({
+        where: {
+          status: AdminStatus.ACTIVE
+        },
+        select: {
+          id: true,
+          email: true
+        },
+        orderBy: {
+          id: "asc"
+        },
+        take: BROADCAST_RECIPIENT_PAGE,
+        ...(cursor ? { skip: 1, cursor: { id: cursor } } : {})
+      });
+      if (batch.length === 0) {
+        break;
+      }
+      for (const row of batch) {
+        await enqueueOne(() =>
+          enqueueNotification({
+            type,
+            channel: "EMAIL",
+            recipientEmail: row.email,
+            recipientType: "ADMIN",
+            payload: input.payload
+          })
+        );
+      }
+      cursor = batch[batch.length - 1]?.id;
+      if (batch.length < BROADCAST_RECIPIENT_PAGE) {
+        break;
+      }
+    }
+  } else {
+    const userWhere: Prisma.UserWhereInput =
+      input.segment === "MARKETING_OPT_IN"
+        ? {
+            status: UserStatus.ACTIVE,
+            notificationPreference: {
+              is: {
+                marketingEmailEnabled: true
+              }
+            }
+          }
+        : {
+            status: UserStatus.ACTIVE
+          };
+
+    let cursor: string | undefined;
+    while (true) {
+      const batch = await prisma.user.findMany({
+        where: userWhere,
+        select: {
+          id: true
+        },
+        orderBy: {
+          id: "asc"
+        },
+        take: BROADCAST_RECIPIENT_PAGE,
+        ...(cursor ? { skip: 1, cursor: { id: cursor } } : {})
+      });
+      if (batch.length === 0) {
+        break;
+      }
+      for (const row of batch) {
+        await enqueueOne(() =>
+          enqueueNotification({
+            type,
+            channel: "EMAIL",
+            recipientUserId: row.id,
+            recipientType: "USER",
+            payload: input.payload
+          })
+        );
+      }
+      cursor = batch[batch.length - 1]?.id;
+      if (batch.length < BROADCAST_RECIPIENT_PAGE) {
+        break;
+      }
+    }
+  }
+
+  await prisma.$transaction([
+    prisma.auditLog.create({
+      data: {
+        actorType: "ADMIN",
+        actorAdminUserId: input.actorAdminUserId,
+        actionCode: "notifications.broadcast",
+        entityType: "NOTIFICATION",
+        entityId: broadcastBatchId,
+        metadata: toPrismaJsonValue({
+          segment: input.segment,
+          type,
+          expectedRecipients: total,
+          enqueued,
+          failed,
+          lastError
+        })
+      }
+    }),
+    prisma.adminActionLog.create({
+      data: {
+        adminUserId: input.actorAdminUserId,
+        screen: "notifications.outbox",
+        actionCode: "notifications.broadcast",
+        entityType: "NOTIFICATION",
+        entityId: broadcastBatchId,
+        after: toPrismaJsonValue({
+          segment: input.segment,
+          type,
+          expectedRecipients: total,
+          enqueued,
+          failed,
+          lastError
+        })
+      }
+    })
+  ]);
+
+  if (total > 0 && enqueued === 0) {
+    throw invalidInputError(lastError ?? "Broadcast could not enqueue any notifications.");
+  }
+
+  return {
+    broadcastBatchId,
+    segment: input.segment,
+    type,
+    expectedRecipients: total,
+    enqueued,
+    failed,
+    lastError
   };
 };
 
