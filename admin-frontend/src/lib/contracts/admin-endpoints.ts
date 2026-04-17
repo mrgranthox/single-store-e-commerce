@@ -111,6 +111,7 @@ export const adminEndpointCatalog = [
   endpoint("inventory.warehouses.update", "inventory", "PATCH", "/api/admin/inventory/warehouses/:warehouseId", "Update a warehouse."),
 
   endpoint("orders.list", "orders", "GET", "/api/admin/orders", "List orders."),
+  endpoint("orders.bulkUpdateStatus", "orders", "POST", "/api/admin/orders/bulk-status", "Update status for many orders."),
   endpoint("orders.fulfillmentQueue", "orders", "GET", "/api/admin/orders/fulfillment-queue", "Load orders awaiting fulfillment."),
   endpoint("orders.dispatchQueue", "orders", "GET", "/api/admin/orders/dispatch-queue", "Load orders awaiting dispatch."),
   endpoint("orders.detail", "orders", "GET", "/api/admin/orders/:orderId", "Load order detail."),

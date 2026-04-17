@@ -235,6 +235,29 @@ export const updateAdminOrderStatus = async (
     body
   });
 
+export type BulkOrderStatus = "PROCESSING" | "COMPLETED";
+
+export type BulkUpdateOrderStatusResponse = {
+  success: true;
+  data: {
+    results: Array<{ orderId: string; ok: true } | { orderId: string; ok: false; error: string }>;
+    succeeded: number;
+    failed: number;
+    total: number;
+  };
+};
+
+export const bulkUpdateAdminOrderStatus = async (
+  accessToken: string,
+  body: { orderIds: string[]; status: BulkOrderStatus; reason?: string; note?: string }
+): Promise<BulkUpdateOrderStatusResponse> =>
+  apiRequest<BulkUpdateOrderStatusResponse>({
+    method: "POST",
+    path: "/api/admin/orders/bulk-status",
+    accessToken,
+    body
+  });
+
 export const assignAdminOrderWarehouse = async (
   accessToken: string,
   orderId: string,

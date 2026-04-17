@@ -8,23 +8,29 @@ import {
   Filter,
   MoreVertical,
   Package,
+  PlayCircle,
   Upload,
   Warehouse
 } from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
 import { BulkActionBar } from "@/components/primitives/BulkActionBar";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
 import { StitchFilterPanel, StitchFieldLabel, StitchKpiMicro, DisabledTooltipWrapper } from "@/components/stitch";
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
 import {
   ApiError,
+  bulkUpdateAdminOrderStatus,
   getAdminOrderDetail,
   listAdminOrders,
-  type AdminOrderListItem
+  type AdminOrderListItem,
+  type BulkOrderStatus
 } from "@/features/orders/api/admin-orders.api";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
@@ -93,8 +99,12 @@ const ORDER_FILTERS_DEFAULTS = { q: "", status: "", paymentState: "" } as const;
 
 export const OrdersListPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions ?? []);
   const queryClient = useQueryClient();
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
+  const [bulkTargetStatus, setBulkTargetStatus] = useState<BulkOrderStatus>("PROCESSING");
+  const [bulkSummary, setBulkSummary] = useState<string | null>(null);
   const [orderDraft, setOrderDraft] = useState("");
   const [customerDraft, setCustomerDraft] = useState("");
 
@@ -124,6 +134,54 @@ export const OrdersListPage = () => {
 
   const items = ordersQuery.data?.data.items ?? [];
   const meta = ordersQuery.data?.meta;
+
+  const canBulkUpdate = adminHasAnyPermission(actorPermissions, ["orders.update"]);
+
+  const selectedOrders = useMemo(() => items.filter((o) => selected.has(o.id)), [items, selected]);
+
+  const canBulkSetProcessing =
+    canBulkUpdate &&
+    selectedOrders.length > 0 &&
+    selectedOrders.every((o) => o.status === "CONFIRMED");
+
+  const canBulkMarkComplete =
+    canBulkUpdate &&
+    selectedOrders.length > 0 &&
+    selectedOrders.every((o) => {
+      if (["CANCELLED", "COMPLETED", "CLOSED"].includes(o.status)) {
+        return false;
+      }
+      const f = (o.fulfillment?.status ?? "").toUpperCase();
+      return f === "DELIVERED";
+    });
+
+  const bulkMutation = useAdminAction({
+    mutationFn: async (status: BulkOrderStatus) => {
+      if (!accessToken) throw new Error("Not signed in.");
+      return bulkUpdateAdminOrderStatus(accessToken, {
+        orderIds: [...selected],
+        status,
+        reason: `bulk_${status.toLowerCase()}`
+      });
+    },
+    invalidate: [orderKeys.lists()],
+    onSuccess: (result, _variables) => {
+      const { succeeded, failed, total } = result.data;
+      const failedRows = result.data.results.filter((r): r is { orderId: string; ok: false; error: string } => !r.ok);
+      const sample =
+        failedRows.length > 0
+          ? ` Examples: ${failedRows
+              .slice(0, 3)
+              .map((r) => `${r.orderId.slice(0, 8)}… (${r.error})`)
+              .join("; ")}`
+          : "";
+      setBulkSummary(`Bulk status: ${succeeded} of ${total} succeeded${failed > 0 ? `, ${failed} failed.${sample}` : "."}`);
+      setSelected(new Set());
+    },
+    onError: (error, _variables) => {
+      setBulkSummary(error instanceof ApiError ? error.message : "Bulk update failed.");
+    }
+  });
 
   useEffect(() => {
     prefetchOrderDetails(items.map((order) => order.id), 2);
@@ -380,6 +438,19 @@ export const OrdersListPage = () => {
         </div>
       ) : null}
 
+      {bulkSummary ? (
+        <div
+          className={`rounded-xl border px-4 py-3 text-sm ${
+            bulkSummary.includes("failed")
+              ? "border-amber-200 bg-amber-50 text-amber-950"
+              : "border-emerald-200 bg-emerald-50 text-emerald-950"
+          }`}
+          role="status"
+        >
+          {bulkSummary}
+        </div>
+      ) : null}
+
       {ordersQuery.isLoading ? (
         <StitchOperationalTableSkeleton rowCount={10} columnCount={7} />
       ) : (
@@ -419,16 +490,66 @@ export const OrdersListPage = () => {
                   Assign warehouse
                 </button>
               </DisabledTooltipWrapper>
-              <DisabledTooltipWrapper reason="Mark fulfilled from an open order detail.">
+              {!canBulkUpdate ? (
+                <DisabledTooltipWrapper reason="Requires orders.update permission.">
+                  <button
+                    type="button"
+                    disabled
+                    className="flex items-center gap-2 rounded-lg bg-[#f2f3ff] px-4 py-2 text-xs font-semibold text-[#181b25]"
+                  >
+                    <PlayCircle className="h-4 w-4" />
+                    Set processing
+                  </button>
+                </DisabledTooltipWrapper>
+              ) : (
                 <button
                   type="button"
-                  disabled
-                  className="flex items-center gap-2 rounded-lg bg-[#1653cc]/10 px-4 py-2 text-xs font-semibold text-[#1653cc]"
+                  disabled={!canBulkSetProcessing || bulkMutation.isPending}
+                  title={
+                    !canBulkSetProcessing && selected.size > 0
+                      ? "Every selected order must be CONFIRMED to move to PROCESSING."
+                      : undefined
+                  }
+                  onClick={() => {
+                    setBulkTargetStatus("PROCESSING");
+                    setBulkDialogOpen(true);
+                  }}
+                  className="flex items-center gap-2 rounded-lg bg-[#f2f3ff] px-4 py-2 text-xs font-semibold text-[#181b25] transition-all hover:bg-[#e6e7f6] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <PlayCircle className="h-4 w-4" />
+                  Set processing
+                </button>
+              )}
+              {!canBulkUpdate ? (
+                <DisabledTooltipWrapper reason="Requires orders.update permission.">
+                  <button
+                    type="button"
+                    disabled
+                    className="flex items-center gap-2 rounded-lg bg-[#1653cc]/10 px-4 py-2 text-xs font-semibold text-[#1653cc]"
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    Mark complete
+                  </button>
+                </DisabledTooltipWrapper>
+              ) : (
+                <button
+                  type="button"
+                  disabled={!canBulkMarkComplete || bulkMutation.isPending}
+                  title={
+                    !canBulkMarkComplete && selected.size > 0
+                      ? "Every selected order must have a delivered shipment (fulfillment shows DELIVERED) and not be terminal."
+                      : undefined
+                  }
+                  onClick={() => {
+                    setBulkTargetStatus("COMPLETED");
+                    setBulkDialogOpen(true);
+                  }}
+                  className="flex items-center gap-2 rounded-lg bg-[#1653cc]/10 px-4 py-2 text-xs font-semibold text-[#1653cc] transition-all hover:bg-[#1653cc]/15 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <CheckCircle2 className="h-4 w-4" />
-                  Mark fulfilled
+                  Mark complete
                 </button>
-              </DisabledTooltipWrapper>
+              )}
             </div>
           </div>
 
@@ -591,6 +712,30 @@ export const OrdersListPage = () => {
           ) : null}
         </div>
       )}
+
+      <ConfirmDialog
+        open={bulkDialogOpen}
+        title={
+          bulkTargetStatus === "PROCESSING"
+            ? "Set selected orders to processing?"
+            : "Mark selected orders complete?"
+        }
+        body={
+          <p className="text-sm text-[#434654]">
+            This runs for {selected.size} order{selected.size === 1 ? "" : "s"}. Orders that fail validation stay
+            unchanged; you will see a short summary afterward.
+          </p>
+        }
+        impactSummary="Uses the same rules as single-order status updates (eligibility is enforced server-side)."
+        confirmLabel={bulkMutation.isPending ? "Working…" : "Confirm"}
+        confirmDisabled={bulkMutation.isPending || selected.size === 0}
+        onClose={() => setBulkDialogOpen(false)}
+        onConfirm={() => {
+          setBulkSummary(null);
+          bulkMutation.mutate(bulkTargetStatus);
+          setBulkDialogOpen(false);
+        }}
+      />
     </div>
   );
 };

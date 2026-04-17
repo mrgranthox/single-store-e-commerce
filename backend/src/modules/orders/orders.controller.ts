@@ -21,6 +21,7 @@ import {
   adminResolveCancellationBodySchema,
   adminOrdersQuerySchema,
   adminQueueQuerySchema,
+  bulkAdminOrderStatusBodySchema,
   cancellationIdParamsSchema,
   customerCancelOrderBodySchema,
   guestTrackOrderBodySchema,
@@ -44,6 +45,7 @@ import {
   rejectAdminCancellationRequest,
   requestAccountOrderCancellation,
   trackGuestOrder,
+  bulkUpdateAdminOrderStatus,
   updateAdminOrderStatus
 } from "./orders.service";
 
@@ -134,6 +136,19 @@ export const updateOrderStatusAdmin = asyncHandler(async (request, response) => 
     actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
     orderId: params.orderId,
     ...body
+  });
+
+  return sendSuccess(response, { data });
+});
+
+export const bulkUpdateOrderStatusAdmin = asyncHandler(async (request, response) => {
+  const body = readValidatedBody<z.infer<typeof bulkAdminOrderStatusBodySchema>>(request);
+  const data = await bulkUpdateAdminOrderStatus({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
+    orderIds: body.orderIds,
+    status: body.status,
+    reason: body.reason,
+    note: body.note
   });
 
   return sendSuccess(response, { data });

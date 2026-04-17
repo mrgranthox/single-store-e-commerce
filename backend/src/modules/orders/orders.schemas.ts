@@ -61,6 +61,13 @@ export const adminOrderStatusBodySchema = z.object({
   note: z.string().trim().max(1_000).optional()
 });
 
+export const bulkAdminOrderStatusBodySchema = z.object({
+  orderIds: z.array(z.string().uuid()).min(1).max(100),
+  status: z.enum(["PROCESSING", "COMPLETED"]),
+  reason: z.string().trim().min(1).max(500).optional(),
+  note: z.string().trim().max(1_000).optional()
+});
+
 export const adminCancelOrderBodySchema = z.object({
   reason: z.string().trim().min(1).max(500),
   note: z.string().trim().max(1_000).optional()

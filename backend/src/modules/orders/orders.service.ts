@@ -8,6 +8,7 @@ import {
 import {
   invalidInputError,
   invalidStateTransitionError,
+  isAppError,
   notFoundError,
   orderNotEligibleError,
   orderNotFoundError
@@ -1103,6 +1104,47 @@ export const updateAdminOrderStatus = async (input: {
       entity: serializeOrderDetail(updatedOrder!)
     };
   });
+
+export const bulkUpdateAdminOrderStatus = async (input: {
+  actorAdminUserId: string;
+  orderIds: readonly string[];
+  status: "PROCESSING" | "COMPLETED";
+  reason?: string;
+  note?: string;
+}) => {
+  const uniqueIds = [...new Set(input.orderIds)];
+  const results: Array<{ orderId: string; ok: true } | { orderId: string; ok: false; error: string }> = [];
+
+  for (const orderId of uniqueIds) {
+    try {
+      await updateAdminOrderStatus({
+        actorAdminUserId: input.actorAdminUserId,
+        orderId,
+        status: input.status,
+        reason: input.reason ?? `bulk_${input.status.toLowerCase()}`,
+        note: input.note
+      });
+      results.push({ orderId, ok: true });
+    } catch (error) {
+      const message = isAppError(error)
+        ? error.message
+        : error instanceof Error
+          ? error.message
+          : "Update failed.";
+      results.push({ orderId, ok: false, error: message });
+    }
+  }
+
+  const succeeded = results.filter((row) => row.ok).length;
+  const failed = results.length - succeeded;
+
+  return {
+    results,
+    succeeded,
+    failed,
+    total: results.length
+  };
+};
 
 export const assignAdminOrderWarehouse = async (input: {
   actorAdminUserId: string;

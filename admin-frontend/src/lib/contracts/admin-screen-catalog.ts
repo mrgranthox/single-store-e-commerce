@@ -480,9 +480,9 @@ const orderScreens = [
     navLabel: "Orders",
     showInSidebar: true,
     purpose: "Central order operations queue.",
-    endpointIds: ["orders.list"],
-    actions: ["Search and filter orders", "Open order detail", "Open queue views"],
-    permissionHints: ["orders.read"]
+    endpointIds: ["orders.list", "orders.bulkUpdateStatus"],
+    actions: ["Search and filter orders", "Open order detail", "Open queue views", "Bulk set processing", "Bulk mark complete"],
+    permissionHints: ["orders.read", "orders.update"]
   }),
   screen({
     sequence: 33,

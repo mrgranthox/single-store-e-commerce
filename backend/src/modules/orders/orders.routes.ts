@@ -20,6 +20,7 @@ import {
   listFulfillmentQueueAdmin,
   listOrdersAdmin,
   rejectOrderCancellationRequestAdmin,
+  bulkUpdateOrderStatusAdmin,
   updateOrderStatusAdmin,
   patchOrderCampaignAttributionAdmin
 } from "./orders.controller";
@@ -33,6 +34,7 @@ import {
   adminResolveCancellationBodySchema,
   adminOrdersQuerySchema,
   adminQueueQuerySchema,
+  bulkAdminOrderStatusBodySchema,
   cancellationIdParamsSchema,
   customerCancelOrderBodySchema,
   guestTrackOrderBodySchema,
@@ -81,6 +83,13 @@ router.get(
   requirePermissions(["orders.read"]),
   validateRequest({ query: adminCancellationRequestsQuerySchema }),
   listOrderCancellationRequestsAdmin
+);
+router.post(
+  "/admin/orders/bulk-status",
+  requireAdminActor,
+  requirePermissions(["orders.update"]),
+  validateRequest({ body: bulkAdminOrderStatusBodySchema }),
+  bulkUpdateOrderStatusAdmin
 );
 router.post(
   "/admin/orders/cancellation-requests/:cancellationId/approve",
@@ -191,6 +200,14 @@ export const ordersRouteModule: RouteModule = {
       tags: ["orders"],
       auth: "admin",
       permissions: ["orders.read"]
+    },
+    {
+      method: "POST",
+      path: "/api/v1/admin/orders/bulk-status",
+      summary: "Apply the same allowed status transition to many orders (partial success per id).",
+      tags: ["orders"],
+      auth: "admin",
+      permissions: ["orders.update"]
     },
     {
       method: "GET",
