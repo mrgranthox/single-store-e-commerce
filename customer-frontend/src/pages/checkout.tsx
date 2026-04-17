@@ -68,7 +68,68 @@ type AccountAddressRow = {
   isDefaultShipping: boolean;
 };
 
+type CheckoutShippingOptionView = {
+  code: "PAY_ON_DELIVERY" | "PREPAID";
+  label: string;
+  amountCents: number;
+  estimatedDeliveryWindow: string;
+};
+
 const toNonNegativeInt = (value: unknown) => (typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0);
+
+const buildEffectiveShippingOptions = (evaluation: unknown, subtotalGhs: number): CheckoutShippingOptionView[] => {
+  const data = evaluation && typeof evaluation === "object" ? (evaluation as CartEvalShape) : null;
+  const rawOptions = Array.isArray(data?.shippingOptions) ? data.shippingOptions : [];
+  const normalized = rawOptions
+    .map((option) => {
+      const code = typeof option?.code === "string" ? option.code.trim().toUpperCase() : "";
+      if (code === "PAY_ON_DELIVERY") {
+        return {
+          code: "PAY_ON_DELIVERY" as const,
+          label: "Pay on delivery",
+          amountCents: 0,
+          estimatedDeliveryWindow:
+            typeof option?.estimatedDeliveryWindow === "string" && option.estimatedDeliveryWindow.trim()
+              ? option.estimatedDeliveryWindow.trim()
+              : "1-3 business days"
+        };
+      }
+      if (code === "PREPAID") {
+        return {
+          code: "PREPAID" as const,
+          label: "No pay on delivery (Standard delivery)",
+          amountCents: toNonNegativeInt(option?.amountCents),
+          estimatedDeliveryWindow:
+            typeof option?.estimatedDeliveryWindow === "string" && option.estimatedDeliveryWindow.trim()
+              ? option.estimatedDeliveryWindow.trim()
+              : "1-3 business days"
+        };
+      }
+      return null;
+    })
+    .filter((option): option is CheckoutShippingOptionView => Boolean(option));
+
+  if (normalized.length === 2) {
+    return normalized;
+  }
+
+  const subtotalCents = Math.max(0, Math.round(subtotalGhs * 100));
+  const prepaidFeeCents = subtotalCents > 25_000 ? 2_000 : 3_000;
+  return [
+    {
+      code: "PAY_ON_DELIVERY",
+      label: "Pay on delivery",
+      amountCents: 0,
+      estimatedDeliveryWindow: "1-3 business days"
+    },
+    {
+      code: "PREPAID",
+      label: "No pay on delivery (Standard delivery)",
+      amountCents: prepaidFeeCents,
+      estimatedDeliveryWindow: "1-3 business days"
+    }
+  ];
+};
 
 const applyOptimisticCartQuantity = (evaluation: unknown, itemId: string, nextQuantity: number): unknown => {
   if (!evaluation || typeof evaluation !== "object") return evaluation;
@@ -498,82 +559,10 @@ export const CheckoutShippingPage = () => {
   }));
   const couponOutcome = summary.couponOutcome;
 
-  const shippingOptions = useMemo(() => {
-    if (!cartQuery.data || typeof cartQuery.data !== "object") return [] as Array<{
-      code: string;
-      label: string;
-      amountCents: number;
-      estimatedDeliveryWindow: string;
-    }>;
-    const raw = (cartQuery.data as CartEvalShape).shippingOptions;
-    if (!Array.isArray(raw)) return [];
-    return raw
-      .map((option) => {
-        const code = typeof option?.code === "string" ? option.code : "";
-        if (!code) return null;
-        return {
-          code,
-          label: typeof option?.label === "string" ? option.label : code,
-          amountCents: toNonNegativeInt(option?.amountCents),
-          estimatedDeliveryWindow:
-            typeof option?.estimatedDeliveryWindow === "string" && option.estimatedDeliveryWindow.trim()
-              ? option.estimatedDeliveryWindow.trim()
-              : "1-3 business days"
-        };
-      })
-      .filter((option): option is { code: string; label: string; amountCents: number; estimatedDeliveryWindow: string } => Boolean(option));
-  }, [cartQuery.data]);
-
-  const effectiveShippingOptions = useMemo(() => {
-    const normalizedBackendOptions = shippingOptions
-      .map((option) => {
-        const code = option.code.trim().toUpperCase();
-        if (code === "PAY_ON_DELIVERY") {
-          return {
-            code: "PAY_ON_DELIVERY",
-            label: "Pay on delivery",
-            amountCents: 0,
-            estimatedDeliveryWindow: option.estimatedDeliveryWindow
-          };
-        }
-        if (code === "PREPAID") {
-          return {
-            code: "PREPAID",
-            label: "No pay on delivery (Standard delivery)",
-            amountCents: option.amountCents,
-            estimatedDeliveryWindow: option.estimatedDeliveryWindow
-          };
-        }
-        return null;
-      })
-      .filter(
-        (
-          option
-        ): option is { code: "PAY_ON_DELIVERY" | "PREPAID"; label: string; amountCents: number; estimatedDeliveryWindow: string } =>
-          Boolean(option)
-      );
-
-    if (normalizedBackendOptions.length === 2) {
-      return normalizedBackendOptions;
-    }
-
-    const subtotalCents = Math.max(0, Math.round(summary.subtotalGhs * 100));
-    const prepaidFeeCents = subtotalCents > 25_000 ? 2_000 : 3_000;
-    return [
-      {
-        code: "PAY_ON_DELIVERY",
-        label: "Pay on delivery",
-        amountCents: 0,
-        estimatedDeliveryWindow: "1-3 business days"
-      },
-      {
-        code: "PREPAID",
-        label: "No pay on delivery (Standard delivery)",
-        amountCents: prepaidFeeCents,
-        estimatedDeliveryWindow: "1-3 business days"
-      }
-    ];
-  }, [shippingOptions, summary.subtotalGhs]);
+  const effectiveShippingOptions = useMemo(
+    () => buildEffectiveShippingOptions(cartQuery.data, summary.subtotalGhs),
+    [cartQuery.data, summary.subtotalGhs]
+  );
 
   const selectedShippingOption =
     effectiveShippingOptions.find((option) => option.code === selectedMethod) ?? effectiveShippingOptions[0] ?? null;
@@ -902,10 +891,34 @@ export const CheckoutPaymentPage = () => {
   const queryClient = useQueryClient();
   const cartQueryKey = useCustomerCartQueryKey();
   const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
+  const draft = readCheckoutDraft();
   const [method, setMethod] = useState<"paystack_card" | "paystack_mobile_money">("paystack_card");
-  const [billingSame, setBillingSame] = useState(true);
+  const [billingSame, setBillingSame] = useState(draft?.billingSameAsShipping ?? true);
   const [mmNetwork, setMmNetwork] = useState<"mtn" | "telecel" | "airteltigo">("mtn");
   const [mmPhone, setMmPhone] = useState("");
+  const {
+    register: registerBilling,
+    getValues: getBillingValues,
+    formState: { errors: billingErrors },
+    setError: setBillingError,
+    clearErrors: clearBillingErrors
+  } = useForm<{
+    fullName: string;
+    email: string;
+    address: string;
+    city: string;
+    zip: string;
+    phone: string;
+  }>({
+    defaultValues: {
+      fullName: draft?.billingAddress?.fullName ?? draft?.address.fullName ?? "",
+      email: draft?.billingAddress?.email ?? draft?.address.email ?? "",
+      address: draft?.billingAddress?.line1 ?? draft?.address.line1 ?? "",
+      city: draft?.billingAddress?.city ?? draft?.address.city ?? "",
+      zip: draft?.billingAddress?.postalCode ?? draft?.address.postalCode ?? "",
+      phone: draft?.billingAddress?.phone ?? draft?.address.phone ?? ""
+    }
+  });
 
   const cartQuery = useQuery({
     queryKey: cartQueryKey,
@@ -923,6 +936,20 @@ export const CheckoutPaymentPage = () => {
     price: l.price,
     image: l.image
   }));
+  const couponOutcome = summary.couponOutcome;
+  const effectiveShippingOptions = useMemo(
+    () => buildEffectiveShippingOptions(cartQuery.data, summary.subtotalGhs),
+    [cartQuery.data, summary.subtotalGhs]
+  );
+  const selectedShippingOption =
+    effectiveShippingOptions.find((option) => option.code === draft?.shippingMethodCode) ??
+    effectiveShippingOptions[0] ??
+    null;
+  const selectedShippingCents = selectedShippingOption?.amountCents ?? summary.shippingCents;
+  const discountGhs =
+    couponOutcome?.valid && typeof couponOutcome.discountCents === "number" ? couponOutcome.discountCents / 100 : 0;
+  const paymentTotalGhs =
+    Math.round((summary.subtotalGhs - discountGhs + selectedShippingCents / 100 + summary.taxGhs) * 100) / 100;
 
   useEffect(() => {
     if (!readCheckoutDraft()) {
@@ -1055,12 +1082,55 @@ export const CheckoutPaymentPage = () => {
                   <span className="text-sm text-on-surface-variant">Same as shipping address</span>
                 </div>
                 <button
-                  onClick={() => setBillingSame(!billingSame)}
+                  onClick={() => {
+                    const next = !billingSame;
+                    setBillingSame(next);
+                    if (next) {
+                      clearBillingErrors();
+                    }
+                  }}
                   className={`w-12 h-6 rounded-full relative flex items-center px-1 transition-colors ${billingSame ? "bg-secondary" : "bg-surface-container-high"}`}
                 >
                   <div className={`w-4 h-4 bg-white rounded-full transition-all ${billingSame ? "ml-auto" : ""}`} />
                 </button>
               </div>
+
+              {!billingSame ? (
+                <div className="bg-surface-container-low p-8 md:p-10 rounded-xl space-y-6">
+                  <h3 className="font-headline text-lg font-bold tracking-tight">New billing address</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Full Name</label>
+                      <input {...registerBilling("fullName")} className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} type="text" />
+                      {billingErrors.fullName ? <p className="text-xs text-error">{billingErrors.fullName.message}</p> : null}
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Email</label>
+                      <input {...registerBilling("email")} className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} type="email" />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Address</label>
+                      <input {...registerBilling("address")} className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} type="text" />
+                      {billingErrors.address ? <p className="text-xs text-error">{billingErrors.address.message}</p> : null}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">City</label>
+                      <input {...registerBilling("city")} className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} type="text" />
+                      {billingErrors.city ? <p className="text-xs text-error">{billingErrors.city.message}</p> : null}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Zip Code</label>
+                      <input {...registerBilling("zip")} className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} type="text" />
+                      {billingErrors.zip ? <p className="text-xs text-error">{billingErrors.zip.message}</p> : null}
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Phone</label>
+                      <input {...registerBilling("phone")} className={`w-full rounded-md px-4 py-3 ${neutralFieldClass}`} type="tel" />
+                      {billingErrors.phone ? <p className="text-xs text-error">{billingErrors.phone.message}</p> : null}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               {/* Actions */}
               <div className="flex flex-col md:flex-row items-center gap-6 pt-6">
@@ -1072,6 +1142,31 @@ export const CheckoutPaymentPage = () => {
                       navigate("/checkout/shipping");
                       return;
                     }
+                    let billingAddress = d.billingAddress;
+                    if (!billingSame) {
+                      const billing = getBillingValues();
+                      const requiredFields: Array<keyof typeof billing> = ["fullName", "address", "city", "zip", "phone"];
+                      let hasValidationError = false;
+                      for (const field of requiredFields) {
+                        if (!String(billing[field] ?? "").trim()) {
+                          hasValidationError = true;
+                          setBillingError(field, { message: "Required" });
+                        }
+                      }
+                      if (hasValidationError) {
+                        return;
+                      }
+                      billingAddress = {
+                        fullName: billing.fullName.trim(),
+                        email: billing.email.trim() || undefined,
+                        phone: billing.phone.trim(),
+                        country: d.address.country,
+                        region: billing.city.trim(),
+                        city: billing.city.trim(),
+                        line1: billing.address.trim(),
+                        postalCode: billing.zip.trim()
+                      };
+                    }
                     const channel: "card" | "mobile_money" = method === "paystack_card" ? "card" : "mobile_money";
                     const mobileMoney =
                       channel === "mobile_money"
@@ -1079,6 +1174,8 @@ export const CheckoutPaymentPage = () => {
                         : undefined;
                     writeCheckoutDraft({
                       ...d,
+                      billingSameAsShipping: billingSame,
+                      billingAddress: billingSame ? undefined : billingAddress,
                       payment: { channel, mobileMoney }
                     });
                     navigate("/checkout/review");
@@ -1099,49 +1196,23 @@ export const CheckoutPaymentPage = () => {
             </div>
           </div>
 
-          <aside className="lg:col-span-5 xl:col-span-4">
-            <div className="sticky top-32 bg-surface-container-low rounded-xl overflow-hidden">
-              <div className="p-8 space-y-8">
-                <h2 className="text-xl font-bold font-headline tracking-tight">Order Summary</h2>
-                <div className="space-y-6">
-                  {orderLines.map((item, i) => (
-                    <div key={i} className="flex gap-4">
-                      <div className="w-20 h-24 bg-surface-container-high overflow-hidden rounded-lg flex-shrink-0">
-                        <img className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" src={item.image} alt={item.name} loading="lazy" decoding="async" />
-                      </div>
-                      <div className="flex flex-col justify-between py-1">
-                        <div>
-                          <h4 className="font-bold text-sm mb-1">{item.name}</h4>
-                          <p className="text-xs text-on-surface-variant">{item.variant}</p>
-                        </div>
-                        <p className="font-bold text-sm">{formatGhs(item.price)}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-3 border-t border-outline-variant/20 pt-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-on-surface-variant">Subtotal</span>
-                    <span>{formatGhs(summary.subtotalGhs)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-on-surface-variant">Shipping</span>
-                    <span className="text-secondary font-medium">
-                      {summary.shippingCents === 0 ? "Free" : formatGhs(summary.shippingCents / 100)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-on-surface-variant">Tax</span>
-                    <span>{formatGhs(summary.taxGhs)}</span>
-                  </div>
-                  <div className="flex justify-between pt-4 font-extrabold text-lg">
-                    <span>Total</span>
-                    <span>{formatGhs(summary.totalGhs)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </aside>
+          <CheckoutOrderSummary
+            items={orderLines}
+            subtotal={summary.subtotalGhs}
+            shipping={formatGhs(selectedShippingCents / 100)}
+            tax={summary.taxGhs}
+            total={paymentTotalGhs}
+            showPromoInput={!couponOutcome?.valid}
+            couponDescription={
+              couponOutcome?.valid
+                ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
+                    typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
+                      ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
+                      : ""
+                  }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
+                : undefined
+            }
+          />
         </div>
       </main>
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-end min-h-[4.25rem] px-1 py-2 safe-area-pb bg-white/80 backdrop-blur-xl border-t border-slate-200/20">

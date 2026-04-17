@@ -21,6 +21,8 @@ export type CheckoutPaymentDraft = {
 
 export type CheckoutDraft = {
   address: CheckoutAddressDraft;
+  billingSameAsShipping?: boolean;
+  billingAddress?: CheckoutAddressDraft;
   shippingMethodCode: string;
   payment: CheckoutPaymentDraft;
 };
