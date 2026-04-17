@@ -127,6 +127,8 @@ test("manual notification creation sends a step-up token", async ({ page }) => {
 
   await page.goto("/admin/system/notifications");
   await expect(page.getByRole("heading", { level: 1, name: "Notifications workspace" })).toBeVisible();
+  await page.getByPlaceholder("e.g. Scheduled maintenance this Sunday").fill("Test subject");
+  await page.getByPlaceholder("The opening paragraph customers read first.").fill("Test body for notification.");
   await page.getByPlaceholder("recipient@example.com").fill("invitee@example.com");
   await page.getByRole("button", { name: "Queue notification" }).click();
 

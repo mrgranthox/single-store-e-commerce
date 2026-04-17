@@ -31,21 +31,8 @@ import {
 
 const notificationDraftSchema = z.object({
   type: z.string().trim().min(1, "Notification type is required."),
-  recipientEmail: z.string().trim().email("Enter a valid recipient email."),
-  payloadJson: z.string().trim().min(2, "Payload JSON is required.")
+  recipientEmail: z.string().trim().email("Enter a valid recipient email.")
 });
-
-const DEFAULT_PAYLOAD_TEMPLATE = `{
-  "subject": "",
-  "heading": "",
-  "message": "",
-  "detail": "",
-  "ctaLabel": "",
-  "ctaUrl": ""
-}`;
-
-const PAYLOAD_FIELD_HINT =
-  "Payload fields used by email rendering: subject, heading, message, optional detail (extra copy), optional ctaLabel and ctaUrl. Type ADMIN_BROADCAST uses the announcement template; other types fall back to the generic template when unlisted.";
 
 const SEGMENT_COPY: Record<BroadcastSegment, { label: string; description: string }> = {
   ALL_ACTIVE_CUSTOMERS: {
@@ -64,7 +51,48 @@ const SEGMENT_COPY: Record<BroadcastSegment, { label: string; description: strin
 
 type ComposeMode = "single" | "broadcast";
 
+type MessageContent = {
+  emailSubject: string;
+  headline: string;
+  mainMessage: string;
+  extraDetails: string;
+  buttonLabel: string;
+  buttonLink: string;
+};
+
+const emptyMessageContent = (): MessageContent => ({
+  emailSubject: "",
+  headline: "",
+  mainMessage: "",
+  extraDetails: "",
+  buttonLabel: "",
+  buttonLink: ""
+});
+
+const buildPayloadFromMessageContent = (m: MessageContent): Record<string, unknown> => {
+  const payload: Record<string, unknown> = {};
+  const subject = m.emailSubject.trim();
+  const heading = m.headline.trim();
+  const message = m.mainMessage.trim();
+  const detail = m.extraDetails.trim();
+  const ctaLabel = m.buttonLabel.trim();
+  const ctaUrl = m.buttonLink.trim();
+  if (subject) payload.subject = subject;
+  if (heading) payload.heading = heading;
+  if (message) payload.message = message;
+  if (detail) payload.detail = detail;
+  if (ctaLabel) payload.ctaLabel = ctaLabel;
+  if (ctaUrl) payload.ctaUrl = ctaUrl;
+  return payload;
+};
+
+const isAdminBroadcastType = (type: string) => type.trim() === "ADMIN_BROADCAST";
+
 const NOTIFICATION_LIST_DEFAULTS = { status: "", type: "", recipient: "" };
+
+const labelClass = "mb-1 block text-xs font-semibold uppercase tracking-wide text-[#5b5e68]";
+const inputClass = "w-full rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm text-[#181b25] placeholder:text-[#9aa3b2]";
+const textAreaClass = `${inputClass} min-h-[88px] resize-y`;
 
 export const NotificationsWorkspacePage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
@@ -79,9 +107,11 @@ export const NotificationsWorkspacePage = () => {
   const [recipientDraft, setRecipientDraft] = useState("");
   const [form, setForm] = useState({
     type: "ADMIN_BROADCAST",
-    recipientEmail: "",
-    payloadJson: DEFAULT_PAYLOAD_TEMPLATE
+    recipientEmail: ""
   });
+  const [messageContent, setMessageContent] = useState<MessageContent>(emptyMessageContent);
+  /** Used when notification type is not ADMIN_BROADCAST (e.g. admin invite) — technical payload. */
+  const [technicalPayloadJson, setTechnicalPayloadJson] = useState("{}");
   const [flash, setFlash] = useState<string | null>(null);
 
   useEffect(() => {
@@ -95,24 +125,43 @@ export const NotificationsWorkspacePage = () => {
   }, [broadcastSegment, composeMode]);
 
   const draftValidation = useMemo(() => {
-    const payloadJson = form.payloadJson.trim();
-    if (payloadJson.length < 2) {
-      return { ok: false as const, message: "Payload JSON is required." };
-    }
+    const simple = isAdminBroadcastType(form.type);
+
     let payload: Record<string, unknown>;
-    try {
-      const parsedPayload = JSON.parse(payloadJson) as unknown;
-      if (!parsedPayload || typeof parsedPayload !== "object" || Array.isArray(parsedPayload)) {
-        return { ok: false as const, message: "Payload JSON must be an object." };
+
+    if (simple) {
+      if (!messageContent.emailSubject.trim()) {
+        return { ok: false as const, message: "Email subject is required." };
       }
-      payload = parsedPayload as Record<string, unknown>;
-    } catch {
-      return { ok: false as const, message: "Payload JSON must be valid JSON." };
+      if (!messageContent.mainMessage.trim()) {
+        return { ok: false as const, message: "Main message is required." };
+      }
+      payload = buildPayloadFromMessageContent(messageContent);
+    } else {
+      const raw = technicalPayloadJson.trim();
+      if (raw.length < 2) {
+        return { ok: false as const, message: "Payload JSON is required for this notification type." };
+      }
+      try {
+        const parsed = JSON.parse(raw) as unknown;
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          return { ok: false as const, message: "Payload must be a JSON object." };
+        }
+        payload = parsed as Record<string, unknown>;
+      } catch {
+        return { ok: false as const, message: "Payload must be valid JSON." };
+      }
     }
 
     if (composeMode === "broadcast") {
       if (!form.type.trim()) {
         return { ok: false as const, message: "Notification type is required." };
+      }
+      if (!isAdminBroadcastType(form.type)) {
+        return {
+          ok: false as const,
+          message: "Broadcasts use the simple email form. Set type to ADMIN_BROADCAST, or send other types to one recipient only."
+        };
       }
       return { ok: true as const, payload };
     }
@@ -125,7 +174,7 @@ export const NotificationsWorkspacePage = () => {
       };
     }
     return { ok: true as const, payload };
-  }, [form, composeMode]);
+  }, [form, composeMode, messageContent, technicalPayloadJson]);
 
   const query = useAuthedQuery(
     ["admin-notifications", page, filters.status, filters.type, filters.recipient],
@@ -302,6 +351,8 @@ export const NotificationsWorkspacePage = () => {
     </div>
   ]);
 
+  const showSimpleForm = isAdminBroadcastType(form.type);
+
   return (
     <div className="mx-auto max-w-[1400px] space-y-6">
       <PageHeader
@@ -384,9 +435,12 @@ export const NotificationsWorkspacePage = () => {
           <button
             type="button"
             className="ml-auto rounded-lg border border-[#d8dbe8] px-3 py-2 text-xs font-semibold text-[#434654] hover:bg-[#f8f9fc]"
-            onClick={() => setForm((c) => ({ ...c, payloadJson: DEFAULT_PAYLOAD_TEMPLATE }))}
+            onClick={() => {
+              setMessageContent(emptyMessageContent());
+              setTechnicalPayloadJson("{}");
+            }}
           >
-            Reset payload template
+            Clear message
           </button>
         </div>
 
@@ -396,41 +450,165 @@ export const NotificationsWorkspacePage = () => {
           </div>
         ) : null}
 
-        <p className="mb-3 text-xs leading-relaxed text-[#5b5e68]">{PAYLOAD_FIELD_HINT}</p>
+        <div className="mb-4">
+          <label className={labelClass} htmlFor="notification-type-compose">
+            Notification type
+          </label>
+          <input
+            id="notification-type-compose"
+            value={form.type}
+            onChange={(event) => setForm((current) => ({ ...current, type: event.target.value }))}
+            placeholder="ADMIN_BROADCAST for store announcements"
+            className={inputClass}
+          />
+          <p className="mt-2 text-xs text-[#737685]">
+            Use <span className="font-mono">ADMIN_BROADCAST</span> for the form below. For other types (e.g. invitations), switch
+            the type and use the technical JSON payload.
+          </p>
+        </div>
 
-        {composeMode === "single" ? (
-          <div className="grid gap-4 lg:grid-cols-[1fr_1fr_auto]">
-            <input
-              value={form.type}
-              onChange={(event) => setForm((current) => ({ ...current, type: event.target.value }))}
-              placeholder="Notification type (e.g. ADMIN_BROADCAST)"
-              className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
-            />
-            <input
-              value={form.recipientEmail}
-              onChange={(event) => setForm((current) => ({ ...current, recipientEmail: event.target.value }))}
-              placeholder="recipient@example.com"
-              className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
-            />
-            <AsyncActionButton
-              pending={createMutation.isPending}
-              blocked={createMutation.blocked}
-              onClick={() => createMutation.run(undefined)}
-            >
-              Queue notification
-            </AsyncActionButton>
+        {showSimpleForm ? (
+          <div className="rounded-xl border border-[#e5e7eb] bg-[#f8f9fc] p-4 md:p-5">
+            <h3 className="mb-1 text-sm font-bold text-[#181b25]">Email content</h3>
+            <p className="mb-4 text-xs text-[#5b5e68]">
+              This is what recipients see in their inbox. Required fields are marked. Optional fields add a second paragraph or a
+              button link.
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className={labelClass} htmlFor="msg-subject">
+                  Email subject <span className="text-red-600">*</span>
+                </label>
+                <input
+                  id="msg-subject"
+                  value={messageContent.emailSubject}
+                  onChange={(e) => setMessageContent((c) => ({ ...c, emailSubject: e.target.value }))}
+                  placeholder="e.g. Scheduled maintenance this Sunday"
+                  className={inputClass}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className={labelClass} htmlFor="msg-headline">
+                  Headline <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
+                </label>
+                <input
+                  id="msg-headline"
+                  value={messageContent.headline}
+                  onChange={(e) => setMessageContent((c) => ({ ...c, headline: e.target.value }))}
+                  placeholder="Large title inside the email; defaults to the subject if left blank"
+                  className={inputClass}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className={labelClass} htmlFor="msg-main">
+                  Main message <span className="text-red-600">*</span>
+                </label>
+                <textarea
+                  id="msg-main"
+                  value={messageContent.mainMessage}
+                  onChange={(e) => setMessageContent((c) => ({ ...c, mainMessage: e.target.value }))}
+                  placeholder="The opening paragraph customers read first."
+                  className={textAreaClass}
+                  rows={4}
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className={labelClass} htmlFor="msg-extra">
+                  Extra details <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
+                </label>
+                <textarea
+                  id="msg-extra"
+                  value={messageContent.extraDetails}
+                  onChange={(e) => setMessageContent((c) => ({ ...c, extraDetails: e.target.value }))}
+                  placeholder="Optional second paragraph (timelines, links to policy, etc.)"
+                  className={textAreaClass}
+                  rows={3}
+                />
+              </div>
+              <div>
+                <label className={labelClass} htmlFor="msg-cta-label">
+                  Button label <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
+                </label>
+                <input
+                  id="msg-cta-label"
+                  value={messageContent.buttonLabel}
+                  onChange={(e) => setMessageContent((c) => ({ ...c, buttonLabel: e.target.value }))}
+                  placeholder="e.g. View your account"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass} htmlFor="msg-cta-url">
+                  Button link <span className="font-normal normal-case text-[#9aa3b2]">(optional)</span>
+                </label>
+                <input
+                  id="msg-cta-url"
+                  value={messageContent.buttonLink}
+                  onChange={(e) => setMessageContent((c) => ({ ...c, buttonLink: e.target.value }))}
+                  placeholder="https://…"
+                  className={inputClass}
+                  inputMode="url"
+                />
+              </div>
+            </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div>
+            <label className={labelClass} htmlFor="technical-payload">
+              Technical payload (JSON)
+            </label>
+            <p className="mb-2 text-xs text-[#737685]">
+              This notification type expects structured fields in JSON (for example invite links for{" "}
+              <span className="font-mono">ADMIN_INVITATION</span>). Switch type back to{" "}
+              <span className="font-mono">ADMIN_BROADCAST</span> to use the simple form.
+            </p>
+            <textarea
+              id="technical-payload"
+              value={technicalPayloadJson}
+              onChange={(e) => setTechnicalPayloadJson(e.target.value)}
+              className="min-h-48 w-full rounded-xl border border-[#d8dbe8] bg-[#0f172a] p-4 font-mono text-xs text-slate-100"
+              spellCheck={false}
+              aria-label="Technical notification payload JSON"
+            />
+          </div>
+        )}
+
+        {composeMode === "single" ? (
+          <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto]">
+            <div>
+              <label className={labelClass} htmlFor="recipient-email">
+                Recipient email
+              </label>
+              <input
+                id="recipient-email"
+                value={form.recipientEmail}
+                onChange={(event) => setForm((current) => ({ ...current, recipientEmail: event.target.value }))}
+                placeholder="recipient@example.com"
+                className={inputClass}
+              />
+            </div>
+            <div className="flex items-end">
+              <AsyncActionButton
+                pending={createMutation.isPending}
+                blocked={createMutation.blocked}
+                onClick={() => createMutation.run(undefined)}
+              >
+                Queue notification
+              </AsyncActionButton>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-6 space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-[#5b5e68]">
+                <label className={labelClass} htmlFor="broadcast-segment">
                   Segment
                 </label>
                 <select
+                  id="broadcast-segment"
                   value={broadcastSegment}
                   onChange={(event) => setBroadcastSegment(event.target.value as BroadcastSegment)}
-                  className="w-full rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
+                  className={inputClass}
                 >
                   {(Object.keys(SEGMENT_COPY) as BroadcastSegment[]).map((key) => (
                     <option key={key} value={key}>
@@ -440,20 +618,11 @@ export const NotificationsWorkspacePage = () => {
                 </select>
                 <p className="mt-2 text-xs text-[#737685]">{SEGMENT_COPY[broadcastSegment].description}</p>
               </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-[#5b5e68]">
-                  Notification type
-                </label>
-                <input
-                  value={form.type}
-                  onChange={(event) => setForm((current) => ({ ...current, type: event.target.value }))}
-                  placeholder="Leave as ADMIN_BROADCAST or choose another supported type"
-                  className="w-full rounded-lg border border-[#d8dbe8] px-3 py-2 text-sm"
-                />
-                <div className="mt-3 flex flex-wrap items-center gap-2">
+              <div className="flex flex-col justify-end">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-xs font-semibold text-[#434654] hover:bg-[#f8f9fc] disabled:opacity-50"
+                    className="rounded-lg border border-[#d8dbe8] px-3 py-2 text-xs font-semibold text-[#434654] hover:bg-white disabled:opacity-50"
                     disabled={previewLoading || !accessToken}
                     onClick={() => void loadPreview()}
                   >
@@ -466,7 +635,7 @@ export const NotificationsWorkspacePage = () => {
                 {previewError ? <p className="mt-2 text-xs text-red-700">{previewError}</p> : null}
               </div>
             </div>
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-col items-end gap-2 border-t border-[#e5e7eb] pt-4">
               {previewCount === null ? (
                 <p className="max-w-md text-right text-xs text-[#737685]">
                   Preview the audience size to confirm how many emails will be queued, then use Queue broadcast.
@@ -484,14 +653,6 @@ export const NotificationsWorkspacePage = () => {
             </div>
           </div>
         )}
-
-        <textarea
-          value={form.payloadJson}
-          onChange={(event) => setForm((current) => ({ ...current, payloadJson: event.target.value }))}
-          className="mt-4 min-h-48 w-full rounded-xl border border-[#d8dbe8] bg-[#0f172a] p-4 font-mono text-xs text-slate-100"
-          spellCheck={false}
-          aria-label="Notification payload JSON"
-        />
       </SurfaceCard>
 
       <SurfaceCard title="Notification delivery records" description="Recent notifications and replay actions.">
