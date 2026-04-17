@@ -64,7 +64,7 @@ export const ProductGallery = ({
   return (
     <div className="col-span-12 lg:col-span-7 min-w-0">
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 min-w-0">
-        <div className="order-2 lg:order-none flex flex-row lg:flex-col gap-3 lg:gap-4 lg:w-20 shrink-0 overflow-x-auto no-scrollbar pb-1 lg:pb-0 -mx-1 px-1 lg:mx-0 lg:px-0 w-full lg:w-auto">
+        <div className="order-2 lg:order-none flex flex-row lg:flex-col gap-3 lg:gap-4 lg:w-20 shrink-0 overflow-x-auto lg:overflow-y-auto lg:overflow-x-hidden no-scrollbar pb-1 lg:pb-0 -mx-1 px-1 lg:mx-0 lg:px-0 w-full lg:w-auto lg:max-h-[min(88dvh,640px)]">
           {galleryImages.map((img) => {
             const active = selectedImage === img;
             const thumbSrc = failedImages[img] ? FALLBACK_IMAGE : img;

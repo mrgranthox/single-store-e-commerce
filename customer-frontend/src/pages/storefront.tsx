@@ -886,6 +886,32 @@ export const ProductDetailPage = () => {
     staleTime: 30_000
   });
 
+  const reviewsSummaryQuery = useQuery({
+    queryKey: ["customer-product-reviews-summary", productSlug],
+    queryFn: async () => {
+      const { data } = await customerBackendApi.listProductReviews(productSlug!, 1, 100);
+      const items = Array.isArray(data.items) ? data.items : [];
+      let ratingSum = 0;
+      let ratingCount = 0;
+      for (const row of items) {
+        if (!row || typeof row !== "object") continue;
+        const rating = (row as { rating?: unknown }).rating;
+        if (typeof rating === "number" && Number.isFinite(rating)) {
+          ratingSum += rating;
+          ratingCount += 1;
+        }
+      }
+      const averageRating =
+        ratingCount > 0 ? Math.round((ratingSum / ratingCount) * 10) / 10 : 0;
+      return {
+        averageRating,
+        reviewCount: items.length
+      };
+    },
+    enabled: Boolean(productSlug),
+    staleTime: 30_000
+  });
+
   const product = useMemo(
     () => (detailQuery.data ? mapPublicProductDetailToProduct(detailQuery.data) : null),
     [detailQuery.data]
@@ -922,6 +948,10 @@ export const ProductDetailPage = () => {
   }, [product?.id, product?.imageUrl, product?.images]);
 
   const selectedVariant = product?.pdpVariants?.find((variant) => variant.id === selectedVariantId);
+  const reviewRating =
+    reviewsSummaryQuery.data?.averageRating ?? (typeof product?.rating === "number" ? product.rating : 0);
+  const reviewCount =
+    reviewsSummaryQuery.data?.reviewCount ?? (typeof product?.reviewCount === "number" ? product.reviewCount : 0);
 
   const addToCart = async () => {
     if (!selectedVariantId) return;
@@ -983,6 +1013,8 @@ export const ProductDetailPage = () => {
           />
           <ProductInfo
             product={product}
+            reviewRating={reviewRating}
+            reviewCount={reviewCount}
             availabilityMessage={availabilityMessage}
             selectedVariantId={selectedVariantId}
             selectedVariant={selectedVariant}

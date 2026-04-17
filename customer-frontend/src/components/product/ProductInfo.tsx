@@ -8,6 +8,8 @@ import { VariantSelector } from "@/components/product/VariantSelector";
 
 type ProductInfoProps = {
   product: Product;
+  reviewRating: number;
+  reviewCount: number;
   availabilityMessage?: string;
   selectedVariantId: string | null;
   selectedVariant?: NonNullable<Product["pdpVariants"]>[number];
@@ -21,6 +23,8 @@ type ProductInfoProps = {
 
 export const ProductInfo = ({
   product,
+  reviewRating,
+  reviewCount,
   availabilityMessage,
   selectedVariantId,
   selectedVariant,
@@ -42,12 +46,12 @@ export const ProductInfo = ({
     <div className="col-span-12 lg:col-span-5 min-w-0">
       <div className="lg:sticky lg:top-28 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain">
         <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <StarRating rating={product.rating ?? 4} />
+          <StarRating rating={reviewRating} />
           <Link
             to={`/products/${product.slug}/reviews`}
             className="text-xs font-label text-outline hover:text-secondary underline underline-offset-4"
           >
-            {product.reviewCount ?? 0} reviews
+            {reviewCount} reviews
           </Link>
           <span className="text-outline hidden sm:inline">·</span>
           <Link
