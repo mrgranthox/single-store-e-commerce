@@ -146,7 +146,7 @@ const updateOrderStatusRecord = async (
     orderId: string;
     fromStatus: string;
     toStatus: string;
-    actorAdminUserId: string;
+    actorAdminUserId: string | null;
     reason: string;
     metadata?: unknown;
   }
@@ -172,10 +172,12 @@ const updateOrderStatusRecord = async (
   });
 };
 
-const recordShipmentAdminMutation = async (
+type ShipmentMutationActor = { kind: "admin"; adminUserId: string } | { kind: "system" };
+
+const recordShipmentMutation = async (
   db: Prisma.TransactionClient,
   input: {
-    actorAdminUserId: string;
+    actor: ShipmentMutationActor;
     actionCode: string;
     shipmentId: string;
     orderId: string;
@@ -187,11 +189,14 @@ const recordShipmentAdminMutation = async (
     orderPayload: unknown;
   }
 ) => {
-  await Promise.all([
+  const actorType = input.actor.kind === "admin" ? "ADMIN" : "SYSTEM";
+  const actorAdminUserId = input.actor.kind === "admin" ? input.actor.adminUserId : null;
+
+  const logs: Promise<unknown>[] = [
     db.auditLog.create({
       data: {
-        actorType: "ADMIN",
-        actorAdminUserId: input.actorAdminUserId,
+        actorType,
+        actorAdminUserId,
         actionCode: input.actionCode,
         entityType: "SHIPMENT",
         entityId: input.shipmentId,
@@ -203,30 +208,37 @@ const recordShipmentAdminMutation = async (
         })
       }
     }),
-    db.adminActionLog.create({
-      data: {
-        adminUserId: input.actorAdminUserId,
-        screen: "orders.fulfillment",
-        actionCode: input.actionCode,
-        reason: input.reason,
-        note: input.note,
-        entityType: "SHIPMENT",
-        entityId: input.shipmentId,
-        before: toPrismaJsonValue(input.before),
-        after: toPrismaJsonValue(input.after)
-      }
-    }),
     db.timelineEvent.create({
       data: {
         entityType: "ORDER",
         entityId: input.orderId,
         eventType: input.orderEventType,
-        actorAdminUserId: input.actorAdminUserId,
-        actorType: "ADMIN",
+        actorAdminUserId,
+        actorType,
         payload: toPrismaJsonValue(input.orderPayload)
       }
     })
-  ]);
+  ];
+
+  if (input.actor.kind === "admin") {
+    logs.push(
+      db.adminActionLog.create({
+        data: {
+          adminUserId: input.actor.adminUserId,
+          screen: "orders.fulfillment",
+          actionCode: input.actionCode,
+          reason: input.reason,
+          note: input.note,
+          entityType: "SHIPMENT",
+          entityId: input.shipmentId,
+          before: toPrismaJsonValue(input.before),
+          after: toPrismaJsonValue(input.after)
+        }
+      })
+    );
+  }
+
+  await Promise.all(logs);
 };
 
 const progressOrderForFulfillment = async (
@@ -234,7 +246,7 @@ const progressOrderForFulfillment = async (
   input: {
     orderId: string;
     currentStatus: string;
-    actorAdminUserId: string;
+    actorAdminUserId: string | null;
     shipmentStatuses: ShipmentStatus[];
     metadata?: unknown;
   }
@@ -298,6 +310,174 @@ export const getAdminShipmentTracking = async (shipmentId: string) => {
   };
 };
 
+const createInitialShipmentInTransaction = async (
+  transaction: Prisma.TransactionClient,
+  input: {
+    order: Awaited<ReturnType<typeof loadOrderOrThrow>>;
+    warehouse: { id: string; code: string; name: string };
+    carrier?: string | null;
+    trackingNumber?: string | null;
+    note?: string | null;
+    progressOrderActorAdminId: string | null;
+    shipmentRecordActor: ShipmentMutationActor;
+  }
+) => {
+  const { order, warehouse } = input;
+
+  if (
+    input.trackingNumber &&
+    order.shipments.some((shipment) => shipment.trackingNumber === input.trackingNumber)
+  ) {
+    throw invalidInputError("This tracking number is already attached to the order.");
+  }
+
+  const shipment = await transaction.shipment.create({
+    data: {
+      orderId: order.id,
+      warehouseId: warehouse.id,
+      status: ShipmentStatus.CREATED,
+      carrier: input.carrier ?? undefined,
+      trackingNumber: input.trackingNumber ?? undefined
+    }
+  });
+
+  await transaction.shipmentTrackingEvent.create({
+    data: {
+      shipmentId: shipment.id,
+      eventType: "SHIPMENT_CREATED",
+      statusLabel: "Shipment created",
+      occurredAt: new Date(),
+      location: warehouse.name,
+      payload: toPrismaJsonValue({
+        carrier: shipment.carrier,
+        trackingNumber: shipment.trackingNumber,
+        note: input.note
+      })
+    }
+  });
+
+  await progressOrderForFulfillment(transaction, {
+    orderId: order.id,
+    currentStatus: order.status,
+    actorAdminUserId: input.progressOrderActorAdminId,
+    shipmentStatuses: [...order.shipments.map((entry) => entry.status), ShipmentStatus.CREATED],
+    metadata: {
+      shipmentId: shipment.id
+    }
+  });
+
+  await recordShipmentMutation(transaction, {
+    actor: input.shipmentRecordActor,
+    actionCode: "orders.shipments.create",
+    shipmentId: shipment.id,
+    orderId: order.id,
+    note: input.note ?? undefined,
+    after: {
+      warehouseId: warehouse.id,
+      status: ShipmentStatus.CREATED,
+      carrier: shipment.carrier,
+      trackingNumber: shipment.trackingNumber
+    },
+    orderEventType: "SHIPMENT_CREATED",
+    orderPayload: {
+      shipmentId: shipment.id,
+      warehouse: {
+        id: warehouse.id,
+        code: warehouse.code,
+        name: warehouse.name
+      },
+      carrier: shipment.carrier,
+      trackingNumber: shipment.trackingNumber,
+      note: input.note
+    }
+  });
+
+  const createdShipment = await loadShipmentOrThrow(shipment.id, transaction);
+
+  return {
+    entity: serializeShipmentDetail(createdShipment)
+  };
+};
+
+/**
+ * When a warehouse is first assigned, create a single CREATED shipment (no carrier / tracking yet).
+ * Idempotent if a non-cancelled shipment already exists. Does not throw — safe inside payment transactions.
+ */
+export const autoCreateInitialShipmentIfEligibleInTransaction = async (
+  transaction: Prisma.TransactionClient,
+  input: { orderId: string; warehouseId: string }
+): Promise<{ created: boolean; shipmentId?: string; skipReason?: string }> => {
+  try {
+    const order = await loadOrderOrThrow(input.orderId, transaction);
+
+    if (!fulfillableOrderStatuses.has(order.status)) {
+      return {
+        created: false,
+        skipReason: "order_status"
+      };
+    }
+
+    const hasActiveShipment = order.shipments.some(
+      (shipment) => shipment.status !== ShipmentStatus.CANCELLED
+    );
+
+    if (hasActiveShipment) {
+      return {
+        created: false,
+        skipReason: "shipment_exists"
+      };
+    }
+
+    const warehouse = await transaction.warehouse.findUnique({
+      where: {
+        id: input.warehouseId
+      }
+    });
+
+    if (!warehouse) {
+      return {
+        created: false,
+        skipReason: "warehouse_missing"
+      };
+    }
+
+    const result = await createInitialShipmentInTransaction(transaction, {
+      order,
+      warehouse,
+      note: "auto_create_after_warehouse_assign",
+      progressOrderActorAdminId: null,
+      shipmentRecordActor: {
+        kind: "system"
+      }
+    });
+
+    logger.info(
+      {
+        orderId: input.orderId,
+        shipmentId: result.entity.id
+      },
+      "Auto-created initial shipment after warehouse assignment."
+    );
+
+    return {
+      created: true,
+      shipmentId: result.entity.id
+    };
+  } catch (error) {
+    logger.error(
+      {
+        orderId: input.orderId,
+        error
+      },
+      "Auto shipment creation failed; order flow continues."
+    );
+    return {
+      created: false,
+      skipReason: "error"
+    };
+  }
+};
+
 export const createAdminShipment = async (input: {
   actorAdminUserId: string;
   orderId: string;
@@ -329,79 +509,18 @@ export const createAdminShipment = async (input: {
       );
     }
 
-    if (
-      input.trackingNumber &&
-      order.shipments.some((shipment) => shipment.trackingNumber === input.trackingNumber)
-    ) {
-      throw invalidInputError("This tracking number is already attached to the order.");
-    }
-
-    const shipment = await transaction.shipment.create({
-      data: {
-        orderId: order.id,
-        warehouseId: warehouse.id,
-        status: ShipmentStatus.CREATED,
-        carrier: input.carrier,
-        trackingNumber: input.trackingNumber
-      }
-    });
-
-    await transaction.shipmentTrackingEvent.create({
-      data: {
-        shipmentId: shipment.id,
-        eventType: "SHIPMENT_CREATED",
-        statusLabel: "Shipment created",
-        occurredAt: new Date(),
-        location: warehouse.name,
-        payload: toPrismaJsonValue({
-          carrier: shipment.carrier,
-          trackingNumber: shipment.trackingNumber,
-          note: input.note
-        })
-      }
-    });
-
-    await progressOrderForFulfillment(transaction, {
-      orderId: order.id,
-      currentStatus: order.status,
-      actorAdminUserId: input.actorAdminUserId,
-      shipmentStatuses: [...order.shipments.map((entry) => entry.status), ShipmentStatus.CREATED],
-      metadata: {
-        shipmentId: shipment.id
-      }
-    });
-
-    await recordShipmentAdminMutation(transaction, {
-      actorAdminUserId: input.actorAdminUserId,
-      actionCode: "orders.shipments.create",
-      shipmentId: shipment.id,
-      orderId: order.id,
+    return createInitialShipmentInTransaction(transaction, {
+      order,
+      warehouse,
+      carrier: input.carrier,
+      trackingNumber: input.trackingNumber,
       note: input.note,
-      after: {
-        warehouseId: warehouse.id,
-        status: ShipmentStatus.CREATED,
-        carrier: shipment.carrier,
-        trackingNumber: shipment.trackingNumber
-      },
-      orderEventType: "SHIPMENT_CREATED",
-      orderPayload: {
-        shipmentId: shipment.id,
-        warehouse: {
-          id: warehouse.id,
-          code: warehouse.code,
-          name: warehouse.name
-        },
-        carrier: shipment.carrier,
-        trackingNumber: shipment.trackingNumber,
-        note: input.note
+      progressOrderActorAdminId: input.actorAdminUserId,
+      shipmentRecordActor: {
+        kind: "admin",
+        adminUserId: input.actorAdminUserId
       }
     });
-
-    const createdShipment = await loadShipmentOrThrow(shipment.id, transaction);
-
-    return {
-      entity: serializeShipmentDetail(createdShipment)
-    };
   });
 
 export const createAdminShipmentTrackingEvent = async (input: {
@@ -488,8 +607,11 @@ export const createAdminShipmentTrackingEvent = async (input: {
       });
     }
 
-    await recordShipmentAdminMutation(transaction, {
-      actorAdminUserId: input.actorAdminUserId,
+    await recordShipmentMutation(transaction, {
+      actor: {
+        kind: "admin",
+        adminUserId: input.actorAdminUserId
+      },
       actionCode: "orders.shipments.track",
       shipmentId: shipment.id,
       orderId: shipment.order.id,
@@ -665,8 +787,11 @@ export const updateAdminShipment = async (input: {
       });
     }
 
-    await recordShipmentAdminMutation(transaction, {
-      actorAdminUserId: input.actorAdminUserId,
+    await recordShipmentMutation(transaction, {
+      actor: {
+        kind: "admin",
+        adminUserId: input.actorAdminUserId
+      },
       actionCode: "orders.shipments.update",
       shipmentId: shipment.id,
       orderId: shipment.order.id,

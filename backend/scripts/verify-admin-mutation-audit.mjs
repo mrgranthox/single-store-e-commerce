@@ -114,7 +114,7 @@ const hasDirectLogs = (body) =>
 
 const hasExemption = (body) => body.includes("audit-admin-action-exempt");
 const hasKnownAuditHelperDelegation = (body) =>
-  /\b(record[A-Za-z0-9_]*AdminMutation|recordCatalogMutation|recordMarketingMutation|recordReturnAdminMutation|recordShipmentAdminMutation|recordSupportAdminMutation|recordContentAdminMutation)\s*\(/.test(
+  /\b(record[A-Za-z0-9_]*AdminMutation|recordShipmentMutation|createInitialShipmentInTransaction|persistOrderWarehouseAssignmentInTransaction|recordCatalogMutation|recordMarketingMutation|recordReturnAdminMutation|recordShipmentAdminMutation|recordSupportAdminMutation|recordContentAdminMutation)\s*\(/.test(
     body
   );
 

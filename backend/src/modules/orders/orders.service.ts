@@ -1236,6 +1236,12 @@ export const autoAssignWarehouseForConfirmedOrderInTransaction = async (
       }
     });
 
+    const { autoCreateInitialShipmentIfEligibleInTransaction } = await import("../shipping/shipping.service");
+    await autoCreateInitialShipmentIfEligibleInTransaction(transaction, {
+      orderId,
+      warehouseId: warehouse.id
+    });
+
     logger.info(
       {
         orderId,
@@ -1462,6 +1468,12 @@ export const assignAdminOrderWarehouse = async (input: {
         reason: input.reason ?? null,
         note: input.note ?? null
       }
+    });
+
+    const { autoCreateInitialShipmentIfEligibleInTransaction } = await import("../shipping/shipping.service");
+    await autoCreateInitialShipmentIfEligibleInTransaction(transaction, {
+      orderId: order.id,
+      warehouseId: warehouse.id
     });
 
     const updatedOrder = await transaction.order.findUnique({
