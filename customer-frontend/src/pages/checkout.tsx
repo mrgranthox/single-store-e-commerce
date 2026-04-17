@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,6 +38,14 @@ type CartEvalItem = {
 
 type CartEvalShape = {
   items?: CartEvalItem[];
+  shippingOptions?: Array<{
+    code?: string;
+    label?: string;
+    amountCents?: number;
+    currency?: string;
+    estimatedDeliveryWindow?: string;
+    available?: boolean;
+  }>;
   normalizedTotals?: {
     subtotalCents?: number;
     discountCents?: number;
@@ -45,6 +53,19 @@ type CartEvalShape = {
     taxCents?: number;
     grandTotalCents?: number;
   };
+};
+
+type AccountAddressRow = {
+  id: string;
+  label: string | null;
+  fullName: string;
+  country: string;
+  region: string;
+  city: string;
+  postalCode: string | null;
+  addressLine1: string;
+  addressLine2: string | null;
+  isDefaultShipping: boolean;
 };
 
 const toNonNegativeInt = (value: unknown) => (typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0);
@@ -433,10 +454,12 @@ export const CheckoutShippingPage = () => {
   const queryClient = useQueryClient();
   const cartQueryKey = useCustomerCartQueryKey();
   const isAuthenticated = useCustomerStore((s) => s.isAuthenticated);
-  const [selectedMethod, setSelectedMethod] = useState<"standard" | "express">("standard");
   const prior = readCheckoutDraft();
+  const [selectedMethod, setSelectedMethod] = useState<string>(prior?.shippingMethodCode ?? "PAY_ON_DELIVERY");
+  const [addressMode, setAddressMode] = useState<"saved" | "new">(isAuthenticated ? "saved" : "new");
+  const [selectedSavedAddressId, setSelectedSavedAddressId] = useState<string>("");
 
-  const { register, handleSubmit, formState: { errors }, setError } = useForm({
+  const { register, handleSubmit, formState: { errors }, setError, setValue } = useForm({
     resolver: zodResolver(shippingSchema),
     defaultValues: {
       fullName: prior?.address.fullName ?? "",
@@ -446,6 +469,15 @@ export const CheckoutShippingPage = () => {
       zip: prior?.address.postalCode ?? "",
       phone: prior?.address.phone ?? ""
     }
+  });
+
+  const addressesQuery = useQuery({
+    queryKey: ["account", "addresses"],
+    queryFn: async () => {
+      const res = await customerBackendApi.listAddresses();
+      return (res.data as { items?: AccountAddressRow[] }).items ?? [];
+    },
+    enabled: isAuthenticated
   });
 
   const cartQuery = useQuery({
@@ -464,6 +496,77 @@ export const CheckoutShippingPage = () => {
     price: l.price,
     image: l.image
   }));
+  const couponOutcome = summary.couponOutcome;
+
+  const shippingOptions = useMemo(() => {
+    if (!cartQuery.data || typeof cartQuery.data !== "object") return [] as Array<{
+      code: string;
+      label: string;
+      amountCents: number;
+      estimatedDeliveryWindow: string;
+    }>;
+    const raw = (cartQuery.data as CartEvalShape).shippingOptions;
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((option) => {
+        const code = typeof option?.code === "string" ? option.code : "";
+        if (!code) return null;
+        return {
+          code,
+          label: typeof option?.label === "string" ? option.label : code,
+          amountCents: toNonNegativeInt(option?.amountCents),
+          estimatedDeliveryWindow:
+            typeof option?.estimatedDeliveryWindow === "string" && option.estimatedDeliveryWindow.trim()
+              ? option.estimatedDeliveryWindow.trim()
+              : "1-3 business days"
+        };
+      })
+      .filter((option): option is { code: string; label: string; amountCents: number; estimatedDeliveryWindow: string } => Boolean(option));
+  }, [cartQuery.data]);
+
+  const selectedShippingOption =
+    shippingOptions.find((option) => option.code === selectedMethod) ?? shippingOptions[0] ?? null;
+  const selectedShippingCents = selectedShippingOption?.amountCents ?? summary.shippingCents;
+  const discountGhs =
+    couponOutcome?.valid && typeof couponOutcome.discountCents === "number" ? couponOutcome.discountCents / 100 : 0;
+  const shippingTotalGhs =
+    Math.round((summary.subtotalGhs - discountGhs + selectedShippingCents / 100 + summary.taxGhs) * 100) / 100;
+  const savedAddresses = addressesQuery.data ?? [];
+  const usingSavedAddress = isAuthenticated && addressMode === "saved" && savedAddresses.length > 0;
+
+  useEffect(() => {
+    if (shippingOptions.length === 0) return;
+    if (shippingOptions.some((option) => option.code === selectedMethod)) return;
+    setSelectedMethod(shippingOptions[0].code);
+  }, [shippingOptions, selectedMethod]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setAddressMode("new");
+      return;
+    }
+    if (savedAddresses.length === 0) {
+      setAddressMode("new");
+      return;
+    }
+    const initial =
+      savedAddresses.find((address) => address.id === selectedSavedAddressId) ??
+      savedAddresses.find((address) => address.isDefaultShipping) ??
+      savedAddresses[0];
+    if (initial && selectedSavedAddressId !== initial.id) {
+      setSelectedSavedAddressId(initial.id);
+    }
+  }, [isAuthenticated, savedAddresses, selectedSavedAddressId]);
+
+  useEffect(() => {
+    if (!isAuthenticated || addressMode !== "saved") return;
+    const selectedAddress = savedAddresses.find((address) => address.id === selectedSavedAddressId);
+    if (!selectedAddress) return;
+    setValue("fullName", selectedAddress.fullName);
+    setValue("address", selectedAddress.addressLine1);
+    setValue("city", selectedAddress.city);
+    setValue("zip", selectedAddress.postalCode ?? "N/A");
+  }, [addressMode, isAuthenticated, savedAddresses, selectedSavedAddressId, setValue]);
 
   const checkoutAuthFlipRef = useRef<boolean | undefined>(undefined);
   useEffect(() => {
@@ -508,28 +611,99 @@ export const CheckoutShippingPage = () => {
                   return;
                 }
                 const email = String(data.email ?? "").trim();
+                const selectedAddress =
+                  isAuthenticated && addressMode === "saved"
+                    ? savedAddresses.find((address) => address.id === selectedSavedAddressId)
+                    : undefined;
+                if (isAuthenticated && addressMode === "saved" && !selectedAddress) {
+                  setError("address", { message: "Select a saved address or enter a new one." });
+                  return;
+                }
                 writeCheckoutDraft({
                   address: {
-                    fullName: data.fullName,
-                    email: email || undefined,
+                    fullName: selectedAddress?.fullName ?? data.fullName,
+                    email: email || prior?.address.email || undefined,
                     phone: data.phone,
-                    country: "Ghana",
-                    region: data.city,
-                    city: data.city,
-                    line1: data.address,
-                    postalCode: data.zip
+                    country: selectedAddress?.country || "Ghana",
+                    region: selectedAddress?.region || selectedAddress?.city || data.city,
+                    city: selectedAddress?.city ?? data.city,
+                    line1: selectedAddress?.addressLine1 ?? data.address,
+                    line2: selectedAddress?.addressLine2 ?? undefined,
+                    postalCode: selectedAddress?.postalCode ?? data.zip
                   },
-                  shippingMethodCode: "STANDARD",
+                  shippingMethodCode: selectedShippingOption?.code ?? selectedMethod,
                   payment: prior?.payment ?? { channel: "card" }
                 });
-                void selectedMethod;
                 navigate("/checkout/payment");
               })}
               className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8"
             >
+              {isAuthenticated && savedAddresses.length > 0 ? (
+                <div className="md:col-span-2 pt-2">
+                  <h2 className="font-headline text-xl font-bold tracking-tight mb-4">Address</h2>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setAddressMode("saved")}
+                      className={`px-4 py-2.5 rounded-lg border text-sm font-bold ${
+                        addressMode === "saved"
+                          ? "border-secondary text-secondary bg-secondary/5"
+                          : "border-outline-variant/30 text-on-surface-variant"
+                      }`}
+                    >
+                      Select saved address
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAddressMode("new")}
+                      className={`px-4 py-2.5 rounded-lg border text-sm font-bold ${
+                        addressMode === "new"
+                          ? "border-secondary text-secondary bg-secondary/5"
+                          : "border-outline-variant/30 text-on-surface-variant"
+                      }`}
+                    >
+                      Enter new address
+                    </button>
+                  </div>
+                  {addressMode === "saved" ? (
+                    <div className="grid grid-cols-1 gap-3 mt-4">
+                      {savedAddresses.map((address) => (
+                        <label
+                          key={address.id}
+                          className={`cursor-pointer rounded-xl border p-4 ${
+                            selectedSavedAddressId === address.id
+                              ? "border-secondary bg-secondary/5"
+                              : "border-outline-variant/25"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="savedAddress"
+                            value={address.id}
+                            checked={selectedSavedAddressId === address.id}
+                            onChange={() => setSelectedSavedAddressId(address.id)}
+                            className="hidden"
+                          />
+                          <p className="font-bold text-sm">{address.label?.trim() || "Saved address"}</p>
+                          <p className="text-xs text-on-surface-variant mt-1">
+                            {address.fullName} · {address.addressLine1} · {address.city}
+                            {address.postalCode ? `, ${address.postalCode}` : ""}
+                          </p>
+                        </label>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
               <div className="md:col-span-2 space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Full Name</label>
-                <input {...register("fullName")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="Julianne Moore" type="text" />
+                <input
+                  {...register("fullName")}
+                  disabled={usingSavedAddress}
+                  className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`}
+                  placeholder="Julianne Moore"
+                  type="text"
+                />
                 {errors.fullName && <p className="text-xs text-error">{errors.fullName.message}</p>}
               </div>
               {!isAuthenticated ? (
@@ -541,17 +715,35 @@ export const CheckoutShippingPage = () => {
               ) : null}
               <div className="md:col-span-2 space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Address</label>
-                <input {...register("address")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="Street, area, landmark" type="text" />
+                <input
+                  {...register("address")}
+                  disabled={usingSavedAddress}
+                  className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`}
+                  placeholder="Street, area, landmark"
+                  type="text"
+                />
                 {errors.address && <p className="text-xs text-error">{errors.address.message}</p>}
               </div>
               <div className="space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">City</label>
-                <input {...register("city")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="New York" type="text" />
+                <input
+                  {...register("city")}
+                  disabled={usingSavedAddress}
+                  className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`}
+                  placeholder="Accra"
+                  type="text"
+                />
                 {errors.city && <p className="text-xs text-error">{errors.city.message}</p>}
               </div>
               <div className="space-y-2">
                 <label className="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Zip Code</label>
-                <input {...register("zip")} className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`} placeholder="10001" type="text" />
+                <input
+                  {...register("zip")}
+                  disabled={usingSavedAddress}
+                  className={`w-full rounded-lg px-4 py-4 ${neutralFieldClass}`}
+                  placeholder="GA-000-0000"
+                  type="text"
+                />
                 {errors.zip && <p className="text-xs text-error">{errors.zip.message}</p>}
               </div>
               <div className="md:col-span-2 space-y-2">
@@ -564,34 +756,37 @@ export const CheckoutShippingPage = () => {
               <div className="md:col-span-2 pt-8">
                 <h2 className="font-headline text-xl font-bold tracking-tight mb-6">Delivery Method</h2>
                 <div className="grid grid-cols-1 gap-4">
-                  {[
-                    { id: "standard", icon: "local_shipping", title: "Standard Delivery", sub: "3-5 business days", price: "Free" },
-                    { id: "express", icon: "rocket_launch", title: "Express Shipping", sub: "Shown for layout — billed as standard at checkout", price: formatGhs(24) },
-                  ].map((method) => (
+                  {shippingOptions.map((method) => (
                     <label
-                      key={method.id}
+                      key={method.code}
                       className={`group cursor-pointer relative flex items-center justify-between p-6 bg-surface-container-lowest rounded-xl transition-all shadow-sm border-2 ${
-                        selectedMethod === method.id ? "border-secondary" : "border-transparent hover:border-secondary/20"
+                        selectedMethod === method.code ? "border-secondary" : "border-transparent hover:border-secondary/20"
                       }`}
                     >
                       <input
                         type="radio"
                         name="shipping"
-                        value={method.id}
-                        checked={selectedMethod === (method.id as "standard" | "express")}
-                        onChange={() => setSelectedMethod(method.id as "standard" | "express")}
+                        value={method.code}
+                        checked={selectedMethod === method.code}
+                        onChange={() => setSelectedMethod(method.code)}
                         className="hidden"
                       />
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center">
-                          <Icon name={method.icon} className="text-secondary" />
+                          <Icon name={method.code === "PAY_ON_DELIVERY" ? "local_shipping" : "payments"} className="text-secondary" />
                         </div>
                         <div>
-                          <p className="font-bold">{method.title}</p>
-                          <p className="text-sm text-on-surface-variant">{method.sub}</p>
+                          <p className="font-bold">{method.label}</p>
+                          <p className="text-sm text-on-surface-variant">
+                            {method.code === "PAY_ON_DELIVERY"
+                              ? "Pay when your order is delivered."
+                              : `Shipping fee applies (${formatGhs(method.amountCents / 100)}).`}
+                          </p>
                         </div>
                       </div>
-                      <span className="font-bold text-secondary">{method.price}</span>
+                      <span className="font-bold text-secondary">
+                        {method.amountCents === 0 ? "Free" : formatGhs(method.amountCents / 100)}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -612,9 +807,19 @@ export const CheckoutShippingPage = () => {
         <CheckoutOrderSummary
           items={orderLines}
           subtotal={summary.subtotalGhs}
-          shipping={summary.shippingCents === 0 ? "Free" : formatGhs(summary.shippingCents / 100)}
+          shipping={selectedShippingCents === 0 ? "Free" : formatGhs(selectedShippingCents / 100)}
           tax={summary.taxGhs}
-          total={summary.totalGhs}
+          total={shippingTotalGhs}
+          showPromoInput={!couponOutcome?.valid}
+          couponDescription={
+            couponOutcome?.valid
+              ? `${couponOutcome.appliedCode ?? "Coupon"} applied${
+                  typeof couponOutcome.discountCents === "number" && couponOutcome.discountCents > 0
+                    ? ` • -${formatGhs(couponOutcome.discountCents / 100)}`
+                    : ""
+                }${couponOutcome.message ? ` — ${couponOutcome.message}` : ""}`
+              : undefined
+          }
         />
       </main>
       {/* Mobile step nav */}

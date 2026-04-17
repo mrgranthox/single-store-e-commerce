@@ -48,7 +48,11 @@ export const formatShipToLinesFromAddress = (address: CheckoutAddressDraft): str
 };
 
 export const labelForShippingMethodCode = (code: string) =>
-  code.trim().toUpperCase() === "STANDARD" ? "Standard shipping" : code.trim() || "Shipping";
+  code.trim().toUpperCase() === "PAY_ON_DELIVERY"
+    ? "Pay on delivery"
+    : code.trim().toUpperCase() === "PREPAID"
+      ? "No pay on delivery"
+      : code.trim() || "Shipping";
 
 export const readCheckoutDraft = (): CheckoutDraft | null => {
   try {

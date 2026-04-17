@@ -560,7 +560,8 @@ const evaluateCoupon = async (
   };
 };
 
-const buildShippingOptions = (currency: string | null) => buildShippingMethodOptions(currency);
+const buildShippingOptions = (currency: string | null, subtotalCents: number) =>
+  buildShippingMethodOptions(currency, subtotalCents);
 
 export const evaluateCart = async (
   db: DatabaseClient,
@@ -746,7 +747,7 @@ export const evaluateCart = async (
     items,
     couponOutcome,
     normalizedTotals,
-    shippingOptions: buildShippingOptions(currency),
+    shippingOptions: buildShippingOptions(currency, subtotalCents),
     warnings,
     blockedItems,
     priceChanges,

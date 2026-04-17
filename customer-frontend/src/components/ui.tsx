@@ -187,12 +187,16 @@ export const CheckoutOrderSummary = ({
   shipping,
   tax,
   total,
+  showPromoInput = true,
+  couponDescription,
 }: {
   items: { name: string; variant?: string; qty?: number; price: number; image: string }[];
   subtotal?: number;
   shipping?: string;
   tax?: number;
   total?: number;
+  showPromoInput?: boolean;
+  couponDescription?: string;
 }) => (
   <aside className="mt-10 lg:mt-0 w-full lg:w-[400px] max-w-full">
     <div className="bg-surface-container-low p-5 sm:p-8 rounded-xl lg:sticky lg:top-28">
@@ -240,16 +244,19 @@ export const CheckoutOrderSummary = ({
           </div>
         )}
       </div>
-      <div className="mt-8 flex gap-2">
-        <input
-          className={`flex-1 rounded px-4 py-3 text-sm ${neutralFieldClass}`}
-          placeholder="Promo Code"
-          type="text"
-        />
-        <button className="bg-primary text-on-primary px-4 py-3 text-xs font-bold uppercase tracking-widest rounded hover:opacity-90">
-          Apply
-        </button>
-      </div>
+      {showPromoInput ? (
+        <div className="mt-8 flex gap-2">
+          <input
+            className={`flex-1 rounded px-4 py-3 text-sm ${neutralFieldClass}`}
+            placeholder="Promo Code"
+            type="text"
+          />
+          <button className="bg-primary text-on-primary px-4 py-3 text-xs font-bold uppercase tracking-widest rounded hover:opacity-90">
+            Apply
+          </button>
+        </div>
+      ) : null}
+      {couponDescription ? <p className="mt-4 text-xs font-medium text-secondary">{couponDescription}</p> : null}
       <div className="mt-8 flex items-center gap-3 p-4 bg-tertiary-fixed rounded-lg text-on-tertiary-fixed">
         <Icon name="verified" />
         <p className="text-xs font-medium">Authenticity Guaranteed & 30-Day Free Returns</p>

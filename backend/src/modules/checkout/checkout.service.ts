@@ -144,6 +144,33 @@ const readGrandTotalFromSnapshot = (value: Prisma.JsonValue) => {
   };
 };
 
+const buildNormalizedTotalsForShippingMethod = (
+  evaluation: CheckoutEvaluation,
+  shippingMethodCode: string
+): NormalizedTotals => {
+  const selectedOption =
+    evaluation.shippingOptions.find(
+      (option) => option.code === shippingMethodCode && option.available
+    ) ?? evaluation.shippingOptions.find((option) => option.available);
+
+  const shippingCents = selectedOption
+    ? Math.max(0, Math.trunc(selectedOption.amountCents))
+    : Math.max(0, Math.trunc(evaluation.normalizedTotals.shippingCents));
+
+  const subtotalCents = Math.max(0, Math.trunc(evaluation.normalizedTotals.subtotalCents));
+  const discountCents = Math.max(0, Math.trunc(evaluation.normalizedTotals.discountCents));
+  const taxCents = Math.max(0, Math.trunc(evaluation.normalizedTotals.taxCents));
+
+  return {
+    ...evaluation.normalizedTotals,
+    subtotalCents,
+    discountCents,
+    shippingCents,
+    taxCents,
+    grandTotalCents: Math.max(0, subtotalCents - discountCents + shippingCents + taxCents)
+  };
+};
+
 const readContactEmailFromAddressSnapshot = (value: Prisma.JsonValue) => {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return null;
@@ -484,9 +511,10 @@ export const validateCheckout = async (
   }
 ) => {
   const { evaluation } = await getCartState(prisma, context);
+  const normalizedTotals = buildNormalizedTotalsForShippingMethod(evaluation, input.shippingMethodCode);
 
   return {
-    normalizedTotals: evaluation.normalizedTotals,
+    normalizedTotals,
     shippingOptions: evaluation.shippingOptions.map((option) => ({
       ...option,
       selected: option.code === input.shippingMethodCode
@@ -546,7 +574,7 @@ export const createOrderFromCheckout = async (
         existingSession.order,
         evaluation,
         existingSession.id,
-        snapshotTotals ?? evaluation.normalizedTotals
+        snapshotTotals ?? buildNormalizedTotalsForShippingMethod(evaluation, input.shippingMethodCode)
       );
     }
 
@@ -577,6 +605,7 @@ export const createOrderFromCheckout = async (
     }
 
     assertCartCanCheckout(evaluation);
+    const selectedTotals = buildNormalizedTotalsForShippingMethod(evaluation, input.shippingMethodCode);
 
     if (existingSession && existingSession.cartId !== cart.id) {
       throw invalidInputError("This checkout idempotency key is already bound to a different cart.");
@@ -633,7 +662,7 @@ export const createOrderFromCheckout = async (
     await transaction.checkoutValidationSnapshot.create({
       data: {
         checkoutSessionId: checkoutSession.id,
-        normalizedTotals: toPrismaJsonValue(evaluation.normalizedTotals)!,
+        normalizedTotals: toPrismaJsonValue(selectedTotals)!,
         shippingOptions: toPrismaJsonValue(
           evaluation.shippingOptions.map((option) => ({
             ...option,
@@ -658,7 +687,7 @@ export const createOrderFromCheckout = async (
           ...input.address,
           contactEmail: identity.contactEmail,
           shippingMethodCode: input.shippingMethodCode,
-          normalizedTotals: evaluation.normalizedTotals,
+          normalizedTotals: selectedTotals,
           couponOutcome: evaluation.couponOutcome
         })!
       }
@@ -694,7 +723,7 @@ export const createOrderFromCheckout = async (
         actorType: context.actor.kind === "customer" ? "CUSTOMER" : "SYSTEM",
         payload: toPrismaJsonValue({
           checkoutSessionId: checkoutSession.id,
-          totals: evaluation.normalizedTotals
+          totals: selectedTotals
         })
       }
     });
@@ -728,7 +757,7 @@ export const createOrderFromCheckout = async (
       }
     });
 
-    return serializeOrderEntity(order, evaluation, checkoutSession.id);
+    return serializeOrderEntity(order, evaluation, checkoutSession.id, selectedTotals);
   });
 
 export const completeCheckoutAndInitializePayment = async (
@@ -810,14 +839,15 @@ export const completeCheckoutAndInitializePayment = async (
       const snapshotTotals = readNormalizedTotalsFromAddressSnapshot(existingIntent.order.addressSnapshot);
       const mergedEvaluation: CheckoutEvaluation = {
         ...evaluation,
-        normalizedTotals: snapshotTotals ?? evaluation.normalizedTotals
+        normalizedTotals:
+          snapshotTotals ?? buildNormalizedTotalsForShippingMethod(evaluation, input.shippingMethodCode)
       };
 
       const orderEntity = serializeOrderEntity(
         existingIntent.order,
         mergedEvaluation,
         existingIntent.checkoutSession.id,
-        snapshotTotals ?? evaluation.normalizedTotals
+        snapshotTotals ?? buildNormalizedTotalsForShippingMethod(evaluation, input.shippingMethodCode)
       );
 
       const payment = await buildDeferredPaymentResponse(transaction, {
@@ -892,6 +922,7 @@ export const completeCheckoutAndInitializePayment = async (
     }
 
     assertCartCanCheckout(evaluation);
+    const selectedTotals = buildNormalizedTotalsForShippingMethod(evaluation, input.shippingMethodCode);
 
     const existingSession = await transaction.checkoutSession.findUnique({
       where: {
@@ -1030,7 +1061,7 @@ export const completeCheckoutAndInitializePayment = async (
     await transaction.checkoutValidationSnapshot.create({
       data: {
         checkoutSessionId: checkoutSession.id,
-        normalizedTotals: toPrismaJsonValue(evaluation.normalizedTotals)!,
+        normalizedTotals: toPrismaJsonValue(selectedTotals)!,
         shippingOptions: toPrismaJsonValue(
           evaluation.shippingOptions.map((option) => ({
             ...option,
@@ -1057,7 +1088,7 @@ export const completeCheckoutAndInitializePayment = async (
       address: input.address,
       shippingMethodCode: input.shippingMethodCode,
       campaignId: input.campaignId ?? null,
-      normalizedTotals: evaluation.normalizedTotals,
+      normalizedTotals: selectedTotals,
       couponOutcome: evaluation.couponOutcome,
       lineItems: lineItemsPayload,
       identity: {
