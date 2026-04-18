@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AccountLayout } from "@/components/layout";
 import { OrderStatusBadge } from "@/components/ui";
@@ -1806,6 +1806,7 @@ type ReviewEligibilityEntity = {
 
 export const OrderReviewWizardPage = () => {
   const { orderId } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
   const [selectedOrderItemId, setSelectedOrderItemId] = useState<string | null>(null);
@@ -1847,7 +1848,7 @@ export const OrderReviewWizardPage = () => {
       await queryClient.invalidateQueries({ queryKey: ["account", "reviews"] });
       await queryClient.invalidateQueries({ queryKey: ["account", "review-eligibility", orderId] });
       await queryClient.invalidateQueries({ queryKey: ["account", "order", orderId] });
-      setStep(3);
+      navigate("/account/reviews", { replace: true });
     }
   });
 
@@ -1918,12 +1919,12 @@ export const OrderReviewWizardPage = () => {
       <header className="mb-12">
         <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">Write a review</h1>
         <p className="text-on-surface-variant">
-          Order #{titleOrder} · Step {step} of 3
+          Order #{titleOrder} · Step {step} of 2
         </p>
       </header>
       <div className="max-w-2xl">
         <div className="flex gap-2 mb-8">
-          {[1, 2, 3].map((s) => (
+          {[1, 2].map((s) => (
             <div key={s} className={`h-1 flex-1 rounded-full ${s <= step ? "bg-secondary" : "bg-surface-container-high"}`} />
           ))}
         </div>
@@ -2030,32 +2031,6 @@ export const OrderReviewWizardPage = () => {
               >
                 {reviewMutation.isPending ? "Submitting…" : "Submit review"}
               </button>
-            </div>
-          </div>
-        ) : null}
-        {step === 3 ? (
-          <div className="space-y-6">
-            <h2 className="font-headline font-bold text-xl">Thank you</h2>
-            <div className="space-y-4 rounded-xl bg-surface-container-low p-6">
-              <div className="flex items-center gap-3 text-secondary">
-                <Icon name="check_circle" filled />
-                <p className="font-bold">Review submitted</p>
-              </div>
-              <p className="text-sm text-on-surface-variant">It will appear in your reviews list after moderation.</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                to={`/account/orders/${orderId}`}
-                className="inline-block bg-surface-container-high px-8 py-3 font-bold text-on-surface transition-colors hover:bg-surface-container rounded-md"
-              >
-                Back to order
-              </Link>
-              <Link
-                to="/account/reviews"
-                className="inline-block bg-secondary px-8 py-3 font-bold text-on-secondary transition-opacity hover:opacity-90 rounded-md"
-              >
-                View my reviews
-              </Link>
             </div>
           </div>
         ) : null}
