@@ -9,6 +9,7 @@ import {
 } from "../auth/api-session.service";
 import { runInTransaction, type DbClient } from "../../common/database/prisma-transaction";
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
+import { buildOrderCardPreview, variantPrimaryImageUrl } from "../orders/order-preview-media";
 import {
   invalidInputError,
   notFoundError,
@@ -213,7 +214,7 @@ export const getAccountDashboard = async (userId: string) => {
     returns,
     refunds,
     wishlistItems,
-    recentOrders,
+    recentOrdersRaw,
     deliveredOrders,
     existingReviews,
     returnStatusGroups,
@@ -244,7 +245,28 @@ export const getAccountDashboard = async (userId: string) => {
         id: true,
         orderNumber: true,
         status: true,
-        createdAt: true
+        createdAt: true,
+        items: {
+          orderBy: {
+            createdAt: "asc"
+          },
+          select: {
+            quantity: true,
+            variant: {
+              select: {
+                media: {
+                  orderBy: {
+                    sortOrder: "asc"
+                  },
+                  select: {
+                    url: true,
+                    kind: true
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }),
     prisma.order.findMany({
@@ -328,6 +350,22 @@ export const getAccountDashboard = async (userId: string) => {
 
   const returnStatusCounts = new Map(returnStatusGroups.map((entry) => [entry.status, entry._count._all]));
   const refundStateCounts = new Map(refundStateGroups.map((entry) => [entry.state, entry._count._all]));
+
+  const recentOrders = recentOrdersRaw.map((order) => {
+    const lines = order.items.map((item) => ({
+      quantity: item.quantity,
+      imageUrl: variantPrimaryImageUrl(item.variant)
+    }));
+    const { previewImageUrl, previewImageUrls } = buildOrderCardPreview(lines);
+    return {
+      id: order.id,
+      orderNumber: order.orderNumber,
+      status: order.status,
+      createdAt: order.createdAt,
+      previewImageUrl,
+      previewImageUrls
+    };
+  });
 
   return {
     entity: {

@@ -16,6 +16,44 @@ import { CommerceApiError } from "@/lib/api/commerce-fetch";
 import { neutralFieldClass } from "@/lib/form-field-styles";
 import { STORE_NAME_FULL, STORE_NAME_SHORT, SUPPORT_SENDER_LABEL } from "@/lib/brand";
 
+function OrderCardPreviewMedia({
+  previewImageUrl,
+  previewImageUrls,
+  iconClassName
+}: {
+  previewImageUrl?: string | null;
+  previewImageUrls?: string[] | null;
+  iconClassName?: string;
+}) {
+  const urls = (previewImageUrls ?? []).map((u) => String(u).trim()).filter(Boolean);
+  const primary = (previewImageUrl?.trim() || urls[0]) || null;
+  if (urls.length >= 2) {
+    return (
+      <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-0.5">
+        {urls.slice(0, 4).map((src, i) => (
+          <img key={`${src}-${i}`} src={src} alt="" className="min-h-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+        ))}
+      </div>
+    );
+  }
+  if (primary) {
+    return (
+      <img
+        src={primary}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  }
+  return (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <Icon name="package_2" className={iconClassName ?? "text-3xl"} />
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────
    ACCOUNT DASHBOARD
 ───────────────────────────────────────────── */
@@ -27,7 +65,14 @@ type AccountOverviewEntity = {
     wishlistItems: number;
     addresses: number;
   };
-  recentOrders: Array<{ id: string; orderNumber: string; status: string; createdAt: string }>;
+  recentOrders: Array<{
+    id: string;
+    orderNumber: string;
+    status: string;
+    createdAt: string;
+    previewImageUrl?: string | null;
+    previewImageUrls?: string[];
+  }>;
 };
 
 export const AccountDashboardPage = () => {
@@ -141,8 +186,12 @@ export const AccountDashboardPage = () => {
             className="group bg-surface-container-lowest p-4 sm:p-6 rounded-2xl border border-outline-variant/20 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 hover:border-outline-variant/35 transition-colors"
           >
             <div className="flex gap-4 flex-1 min-w-0">
-              <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center text-secondary">
-                <Icon name="package_2" className="text-3xl" />
+              <div className="relative flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-surface-container text-secondary">
+                <OrderCardPreviewMedia
+                  previewImageUrl={order.previewImageUrl}
+                  previewImageUrls={order.previewImageUrls}
+                  iconClassName="text-3xl"
+                />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -185,6 +234,8 @@ type OrderListRow = {
   status: string;
   createdAt: string;
   totals?: unknown;
+  previewImageUrl?: string | null;
+  previewImageUrls?: string[];
 };
 
 export const OrdersListPage = () => {
@@ -283,8 +334,12 @@ export const OrdersListPage = () => {
           return (
             <div key={order.id} className="group bg-surface-container-lowest p-1 rounded-2xl transition-all duration-300 hover:shadow-[0_20px_40px_rgba(11,28,48,0.06)]">
               <div className="flex flex-col lg:flex-row items-stretch lg:items-center bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20">
-                <div className="flex-shrink-0 w-full lg:w-32 h-32 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center text-secondary">
-                  <Icon name="package_2" className="text-5xl" />
+                <div className="relative flex-shrink-0 w-full lg:w-32 h-32 rounded-xl overflow-hidden bg-surface-container text-secondary">
+                  <OrderCardPreviewMedia
+                    previewImageUrl={order.previewImageUrl}
+                    previewImageUrls={order.previewImageUrls}
+                    iconClassName="text-5xl"
+                  />
                 </div>
                 <div className="flex-grow mt-6 lg:mt-0 lg:px-8 space-y-1">
                   <div className="flex items-center gap-3 mb-2">
@@ -360,6 +415,7 @@ type OrderDetailEntity = {
     quantity: number;
     unitPriceAmountCents: number;
     lineTotalCents: number;
+    imageUrl?: string | null;
   }>;
   totals?: unknown;
   addressSnapshot: {
@@ -484,7 +540,17 @@ export const OrderDetailPage = () => {
           {order.items.map((item) => (
             <div key={item.id} className="flex gap-6 p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
               <div className="w-24 h-28 bg-surface-container rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center text-secondary">
-                <Icon name="styler" className="text-3xl" />
+                {item.imageUrl ? (
+                  <img
+                    src={item.imageUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <Icon name="styler" className="text-3xl" />
+                )}
               </div>
               <div className="flex flex-col justify-between flex-grow">
                 <div>

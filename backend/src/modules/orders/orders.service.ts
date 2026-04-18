@@ -22,6 +22,7 @@ import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { runInTransaction } from "../../common/database/prisma-transaction";
 import { prisma } from "../../config/prisma";
 import { logger } from "../../config/logger";
+import { buildOrderCardPreview, variantPrimaryImageUrl } from "./order-preview-media";
 
 type DatabaseClient = Prisma.TransactionClient | typeof prisma;
 
@@ -37,6 +38,21 @@ const orderInclude = {
   items: {
     orderBy: {
       createdAt: "asc" as const
+    },
+    include: {
+      variant: {
+        select: {
+          media: {
+            orderBy: {
+              sortOrder: "asc" as const
+            },
+            select: {
+              url: true,
+              kind: true
+            }
+          }
+        }
+      }
     }
   },
   payments: {
@@ -105,6 +121,9 @@ type OrderRecord = {
     unitPriceAmountCents: number;
     unitPriceCurrency: string;
     quantity: number;
+    variant: {
+      media: Array<{ url: string; kind: string | null }>;
+    };
   }>;
   payments: Array<{
     id: string;
@@ -282,7 +301,8 @@ const serializeOrderItems = (order: Pick<OrderRecord, "items">) =>
     unitPriceAmountCents: item.unitPriceAmountCents,
     unitPriceCurrency: item.unitPriceCurrency,
     quantity: item.quantity,
-    lineTotalCents: item.quantity * item.unitPriceAmountCents
+    lineTotalCents: item.quantity * item.unitPriceAmountCents,
+    imageUrl: variantPrimaryImageUrl(item.variant)
   }));
 
 const serializeShipments = (order: Pick<OrderRecord, "shipments">) =>
@@ -393,6 +413,11 @@ const buildEligibility = (order: Pick<OrderRecord, "status" | "shipments" | "pay
 const serializeOrderListItem = (order: OrderRecord) => {
   const addressSnapshot = readAddressSnapshot(order.addressSnapshot);
   const totals = addressSnapshot.normalizedTotals;
+  const previewLines = order.items.map((item) => ({
+    quantity: item.quantity,
+    imageUrl: variantPrimaryImageUrl(item.variant)
+  }));
+  const { previewImageUrl, previewImageUrls } = buildOrderCardPreview(previewLines);
 
   return {
     id: order.id,
@@ -406,7 +431,9 @@ const serializeOrderListItem = (order: OrderRecord) => {
     fulfillment: buildFulfillmentSummary(order),
     eligibility: buildEligibility(order),
     customer: buildCustomerSummary(order),
-    assignedWarehouse: addressSnapshot.fulfillmentAssignment?.warehouse ?? null
+    assignedWarehouse: addressSnapshot.fulfillmentAssignment?.warehouse ?? null,
+    previewImageUrl,
+    previewImageUrls
   };
 };
 
