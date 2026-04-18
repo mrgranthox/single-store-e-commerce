@@ -267,20 +267,28 @@ const ReviewModerationDrawer = ({
           <div className="flex flex-col gap-2">
             <StitchGradientButton
               disabled={mut.isPending || is("PUBLISHED")}
+              aria-busy={mut.isPending && mut.variables === "PUBLISHED"}
               onClick={() => mut.mutate("PUBLISHED")}
+              className="inline-flex min-h-[2.5rem] items-center justify-center gap-2 disabled:cursor-not-allowed"
             >
-              Publish
+              {mut.isPending && mut.variables === "PUBLISHED" ? "Publishing…" : "Publish"}
             </StitchGradientButton>
             <div className="grid grid-cols-2 gap-2">
-              <StitchSecondaryButton disabled={mut.isPending || is("HIDDEN")} onClick={() => mut.mutate("HIDDEN")}>
-                Hide
+              <StitchSecondaryButton
+                disabled={mut.isPending || is("HIDDEN")}
+                aria-busy={mut.isPending && mut.variables === "HIDDEN"}
+                onClick={() => mut.mutate("HIDDEN")}
+                className="min-h-[2.5rem] disabled:cursor-not-allowed"
+              >
+                {mut.isPending && mut.variables === "HIDDEN" ? "Hiding…" : "Hide"}
               </StitchSecondaryButton>
               <StitchSecondaryButton
                 disabled={mut.isPending || is("REJECTED")}
+                aria-busy={mut.isPending && mut.variables === "REJECTED"}
                 onClick={() => mut.mutate("REJECTED")}
-                className="border-rose-200 text-rose-800 hover:bg-rose-50"
+                className="min-h-[2.5rem] border-rose-200 text-rose-800 hover:bg-rose-50 disabled:cursor-not-allowed"
               >
-                Reject
+                {mut.isPending && mut.variables === "REJECTED" ? "Rejecting…" : "Reject"}
               </StitchSecondaryButton>
             </div>
           </div>
@@ -319,6 +327,7 @@ export const CatalogReviewsListPage = () => {
       ...(filters.q.trim() ? { q: filters.q.trim() } : {})
     })
   );
+  const listRefetching = reviewsQuery.isFetching && !reviewsQuery.isPending;
 
   const items = reviewsQuery.data?.data.items ?? [];
   const meta = reviewsQuery.data?.meta;
@@ -420,15 +429,17 @@ export const CatalogReviewsListPage = () => {
         <div className="mt-4 flex flex-wrap gap-3">
           <button
             type="button"
+            disabled={reviewsQuery.isFetching}
             onClick={applyFilters}
-            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60 min-h-[2.5rem] min-w-[7.5rem]"
           >
-            Apply filters
+            {listRefetching ? "Applying…" : "Apply filters"}
           </button>
           <button
             type="button"
+            disabled={reviewsQuery.isFetching}
             onClick={clearFilters}
-            className="text-sm font-semibold text-[#4f7ef8] hover:underline"
+            className="text-sm font-semibold text-[#4f7ef8] hover:underline disabled:opacity-50 disabled:cursor-not-allowed min-h-[2.5rem]"
           >
             Clear filters
           </button>
@@ -453,19 +464,20 @@ export const CatalogReviewsListPage = () => {
             <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm">
               <button
                 type="button"
-                disabled={page <= 1}
-                className="rounded-lg border border-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-40"
+                disabled={page <= 1 || reviewsQuery.isFetching}
+                className="rounded-lg border border-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed min-h-[2.5rem] min-w-[5.5rem]"
                 onClick={() => setPage(Math.max(1, page - 1))}
               >
                 Previous
               </button>
               <span className="text-slate-500">
                 Page {meta.page} of {meta.totalPages}
+                {listRefetching ? <span className="ml-2 text-xs">(loading)</span> : null}
               </span>
               <button
                 type="button"
-                disabled={page >= meta.totalPages}
-                className="rounded-lg border border-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-40"
+                disabled={page >= meta.totalPages || reviewsQuery.isFetching}
+                className="rounded-lg border border-slate-200 px-4 py-2 font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed min-h-[2.5rem] min-w-[5.5rem]"
                 onClick={() => setPage(page + 1)}
               >
                 Next

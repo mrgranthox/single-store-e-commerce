@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AccountLayout } from "@/components/layout";
 import { OrderStatusBadge } from "@/components/ui";
@@ -928,7 +928,31 @@ export const RefundsListPage = () => {
 /* ─────────────────────────────────────────────
    REVIEWS CENTER
 ───────────────────────────────────────────── */
+type AccountReviewListItem = {
+  id: string;
+  rating: number;
+  title: string | null;
+  body: string | null;
+  createdAt: string;
+  status?: string;
+  moderationNote?: string | null;
+  productTitle?: string | null;
+  product?: { title?: string };
+};
+
 export const ReviewsCenterPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [submitBannerDismissed, setSubmitBannerDismissed] = useState(false);
+
+  const submitFlash = location.state as { reviewSubmitted?: boolean; reviewStatus?: string } | null | undefined;
+
+  useEffect(() => {
+    if (submitFlash?.reviewSubmitted) {
+      setSubmitBannerDismissed(false);
+    }
+  }, [submitFlash?.reviewSubmitted, location.key]);
+
   const { data, isPending, error } = useQuery({
     queryKey: ["account", "reviews"],
     queryFn: async () => {
@@ -937,14 +961,28 @@ export const ReviewsCenterPage = () => {
     }
   });
 
-  const items = (data ?? []) as Array<{
-    id: string;
-    rating: number;
-    title: string | null;
-    body: string | null;
-    createdAt: string;
-    productTitle?: string | null;
-  }>;
+  const items = (data ?? []) as AccountReviewListItem[];
+
+  const dismissSubmitBanner = () => {
+    setSubmitBannerDismissed(true);
+    navigate("/account/reviews", { replace: true, state: {} });
+  };
+
+  const showSubmitBanner = Boolean(submitFlash?.reviewSubmitted) && !submitBannerDismissed;
+  const submitBannerMessage =
+    submitFlash?.reviewStatus === "PENDING"
+      ? "Your review was received and is awaiting moderation. It will appear on the product page after staff approve it."
+      : submitFlash?.reviewStatus === "PUBLISHED"
+        ? "Your review is now live on the product page."
+        : "Your review was saved.";
+
+  const reviewStatusLabel = (status: string | undefined) => {
+    const s = status?.toUpperCase();
+    if (s === "PUBLISHED") return { label: "Published", className: "bg-secondary/15 text-secondary" };
+    if (s === "PENDING") return { label: "Pending approval", className: "bg-tertiary-container/40 text-on-surface-variant" };
+    if (s === "REJECTED" || s === "HIDDEN") return { label: s === "HIDDEN" ? "Hidden" : "Rejected", className: "bg-error/10 text-error" };
+    return { label: status?.replace(/_/g, " ") ?? "Submitted", className: "bg-surface-container-high text-outline" };
+  };
 
   return (
     <AccountLayout>
@@ -952,6 +990,21 @@ export const ReviewsCenterPage = () => {
         <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">Reviews</h1>
         <p className="text-on-surface-variant">Reviews you have submitted appear here. Leave new reviews from completed orders.</p>
       </header>
+      {showSubmitBanner ? (
+        <div
+          className="mb-8 max-w-2xl rounded-2xl border border-secondary/30 bg-secondary/5 px-4 py-3 sm:px-5 sm:py-4 flex gap-3 items-start"
+          role="status"
+        >
+          <p className="text-sm text-on-background flex-1 leading-relaxed">{submitBannerMessage}</p>
+          <button
+            type="button"
+            onClick={dismissSubmitBanner}
+            className="shrink-0 text-xs font-bold uppercase tracking-widest text-secondary hover:underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
       <div className="max-w-2xl space-y-6 mb-10">
         <h2 className="font-headline font-bold text-lg">Leave a review</h2>
         <p className="text-sm text-on-surface-variant">
@@ -961,16 +1014,30 @@ export const ReviewsCenterPage = () => {
       {isPending ? <p className="text-on-surface-variant">Loading reviews…</p> : null}
       {error instanceof CommerceApiError ? <p className="text-error text-sm">{error.message}</p> : null}
       <div className="max-w-2xl space-y-4">
-        {items.map((rev) => (
-          <div key={rev.id} className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20">
-            <div className="flex justify-between gap-4 flex-wrap">
-              <h3 className="font-headline font-bold">{rev.title || rev.productTitle || "Review"}</h3>
-              <span className="text-sm text-outline">{formatIsoDate(rev.createdAt)}</span>
+        {items.map((rev) => {
+          const st = reviewStatusLabel(rev.status);
+          const headline = rev.title?.trim() || rev.product?.title || rev.productTitle || "Review";
+          return (
+            <div key={rev.id} className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20">
+              <div className="flex justify-between gap-4 flex-wrap items-start">
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-headline font-bold break-words">{headline}</h3>
+                  <span
+                    className={`inline-block mt-2 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded ${st.className}`}
+                  >
+                    {st.label}
+                  </span>
+                </div>
+                <span className="text-sm text-outline shrink-0">{formatIsoDate(rev.createdAt)}</span>
+              </div>
+              <p className="text-sm text-on-surface-variant mt-2">Rating: {rev.rating} / 5</p>
+              {rev.status === "PENDING" && typeof rev.moderationNote === "string" && rev.moderationNote.trim().length > 0 ? (
+                <p className="text-xs text-outline mt-2 italic">{rev.moderationNote}</p>
+              ) : null}
+              {rev.body ? <p className="text-sm text-on-surface mt-3 leading-relaxed">{rev.body}</p> : null}
             </div>
-            <p className="text-sm text-on-surface-variant mt-2">Rating: {rev.rating} / 5</p>
-            {rev.body ? <p className="text-sm text-on-surface mt-3 leading-relaxed">{rev.body}</p> : null}
-          </div>
-        ))}
+          );
+        })}
         {!isPending && !error && items.length === 0 ? (
           <p className="text-on-surface-variant text-sm">You have not submitted any reviews yet.</p>
         ) : null}
@@ -1837,18 +1904,23 @@ export const OrderReviewWizardPage = () => {
       if (!selectedOrderItemId) {
         throw new Error("Select an item to review.");
       }
-      await customerBackendApi.createReview({
+      const res = await customerBackendApi.createReview({
         orderItemId: selectedOrderItemId,
         rating,
         title: title.trim() || undefined,
         body: body.trim() || undefined
       });
+      const entity = (res.data as { entity?: { status?: string } } | undefined)?.entity;
+      return entity;
     },
-    onSuccess: async () => {
+    onSuccess: async (entity) => {
       await queryClient.invalidateQueries({ queryKey: ["account", "reviews"] });
       await queryClient.invalidateQueries({ queryKey: ["account", "review-eligibility", orderId] });
       await queryClient.invalidateQueries({ queryKey: ["account", "order", orderId] });
-      navigate("/account/reviews", { replace: true });
+      navigate("/account/reviews", {
+        replace: true,
+        state: { reviewSubmitted: true, reviewStatus: entity?.status ?? "UNKNOWN" }
+      });
     }
   });
 
@@ -1963,7 +2035,7 @@ export const OrderReviewWizardPage = () => {
               type="button"
               disabled={!selectedOrderItemId}
               onClick={() => setStep(2)}
-              className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90 disabled:opacity-50"
+              className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed min-h-[3rem]"
             >
               Continue
             </button>
@@ -2016,20 +2088,39 @@ export const OrderReviewWizardPage = () => {
                 placeholder="Share details about fit, quality, or delivery…"
               />
             </div>
-            {reviewMutation.isError && reviewMutation.error instanceof CommerceApiError ? (
-              <p className="text-error text-sm">{reviewMutation.error.message}</p>
+            {reviewMutation.isError ? (
+              <p className="text-error text-sm" role="alert">
+                {reviewMutation.error instanceof CommerceApiError
+                  ? reviewMutation.error.message
+                  : reviewMutation.error instanceof Error
+                    ? reviewMutation.error.message
+                    : "Something went wrong."}
+              </p>
             ) : null}
-            <div className="flex gap-4">
-              <button type="button" onClick={() => setStep(1)} className="text-on-surface-variant font-medium hover:text-on-surface">
+            <div className="flex flex-wrap gap-4 items-center">
+              <button
+                type="button"
+                disabled={reviewMutation.isPending}
+                onClick={() => setStep(1)}
+                className="text-on-surface-variant font-medium hover:text-on-surface disabled:opacity-50 disabled:cursor-not-allowed min-h-[3rem] px-1"
+              >
                 Back
               </button>
               <button
                 type="button"
                 disabled={reviewMutation.isPending || !selectedOrderItemId}
+                aria-busy={reviewMutation.isPending}
                 onClick={() => reviewMutation.mutate()}
-                className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90 disabled:opacity-60"
+                className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed min-h-[3rem] min-w-[10.5rem] inline-flex items-center justify-center gap-2"
               >
-                {reviewMutation.isPending ? "Submitting…" : "Submit review"}
+                {reviewMutation.isPending ? (
+                  <>
+                    <Icon name="progress_activity" className="animate-spin text-[1.25rem]" aria-hidden />
+                    Submitting…
+                  </>
+                ) : (
+                  "Submit review"
+                )}
               </button>
             </div>
           </div>

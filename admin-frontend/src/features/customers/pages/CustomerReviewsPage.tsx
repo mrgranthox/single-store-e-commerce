@@ -38,6 +38,7 @@ export const CustomerReviewsPage = () => {
 
   const items = listQuery.data?.data.items ?? [];
   const meta = listQuery.data?.meta;
+  const listRefetching = listQuery.isFetching && !listQuery.isPending;
 
   const err =
     listQuery.error instanceof ApiError
@@ -106,21 +107,22 @@ export const CustomerReviewsPage = () => {
             <div className="flex flex-wrap justify-between gap-3 text-sm text-[var(--color-text-muted)]">
               <span>
                 Page {meta.page} of {meta.totalPages}
+                {listRefetching ? <span className="ml-2 text-xs">(loading)</span> : null}
               </span>
               <div className="flex gap-2">
                 <button
                   type="button"
-                  disabled={page <= 1}
+                  disabled={page <= 1 || listQuery.isFetching}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="rounded-lg border px-3 py-1 disabled:opacity-40"
+                  className="rounded-lg border px-3 py-1.5 min-h-[2.25rem] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
                 <button
                   type="button"
-                  disabled={page >= meta.totalPages}
+                  disabled={page >= meta.totalPages || listQuery.isFetching}
                   onClick={() => setPage((p) => p + 1)}
-                  className="rounded-lg border px-3 py-1 disabled:opacity-40"
+                  className="rounded-lg border px-3 py-1.5 min-h-[2.25rem] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
