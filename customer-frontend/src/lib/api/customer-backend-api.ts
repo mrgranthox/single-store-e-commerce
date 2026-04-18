@@ -40,11 +40,12 @@ export const customerBackendApi = {
 
   getProduct: async (slug: string) => commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}`, { method: "GET" }),
 
+  /** Storefront GET /products/:slug/reviews: `data.items`; totals/pages are on the envelope `meta` (e.g. totalItems, page, limit). */
   listProductReviews: async (slug: string, page = 1, page_size = 20) =>
-    commerceFetchJson<{
-      items: unknown[];
-      pagination?: { totalItems?: number; page?: number; page_size?: number; totalPages?: number };
-    }>(`/api/products/${encodeURIComponent(slug)}/reviews${qs({ page, page_size })}`, { method: "GET" }),
+    commerceFetchJson<{ items: unknown[] }>(
+      `/api/products/${encodeURIComponent(slug)}/reviews${qs({ page, page_size })}`,
+      { method: "GET" }
+    ),
 
   getProductQuestions: async (slug: string) =>
     commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}/questions`, { method: "GET" }),

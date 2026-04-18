@@ -170,14 +170,16 @@ export const ProductReviewsPage = () => {
   const reviewsQuery = useQuery({
     queryKey: ["customer-product-reviews", productSlug],
     queryFn: async () => {
-      const { data } = await customerBackendApi.listProductReviews(productSlug!, 1, 50);
+      const { data, meta } = await customerBackendApi.listProductReviews(productSlug!, 1, 50);
       const items = Array.isArray(data.items) ? (data.items as ApiReview[]) : [];
-      const totalRaw = data.pagination?.totalItems;
+      const metaTotal = meta?.totalItems;
       const totalItems =
-        typeof totalRaw === "number" && Number.isFinite(totalRaw) ? Math.max(0, Math.trunc(totalRaw)) : items.length;
+        typeof metaTotal === "number" && Number.isFinite(metaTotal)
+          ? Math.max(0, Math.trunc(metaTotal))
+          : items.length;
       return { items, totalItems };
     },
-    enabled: Boolean(productSlug) && productQuery.isSuccess,
+    enabled: Boolean(productSlug),
     staleTime: 30_000
   });
 
@@ -256,12 +258,24 @@ export const ProductReviewsPage = () => {
         {reviewsQuery.isPending ? (
           <p className="text-on-surface-variant">Loading reviews…</p>
         ) : reviewsQuery.isError ? (
-          <p className="text-error text-sm">Reviews could not be loaded.</p>
+          <p className="text-error text-sm">
+            {reviewsQuery.error instanceof CommerceApiError ? reviewsQuery.error.message : "Reviews could not be loaded."}
+          </p>
         ) : (
           <ul className="space-y-6">
             {reviews.length === 0 ? (
-              <li className="p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 text-on-surface-variant text-sm">
-                No reviews match this filter yet.
+              <li className="p-6 bg-surface-container-lowest rounded-2xl border border-outline-variant/20 text-on-surface-variant text-sm leading-relaxed">
+                {filter === "all" && totalReviews === 0 ? (
+                  <>
+                    No reviews yet.{" "}
+                    <Link to="/account/orders" className="text-secondary font-bold underline underline-offset-2">
+                      View your orders
+                    </Link>{" "}
+                    to write a review when eligible.
+                  </>
+                ) : (
+                  "No reviews match this filter yet."
+                )}
               </li>
             ) : (
               reviews.map((r) => {
@@ -292,6 +306,11 @@ export const ProductReviewsPage = () => {
             )}
           </ul>
         )}
+        {reviewsQuery.isSuccess && totalReviews > rawReviews.length ? (
+          <p className="text-xs text-outline mt-6">
+            Showing {rawReviews.length} of {totalReviews} reviews.
+          </p>
+        ) : null}
       </StorefrontMain>
     </StorefrontShell>
   );
