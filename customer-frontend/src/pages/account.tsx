@@ -13,7 +13,7 @@ import {
 } from "@/lib/account/account-ui";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 import { CommerceApiError } from "@/lib/api/commerce-fetch";
-import { neutralCheckboxClass, neutralFieldClass } from "@/lib/form-field-styles";
+import { neutralFieldClass } from "@/lib/form-field-styles";
 import { STORE_NAME_FULL, STORE_NAME_SHORT, SUPPORT_SENDER_LABEL } from "@/lib/brand";
 
 /* ─────────────────────────────────────────────
@@ -389,7 +389,17 @@ export const OrderDetailPage = () => {
     enabled: Boolean(orderId)
   });
 
+  const { data: reviewEligibilityPayload } = useQuery({
+    queryKey: ["account", "review-eligibility", orderId],
+    queryFn: async () => {
+      const res = await customerBackendApi.getOrderReviewEligibility(orderId!);
+      return res.data as { entity: { canReview: boolean } };
+    },
+    enabled: Boolean(orderId)
+  });
+
   const order = data?.entity;
+  const canWriteReview = Boolean(reviewEligibilityPayload?.entity?.canReview);
 
   if (!orderId) {
     return null;
@@ -455,6 +465,14 @@ export const OrderDetailPage = () => {
               className="bg-surface-container-high text-on-surface text-center px-6 py-3 rounded-md font-bold text-sm hover:bg-surface-container transition-colors"
             >
               Request return
+            </Link>
+          ) : null}
+          {canWriteReview ? (
+            <Link
+              to={`/account/orders/${order.id}/review`}
+              className="border-2 border-secondary text-secondary text-center px-6 py-3 rounded-md font-bold text-sm hover:bg-secondary/5 transition-colors"
+            >
+              Write a review
             </Link>
           ) : null}
         </div>
@@ -937,7 +955,7 @@ export const ReviewsCenterPage = () => {
       <div className="max-w-2xl space-y-6 mb-10">
         <h2 className="font-headline font-bold text-lg">Leave a review</h2>
         <p className="text-sm text-on-surface-variant">
-          Open a <Link to="/account/orders" className="text-secondary font-bold hover:underline">delivered order</Link> and use review eligibility on the order detail flow when available.
+          Open a <Link to="/account/orders" className="text-secondary font-bold hover:underline">delivered order</Link> and use <span className="font-semibold text-on-background">Write a review</span> on the order when you are eligible.
         </p>
       </div>
       {isPending ? <p className="text-on-surface-variant">Loading reviews…</p> : null}
@@ -1758,6 +1776,294 @@ export const ReturnRequestPage = () => {
             >
               View returns
             </Link>
+          </div>
+        ) : null}
+      </div>
+    </AccountLayout>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   REVIEW REQUEST WIZARD
+───────────────────────────────────────────── */
+type ReviewEligibilityItem = {
+  orderItemId: string;
+  product: { id: string; slug: string; title: string };
+  variant: { id: string; sku: string };
+  canReview: boolean;
+  existingReviewId: string | null;
+  existingReviewStatus: string | null;
+  reasonCode: string | null;
+  reasonMessage: string | null;
+};
+
+type ReviewEligibilityEntity = {
+  orderId: string;
+  orderNumber: string;
+  canReview: boolean;
+  reasonCode: string | null;
+  reasonMessage: string | null;
+  items: ReviewEligibilityItem[];
+};
+
+export const OrderReviewWizardPage = () => {
+  const { orderId } = useParams();
+  const queryClient = useQueryClient();
+  const [step, setStep] = useState(1);
+  const [selectedOrderItemId, setSelectedOrderItemId] = useState<string | null>(null);
+  const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
+  const { data: eligData, isPending: eligPending, error: eligError } = useQuery({
+    queryKey: ["account", "review-eligibility", orderId],
+    queryFn: async () => {
+      const res = await customerBackendApi.getOrderReviewEligibility(orderId!);
+      return (res.data as { entity: ReviewEligibilityEntity }).entity;
+    },
+    enabled: Boolean(orderId)
+  });
+
+  const { data: orderData } = useQuery({
+    queryKey: ["account", "order", orderId, "review"],
+    queryFn: async () => {
+      const res = await customerBackendApi.getOrder(orderId!);
+      return (res.data as { entity: OrderDetailEntity }).entity;
+    },
+    enabled: Boolean(orderId)
+  });
+
+  const reviewMutation = useMutation({
+    mutationFn: async () => {
+      if (!selectedOrderItemId) {
+        throw new Error("Select an item to review.");
+      }
+      await customerBackendApi.createReview({
+        orderItemId: selectedOrderItemId,
+        rating,
+        title: title.trim() || undefined,
+        body: body.trim() || undefined
+      });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["account", "reviews"] });
+      await queryClient.invalidateQueries({ queryKey: ["account", "review-eligibility", orderId] });
+      await queryClient.invalidateQueries({ queryKey: ["account", "order", orderId] });
+      setStep(3);
+    }
+  });
+
+  if (!orderId) return null;
+
+  if (eligPending) {
+    return (
+      <AccountLayout>
+        <p className="text-on-surface-variant">Loading review options…</p>
+      </AccountLayout>
+    );
+  }
+
+  if (eligError || !eligData) {
+    return (
+      <AccountLayout>
+        <header className="mb-8">
+          <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">Write a review</h1>
+        </header>
+        <div className="max-w-2xl p-6 bg-error-container/20 rounded-xl border border-error/20">
+          <p className="font-bold text-on-background mb-2">Reviews are not available for this order here</p>
+          <p className="text-sm text-on-surface-variant mb-4">
+            {eligError instanceof CommerceApiError ? eligError.message : "We could not load review eligibility."}
+          </p>
+          <Link to="/account/orders" className="text-secondary font-bold text-sm hover:underline underline-offset-4">
+            View your orders
+          </Link>
+        </div>
+      </AccountLayout>
+    );
+  }
+
+  if (!eligData.canReview) {
+    return (
+      <AccountLayout>
+        <header className="mb-8">
+          <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">Write a review</h1>
+        </header>
+        <div className="max-w-2xl p-6 bg-error-container/20 rounded-xl border border-error/20">
+          <p className="font-bold text-on-background mb-2">Nothing to review yet</p>
+          <p className="text-sm text-on-surface-variant mb-4">{eligData.reasonMessage ?? "This order has no eligible lines for a new review."}</p>
+          <Link to={`/account/orders/${orderId}`} className="text-secondary font-bold text-sm hover:underline underline-offset-4">
+            Back to order
+          </Link>
+        </div>
+      </AccountLayout>
+    );
+  }
+
+  const eligibleLines = eligData.items.filter((i) => i.canReview);
+  const titleOrder = orderData?.orderNumber ?? eligData.orderNumber;
+  const selectedLine = eligibleLines.find((l) => l.orderItemId === selectedOrderItemId) ?? null;
+
+  return (
+    <AccountLayout>
+      <nav className="flex items-center gap-2 text-xs font-label tracking-widest uppercase text-outline mb-10">
+        <Link className="hover:text-secondary transition-colors" to="/account/orders">
+          Orders
+        </Link>
+        <Icon name="chevron_right" className="text-[10px]" />
+        <Link className="hover:text-secondary transition-colors" to={`/account/orders/${orderId}`}>
+          #{titleOrder}
+        </Link>
+        <Icon name="chevron_right" className="text-[10px]" />
+        <span className="text-on-surface">Review</span>
+      </nav>
+      <header className="mb-12">
+        <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">Write a review</h1>
+        <p className="text-on-surface-variant">
+          Order #{titleOrder} · Step {step} of 3
+        </p>
+      </header>
+      <div className="max-w-2xl">
+        <div className="flex gap-2 mb-8">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className={`h-1 flex-1 rounded-full ${s <= step ? "bg-secondary" : "bg-surface-container-high"}`} />
+          ))}
+        </div>
+        {step === 1 ? (
+          <div className="space-y-6">
+            <h2 className="font-headline font-bold text-xl">Choose an item</h2>
+            <p className="text-sm text-on-surface-variant">Select one product from this order to review.</p>
+            {eligibleLines.map((line) => {
+              const productTitle =
+                orderData?.items.find((oi) => oi.id === line.orderItemId)?.productTitle ?? line.product.title;
+              const checked = selectedOrderItemId === line.orderItemId;
+              return (
+                <label
+                  key={line.orderItemId}
+                  className={`flex cursor-pointer flex-col gap-2 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between ${
+                    checked ? "border-secondary bg-secondary/5" : "border-outline-variant/20 bg-surface-container-lowest"
+                  }`}
+                >
+                  <div className="flex min-w-0 flex-1 items-start gap-3">
+                    <input
+                      type="radio"
+                      name="review-order-item"
+                      className="mt-1 h-4 w-4 accent-secondary"
+                      checked={checked}
+                      onChange={() => setSelectedOrderItemId(line.orderItemId)}
+                    />
+                    <div className="min-w-0">
+                      <p className="font-bold">{productTitle}</p>
+                      <p className="mt-1 text-xs uppercase tracking-widest text-outline">SKU {line.variant.sku}</p>
+                    </div>
+                  </div>
+                </label>
+              );
+            })}
+            <button
+              type="button"
+              disabled={!selectedOrderItemId}
+              onClick={() => setStep(2)}
+              className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90 disabled:opacity-50"
+            >
+              Continue
+            </button>
+          </div>
+        ) : null}
+        {step === 2 ? (
+          <div className="space-y-6">
+            <h2 className="font-headline font-bold text-xl">Your review</h2>
+            {selectedLine ? (
+              <p className="text-sm text-on-surface-variant">
+                For: <span className="font-semibold text-on-background">{selectedLine.product.title}</span>
+              </p>
+            ) : null}
+            <div className="space-y-2">
+              <label className="font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Rating</label>
+              <select
+                value={rating}
+                onChange={(e) => setRating(Number(e.target.value))}
+                className={`w-full rounded-lg py-3 px-4 ${neutralFieldClass}`}
+              >
+                {[5, 4, 3, 2, 1].map((n) => (
+                  <option key={n} value={n}>
+                    {n} — {n === 5 ? "Excellent" : n === 4 ? "Good" : n === 3 ? "OK" : n === 2 ? "Poor" : "Very poor"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                Title (optional)
+              </label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className={`w-full rounded-lg px-4 py-3 ${neutralFieldClass}`}
+                maxLength={255}
+                placeholder="Short headline"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="font-label text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                Comments (optional)
+              </label>
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                className={`w-full resize-none rounded-lg px-4 py-3 ${neutralFieldClass}`}
+                rows={5}
+                maxLength={2000}
+                placeholder="Share details about fit, quality, or delivery…"
+              />
+            </div>
+            {reviewMutation.isError ? (
+              <p className="text-error text-sm">
+                {reviewMutation.error instanceof CommerceApiError
+                  ? reviewMutation.error.message
+                  : reviewMutation.error instanceof Error
+                    ? reviewMutation.error.message
+                    : "Review could not be submitted."}
+              </p>
+            ) : null}
+            <div className="flex gap-4">
+              <button type="button" onClick={() => setStep(1)} className="text-on-surface-variant font-medium hover:text-on-surface">
+                Back
+              </button>
+              <button
+                type="button"
+                disabled={reviewMutation.isPending || !selectedOrderItemId}
+                onClick={() => reviewMutation.mutate()}
+                className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90 disabled:opacity-60"
+              >
+                {reviewMutation.isPending ? "Submitting…" : "Submit review"}
+              </button>
+            </div>
+          </div>
+        ) : null}
+        {step === 3 ? (
+          <div className="space-y-6">
+            <h2 className="font-headline font-bold text-xl">Thank you</h2>
+            <div className="space-y-4 rounded-xl bg-surface-container-low p-6">
+              <div className="flex items-center gap-3 text-secondary">
+                <Icon name="check_circle" filled />
+                <p className="font-bold">Review submitted</p>
+              </div>
+              <p className="text-sm text-on-surface-variant">It will appear in your reviews list after moderation.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to={`/account/orders/${orderId}`}
+                className="inline-block bg-surface-container-high px-8 py-3 font-bold text-on-surface transition-colors hover:bg-surface-container rounded-md"
+              >
+                Back to order
+              </Link>
+              <Link
+                to="/account/reviews"
+                className="inline-block bg-secondary px-8 py-3 font-bold text-on-secondary transition-opacity hover:opacity-90 rounded-md"
+              >
+                View my reviews
+              </Link>
+            </div>
           </div>
         ) : null}
       </div>

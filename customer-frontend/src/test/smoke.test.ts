@@ -4,7 +4,7 @@ import { customerScreenCatalog } from "@/lib/contracts/customer-screen-catalog";
 
 describe("customer screen catalog", () => {
   it("contains the planned 50 logical screens", () => {
-    expect(customerScreenCatalog).toHaveLength(50);
+    expect(customerScreenCatalog).toHaveLength(51);
   });
 
   it("maps every screen to at least one Stitch reference", () => {

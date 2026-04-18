@@ -43,6 +43,7 @@ export type CustomerScreenId =
   | "shipmentTrackingDetail"
   | "returnsList"
   | "returnRequestWizard"
+  | "reviewRequestWizard"
   | "refundsList"
   | "reviewsCenter"
   | "securitySessions"
@@ -115,6 +116,15 @@ export const customerScreenCatalog: CustomerScreen[] = [
   screen("shipmentTrackingDetail", "Shipment Tracking Detail", "/account/orders/:orderId/tracking", "account", "account", "Detailed shipment milestones and delivery progress.", ["shipment_tracking_detail", "mobile_shipment_tracking_detail"]),
   screen("returnsList", "Returns List", "/account/returns", "account", "account", "Returns overview and status tracking.", ["account_returns_list", "mobile_account_returns_list"]),
   screen("returnRequestWizard", "Return Request Wizard", "/account/orders/:orderId/return", "account", "account", "Guided return intake and eligibility capture.", ["return_request_wizard", "return_request_wizard_desktop", "mobile_return_request_wizard"]),
+  screen(
+    "reviewRequestWizard",
+    "Review Request Wizard",
+    "/account/orders/:orderId/review",
+    "account",
+    "account",
+    "Guided post-delivery review intake for eligible order lines.",
+    ["write_or_edit_review", "mobile_write_or_edit_review"]
+  ),
   screen("refundsList", "Refunds List", "/account/refunds", "account", "account", "Refund lifecycle view and payout status.", ["account_refunds_list", "account_refunds_list_desktop", "mobile_account_refunds_history", "refunds_list_desktop"]),
   screen("reviewsCenter", "Reviews Center", "/account/reviews", "account", "account", "Post-purchase review management center.", ["reviews_center", "reviews_center_desktop", "mobile_reviews_center"]),
   screen("securitySessions", "Security & Sessions", "/account/security", "account", "account", "Password, sessions, and account security view.", ["account_security_sessions", "mobile_account_security_sessions"]),

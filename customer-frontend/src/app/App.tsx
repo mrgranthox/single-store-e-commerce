@@ -57,6 +57,7 @@ const AccountOrdersListPage = lazy(() => import("@/pages/account").then((m) => (
 const AccountOrderDetailPage = lazy(() => import("@/pages/account").then((m) => ({ default: m.OrderDetailPage })));
 const ShipmentTrackingPage = lazy(() => import("@/pages/account").then((m) => ({ default: m.ShipmentTrackingPage })));
 const ReturnRequestPage = lazy(() => import("@/pages/account").then((m) => ({ default: m.ReturnRequestPage })));
+const OrderReviewWizardPage = lazy(() => import("@/pages/account").then((m) => ({ default: m.OrderReviewWizardPage })));
 const ReturnsListPage = lazy(() => import("@/pages/account").then((m) => ({ default: m.ReturnsListPage })));
 const RefundsListPage = lazy(() => import("@/pages/account").then((m) => ({ default: m.RefundsListPage })));
 const ReviewsCenterPage = lazy(() => import("@/pages/account").then((m) => ({ default: m.ReviewsCenterPage })));
@@ -212,6 +213,14 @@ export const App = () => (
             element={
               <RequireCustomerAuth>
                 <ReturnRequestPage />
+              </RequireCustomerAuth>
+            }
+          />
+          <Route
+            path="/account/orders/:orderId/review"
+            element={
+              <RequireCustomerAuth>
+                <OrderReviewWizardPage />
               </RequireCustomerAuth>
             }
           />
