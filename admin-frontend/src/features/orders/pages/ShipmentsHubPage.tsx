@@ -1,28 +1,52 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronLeft, ChevronRight, Filter, MoreVertical, Package, Upload } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  MoreVertical,
+  Package,
+  PlayCircle,
+  Upload
+} from "lucide-react";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
+import { BulkActionBar } from "@/components/primitives/BulkActionBar";
+import { ConfirmDialog } from "@/components/primitives/ConfirmDialog";
 import { StatusBadge, type StatusBadgeTone } from "@/components/primitives/StatusBadge";
 import { StitchOperationalTableSkeleton } from "@/components/primitives/StitchOperationalTableSkeleton";
-import { StitchFilterPanel, StitchFieldLabel, StitchKpiMicro } from "@/components/stitch";
+import { StitchFilterPanel, StitchFieldLabel, StitchKpiMicro, DisabledTooltipWrapper } from "@/components/stitch";
 import { preloadLazyNamedComponent } from "@/app/lazy-admin-routes";
-import { listAdminShipments } from "@/features/orders/api/admin-shipments.api";
-import { ApiError } from "@/lib/api/http";
+import {
+  bulkUpdateAdminShipmentStatus,
+  listAdminShipments
+} from "@/features/orders/api/admin-shipments.api";
 import { getAdminShipmentDetail } from "@/features/orders/api/admin-orders.api";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
+import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
+import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { useAdminDetailPrefetch } from "@/lib/performance/useAdminDetailPrefetch";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 import { useListFilters } from "@/lib/hooks/useListFilters";
 import { formatDateCompact, formatCount, humanize } from "@/lib/format";
 import { shipmentKeys } from "@/lib/query-keys";
+import { CACHE } from "@/lib/api/cache-strategy";
+import { ApiError } from "@/lib/api/http";
 
 const shipmentDetailQueryKey = (shipmentId: string) => ["admin-shipment-detail", shipmentId] as const;
-import { CACHE } from "@/lib/api/cache-strategy";
 
 const SHIPMENT_STATUSES = ["", "CREATED", "PACKING", "DISPATCHED", "IN_TRANSIT", "DELIVERED", "CANCELLED"] as const;
+
+const BULK_TARGET_STATUSES = [
+  "CREATED",
+  "PACKING",
+  "DISPATCHED",
+  "IN_TRANSIT",
+  "DELIVERED",
+  "CANCELLED"
+] as const;
 
 const SHIPMENT_FILTERS_DEFAULTS = { q: "", status: "" } as const;
 
@@ -59,8 +83,15 @@ const shortId = (id: string) => `${id.slice(0, 8)}…`;
 
 export const ShipmentsHubPage = () => {
   const accessToken = useAdminAuthStore((s) => s.accessToken);
+  const actorPermissions = useAdminAuthStore((s) => s.actor?.permissions ?? []);
   const queryClient = useQueryClient();
   const [searchDraft, setSearchDraft] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
+  const [bulkTargetStatus, setBulkTargetStatus] = useState<string>("PACKING");
+  const [bulkSummary, setBulkSummary] = useState<string | null>(null);
+
+  const canBulkMutate = adminHasAnyPermission(actorPermissions, ["orders.override_fulfillment"]);
 
   const { filters, page, setPage, set, reset } = useListFilters({
     defaults: SHIPMENT_FILTERS_DEFAULTS
@@ -97,13 +128,43 @@ export const ShipmentsHubPage = () => {
     prefetchShipmentDetails(items.map((s) => s.id), 2);
   }, [items, prefetchShipmentDetails]);
 
+  const bulkMutation = useAdminAction({
+    mutationFn: async () => {
+      if (!accessToken) throw new Error("Not signed in.");
+      return bulkUpdateAdminShipmentStatus(accessToken, {
+        shipmentIds: [...selected],
+        shipmentStatus: bulkTargetStatus,
+        note: "bulk_shipment_status"
+      });
+    },
+    invalidate: [shipmentKeys.lists()],
+    onSuccess: (result) => {
+      const { succeeded, failed, total } = result.data;
+      const failedRows = result.data.results.filter((r): r is { shipmentId: string; ok: false; error: string } => !r.ok);
+      const sample =
+        failedRows.length > 0
+          ? ` Examples: ${failedRows
+              .slice(0, 3)
+              .map((r) => `${r.shipmentId.slice(0, 8)}… (${r.error})`)
+              .join("; ")}`
+          : "";
+      setBulkSummary(`Bulk status: ${succeeded} of ${total} succeeded${failed > 0 ? `, ${failed} failed.${sample}` : "."}`);
+      setSelected(new Set());
+    },
+    onError: (error) => {
+      setBulkSummary(error instanceof ApiError ? error.message : "Bulk update failed.");
+    }
+  });
+
   const applySearch = () => {
     set("q", searchDraft.trim());
+    setSelected(new Set());
   };
 
   const clearFilters = () => {
     setSearchDraft("");
     reset();
+    setSelected(new Set());
   };
 
   const shipmentsError = shipmentsQuery.error;
@@ -127,7 +188,27 @@ export const ShipmentsHubPage = () => {
     return { todayShipments, inMotion, packing, delivered };
   }, [items, today]);
 
+  const allPageSelected = items.length > 0 && items.every((s) => selected.has(s.id));
+
+  const toggleAll = () => {
+    if (allPageSelected) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(items.map((s) => s.id)));
+    }
+  };
+
+  const toggleRow = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   const exportCsv = () => {
+    const subset = items.filter((s) => (selected.size ? selected.has(s.id) : true));
     const header = [
       "shipment_id",
       "order_number",
@@ -140,7 +221,7 @@ export const ShipmentsHubPage = () => {
     ];
     const lines = [
       header.join(","),
-      ...items.map((s) =>
+      ...subset.map((s) =>
         [
           s.id,
           s.orderNumber,
@@ -277,14 +358,36 @@ export const ShipmentsHubPage = () => {
         </div>
       ) : null}
 
+      {bulkSummary ? (
+        <div
+          className={`rounded-xl border px-4 py-3 text-sm ${
+            bulkSummary.includes("failed")
+              ? "border-amber-200 bg-amber-50 text-amber-950"
+              : "border-emerald-200 bg-emerald-50 text-emerald-950"
+          }`}
+          role="status"
+        >
+          {bulkSummary}
+        </div>
+      ) : null}
+
       {shipmentsQuery.isLoading ? (
         <StitchOperationalTableSkeleton rowCount={10} columnCount={10} />
       ) : (
         <div className="overflow-hidden rounded-xl bg-white shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#e6e7f6] px-6 py-4">
             <div className="flex items-center gap-4">
+              <input
+                type="checkbox"
+                checked={allPageSelected}
+                onChange={toggleAll}
+                className="h-4 w-4 rounded border-[#737685] text-[#1653cc] focus:ring-[#1653cc]/20"
+                aria-label="Select all on page"
+              />
               <span className="text-xs font-medium text-[#434654]">
-                {items.length} shipment{items.length === 1 ? "" : "s"} on this page
+                {selected.size > 0
+                  ? `${selected.size} shipment${selected.size === 1 ? "" : "s"} selected`
+                  : `${items.length} on this page`}
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-3">
@@ -296,6 +399,31 @@ export const ShipmentsHubPage = () => {
                 <Upload className="h-4 w-4" />
                 Export
               </button>
+              {!canBulkMutate ? (
+                <DisabledTooltipWrapper reason="Requires orders.override_fulfillment permission.">
+                  <button
+                    type="button"
+                    disabled
+                    className="flex items-center gap-2 rounded-lg bg-[#f2f3ff] px-4 py-2 text-xs font-semibold text-[#181b25] opacity-50"
+                  >
+                    <PlayCircle className="h-4 w-4" />
+                    Set status…
+                  </button>
+                </DisabledTooltipWrapper>
+              ) : (
+                <button
+                  type="button"
+                  disabled={selected.size === 0 || bulkMutation.isPending}
+                  onClick={() => {
+                    setBulkSummary(null);
+                    setBulkDialogOpen(true);
+                  }}
+                  className="flex items-center gap-2 rounded-lg bg-[#1653cc]/10 px-4 py-2 text-xs font-semibold text-[#1653cc] transition-all hover:bg-[#1653cc]/15 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <PlayCircle className="h-4 w-4" />
+                  Set status…
+                </button>
+              )}
             </div>
           </div>
 
@@ -341,7 +469,15 @@ export const ShipmentsHubPage = () => {
                       className="border-b border-[#f1f3f9] transition-colors hover:bg-[#f8f9fb]"
                       onMouseEnter={() => prefetchShipmentDetail(row.id)}
                     >
-                      <td className="px-6 h-[52px] align-middle" />
+                      <td className="px-6 h-[52px] align-middle">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(row.id)}
+                          onChange={() => toggleRow(row.id)}
+                          className="h-4 w-4 rounded border-[#737685] text-[#1653cc] focus:ring-[#1653cc]/20"
+                          aria-label={`Select shipment ${row.id.slice(0, 8)}`}
+                        />
+                      </td>
                       <td className="px-4 h-[52px] align-middle">
                         <Link
                           to={`/admin/shipments/${row.id}`}
@@ -394,6 +530,20 @@ export const ShipmentsHubPage = () => {
             )}
           </div>
 
+          <BulkActionBar count={selected.size} className="mx-4 mb-4 mt-2">
+            <span className="text-xs font-semibold text-[#434654]">
+              {selected.size} shipment{selected.size === 1 ? "" : "s"} selected
+            </span>
+            <button
+              type="button"
+              onClick={exportCsv}
+              className="flex items-center gap-2 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-[#181b25] shadow-sm hover:bg-[#f2f3ff]"
+            >
+              <Upload className="h-3.5 w-3.5" />
+              Export selected
+            </button>
+          </BulkActionBar>
+
           {meta ? (
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e6e7f6] bg-[#f8f9fb] px-6 py-4">
               <p className="text-xs font-bold uppercase tracking-widest text-[#737685]">
@@ -424,6 +574,42 @@ export const ShipmentsHubPage = () => {
           ) : null}
         </div>
       )}
+
+      <ConfirmDialog
+        open={bulkDialogOpen}
+        title="Set shipment status for selection?"
+        body={
+          <div className="space-y-3 text-sm text-[#434654]">
+            <p>
+              This runs for {selected.size} shipment{selected.size === 1 ? "" : "s"}. Each row is validated
+              server-side; ineligible rows fail without changing others.
+            </p>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#737685]">
+              Target status
+              <select
+                value={bulkTargetStatus}
+                onChange={(ev) => setBulkTargetStatus(ev.target.value)}
+                className="mt-2 w-full rounded-lg border border-[#e0e2f0] bg-white px-3 py-2 text-sm text-[#181b25]"
+              >
+                {BULK_TARGET_STATUSES.map((s) => (
+                  <option key={s} value={s}>
+                    {humanize(s)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        }
+        impactSummary="Uses the same rules as single-shipment updates (state machine and inventory)."
+        confirmLabel={bulkMutation.isPending ? "Working…" : "Confirm"}
+        confirmDisabled={bulkMutation.isPending || selected.size === 0}
+        onClose={() => setBulkDialogOpen(false)}
+        onConfirm={() => {
+          setBulkSummary(null);
+          bulkMutation.mutate(undefined);
+          setBulkDialogOpen(false);
+        }}
+      />
     </div>
   );
 };

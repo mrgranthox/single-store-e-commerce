@@ -471,6 +471,8 @@ export type ShipmentDetailEntity = {
   updatedAt: string;
   recipient: ShipmentRecipient;
   trackingEvents: ShipmentTrackingEventApi[];
+  /** Server-driven allowed values for the shipment status editor (current + valid next states). */
+  allowedShipmentStatusesForUi?: string[];
 };
 
 export type ShipmentDetailResponse = {

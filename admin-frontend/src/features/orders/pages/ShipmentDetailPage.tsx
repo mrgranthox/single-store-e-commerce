@@ -18,6 +18,7 @@ import { useAdminAction } from "@/lib/admin-actions/useAdminAction";
 import { adminHasAnyPermission } from "@/lib/admin-rbac/permissions";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { formatDateTime } from "@/lib/format";
+import { shipmentKeys } from "@/lib/query-keys";
 
 const shipmentRef = (id: string) => `SHP-${id.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
 
@@ -68,12 +69,11 @@ export const ShipmentDetailPage = () => {
   const [editCarrier, setEditCarrier] = useState("");
   const [editTrackingNumber, setEditTrackingNumber] = useState("");
   const [editNote, setEditNote] = useState("");
-  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   const q = useAuthedQuery(
     ["admin-shipment-detail", shipmentId],
     (token) => getAdminShipmentDetail(token, shipmentId!),
-    { enabled: Boolean(shipmentId) },
+    { enabled: Boolean(shipmentId), refetchOnWindowFocus: true },
   );
 
   const e = q.data?.data.entity;
@@ -127,15 +127,21 @@ export const ShipmentDetailPage = () => {
       });
     },
     onSuccess: () => {
-      setActionMessage("Shipment updated.");
       setEditNote("");
     },
-    onError: (error: unknown) => {
-      setActionMessage(error instanceof ApiError ? error.message : "Shipment update failed.");
+    successMessage: "Shipment updated.",
+    errorMessage: (error) => {
+      if (error instanceof ApiError) {
+        if (error.statusCode === 409) {
+          return `${error.message} Refresh if this shipment was changed in another tab.`;
+        }
+        return error.message;
+      }
+      return "Shipment update failed.";
     },
     isAvailable: Boolean(e) && !terminal && shipmentHasChanges,
     isAllowed: canUpdateShipment,
-    invalidate: [["admin-shipment-detail", shipmentId], ["admin-shipment-tracking", shipmentId]]
+    invalidate: [["admin-shipment-detail", shipmentId], ["admin-shipment-tracking", shipmentId], shipmentKeys.lists()]
   });
 
   const phases = useMemo((): Phase[] => {
@@ -351,7 +357,10 @@ export const ShipmentDetailPage = () => {
                         onChange={(event) => setEditStatus(event.target.value)}
                         className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-[#181b25]"
                       >
-                        {["CREATED", "PACKING", "DISPATCHED", "IN_TRANSIT", "DELIVERED", "CANCELLED"].map((status) => (
+                        {(e.allowedShipmentStatusesForUi && e.allowedShipmentStatusesForUi.length > 0
+                          ? e.allowedShipmentStatusesForUi
+                          : [e.status]
+                        ).map((status) => (
                           <option key={status} value={status}>
                             {status.replace(/_/g, " ")}
                           </option>
@@ -385,7 +394,6 @@ export const ShipmentDetailPage = () => {
                         placeholder="Reason for this change"
                       />
                     </label>
-                    {actionMessage ? <p className="text-xs text-[#434654]">{actionMessage}</p> : null}
                     <AsyncActionButton
                       pending={updateMutation.isPending}
                       blocked={updateMutation.blocked}

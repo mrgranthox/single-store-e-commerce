@@ -59,3 +59,28 @@ export const listAdminShipments = async (
     path: `/api/admin/shipments${buildQuery(query)}`,
     accessToken
   });
+
+export type BulkShipmentStatusResultRow =
+  | { shipmentId: string; ok: true }
+  | { shipmentId: string; ok: false; error: string };
+
+export type BulkShipmentStatusResponse = {
+  success: true;
+  data: {
+    results: BulkShipmentStatusResultRow[];
+    succeeded: number;
+    failed: number;
+    total: number;
+  };
+};
+
+export const bulkUpdateAdminShipmentStatus = async (
+  accessToken: string,
+  body: { shipmentIds: string[]; shipmentStatus: string; note?: string }
+): Promise<BulkShipmentStatusResponse> =>
+  apiRequest<BulkShipmentStatusResponse>({
+    method: "POST",
+    path: "/api/admin/shipments/bulk-status",
+    accessToken,
+    body
+  });

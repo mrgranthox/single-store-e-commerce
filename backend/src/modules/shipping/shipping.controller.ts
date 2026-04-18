@@ -5,6 +5,7 @@ import { sendSuccess } from "../../common/http/response";
 import { asyncHandler } from "../../common/middleware/async-handler";
 import { readValidatedBody, readValidatedParams, readValidatedQuery } from "../../common/validation/validate-request";
 import {
+  bulkUpdateAdminShipments,
   createAdminShipment,
   createAdminShipmentTrackingEvent,
   getAdminShipmentDetail,
@@ -15,6 +16,7 @@ import {
 } from "./shipping.service";
 import {
   adminShipmentsQuerySchema,
+  bulkAdminShipmentStatusBodySchema,
   createShipmentBodySchema,
   createTrackingEventBodySchema,
   orderIdParamsSchema,
@@ -37,6 +39,18 @@ export const listShipmentsAdmin = asyncHandler(async (request, response) => {
     },
     meta: data.pagination
   });
+});
+
+export const bulkUpdateShipmentsAdmin = asyncHandler(async (request, response) => {
+  const body = readValidatedBody<z.infer<typeof bulkAdminShipmentStatusBodySchema>>(request);
+  const data = await bulkUpdateAdminShipments({
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
+    shipmentIds: body.shipmentIds,
+    shipmentStatus: body.shipmentStatus,
+    note: body.note
+  });
+
+  return sendSuccess(response, { data });
 });
 
 export const createShipmentAdmin = asyncHandler(async (request, response) => {

@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   invalidInputError,
   invalidStateTransitionError,
+  isAppError,
   notFoundError
 } from "../../common/errors/app-error";
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
@@ -89,22 +90,28 @@ const serializeTrackingEvent = (event: ShipmentRecord["trackingEvents"][number])
   payload: event.payload
 });
 
-const serializeShipmentDetail = (shipment: ShipmentRecord) => ({
-  id: shipment.id,
-  order: {
-    id: shipment.order.id,
-    orderNumber: shipment.order.orderNumber,
-    status: shipment.order.status
-  },
-  warehouse: shipment.warehouse,
-  status: shipment.status,
-  trackingNumber: shipment.trackingNumber,
-  carrier: shipment.carrier,
-  createdAt: shipment.createdAt,
-  updatedAt: shipment.updatedAt,
-  recipient: readRecipient(shipment.order.addressSnapshot),
-  trackingEvents: shipment.trackingEvents.map(serializeTrackingEvent)
-});
+const serializeShipmentDetail = (shipment: ShipmentRecord) => {
+  const allowedNext = shipmentStatusTransitions[shipment.status] ?? [];
+  const allowedShipmentStatusesForUi = [shipment.status, ...allowedNext];
+
+  return {
+    id: shipment.id,
+    order: {
+      id: shipment.order.id,
+      orderNumber: shipment.order.orderNumber,
+      status: shipment.order.status
+    },
+    warehouse: shipment.warehouse,
+    status: shipment.status,
+    trackingNumber: shipment.trackingNumber,
+    carrier: shipment.carrier,
+    createdAt: shipment.createdAt,
+    updatedAt: shipment.updatedAt,
+    recipient: readRecipient(shipment.order.addressSnapshot),
+    trackingEvents: shipment.trackingEvents.map(serializeTrackingEvent),
+    allowedShipmentStatusesForUi
+  };
+};
 
 const loadOrderOrThrow = async (orderId: string, db: DatabaseClient = prisma) => {
   const order = await db.order.findUnique({
@@ -957,3 +964,43 @@ export const updateAdminShipment = async (input: {
 
     return result;
   });
+
+export const bulkUpdateAdminShipments = async (input: {
+  actorAdminUserId: string;
+  shipmentIds: readonly string[];
+  shipmentStatus: ShipmentStatus;
+  note?: string;
+}) => {
+  const uniqueIds = [...new Set(input.shipmentIds)];
+  const results: Array<
+    { shipmentId: string; ok: true } | { shipmentId: string; ok: false; error: string }
+  > = [];
+
+  for (const shipmentId of uniqueIds) {
+    try {
+      await updateAdminShipment({
+        actorAdminUserId: input.actorAdminUserId,
+        shipmentId,
+        shipmentStatus: input.shipmentStatus,
+        note: input.note
+      });
+      results.push({ shipmentId, ok: true });
+    } catch (error) {
+      const message = isAppError(error)
+        ? error.message
+        : error instanceof Error
+          ? error.message
+          : "Update failed.";
+      results.push({ shipmentId, ok: false, error: message });
+    }
+  }
+
+  const succeeded = results.filter((row) => row.ok).length;
+
+  return {
+    results,
+    succeeded,
+    failed: results.length - succeeded,
+    total: results.length
+  };
+};

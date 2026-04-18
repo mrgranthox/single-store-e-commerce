@@ -541,9 +541,9 @@ const orderScreens = [
     navLabel: "Shipments",
     showInSidebar: true,
     purpose: "Operational list of all shipments with search and status filters.",
-    endpointIds: ["shipments.list", "shipments.detail"],
-    actions: ["Search by order or tracking", "Filter by shipment status", "Open detail", "Open tracking"],
-    permissionHints: ["orders.read"]
+    endpointIds: ["shipments.list", "shipments.detail", "shipments.bulkStatus"],
+    actions: ["Search by order or tracking", "Filter by shipment status", "Bulk set status", "Open detail"],
+    permissionHints: ["orders.read", "orders.override_fulfillment"]
   }),
   screen({
     sequence: 37,

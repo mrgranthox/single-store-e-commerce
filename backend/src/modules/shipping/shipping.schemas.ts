@@ -44,3 +44,9 @@ export const updateShipmentBodySchema = z.object({
   carrier: z.string().trim().min(1).max(120).optional(),
   note: z.string().trim().max(1_000).optional()
 });
+
+export const bulkAdminShipmentStatusBodySchema = z.object({
+  shipmentIds: z.array(z.string().uuid()).min(1).max(100),
+  shipmentStatus: z.nativeEnum(ShipmentStatus),
+  note: z.string().trim().max(1_000).optional()
+});

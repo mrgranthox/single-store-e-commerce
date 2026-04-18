@@ -4,6 +4,7 @@ import type { RouteModule } from "../../app/route.types";
 import { validateRequest } from "../../common/validation/validate-request";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
 import {
+  bulkUpdateShipmentsAdmin,
   createShipmentAdmin,
   createShipmentTrackingEventAdmin,
   getShipmentAdmin,
@@ -14,6 +15,7 @@ import {
 } from "./shipping.controller";
 import {
   adminShipmentsQuerySchema,
+  bulkAdminShipmentStatusBodySchema,
   createShipmentBodySchema,
   createTrackingEventBodySchema,
   orderIdParamsSchema,
@@ -38,6 +40,13 @@ router.get(
   requirePermissions(["orders.read"]),
   validateRequest({ query: adminShipmentsQuerySchema }),
   listShipmentsAdmin
+);
+router.post(
+  "/admin/shipments/bulk-status",
+  requireAdminActor,
+  requirePermissions(["orders.override_fulfillment"]),
+  validateRequest({ body: bulkAdminShipmentStatusBodySchema }),
+  bulkUpdateShipmentsAdmin
 );
 router.get(
   "/admin/shipments/:shipmentId",
@@ -93,6 +102,14 @@ export const shippingRouteModule: RouteModule = {
       tags: ["shipping"],
       auth: "admin",
       permissions: ["orders.read"]
+    },
+    {
+      method: "POST",
+      path: "/api/v1/admin/shipments/bulk-status",
+      summary: "Bulk set shipment status; each id is validated independently.",
+      tags: ["shipping"],
+      auth: "admin",
+      permissions: ["orders.override_fulfillment"]
     },
     {
       method: "GET",
