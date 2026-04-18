@@ -959,9 +959,7 @@ export const ReviewsCenterPage = () => {
         </p>
       </div>
       {isPending ? <p className="text-on-surface-variant">Loading reviews…</p> : null}
-      {error ? (
-        <p className="text-error text-sm">{error instanceof CommerceApiError ? error.message : "Could not load reviews."}</p>
-      ) : null}
+      {error instanceof CommerceApiError ? <p className="text-error text-sm">{error.message}</p> : null}
       <div className="max-w-2xl space-y-4">
         {items.map((rev) => (
           <div key={rev.id} className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20">
@@ -1870,10 +1868,9 @@ export const OrderReviewWizardPage = () => {
           <h1 className="text-4xl font-headline font-extrabold tracking-tighter text-on-background mb-2">Write a review</h1>
         </header>
         <div className="max-w-2xl p-6 bg-error-container/20 rounded-xl border border-error/20">
-          <p className="font-bold text-on-background mb-2">Reviews are not available for this order here</p>
-          <p className="text-sm text-on-surface-variant mb-4">
-            {eligError instanceof CommerceApiError ? eligError.message : "We could not load review eligibility."}
-          </p>
+          {eligError instanceof CommerceApiError ? (
+            <p className="text-sm text-on-surface-variant mb-4">{eligError.message}</p>
+          ) : null}
           <Link to="/account/orders" className="text-secondary font-bold text-sm hover:underline underline-offset-4">
             View your orders
           </Link>
@@ -1890,7 +1887,9 @@ export const OrderReviewWizardPage = () => {
         </header>
         <div className="max-w-2xl p-6 bg-error-container/20 rounded-xl border border-error/20">
           <p className="font-bold text-on-background mb-2">Nothing to review yet</p>
-          <p className="text-sm text-on-surface-variant mb-4">{eligData.reasonMessage ?? "This order has no eligible lines for a new review."}</p>
+          {typeof eligData.reasonMessage === "string" && eligData.reasonMessage.trim().length > 0 ? (
+            <p className="text-sm text-on-surface-variant mb-4">{eligData.reasonMessage}</p>
+          ) : null}
           <Link to={`/account/orders/${orderId}`} className="text-secondary font-bold text-sm hover:underline underline-offset-4">
             Back to order
           </Link>
@@ -2016,14 +2015,8 @@ export const OrderReviewWizardPage = () => {
                 placeholder="Share details about fit, quality, or delivery…"
               />
             </div>
-            {reviewMutation.isError ? (
-              <p className="text-error text-sm">
-                {reviewMutation.error instanceof CommerceApiError
-                  ? reviewMutation.error.message
-                  : reviewMutation.error instanceof Error
-                    ? reviewMutation.error.message
-                    : "Review could not be submitted."}
-              </p>
+            {reviewMutation.isError && reviewMutation.error instanceof CommerceApiError ? (
+              <p className="text-error text-sm">{reviewMutation.error.message}</p>
             ) : null}
             <div className="flex gap-4">
               <button type="button" onClick={() => setStep(1)} className="text-on-surface-variant font-medium hover:text-on-surface">

@@ -338,7 +338,10 @@ const buildEligibility = (order: Pick<OrderRecord, "status" | "shipments" | "pay
     (request) => request.status === "PENDING_APPROVAL"
   );
   const hasShipped = order.shipments.some((shipment) => shippableShipmentStates.has(shipment.status));
-  const delivered = order.shipments.some((shipment) => shipment.status === ShipmentStatus.DELIVERED);
+  /** Match `getCustomerOrderReviewEligibility` / return wizard: completed counts as post-fulfillment even if shipment rows lag. */
+  const delivered =
+    order.status === "COMPLETED" ||
+    order.shipments.some((shipment) => shipment.status === ShipmentStatus.DELIVERED);
 
   let canCancel = true;
   let cancelReasonCode: string | null = null;

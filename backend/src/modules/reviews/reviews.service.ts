@@ -327,6 +327,19 @@ export const getCustomerOrderReviewEligibility = async (
     throw notFoundError("The requested order was not found.");
   }
 
+  if (order.items.length === 0) {
+    return {
+      entity: {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        canReview: false,
+        reasonCode: "NO_ORDER_LINES",
+        reasonMessage: "This order has no line items to review.",
+        items: []
+      }
+    };
+  }
+
   const delivered =
     order.status === "COMPLETED" ||
     order.shipments.some((shipment) => shipment.status === ShipmentStatus.DELIVERED);
@@ -372,13 +385,25 @@ export const getCustomerOrderReviewEligibility = async (
     };
   });
 
+  const canReviewAny = items.some((item) => item.canReview);
+  const orderLevelReasonCode = !delivered
+    ? "NOT_DELIVERED_YET"
+    : canReviewAny
+      ? null
+      : (items.find((row) => row.reasonCode)?.reasonCode ?? "REVIEW_ALREADY_EXISTS");
+  const orderLevelReasonMessage = !delivered
+    ? "You can review this order after delivery."
+    : canReviewAny
+      ? null
+      : (items.find((row) => row.reasonMessage)?.reasonMessage ?? "A review already exists for this item.");
+
   return {
     entity: {
       orderId: order.id,
       orderNumber: order.orderNumber,
-      canReview: items.some((item) => item.canReview),
-      reasonCode: delivered ? null : "NOT_DELIVERED_YET",
-      reasonMessage: delivered ? null : "You can review this order after delivery.",
+      canReview: canReviewAny,
+      reasonCode: orderLevelReasonCode,
+      reasonMessage: orderLevelReasonMessage,
       items
     }
   };
