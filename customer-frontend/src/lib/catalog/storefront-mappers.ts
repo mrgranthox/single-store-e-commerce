@@ -22,6 +22,22 @@ const centsToGhs = (cents: number) => Math.round((cents / 100) * 100) / 100;
 
 type ApiMedia = { url?: string | null } | null | undefined;
 
+type ApiReviewSummaryLike = {
+  averageRating?: number | null;
+  reviewCount?: number | null;
+  totalReviews?: number | null;
+} | null;
+
+const mapReviewSummaryFields = (summary: ApiReviewSummaryLike | undefined) => {
+  const avg = summary?.averageRating;
+  const rawCount = summary?.reviewCount ?? summary?.totalReviews;
+  return {
+    rating: typeof avg === "number" && Number.isFinite(avg) ? avg : undefined,
+    reviewCount:
+      typeof rawCount === "number" && Number.isFinite(rawCount) ? Math.max(0, Math.trunc(rawCount)) : undefined
+  };
+};
+
 type ApiPricing = {
   amountCents?: number | null;
   compareAtAmountCents?: number | null;
@@ -40,7 +56,7 @@ type ApiProductCard = {
   primaryMedia?: ApiMedia;
   pricing?: ApiPricing;
   defaultVariantId?: string | null;
-  reviewSummary?: { averageRating?: number | null; reviewCount?: number | null };
+  reviewSummary?: ApiReviewSummaryLike;
   availability?: { lowStock?: boolean };
 };
 
@@ -62,8 +78,7 @@ export const mapStorefrontProductCard = (raw: unknown): UiStorefrontProduct | nu
   const imageUrl =
     p.primaryMedia?.url?.trim() ||
     `https://placehold.co/480x600/e2e8f0/64748b/png?text=${encodeURIComponent(p.slug.slice(0, 12))}`;
-  const avg = p.reviewSummary?.averageRating;
-  const count = p.reviewSummary?.reviewCount;
+  const { rating: cardRating, reviewCount: cardReviewCount } = mapReviewSummaryFields(p.reviewSummary ?? undefined);
   return {
     id: p.id,
     slug: p.slug,
@@ -74,8 +89,8 @@ export const mapStorefrontProductCard = (raw: unknown): UiStorefrontProduct | nu
     category,
     brand: p.brand?.name ?? undefined,
     description: p.description ?? undefined,
-    rating: typeof avg === "number" ? avg : undefined,
-    reviewCount: typeof count === "number" ? count : undefined,
+    rating: cardRating,
+    reviewCount: cardReviewCount,
     badge: p.availability?.lowStock ? "Low stock" : undefined,
     defaultVariantId: typeof p.defaultVariantId === "string" ? p.defaultVariantId : null
   };
@@ -162,9 +177,8 @@ export const mapPublicProductDetailToProduct = (raw: unknown): Product | null =>
   const price = centsToGhs(amountCents);
   const originalPrice = compare != null && compare > amountCents ? centsToGhs(compare) : undefined;
 
-  const reviewSummary = d.reviewSummary as { averageRating?: number | null; reviewCount?: number | null } | undefined;
-  const avg = reviewSummary?.averageRating;
-  const count = reviewSummary?.reviewCount;
+  const reviewSummary = d.reviewSummary as ApiReviewSummaryLike | undefined;
+  const { rating: detailRating, reviewCount: detailReviewCount } = mapReviewSummaryFields(reviewSummary ?? undefined);
 
   const availability = d.availability as { lowStock?: boolean; message?: string } | undefined;
   const badge = availability?.lowStock ? "Low stock" : undefined;
@@ -212,8 +226,8 @@ export const mapPublicProductDetailToProduct = (raw: unknown): Product | null =>
     imageUrl,
     images: images.length > 0 ? images : undefined,
     badge,
-    rating: typeof avg === "number" ? avg : undefined,
-    reviewCount: typeof count === "number" ? count : undefined,
+    rating: detailRating,
+    reviewCount: detailReviewCount,
     description: typeof d.description === "string" ? d.description : undefined,
     brand,
     sizes,

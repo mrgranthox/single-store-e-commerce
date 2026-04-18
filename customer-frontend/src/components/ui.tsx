@@ -37,7 +37,10 @@ export const ProductCard = ({ product }: { product: Product }) => {
       ? (product as { defaultVariantId?: string }).defaultVariantId
       : null;
 
-  const stars = Array.from({ length: 5 }, (_, i) => i < Math.round(product.rating ?? 4));
+  const reviewCount = product.reviewCount ?? 0;
+  const ratingForStars =
+    reviewCount > 0 && typeof product.rating === "number" && Number.isFinite(product.rating) ? product.rating : 0;
+  const stars = Array.from({ length: 5 }, (_, i) => i < Math.round(ratingForStars));
 
   return (
     <div className="group min-w-0 max-w-full">
@@ -116,7 +119,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
               {stars.map((filled, i) => (
                 <Icon key={i} name="star" filled={filled} className="text-[16px] text-tertiary" />
               ))}
-              <span className="text-[10px] text-outline ml-1 font-medium">({product.reviewCount ?? 0})</span>
+              <span className="text-[10px] text-outline ml-1 font-medium">({reviewCount})</span>
             </div>
           </div>
           <div className="text-right shrink-0 tabular-nums">

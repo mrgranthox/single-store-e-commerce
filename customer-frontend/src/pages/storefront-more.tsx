@@ -171,7 +171,11 @@ export const ProductReviewsPage = () => {
     queryKey: ["customer-product-reviews", productSlug],
     queryFn: async () => {
       const { data } = await customerBackendApi.listProductReviews(productSlug!, 1, 50);
-      return data.items as ApiReview[];
+      const items = Array.isArray(data.items) ? (data.items as ApiReview[]) : [];
+      const totalRaw = data.pagination?.totalItems;
+      const totalItems =
+        typeof totalRaw === "number" && Number.isFinite(totalRaw) ? Math.max(0, Math.trunc(totalRaw)) : items.length;
+      return { items, totalItems };
     },
     enabled: Boolean(productSlug) && productQuery.isSuccess,
     staleTime: 30_000
@@ -194,19 +198,29 @@ export const ProductReviewsPage = () => {
 
   if (productQuery.isError || !product) return <ProductSubpageMissing />;
 
-  const rawReviews = reviewsQuery.data ?? [];
-  const totalReviews = rawReviews.length;
+  const rawReviews = reviewsQuery.data?.items ?? [];
+  const totalReviews =
+    typeof reviewsQuery.data?.totalItems === "number"
+      ? reviewsQuery.data.totalItems
+      : typeof product.reviewCount === "number"
+        ? product.reviewCount
+        : rawReviews.length;
+  const productReviewCount = typeof product.reviewCount === "number" ? product.reviewCount : 0;
   const averageRating =
-    totalReviews > 0
-      ? Math.round(
-          (rawReviews.reduce((sum, row) => {
-            const rating = typeof row.rating === "number" ? row.rating : 0;
-            return sum + rating;
-          }, 0) /
-            totalReviews) *
-            10
-        ) / 10
-      : product.rating ?? 0;
+    typeof product.rating === "number" &&
+    Number.isFinite(product.rating) &&
+    productReviewCount > 0
+      ? product.rating
+      : rawReviews.length > 0
+        ? Math.round(
+            (rawReviews.reduce((sum, row) => {
+              const rating = typeof row.rating === "number" ? row.rating : 0;
+              return sum + rating;
+            }, 0) /
+              rawReviews.length) *
+              10
+          ) / 10
+        : 0;
   const reviews = rawReviews.filter((r) => (filter === "all" ? true : String(r.rating) === filter));
 
   return (

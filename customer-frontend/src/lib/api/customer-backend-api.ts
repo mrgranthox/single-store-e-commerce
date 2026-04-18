@@ -41,10 +41,10 @@ export const customerBackendApi = {
   getProduct: async (slug: string) => commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}`, { method: "GET" }),
 
   listProductReviews: async (slug: string, page = 1, page_size = 20) =>
-    commerceFetchJson<{ items: unknown[] }>(
-      `/api/products/${encodeURIComponent(slug)}/reviews${qs({ page, page_size })}`,
-      { method: "GET" }
-    ),
+    commerceFetchJson<{
+      items: unknown[];
+      pagination?: { totalItems?: number; page?: number; page_size?: number; totalPages?: number };
+    }>(`/api/products/${encodeURIComponent(slug)}/reviews${qs({ page, page_size })}`, { method: "GET" }),
 
   getProductQuestions: async (slug: string) =>
     commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}/questions`, { method: "GET" }),
