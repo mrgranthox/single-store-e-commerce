@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { isAppError } from "../common/errors/app-error";
-import { assertCustomerReviewContentPublishable } from "../modules/reviews/review-content-screen";
+import {
+  assertCustomerReviewContentPublishable,
+  isCustomerReviewContentPublishable
+} from "../modules/reviews/review-content-screen";
 
 test("assertCustomerReviewContentPublishable allows empty body", () => {
   assertCustomerReviewContentPublishable(undefined, []);
@@ -33,4 +36,11 @@ test("assertCustomerReviewContentPublishable rejects excessive URLs", () => {
     () => assertCustomerReviewContentPublishable(body, []),
     (error: unknown) => isAppError(error) && error.code === "INVALID_INPUT"
   );
+});
+
+test("isCustomerReviewContentPublishable matches assert for allow and deny", () => {
+  assert.equal(isCustomerReviewContentPublishable(undefined, []), true);
+  assert.equal(isCustomerReviewContentPublishable("Great product.", []), true);
+  assert.equal(isCustomerReviewContentPublishable("Pay via Western Union.", []), false);
+  assert.equal(isCustomerReviewContentPublishable("utterly badword thing.", ["badword"]), false);
 });

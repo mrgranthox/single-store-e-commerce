@@ -1,5 +1,8 @@
 import { invalidInputError } from "../../common/errors/app-error";
 
+/** Stored on `Review.moderationNote` when automated screening requires moderation before publish. */
+export const REVIEW_AUTOMATED_PENDING_NOTE = "Pending automated content screening.";
+
 const normalizeReviewText = (raw: string) => raw.normalize("NFKC").trim().toLowerCase();
 
 /** Catches keyboard-mash / noise spam without blocking normal emphasis. */
@@ -30,41 +33,30 @@ const countUrls = (normalized: string): number => {
   return matches?.length ?? 0;
 };
 
-/**
- * Rejects review text that looks abusive (optional blocklist), scam-like, or spammy.
- * Rating-only reviews (empty body) skip text checks.
- */
-export const assertCustomerReviewContentPublishable = (
+type ContentViolation = "SPAM_PATTERN" | "EXCESSIVE_URLS" | "FRAUD_PATTERN" | "BLOCKLIST_TERM";
+
+const getCustomerReviewContentViolation = (
   body: string | null | undefined,
   blocklistTerms: readonly string[]
-): void => {
+): ContentViolation | null => {
   const trimmed = typeof body === "string" ? body.trim() : "";
   if (!trimmed) {
-    return;
+    return null;
   }
 
   const normalized = normalizeReviewText(trimmed);
 
   if (SPAM_CHAR_RUN.test(normalized)) {
-    throw invalidInputError(
-      "This review could not be submitted. Please shorten repeated characters and try again.",
-      { reason: "SPAM_PATTERN" }
-    );
+    return "SPAM_PATTERN";
   }
 
   if (countUrls(normalized) >= 3) {
-    throw invalidInputError(
-      "This review could not be submitted. Please use fewer links in your review.",
-      { reason: "EXCESSIVE_URLS" }
-    );
+    return "EXCESSIVE_URLS";
   }
 
   for (const pattern of FRAUD_PATTERNS) {
     if (pattern.test(normalized)) {
-      throw invalidInputError(
-        "This review could not be submitted. Remove payment requests, off-platform contact instructions, or suspicious claims.",
-        { reason: "FRAUD_PATTERN" }
-      );
+      return "FRAUD_PATTERN";
     }
   }
 
@@ -75,19 +67,62 @@ export const assertCustomerReviewContentPublishable = (
     }
     if (t.includes(" ")) {
       if (normalized.includes(t)) {
-        throw invalidInputError(
-          "This review could not be submitted. Please revise your wording and try again.",
-          { reason: "BLOCKLIST_TERM" }
-        );
+        return "BLOCKLIST_TERM";
       }
       continue;
     }
     const re = new RegExp(`\\b${escapeRegExp(t)}\\b`, "iu");
     if (re.test(normalized)) {
+      return "BLOCKLIST_TERM";
+    }
+  }
+
+  return null;
+};
+
+/** Rating-only reviews (empty body) skip text checks and are treated as publishable. */
+export const isCustomerReviewContentPublishable = (
+  body: string | null | undefined,
+  blocklistTerms: readonly string[]
+): boolean => getCustomerReviewContentViolation(body, blocklistTerms) === null;
+
+/**
+ * Hard-fail variant for callers that must reject instead of pending (tests, optional paths).
+ * Rating-only reviews (empty body) skip text checks.
+ */
+export const assertCustomerReviewContentPublishable = (
+  body: string | null | undefined,
+  blocklistTerms: readonly string[]
+): void => {
+  const violation = getCustomerReviewContentViolation(body, blocklistTerms);
+  if (violation === null) {
+    return;
+  }
+
+  switch (violation) {
+    case "SPAM_PATTERN":
+      throw invalidInputError(
+        "This review could not be submitted. Please shorten repeated characters and try again.",
+        { reason: "SPAM_PATTERN" }
+      );
+    case "EXCESSIVE_URLS":
+      throw invalidInputError(
+        "This review could not be submitted. Please use fewer links in your review.",
+        { reason: "EXCESSIVE_URLS" }
+      );
+    case "FRAUD_PATTERN":
+      throw invalidInputError(
+        "This review could not be submitted. Remove payment requests, off-platform contact instructions, or suspicious claims.",
+        { reason: "FRAUD_PATTERN" }
+      );
+    case "BLOCKLIST_TERM":
       throw invalidInputError(
         "This review could not be submitted. Please revise your wording and try again.",
         { reason: "BLOCKLIST_TERM" }
       );
+    default: {
+      const _exhaustive: never = violation;
+      throw new Error(`Unhandled violation: ${_exhaustive}`);
     }
   }
 };

@@ -16,7 +16,10 @@ import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { runInTransaction } from "../../common/database/prisma-transaction";
 import { env } from "../../config/env";
 import { prisma } from "../../config/prisma";
-import { assertCustomerReviewContentPublishable } from "./review-content-screen";
+import {
+  isCustomerReviewContentPublishable,
+  REVIEW_AUTOMATED_PENDING_NOTE
+} from "./review-content-screen";
 
 const reviewInclude = {
   user: {
@@ -443,7 +446,7 @@ export const createCustomerReview = async (
       });
     }
 
-    assertCustomerReviewContentPublishable(input.body, env.REVIEW_CONTENT_BLOCKLIST_TERMS);
+    const publishable = isCustomerReviewContentPublishable(input.body, env.REVIEW_CONTENT_BLOCKLIST_TERMS);
 
     const review = await transaction.review.create({
       data: {
@@ -452,7 +455,8 @@ export const createCustomerReview = async (
         variantId: orderItem.variantId,
         rating: input.rating,
         body: input.body,
-        status: ReviewStatus.PUBLISHED
+        status: publishable ? ReviewStatus.PUBLISHED : ReviewStatus.PENDING,
+        moderationNote: publishable ? null : REVIEW_AUTOMATED_PENDING_NOTE
       },
       include: reviewInclude
     });
@@ -491,7 +495,21 @@ export const updateCustomerReview = async (
   }
 
   const nextBody = input.body !== undefined ? input.body : existingReview.body;
-  assertCustomerReviewContentPublishable(nextBody, env.REVIEW_CONTENT_BLOCKLIST_TERMS);
+  const publishable = isCustomerReviewContentPublishable(nextBody, env.REVIEW_CONTENT_BLOCKLIST_TERMS);
+
+  const nextStatus = !publishable
+    ? ReviewStatus.PENDING
+    : existingReview.status === ReviewStatus.PUBLISHED
+      ? ReviewStatus.PENDING
+      : existingReview.status;
+
+  const nextModerationNote = !publishable
+    ? REVIEW_AUTOMATED_PENDING_NOTE
+    : existingReview.status === ReviewStatus.PUBLISHED
+      ? null
+      : existingReview.moderationNote === REVIEW_AUTOMATED_PENDING_NOTE
+        ? null
+        : existingReview.moderationNote;
 
   const review = await prisma.review.update({
     where: {
@@ -500,9 +518,8 @@ export const updateCustomerReview = async (
     data: {
       rating: input.rating ?? existingReview.rating,
       body: input.body ?? existingReview.body,
-      status:
-        existingReview.status === ReviewStatus.PUBLISHED ? ReviewStatus.PENDING : existingReview.status,
-      moderationNote: existingReview.status === ReviewStatus.PUBLISHED ? null : existingReview.moderationNote
+      status: nextStatus,
+      moderationNote: nextModerationNote
     },
     include: reviewInclude
   });
