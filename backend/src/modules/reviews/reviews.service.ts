@@ -14,7 +14,9 @@ import {
 } from "../../common/http/pagination";
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { runInTransaction } from "../../common/database/prisma-transaction";
+import { env } from "../../config/env";
 import { prisma } from "../../config/prisma";
+import { assertCustomerReviewContentPublishable } from "./review-content-screen";
 
 const reviewInclude = {
   user: {
@@ -441,13 +443,16 @@ export const createCustomerReview = async (
       });
     }
 
+    assertCustomerReviewContentPublishable(input.body, env.REVIEW_CONTENT_BLOCKLIST_TERMS);
+
     const review = await transaction.review.create({
       data: {
         userId: customerUserId,
         productId: orderItem.variant.productId,
         variantId: orderItem.variantId,
         rating: input.rating,
-        body: input.body
+        body: input.body,
+        status: ReviewStatus.PUBLISHED
       },
       include: reviewInclude
     });
@@ -484,6 +489,9 @@ export const updateCustomerReview = async (
   if (input.rating === undefined && input.body === undefined) {
     throw invalidInputError("At least one review field must be updated.");
   }
+
+  const nextBody = input.body !== undefined ? input.body : existingReview.body;
+  assertCustomerReviewContentPublishable(nextBody, env.REVIEW_CONTENT_BLOCKLIST_TERMS);
 
   const review = await prisma.review.update({
     where: {

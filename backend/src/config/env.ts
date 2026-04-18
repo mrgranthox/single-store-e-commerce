@@ -272,7 +272,17 @@ const envSchema = z.object({
   SEED_DEFAULT_ADMIN_CLERK_USER_ID: z.string().optional(),
   SEED_DEFAULT_ADMIN_PASSWORD: z.string().optional(),
   SEED_DEFAULT_ADMIN_PHONE: z.string().optional(),
-  SEED_DEFAULT_ADMIN_ROLE: z.string().default("super_admin")
+  SEED_DEFAULT_ADMIN_ROLE: z.string().default("super_admin"),
+  /** Comma-separated terms/phrases (case-insensitive). Single tokens use word boundaries; phrases use substring match after NFKC lowercase. */
+  REVIEW_CONTENT_BLOCKLIST_TERMS: z
+    .string()
+    .default("")
+    .transform((raw) =>
+      raw
+        .split(",")
+        .map((entry) => entry.trim().toLowerCase())
+        .filter((entry) => entry.length >= 2)
+    )
 });
 
 type ParsedEnv = z.infer<typeof envSchema>;
