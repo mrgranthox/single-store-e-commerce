@@ -172,6 +172,12 @@ const envSchema = z.object({
   ),
   WORKER_HEARTBEAT_INTERVAL_SECONDS: z.coerce.number().int().min(5).max(300).default(15),
   WORKER_HEARTBEAT_TTL_SECONDS: z.coerce.number().int().min(10).max(600).default(45),
+  /**
+   * When false, workers do not register BullMQ repeatables (catalog publish/pricing ticks, SLA scan,
+   * pending payment reconcile). Existing automation repeatables are removed from Redis on worker startup.
+   * Event-driven jobs (webhooks, notifications, etc.) still process when enqueued.
+   */
+  AUTOMATION_SCHEDULES_ENABLED: booleanFromString.default(false),
   QUEUE_PREFIX: z.preprocess(
     (value) => (value === "" || value === undefined || value === null ? undefined : value),
     z.string().min(1).default("ecommerce")

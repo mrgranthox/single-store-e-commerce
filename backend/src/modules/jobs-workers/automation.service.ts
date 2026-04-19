@@ -49,6 +49,29 @@ const automationSchedules: AutomationSchedule[] = [
 
 let schedulesRegistered = false;
 
+const automationJobNames = new Set(automationSchedules.map((schedule) => schedule.jobName));
+
+/** Removes persisted BullMQ repeatables so they stop firing after schedules were disabled or redeployed. */
+export const clearAutomationRepeatables = async () => {
+  const queueKeys = [...new Set(automationSchedules.map((schedule) => schedule.queue))];
+  let removed = 0;
+
+  for (const queueKey of queueKeys) {
+    const queue = queues[queueKey];
+    const repeatables = await queue.getRepeatableJobs();
+    for (const entry of repeatables) {
+      if (automationJobNames.has(entry.name)) {
+        await queue.removeRepeatableByKey(entry.key);
+        removed += 1;
+      }
+    }
+  }
+
+  schedulesRegistered = false;
+
+  logger.info({ removed }, "Cleared automation repeatable job definitions from Redis.");
+};
+
 export const registerAutomationSchedules = async () => {
   if (schedulesRegistered) {
     return;

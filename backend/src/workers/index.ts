@@ -8,6 +8,7 @@ import { prisma } from "../config/prisma";
 import { closeRedisConnection } from "../config/redis";
 import { flushSentry } from "../config/sentry";
 import {
+  clearAutomationRepeatables,
   processAutomationJob,
   registerAutomationSchedules
 } from "../modules/jobs-workers/automation.service";
@@ -185,18 +186,27 @@ for (const signal of ["SIGINT", "SIGTERM"] as const) {
   });
 }
 
-void Promise.all(workerDefinitions.map((worker) => worker.waitUntilReady())).then(() => {
-  return registerAutomationSchedules().then(() => {
-    return startWorkerHeartbeat().then(() => {
+void Promise.all(workerDefinitions.map((worker) => worker.waitUntilReady()))
+  .then(async () => {
+    if (env.AUTOMATION_SCHEDULES_ENABLED) {
+      await registerAutomationSchedules();
+    } else {
+      await clearAutomationRepeatables();
       logger.info(
-        {
-          queues: Object.values(queueNames)
-        },
-        "Worker baseline started."
+        {},
+        "AUTOMATION_SCHEDULES_ENABLED=false: repeatable catalog/SLA/payment-reconcile schedules are off; event-driven queue jobs still run."
       );
-    });
+    }
+
+    await startWorkerHeartbeat();
+    logger.info(
+      {
+        queues: Object.values(queueNames)
+      },
+      "Worker baseline started."
+    );
+  })
+  .catch((error) => {
+    logger.error({ error }, "Worker startup failed.");
+    process.exit(1);
   });
-}).catch((error) => {
-  logger.error({ error }, "Worker startup failed.");
-  process.exit(1);
-});
