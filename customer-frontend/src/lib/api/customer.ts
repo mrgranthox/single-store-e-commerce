@@ -131,7 +131,8 @@ export type CustomerHomepagePayload = {
 
 const readHomepageEntity = async () => {
   const response = await fetch(resolveCommerceUrl("/api/content/homepage"), {
-    headers: { accept: "application/json" }
+    headers: { accept: "application/json" },
+    cache: "no-store"
   });
   const payload = (await response.json()) as { success?: boolean; data?: { entity: CustomerHomepagePayload } };
   if (!response.ok || payload.success !== true || !payload.data?.entity) {

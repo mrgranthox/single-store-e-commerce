@@ -36,7 +36,10 @@ const ShellMain = ({ children, className = "" }: { children: ReactNode; classNam
 export const HomePage = () => {
   const homepageQuery = useQuery({
     queryKey: ["customer-homepage"],
-    queryFn: async () => (await customerApi.getHomepage()).entity
+    queryFn: async () => (await customerApi.getHomepage()).entity,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true
   });
 
   const promoCtaHref = (href: string, code: string) =>
