@@ -168,16 +168,17 @@ export const RefundDetailPage = () => {
 
   const providerEngineCopy = useMemo(() => {
     if (!e) return { title: "—", sub: "—" };
+    const processor = formatPaymentGatewayLabel(e.payment.provider ?? null);
     if (e.state === "COMPLETED") {
-      return { title: "Settled via Paystack", sub: "Gateway confirmation recorded." };
+      return { title: `Settled via ${processor}`, sub: "Gateway confirmation recorded." };
     }
     if (e.state === "PENDING_PROVIDER" || e.state === "APPROVED") {
-      return { title: "Syncing with Paystack", sub: "Awaiting provider refund confirmation." };
+      return { title: `Syncing with ${processor}`, sub: "Handshake established. Processing gateway confirmation." };
     }
     if (e.state === "REJECTED" || e.state === "FAILED") {
       return { title: "Refund halted", sub: "No provider debit will be attempted for this request." };
     }
-    return { title: "Queued for review", sub: "Approval required before Paystack is instructed." };
+    return { title: "Queued for review", sub: `Approval required before ${processor} is instructed.` };
   }, [e]);
 
   const lifecycle = useMemo(() => {
