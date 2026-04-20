@@ -483,22 +483,29 @@ export const RefundDetailPage = () => {
                 </section>
               ) : null}
 
-              <section className="relative overflow-hidden rounded-xl bg-slate-900 p-8 text-white">
+              <section className="relative overflow-hidden rounded-xl border border-slate-800/70 bg-slate-900 p-8 text-white shadow-[0_18px_45px_-26px_rgba(15,23,42,0.95)]">
                 <div className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#1653cc]/20 blur-3xl" />
+                <div className="pointer-events-none absolute -left-8 bottom-0 h-24 w-24 rounded-full bg-emerald-500/10 blur-2xl" />
                 <div className="relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
-                  <div>
-                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  <div className="space-y-2">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                       Provider Refund Engine
                     </h3>
-                    <div className="mb-1 flex items-center gap-2 text-xl font-bold">
+                    <div className="flex items-center gap-2 text-xl font-bold leading-tight">
                       <MaterialIcon name="cloud_sync" className="text-[#3b6de6]" />
                       {providerEngineCopy.title}
                     </div>
-                    <p className="text-xs text-slate-400">{providerEngineCopy.sub}</p>
+                    <p className="max-w-xl text-xs text-slate-400">{providerEngineCopy.sub}</p>
+                    <div className="pt-1">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/45 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-200">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                        {formatPaymentGatewayLabel(e.payment.provider ?? null)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end">
+                  <div className="flex min-w-[210px] flex-col items-end">
                     <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Provider ID</span>
-                    <span className="mt-1 rounded bg-slate-800 px-2 py-1 font-mono text-sm">
+                    <span className="mt-1 max-w-full break-all rounded border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-right font-mono text-sm text-slate-100">
                       {e.providerRefundRef?.trim() || "—"}
                     </span>
                   </div>
