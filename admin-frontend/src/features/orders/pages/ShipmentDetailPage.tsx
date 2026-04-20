@@ -562,8 +562,8 @@ export const ShipmentDetailPage = () => {
                 </div>
               </div>
 
-              <div className="stitch-surface-card bg-[#1a1d27] p-6 text-white shadow-sm">
-                <h2 className="mb-4 font-headline text-sm font-bold uppercase tracking-wider text-slate-400">
+              <div className="rounded-xl border border-[#303444] bg-[#1a1d27] p-6 text-[#fefcff] shadow-sm">
+                <h2 className="mb-4 font-headline text-sm font-bold uppercase tracking-wider text-[#bfc3d6]">
                   Operational actions
                 </h2>
                 <div className="space-y-3">
@@ -571,7 +571,7 @@ export const ShipmentDetailPage = () => {
                     to={`/admin/orders/${e.order.id}`}
                     className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
                   >
-                    <span className="text-sm font-medium">Update status</span>
+                    <span className="text-sm font-medium text-[#f2f3ff]">Update status</span>
                     <MaterialIcon
                       name="chevron_right"
                       className="text-lg text-[#4f7ef8] transition-transform group-hover:translate-x-1"
@@ -581,14 +581,14 @@ export const ShipmentDetailPage = () => {
                     to={`/admin/shipments/${shipmentId}/tracking`}
                     className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
                   >
-                    <span className="text-sm font-medium">Add tracking event</span>
+                    <span className="text-sm font-medium text-[#f2f3ff]">Add tracking event</span>
                     <MaterialIcon name="add_location" className="text-lg text-[#4f7ef8]" />
                   </Link>
                   <Link
                     to={`/admin/shipments/${shipmentId}/tracking`}
                     className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
                   >
-                    <span className="text-sm font-medium">View event log</span>
+                    <span className="text-sm font-medium text-[#f2f3ff]">View event log</span>
                     <MaterialIcon
                       name="history"
                       className="text-lg text-slate-400 transition-transform group-hover:translate-x-1"
