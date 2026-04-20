@@ -60,6 +60,11 @@ const shipmentStatusTransitions: Record<ShipmentStatus, ShipmentStatus[]> = {
   [ShipmentStatus.DELIVERED]: [],
   [ShipmentStatus.CANCELLED]: []
 };
+const shipmentAutoProgressEligibleStatuses: ShipmentStatus[] = [
+  ShipmentStatus.CREATED,
+  ShipmentStatus.PACKING,
+  ShipmentStatus.DISPATCHED
+];
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -291,6 +296,35 @@ const progressOrderForFulfillment = async (
   }
 
   return nextOrderStatus;
+};
+
+const autoProgressShipmentTarget = (currentStatus: ShipmentStatus): ShipmentStatus | null => {
+  if (currentStatus === ShipmentStatus.CREATED || currentStatus === ShipmentStatus.PACKING) {
+    return ShipmentStatus.DISPATCHED;
+  }
+  if (currentStatus === ShipmentStatus.DISPATCHED) {
+    return ShipmentStatus.DELIVERED;
+  }
+  return null;
+};
+
+const autoProgressEventForStatus = (status: ShipmentStatus) => {
+  if (status === ShipmentStatus.DISPATCHED) {
+    return {
+      eventType: "SHIPMENT_AUTO_DISPATCHED",
+      statusLabel: "Auto-dispatched after SLA window",
+      mutationReason: "auto_progress_dispatched_after_24h",
+      orderEventType: "SHIPMENT_AUTO_DISPATCHED",
+      actionCode: "orders.shipments.auto-dispatch"
+    };
+  }
+  return {
+    eventType: "SHIPMENT_AUTO_DELIVERED",
+    statusLabel: "Auto-delivered after dispatch window",
+    mutationReason: "auto_progress_delivered_after_dispatch_24h",
+    orderEventType: "SHIPMENT_AUTO_DELIVERED",
+    actionCode: "orders.shipments.auto-deliver"
+  };
 };
 
 export const listPublicShippingMethods = () => ({
@@ -1002,5 +1036,192 @@ export const bulkUpdateAdminShipments = async (input: {
     succeeded,
     failed: results.length - succeeded,
     total: results.length
+  };
+};
+
+export const processScheduledShipmentAutomationJob = async (input?: {
+  staleHours?: number;
+  batchSize?: number;
+}) => {
+  const staleHours = Math.max(1, Math.trunc(input?.staleHours ?? 24));
+  const batchSize = Math.min(500, Math.max(1, Math.trunc(input?.batchSize ?? 100)));
+  const cutoff = new Date(Date.now() - staleHours * 60 * 60 * 1000);
+
+  const candidates = await prisma.shipment.findMany({
+    where: {
+      status: {
+        in: shipmentAutoProgressEligibleStatuses
+      },
+      updatedAt: {
+        lte: cutoff
+      }
+    },
+    orderBy: {
+      updatedAt: "asc"
+    },
+    take: batchSize,
+    select: {
+      id: true
+    }
+  });
+
+  let progressed = 0;
+  let skipped = 0;
+  let failed = 0;
+
+  for (const candidate of candidates) {
+    try {
+      const result = await runInTransaction(async (transaction) => {
+        const shipment = await loadShipmentOrThrow(candidate.id, transaction);
+        const targetStatus = autoProgressShipmentTarget(shipment.status);
+
+        if (!targetStatus || shipment.updatedAt > cutoff) {
+          return null;
+        }
+
+        const allowedStatuses = shipmentStatusTransitions[shipment.status] ?? [];
+        if (!allowedStatuses.includes(targetStatus)) {
+          return null;
+        }
+
+        const eventMeta = autoProgressEventForStatus(targetStatus);
+
+        await transaction.shipment.update({
+          where: { id: shipment.id },
+          data: { status: targetStatus }
+        });
+
+        const trackingEvent = await transaction.shipmentTrackingEvent.create({
+          data: {
+            shipmentId: shipment.id,
+            eventType: eventMeta.eventType,
+            statusLabel: eventMeta.statusLabel,
+            occurredAt: new Date(),
+            location: shipment.warehouse.name,
+            payload: toPrismaJsonValue({
+              shipmentStatus: targetStatus,
+              carrier: shipment.carrier,
+              trackingNumber: shipment.trackingNumber,
+              automated: true,
+              staleHours
+            })
+          }
+        });
+
+        const siblingShipments = await transaction.shipment.findMany({
+          where: {
+            orderId: shipment.order.id
+          }
+        });
+
+        const nextShipmentStatuses = siblingShipments.map((entry) =>
+          entry.id === shipment.id ? targetStatus : entry.status
+        );
+
+        await progressOrderForFulfillment(transaction, {
+          orderId: shipment.order.id,
+          currentStatus: shipment.order.status,
+          actorAdminUserId: null,
+          shipmentStatuses: nextShipmentStatuses,
+          metadata: {
+            shipmentId: shipment.id,
+            shipmentStatus: targetStatus,
+            trackingEventId: trackingEvent.id,
+            automated: true
+          }
+        });
+
+        if (inventoryFinalizationShipmentStates.has(targetStatus)) {
+          await finalizeOrderInventoryForFulfillment(transaction, {
+            orderId: shipment.order.id,
+            reason: "shipment_auto_progressed_to_fulfillment",
+            actorAdminUserId: null
+          });
+        }
+
+        await recordShipmentMutation(transaction, {
+          actor: { kind: "system" },
+          actionCode: eventMeta.actionCode,
+          shipmentId: shipment.id,
+          orderId: shipment.order.id,
+          reason: eventMeta.mutationReason,
+          before: {
+            status: shipment.status,
+            trackingNumber: shipment.trackingNumber,
+            carrier: shipment.carrier
+          },
+          after: {
+            status: targetStatus,
+            trackingNumber: shipment.trackingNumber,
+            carrier: shipment.carrier
+          },
+          orderEventType: eventMeta.orderEventType,
+          orderPayload: {
+            shipmentId: shipment.id,
+            trackingEventId: trackingEvent.id,
+            shipmentStatus: targetStatus,
+            automated: true,
+            staleHours
+          }
+        });
+
+        const updatedShipment = await loadShipmentOrThrow(shipment.id, transaction);
+        return {
+          id: updatedShipment.id,
+          status: updatedShipment.status,
+          recipientEmail: readRecipient(updatedShipment.order.addressSnapshot).email,
+          orderId: updatedShipment.order.id,
+          orderNumber: updatedShipment.order.orderNumber,
+          trackingNumber: updatedShipment.trackingNumber,
+          carrier: updatedShipment.carrier
+        };
+      });
+
+      if (!result) {
+        skipped += 1;
+        continue;
+      }
+
+      progressed += 1;
+
+      if (result.recipientEmail) {
+        try {
+          await enqueueNotification({
+            type: result.status === ShipmentStatus.DELIVERED ? "SHIPMENT_DELIVERED" : "SHIPMENT_UPDATED",
+            recipientEmail: result.recipientEmail,
+            recipientType: "EMAIL",
+            payload: {
+              orderId: result.orderId,
+              orderNumber: result.orderNumber,
+              shipmentId: result.id,
+              trackingNumber: result.trackingNumber,
+              carrier: result.carrier,
+              shipmentStatus: result.status,
+              automated: true
+            }
+          });
+        } catch (error) {
+          logger.warn(
+            {
+              shipmentId: result.id,
+              error
+            },
+            "Failed to enqueue automated shipment notification."
+          );
+        }
+      }
+    } catch (error) {
+      failed += 1;
+      logger.error({ shipmentId: candidate.id, error }, "Shipment automation sweep failed for shipment.");
+    }
+  }
+
+  return {
+    scanned: candidates.length,
+    progressed,
+    skipped,
+    failed,
+    staleHours,
+    cutoff: cutoff.toISOString()
   };
 };

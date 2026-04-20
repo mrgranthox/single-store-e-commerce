@@ -4,6 +4,7 @@ import { logger } from "../../config/logger";
 import { queues } from "../../config/queue";
 import { processScheduledCatalogAutomationJob } from "../catalog/catalog.service";
 import { processPendingPaymentReconciliationJob } from "../payments/payments.service";
+import { processScheduledShipmentAutomationJob } from "../shipping/shipping.service";
 import { processSupportSlaSweepJob } from "../support/support.service";
 
 type AutomationSchedule = {
@@ -44,6 +45,16 @@ const automationSchedules: AutomationSchedule[] = [
     jobName: "catalog.apply-due-pricing",
     jobId: "catalog-apply-due-pricing",
     repeatEveryMs: MINUTE_MS
+  },
+  {
+    queue: "reconciliation",
+    jobName: "shipments.auto-progress",
+    jobId: "shipments-auto-progress",
+    repeatEveryMs: MINUTE_MS,
+    payload: {
+      staleHours: 24,
+      batchSize: 100
+    }
   }
 ];
 
@@ -109,6 +120,10 @@ export const processAutomationJob = async (job: Job) => {
     case "catalog.publish-due-products":
     case "catalog.apply-due-pricing":
       return processScheduledCatalogAutomationJob(job as Job<Record<string, never>>);
+    case "shipments.auto-progress":
+      return processScheduledShipmentAutomationJob(
+        (job as Job<{ staleHours?: number; batchSize?: number }>).data
+      );
     default:
       return null;
   }
