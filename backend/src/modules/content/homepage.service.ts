@@ -7,7 +7,7 @@ import {
   PromotionStatus
 } from "@prisma/client";
 
-import { notFoundError } from "../../common/errors/app-error";
+import { badRequestError, notFoundError } from "../../common/errors/app-error";
 import { toPrismaJsonValue } from "../../common/database/prisma-json";
 import { prisma } from "../../config/prisma";
 import { listCatalogCategories, listPublicProductCardsByIds } from "../catalog/catalog.service";
@@ -382,6 +382,35 @@ const extractDraftInput = (record: HomePageVersionRecord): HomepageDraftInput =>
     statusLabel: item.statusLabel
   }))
 });
+
+const validatePublishableHomepageDraft = (draft: HomepageDraftInput) => {
+  const emptyVisibleSections: string[] = [];
+
+  if (draft.sectionHeaders.category.isVisible && draft.categoryTiles.length === 0) {
+    emptyVisibleSections.push("category");
+  }
+  if (draft.sectionHeaders.featured.isVisible && draft.featuredProducts.length === 0) {
+    emptyVisibleSections.push("featured");
+  }
+  if (draft.sectionHeaders.brand.isVisible && draft.brandSpotlights.length === 0) {
+    emptyVisibleSections.push("brand");
+  }
+  if (draft.sectionHeaders.campaign.isVisible && draft.campaignSpotlights.length === 0) {
+    emptyVisibleSections.push("campaign");
+  }
+  if (draft.sectionHeaders.promo.isVisible && draft.promoOffers.length === 0) {
+    emptyVisibleSections.push("promo");
+  }
+  if (draft.sectionHeaders.testimonial.isVisible && draft.testimonials.length === 0) {
+    emptyVisibleSections.push("testimonial");
+  }
+
+  if (emptyVisibleSections.length > 0) {
+    throw badRequestError("Cannot publish homepage with visible empty sections.", {
+      emptyVisibleSections
+    });
+  }
+};
 
 const recordHomepageMutation = async (
   transaction: Prisma.TransactionClient,
@@ -1277,6 +1306,7 @@ export const publishAdminHomepageDraft = async (input: {
   const draft = await ensureHomepageSeeded();
   const beforePublished = await getVersion(prisma, HomePageVersionState.PUBLISHED);
   const snapshot = extractDraftInput(draft);
+  validatePublishableHomepageDraft(snapshot);
 
   await prisma.$transaction(async (transaction) => {
     const existingPublished = await transaction.homePageVersion.findUnique({
