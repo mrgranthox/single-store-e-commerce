@@ -101,6 +101,11 @@ const normalizeNullableText = (value?: string | null) => {
   return value.trim().length > 0 ? value : null;
 };
 
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const isUuid = (value: string) => UUID_PATTERN.test(value.trim());
+
 const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDraftBody => ({
   ...draft,
   hero: {
@@ -123,6 +128,21 @@ const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDr
     ...item,
     href: normalizeNullableText(item.href),
     ariaLabel: normalizeNullableText(item.ariaLabel)
+  })),
+  featuredProducts: draft.featuredProducts
+    .map((item) => ({ ...item, productId: item.productId.trim() }))
+    .filter((item) => isUuid(item.productId)),
+  brandSpotlights: draft.brandSpotlights.map((item) => ({
+    ...item,
+    productIds: item.productIds.map((id) => id.trim()).filter((id) => isUuid(id))
+  })),
+  campaignSpotlights: draft.campaignSpotlights.map((item) => ({
+    ...item,
+    productIds: item.productIds.map((id) => id.trim()).filter((id) => isUuid(id))
+  })),
+  promoOffers: draft.promoOffers.map((item) => ({
+    ...item,
+    productIds: item.productIds.map((id) => id.trim()).filter((id) => isUuid(id))
   })),
   testimonials: draft.testimonials.map((item) => ({
     ...item,
