@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
@@ -7,6 +7,7 @@ import { ContentWorkspaceNav } from "@/components/stitch/ContentWorkspaceNav";
 import { useAdminAuthStore } from "@/features/auth/auth.store";
 import {
   ApiError,
+  createContentMediaUploadIntent,
   getAdminHomepageDraft,
   publishAdminHomepage,
   unpublishAdminHomepage,
@@ -27,6 +28,7 @@ import {
   type UpdateHomepageDraftBody
 } from "@/features/content/api/admin-content.api";
 import { refreshDataMenuItem } from "@/lib/page-action-menu";
+import { postSignedCloudinaryDirectUpload } from "@/lib/media/cloudinaryDirectUpload";
 
 const shellCardClass = "rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-sm";
 const inputClass =
@@ -38,6 +40,11 @@ const primaryButtonClass =
   "rounded-lg bg-[#1653cc] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1247b2] disabled:cursor-not-allowed disabled:opacity-50";
 const dangerButtonClass =
   "rounded-lg border border-[#f0c7c7] bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[#ba1a1a] transition hover:bg-[#fff5f5]";
+const uploadButtonClass =
+  "w-full rounded-lg border border-[#1653cc]/25 bg-white px-3 py-2.5 text-sm font-semibold text-[#1653cc] transition hover:bg-[#f2f3ff] disabled:cursor-not-allowed disabled:opacity-60";
+const uploadHintClass = "mt-1 text-xs text-[#737685]";
+const HOMEPAGE_IMAGE_ACCEPT = "image/jpeg,image/png,image/webp";
+const HOMEPAGE_IMAGE_MAX_BYTES = 8 * 1024 * 1024;
 
 const removeStatus = (entity: AdminHomepageDraftEntity): UpdateHomepageDraftBody => {
   const { status: _status, ...draft } = entity;
@@ -311,6 +318,24 @@ export const HomepageManagementPage = () => {
       ) : null}
 
       <section className={shellCardClass}>
+        <SectionHeading
+          title="Homepage Layout Structure"
+          description="Order aligned to your approved structure: Hero, Featured, Editor's Pick, New Arrivals, Brand, Category, Promotions, Product Reviews, Testimonies."
+        />
+        <ol className="grid gap-2 text-sm text-[#434654] md:grid-cols-2">
+          <li>1. Hero section</li>
+          <li>2. Featured products (up to 10)</li>
+          <li>3. Editor&apos;s pick (campaign spotlight banners)</li>
+          <li>4. New arrivals (latest uploaded products)</li>
+          <li>5. Brand section (3 brands)</li>
+          <li>6. Category section (3 categories)</li>
+          <li>7. Coupon / promotions banners</li>
+          <li>8. Product reviews highlights</li>
+          <li>9. Testimonies</li>
+        </ol>
+      </section>
+
+      <section className={shellCardClass}>
         <SectionHeading title="Hero" description="Main above-the-fold message and primary CTA." />
         <div className="grid gap-4 md:grid-cols-2">
           <TextField
@@ -362,12 +387,14 @@ export const HomepageManagementPage = () => {
           />
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          <TextField
-            label="Background Image URL"
+          <ImageUploadField
+            accessToken={accessToken}
+            label="Background Image"
             value={draft.hero.backgroundImageUrl}
             onChange={(value) =>
               setDraft((current) => ({ ...current, hero: { ...current.hero, backgroundImageUrl: value } }))
             }
+            helperText="Upload hero background (JPG, PNG, WebP; max 8MB)."
           />
           <TextField
             label="Background Image Alt"
@@ -488,68 +515,8 @@ export const HomepageManagementPage = () => {
       </section>
 
       <SectionHeaderCard
-        title="Category Section"
-        description="Heading copy plus curated category tiles."
-        header={draft.sectionHeaders.category}
-        onChange={(nextHeader) => setSectionHeader("category", nextHeader)}
-      >
-        <div className="space-y-4">
-          {draft.categoryTiles.map((tile, index) => (
-            <ArrayItemCard
-              key={`category-${index}`}
-              title={tile.title || `Tile ${index + 1}`}
-              index={index}
-              count={draft.categoryTiles.length}
-              onMoveUp={() =>
-                setDraft((current) => ({ ...current, categoryTiles: moveItem(current.categoryTiles, index, -1) }))
-              }
-              onMoveDown={() =>
-                setDraft((current) => ({ ...current, categoryTiles: moveItem(current.categoryTiles, index, 1) }))
-              }
-              onRemove={() =>
-                setDraft((current) => ({
-                  ...current,
-                  categoryTiles: current.categoryTiles.filter((_, currentIndex) => currentIndex !== index)
-                }))
-              }
-            >
-              <CategoryTileEditor
-                tile={tile}
-                categories={categoryOptions}
-                onChange={(nextTile) =>
-                  setDraft((current) => ({
-                    ...current,
-                    categoryTiles: current.categoryTiles.map((entry, currentIndex) =>
-                      currentIndex === index ? nextTile : entry
-                    )
-                  }))
-                }
-              />
-            </ArrayItemCard>
-          ))}
-        </div>
-        <div className="mt-4">
-          <button
-            type="button"
-            className={smallButtonClass}
-            onClick={() =>
-              setDraft((current) => ({
-                ...current,
-                categoryTiles: [
-                  ...current.categoryTiles,
-                  { categoryId: null, slug: "", title: "", description: "", imageUrl: "" }
-                ]
-              }))
-            }
-          >
-            Add Category Tile
-          </button>
-        </div>
-      </SectionHeaderCard>
-
-      <SectionHeaderCard
-        title="Featured Products"
-        description="Grid of products shown with standard product cards."
+        title="Featured Products (Up To 10)"
+        description="Primary featured product grid on homepage."
         header={draft.sectionHeaders.featured}
         onChange={(nextHeader) => setSectionHeader("featured", nextHeader)}
       >
@@ -564,8 +531,98 @@ export const HomepageManagementPage = () => {
       </SectionHeaderCard>
 
       <SectionHeaderCard
-        title="Brand Spotlights"
-        description="Full-width brand cards with hero media and linked product picks."
+        title="Editor's Pick (Campaign Banners)"
+        description="Editorial banner blocks used as editor's pick sections."
+        header={draft.sectionHeaders.campaign}
+        onChange={(nextHeader) => setSectionHeader("campaign", nextHeader)}
+      >
+        <div className="space-y-4">
+          {draft.campaignSpotlights.map((spotlight, index) => (
+            <ArrayItemCard
+              key={`campaign-${index}`}
+              title={spotlight.title || `Editor's Pick ${index + 1}`}
+              index={index}
+              count={draft.campaignSpotlights.length}
+              onMoveUp={() =>
+                setDraft((current) => ({
+                  ...current,
+                  campaignSpotlights: moveItem(current.campaignSpotlights, index, -1)
+                }))
+              }
+              onMoveDown={() =>
+                setDraft((current) => ({
+                  ...current,
+                  campaignSpotlights: moveItem(current.campaignSpotlights, index, 1)
+                }))
+              }
+              onRemove={() =>
+                setDraft((current) => ({
+                  ...current,
+                  campaignSpotlights: current.campaignSpotlights.filter((_, currentIndex) => currentIndex !== index)
+                }))
+              }
+            >
+              <CampaignSpotlightEditor
+                accessToken={accessToken}
+                item={spotlight}
+                campaigns={campaignOptions}
+                products={productOptions}
+                onChange={(nextValue) =>
+                  setDraft((current) => ({
+                    ...current,
+                    campaignSpotlights: current.campaignSpotlights.map((entry, currentIndex) =>
+                      currentIndex === index ? nextValue : entry
+                    )
+                  }))
+                }
+              />
+            </ArrayItemCard>
+          ))}
+        </div>
+        <div className="mt-4">
+          <button
+            type="button"
+            className={smallButtonClass}
+            onClick={() =>
+              setDraft((current) => ({
+                ...current,
+                campaignSpotlights: [
+                  ...current.campaignSpotlights,
+                  {
+                    campaignId: null,
+                    slug: "",
+                    title: "",
+                    subtitle: "",
+                    heroImageUrl: "",
+                    label: "",
+                    ctaLabel: "",
+                    layout: "FEATURE",
+                    productIds: []
+                  }
+                ]
+              }))
+            }
+          >
+            Add Editor&apos;s Pick Banner
+          </button>
+        </div>
+      </SectionHeaderCard>
+
+      <SectionHeaderCard
+        title="New Arrivals"
+        description="Auto-managed from newest published products in catalog (latest updates)."
+        header={draft.sectionHeaders.featured}
+        onChange={(nextHeader) => setSectionHeader("featured", nextHeader)}
+      >
+        <div className="rounded-xl border border-dashed border-[#d7dce5] bg-[#fbfcff] p-4 text-sm text-[#5b5e68]">
+          New arrivals are pulled from recently uploaded/published products and shown on the customer homepage.
+          Use the catalog module to update product freshness.
+        </div>
+      </SectionHeaderCard>
+
+      <SectionHeaderCard
+        title="Brand Section (3 Brands)"
+        description="Brand banners with direct links and product picks."
         header={draft.sectionHeaders.brand}
         onChange={(nextHeader) => setSectionHeader("brand", nextHeader)}
       >
@@ -596,6 +653,7 @@ export const HomepageManagementPage = () => {
               }
             >
               <BrandSpotlightEditor
+                accessToken={accessToken}
                 item={spotlight}
                 brands={brandOptions}
                 products={productOptions}
@@ -639,46 +697,40 @@ export const HomepageManagementPage = () => {
       </SectionHeaderCard>
 
       <SectionHeaderCard
-        title="Campaign Spotlights"
-        description="Seasonal or editorial blocks with layout style and optional linked products."
-        header={draft.sectionHeaders.campaign}
-        onChange={(nextHeader) => setSectionHeader("campaign", nextHeader)}
+        title="Category Section (3 Categories)"
+        description="Category banners with direct route links."
+        header={draft.sectionHeaders.category}
+        onChange={(nextHeader) => setSectionHeader("category", nextHeader)}
       >
         <div className="space-y-4">
-          {draft.campaignSpotlights.map((spotlight, index) => (
+          {draft.categoryTiles.map((tile, index) => (
             <ArrayItemCard
-              key={`campaign-${index}`}
-              title={spotlight.title || `Campaign ${index + 1}`}
+              key={`category-${index}`}
+              title={tile.title || `Tile ${index + 1}`}
               index={index}
-              count={draft.campaignSpotlights.length}
+              count={draft.categoryTiles.length}
               onMoveUp={() =>
-                setDraft((current) => ({
-                  ...current,
-                  campaignSpotlights: moveItem(current.campaignSpotlights, index, -1)
-                }))
+                setDraft((current) => ({ ...current, categoryTiles: moveItem(current.categoryTiles, index, -1) }))
               }
               onMoveDown={() =>
-                setDraft((current) => ({
-                  ...current,
-                  campaignSpotlights: moveItem(current.campaignSpotlights, index, 1)
-                }))
+                setDraft((current) => ({ ...current, categoryTiles: moveItem(current.categoryTiles, index, 1) }))
               }
               onRemove={() =>
                 setDraft((current) => ({
                   ...current,
-                  campaignSpotlights: current.campaignSpotlights.filter((_, currentIndex) => currentIndex !== index)
+                  categoryTiles: current.categoryTiles.filter((_, currentIndex) => currentIndex !== index)
                 }))
               }
             >
-              <CampaignSpotlightEditor
-                item={spotlight}
-                campaigns={campaignOptions}
-                products={productOptions}
-                onChange={(nextValue) =>
+              <CategoryTileEditor
+                accessToken={accessToken}
+                tile={tile}
+                categories={categoryOptions}
+                onChange={(nextTile) =>
                   setDraft((current) => ({
                     ...current,
-                    campaignSpotlights: current.campaignSpotlights.map((entry, currentIndex) =>
-                      currentIndex === index ? nextValue : entry
+                    categoryTiles: current.categoryTiles.map((entry, currentIndex) =>
+                      currentIndex === index ? nextTile : entry
                     )
                   }))
                 }
@@ -693,31 +745,21 @@ export const HomepageManagementPage = () => {
             onClick={() =>
               setDraft((current) => ({
                 ...current,
-                campaignSpotlights: [
-                  ...current.campaignSpotlights,
-                  {
-                    campaignId: null,
-                    slug: "",
-                    title: "",
-                    subtitle: "",
-                    heroImageUrl: "",
-                    label: "",
-                    ctaLabel: "",
-                    layout: "FEATURE",
-                    productIds: []
-                  }
+                categoryTiles: [
+                  ...current.categoryTiles,
+                  { categoryId: null, slug: "", title: "", description: "", imageUrl: "" }
                 ]
               }))
             }
           >
-            Add Campaign Spotlight
+            Add Category Tile
           </button>
         </div>
       </SectionHeaderCard>
 
       <SectionHeaderCard
-        title="Promo Offers"
-        description="Offer cards with code, copy, banner image, and supporting products."
+        title="Coupon / Promotions Banners"
+        description="Coupon and promotion banners with direct CTA routing."
         header={draft.sectionHeaders.promo}
         onChange={(nextHeader) => setSectionHeader("promo", nextHeader)}
       >
@@ -742,6 +784,7 @@ export const HomepageManagementPage = () => {
               }
             >
               <PromoOfferEditor
+                accessToken={accessToken}
                 item={offer}
                 products={productOptions}
                 onChange={(nextValue) =>
@@ -786,8 +829,19 @@ export const HomepageManagementPage = () => {
       </SectionHeaderCard>
 
       <SectionHeaderCard
-        title="Testimonials"
-        description="Community proof and quote cards."
+        title="Product Reviews Highlights"
+        description="Review-like social proof cards shown before testimonies."
+        header={draft.sectionHeaders.testimonial}
+        onChange={(nextHeader) => setSectionHeader("testimonial", nextHeader)}
+      >
+        <div className="rounded-xl border border-dashed border-[#d7dce5] bg-[#fbfcff] p-4 text-sm text-[#5b5e68]">
+          This area is powered by testimonial/review entries below. Add quote cards with customer names and status labels.
+        </div>
+      </SectionHeaderCard>
+
+      <SectionHeaderCard
+        title="Testimonies"
+        description="Customer testimonies and trust quotes."
         header={draft.sectionHeaders.testimonial}
         onChange={(nextHeader) => setSectionHeader("testimonial", nextHeader)}
       >
@@ -818,6 +872,7 @@ export const HomepageManagementPage = () => {
               }
             >
               <TestimonialEditor
+                accessToken={accessToken}
                 item={item}
                 onChange={(nextValue) =>
                   setDraft((current) => ({
@@ -968,10 +1023,12 @@ const ArrayItemCard = ({
 );
 
 const CategoryTileEditor = ({
+  accessToken,
   tile,
   categories,
   onChange
 }: {
+  accessToken: string | null;
   tile: HomepageCategoryTileDraft;
   categories: HomepageOptionCategory[];
   onChange: (tile: HomepageCategoryTileDraft) => void;
@@ -999,10 +1056,12 @@ const CategoryTileEditor = ({
     />
     <TextField label="Slug" value={tile.slug} onChange={(value) => onChange({ ...tile, slug: value })} />
     <TextField label="Title" value={tile.title} onChange={(value) => onChange({ ...tile, title: value })} />
-    <TextField
-      label="Image URL"
+    <ImageUploadField
+      accessToken={accessToken}
+      label="Category Image"
       value={tile.imageUrl}
       onChange={(value) => onChange({ ...tile, imageUrl: value })}
+      helperText="Upload category tile image."
     />
     <div className="md:col-span-2">
       <TextAreaField
@@ -1060,11 +1119,13 @@ const SortableProductRows = <T extends HomepageFeaturedProductDraft>({
 );
 
 const BrandSpotlightEditor = ({
+  accessToken,
   item,
   brands,
   products,
   onChange
 }: {
+  accessToken: string | null;
   item: HomepageBrandSpotlightDraft;
   brands: HomepageOptionBrand[];
   products: HomepageOptionProduct[];
@@ -1090,10 +1151,12 @@ const BrandSpotlightEditor = ({
       <TextField label="Slug" value={item.slug} onChange={(value) => onChange({ ...item, slug: value })} />
       <TextField label="Title" value={item.title} onChange={(value) => onChange({ ...item, title: value })} />
       <TextField label="CTA Label" value={item.ctaLabel} onChange={(value) => onChange({ ...item, ctaLabel: value })} />
-      <TextField
-        label="Hero Image URL"
+      <ImageUploadField
+        accessToken={accessToken}
+        label="Hero Image"
         value={item.heroImageUrl}
         onChange={(value) => onChange({ ...item, heroImageUrl: value })}
+        helperText="Upload brand spotlight hero image."
       />
       <div className="md:col-span-2">
         <TextAreaField label="Tagline" value={item.tagline} onChange={(value) => onChange({ ...item, tagline: value })} />
@@ -1109,11 +1172,13 @@ const BrandSpotlightEditor = ({
 );
 
 const CampaignSpotlightEditor = ({
+  accessToken,
   item,
   campaigns,
   products,
   onChange
 }: {
+  accessToken: string | null;
   item: HomepageCampaignSpotlightDraft;
   campaigns: HomepageOptionCampaign[];
   products: HomepageOptionProduct[];
@@ -1151,10 +1216,12 @@ const CampaignSpotlightEditor = ({
       <TextField label="Label" value={item.label} onChange={(value) => onChange({ ...item, label: value })} />
       <TextField label="Title" value={item.title} onChange={(value) => onChange({ ...item, title: value })} />
       <TextField label="CTA Label" value={item.ctaLabel} onChange={(value) => onChange({ ...item, ctaLabel: value })} />
-      <TextField
-        label="Hero Image URL"
+      <ImageUploadField
+        accessToken={accessToken}
+        label="Hero Image"
         value={item.heroImageUrl}
         onChange={(value) => onChange({ ...item, heroImageUrl: value })}
+        helperText="Upload campaign hero image."
       />
       <div className="md:col-span-2">
         <TextAreaField
@@ -1174,10 +1241,12 @@ const CampaignSpotlightEditor = ({
 );
 
 const PromoOfferEditor = ({
+  accessToken,
   item,
   products,
   onChange
 }: {
+  accessToken: string | null;
   item: HomepagePromoOfferDraft;
   products: HomepageOptionProduct[];
   onChange: (item: HomepagePromoOfferDraft) => void;
@@ -1196,10 +1265,12 @@ const PromoOfferEditor = ({
         value={item.ctaHref}
         onChange={(value) => onChange({ ...item, ctaHref: value })}
       />
-      <TextField
-        label="Banner Image URL"
+      <ImageUploadField
+        accessToken={accessToken}
+        label="Banner Image"
         value={item.bannerImageUrl}
         onChange={(value) => onChange({ ...item, bannerImageUrl: value })}
+        helperText="Upload promotional banner image."
       />
       <TextField
         label="Headline"
@@ -1223,9 +1294,11 @@ const PromoOfferEditor = ({
 );
 
 const TestimonialEditor = ({
+  accessToken,
   item,
   onChange
 }: {
+  accessToken: string | null;
   item: HomepageTestimonialDraft;
   onChange: (item: HomepageTestimonialDraft) => void;
 }) => (
@@ -1236,7 +1309,13 @@ const TestimonialEditor = ({
       onChange={(value) => onChange({ ...item, customerName: value })}
     />
     <TextField label="Status Label" value={item.statusLabel ?? ""} onChange={(value) => onChange({ ...item, statusLabel: value })} />
-    <TextField label="Image URL" value={item.imageUrl} onChange={(value) => onChange({ ...item, imageUrl: value })} />
+    <ImageUploadField
+      accessToken={accessToken}
+      label="Customer Image"
+      value={item.imageUrl}
+      onChange={(value) => onChange({ ...item, imageUrl: value })}
+      helperText="Upload customer profile image."
+    />
     <div className="md:col-span-2">
       <TextAreaField label="Quote" value={item.quote} onChange={(value) => onChange({ ...item, quote: value })} />
     </div>
@@ -1353,3 +1432,98 @@ const SelectField = ({
     </select>
   </label>
 );
+
+const ImageUploadField = ({
+  accessToken,
+  label,
+  value,
+  onChange,
+  helperText
+}: {
+  accessToken: string | null;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  helperText?: string;
+}) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const uploadFile = async (file: File) => {
+    if (!accessToken) {
+      setUploadError("Sign in is required for uploads.");
+      return;
+    }
+
+    if (!HOMEPAGE_IMAGE_ACCEPT.split(",").includes(file.type)) {
+      setUploadError("Use JPG, PNG, or WebP.");
+      return;
+    }
+
+    if (file.size > HOMEPAGE_IMAGE_MAX_BYTES) {
+      setUploadError("Image must be 8MB or smaller.");
+      return;
+    }
+
+    setUploadError(null);
+    setIsUploading(true);
+    try {
+      const intentResponse = await createContentMediaUploadIntent(accessToken, {
+        fileName: file.name,
+        contentType: file.type,
+        fileSizeBytes: file.size,
+        resourceType: "image"
+      });
+      const intent = intentResponse.data.entity;
+      const uploadedUrl = await postSignedCloudinaryDirectUpload(intent, file, {
+        operation: "media.homepage"
+      });
+      onChange(uploadedUrl);
+    } catch (error) {
+      setUploadError(
+        error instanceof ApiError ? error.message : error instanceof Error ? error.message : "Upload failed."
+      );
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div>
+      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#737685]">{label}</span>
+      <div className="space-y-2 rounded-lg border border-[#d7dce5] bg-[#fbfcff] p-3">
+        {value ? (
+          <img src={value} alt="" className="h-28 w-full rounded-md border border-[#e5e7eb] object-cover" />
+        ) : (
+          <div className="flex h-28 items-center justify-center rounded-md border border-dashed border-[#d7dce5] text-xs text-[#737685]">
+            No image uploaded
+          </div>
+        )}
+        <input
+          ref={inputRef}
+          type="file"
+          accept={HOMEPAGE_IMAGE_ACCEPT}
+          className="hidden"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+              void uploadFile(file);
+            }
+            event.target.value = "";
+          }}
+        />
+        <button
+          type="button"
+          className={uploadButtonClass}
+          onClick={() => inputRef.current?.click()}
+          disabled={isUploading}
+        >
+          {isUploading ? "Uploading image..." : "Upload image"}
+        </button>
+        {helperText ? <p className={uploadHintClass}>{helperText}</p> : null}
+        {uploadError ? <p className="text-xs text-[#ba1a1a]">{uploadError}</p> : null}
+      </div>
+    </div>
+  );
+};
