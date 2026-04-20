@@ -103,8 +103,19 @@ const normalizeNullableText = (value?: string | null) => {
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const INTERNAL_HREF_PATTERN = /^\/[a-zA-Z0-9\-._~!$&'()*+,;=:@/%/?]*$/;
 
 const isUuid = (value: string) => UUID_PATTERN.test(value.trim());
+const isInternalHref = (value: string) => INTERNAL_HREF_PATTERN.test(value.trim());
+
+const isHttpUrl = (value: string) => {
+  try {
+    const parsed = new URL(value.trim());
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
 
 const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDraftBody => ({
   ...draft,
@@ -150,6 +161,89 @@ const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDr
   }))
 });
 
+const validateDraftBeforeSave = (draft: UpdateHomepageDraftBody): string[] => {
+  const errors: string[] = [];
+
+  if (!draft.hero.eyebrow.trim()) errors.push("Hero eyebrow is required.");
+  if (!draft.hero.titlePrefix.trim()) errors.push("Hero title prefix is required.");
+  if (!draft.hero.body.trim()) errors.push("Hero body is required.");
+  if (!draft.hero.primaryCtaLabel.trim()) errors.push("Hero CTA label is required.");
+  if (!isInternalHref(draft.hero.primaryCtaHref)) errors.push("Hero CTA route must be an internal path starting with '/'.");
+  if (!isHttpUrl(draft.hero.backgroundImageUrl)) errors.push("Hero background image must be a valid image URL.");
+
+  if (draft.trustBadges.length > 8) errors.push("Trust badges cannot exceed 8.");
+  if (draft.categoryTiles.length > 8) errors.push("Category tiles cannot exceed 8.");
+  if (draft.featuredProducts.length > 12) errors.push("Featured products cannot exceed 12.");
+  if (draft.brandSpotlights.length > 6) errors.push("Brand spotlights cannot exceed 6.");
+  if (draft.campaignSpotlights.length > 4) errors.push("Campaign spotlights cannot exceed 4.");
+  if (draft.promoOffers.length > 6) errors.push("Promo offers cannot exceed 6.");
+  if (draft.testimonials.length > 6) errors.push("Testimonials cannot exceed 6.");
+
+  for (const [sectionKey, header] of Object.entries(draft.sectionHeaders)) {
+    if (!header.eyebrow.trim()) errors.push(`${sectionKey} section eyebrow is required.`);
+    if (!header.title.trim()) errors.push(`${sectionKey} section title is required.`);
+    if (!header.description.trim()) errors.push(`${sectionKey} section description is required.`);
+    if (header.ctaHref && !isInternalHref(header.ctaHref)) {
+      errors.push(`${sectionKey} section CTA route must be an internal path.`);
+    }
+  }
+
+  for (const badge of draft.trustBadges) {
+    if (badge.href && !isInternalHref(badge.href)) {
+      errors.push(`Trust badge "${badge.title}" has an invalid route.`);
+    }
+  }
+
+  draft.featuredProducts.forEach((item, index) => {
+    if (!isUuid(item.productId)) {
+      errors.push(`Featured product #${index + 1} has an invalid product selection.`);
+    }
+  });
+
+  draft.brandSpotlights.forEach((item, index) => {
+    if (!item.slug.trim()) errors.push(`Brand spotlight #${index + 1} slug is required.`);
+    if (!isHttpUrl(item.heroImageUrl)) errors.push(`Brand spotlight #${index + 1} hero image URL is invalid.`);
+    if (!item.ctaLabel.trim()) errors.push(`Brand spotlight #${index + 1} CTA label is required.`);
+    if (item.productIds.length > 6) errors.push(`Brand spotlight #${index + 1} cannot exceed 6 products.`);
+    item.productIds.forEach((productId) => {
+      if (!isUuid(productId)) errors.push(`Brand spotlight #${index + 1} has an invalid product ID.`);
+    });
+  });
+
+  draft.campaignSpotlights.forEach((item, index) => {
+    if (!item.slug.trim()) errors.push(`Editor's pick #${index + 1} slug is required.`);
+    if (!isHttpUrl(item.heroImageUrl)) errors.push(`Editor's pick #${index + 1} hero image URL is invalid.`);
+    if (!item.label.trim()) errors.push(`Editor's pick #${index + 1} label is required.`);
+    if (!item.ctaLabel.trim()) errors.push(`Editor's pick #${index + 1} CTA label is required.`);
+    if (item.productIds.length > 6) errors.push(`Editor's pick #${index + 1} cannot exceed 6 products.`);
+    item.productIds.forEach((productId) => {
+      if (!isUuid(productId)) errors.push(`Editor's pick #${index + 1} has an invalid product ID.`);
+    });
+  });
+
+  draft.promoOffers.forEach((item, index) => {
+    if (!item.badge.trim()) errors.push(`Promotion #${index + 1} badge is required.`);
+    if (!item.code.trim()) errors.push(`Promotion #${index + 1} code is required.`);
+    if (!item.headline.trim()) errors.push(`Promotion #${index + 1} headline is required.`);
+    if (!item.body.trim()) errors.push(`Promotion #${index + 1} body is required.`);
+    if (!item.terms.trim()) errors.push(`Promotion #${index + 1} terms are required.`);
+    if (!isInternalHref(item.ctaHref)) errors.push(`Promotion #${index + 1} CTA route must be an internal path.`);
+    if (!isHttpUrl(item.bannerImageUrl)) errors.push(`Promotion #${index + 1} banner image URL is invalid.`);
+    if (item.productIds.length > 6) errors.push(`Promotion #${index + 1} cannot exceed 6 products.`);
+    item.productIds.forEach((productId) => {
+      if (!isUuid(productId)) errors.push(`Promotion #${index + 1} has an invalid product ID.`);
+    });
+  });
+
+  draft.testimonials.forEach((item, index) => {
+    if (!item.customerName.trim()) errors.push(`Testimony #${index + 1} customer name is required.`);
+    if (!item.quote.trim()) errors.push(`Testimony #${index + 1} quote is required.`);
+    if (!isHttpUrl(item.imageUrl)) errors.push(`Testimony #${index + 1} image URL is invalid.`);
+  });
+
+  return Array.from(new Set(errors));
+};
+
 const emptyDraft: UpdateHomepageDraftBody = {
   hero: {
     eyebrow: "Storefront homepage",
@@ -185,6 +279,7 @@ export const HomepageManagementPage = () => {
   const [draft, setDraft] = useState<UpdateHomepageDraftBody>(emptyDraft);
   const [status, setStatus] = useState<AdminHomepageDraftEntity["status"] | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [validationIssues, setValidationIssues] = useState<string[]>([]);
 
   const homepageQuery = useAuthedQuery(
   ["admin-homepage-draft"],
@@ -198,6 +293,7 @@ export const HomepageManagementPage = () => {
     }
     setDraft(removeStatus(entity));
     setStatus(entity.status);
+    setValidationIssues([]);
   }, [homepageQuery.dataUpdatedAt, homepageQuery.data]);
 
   const options = homepageQuery.data?.data.options;
@@ -207,10 +303,17 @@ export const HomepageManagementPage = () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
-      return updateAdminHomepageDraft(accessToken, normalizeDraftForSave(body));
+      const normalized = normalizeDraftForSave(body);
+      const issues = validateDraftBeforeSave(normalized);
+      if (issues.length > 0) {
+        setValidationIssues(issues);
+        throw new Error("Homepage draft has validation issues. Resolve them and save again.");
+      }
+      return updateAdminHomepageDraft(accessToken, normalized);
     },
     onSuccess: (response) => {
       setFeedback("Draft saved.");
+      setValidationIssues([]);
       setDraft(removeStatus(response.data.entity));
       setStatus(response.data.entity.status);
       void queryClient.invalidateQueries({ queryKey: ["admin-homepage-draft"] });
@@ -341,6 +444,7 @@ export const HomepageManagementPage = () => {
     }
     setDraft(removeStatus(entity));
     setStatus(entity.status);
+    setValidationIssues([]);
     setFeedback("Homepage workspace refreshed.");
   };
 
@@ -427,6 +531,17 @@ export const HomepageManagementPage = () => {
       {feedback ? (
         <div className="rounded-xl border border-[#c7d7f8] bg-[#f4f8ff] px-4 py-3 text-sm text-[#1653cc]">
           {feedback}
+        </div>
+      ) : null}
+
+      {validationIssues.length > 0 ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          <p className="font-semibold">Please fix these homepage CMS issues before saving:</p>
+          <ul className="mt-2 list-disc space-y-1 pl-5">
+            {validationIssues.map((issue) => (
+              <li key={issue}>{issue}</li>
+            ))}
+          </ul>
         </div>
       ) : null}
 
