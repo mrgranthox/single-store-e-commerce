@@ -383,6 +383,134 @@ const extractDraftInput = (record: HomePageVersionRecord): HomepageDraftInput =>
   }))
 });
 
+const hydrateDraftForPublication = async (
+  db: DatabaseClient,
+  draft: HomepageDraftInput
+): Promise<HomepageDraftInput> => {
+  const next: HomepageDraftInput = {
+    ...draft,
+    sectionHeaders: { ...draft.sectionHeaders },
+    categoryTiles: [...draft.categoryTiles],
+    featuredProducts: [...draft.featuredProducts],
+    brandSpotlights: draft.brandSpotlights.map((item) => ({ ...item, productIds: [...item.productIds] })),
+    campaignSpotlights: draft.campaignSpotlights.map((item) => ({ ...item, productIds: [...item.productIds] })),
+    promoOffers: draft.promoOffers.map((item) => ({ ...item, productIds: [...item.productIds] })),
+    testimonials: [...draft.testimonials],
+    trustBadges: [...draft.trustBadges]
+  };
+
+  const [products, categories, brands, campaigns] = await Promise.all([
+    db.product.findMany({
+      where: { status: ProductStatus.PUBLISHED },
+      orderBy: { updatedAt: "desc" },
+      take: 24,
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        brandId: true
+      }
+    }),
+    db.category.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { name: "asc" },
+      take: 8,
+      include: {
+        _count: {
+          select: { products: true }
+        }
+      }
+    }),
+    db.brand.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { name: "asc" },
+      take: 6,
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        logoUrl: true
+      }
+    }),
+    db.campaign.findMany({
+      where: { status: PromotionStatus.ACTIVE },
+      orderBy: { updatedAt: "desc" },
+      take: 4,
+      select: {
+        id: true,
+        slug: true,
+        name: true
+      }
+    })
+  ]);
+
+  if (next.featuredProducts.length === 0 && products.length > 0) {
+    next.featuredProducts = products.slice(0, 12).map((product) => ({ productId: product.id }));
+  }
+
+  if (next.categoryTiles.length === 0 && categories.length > 0) {
+    const categoryImages = [
+      defaultImages.categoryOuterwear,
+      defaultImages.categoryFootwear,
+      defaultImages.categoryBasics,
+      defaultImages.categoryKnitwear,
+      defaultImages.categoryEyewear
+    ];
+    next.categoryTiles = categories.slice(0, 5).map((category, index) => ({
+      categoryId: category.id,
+      slug: category.slug,
+      title: category.name,
+      description:
+        category._count.products > 0
+          ? `${category._count.products} product${category._count.products === 1 ? "" : "s"} currently published`
+          : "Merchandising-ready category slot",
+      imageUrl: categoryImages[index] ?? categoryImages[categoryImages.length - 1]!
+    }));
+  }
+
+  if (next.brandSpotlights.length === 0 && brands.length > 0) {
+    const brandImages = [defaultImages.brandFirst, defaultImages.brandSecond, defaultImages.brandThird];
+    next.brandSpotlights = brands.slice(0, 3).map((brand, index) => ({
+      brandId: brand.id,
+      slug: brand.slug,
+      title: brand.name,
+      tagline: `Featured brand spotlight for ${brand.name}.`,
+      heroImageUrl: brand.logoUrl || brandImages[index] || brandImages[brandImages.length - 1]!,
+      ctaLabel: `Full ${brand.name} collection`,
+      productIds: products
+        .filter((product) => product.brandId === brand.id)
+        .slice(0, 3)
+        .map((product) => product.id)
+    }));
+  }
+
+  if (next.campaignSpotlights.length === 0 && campaigns.length > 0) {
+    next.campaignSpotlights = campaigns.slice(0, 2).map((campaign, index) => ({
+      campaignId: campaign.id,
+      slug: campaign.slug,
+      title: campaign.name,
+      subtitle:
+        index === 0
+          ? "Primary campaign block with a large visual and curated picks."
+          : "Secondary campaign block with a shorter supporting story.",
+      heroImageUrl: index === 0 ? defaultImages.campaignPrimary : defaultImages.campaignSecondary,
+      label: index === 0 ? "Featured campaign" : "Second story",
+      ctaLabel: index === 0 ? "Open edit" : "View campaign",
+      layout: index === 0 ? "FEATURE" : "SPLIT",
+      productIds: products.slice(index * 4, index * 4 + 4).map((product) => product.id)
+    }));
+  }
+
+  next.sectionHeaders.featured.isVisible = next.featuredProducts.length > 0;
+  next.sectionHeaders.category.isVisible = next.categoryTiles.length > 0;
+  next.sectionHeaders.brand.isVisible = next.brandSpotlights.length > 0;
+  next.sectionHeaders.campaign.isVisible = next.campaignSpotlights.length > 0;
+  next.sectionHeaders.promo.isVisible = next.promoOffers.length > 0;
+  next.sectionHeaders.testimonial.isVisible = next.testimonials.length > 0;
+
+  return next;
+};
+
 const validatePublishableHomepageDraft = (draft: HomepageDraftInput) => {
   const emptyVisibleSections: string[] = [];
 
@@ -1272,6 +1400,7 @@ export const saveAdminHomepageDraft = async (input: {
 }) => {
   const beforeDraft = await ensureHomepageSeeded();
   const beforePublished = await getVersion(prisma, HomePageVersionState.PUBLISHED);
+  const hydratedDraft = await hydrateDraftForPublication(prisma, input.draft);
 
   await prisma.$transaction(async (transaction) => {
     const draftVersion = await transaction.homePageVersion.upsert({
@@ -1284,7 +1413,7 @@ export const saveAdminHomepageDraft = async (input: {
       }
     });
 
-    await writeVersionContent(transaction, draftVersion.id, input.draft);
+    await writeVersionContent(transaction, draftVersion.id, hydratedDraft);
 
     const updatedDraft = await getVersion(transaction, HomePageVersionState.DRAFT);
     await recordHomepageMutation(transaction, {
@@ -1305,7 +1434,7 @@ export const publishAdminHomepageDraft = async (input: {
 }) => {
   const draft = await ensureHomepageSeeded();
   const beforePublished = await getVersion(prisma, HomePageVersionState.PUBLISHED);
-  const snapshot = extractDraftInput(draft);
+  const snapshot = await hydrateDraftForPublication(prisma, extractDraftInput(draft));
   validatePublishableHomepageDraft(snapshot);
 
   await prisma.$transaction(async (transaction) => {
