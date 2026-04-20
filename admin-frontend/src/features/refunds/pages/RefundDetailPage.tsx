@@ -483,29 +483,29 @@ export const RefundDetailPage = () => {
                 </section>
               ) : null}
 
-              <section className="relative overflow-hidden rounded-xl border border-slate-800/70 bg-slate-900 p-8 text-white shadow-[0_18px_45px_-26px_rgba(15,23,42,0.95)]">
-                <div className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#1653cc]/20 blur-3xl" />
-                <div className="pointer-events-none absolute -left-8 bottom-0 h-24 w-24 rounded-full bg-emerald-500/10 blur-2xl" />
+              <section className="relative overflow-hidden rounded-xl border border-[#303444] bg-[#181b25] p-8 text-[#fefcff] shadow-sm">
+                <div className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#3b6de6]/20 blur-3xl" />
+                <div className="pointer-events-none absolute -left-8 bottom-0 h-24 w-24 rounded-full bg-[#4ae176]/10 blur-2xl" />
                 <div className="relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
                   <div className="space-y-2">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-[#bfc3d6]">
                       Provider Refund Engine
                     </h3>
-                    <div className="flex items-center gap-2 text-xl font-bold leading-tight">
+                    <div className="flex items-center gap-2 text-xl font-bold leading-tight text-[#f2f3ff]">
                       <MaterialIcon name="cloud_sync" className="text-[#3b6de6]" />
                       {providerEngineCopy.title}
                     </div>
-                    <p className="max-w-xl text-xs text-slate-400">{providerEngineCopy.sub}</p>
+                    <p className="max-w-xl text-xs text-[#c3c6d6]">{providerEngineCopy.sub}</p>
                     <div className="pt-1">
-                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/45 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-200">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                      <span className="inline-flex items-center gap-1 rounded-full border border-[#4ae176]/45 bg-[#4ae176]/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#9eeab4]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#4ae176]" />
                         {formatPaymentGatewayLabel(e.payment.provider ?? null)}
                       </span>
                     </div>
                   </div>
                   <div className="flex min-w-[210px] flex-col items-end">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Provider ID</span>
-                    <span className="mt-1 max-w-full break-all rounded border border-slate-700 bg-slate-800 px-2.5 py-1.5 text-right font-mono text-sm text-slate-100">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-[#9da3bd]">Provider ID</span>
+                    <span className="mt-1 max-w-full break-all rounded border border-[#404556] bg-[#202430] px-2.5 py-1.5 text-right font-mono text-sm text-[#eff0fe]">
                       {e.providerRefundRef?.trim() || "—"}
                     </span>
                   </div>
@@ -567,7 +567,7 @@ export const RefundDetailPage = () => {
                     value={note}
                     onChange={(ev) => setNote(ev.target.value)}
                     rows={3}
-                    className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal normal-case"
+                    className="rounded-lg border border-slate-200 bg-[#f4f6fb] px-3 py-2 text-sm font-normal normal-case text-slate-900 placeholder:text-slate-400"
                   />
                 </label>
                 {e.state === "PENDING_APPROVAL" ? (
@@ -608,14 +608,14 @@ export const RefundDetailPage = () => {
                         value={providerRef}
                         onChange={(ev) => setProviderRef(ev.target.value)}
                         placeholder="Gateway confirmation id"
-                        className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal normal-case"
+                        className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal normal-case text-slate-900 placeholder:text-slate-400"
                       />
                     </label>
                     <button
                       type="button"
                       disabled={completeMut.isPending || completeMut.blocked || !canManageRefund}
                       onClick={() => setConfirmAction("complete")}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 py-3 px-4 font-bold text-white hover:bg-slate-800 disabled:opacity-50"
+                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#181b25] py-3 px-4 font-bold text-[#fefcff] transition-colors hover:bg-[#2d303b] disabled:cursor-not-allowed disabled:bg-[#e6e7f6] disabled:text-[#9aa0b7]"
                       title={canManageRefund ? undefined : "Requires refunds.approve permission"}
                     >
                       <MaterialIcon name="done_all" className="text-lg" />
