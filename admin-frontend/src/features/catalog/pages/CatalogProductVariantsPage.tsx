@@ -26,31 +26,44 @@ import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
 const variantStatuses = ["ACTIVE", "ARCHIVED"] as const;
 
-const parseAttributesJson = (raw: string): { ok: true; value: Record<string, unknown> | undefined } | { ok: false; error: string } => {
-  const trimmed = raw.trim();
-  if (!trimmed) {
-    return { ok: true, value: undefined };
+type AttributeRow = { key: string; value: string };
+
+const toAttributeRows = (value: unknown): AttributeRow[] => {
+  if (value == null || typeof value !== "object" || Array.isArray(value)) {
+    return [{ key: "", value: "" }];
   }
-  try {
-    const parsed = JSON.parse(trimmed) as unknown;
-    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed)) {
-      return { ok: false, error: "Attributes must be a JSON object (e.g. {\"size\":\"42\",\"color\":\"Black\"})." };
-    }
-    return { ok: true, value: parsed as Record<string, unknown> };
-  } catch {
-    return { ok: false, error: "Invalid JSON for attributes." };
-  }
+  const entries = Object.entries(value as Record<string, unknown>).map(([k, v]) => ({
+    key: k,
+    value: typeof v === "string" ? v : String(v ?? "")
+  }));
+  return entries.length > 0 ? entries : [{ key: "", value: "" }];
 };
 
-const prettyAttributesJson = (value: unknown): string => {
-  if (value == null || typeof value !== "object" || Array.isArray(value)) {
-    return "";
+const fromAttributeRows = (
+  rows: AttributeRow[]
+): { ok: true; value: Record<string, unknown> | undefined } | { ok: false; error: string } => {
+  const normalized = rows.map((row) => ({
+    key: row.key.trim(),
+    value: row.value.trim()
+  }));
+
+  const filled = normalized.filter((row) => row.key !== "" || row.value !== "");
+  if (filled.length === 0) {
+    return { ok: true, value: undefined };
   }
-  try {
-    return JSON.stringify(value, null, 2);
-  } catch {
-    return "";
+
+  const out: Record<string, unknown> = {};
+  for (const row of filled) {
+    if (!row.key) {
+      return { ok: false, error: "Attribute name is required when value is provided." };
+    }
+    if (Object.prototype.hasOwnProperty.call(out, row.key)) {
+      return { ok: false, error: `Duplicate attribute name "${row.key}".` };
+    }
+    out[row.key] = row.value;
   }
+
+  return { ok: true, value: out };
 };
 
 export const CatalogProductVariantsPage = () => {
@@ -435,7 +448,7 @@ const AddVariantForm = ({
   onCancel: () => void;
 }) => {
   const [sku, setSku] = useState("");
-  const [attributesJson, setAttributesJson] = useState("");
+  const [rows, setRows] = useState<AttributeRow[]>([{ key: "", value: "" }]);
   const [localError, setLocalError] = useState<string | null>(null);
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
@@ -455,21 +468,13 @@ const AddVariantForm = ({
             placeholder="e.g. SKU-RED-L"
           />
         </label>
-        <label className="flex min-w-[320px] flex-1 flex-col gap-1 text-xs font-medium text-slate-600">
-          Attributes JSON (optional)
-          <textarea
-            className="min-h-[88px] rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-xs"
-            value={attributesJson}
-            onChange={(e) => setAttributesJson(e.target.value)}
-            placeholder='{"size":"L","color":"Red"}'
-          />
-        </label>
+        <AttributeEditor rows={rows} onChange={setRows} />
         <button
           type="button"
           disabled={submitting || !sku.trim()}
           className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
           onClick={() => {
-            const parsed = parseAttributesJson(attributesJson);
+            const parsed = fromAttributeRows(rows);
             if (!parsed.ok) {
               setLocalError(parsed.error);
               return;
@@ -581,11 +586,11 @@ const VariantInlineForm = ({
   const [cost, setCost] = useState(centsToInputString(variant.costAmountCents ?? null));
   const [currency, setCurrency] = useState(variant.pricing?.currency ?? "GHS");
   const [status, setStatus] = useState(variant.status);
-  const [attributesJson, setAttributesJson] = useState(prettyAttributesJson(variant.attributes));
+  const [rows, setRows] = useState<AttributeRow[]>(toAttributeRows(variant.attributes));
   const [localError, setLocalError] = useState<string | null>(null);
 
   const submit = () => {
-    const attributesParsed = parseAttributesJson(attributesJson);
+    const attributesParsed = fromAttributeRows(rows);
     if (!attributesParsed.ok) {
       setLocalError(attributesParsed.error);
       return;
@@ -666,15 +671,9 @@ const VariantInlineForm = ({
             maxLength={3}
           />
         </label>
-        <label className="sm:col-span-2 flex flex-col gap-1 text-xs font-medium text-slate-600">
-          Attributes JSON
-          <textarea
-            className="min-h-[100px] rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-xs"
-            value={attributesJson}
-            onChange={(e) => setAttributesJson(e.target.value)}
-            placeholder='{"size":"42","color":"Black"}'
-          />
-        </label>
+        <div className="sm:col-span-2">
+          <AttributeEditor rows={rows} onChange={setRows} />
+        </div>
       </div>
       <div className="flex flex-col justify-end gap-2">
         {localError ? <p className="text-xs font-medium text-red-700">{localError}</p> : null}
@@ -694,6 +693,63 @@ const VariantInlineForm = ({
             Cancel
           </button>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const AttributeEditor = ({
+  rows,
+  onChange
+}: {
+  rows: AttributeRow[];
+  onChange: (rows: AttributeRow[]) => void;
+}) => {
+  const setRow = (index: number, patch: Partial<AttributeRow>) => {
+    onChange(rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
+  };
+
+  const removeRow = (index: number) => {
+    const next = rows.filter((_, i) => i !== index);
+    onChange(next.length > 0 ? next : [{ key: "", value: "" }]);
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-medium text-slate-600">Variant attributes (optional)</p>
+        <button
+          type="button"
+          className="text-xs font-semibold text-[#4f7ef8] hover:underline"
+          onClick={() => onChange([...rows, { key: "", value: "" }])}
+        >
+          + Add attribute
+        </button>
+      </div>
+      <div className="space-y-2 rounded-lg border border-slate-200 bg-white p-3">
+        {rows.map((row, index) => (
+          <div key={`attr-${index}`} className="grid grid-cols-[1fr_1fr_auto] gap-2">
+            <input
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+              value={row.key}
+              onChange={(e) => setRow(index, { key: e.target.value })}
+              placeholder="Attribute (e.g. size)"
+            />
+            <input
+              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+              value={row.value}
+              onChange={(e) => setRow(index, { value: e.target.value })}
+              placeholder="Value (e.g. L)"
+            />
+            <button
+              type="button"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+              onClick={() => removeRow(index)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
