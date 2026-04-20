@@ -27,7 +27,6 @@ import {
   type HomepageTrustBadgeDraft,
   type UpdateHomepageDraftBody
 } from "@/features/content/api/admin-content.api";
-import { refreshDataMenuItem } from "@/lib/page-action-menu";
 import { postSignedCloudinaryDirectUpload } from "@/lib/media/cloudinaryDirectUpload";
 
 const shellCardClass = "rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-sm";
@@ -179,7 +178,7 @@ export const HomepageManagementPage = () => {
     }
     setDraft(removeStatus(entity));
     setStatus(entity.status);
-  }, [homepageQuery.data]);
+  }, [homepageQuery.dataUpdatedAt, homepageQuery.data]);
 
   const options = homepageQuery.data?.data.options;
 
@@ -314,6 +313,17 @@ export const HomepageManagementPage = () => {
     publishMutation.isPending ||
     unpublishMutation.isPending;
 
+  const refreshHomepageWorkspace = async () => {
+    const response = await homepageQuery.refetch();
+    const entity = response.data?.data.entity;
+    if (!entity) {
+      throw new Error("Homepage workspace refresh returned no entity.");
+    }
+    setDraft(removeStatus(entity));
+    setStatus(entity.status);
+    setFeedback("Homepage workspace refreshed.");
+  };
+
   if (homepageQuery.isLoading && !homepageQuery.data) {
     return <div className="p-8 text-sm text-[#5b5e68]">Loading homepage workspace…</div>;
   }
@@ -340,7 +350,23 @@ export const HomepageManagementPage = () => {
       <PageHeader
         title="Homepage"
         description="Control every customer-homepage section from one typed content workspace."
-        actionMenuItems={[refreshDataMenuItem(queryClient, ["admin-homepage-draft"])]}
+        actionMenuItems={[
+          {
+            id: "refresh-homepage-workspace",
+            label: "Refresh data",
+            onSelect: () => {
+              void refreshHomepageWorkspace().catch((error: unknown) => {
+                setFeedback(
+                  error instanceof ApiError
+                    ? error.message
+                    : error instanceof Error
+                      ? error.message
+                      : "Refresh failed."
+                );
+              });
+            }
+          }
+        ]}
         actions={
           <div className="flex flex-wrap gap-2">
             <button

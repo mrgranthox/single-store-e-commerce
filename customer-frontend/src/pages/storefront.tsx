@@ -115,12 +115,8 @@ export const HomePage = () => {
   const newArrivalItems = homepage.featuredSection.items.slice(10, 15);
   const brandItems = homepage.brandSection.items.slice(0, 3);
   const categoryItems = homepage.categorySection.items.slice(0, 3);
-  const productReviewItems = homepage.testimonialSection.items.filter((item) =>
-    (item.statusLabel ?? "").toLowerCase().includes("review")
-  );
-  const testimonyItems = homepage.testimonialSection.items.filter(
-    (item) => !(item.statusLabel ?? "").toLowerCase().includes("review")
-  );
+  const productReviewItems = homepage.testimonialSection.items.slice(0, 3);
+  const testimonyItems = homepage.testimonialSection.items.slice(3);
 
   return (
     <StorefrontShell>
@@ -301,14 +297,16 @@ export const HomePage = () => {
           <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
               <div className="min-w-0">
-                <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
-                  New Arrivals
-                </p>
+                {homepage.featuredSection.eyebrow ? (
+                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                    {homepage.featuredSection.eyebrow}
+                  </p>
+                ) : null}
                 <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
-                  Latest from homepage selection
+                  {homepage.featuredSection.title}
                 </h2>
                 <p className="text-on-surface-variant text-sm sm:text-base mt-2 max-w-xl">
-                  Managed from homepage featured product ordering after the primary featured block.
+                  {homepage.featuredSection.description}
                 </p>
               </div>
               {homepage.featuredSection.ctaLabel && homepage.featuredSection.ctaHref ? (
@@ -531,14 +529,16 @@ export const HomePage = () => {
           <section className="bg-surface-container-low py-12 sm:py-16 md:py-24 border-t border-outline-variant/10 w-full min-w-0">
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
               <div className="text-center mb-10 md:mb-14 px-1">
-                <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
-                  Product Reviews
-                </p>
+                {homepage.testimonialSection.eyebrow ? (
+                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                    {homepage.testimonialSection.eyebrow}
+                  </p>
+                ) : null}
                 <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
-                  What customers are saying
+                  {homepage.testimonialSection.title}
                 </h2>
                 <p className="text-on-surface-variant max-w-xl mx-auto text-sm sm:text-base">
-                  Review highlights managed from homepage testimonies where status label includes &quot;review&quot;.
+                  {homepage.testimonialSection.description}
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
