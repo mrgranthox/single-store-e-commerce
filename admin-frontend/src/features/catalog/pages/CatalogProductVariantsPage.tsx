@@ -26,6 +26,33 @@ import { refreshDataMenuItem } from "@/lib/page-action-menu";
 
 const variantStatuses = ["ACTIVE", "ARCHIVED"] as const;
 
+const parseAttributesJson = (raw: string): { ok: true; value: Record<string, unknown> | undefined } | { ok: false; error: string } => {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return { ok: true, value: undefined };
+  }
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { ok: false, error: "Attributes must be a JSON object (e.g. {\"size\":\"42\",\"color\":\"Black\"})." };
+    }
+    return { ok: true, value: parsed as Record<string, unknown> };
+  } catch {
+    return { ok: false, error: "Invalid JSON for attributes." };
+  }
+};
+
+const prettyAttributesJson = (value: unknown): string => {
+  if (value == null || typeof value !== "object" || Array.isArray(value)) {
+    return "";
+  }
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch {
+    return "";
+  }
+};
+
 export const CatalogProductVariantsPage = () => {
   const { productId } = useParams<{ productId: string }>();
   const accessToken = useAdminAuthStore((s) => s.accessToken);
@@ -100,12 +127,13 @@ export const CatalogProductVariantsPage = () => {
   });
 
   const createMut = useMutation({
-    mutationFn: async (body: { sku: string; status: string; priceCurrency?: string }) => {
+    mutationFn: async (body: { sku: string; attributes?: Record<string, unknown>; status: string; priceCurrency?: string }) => {
       if (!accessToken || !productId) {
         throw new Error("Missing context.");
       }
       return createAdminCatalogProductVariant(accessToken, productId, {
         sku: body.sku,
+        attributes: body.attributes,
         status: body.status,
         priceCurrency: body.priceCurrency
       });
@@ -251,12 +279,17 @@ export const CatalogProductVariantsPage = () => {
       </div>
 
       {showAdd ? (
-        <AddVariantForm
+      <AddVariantForm
           defaultCurrency={defaultCurrency}
           submitting={createMut.isPending}
           onCancel={() => setShowAdd(false)}
-          onSubmit={(sku) => {
-            createMut.mutate({ sku, status: "ACTIVE", priceCurrency: defaultCurrency });
+          onSubmit={(payload) => {
+            createMut.mutate({
+              sku: payload.sku,
+              attributes: payload.attributes,
+              status: "ACTIVE",
+              priceCurrency: defaultCurrency
+            });
           }}
         />
       ) : null}
@@ -398,10 +431,12 @@ const AddVariantForm = ({
 }: {
   defaultCurrency: string;
   submitting: boolean;
-  onSubmit: (sku: string) => void;
+  onSubmit: (payload: { sku: string; attributes?: Record<string, unknown> }) => void;
   onCancel: () => void;
 }) => {
   const [sku, setSku] = useState("");
+  const [attributesJson, setAttributesJson] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
       <div className="text-sm font-semibold text-slate-800">New variant</div>
@@ -409,6 +444,7 @@ const AddVariantForm = ({
         Creates an active variant with SKU. Add pricing from the expanded row after creation. Currency defaults to{" "}
         {defaultCurrency}.
       </p>
+      {localError ? <p className="mt-2 text-xs font-medium text-red-700">{localError}</p> : null}
       <div className="mt-3 flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
           SKU
@@ -419,11 +455,28 @@ const AddVariantForm = ({
             placeholder="e.g. SKU-RED-L"
           />
         </label>
+        <label className="flex min-w-[320px] flex-1 flex-col gap-1 text-xs font-medium text-slate-600">
+          Attributes JSON (optional)
+          <textarea
+            className="min-h-[88px] rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-xs"
+            value={attributesJson}
+            onChange={(e) => setAttributesJson(e.target.value)}
+            placeholder='{"size":"L","color":"Red"}'
+          />
+        </label>
         <button
           type="button"
           disabled={submitting || !sku.trim()}
           className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-          onClick={() => onSubmit(sku.trim())}
+          onClick={() => {
+            const parsed = parseAttributesJson(attributesJson);
+            if (!parsed.ok) {
+              setLocalError(parsed.error);
+              return;
+            }
+            setLocalError(null);
+            onSubmit({ sku: sku.trim(), attributes: parsed.value });
+          }}
         >
           Create variant
         </button>
@@ -528,13 +581,22 @@ const VariantInlineForm = ({
   const [cost, setCost] = useState(centsToInputString(variant.costAmountCents ?? null));
   const [currency, setCurrency] = useState(variant.pricing?.currency ?? "GHS");
   const [status, setStatus] = useState(variant.status);
+  const [attributesJson, setAttributesJson] = useState(prettyAttributesJson(variant.attributes));
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const submit = () => {
+    const attributesParsed = parseAttributesJson(attributesJson);
+    if (!attributesParsed.ok) {
+      setLocalError(attributesParsed.error);
+      return;
+    }
     const priceCents = parseMoneyInputToCents(price);
     const compareCents = parseMoneyInputToCents(compare);
     const costCents = parseMoneyInputToCents(cost);
+    setLocalError(null);
     onSave({
       sku,
+      attributes: attributesParsed.value,
       priceAmountCents: priceCents,
       compareAtPriceAmountCents: compareCents,
       costAmountCents: costCents,
@@ -604,8 +666,18 @@ const VariantInlineForm = ({
             maxLength={3}
           />
         </label>
+        <label className="sm:col-span-2 flex flex-col gap-1 text-xs font-medium text-slate-600">
+          Attributes JSON
+          <textarea
+            className="min-h-[100px] rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-xs"
+            value={attributesJson}
+            onChange={(e) => setAttributesJson(e.target.value)}
+            placeholder='{"size":"42","color":"Black"}'
+          />
+        </label>
       </div>
       <div className="flex flex-col justify-end gap-2">
+        {localError ? <p className="text-xs font-medium text-red-700">{localError}</p> : null}
         <p className="text-xs text-[var(--color-text-muted)]">
           Stock levels are managed per warehouse on the Inventory tab; this form updates catalog variant fields only.
         </p>
