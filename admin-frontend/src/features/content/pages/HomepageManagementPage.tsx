@@ -141,19 +141,18 @@ const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDr
     ariaLabel: normalizeNullableText(item.ariaLabel)
   })),
   featuredProducts: draft.featuredProducts
-    .map((item) => ({ ...item, productId: item.productId.trim() }))
-    .filter((item) => isUuid(item.productId)),
+    .map((item) => ({ ...item, productId: item.productId.trim() })),
   brandSpotlights: draft.brandSpotlights.map((item) => ({
     ...item,
-    productIds: item.productIds.map((id) => id.trim()).filter((id) => isUuid(id))
+    productIds: item.productIds.map((id) => id.trim())
   })),
   campaignSpotlights: draft.campaignSpotlights.map((item) => ({
     ...item,
-    productIds: item.productIds.map((id) => id.trim()).filter((id) => isUuid(id))
+    productIds: item.productIds.map((id) => id.trim())
   })),
   promoOffers: draft.promoOffers.map((item) => ({
     ...item,
-    productIds: item.productIds.map((id) => id.trim()).filter((id) => isUuid(id))
+    productIds: item.productIds.map((id) => id.trim())
   })),
   testimonials: draft.testimonials.map((item) => ({
     ...item,
@@ -161,7 +160,15 @@ const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDr
   }))
 });
 
-const validateDraftBeforeSave = (draft: UpdateHomepageDraftBody): string[] => {
+const validateDraftBeforeSave = (
+  draft: UpdateHomepageDraftBody,
+  availability: {
+    hasProducts: boolean;
+    hasCategories: boolean;
+    hasBrands: boolean;
+    hasCampaigns: boolean;
+  }
+): string[] => {
   const errors: string[] = [];
 
   if (!draft.hero.eyebrow.trim()) errors.push("Hero eyebrow is required.");
@@ -178,6 +185,25 @@ const validateDraftBeforeSave = (draft: UpdateHomepageDraftBody): string[] => {
   if (draft.campaignSpotlights.length > 4) errors.push("Campaign spotlights cannot exceed 4.");
   if (draft.promoOffers.length > 6) errors.push("Promo offers cannot exceed 6.");
   if (draft.testimonials.length > 6) errors.push("Testimonials cannot exceed 6.");
+
+  if (draft.sectionHeaders.category.isVisible && draft.categoryTiles.length === 0 && availability.hasCategories) {
+    errors.push("Category section is visible but has no category tiles.");
+  }
+  if (draft.sectionHeaders.featured.isVisible && draft.featuredProducts.length === 0 && availability.hasProducts) {
+    errors.push("Featured section is visible but has no featured products.");
+  }
+  if (draft.sectionHeaders.brand.isVisible && draft.brandSpotlights.length === 0 && availability.hasBrands) {
+    errors.push("Brand section is visible but has no brand spotlights.");
+  }
+  if (draft.sectionHeaders.campaign.isVisible && draft.campaignSpotlights.length === 0 && availability.hasCampaigns) {
+    errors.push("Editor's pick section is visible but has no campaign banners.");
+  }
+  if (draft.sectionHeaders.promo.isVisible && draft.promoOffers.length === 0) {
+    errors.push("Promotions section is visible but has no promo offers.");
+  }
+  if (draft.sectionHeaders.testimonial.isVisible && draft.testimonials.length === 0) {
+    errors.push("Testimonials section is visible but has no testimony/review entries.");
+  }
 
   for (const [sectionKey, header] of Object.entries(draft.sectionHeaders)) {
     if (!header.eyebrow.trim()) errors.push(`${sectionKey} section eyebrow is required.`);
@@ -303,8 +329,44 @@ export const HomepageManagementPage = () => {
       if (!accessToken) {
         throw new Error("Not signed in.");
       }
-      const normalized = normalizeDraftForSave(body);
-      const issues = validateDraftBeforeSave(normalized);
+      let normalized = normalizeDraftForSave(body);
+
+      if (normalized.featuredProducts.length === 0 && productOptions.length > 0) {
+        normalized = {
+          ...normalized,
+          featuredProducts: productOptions.slice(0, 10).map((product) => ({ productId: product.id }))
+        };
+      }
+
+      normalized = {
+        ...normalized,
+        sectionHeaders: {
+          ...normalized.sectionHeaders,
+          featured: {
+            ...normalized.sectionHeaders.featured,
+            isVisible: productOptions.length > 0 ? normalized.sectionHeaders.featured.isVisible : false
+          },
+          category: {
+            ...normalized.sectionHeaders.category,
+            isVisible: categoryOptions.length > 0 ? normalized.sectionHeaders.category.isVisible : false
+          },
+          brand: {
+            ...normalized.sectionHeaders.brand,
+            isVisible: brandOptions.length > 0 ? normalized.sectionHeaders.brand.isVisible : false
+          },
+          campaign: {
+            ...normalized.sectionHeaders.campaign,
+            isVisible: campaignOptions.length > 0 ? normalized.sectionHeaders.campaign.isVisible : false
+          }
+        }
+      };
+
+      const issues = validateDraftBeforeSave(normalized, {
+        hasProducts: productOptions.length > 0,
+        hasCategories: categoryOptions.length > 0,
+        hasBrands: brandOptions.length > 0,
+        hasCampaigns: campaignOptions.length > 0
+      });
       if (issues.length > 0) {
         setValidationIssues(issues);
         throw new Error("Homepage draft has validation issues. Resolve them and save again.");
