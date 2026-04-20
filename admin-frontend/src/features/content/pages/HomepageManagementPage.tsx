@@ -1308,7 +1308,16 @@ const TestimonialEditor = ({
       value={item.customerName}
       onChange={(value) => onChange({ ...item, customerName: value })}
     />
-    <TextField label="Status Label" value={item.statusLabel ?? ""} onChange={(value) => onChange({ ...item, statusLabel: value })} />
+    <div>
+      <TextField
+        label="Status Label"
+        value={item.statusLabel ?? ""}
+        onChange={(value) => onChange({ ...item, statusLabel: value })}
+      />
+      <p className="mt-1 text-xs text-[#737685]">
+        Include the word &quot;review&quot; in this label to place this card under Product Reviews; otherwise it appears under Testimonies.
+      </p>
+    </div>
     <ImageUploadField
       accessToken={accessToken}
       label="Customer Image"
