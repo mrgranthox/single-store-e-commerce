@@ -45,6 +45,29 @@ const uploadButtonClass =
 const uploadHintClass = "mt-1 text-xs text-[#737685]";
 const HOMEPAGE_IMAGE_ACCEPT = "image/jpeg,image/png,image/webp";
 const HOMEPAGE_IMAGE_MAX_BYTES = 8 * 1024 * 1024;
+type HrefOption = { value: string; label: string };
+
+const commonRouteOptions: HrefOption[] = [
+  { value: "/shop", label: "Shop" },
+  { value: "/brands", label: "Brands" },
+  { value: "/categories", label: "Categories" },
+  { value: "/search", label: "Search" },
+  { value: "/support", label: "Support" },
+  { value: "/about", label: "About" },
+  { value: "/contact", label: "Contact" },
+  { value: "/pages/shipping-policy", label: "Shipping policy" },
+  { value: "/pages/returns-policy", label: "Returns policy" },
+  { value: "/pages/privacy-policy", label: "Privacy policy" },
+  { value: "/pages/terms", label: "Terms" }
+];
+
+const mergeHrefOptions = (options: HrefOption[], currentValue?: string | null): HrefOption[] => {
+  const map = new Map(options.map((option) => [option.value, option] as const));
+  if (currentValue && !map.has(currentValue)) {
+    map.set(currentValue, { value: currentValue, label: `Current: ${currentValue}` });
+  }
+  return [...map.values()];
+};
 
 const removeStatus = (entity: AdminHomepageDraftEntity): UpdateHomepageDraftBody => {
   const { status: _status, ...draft } = entity;
@@ -222,6 +245,50 @@ export const HomepageManagementPage = () => {
   const categoryOptions = options?.categories ?? [];
   const brandOptions = options?.brands ?? [];
   const campaignOptions = options?.campaigns ?? [];
+  const brandHrefOptions = useMemo(
+    () =>
+      brandOptions.map((brand) => ({
+        value: `/brands/${brand.slug}`,
+        label: `Brand: ${brand.name}`
+      })),
+    [brandOptions]
+  );
+  const categoryHrefOptions = useMemo(
+    () =>
+      categoryOptions.map((category) => ({
+        value: `/categories/${category.slug}`,
+        label: `Category: ${category.name}`
+      })),
+    [categoryOptions]
+  );
+  const campaignHrefOptions = useMemo(
+    () =>
+      campaignOptions.map((campaign) => ({
+        value: `/campaigns/${campaign.slug}`,
+        label: `Campaign: ${campaign.name}`
+      })),
+    [campaignOptions]
+  );
+  const productHrefOptions = useMemo(
+    () =>
+      productOptions.map((product) => ({
+        value: `/products/${product.slug}`,
+        label: `Product: ${product.title}`
+      })),
+    [productOptions]
+  );
+  const sectionCtaHrefOptions = useMemo(
+    () => [...commonRouteOptions, ...categoryHrefOptions, ...brandHrefOptions, ...campaignHrefOptions],
+    [brandHrefOptions, campaignHrefOptions, categoryHrefOptions]
+  );
+  const trustBadgeHrefOptions = useMemo(
+    () => [...commonRouteOptions, ...categoryHrefOptions, ...brandHrefOptions],
+    [brandHrefOptions, categoryHrefOptions]
+  );
+  const promoHrefOptions = useMemo(
+    () => [...commonRouteOptions, ...categoryHrefOptions, ...brandHrefOptions, ...campaignHrefOptions, ...productHrefOptions],
+    [brandHrefOptions, campaignHrefOptions, categoryHrefOptions, productHrefOptions]
+  );
 
   const productTitleById = useMemo(
     () => new Map(productOptions.map((product) => [product.id, product.title])),
@@ -371,12 +438,13 @@ export const HomepageManagementPage = () => {
               setDraft((current) => ({ ...current, hero: { ...current.hero, titleSuffix: value } }))
             }
           />
-          <TextField
-            label="CTA Href"
+          <SelectField
+            label="CTA Route"
             value={draft.hero.primaryCtaHref}
             onChange={(value) =>
               setDraft((current) => ({ ...current, hero: { ...current.hero, primaryCtaHref: value } }))
             }
+            options={mergeHrefOptions(sectionCtaHrefOptions, draft.hero.primaryCtaHref)}
           />
         </div>
         <div className="mt-4">
@@ -441,17 +509,21 @@ export const HomepageManagementPage = () => {
                     }))
                   }
                 />
-                <TextField
-                  label="Link Href"
+                <SelectField
+                  label="Link Route"
                   value={item.href ?? ""}
                   onChange={(value) =>
                     setDraft((current) => ({
                       ...current,
                       trustBadges: current.trustBadges.map((entry, currentIndex) =>
-                        currentIndex === index ? { ...entry, href: value } : entry
+                        currentIndex === index ? { ...entry, href: value || null } : entry
                       )
                     }))
                   }
+                  options={[
+                    { value: "", label: "None" },
+                    ...mergeHrefOptions(trustBadgeHrefOptions, item.href)
+                  ]}
                 />
                 <TextField
                   label="Title"
@@ -518,6 +590,7 @@ export const HomepageManagementPage = () => {
         title="Featured Products (Up To 10)"
         description="Primary featured product grid on homepage."
         header={draft.sectionHeaders.featured}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("featured", nextHeader)}
       >
         <SortableProductRows
@@ -534,6 +607,7 @@ export const HomepageManagementPage = () => {
         title="Editor's Pick (Campaign Banners)"
         description="Editorial banner blocks used as editor's pick sections."
         header={draft.sectionHeaders.campaign}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("campaign", nextHeader)}
       >
         <div className="space-y-4">
@@ -567,6 +641,7 @@ export const HomepageManagementPage = () => {
                 item={spotlight}
                 campaigns={campaignOptions}
                 products={productOptions}
+                hrefOptions={campaignHrefOptions}
                 onChange={(nextValue) =>
                   setDraft((current) => ({
                     ...current,
@@ -612,6 +687,7 @@ export const HomepageManagementPage = () => {
         title="New Arrivals"
         description="Auto-managed from newest published products in catalog (latest updates)."
         header={draft.sectionHeaders.featured}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("featured", nextHeader)}
       >
         <div className="rounded-xl border border-dashed border-[#d7dce5] bg-[#fbfcff] p-4 text-sm text-[#5b5e68]">
@@ -624,6 +700,7 @@ export const HomepageManagementPage = () => {
         title="Brand Section (3 Brands)"
         description="Brand banners with direct links and product picks."
         header={draft.sectionHeaders.brand}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("brand", nextHeader)}
       >
         <div className="space-y-4">
@@ -657,6 +734,7 @@ export const HomepageManagementPage = () => {
                 item={spotlight}
                 brands={brandOptions}
                 products={productOptions}
+                hrefOptions={brandHrefOptions}
                 onChange={(nextValue) =>
                   setDraft((current) => ({
                     ...current,
@@ -700,6 +778,7 @@ export const HomepageManagementPage = () => {
         title="Category Section (3 Categories)"
         description="Category banners with direct route links."
         header={draft.sectionHeaders.category}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("category", nextHeader)}
       >
         <div className="space-y-4">
@@ -726,6 +805,7 @@ export const HomepageManagementPage = () => {
                 accessToken={accessToken}
                 tile={tile}
                 categories={categoryOptions}
+                hrefOptions={categoryHrefOptions}
                 onChange={(nextTile) =>
                   setDraft((current) => ({
                     ...current,
@@ -761,6 +841,7 @@ export const HomepageManagementPage = () => {
         title="Coupon / Promotions Banners"
         description="Coupon and promotion banners with direct CTA routing."
         header={draft.sectionHeaders.promo}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("promo", nextHeader)}
       >
         <div className="space-y-4">
@@ -787,6 +868,7 @@ export const HomepageManagementPage = () => {
                 accessToken={accessToken}
                 item={offer}
                 products={productOptions}
+                hrefOptions={promoHrefOptions}
                 onChange={(nextValue) =>
                   setDraft((current) => ({
                     ...current,
@@ -832,6 +914,7 @@ export const HomepageManagementPage = () => {
         title="Product Reviews Highlights"
         description="Review-like social proof cards shown before testimonies."
         header={draft.sectionHeaders.testimonial}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("testimonial", nextHeader)}
       >
         <div className="rounded-xl border border-dashed border-[#d7dce5] bg-[#fbfcff] p-4 text-sm text-[#5b5e68]">
@@ -843,6 +926,7 @@ export const HomepageManagementPage = () => {
         title="Testimonies"
         description="Customer testimonies and trust quotes."
         header={draft.sectionHeaders.testimonial}
+        hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("testimonial", nextHeader)}
       >
         <div className="space-y-4">
@@ -936,12 +1020,14 @@ const SectionHeaderCard = ({
   title,
   description,
   header,
+  hrefOptions,
   onChange,
   children
 }: {
   title: string;
   description: string;
   header: HomepageSectionHeader;
+  hrefOptions: HrefOption[];
   onChange: (header: HomepageSectionHeader) => void;
   children: ReactNode;
 }) => (
@@ -955,10 +1041,11 @@ const SectionHeaderCard = ({
         value={header.ctaLabel ?? ""}
         onChange={(value) => onChange({ ...header, ctaLabel: value })}
       />
-      <TextField
-        label="CTA Href"
+      <SelectField
+        label="CTA Route"
         value={header.ctaHref ?? ""}
-        onChange={(value) => onChange({ ...header, ctaHref: value })}
+        onChange={(value) => onChange({ ...header, ctaHref: value || null })}
+        options={[{ value: "", label: "None" }, ...mergeHrefOptions(hrefOptions, header.ctaHref)]}
       />
     </div>
     <div className="mt-4">
@@ -1026,11 +1113,13 @@ const CategoryTileEditor = ({
   accessToken,
   tile,
   categories,
+  hrefOptions,
   onChange
 }: {
   accessToken: string | null;
   tile: HomepageCategoryTileDraft;
   categories: HomepageOptionCategory[];
+  hrefOptions: HrefOption[];
   onChange: (tile: HomepageCategoryTileDraft) => void;
 }) => (
   <div className="grid gap-4 md:grid-cols-2">
@@ -1052,6 +1141,20 @@ const CategoryTileEditor = ({
           value: category.id,
           label: `${category.name} (${category.productCount})`
         }))
+      ]}
+    />
+    <SelectField
+      label="Category Route"
+      value={tile.slug ? `/categories/${tile.slug}` : ""}
+      onChange={(value) =>
+        onChange({
+          ...tile,
+          slug: value.startsWith("/categories/") ? value.replace("/categories/", "") : tile.slug
+        })
+      }
+      options={[
+        { value: "", label: "Auto from linked category" },
+        ...mergeHrefOptions(hrefOptions, tile.slug ? `/categories/${tile.slug}` : null)
       ]}
     />
     <TextField label="Slug" value={tile.slug} onChange={(value) => onChange({ ...tile, slug: value })} />
@@ -1123,12 +1226,14 @@ const BrandSpotlightEditor = ({
   item,
   brands,
   products,
+  hrefOptions,
   onChange
 }: {
   accessToken: string | null;
   item: HomepageBrandSpotlightDraft;
   brands: HomepageOptionBrand[];
   products: HomepageOptionProduct[];
+  hrefOptions: HrefOption[];
   onChange: (item: HomepageBrandSpotlightDraft) => void;
 }) => (
   <div className="space-y-4">
@@ -1147,6 +1252,20 @@ const BrandSpotlightEditor = ({
           });
         }}
         options={[{ value: "", label: "None" }, ...brands.map((brand) => ({ value: brand.id, label: brand.name }))]}
+      />
+      <SelectField
+        label="Brand Route"
+        value={item.slug ? `/brands/${item.slug}` : ""}
+        onChange={(value) =>
+          onChange({
+            ...item,
+            slug: value.startsWith("/brands/") ? value.replace("/brands/", "") : item.slug
+          })
+        }
+        options={[
+          { value: "", label: "Auto from linked brand" },
+          ...mergeHrefOptions(hrefOptions, item.slug ? `/brands/${item.slug}` : null)
+        ]}
       />
       <TextField label="Slug" value={item.slug} onChange={(value) => onChange({ ...item, slug: value })} />
       <TextField label="Title" value={item.title} onChange={(value) => onChange({ ...item, title: value })} />
@@ -1176,12 +1295,14 @@ const CampaignSpotlightEditor = ({
   item,
   campaigns,
   products,
+  hrefOptions,
   onChange
 }: {
   accessToken: string | null;
   item: HomepageCampaignSpotlightDraft;
   campaigns: HomepageOptionCampaign[];
   products: HomepageOptionProduct[];
+  hrefOptions: HrefOption[];
   onChange: (item: HomepageCampaignSpotlightDraft) => void;
 }) => (
   <div className="space-y-4">
@@ -1201,6 +1322,20 @@ const CampaignSpotlightEditor = ({
         options={[
           { value: "", label: "None" },
           ...campaigns.map((campaign) => ({ value: campaign.id, label: campaign.name }))
+        ]}
+      />
+      <SelectField
+        label="Campaign Route"
+        value={item.slug ? `/campaigns/${item.slug}` : ""}
+        onChange={(value) =>
+          onChange({
+            ...item,
+            slug: value.startsWith("/campaigns/") ? value.replace("/campaigns/", "") : item.slug
+          })
+        }
+        options={[
+          { value: "", label: "Auto from linked campaign" },
+          ...mergeHrefOptions(hrefOptions, item.slug ? `/campaigns/${item.slug}` : null)
         ]}
       />
       <SelectField
@@ -1244,11 +1379,13 @@ const PromoOfferEditor = ({
   accessToken,
   item,
   products,
+  hrefOptions,
   onChange
 }: {
   accessToken: string | null;
   item: HomepagePromoOfferDraft;
   products: HomepageOptionProduct[];
+  hrefOptions: HrefOption[];
   onChange: (item: HomepagePromoOfferDraft) => void;
 }) => (
   <div className="space-y-4">
@@ -1260,10 +1397,11 @@ const PromoOfferEditor = ({
         value={item.ctaLabel}
         onChange={(value) => onChange({ ...item, ctaLabel: value })}
       />
-      <TextField
-        label="CTA Href"
+      <SelectField
+        label="CTA Route"
         value={item.ctaHref}
         onChange={(value) => onChange({ ...item, ctaHref: value })}
+        options={mergeHrefOptions(hrefOptions, item.ctaHref)}
       />
       <ImageUploadField
         accessToken={accessToken}
