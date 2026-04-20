@@ -141,6 +141,10 @@ export const OrderDetailPage = () => {
 
   const hasFulfillmentShipment = nonCancelledShipments.length > 0;
   const hasAssignedWarehouse = Boolean(entity?.assignedWarehouse?.id);
+  const deliveredFulfillmentLocked =
+    (entity?.fulfillment?.status ?? "").toUpperCase() === "DELIVERED" ||
+    (latestShipment?.status ?? "").toUpperCase() === "DELIVERED";
+  const deliveredLockReason = "Order is delivered. Management actions are locked.";
   const [showWarehouseOverride, setShowWarehouseOverride] = useState(false);
 
   const shippingSnapshotRows = useMemo(() => {
@@ -277,6 +281,7 @@ export const OrderDetailPage = () => {
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Status update failed.",
     isAllowed: canUpdateOrder,
+    isAvailable: !deliveredFulfillmentLocked,
     invalidate: [],
   });
 
@@ -289,7 +294,7 @@ export const OrderDetailPage = () => {
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Assign warehouse failed.",
     isAllowed: canOverrideFulfillment,
-    isAvailable: Boolean(normalizedWarehouseId),
+    isAvailable: Boolean(normalizedWarehouseId) && !deliveredFulfillmentLocked,
     invalidate: orderInvalidateKeys });
 
   const cancelMut = useAdminAction({
@@ -301,7 +306,7 @@ export const OrderDetailPage = () => {
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Cancel order failed.",
     isAllowed: canCancelOrder,
-    isAvailable: Boolean(normalizedCancelReason),
+    isAvailable: Boolean(normalizedCancelReason) && !deliveredFulfillmentLocked,
     invalidate: orderInvalidateKeys });
 
   const shipMut = useAdminAction({
@@ -315,7 +320,7 @@ export const OrderDetailPage = () => {
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Create shipment failed.",
     isAllowed: canOverrideFulfillment,
-    isAvailable: shipmentCreatable && !hasFulfillmentShipment,
+    isAvailable: shipmentCreatable && !hasFulfillmentShipment && !deliveredFulfillmentLocked,
     invalidate: orderInvalidateKeys });
 
   const campaignMut = useAdminAction({
@@ -327,7 +332,7 @@ export const OrderDetailPage = () => {
     errorMessage: (err) =>
       err instanceof ApiError ? err.message : "Campaign attribution update failed.",
     isAllowed: canUpdateOrder,
-    isAvailable: campaignHasChanges,
+    isAvailable: campaignHasChanges && !deliveredFulfillmentLocked,
     invalidate: orderInvalidateKeys });
 
   const itemRows = useMemo(
@@ -852,10 +857,16 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={statusMut.isPending || statusMut.blocked || !canUpdateOrder}
+                    disabled={statusMut.isPending || statusMut.blocked || !canUpdateOrder || deliveredFulfillmentLocked}
                     onClick={() => setConfirmAction("status")}
                     className="rounded-lg bg-[#1653cc] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-                    title={canUpdateOrder ? undefined : "Requires orders.update permission"}
+                    title={
+                      deliveredFulfillmentLocked
+                        ? deliveredLockReason
+                        : canUpdateOrder
+                          ? undefined
+                          : "Requires orders.update permission"
+                    }
                   >
                     {statusMut.isPending ? "Updating…" : "Apply status"}
                   </button>
@@ -899,9 +910,10 @@ export const OrderDetailPage = () => {
                       <div className="flex flex-wrap items-center gap-3">
                         <button
                           type="button"
-                          disabled={assignMut.isPending || assignMut.blocked || !warehouseId.trim()}
+                          disabled={assignMut.isPending || assignMut.blocked || !warehouseId.trim() || deliveredFulfillmentLocked}
                           onClick={() => setConfirmAction("assign")}
                           className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
+                          title={deliveredFulfillmentLocked ? deliveredLockReason : undefined}
                         >
                           {assignMut.isPending ? "Assigning…" : "Apply warehouse"}
                         </button>
@@ -1003,11 +1015,13 @@ export const OrderDetailPage = () => {
                           </label>
                           <button
                             type="button"
-                            disabled={shipMut.isPending || shipMut.blocked}
+                            disabled={shipMut.isPending || shipMut.blocked || deliveredFulfillmentLocked}
                             onClick={() => setConfirmAction("ship")}
                             className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
                             title={
-                              !shipmentCreatable
+                              deliveredFulfillmentLocked
+                                ? deliveredLockReason
+                                : !shipmentCreatable
                                 ? "Warehouse id is required — refresh if the order has a warehouse but the field is empty"
                                 : undefined
                             }
@@ -1053,11 +1067,13 @@ export const OrderDetailPage = () => {
                           </label>
                           <button
                             type="button"
-                            disabled={shipMut.isPending || shipMut.blocked}
+                            disabled={shipMut.isPending || shipMut.blocked || deliveredFulfillmentLocked}
                             onClick={() => setConfirmAction("ship")}
                             className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
                             title={
-                              !shipmentCreatable
+                              deliveredFulfillmentLocked
+                                ? deliveredLockReason
+                                : !shipmentCreatable
                                 ? "Enter a warehouse id before creating a shipment"
                                 : undefined
                             }
@@ -1092,11 +1108,13 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={campaignMut.isPending || campaignMut.blocked}
+                    disabled={campaignMut.isPending || campaignMut.blocked || deliveredFulfillmentLocked}
                     onClick={() => campaignMut.run(undefined)}
                     className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-50"
                     title={
-                      !canUpdateOrder
+                      deliveredFulfillmentLocked
+                        ? deliveredLockReason
+                        : !canUpdateOrder
                         ? "Requires orders.update permission"
                         : !campaignHasChanges
                           ? "Change the campaign id or add a note before saving"
@@ -1129,10 +1147,16 @@ export const OrderDetailPage = () => {
                   </label>
                   <button
                     type="button"
-                    disabled={cancelMut.isPending || cancelMut.blocked || !cancelReason.trim() || !canCancelOrder}
+                    disabled={cancelMut.isPending || cancelMut.blocked || !cancelReason.trim() || !canCancelOrder || deliveredFulfillmentLocked}
                     onClick={() => setConfirmAction("cancel")}
                     className="rounded-lg bg-rose-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-                    title={canCancelOrder ? undefined : "Requires orders.cancel permission"}
+                    title={
+                      deliveredFulfillmentLocked
+                        ? deliveredLockReason
+                        : canCancelOrder
+                          ? undefined
+                          : "Requires orders.cancel permission"
+                    }
                   >
                     {cancelMut.isPending ? "Cancelling…" : "Cancel order"}
                   </button>
@@ -1151,7 +1175,7 @@ export const OrderDetailPage = () => {
           <button
             type="button"
             className={railBtn}
-            disabled={!canUpdateOrder}
+            disabled={!canUpdateOrder || deliveredFulfillmentLocked}
             title="Mark fulfilled"
             onClick={() => {
               setNextStatus("COMPLETED");
@@ -1163,9 +1187,15 @@ export const OrderDetailPage = () => {
           <button
             type="button"
             className={railBtn}
-            disabled={!canOverrideFulfillment || (Boolean(hasAssignedWarehouse) && Boolean(hasFulfillmentShipment))}
+            disabled={
+              !canOverrideFulfillment ||
+              (Boolean(hasAssignedWarehouse) && Boolean(hasFulfillmentShipment)) ||
+              deliveredFulfillmentLocked
+            }
             title={
-              hasAssignedWarehouse && hasFulfillmentShipment
+              deliveredFulfillmentLocked
+                ? deliveredLockReason
+                : hasAssignedWarehouse && hasFulfillmentShipment
                 ? "Warehouse is set and shipment exists"
                 : "Warehouse override"
             }
@@ -1185,7 +1215,7 @@ export const OrderDetailPage = () => {
             <button
               type="button"
               className={railBtn}
-              disabled={!canOverrideFulfillment}
+              disabled={!canOverrideFulfillment || deliveredFulfillmentLocked}
               title="Shipment fallback or status"
               onClick={() => scrollToSection("order-admin-ship")}
             >
@@ -1203,7 +1233,7 @@ export const OrderDetailPage = () => {
             <button
               type="button"
               className="group relative flex h-10 w-10 items-center justify-center rounded-lg text-red-400 transition-all hover:bg-red-500/20"
-              disabled={!canCancelOrder}
+              disabled={!canCancelOrder || deliveredFulfillmentLocked}
               title="Cancel order"
               onClick={() => scrollToSection("order-admin-cancel")}
             >

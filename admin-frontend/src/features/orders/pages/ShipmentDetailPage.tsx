@@ -232,13 +232,24 @@ export const ShipmentDetailPage = () => {
                 <MaterialIcon name="print" className="text-lg" />
                 Label
               </button>
-              <Link
-                to={`/admin/orders/${e.order.id}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
-              >
-                <MaterialIcon name="edit" className="text-lg text-white" />
-                Edit shipment
-              </Link>
+              {terminal ? (
+                <span
+                  className="inline-flex cursor-not-allowed items-center gap-2 rounded-xl bg-[#e6e7f6] px-4 py-2 text-sm font-semibold text-slate-500"
+                  title="Delivered shipments are locked from edits."
+                  aria-disabled="true"
+                >
+                  <MaterialIcon name="edit" className="text-lg text-slate-400" />
+                  Edit shipment
+                </span>
+              ) : (
+                <Link
+                  to={`/admin/orders/${e.order.id}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+                >
+                  <MaterialIcon name="edit" className="text-lg text-white" />
+                  Edit shipment
+                </Link>
+              )}
               <PageActionsMenu
                 items={[refreshDataMenuItem(queryClient, ["admin-shipment-detail", shipmentId])]}
                 triggerLabel="Actions"
@@ -567,23 +578,31 @@ export const ShipmentDetailPage = () => {
                   Operational actions
                 </h2>
                 <div className="space-y-3">
-                  <Link
-                    to={`/admin/orders/${e.order.id}`}
-                    className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
-                  >
-                    <span className="text-sm font-medium text-[#f2f3ff]">Update status</span>
-                    <MaterialIcon
-                      name="chevron_right"
-                      className="text-lg text-[#4f7ef8] transition-transform group-hover:translate-x-1"
-                    />
-                  </Link>
-                  <Link
-                    to={`/admin/shipments/${shipmentId}/tracking`}
-                    className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
-                  >
-                    <span className="text-sm font-medium text-[#f2f3ff]">Add tracking event</span>
-                    <MaterialIcon name="add_location" className="text-lg text-[#4f7ef8]" />
-                  </Link>
+                  {terminal ? (
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-[#bfc3d6]">
+                      Shipment is delivered/cancelled. Operational updates are locked.
+                    </div>
+                  ) : (
+                    <>
+                      <Link
+                        to={`/admin/orders/${e.order.id}`}
+                        className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
+                      >
+                        <span className="text-sm font-medium text-[#f2f3ff]">Update status</span>
+                        <MaterialIcon
+                          name="chevron_right"
+                          className="text-lg text-[#4f7ef8] transition-transform group-hover:translate-x-1"
+                        />
+                      </Link>
+                      <Link
+                        to={`/admin/shipments/${shipmentId}/tracking`}
+                        className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
+                      >
+                        <span className="text-sm font-medium text-[#f2f3ff]">Add tracking event</span>
+                        <MaterialIcon name="add_location" className="text-lg text-[#4f7ef8]" />
+                      </Link>
+                    </>
+                  )}
                   <Link
                     to={`/admin/shipments/${shipmentId}/tracking`}
                     className="group flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
