@@ -68,6 +68,7 @@ export const PaymentDetailPage = () => {
   );
 
   const methodLine = railLabel ?? PAYSTACK_RAILS_COMPACT;
+  const refundInitiated = refundRows.length > 0;
 
   const timelineEntries = useMemo(() => {
     if (!entity) return [];
@@ -149,12 +150,22 @@ export const PaymentDetailPage = () => {
               >
                 Print Receipt
               </button>
-              <Link
-                to={`/admin/refunds?q=${encodeURIComponent(entity.orderNumber)}`}
-                className="rounded-md bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-4 py-2 text-xs font-semibold text-white shadow-md transition-opacity hover:opacity-90"
-              >
-                Initiate Refund
-              </Link>
+              {refundInitiated ? (
+                <span
+                  className="cursor-not-allowed rounded-md bg-[#e6e7f6] px-4 py-2 text-xs font-semibold text-slate-500"
+                  title="Refund already initiated for this payment."
+                  aria-disabled="true"
+                >
+                  Initiate Refund
+                </span>
+              ) : (
+                <Link
+                  to={`/admin/refunds?q=${encodeURIComponent(entity.orderNumber)}`}
+                  className="rounded-md bg-gradient-to-br from-[#1653cc] to-[#3b6de6] px-4 py-2 text-xs font-semibold text-white shadow-md transition-opacity hover:opacity-90"
+                >
+                  Initiate Refund
+                </Link>
+              )}
             </div>
           </div>
 
