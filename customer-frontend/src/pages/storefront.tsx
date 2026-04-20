@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { StorefrontMain, StorefrontShell, storefrontScrollRegionClasses } from "@/components/layout";
-import { ProductCard, TrustBadge } from "@/components/ui";
+import { ProductCard } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { customerApi } from "@/lib/api/customer";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
@@ -167,23 +167,6 @@ export const HomePage = () => {
           </div>
         </section>
 
-        {homepage.trustBadges.length > 0 ? (
-          <section className="border-y border-outline-variant/15 bg-surface-container-lowest/80">
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
-              {homepage.trustBadges.map((badge) => (
-                <TrustBadge
-                  key={`${badge.iconName}-${badge.title}`}
-                  icon={badge.iconName}
-                  title={badge.title}
-                  sub={badge.subtitle}
-                  to={badge.href ?? undefined}
-                  ariaLabel={badge.ariaLabel ?? undefined}
-                />
-              ))}
-            </div>
-          </section>
-        ) : null}
-
         {homepage.featuredSection.isVisible && featuredItems.length > 0 ? (
           <section className="bg-surface-container-low/50 border-y border-outline-variant/10 w-full min-w-0">
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
@@ -307,13 +290,6 @@ export const HomePage = () => {
                         </div>
                       </Link>
                     )}
-                    {campaign.products.length > 0 ? (
-                      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 w-full min-w-0 [&>*]:min-w-0">
-                        {campaign.products.map((product) => (
-                          <ProductCard key={product.id} product={product} />
-                        ))}
-                      </div>
-                    ) : null}
                   </div>
                 ))}
               </div>
@@ -414,33 +390,6 @@ export const HomePage = () => {
                   </Link>
                   <div className="p-4 sm:p-5 flex flex-col flex-1">
                     <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2">{brand.tagline}</p>
-                    {brand.products.length > 0 ? (
-                      <>
-                        <p className="font-label text-[10px] uppercase tracking-widest text-outline font-bold mt-4 mb-2">
-                          Shop directly
-                        </p>
-                        <div className="grid grid-cols-3 gap-2 w-full min-w-0">
-                          {brand.products.map((product) => (
-                            <Link
-                              key={product.id}
-                              to={`/products/${product.slug}`}
-                              className="group/p flex min-w-0 flex-col gap-1.5"
-                              aria-label={`${product.name} by ${brand.title} — ${product.category}, ${formatGhs(product.price)}. View product.`}
-                            >
-                              <div className="aspect-[3/4] rounded-lg overflow-hidden border border-outline-variant/15 bg-surface-container-low w-full">
-                                <img
-                                  src={product.imageUrl}
-                                  alt={`${product.name} — ${brand.title}`}
-                                  className="h-full w-full object-cover group-hover/p:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
-                              </div>
-                              <span className="text-[10px] font-headline font-semibold text-on-background line-clamp-2 leading-tight group-hover/p:text-secondary transition-colors break-words">
-                                {product.name}
-                              </span>
-                            </Link>
-                          ))}
-                        </div>
-                      </>
-                    ) : null}
                     <Link
                       to={brand.href}
                       className="mt-4 inline-flex items-center gap-1 text-secondary font-label font-bold text-[10px] uppercase tracking-widest hover:underline underline-offset-4"
@@ -570,26 +519,7 @@ export const HomePage = () => {
                         {promo.ctaLabel}
                         <Icon name="arrow_forward" className="text-base" />
                       </Link>
-                      <Link
-                        to="/cart"
-                        className="inline-flex w-full sm:w-fit justify-center items-center gap-2 border-2 border-outline-variant/30 text-on-background px-6 py-3 rounded-xl font-label font-bold text-xs uppercase tracking-widest hover:border-secondary/40 transition-colors"
-                        aria-label={`Go to bag to apply code ${promo.code}`}
-                      >
-                        View bag
-                      </Link>
                     </div>
-                    {promo.products.length > 0 ? (
-                      <>
-                        <p className="font-label text-[10px] uppercase tracking-widest text-outline font-bold mt-8 mb-3">
-                          Featured with this offer
-                        </p>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 w-full min-w-0 [&>*]:min-w-0">
-                          {promo.products.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                          ))}
-                        </div>
-                      </>
-                    ) : null}
                   </div>
                 </div>
               ))}
