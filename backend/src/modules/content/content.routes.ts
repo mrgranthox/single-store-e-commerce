@@ -38,6 +38,7 @@ import {
   createPageBodySchema,
   pageIdParamsSchema,
   pageSlugParamsSchema,
+  publishHomepageDraftBodySchema,
   publicBannersQuerySchema,
   updateHomepageDraftBodySchema,
   updateBannerBodySchema,
@@ -69,7 +70,7 @@ router.post(
   "/admin/content/homepage/publish",
   requireAdminActor,
   requirePermissions(["content.pages.write"]),
-  validateRequest({ body: contentMutationBodySchema }),
+  validateRequest({ body: publishHomepageDraftBodySchema }),
   publishHomepageAdmin
 );
 router.post(

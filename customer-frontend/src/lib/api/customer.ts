@@ -16,6 +16,7 @@ export type HomepageProductCard = {
   reviewCount?: number;
   description?: string;
   brand?: string;
+  defaultVariantId?: string | null;
 };
 
 export type CustomerHomepagePayload = {

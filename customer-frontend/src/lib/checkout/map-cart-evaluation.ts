@@ -90,10 +90,7 @@ export const mapCartEvaluationToOrderSummary = (
     };
     const qty = typeof it.quantity === "number" ? it.quantity : 1;
     const lineCents = typeof it.pricing?.lineSubtotalCents === "number" ? it.pricing.lineSubtotalCents : 0;
-    const image =
-      typeof it.mediaUrl === "string" && it.mediaUrl.trim()
-        ? it.mediaUrl.trim()
-        : "https://placehold.co/160x200/e2e8f0/64748b/png?text=Item";
+    const image = typeof it.mediaUrl === "string" && it.mediaUrl.trim() ? it.mediaUrl.trim() : "";
     return {
       itemId:
         typeof it.id === "string" && it.id.trim()

@@ -276,6 +276,7 @@ export const deleteAdminContentPagePermanent = async (
 
 export type HomepageSectionHeader = {
   isVisible: boolean;
+  contentMode: "MANUAL" | "AUTO";
   eyebrow: string;
   title: string;
   description: string;
@@ -380,6 +381,132 @@ export type AdminHomepageDraftEntity = {
   testimonials: HomepageTestimonialDraft[];
 };
 
+export type HomepagePreviewProductCard = {
+  id: string;
+  slug: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice?: number;
+  imageUrl: string;
+  rating?: number;
+  reviewCount?: number;
+  description?: string;
+  brand?: string;
+  defaultVariantId?: string | null;
+};
+
+export type AdminHomepageResolvedPreview = {
+  hero: {
+    eyebrow: string;
+    titlePrefix: string;
+    titleAccent: string | null;
+    titleSuffix: string | null;
+    body: string;
+    primaryCtaLabel: string;
+    primaryCtaHref: string;
+    backgroundImageUrl: string;
+    backgroundImageAlt: string;
+  };
+  trustBadges: Array<{
+    iconName: string;
+    title: string;
+    subtitle: string;
+    href: string | null;
+    ariaLabel: string | null;
+  }>;
+  featuredSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: HomepagePreviewProductCard[];
+  };
+  promoSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: Array<{
+      badge: string;
+      code: string;
+      headline: string;
+      body: string;
+      terms: string;
+      bannerImageUrl: string;
+      ctaLabel: string;
+      ctaHref: string;
+      products: HomepagePreviewProductCard[];
+    }>;
+  };
+  categorySection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: Array<{
+      slug: string;
+      title: string;
+      description: string;
+      imageUrl: string;
+      productCount: number;
+      href: string;
+    }>;
+  };
+  brandSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: Array<{
+      slug: string;
+      title: string;
+      tagline: string;
+      heroImageUrl: string;
+      ctaLabel: string;
+      href: string;
+      products: HomepagePreviewProductCard[];
+    }>;
+  };
+  campaignSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaLabel?: string | null;
+    ctaHref?: string | null;
+    items: Array<{
+      slug: string;
+      title: string;
+      subtitle: string;
+      heroImageUrl: string;
+      label: string;
+      ctaLabel: string;
+      href: string;
+      layout: "FEATURE" | "SPLIT";
+      products: HomepagePreviewProductCard[];
+    }>;
+  };
+  testimonialSection: {
+    isVisible: boolean;
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: Array<{
+      quote: string;
+      customerName: string;
+      imageUrl: string;
+      statusLabel: string;
+    }>;
+  };
+};
+
 export type HomepageOptionCategory = {
   id: string;
   slug: string;
@@ -412,6 +539,8 @@ export type AdminHomepageDraftResponse = {
   success: true;
   data: {
     entity: AdminHomepageDraftEntity;
+    resolvedPreview: AdminHomepageResolvedPreview;
+    warnings: string[];
     options: {
       categories: HomepageOptionCategory[];
       products: HomepageOptionProduct[];
@@ -422,6 +551,9 @@ export type AdminHomepageDraftResponse = {
 };
 
 export type UpdateHomepageDraftBody = Omit<AdminHomepageDraftEntity, "status">;
+export type SaveHomepageDraftRequestBody = UpdateHomepageDraftBody & {
+  expectedDraftUpdatedAt: string;
+};
 
 export const getAdminHomepageDraft = async (
   accessToken: string
@@ -433,7 +565,7 @@ export const getAdminHomepageDraft = async (
 
 export const updateAdminHomepageDraft = async (
   accessToken: string,
-  body: UpdateHomepageDraftBody
+  body: SaveHomepageDraftRequestBody
 ): Promise<AdminHomepageDraftResponse> =>
   apiRequest<AdminHomepageDraftResponse>({
     method: "PUT",
@@ -443,13 +575,14 @@ export const updateAdminHomepageDraft = async (
   });
 
 export const publishAdminHomepage = async (
-  accessToken: string
+  accessToken: string,
+  body: SaveHomepageDraftRequestBody
 ): Promise<AdminHomepageDraftResponse> =>
   apiRequest<AdminHomepageDraftResponse>({
     method: "POST",
     path: "/api/admin/content/homepage/publish",
     accessToken,
-    body: {}
+    body
   });
 
 export const unpublishAdminHomepage = async (

@@ -41,14 +41,27 @@ export const ProductCard = ({ product }: { product: Product }) => {
   const ratingForStars =
     reviewCount > 0 && typeof product.rating === "number" && Number.isFinite(product.rating) ? product.rating : 0;
   const stars = Array.from({ length: 5 }, (_, i) => i < Math.round(ratingForStars));
+  const hasImage = product.imageUrl.trim().length > 0;
 
   return (
     <div className="group min-w-0 max-w-full">
       <div className="relative aspect-[3/4] overflow-hidden bg-surface-container-low mb-4 sm:mb-6 rounded-sm w-full">
-        <img
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          src={product.imageUrl}
-          alt={product.name} loading="lazy" decoding="async" />
+        {hasImage ? (
+          <img
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            src={product.imageUrl}
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-surface-container-high text-outline">
+            <div className="flex flex-col items-center gap-2 text-center">
+              <Icon name="image" className="text-4xl" />
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest">No media</span>
+            </div>
+          </div>
+        )}
         {product.badge && (
           <div className="absolute top-4 left-4">
             <span
@@ -69,58 +82,70 @@ export const ProductCard = ({ product }: { product: Product }) => {
         >
           <Icon name="favorite" filled={heartOn} className={heartOn ? "text-error" : "text-on-surface"} />
         </button>
-        <button
-          type="button"
-          disabled={!variantId || cartBusy}
-          title={cartError ?? (!variantId ? "Open product to choose options" : cartBusy ? "Adding..." : "Add to bag")}
-          aria-busy={cartBusy}
-          onClick={async () => {
-            if (!variantId) return;
-            setCartBusy(true);
-            setCartError(null);
-            const previousCart = queryClient.getQueryData(cartQueryKey);
-            queryClient.setQueryData(cartQueryKey, (current) =>
-              applyOptimisticAddCartItem(current, {
-                variantId,
-                quantity: 1,
-                unitAmountCents: Math.round(product.price * 100),
-                mediaUrl: product.imageUrl,
-                product: {
-                  id: product.id,
-                  slug: product.slug,
-                  title: product.name,
-                  status: "PUBLISHED"
-                }
-              })
-            );
-            try {
-              const response = await customerBackendApi.addCartItem({ variantId, quantity: 1 });
-              queryClient.setQueryData(cartQueryKey, response.data);
-            } catch (error) {
-              queryClient.setQueryData(cartQueryKey, previousCart);
-              const message = error instanceof CommerceApiError ? error.message : "Could not add to bag.";
-              setCartError(message);
-            } finally {
-              setCartBusy(false);
-            }
-          }}
-          className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg disabled:opacity-40"
-        >
-          <Icon name={cartBusy ? "progress_activity" : "add_shopping_cart"} className="text-on-surface" />
-          <span className="sr-only">{cartBusy ? "Adding to cart" : "Add to cart"}</span>
-        </button>
+        {variantId ? (
+          <button
+            type="button"
+            disabled={cartBusy}
+            title={cartError ?? (cartBusy ? "Adding..." : "Add to bag")}
+            aria-busy={cartBusy}
+            onClick={async () => {
+              setCartBusy(true);
+              setCartError(null);
+              const previousCart = queryClient.getQueryData(cartQueryKey);
+              queryClient.setQueryData(cartQueryKey, (current) =>
+                applyOptimisticAddCartItem(current, {
+                  variantId,
+                  quantity: 1,
+                  unitAmountCents: Math.round(product.price * 100),
+                  mediaUrl: product.imageUrl,
+                  product: {
+                    id: product.id,
+                    slug: product.slug,
+                    title: product.name,
+                    status: "PUBLISHED"
+                  }
+                })
+              );
+              try {
+                const response = await customerBackendApi.addCartItem({ variantId, quantity: 1 });
+                queryClient.setQueryData(cartQueryKey, response.data);
+              } catch (error) {
+                queryClient.setQueryData(cartQueryKey, previousCart);
+                const message = error instanceof CommerceApiError ? error.message : "Could not add to bag.";
+                setCartError(message);
+              } finally {
+                setCartBusy(false);
+              }
+            }}
+            className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg disabled:opacity-40"
+          >
+            <Icon name={cartBusy ? "progress_activity" : "add_shopping_cart"} className="text-on-surface" />
+            <span className="sr-only">{cartBusy ? "Adding to cart" : "Add to cart"}</span>
+          </button>
+        ) : (
+          <Link
+            to={`/products/${product.slug}`}
+            title="View product details"
+            className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+          >
+            <Icon name="arrow_forward" className="text-on-surface" />
+            <span className="sr-only">View product details</span>
+          </Link>
+        )}
       </div>
       <Link to={`/products/${product.slug}`} className="block min-w-0">
         <div className="flex justify-between items-start gap-3 min-w-0">
           <div className="min-w-0 flex-1">
             <p className="text-outline text-xs uppercase tracking-widest mb-1">{product.category}</p>
             <h3 className="font-headline font-bold text-base sm:text-lg mb-2 break-words">{product.name}</h3>
-            <div className="flex items-center gap-1 mb-2">
-              {stars.map((filled, i) => (
-                <Icon key={i} name="star" filled={filled} className="text-[16px] text-tertiary" />
-              ))}
-              <span className="text-[10px] text-outline ml-1 font-medium">({reviewCount})</span>
-            </div>
+            {reviewCount > 0 ? (
+              <div className="flex items-center gap-1 mb-2">
+                {stars.map((filled, i) => (
+                  <Icon key={i} name="star" filled={filled} className="text-[16px] text-tertiary" />
+                ))}
+                <span className="text-[10px] text-outline ml-1 font-medium">({reviewCount})</span>
+              </div>
+            ) : null}
           </div>
           <div className="text-right shrink-0 tabular-nums">
             {product.originalPrice && (
@@ -139,7 +164,19 @@ export const ProductCard = ({ product }: { product: Product }) => {
 /* ── cart item image card ── */
 export const CartItemImage = ({ src, alt }: { src: string; alt: string }) => (
   <div className="w-24 sm:w-28 md:w-48 shrink-0 aspect-[4/5] bg-surface-container-low overflow-hidden rounded-lg">
-    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={src} alt={alt} loading="lazy" decoding="async" />
+    {src.trim() ? (
+      <img
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div className="flex h-full w-full items-center justify-center text-outline">
+        <Icon name="image" className="text-3xl" />
+      </div>
+    )}
   </div>
 );
 
@@ -312,10 +349,12 @@ export const OrderStatusBadge = ({ status }: { status: string }) => (
 
 /* ── rating stars ── */
 export const StarRating = ({ rating, count }: { rating: number; count?: number }) => (
-  <div className="flex items-center gap-1">
-    {Array.from({ length: 5 }, (_, i) => (
-      <Icon key={i} name="star" filled={i < Math.round(rating)} className="text-[16px] text-tertiary" />
-    ))}
-    {count != null && <span className="text-[10px] text-outline ml-1 font-medium">({count})</span>}
-  </div>
+  count != null && count <= 0 ? null : (
+    <div className="flex items-center gap-1">
+      {Array.from({ length: 5 }, (_, i) => (
+        <Icon key={i} name="star" filled={i < Math.round(rating)} className="text-[16px] text-tertiary" />
+      ))}
+      {count != null && <span className="text-[10px] text-outline ml-1 font-medium">({count})</span>}
+    </div>
+  )
 );

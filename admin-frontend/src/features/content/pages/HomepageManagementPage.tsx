@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useAuthedQuery } from "@/lib/api/useAuthedQuery";
 
 import { PageHeader } from "@/components/primitives/PageHeader";
@@ -12,7 +12,9 @@ import {
   publishAdminHomepage,
   unpublishAdminHomepage,
   updateAdminHomepageDraft,
+  type AdminHomepageDraftResponse,
   type AdminHomepageDraftEntity,
+  type AdminHomepageResolvedPreview,
   type HomepageBrandSpotlightDraft,
   type HomepageCampaignSpotlightDraft,
   type HomepageCategoryTileDraft,
@@ -44,7 +46,9 @@ const uploadButtonClass =
 const uploadHintClass = "mt-1 text-xs text-[#737685]";
 const HOMEPAGE_IMAGE_ACCEPT = "image/jpeg,image/png,image/webp";
 const HOMEPAGE_IMAGE_MAX_BYTES = 8 * 1024 * 1024;
+const AUTOSAVE_DELAY_MS = 900;
 type HrefOption = { value: string; label: string };
+type HomepageSyncState = "idle" | "dirty" | "saving" | "saved" | "conflict";
 
 const commonRouteOptions: HrefOption[] = [
   { value: "/shop", label: "Shop" },
@@ -160,7 +164,17 @@ const normalizeDraftForSave = (draft: UpdateHomepageDraftBody): UpdateHomepageDr
   }))
 });
 
-const validateDraftBeforeSave = (
+const serializeDraftSignature = (draft: UpdateHomepageDraftBody) => JSON.stringify(normalizeDraftForSave(draft));
+
+const isManualSection = (header: HomepageSectionHeader) => header.contentMode === "MANUAL";
+
+const readConflictDraftUpdatedAt = (error: ApiError) => {
+  const details = (error.payload as { error?: { details?: { currentDraftUpdatedAt?: unknown } } } | null)?.error
+    ?.details;
+  return typeof details?.currentDraftUpdatedAt === "string" ? details.currentDraftUpdatedAt : null;
+};
+
+const validateDraftBeforePublish = (
   draft: UpdateHomepageDraftBody,
   availability: {
     hasProducts: boolean;
@@ -186,23 +200,43 @@ const validateDraftBeforeSave = (
   if (draft.promoOffers.length > 6) errors.push("Promo offers cannot exceed 6.");
   if (draft.testimonials.length > 6) errors.push("Testimonials cannot exceed 6.");
 
-  if (draft.sectionHeaders.category.isVisible && draft.categoryTiles.length === 0 && availability.hasCategories) {
+  if (
+    draft.sectionHeaders.category.isVisible &&
+    isManualSection(draft.sectionHeaders.category) &&
+    draft.categoryTiles.length === 0 &&
+    availability.hasCategories
+  ) {
     errors.push("Category section is visible but has no category tiles.");
   }
-  if (draft.sectionHeaders.featured.isVisible && draft.featuredProducts.length === 0 && availability.hasProducts) {
+  if (
+    draft.sectionHeaders.featured.isVisible &&
+    isManualSection(draft.sectionHeaders.featured) &&
+    draft.featuredProducts.length === 0 &&
+    availability.hasProducts
+  ) {
     errors.push("Featured section is visible but has no featured products.");
   }
-  if (draft.sectionHeaders.brand.isVisible && draft.brandSpotlights.length === 0 && availability.hasBrands) {
+  if (
+    draft.sectionHeaders.brand.isVisible &&
+    isManualSection(draft.sectionHeaders.brand) &&
+    draft.brandSpotlights.length === 0 &&
+    availability.hasBrands
+  ) {
     errors.push("Brand section is visible but has no brand spotlights.");
   }
-  if (draft.sectionHeaders.campaign.isVisible && draft.campaignSpotlights.length === 0 && availability.hasCampaigns) {
-    errors.push("Editor's pick section is visible but has no campaign banners.");
+  if (
+    draft.sectionHeaders.campaign.isVisible &&
+    isManualSection(draft.sectionHeaders.campaign) &&
+    draft.campaignSpotlights.length === 0 &&
+    availability.hasCampaigns
+  ) {
+    errors.push("Campaign section is visible but has no campaign spotlights.");
   }
   if (draft.sectionHeaders.promo.isVisible && draft.promoOffers.length === 0) {
     errors.push("Promotions section is visible but has no promo offers.");
   }
   if (draft.sectionHeaders.testimonial.isVisible && draft.testimonials.length === 0) {
-    errors.push("Testimonials section is visible but has no testimony/review entries.");
+    errors.push("Testimonials section is visible but has no customer proof entries.");
   }
 
   for (const [sectionKey, header] of Object.entries(draft.sectionHeaders)) {
@@ -220,32 +254,38 @@ const validateDraftBeforeSave = (
     }
   }
 
-  draft.featuredProducts.forEach((item, index) => {
-    if (!isUuid(item.productId)) {
-      errors.push(`Featured product #${index + 1} has an invalid product selection.`);
-    }
-  });
-
-  draft.brandSpotlights.forEach((item, index) => {
-    if (!item.slug.trim()) errors.push(`Brand spotlight #${index + 1} slug is required.`);
-    if (!isHttpUrl(item.heroImageUrl)) errors.push(`Brand spotlight #${index + 1} hero image URL is invalid.`);
-    if (!item.ctaLabel.trim()) errors.push(`Brand spotlight #${index + 1} CTA label is required.`);
-    if (item.productIds.length > 6) errors.push(`Brand spotlight #${index + 1} cannot exceed 6 products.`);
-    item.productIds.forEach((productId) => {
-      if (!isUuid(productId)) errors.push(`Brand spotlight #${index + 1} has an invalid product ID.`);
+  if (isManualSection(draft.sectionHeaders.featured)) {
+    draft.featuredProducts.forEach((item, index) => {
+      if (!isUuid(item.productId)) {
+        errors.push(`Featured product #${index + 1} has an invalid product selection.`);
+      }
     });
-  });
+  }
 
-  draft.campaignSpotlights.forEach((item, index) => {
-    if (!item.slug.trim()) errors.push(`Editor's pick #${index + 1} slug is required.`);
-    if (!isHttpUrl(item.heroImageUrl)) errors.push(`Editor's pick #${index + 1} hero image URL is invalid.`);
-    if (!item.label.trim()) errors.push(`Editor's pick #${index + 1} label is required.`);
-    if (!item.ctaLabel.trim()) errors.push(`Editor's pick #${index + 1} CTA label is required.`);
-    if (item.productIds.length > 6) errors.push(`Editor's pick #${index + 1} cannot exceed 6 products.`);
-    item.productIds.forEach((productId) => {
-      if (!isUuid(productId)) errors.push(`Editor's pick #${index + 1} has an invalid product ID.`);
+  if (isManualSection(draft.sectionHeaders.brand)) {
+    draft.brandSpotlights.forEach((item, index) => {
+      if (!item.slug.trim()) errors.push(`Brand spotlight #${index + 1} slug is required.`);
+      if (!isHttpUrl(item.heroImageUrl)) errors.push(`Brand spotlight #${index + 1} hero image URL is invalid.`);
+      if (!item.ctaLabel.trim()) errors.push(`Brand spotlight #${index + 1} CTA label is required.`);
+      if (item.productIds.length > 6) errors.push(`Brand spotlight #${index + 1} cannot exceed 6 products.`);
+      item.productIds.forEach((productId) => {
+        if (!isUuid(productId)) errors.push(`Brand spotlight #${index + 1} has an invalid product ID.`);
+      });
     });
-  });
+  }
+
+  if (isManualSection(draft.sectionHeaders.campaign)) {
+    draft.campaignSpotlights.forEach((item, index) => {
+      if (!item.slug.trim()) errors.push(`Campaign spotlight #${index + 1} slug is required.`);
+      if (!isHttpUrl(item.heroImageUrl)) errors.push(`Campaign spotlight #${index + 1} hero image URL is invalid.`);
+      if (!item.label.trim()) errors.push(`Campaign spotlight #${index + 1} label is required.`);
+      if (!item.ctaLabel.trim()) errors.push(`Campaign spotlight #${index + 1} CTA label is required.`);
+      if (item.productIds.length > 6) errors.push(`Campaign spotlight #${index + 1} cannot exceed 6 products.`);
+      item.productIds.forEach((productId) => {
+        if (!isUuid(productId)) errors.push(`Campaign spotlight #${index + 1} has an invalid product ID.`);
+      });
+    });
+  }
 
   draft.promoOffers.forEach((item, index) => {
     if (!item.badge.trim()) errors.push(`Promotion #${index + 1} badge is required.`);
@@ -272,23 +312,71 @@ const validateDraftBeforeSave = (
 
 const emptyDraft: UpdateHomepageDraftBody = {
   hero: {
-    eyebrow: "Storefront homepage",
+    eyebrow: "Homepage",
     titlePrefix: "",
     titleAccent: "",
     titleSuffix: "",
     body: "",
-    primaryCtaLabel: "",
+    primaryCtaLabel: "Shop now",
     primaryCtaHref: "/shop",
     backgroundImageUrl: "",
     backgroundImageAlt: ""
   },
   sectionHeaders: {
-    category: { isVisible: true, eyebrow: "", title: "", description: "", ctaLabel: "", ctaHref: "" },
-    featured: { isVisible: true, eyebrow: "", title: "", description: "", ctaLabel: "", ctaHref: "" },
-    brand: { isVisible: true, eyebrow: "", title: "", description: "", ctaLabel: "", ctaHref: "" },
-    campaign: { isVisible: true, eyebrow: "", title: "", description: "", ctaLabel: "", ctaHref: "" },
-    promo: { isVisible: true, eyebrow: "", title: "", description: "", ctaLabel: "", ctaHref: "" },
-    testimonial: { isVisible: true, eyebrow: "", title: "", description: "", ctaLabel: "", ctaHref: "" }
+    category: {
+      isVisible: true,
+      contentMode: "AUTO",
+      eyebrow: "Categories",
+      title: "Shop Categories",
+      description: "Browse the catalog by category.",
+      ctaLabel: "Shop all",
+      ctaHref: "/shop"
+    },
+    featured: {
+      isVisible: true,
+      contentMode: "AUTO",
+      eyebrow: "Featured",
+      title: "Featured Products",
+      description: "Shop the products highlighted for the homepage.",
+      ctaLabel: "Shop featured",
+      ctaHref: "/shop"
+    },
+    brand: {
+      isVisible: true,
+      contentMode: "AUTO",
+      eyebrow: "Brands",
+      title: "Shop by Brand",
+      description: "Explore the brands active in the catalog.",
+      ctaLabel: "Browse brands",
+      ctaHref: "/brands"
+    },
+    campaign: {
+      isVisible: true,
+      contentMode: "AUTO",
+      eyebrow: "Campaigns",
+      title: "Current Campaigns",
+      description: "Explore the current campaign highlights.",
+      ctaLabel: "View campaigns",
+      ctaHref: "/shop"
+    },
+    promo: {
+      isVisible: false,
+      contentMode: "MANUAL",
+      eyebrow: "Offers",
+      title: "Promotions",
+      description: "Promotions configured in the homepage CMS.",
+      ctaLabel: "",
+      ctaHref: ""
+    },
+    testimonial: {
+      isVisible: false,
+      contentMode: "MANUAL",
+      eyebrow: "Social proof",
+      title: "Customer Feedback",
+      description: "Verified customer testimonials shown on the homepage.",
+      ctaLabel: "",
+      ctaHref: ""
+    }
   },
   trustBadges: [],
   categoryTiles: [],
@@ -301,130 +389,21 @@ const emptyDraft: UpdateHomepageDraftBody = {
 
 export const HomepageManagementPage = () => {
   const accessToken = useAdminAuthStore((state) => state.accessToken);
-  const queryClient = useQueryClient();
   const [draft, setDraft] = useState<UpdateHomepageDraftBody>(emptyDraft);
   const [status, setStatus] = useState<AdminHomepageDraftEntity["status"] | null>(null);
+  const [resolvedPreview, setResolvedPreview] = useState<AdminHomepageResolvedPreview | null>(null);
+  const [resolverWarnings, setResolverWarnings] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [validationIssues, setValidationIssues] = useState<string[]>([]);
+  const [syncState, setSyncState] = useState<HomepageSyncState>("idle");
+  const [conflictDraftUpdatedAt, setConflictDraftUpdatedAt] = useState<string | null>(null);
+  const lastSyncedSignatureRef = useRef<string | null>(null);
+  const autosaveTimerRef = useRef<number | null>(null);
+  const previousDraftSignatureRef = useRef<string | null>(null);
 
-  const homepageQuery = useAuthedQuery(
-  ["admin-homepage-draft"],
-  (token) => getAdminHomepageDraft(token)
-);
-
-  useEffect(() => {
-    const entity = homepageQuery.data?.data.entity;
-    if (!entity) {
-      return;
-    }
-    setDraft(removeStatus(entity));
-    setStatus(entity.status);
-    setValidationIssues([]);
-  }, [homepageQuery.dataUpdatedAt, homepageQuery.data]);
+  const homepageQuery = useAuthedQuery(["admin-homepage-draft"], (token) => getAdminHomepageDraft(token));
 
   const options = homepageQuery.data?.data.options;
-
-  const saveMutation = useMutation({
-    mutationFn: async (body: UpdateHomepageDraftBody) => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      let normalized = normalizeDraftForSave(body);
-
-      if (normalized.featuredProducts.length === 0 && productOptions.length > 0) {
-        normalized = {
-          ...normalized,
-          featuredProducts: productOptions.slice(0, 10).map((product) => ({ productId: product.id }))
-        };
-      }
-
-      normalized = {
-        ...normalized,
-        sectionHeaders: {
-          ...normalized.sectionHeaders,
-          featured: {
-            ...normalized.sectionHeaders.featured,
-            isVisible: productOptions.length > 0 ? normalized.sectionHeaders.featured.isVisible : false
-          },
-          category: {
-            ...normalized.sectionHeaders.category,
-            isVisible: categoryOptions.length > 0 ? normalized.sectionHeaders.category.isVisible : false
-          },
-          brand: {
-            ...normalized.sectionHeaders.brand,
-            isVisible: brandOptions.length > 0 ? normalized.sectionHeaders.brand.isVisible : false
-          },
-          campaign: {
-            ...normalized.sectionHeaders.campaign,
-            isVisible: campaignOptions.length > 0 ? normalized.sectionHeaders.campaign.isVisible : false
-          }
-        }
-      };
-
-      const issues = validateDraftBeforeSave(normalized, {
-        hasProducts: productOptions.length > 0,
-        hasCategories: categoryOptions.length > 0,
-        hasBrands: brandOptions.length > 0,
-        hasCampaigns: campaignOptions.length > 0
-      });
-      if (issues.length > 0) {
-        setValidationIssues(issues);
-        throw new Error("Homepage draft has validation issues. Resolve them and save again.");
-      }
-      return updateAdminHomepageDraft(accessToken, normalized);
-    },
-    onSuccess: (response) => {
-      setFeedback("Draft saved.");
-      setValidationIssues([]);
-      setDraft(removeStatus(response.data.entity));
-      setStatus(response.data.entity.status);
-      void queryClient.invalidateQueries({ queryKey: ["admin-homepage-draft"] });
-    },
-    onError: (error) => {
-      setFeedback(error instanceof ApiError ? error.message : error instanceof Error ? error.message : "Save failed.");
-    }
-  });
-
-  const publishMutation = useMutation({
-    mutationFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return publishAdminHomepage(accessToken);
-    },
-    onSuccess: (response) => {
-      setFeedback("Homepage published.");
-      setDraft(removeStatus(response.data.entity));
-      setStatus(response.data.entity.status);
-      void queryClient.invalidateQueries({ queryKey: ["admin-homepage-draft"] });
-    },
-    onError: (error) => {
-      setFeedback(
-        error instanceof ApiError ? error.message : error instanceof Error ? error.message : "Publish failed."
-      );
-    }
-  });
-
-  const unpublishMutation = useMutation({
-    mutationFn: async () => {
-      if (!accessToken) {
-        throw new Error("Not signed in.");
-      }
-      return unpublishAdminHomepage(accessToken);
-    },
-    onSuccess: (response) => {
-      setFeedback("Homepage unpublished.");
-      setDraft(removeStatus(response.data.entity));
-      setStatus(response.data.entity.status);
-      void queryClient.invalidateQueries({ queryKey: ["admin-homepage-draft"] });
-    },
-    onError: (error) => {
-      setFeedback(
-        error instanceof ApiError ? error.message : error instanceof Error ? error.message : "Unpublish failed."
-      );
-    }
-  });
-
   const productOptions = options?.products ?? [];
   const categoryOptions = options?.categories ?? [];
   const brandOptions = options?.brands ?? [];
@@ -478,6 +457,155 @@ export const HomepageManagementPage = () => {
     () => new Map(productOptions.map((product) => [product.id, product.title])),
     [productOptions]
   );
+  const draftSignature = useMemo(() => serializeDraftSignature(draft), [draft]);
+
+  const applyWorkspaceResponse = (response: AdminHomepageDraftResponse) => {
+    const entity = response.data.entity;
+    const nextDraft = removeStatus(entity);
+    setDraft(nextDraft);
+    setStatus(entity.status);
+    setResolvedPreview(response.data.resolvedPreview);
+    setResolverWarnings(response.data.warnings);
+    setValidationIssues([]);
+    setConflictDraftUpdatedAt(null);
+    lastSyncedSignatureRef.current = serializeDraftSignature(nextDraft);
+    setSyncState("saved");
+  };
+
+  useEffect(() => {
+    if (!homepageQuery.data) {
+      return;
+    }
+    applyWorkspaceResponse(homepageQuery.data);
+  }, [homepageQuery.dataUpdatedAt, homepageQuery.data]);
+
+  useEffect(() => {
+    if (previousDraftSignatureRef.current && previousDraftSignatureRef.current !== draftSignature && validationIssues.length > 0) {
+      setValidationIssues([]);
+    }
+    previousDraftSignatureRef.current = draftSignature;
+  }, [draftSignature, validationIssues.length]);
+
+  const saveMutation = useMutation({
+    retry: false,
+    mutationFn: async (body: UpdateHomepageDraftBody & { expectedDraftUpdatedAt: string }) => {
+      if (!accessToken) {
+        throw new Error("Not signed in.");
+      }
+      return updateAdminHomepageDraft(accessToken, body);
+    },
+    onMutate: () => {
+      setSyncState("saving");
+    },
+    onSuccess: (response) => {
+      setFeedback(null);
+      applyWorkspaceResponse(response);
+    },
+    onError: (error) => {
+      if (error instanceof ApiError && error.statusCode === 409) {
+        setConflictDraftUpdatedAt(readConflictDraftUpdatedAt(error));
+        setSyncState("conflict");
+        setFeedback("Another admin changed the homepage draft. Refresh the workspace before editing or publishing again.");
+        return;
+      }
+      setSyncState("dirty");
+      setFeedback(error instanceof ApiError ? error.message : error instanceof Error ? error.message : "Autosave failed.");
+    }
+  });
+
+  const publishMutation = useMutation({
+    retry: false,
+    mutationFn: async (body: UpdateHomepageDraftBody & { expectedDraftUpdatedAt: string }) => {
+      if (!accessToken) {
+        throw new Error("Not signed in.");
+      }
+      return publishAdminHomepage(accessToken, body);
+    },
+    onSuccess: (response) => {
+      setFeedback("Homepage published.");
+      applyWorkspaceResponse(response);
+    },
+    onError: (error) => {
+      if (error instanceof ApiError && error.statusCode === 409) {
+        setConflictDraftUpdatedAt(readConflictDraftUpdatedAt(error));
+        setSyncState("conflict");
+        setFeedback("The draft changed before publish completed. Refresh the workspace and try again.");
+        return;
+      }
+      setFeedback(
+        error instanceof ApiError ? error.message : error instanceof Error ? error.message : "Publish failed."
+      );
+    }
+  });
+
+  const unpublishMutation = useMutation({
+    retry: false,
+    mutationFn: async () => {
+      if (!accessToken) {
+        throw new Error("Not signed in.");
+      }
+      return unpublishAdminHomepage(accessToken);
+    },
+    onSuccess: (response) => {
+      setFeedback("Homepage unpublished.");
+      applyWorkspaceResponse(response);
+    },
+    onError: (error) => {
+      setFeedback(
+        error instanceof ApiError ? error.message : error instanceof Error ? error.message : "Unpublish failed."
+      );
+    }
+  });
+
+  useEffect(() => {
+    if (
+      !accessToken ||
+      !status?.draftUpdatedAt ||
+      homepageQuery.isLoading ||
+      syncState === "conflict" ||
+      publishMutation.isPending ||
+      unpublishMutation.isPending
+    ) {
+      return;
+    }
+
+    if (draftSignature === lastSyncedSignatureRef.current) {
+      return;
+    }
+
+    setSyncState((current) => (current === "saving" ? current : "dirty"));
+
+    if (autosaveTimerRef.current) {
+      window.clearTimeout(autosaveTimerRef.current);
+    }
+
+    autosaveTimerRef.current = window.setTimeout(() => {
+      if (saveMutation.isPending || !status?.draftUpdatedAt) {
+        return;
+      }
+
+      void saveMutation.mutate({
+        ...normalizeDraftForSave(draft),
+        expectedDraftUpdatedAt: status.draftUpdatedAt
+      });
+    }, AUTOSAVE_DELAY_MS);
+
+    return () => {
+      if (autosaveTimerRef.current) {
+        window.clearTimeout(autosaveTimerRef.current);
+      }
+    };
+  }, [
+    accessToken,
+    draft,
+    draftSignature,
+    homepageQuery.isLoading,
+    publishMutation.isPending,
+    saveMutation.isPending,
+    status?.draftUpdatedAt,
+    syncState,
+    unpublishMutation.isPending
+  ]);
 
   const setSectionHeader = (
     key: keyof UpdateHomepageDraftBody["sectionHeaders"],
@@ -493,20 +621,46 @@ export const HomepageManagementPage = () => {
   };
 
   const pageActionsDisabled =
-    homepageQuery.isLoading ||
-    saveMutation.isPending ||
-    publishMutation.isPending ||
-    unpublishMutation.isPending;
+    homepageQuery.isLoading || publishMutation.isPending || unpublishMutation.isPending;
+  const publishDisabled =
+    pageActionsDisabled || saveMutation.isPending || syncState === "conflict" || !status?.draftUpdatedAt;
+
+  const handlePublish = () => {
+    if (!status?.draftUpdatedAt) {
+      setFeedback("Homepage draft status is unavailable. Refresh the workspace and try again.");
+      return;
+    }
+
+    const normalized = normalizeDraftForSave(draft);
+    const issues = validateDraftBeforePublish(normalized, {
+      hasProducts: productOptions.length > 0,
+      hasCategories: categoryOptions.length > 0,
+      hasBrands: brandOptions.length > 0,
+      hasCampaigns: campaignOptions.length > 0
+    });
+
+    if (issues.length > 0) {
+      setValidationIssues(issues);
+      setFeedback("Resolve the homepage publish issues and try again.");
+      return;
+    }
+
+    if (autosaveTimerRef.current) {
+      window.clearTimeout(autosaveTimerRef.current);
+    }
+
+    publishMutation.mutate({
+      ...normalized,
+      expectedDraftUpdatedAt: status.draftUpdatedAt
+    });
+  };
 
   const refreshHomepageWorkspace = async () => {
     const response = await homepageQuery.refetch();
-    const entity = response.data?.data.entity;
-    if (!entity) {
+    if (!response.data) {
       throw new Error("Homepage workspace refresh returned no entity.");
     }
-    setDraft(removeStatus(entity));
-    setStatus(entity.status);
-    setValidationIssues([]);
+    applyWorkspaceResponse(response.data);
     setFeedback("Homepage workspace refreshed.");
   };
 
@@ -535,7 +689,7 @@ export const HomepageManagementPage = () => {
 
       <PageHeader
         title="Homepage"
-        description="Control every customer-homepage section from one typed content workspace."
+        description="Manage the draft, preview, and publish snapshot that powers the customer storefront homepage."
         actionMenuItems={[
           {
             id: "refresh-homepage-workspace",
@@ -557,17 +711,9 @@ export const HomepageManagementPage = () => {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className={smallButtonClass}
-              disabled={pageActionsDisabled}
-              onClick={() => saveMutation.mutate(draft)}
-            >
-              Save Draft
-            </button>
-            <button
-              type="button"
               className={primaryButtonClass}
-              disabled={pageActionsDisabled}
-              onClick={() => publishMutation.mutate()}
+              disabled={publishDisabled}
+              onClick={handlePublish}
             >
               Publish Homepage
             </button>
@@ -588,6 +734,32 @@ export const HomepageManagementPage = () => {
         <span>{status?.draftUpdatedAt ? new Date(status.draftUpdatedAt).toLocaleString() : "Not available"}</span>
         <span className="font-semibold">Published:</span>
         <span>{status?.publishedAt ? new Date(status.publishedAt).toLocaleString() : "Not published"}</span>
+        <span className="font-semibold">Sync:</span>
+        <span
+          className={`rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wide ${
+            syncState === "conflict"
+              ? "bg-[#fff1f1] text-[#ba1a1a]"
+              : syncState === "saving"
+                ? "bg-[#eef4ff] text-[#1653cc]"
+                : syncState === "dirty"
+                  ? "bg-[#fff7e8] text-[#8c5a00]"
+                  : "bg-[#edf8f1] text-[#156f42]"
+          }`}
+        >
+          {syncState === "saving"
+            ? "Saving"
+            : syncState === "dirty"
+              ? "Pending autosave"
+              : syncState === "conflict"
+                ? "Conflict"
+                : "Saved"}
+        </span>
+        {conflictDraftUpdatedAt ? (
+          <>
+            <span className="font-semibold">Server draft:</span>
+            <span>{new Date(conflictDraftUpdatedAt).toLocaleString()}</span>
+          </>
+        ) : null}
       </div>
 
       {feedback ? (
@@ -596,9 +768,20 @@ export const HomepageManagementPage = () => {
         </div>
       ) : null}
 
+      {resolverWarnings.length > 0 ? (
+        <div className="rounded-xl border border-[#f2d6a5] bg-[#fff9ee] px-4 py-3 text-sm text-[#7a4b00]">
+          <p className="font-semibold">Resolver warnings</p>
+          <ul className="mt-2 list-disc space-y-1 pl-5">
+            {resolverWarnings.map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       {validationIssues.length > 0 ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-          <p className="font-semibold">Please fix these homepage CMS issues before saving:</p>
+          <p className="font-semibold">Resolve these homepage publish issues:</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             {validationIssues.map((issue) => (
               <li key={issue}>{issue}</li>
@@ -610,20 +793,21 @@ export const HomepageManagementPage = () => {
       <section className={shellCardClass}>
         <SectionHeading
           title="Homepage Layout Structure"
-          description="Order aligned to your approved structure: Hero, Featured, Editor's Pick, New Arrivals, Brand, Category, Promotions, Product Reviews, Testimonies."
+          description="The storefront renders the resolved backend payload in one fixed conversion-first order."
         />
         <ol className="grid gap-2 text-sm text-[#434654] md:grid-cols-2">
           <li>1. Hero section</li>
-          <li>2. Featured products (up to 10)</li>
-          <li>3. Editor&apos;s pick (campaign spotlight banners)</li>
-          <li>4. New arrivals (latest uploaded products)</li>
-          <li>5. Brand section (3 brands)</li>
-          <li>6. Category section (3 categories)</li>
-          <li>7. Coupon / promotions banners</li>
-          <li>8. Product reviews highlights</li>
-          <li>9. Testimonies</li>
+          <li>2. Trust badges</li>
+          <li>3. Featured products</li>
+          <li>4. Promotions</li>
+          <li>5. Categories</li>
+          <li>6. Brands</li>
+          <li>7. Campaigns</li>
+          <li>8. Testimonials</li>
         </ol>
       </section>
+
+      {resolvedPreview ? <ResolvedPreviewPanel preview={resolvedPreview} /> : null}
 
       <section className={shellCardClass}>
         <SectionHeading title="Hero" description="Main above-the-fold message and primary CTA." />
@@ -811,10 +995,12 @@ export const HomepageManagementPage = () => {
 
       <SectionHeaderCard
         title="Featured Products (Up To 10)"
-        description="Primary featured product grid on homepage."
+        description="Primary shoppable product grid on the storefront homepage."
         header={draft.sectionHeaders.featured}
         hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("featured", nextHeader)}
+        supportsContentMode
+        autoSummary="AUTO mode resolves up to 10 published products with real media, inventory, and homepage merchandising priority. Switch to MANUAL only when you need an exact curated sequence."
       >
         <SortableProductRows
           items={draft.featuredProducts}
@@ -827,17 +1013,19 @@ export const HomepageManagementPage = () => {
       </SectionHeaderCard>
 
       <SectionHeaderCard
-        title="Editor's Pick (Campaign Banners)"
-        description="Editorial banner blocks used as editor's pick sections."
+        title="Campaign Spotlights"
+        description="Campaign hero blocks that route customers into active campaign pages."
         header={draft.sectionHeaders.campaign}
         hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("campaign", nextHeader)}
+        supportsContentMode
+        autoSummary="AUTO mode resolves active campaigns that have published banner media. Switch to MANUAL to override the order, copy, and linked products."
       >
         <div className="space-y-4">
           {draft.campaignSpotlights.map((spotlight, index) => (
             <ArrayItemCard
               key={`campaign-${index}`}
-              title={spotlight.title || `Editor's Pick ${index + 1}`}
+              title={spotlight.title || `Campaign ${index + 1}`}
               index={index}
               count={draft.campaignSpotlights.length}
               onMoveUp={() =>
@@ -901,21 +1089,8 @@ export const HomepageManagementPage = () => {
               }))
             }
           >
-            Add Editor&apos;s Pick Banner
+            Add Campaign Spotlight
           </button>
-        </div>
-      </SectionHeaderCard>
-
-      <SectionHeaderCard
-        title="New Arrivals"
-        description="Auto-managed from newest published products in catalog (latest updates)."
-        header={draft.sectionHeaders.featured}
-        hrefOptions={sectionCtaHrefOptions}
-        onChange={(nextHeader) => setSectionHeader("featured", nextHeader)}
-      >
-        <div className="rounded-xl border border-dashed border-[#d7dce5] bg-[#fbfcff] p-4 text-sm text-[#5b5e68]">
-          New arrivals are pulled from recently uploaded/published products and shown on the customer homepage.
-          Use the catalog module to update product freshness.
         </div>
       </SectionHeaderCard>
 
@@ -925,6 +1100,8 @@ export const HomepageManagementPage = () => {
         header={draft.sectionHeaders.brand}
         hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("brand", nextHeader)}
+        supportsContentMode
+        autoSummary="AUTO mode resolves active brands that have published products and real media. Switch to MANUAL to hand-pick the brand story and product selection."
       >
         <div className="space-y-4">
           {draft.brandSpotlights.map((spotlight, index) => (
@@ -1003,6 +1180,8 @@ export const HomepageManagementPage = () => {
         header={draft.sectionHeaders.category}
         hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("category", nextHeader)}
+        supportsContentMode
+        autoSummary="AUTO mode resolves active categories with real media and the strongest catalog density. Switch to MANUAL to set an exact category sequence and copy."
       >
         <div className="space-y-4">
           {draft.categoryTiles.map((tile, index) => (
@@ -1134,20 +1313,8 @@ export const HomepageManagementPage = () => {
       </SectionHeaderCard>
 
       <SectionHeaderCard
-        title="Product Reviews Highlights"
-        description="Review-like social proof cards shown before testimonies."
-        header={draft.sectionHeaders.testimonial}
-        hrefOptions={sectionCtaHrefOptions}
-        onChange={(nextHeader) => setSectionHeader("testimonial", nextHeader)}
-      >
-        <div className="rounded-xl border border-dashed border-[#d7dce5] bg-[#fbfcff] p-4 text-sm text-[#5b5e68]">
-          This area is powered by testimonial/review entries below. Add quote cards with customer names and status labels.
-        </div>
-      </SectionHeaderCard>
-
-      <SectionHeaderCard
-        title="Testimonies"
-        description="Customer testimonies and trust quotes."
+        title="Testimonials"
+        description="Customer proof shown on the storefront as one unified social-proof section."
         header={draft.sectionHeaders.testimonial}
         hrefOptions={sectionCtaHrefOptions}
         onChange={(nextHeader) => setSectionHeader("testimonial", nextHeader)}
@@ -1212,19 +1379,8 @@ export const HomepageManagementPage = () => {
         </div>
       </SectionHeaderCard>
 
-      <div className="flex justify-end">
-        <button
-          type="button"
-          className={primaryButtonClass}
-          disabled={pageActionsDisabled}
-          onClick={() => saveMutation.mutate(draft)}
-        >
-          Save Draft
-        </button>
-      </div>
-
       <div className="rounded-xl border border-dashed border-[#d7dce5] bg-[#fbfcff] px-4 py-3 text-xs text-[#5b5e68]">
-        Selected products are shown in the current saved order. Product labels use the latest catalog titles, for example:
+        Selected products are shown in the current draft order. Product labels use the latest catalog titles, for example:
         {" "}
         {[...productTitleById.values()].slice(0, 3).join(", ")}
       </div>
@@ -1245,6 +1401,8 @@ const SectionHeaderCard = ({
   header,
   hrefOptions,
   onChange,
+  supportsContentMode = false,
+  autoSummary,
   children
 }: {
   title: string;
@@ -1252,6 +1410,8 @@ const SectionHeaderCard = ({
   header: HomepageSectionHeader;
   hrefOptions: HrefOption[];
   onChange: (header: HomepageSectionHeader) => void;
+  supportsContentMode?: boolean;
+  autoSummary?: ReactNode;
   children: ReactNode;
 }) => (
   <section className={shellCardClass}>
@@ -1270,6 +1430,22 @@ const SectionHeaderCard = ({
         onChange={(value) => onChange({ ...header, ctaHref: value || null })}
         options={[{ value: "", label: "None" }, ...mergeHrefOptions(hrefOptions, header.ctaHref)]}
       />
+      {supportsContentMode ? (
+        <SelectField
+          label="Content Source"
+          value={header.contentMode}
+          onChange={(value) =>
+            onChange({
+              ...header,
+              contentMode: value === "MANUAL" ? "MANUAL" : "AUTO"
+            })
+          }
+          options={[
+            { value: "AUTO", label: "Auto from backend data" },
+            { value: "MANUAL", label: "Manual CMS entries" }
+          ]}
+        />
+      ) : null}
     </div>
     <div className="mt-4">
       <TextAreaField
@@ -1289,9 +1465,225 @@ const SectionHeaderCard = ({
         Show this section on the customer homepage
       </label>
     </div>
-    <div className="mt-6">{children}</div>
+    {supportsContentMode && header.contentMode === "AUTO" ? (
+      <div className="mt-6 rounded-xl border border-dashed border-[#c7d7f8] bg-[#f4f8ff] p-4 text-sm text-[#1653cc]">
+        {autoSummary}
+      </div>
+    ) : (
+      <div className="mt-6">{children}</div>
+    )}
   </section>
 );
+
+const ResolvedPreviewPanel = ({ preview }: { preview: AdminHomepageResolvedPreview }) => (
+  <section className={shellCardClass}>
+    <SectionHeading
+      title="Resolved Storefront Preview"
+      description="This is the exact backend-resolved payload the storefront will render after publish."
+    />
+    <div className="space-y-6">
+      <div className="overflow-hidden rounded-2xl border border-[#e5e7eb] bg-[#f8f9fb]">
+        <div className="grid gap-0 md:grid-cols-[1.2fr_1fr]">
+          <PreviewImage src={preview.hero.backgroundImageUrl} alt={preview.hero.backgroundImageAlt} className="h-full min-h-[240px]" />
+          <div className="p-5 md:p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#737685]">
+              {preview.hero.eyebrow || "Hero"}
+            </p>
+            <h3 className="mt-2 font-headline text-2xl font-bold text-[#181b25]">
+              {preview.hero.titlePrefix}
+              {preview.hero.titleAccent ? ` ${preview.hero.titleAccent}` : ""}
+              {preview.hero.titleSuffix ? ` ${preview.hero.titleSuffix}` : ""}
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-[#5b5e68]">{preview.hero.body}</p>
+            <div className="mt-4 inline-flex items-center rounded-full bg-[#1653cc] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+              {preview.hero.primaryCtaLabel} → {preview.hero.primaryCtaHref}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <PreviewSectionCard
+        title="Trust badges"
+        visible={preview.trustBadges.length > 0}
+        itemCount={preview.trustBadges.length}
+      >
+        <div className="grid gap-3 md:grid-cols-3">
+          {preview.trustBadges.map((badge) => (
+            <div key={`${badge.iconName}-${badge.title}`} className="rounded-xl border border-[#e5e7eb] bg-[#fbfcff] p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#737685]">{badge.iconName}</p>
+              <p className="mt-2 font-semibold text-[#181b25]">{badge.title}</p>
+              <p className="mt-1 text-sm text-[#5b5e68]">{badge.subtitle}</p>
+            </div>
+          ))}
+        </div>
+      </PreviewSectionCard>
+
+      <PreviewSectionCard
+        title="Featured products"
+        visible={preview.featuredSection.isVisible}
+        itemCount={preview.featuredSection.items.length}
+      >
+        <PreviewProductGrid products={preview.featuredSection.items} />
+      </PreviewSectionCard>
+
+      <PreviewSectionCard
+        title="Promotions"
+        visible={preview.promoSection.isVisible}
+        itemCount={preview.promoSection.items.length}
+      >
+        <div className="grid gap-4 md:grid-cols-2">
+          {preview.promoSection.items.map((promo) => (
+            <div key={`${promo.code}-${promo.headline}`} className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-[#fbfcff]">
+              <PreviewImage src={promo.bannerImageUrl} alt={promo.headline} className="h-40" />
+              <div className="p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#737685]">
+                  {promo.badge} · {promo.code}
+                </p>
+                <p className="mt-2 font-semibold text-[#181b25]">{promo.headline}</p>
+                <p className="mt-1 text-sm text-[#5b5e68]">{promo.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewSectionCard>
+
+      <PreviewSectionCard
+        title="Categories"
+        visible={preview.categorySection.isVisible}
+        itemCount={preview.categorySection.items.length}
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {preview.categorySection.items.map((category) => (
+            <div key={category.slug} className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-[#fbfcff]">
+              <PreviewImage src={category.imageUrl} alt={category.title} className="h-40" />
+              <div className="p-4">
+                <p className="font-semibold text-[#181b25]">{category.title}</p>
+                <p className="mt-1 text-sm text-[#5b5e68]">{category.description}</p>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#737685]">
+                  {category.productCount} products
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewSectionCard>
+
+      <PreviewSectionCard
+        title="Brands"
+        visible={preview.brandSection.isVisible}
+        itemCount={preview.brandSection.items.length}
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {preview.brandSection.items.map((brand) => (
+            <div key={brand.slug} className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-[#fbfcff]">
+              <PreviewImage src={brand.heroImageUrl} alt={brand.title} className="h-40" />
+              <div className="p-4">
+                <p className="font-semibold text-[#181b25]">{brand.title}</p>
+                <p className="mt-1 text-sm text-[#5b5e68]">{brand.tagline}</p>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#737685]">
+                  {brand.products.length} linked products
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewSectionCard>
+
+      <PreviewSectionCard
+        title="Campaigns"
+        visible={preview.campaignSection.isVisible}
+        itemCount={preview.campaignSection.items.length}
+      >
+        <div className="grid gap-4 md:grid-cols-2">
+          {preview.campaignSection.items.map((campaign) => (
+            <div key={campaign.slug} className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-[#fbfcff]">
+              <PreviewImage src={campaign.heroImageUrl} alt={campaign.title} className="h-48" />
+              <div className="p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#737685]">
+                  {campaign.label} · {campaign.layout}
+                </p>
+                <p className="mt-2 font-semibold text-[#181b25]">{campaign.title}</p>
+                <p className="mt-1 text-sm text-[#5b5e68]">{campaign.subtitle}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PreviewSectionCard>
+
+      <PreviewSectionCard
+        title="Testimonials"
+        visible={preview.testimonialSection.isVisible}
+        itemCount={preview.testimonialSection.items.length}
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {preview.testimonialSection.items.map((testimonial) => (
+            <div key={`${testimonial.customerName}-${testimonial.quote}`} className="rounded-xl border border-[#e5e7eb] bg-[#fbfcff] p-4">
+              <p className="text-sm italic leading-relaxed text-[#181b25]">&ldquo;{testimonial.quote}&rdquo;</p>
+              <p className="mt-3 font-semibold text-[#181b25]">{testimonial.customerName}</p>
+              <p className="text-xs uppercase tracking-[0.16em] text-[#737685]">{testimonial.statusLabel}</p>
+            </div>
+          ))}
+        </div>
+      </PreviewSectionCard>
+    </div>
+  </section>
+);
+
+const PreviewSectionCard = ({
+  title,
+  visible,
+  itemCount,
+  children
+}: {
+  title: string;
+  visible: boolean;
+  itemCount: number;
+  children: ReactNode;
+}) => (
+  <div className="rounded-2xl border border-[#e5e7eb] bg-[#f8f9fb] p-4">
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h3 className="font-semibold text-[#181b25]">{title}</h3>
+        <p className="text-xs uppercase tracking-[0.16em] text-[#737685]">
+          {visible ? "Visible on storefront" : "Hidden on storefront"} · {itemCount} item{itemCount === 1 ? "" : "s"}
+        </p>
+      </div>
+    </div>
+    {itemCount > 0 ? children : <p className="text-sm text-[#5b5e68]">No resolved content for this section.</p>}
+  </div>
+);
+
+const PreviewProductGrid = ({ products }: { products: AdminHomepageResolvedPreview["featuredSection"]["items"] }) => (
+  <div className="grid gap-4 md:grid-cols-4">
+    {products.map((product) => (
+      <div key={product.id} className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-[#fbfcff]">
+        <PreviewImage src={product.imageUrl} alt={product.name} className="h-40" />
+        <div className="p-4">
+          <p className="text-xs uppercase tracking-[0.16em] text-[#737685]">{product.category}</p>
+          <p className="mt-1 font-semibold text-[#181b25]">{product.name}</p>
+          <p className="mt-1 text-sm text-[#5b5e68]">{product.brand ?? "Catalog"}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const PreviewImage = ({
+  src,
+  alt,
+  className
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) =>
+  src ? (
+    <img src={src} alt={alt} className={`w-full object-cover ${className ?? ""}`.trim()} />
+  ) : (
+    <div className={`flex w-full items-center justify-center bg-[#eef2f6] text-xs font-semibold uppercase tracking-[0.16em] text-[#737685] ${className ?? ""}`.trim()}>
+      No image
+    </div>
+  );
 
 const ArrayItemCard = ({
   title,
@@ -1675,9 +2067,7 @@ const TestimonialEditor = ({
         value={item.statusLabel ?? ""}
         onChange={(value) => onChange({ ...item, statusLabel: value })}
       />
-      <p className="mt-1 text-xs text-[#737685]">
-        Include the word &quot;review&quot; in this label to place this card under Product Reviews; otherwise it appears under Testimonies.
-      </p>
+      <p className="mt-1 text-xs text-[#737685]">Use a concise trust marker such as Verified purchase or Repeat customer.</p>
     </div>
     <ImageUploadField
       accessToken={accessToken}

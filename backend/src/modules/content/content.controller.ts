@@ -16,6 +16,7 @@ import {
   createPageBodySchema,
   pageIdParamsSchema,
   pageSlugParamsSchema,
+  publishHomepageDraftBodySchema,
   publicBannersQuerySchema,
   updateHomepageDraftBodySchema,
   updateBannerBodySchema,
@@ -90,15 +91,38 @@ export const updateHomepageAdmin = asyncHandler(async (request, response) => {
   const body = readValidatedBody<z.infer<typeof updateHomepageDraftBodySchema>>(request);
   const data = await saveAdminHomepageDraft({
     actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
-    draft: body
+    expectedDraftUpdatedAt: body.expectedDraftUpdatedAt,
+    draft: {
+      hero: body.hero,
+      sectionHeaders: body.sectionHeaders,
+      trustBadges: body.trustBadges,
+      categoryTiles: body.categoryTiles,
+      featuredProducts: body.featuredProducts,
+      brandSpotlights: body.brandSpotlights,
+      campaignSpotlights: body.campaignSpotlights,
+      promoOffers: body.promoOffers,
+      testimonials: body.testimonials
+    }
   });
   return sendSuccess(response, { data });
 });
 
 export const publishHomepageAdmin = asyncHandler(async (request, response) => {
-  readValidatedBody<z.infer<typeof contentMutationBodySchema>>(request);
+  const body = readValidatedBody<z.infer<typeof publishHomepageDraftBodySchema>>(request);
   const data = await publishAdminHomepageDraft({
-    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId)
+    actorAdminUserId: requireAdminUserId(request.context.actor.adminUserId),
+    expectedDraftUpdatedAt: body.expectedDraftUpdatedAt,
+    draft: {
+      hero: body.hero,
+      sectionHeaders: body.sectionHeaders,
+      trustBadges: body.trustBadges,
+      categoryTiles: body.categoryTiles,
+      featuredProducts: body.featuredProducts,
+      brandSpotlights: body.brandSpotlights,
+      campaignSpotlights: body.campaignSpotlights,
+      promoOffers: body.promoOffers,
+      testimonials: body.testimonials
+    }
   });
   return sendSuccess(response, { data });
 });

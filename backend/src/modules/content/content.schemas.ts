@@ -4,6 +4,7 @@ const optionalResourceTypeSchema = z.enum(["image", "video", "raw"]).optional();
 const optionalDeliveryTypeSchema = z.enum(["upload", "private"]).optional();
 const internalHrefSchema = z.string().trim().min(1).max(255);
 const imageUrlSchema = z.string().trim().url().max(2_000);
+const homepageContentModeSchema = z.enum(["MANUAL", "AUTO"]);
 
 export const pageIdParamsSchema = z.object({
   pageId: z.string().uuid()
@@ -94,6 +95,7 @@ export const contentMediaUploadIntentBodySchema = z.object({
 
 const sectionHeaderInputSchema = z.object({
   isVisible: z.boolean(),
+  contentMode: homepageContentModeSchema,
   eyebrow: z.string().trim().min(1).max(80),
   title: z.string().trim().min(1).max(160),
   description: z.string().trim().min(1).max(600),
@@ -164,7 +166,84 @@ const homepageTestimonialInputSchema = z.object({
   statusLabel: z.union([z.string().trim().min(1).max(80), z.null()]).optional()
 });
 
-export const updateHomepageDraftBodySchema = z.object({
+const draftLooseText = (max: number) => z.string().trim().max(max);
+const draftLooseInternalHrefSchema = z.union([internalHrefSchema, z.literal(""), z.null()]);
+const draftLooseImageUrlSchema = z.union([imageUrlSchema, z.literal("")]);
+const draftLooseUuidSchema = z.union([z.string().uuid(), z.literal(""), z.null()]);
+const draftLooseUuidListSchema = z.array(z.union([z.string().uuid(), z.literal("")])).max(6);
+
+const homepageDraftSectionHeaderInputSchema = z.object({
+  isVisible: z.boolean(),
+  contentMode: homepageContentModeSchema,
+  eyebrow: draftLooseText(80),
+  title: draftLooseText(160),
+  description: draftLooseText(600),
+  ctaLabel: z.union([draftLooseText(80), z.null()]).optional(),
+  ctaHref: draftLooseInternalHrefSchema.optional()
+});
+
+const homepageDraftTrustBadgeInputSchema = z.object({
+  iconName: draftLooseText(80),
+  title: draftLooseText(120),
+  subtitle: draftLooseText(160),
+  href: draftLooseInternalHrefSchema.optional(),
+  ariaLabel: z.union([draftLooseText(255), z.null()]).optional()
+});
+
+const homepageDraftCategoryTileInputSchema = z.object({
+  categoryId: draftLooseUuidSchema.optional(),
+  slug: draftLooseText(120),
+  title: draftLooseText(120),
+  description: draftLooseText(200),
+  imageUrl: draftLooseImageUrlSchema
+});
+
+const homepageDraftFeaturedProductInputSchema = z.object({
+  productId: z.union([z.string().uuid(), z.literal("")])
+});
+
+const homepageDraftBrandSpotlightInputSchema = z.object({
+  brandId: draftLooseUuidSchema.optional(),
+  slug: draftLooseText(120),
+  title: draftLooseText(120),
+  tagline: draftLooseText(255),
+  heroImageUrl: draftLooseImageUrlSchema,
+  ctaLabel: draftLooseText(80),
+  productIds: draftLooseUuidListSchema
+});
+
+const homepageDraftCampaignSpotlightInputSchema = z.object({
+  campaignId: draftLooseUuidSchema.optional(),
+  slug: draftLooseText(120),
+  title: draftLooseText(120),
+  subtitle: draftLooseText(255),
+  heroImageUrl: draftLooseImageUrlSchema,
+  label: draftLooseText(80),
+  ctaLabel: draftLooseText(80),
+  layout: z.enum(["FEATURE", "SPLIT"]),
+  productIds: draftLooseUuidListSchema
+});
+
+const homepageDraftPromoOfferInputSchema = z.object({
+  badge: draftLooseText(80),
+  code: draftLooseText(40),
+  headline: draftLooseText(160),
+  body: draftLooseText(400),
+  terms: draftLooseText(400),
+  bannerImageUrl: draftLooseImageUrlSchema,
+  ctaLabel: draftLooseText(80),
+  ctaHref: draftLooseInternalHrefSchema,
+  productIds: draftLooseUuidListSchema
+});
+
+const homepageDraftTestimonialInputSchema = z.object({
+  quote: draftLooseText(600),
+  customerName: draftLooseText(120),
+  imageUrl: draftLooseImageUrlSchema,
+  statusLabel: z.union([draftLooseText(80), z.null()]).optional()
+});
+
+const homepagePublishBodySchema = z.object({
   hero: z.object({
     eyebrow: z.string().trim().min(1).max(80),
     titlePrefix: z.string().trim().min(1).max(120),
@@ -191,4 +270,41 @@ export const updateHomepageDraftBodySchema = z.object({
   campaignSpotlights: z.array(homepageCampaignSpotlightInputSchema).max(4),
   promoOffers: z.array(homepagePromoOfferInputSchema).max(6),
   testimonials: z.array(homepageTestimonialInputSchema).max(6)
+});
+
+const homepageDraftBodySchema = z.object({
+  hero: z.object({
+    eyebrow: draftLooseText(80),
+    titlePrefix: draftLooseText(120),
+    titleAccent: z.union([draftLooseText(120), z.null()]).optional(),
+    titleSuffix: z.union([draftLooseText(40), z.null()]).optional(),
+    body: draftLooseText(500),
+    primaryCtaLabel: draftLooseText(80),
+    primaryCtaHref: draftLooseInternalHrefSchema,
+    backgroundImageUrl: draftLooseImageUrlSchema,
+    backgroundImageAlt: z.union([draftLooseText(255), z.null()]).optional()
+  }),
+  sectionHeaders: z.object({
+    category: homepageDraftSectionHeaderInputSchema,
+    featured: homepageDraftSectionHeaderInputSchema,
+    brand: homepageDraftSectionHeaderInputSchema,
+    campaign: homepageDraftSectionHeaderInputSchema,
+    promo: homepageDraftSectionHeaderInputSchema,
+    testimonial: homepageDraftSectionHeaderInputSchema
+  }),
+  trustBadges: z.array(homepageDraftTrustBadgeInputSchema).max(8),
+  categoryTiles: z.array(homepageDraftCategoryTileInputSchema).max(8),
+  featuredProducts: z.array(homepageDraftFeaturedProductInputSchema).max(12),
+  brandSpotlights: z.array(homepageDraftBrandSpotlightInputSchema).max(6),
+  campaignSpotlights: z.array(homepageDraftCampaignSpotlightInputSchema).max(4),
+  promoOffers: z.array(homepageDraftPromoOfferInputSchema).max(6),
+  testimonials: z.array(homepageDraftTestimonialInputSchema).max(6)
+});
+
+export const updateHomepageDraftBodySchema = homepageDraftBodySchema.extend({
+  expectedDraftUpdatedAt: z.string().datetime()
+});
+
+export const publishHomepageDraftBodySchema = homepagePublishBodySchema.extend({
+  expectedDraftUpdatedAt: z.string().datetime()
 });

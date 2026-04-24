@@ -711,6 +711,205 @@ export const runAdminOpsIntegrationSuite = async () => {
     assert.equal(publicBannersResponse.statusCode, 200);
     assert.ok(publicBannersResponse.json?.data.items.some((item) => item.id === bannerId));
 
+    step("autosave and publish homepage from admin CMS");
+    const adminHomepageResponse = await requestJson<{
+      success: true;
+      data: {
+        entity: {
+          status: {
+            draftUpdatedAt: string;
+            hasPublishedVersion: boolean;
+            publishedAt: string | null;
+          };
+          hero: {
+            eyebrow: string;
+            titlePrefix: string;
+            titleAccent?: string | null;
+            titleSuffix?: string | null;
+            body: string;
+            primaryCtaLabel: string;
+            primaryCtaHref: string;
+            backgroundImageUrl: string;
+            backgroundImageAlt?: string | null;
+          };
+          sectionHeaders: Record<string, unknown>;
+          trustBadges: unknown[];
+          categoryTiles: unknown[];
+          featuredProducts: unknown[];
+          brandSpotlights: unknown[];
+          campaignSpotlights: unknown[];
+          promoOffers: unknown[];
+          testimonials: unknown[];
+        };
+        resolvedPreview: {
+          hero: {
+            titlePrefix: string;
+          };
+          featuredSection: {
+            items: Array<{ id: string }>;
+          };
+        };
+      };
+    }>({
+      baseUrl,
+      method: "GET",
+      path: "/api/admin/content/homepage",
+      headers: fullAdminHeaders
+    });
+    assert.equal(adminHomepageResponse.statusCode, 200);
+    const homepageEntity = adminHomepageResponse.json?.data.entity;
+    assert.ok(homepageEntity);
+    const { status: homepageStatus, ...homepageDraft } = homepageEntity!;
+
+    const autosavedTitle = `Ops autosave hero ${runId}`;
+    const autosaveHomepageResponse = await requestJson<{
+      success: true;
+      data: {
+        entity: {
+          status: {
+            draftUpdatedAt: string;
+            hasPublishedVersion: boolean;
+            publishedAt: string | null;
+          };
+          hero: {
+            titlePrefix: string;
+            body: string;
+          };
+        };
+      };
+    }>({
+      baseUrl,
+      method: "PUT",
+      path: "/api/admin/content/homepage",
+      headers: fullAdminHeaders,
+      body: {
+        ...homepageDraft,
+        hero: {
+          ...homepageDraft.hero,
+          titlePrefix: autosavedTitle,
+          body: `Autosaved homepage body ${runId}`
+        },
+        expectedDraftUpdatedAt: homepageStatus.draftUpdatedAt
+      }
+    });
+    assert.equal(autosaveHomepageResponse.statusCode, 200);
+    const autosavedStatus = autosaveHomepageResponse.json?.data.entity.status;
+    assert.ok(autosavedStatus);
+    assert.notEqual(autosavedStatus?.draftUpdatedAt, homepageStatus.draftUpdatedAt);
+
+    const staleHomepageSaveResponse = await requestJson({
+      baseUrl,
+      method: "PUT",
+      path: "/api/admin/content/homepage",
+      headers: fullAdminHeaders,
+      body: {
+        ...homepageDraft,
+        expectedDraftUpdatedAt: homepageStatus.draftUpdatedAt
+      }
+    });
+    assert.equal(staleHomepageSaveResponse.statusCode, 409);
+
+    const publishHomepageWorkspace = await requestJson<{
+      success: true;
+      data: {
+        entity: {
+          status: {
+            draftUpdatedAt: string;
+          };
+          hero: {
+            eyebrow: string;
+            titlePrefix: string;
+            titleAccent?: string | null;
+            titleSuffix?: string | null;
+            body: string;
+            primaryCtaLabel: string;
+            primaryCtaHref: string;
+            backgroundImageUrl: string;
+            backgroundImageAlt?: string | null;
+          };
+          sectionHeaders: Record<string, unknown>;
+          trustBadges: unknown[];
+          categoryTiles: unknown[];
+          featuredProducts: unknown[];
+          brandSpotlights: unknown[];
+          campaignSpotlights: unknown[];
+          promoOffers: unknown[];
+          testimonials: unknown[];
+        };
+      };
+    }>({
+      baseUrl,
+      method: "GET",
+      path: "/api/admin/content/homepage",
+      headers: fullAdminHeaders
+    });
+    assert.equal(publishHomepageWorkspace.statusCode, 200);
+    const publishEntity = publishHomepageWorkspace.json?.data.entity;
+    assert.ok(publishEntity);
+    const { status: publishStatus, ...publishDraft } = publishEntity!;
+
+    const publishedHomepageTitle = `Ops published hero ${runId}`;
+    const publishHomepageResponse = await requestJson<{
+      success: true;
+      data: {
+        entity: {
+          status: {
+            draftUpdatedAt: string;
+            hasPublishedVersion: boolean;
+            publishedAt: string | null;
+          };
+        };
+        resolvedPreview: {
+          hero: {
+            titlePrefix: string;
+          };
+          featuredSection: {
+            items: Array<{ id: string }>;
+          };
+        };
+      };
+    }>({
+      baseUrl,
+      method: "POST",
+      path: "/api/admin/content/homepage/publish",
+      headers: fullAdminHeaders,
+      body: {
+        ...publishDraft,
+        hero: {
+          ...publishDraft.hero,
+          titlePrefix: publishedHomepageTitle,
+          body: `Published homepage body ${runId}`
+        },
+        expectedDraftUpdatedAt: publishStatus.draftUpdatedAt
+      }
+    });
+    assert.equal(publishHomepageResponse.statusCode, 200);
+    assert.equal(publishHomepageResponse.json?.data.entity.status.hasPublishedVersion, true);
+    assert.ok(publishHomepageResponse.json?.data.entity.status.publishedAt);
+    assert.equal(publishHomepageResponse.json?.data.resolvedPreview.hero.titlePrefix, publishedHomepageTitle);
+    assert.ok((publishHomepageResponse.json?.data.resolvedPreview.featuredSection.items.length ?? 0) >= 1);
+
+    const publicHomepageResponse = await requestJson<{
+      success: true;
+      data: {
+        entity: {
+          hero: {
+            titlePrefix: string;
+          };
+          featuredSection: {
+            items: Array<{ id: string }>;
+          };
+        };
+      };
+    }>({
+      baseUrl,
+      method: "GET",
+      path: "/api/content/homepage"
+    });
+    assert.equal(publicHomepageResponse.statusCode, 200);
+    assert.equal(publicHomepageResponse.json?.data.entity.hero.titlePrefix, publishedHomepageTitle);
+    assert.ok(publicHomepageResponse.json?.data.entity.featuredSection.items.some((item) => item.id === productId));
+
     step("fetch published catalog product");
     const publicProductResponse = await requestJson({
       baseUrl,

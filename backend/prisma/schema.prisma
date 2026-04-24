@@ -184,6 +184,11 @@ enum HomePageCampaignLayout {
   SPLIT
 }
 
+enum HomePageContentMode {
+  MANUAL
+  AUTO
+}
+
 enum NotificationStatus {
   PENDING
   SENT
@@ -1490,6 +1495,7 @@ model HomePageSectionHeader {
   versionId   String
   kind        HomePageSectionHeaderKind
   isVisible   Boolean @default(true)
+  contentMode HomePageContentMode @default(MANUAL)
   eyebrow     String
   title       String
   description String

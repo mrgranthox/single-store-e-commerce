@@ -75,9 +75,7 @@ export const mapStorefrontProductCard = (raw: unknown): UiStorefrontProduct | nu
   const compare =
     typeof pricing?.compareAtAmountCents === "number" ? pricing.compareAtAmountCents : undefined;
   const category = p.categories?.[0]?.name?.trim() || "Catalog";
-  const imageUrl =
-    p.primaryMedia?.url?.trim() ||
-    `https://placehold.co/480x600/e2e8f0/64748b/png?text=${encodeURIComponent(p.slug.slice(0, 12))}`;
+  const imageUrl = p.primaryMedia?.url?.trim() || "";
   const { rating: cardRating, reviewCount: cardReviewCount } = mapReviewSummaryFields(p.reviewSummary ?? undefined);
   return {
     id: p.id,
@@ -159,9 +157,7 @@ export const mapPublicProductDetailToProduct = (raw: unknown): Product | null =>
   const brand = brandRec?.name?.trim() || undefined;
 
   const media = (d.media as Array<{ url?: string | null }>) ?? [];
-  const imageUrl =
-    media.find((m) => m.url?.trim())?.url?.trim() ??
-    `https://placehold.co/480x600/e2e8f0/64748b/png?text=${encodeURIComponent(slug.slice(0, 12))}`;
+  const imageUrl = media.find((m) => m.url?.trim())?.url?.trim() ?? "";
   const images = media.map((m) => m.url).filter((u): u is string => Boolean(u?.trim()));
 
   const pricing = d.pricing as ApiPricing;
@@ -262,9 +258,7 @@ export const mapWishlistApiItemToProduct = (raw: unknown): Product | null => {
   if (amountCents == null) return null;
   const compare =
     typeof pricing?.compareAtAmountCents === "number" ? pricing.compareAtAmountCents : undefined;
-  const imageUrl =
-    p.primaryMedia?.url?.trim() ??
-    `https://placehold.co/480x600/e2e8f0/64748b/png?text=${encodeURIComponent(p.slug.slice(0, 12))}`;
+  const imageUrl = p.primaryMedia?.url?.trim() ?? "";
   const attrs = parseVariantAttributes(row.variant?.attributes);
   const defaultVariantId = typeof row.variant?.id === "string" ? row.variant.id : null;
 

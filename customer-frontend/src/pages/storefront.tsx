@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { StorefrontMain, StorefrontShell, storefrontScrollRegionClasses } from "@/components/layout";
-import { ProductCard } from "@/components/ui";
+import { ProductCard, TrustBadge } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 import { customerApi } from "@/lib/api/customer";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
@@ -113,13 +113,12 @@ export const HomePage = () => {
   }
 
   const homepage = homepageQuery.data;
-  const featuredItems = homepage.featuredSection.items.slice(0, 10);
-  const editorsPickItems = homepage.campaignSection.items;
-  const newArrivalItems = homepage.featuredSection.items.slice(10, 15);
-  const brandItems = homepage.brandSection.items.slice(0, 3);
-  const categoryItems = homepage.categorySection.items.slice(0, 3);
-  const productReviewItems = homepage.testimonialSection.items.slice(0, 3);
-  const testimonyItems = homepage.testimonialSection.items.slice(3);
+  const featuredItems = homepage.featuredSection.items;
+  const promoItems = homepage.promoSection.items;
+  const categoryItems = homepage.categorySection.items;
+  const brandItems = homepage.brandSection.items;
+  const campaignItems = homepage.campaignSection.items;
+  const testimonialItems = homepage.testimonialSection.items;
 
   return (
     <StorefrontShell>
@@ -127,10 +126,16 @@ export const HomePage = () => {
         className={`${storefrontScrollRegionClasses} bg-surface text-on-background font-body overflow-x-hidden w-full max-w-full min-w-0`}
       >
         <section className="relative min-h-[min(72dvh,540px)] md:min-h-0 md:h-[min(92dvh,920px)] w-full overflow-hidden bg-neutral-950">
-          <img
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-95 md:opacity-92"
-            src={homepage.hero.backgroundImageUrl}
-            alt={homepage.hero.backgroundImageAlt} loading="eager" fetchPriority="high" decoding="async" />
+          {homepage.hero.backgroundImageUrl ? (
+            <img
+              className="absolute inset-0 w-full h-full object-cover object-center opacity-95 md:opacity-92"
+              src={homepage.hero.backgroundImageUrl}
+              alt={homepage.hero.backgroundImageAlt}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          ) : null}
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/72 md:from-black/58 via-black/28 md:via-black/15 to-transparent" />
           <div className="relative z-[1] min-h-[min(72dvh,540px)] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-stretch sm:items-start pb-16 md:pb-0 pt-24 md:pt-0 w-full min-w-0">
             {homepage.hero.eyebrow ? (
@@ -165,6 +170,23 @@ export const HomePage = () => {
             </div>
           </div>
         </section>
+
+        {homepage.trustBadges.length > 0 ? (
+          <section className="border-y border-outline-variant/15 bg-surface-container-lowest/80">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-8">
+              {homepage.trustBadges.map((badge) => (
+                <TrustBadge
+                  key={`${badge.iconName}-${badge.title}`}
+                  icon={badge.iconName}
+                  title={badge.title}
+                  sub={badge.subtitle}
+                  to={badge.href ?? undefined}
+                  ariaLabel={badge.ariaLabel ?? undefined}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {homepage.featuredSection.isVisible && featuredItems.length > 0 ? (
           <section className="bg-surface-container-low/50 border-y border-outline-variant/10 w-full min-w-0">
@@ -203,129 +225,129 @@ export const HomePage = () => {
           </section>
         ) : null}
 
-        {homepage.campaignSection.isVisible && editorsPickItems.length > 0 ? (
-          <section className="bg-surface-container-low/40 border-t border-outline-variant/10 w-full min-w-0">
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-              <div className="mb-10 md:mb-14 max-w-2xl min-w-0">
-                {homepage.campaignSection.eyebrow ? (
-                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
-                    {homepage.campaignSection.eyebrow}
-                  </p>
-                ) : null}
-                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
-                  {homepage.campaignSection.title}
-                </h2>
-                <p className="text-on-surface-variant text-sm sm:text-base mt-2">
-                  {homepage.campaignSection.description}
+        {homepage.promoSection.isVisible && promoItems.length > 0 ? (
+          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
+            <div className="mb-8 md:mb-12 max-w-2xl min-w-0">
+              {homepage.promoSection.eyebrow ? (
+                <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
+                  {homepage.promoSection.eyebrow}
                 </p>
-                {homepage.campaignSection.ctaLabel && homepage.campaignSection.ctaHref ? (
-                  <Link
-                    to={homepage.campaignSection.ctaHref}
-                    className="inline-flex items-center gap-2 mt-4 text-secondary font-label font-bold text-xs uppercase tracking-widest hover:underline underline-offset-4"
-                    aria-label={homepage.campaignSection.ctaLabel}
-                  >
-                    {homepage.campaignSection.ctaLabel}
-                    <Icon name="arrow_forward" className="text-base" />
-                  </Link>
-                ) : null}
-              </div>
-              <div className="flex flex-col gap-12 md:gap-16 min-w-0">
-                {editorsPickItems.map((campaign) => (
-                  <div key={campaign.slug} className="min-w-0">
-                    {campaign.layout === "FEATURE" ? (
-                      <Link
-                        to={campaign.href}
-                        className="group relative block overflow-hidden rounded-2xl border border-outline-variant/15 bg-primary-container min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] w-full max-w-full"
-                        aria-label={`${campaign.title}: ${campaign.subtitle}. ${campaign.ctaLabel}.`}
-                      >
-                        <img
-                          src={campaign.heroImageUrl}
-                          alt={`${campaign.title} campaign`}
-                          className="absolute inset-0 h-full w-full object-cover object-center opacity-55 transition-transform duration-[2.2s] group-hover:scale-[1.04]" loading="lazy" decoding="async" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary-container/95 via-primary-container/55 to-transparent" />
-                        <div className="relative z-[1] h-full min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] flex flex-col justify-end md:justify-center p-5 sm:p-10 md:p-14 w-full max-w-full md:max-w-lg min-w-0">
-                          <span className="font-label text-tertiary-fixed tracking-[0.3em] uppercase text-[10px] font-bold mb-2">
-                            {campaign.label}
-                          </span>
-                          <h3 className="text-white font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tighter mb-3 break-words">
-                            {campaign.title}
-                          </h3>
-                          <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-5 break-words">
-                            {campaign.subtitle}
-                          </p>
-                          <span className="inline-flex items-center gap-2 bg-white text-on-background px-5 py-2.5 rounded-xl font-label font-bold text-xs uppercase tracking-widest group-hover:bg-secondary group-hover:text-on-secondary transition-colors w-fit">
-                            {campaign.ctaLabel}
-                            <Icon name="arrow_forward" className="text-base" />
-                          </span>
-                        </div>
-                      </Link>
-                    ) : (
-                      <Link
-                        to={campaign.href}
-                        className="group relative flex flex-col md:flex-row overflow-hidden rounded-2xl border border-outline-variant/15 bg-surface-container-lowest min-h-[200px] w-full max-w-full"
-                        aria-label={`${campaign.title}: ${campaign.subtitle}. ${campaign.ctaLabel}.`}
-                      >
-                        <div className="relative w-full md:w-1/2 min-h-[180px] sm:min-h-[220px] md:min-h-[280px] shrink-0">
-                          <img
-                            src={campaign.heroImageUrl}
-                            alt={`${campaign.title} campaign`}
-                            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
-                          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/50 to-transparent" />
-                        </div>
-                        <div className="flex flex-1 flex-col justify-center p-5 sm:p-8 md:p-10 min-w-0">
-                          <span className="font-label text-secondary tracking-[0.22em] uppercase text-[10px] font-bold mb-2">
-                            {campaign.label}
-                          </span>
-                          <h3 className="font-headline text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-2 break-words">
-                            {campaign.title}
-                          </h3>
-                          <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed mb-5 break-words">
-                            {campaign.subtitle}
-                          </p>
-                          <span className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-widest group-hover:underline underline-offset-4 w-fit">
-                            {campaign.ctaLabel}
-                            <Icon name="arrow_forward" className="text-base" />
-                          </span>
-                        </div>
-                      </Link>
-                    )}
+              ) : null}
+              <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
+                {homepage.promoSection.title}
+              </h2>
+              <p className="text-on-surface-variant text-sm sm:text-base mt-2">
+                {homepage.promoSection.description}
+              </p>
+            </div>
+            <div className="flex flex-col gap-10 md:gap-14 min-w-0">
+              {promoItems.map((promo, index) => (
+                <div
+                  key={`${promo.code}-${index}`}
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 rounded-2xl border border-outline-variant/15 overflow-hidden bg-surface-container-lowest shadow-sm w-full min-w-0 max-w-full"
+                >
+                  <div className={`relative lg:col-span-5 min-h-[200px] sm:min-h-[240px] ${index % 2 === 1 ? "lg:order-2" : ""}`}>
+                    <img
+                      src={promo.bannerImageUrl}
+                      alt={`${promo.headline} — promotional banner, code ${promo.code}`}
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-primary-container/88 via-primary-container/35 to-transparent" />
+                    <div className="relative h-full min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-6 sm:p-8">
+                      <span className="inline-flex w-fit rounded-full bg-white/15 backdrop-blur-md px-3 py-1 font-label text-[10px] uppercase tracking-widest text-white font-bold border border-white/20">
+                        {promo.badge}
+                      </span>
+                      <p className="mt-4 font-mono text-white text-2xl sm:text-3xl font-bold tracking-widest">
+                        {promo.code}
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <div className={`lg:col-span-7 p-5 sm:p-8 md:p-10 flex flex-col min-w-0 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
+                    <h3 className="font-headline text-lg sm:text-2xl font-extrabold tracking-tight text-on-background break-words">
+                      {promo.headline}
+                    </h3>
+                    <p className="text-on-surface-variant text-sm sm:text-base mt-3 leading-relaxed break-words">
+                      {promo.body}
+                    </p>
+                    <p className="text-outline text-xs mt-4 leading-relaxed border-l-2 border-secondary/40 pl-3 break-words">
+                      {promo.terms}
+                    </p>
+                    <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
+                      <Link
+                        to={promoCtaHref(promo.ctaHref, promo.code)}
+                        className="inline-flex w-full sm:w-fit justify-center items-center gap-2 bg-secondary text-on-secondary px-6 py-3 rounded-xl font-label font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-opacity"
+                        aria-label={`${promo.ctaLabel} — use offer code ${promo.code} at checkout`}
+                      >
+                        {promo.ctaLabel}
+                        <Icon name="arrow_forward" className="text-base" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         ) : null}
 
-        {newArrivalItems.length > 0 ? (
+        {homepage.categorySection.isVisible && categoryItems.length > 0 ? (
           <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
-              <div className="min-w-0">
-                {homepage.featuredSection.eyebrow ? (
+              <div className="max-w-2xl min-w-0">
+                {homepage.categorySection.eyebrow ? (
                   <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
-                    {homepage.featuredSection.eyebrow}
+                    {homepage.categorySection.eyebrow}
                   </p>
                 ) : null}
-                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
-                  {homepage.featuredSection.title}
+                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-on-background break-words text-balance">
+                  {homepage.categorySection.title}
                 </h2>
-                <p className="text-on-surface-variant text-sm sm:text-base mt-2 max-w-xl">
-                  {homepage.featuredSection.description}
+                <p className="text-on-surface-variant text-sm sm:text-base mt-2 leading-relaxed">
+                  {homepage.categorySection.description}
                 </p>
               </div>
-              {homepage.featuredSection.ctaLabel && homepage.featuredSection.ctaHref ? (
+              {homepage.categorySection.ctaLabel && homepage.categorySection.ctaHref ? (
                 <Link
-                  to={homepage.featuredSection.ctaHref}
-                  className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 shrink-0 py-1"
-                  aria-label={homepage.featuredSection.ctaLabel}
+                  to={homepage.categorySection.ctaHref}
+                  className="inline-flex items-center gap-2 shrink-0 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 py-1"
+                  aria-label={homepage.categorySection.ctaLabel}
                 >
-                  {homepage.featuredSection.ctaLabel}
+                  {homepage.categorySection.ctaLabel}
                   <Icon name="arrow_forward" className="text-base" />
                 </Link>
               ) : null}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 w-full min-w-0 [&>*]:min-w-0">
-              {newArrivalItems.map((product) => (
-                <ProductCard key={product.id} product={product} />
+            <div className="grid grid-cols-1 min-[380px]:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 w-full min-w-0">
+              {categoryItems.map((category) => (
+                <Link
+                  key={category.slug}
+                  to={category.href}
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-outline-variant/18 bg-surface-container-lowest shadow-sm hover:border-secondary/30 hover:shadow-[0_16px_40px_rgba(11,28,48,0.08)] transition-all min-w-0 max-w-full"
+                  aria-label={`Shop ${category.title}: ${category.description}. ${category.productCount} product${category.productCount === 1 ? "" : "s"} in this category.`}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-surface-container-low w-full">
+                    <img
+                      src={category.imageUrl}
+                      alt={`${category.title} — ${category.description}`}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary-container/75 via-primary-container/10 to-transparent" />
+                  </div>
+                  <div className="p-3 sm:p-4 flex flex-col flex-1">
+                    <h3 className="font-headline font-bold text-sm sm:text-base text-on-background group-hover:text-secondary transition-colors">
+                      {category.title}
+                    </h3>
+                    <p className="text-on-surface-variant text-[11px] sm:text-xs mt-1 leading-snug line-clamp-2">
+                      {category.description}
+                    </p>
+                    <span className="mt-3 font-label text-[10px] uppercase tracking-widest text-outline font-bold">
+                      {category.productCount} piece{category.productCount === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                </Link>
               ))}
             </div>
           </section>
@@ -406,129 +428,106 @@ export const HomePage = () => {
           </section>
         ) : null}
 
-        {homepage.categorySection.isVisible && categoryItems.length > 0 ? (
-          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12 min-w-0">
-              <div className="max-w-2xl min-w-0">
-                {homepage.categorySection.eyebrow ? (
+        {homepage.campaignSection.isVisible && campaignItems.length > 0 ? (
+          <section className="bg-surface-container-low/40 border-t border-outline-variant/10 w-full min-w-0">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
+              <div className="mb-10 md:mb-14 max-w-2xl min-w-0">
+                {homepage.campaignSection.eyebrow ? (
                   <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
-                    {homepage.categorySection.eyebrow}
+                    {homepage.campaignSection.eyebrow}
                   </p>
                 ) : null}
-                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-on-background break-words text-balance">
-                  {homepage.categorySection.title}
+                <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
+                  {homepage.campaignSection.title}
                 </h2>
-                <p className="text-on-surface-variant text-sm sm:text-base mt-2 leading-relaxed">
-                  {homepage.categorySection.description}
+                <p className="text-on-surface-variant text-sm sm:text-base mt-2">
+                  {homepage.campaignSection.description}
                 </p>
+                {homepage.campaignSection.ctaLabel && homepage.campaignSection.ctaHref ? (
+                  <Link
+                    to={homepage.campaignSection.ctaHref}
+                    className="inline-flex items-center gap-2 mt-4 text-secondary font-label font-bold text-xs uppercase tracking-widest hover:underline underline-offset-4"
+                    aria-label={homepage.campaignSection.ctaLabel}
+                  >
+                    {homepage.campaignSection.ctaLabel}
+                    <Icon name="arrow_forward" className="text-base" />
+                  </Link>
+                ) : null}
               </div>
-              {homepage.categorySection.ctaLabel && homepage.categorySection.ctaHref ? (
-                <Link
-                  to={homepage.categorySection.ctaHref}
-                  className="inline-flex items-center gap-2 shrink-0 text-secondary font-label font-bold text-xs uppercase tracking-[0.18em] hover:underline underline-offset-4 py-1"
-                  aria-label={homepage.categorySection.ctaLabel}
-                >
-                  {homepage.categorySection.ctaLabel}
-                  <Icon name="arrow_forward" className="text-base" />
-                </Link>
-              ) : null}
-            </div>
-            <div className="grid grid-cols-1 min-[380px]:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 w-full min-w-0">
-              {categoryItems.map((category) => (
-                <Link
-                  key={category.slug}
-                  to={category.href}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-outline-variant/18 bg-surface-container-lowest shadow-sm hover:border-secondary/30 hover:shadow-[0_16px_40px_rgba(11,28,48,0.08)] transition-all min-w-0 max-w-full"
-                  aria-label={`Shop ${category.title}: ${category.description}. ${category.productCount} product${category.productCount === 1 ? "" : "s"} in this category.`}
-                >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-surface-container-low w-full">
-                    <img
-                      src={category.imageUrl}
-                      alt={`${category.title} — ${category.description}`}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" loading="lazy" decoding="async" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary-container/75 via-primary-container/10 to-transparent" />
-                  </div>
-                  <div className="p-3 sm:p-4 flex flex-col flex-1">
-                    <h3 className="font-headline font-bold text-sm sm:text-base text-on-background group-hover:text-secondary transition-colors">
-                      {category.title}
-                    </h3>
-                    <p className="text-on-surface-variant text-[11px] sm:text-xs mt-1 leading-snug line-clamp-2">
-                      {category.description}
-                    </p>
-                    <span className="mt-3 font-label text-[10px] uppercase tracking-widest text-outline font-bold">
-                      {category.productCount} piece{category.productCount === 1 ? "" : "s"}
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        {homepage.promoSection.isVisible && homepage.promoSection.items.length > 0 ? (
-          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 w-full min-w-0">
-            <div className="mb-8 md:mb-12 max-w-2xl min-w-0">
-              {homepage.promoSection.eyebrow ? (
-                <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
-                  {homepage.promoSection.eyebrow}
-                </p>
-              ) : null}
-              <h2 className="font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight break-words">
-                {homepage.promoSection.title}
-              </h2>
-              <p className="text-on-surface-variant text-sm sm:text-base mt-2">
-                {homepage.promoSection.description}
-              </p>
-            </div>
-            <div className="flex flex-col gap-10 md:gap-14 min-w-0">
-              {homepage.promoSection.items.map((promo, index) => (
-                <div
-                  key={`${promo.code}-${index}`}
-                  className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 rounded-2xl border border-outline-variant/15 overflow-hidden bg-surface-container-lowest shadow-sm w-full min-w-0 max-w-full"
-                >
-                  <div className={`relative lg:col-span-5 min-h-[200px] sm:min-h-[240px] ${index % 2 === 1 ? "lg:order-2" : ""}`}>
-                    <img
-                      src={promo.bannerImageUrl}
-                      alt={`${promo.headline} — promotional banner, code ${promo.code}`}
-                      className="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" decoding="async" />
-                    <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-primary-container/88 via-primary-container/35 to-transparent" />
-                    <div className="relative h-full min-h-[220px] sm:min-h-[260px] flex flex-col justify-end p-6 sm:p-8">
-                      <span className="inline-flex w-fit rounded-full bg-white/15 backdrop-blur-md px-3 py-1 font-label text-[10px] uppercase tracking-widest text-white font-bold border border-white/20">
-                        {promo.badge}
-                      </span>
-                      <p className="mt-4 font-mono text-white text-2xl sm:text-3xl font-bold tracking-widest">
-                        {promo.code}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={`lg:col-span-7 p-5 sm:p-8 md:p-10 flex flex-col min-w-0 ${index % 2 === 1 ? "lg:order-1" : ""}`}>
-                    <h3 className="font-headline text-lg sm:text-2xl font-extrabold tracking-tight text-on-background break-words">
-                      {promo.headline}
-                    </h3>
-                    <p className="text-on-surface-variant text-sm sm:text-base mt-3 leading-relaxed break-words">
-                      {promo.body}
-                    </p>
-                    <p className="text-outline text-xs mt-4 leading-relaxed border-l-2 border-secondary/40 pl-3 break-words">
-                      {promo.terms}
-                    </p>
-                    <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-3">
+              <div className="flex flex-col gap-12 md:gap-16 min-w-0">
+                {campaignItems.map((campaign) => (
+                  <div key={campaign.slug} className="min-w-0">
+                    {campaign.layout === "FEATURE" ? (
                       <Link
-                        to={promoCtaHref(promo.ctaHref, promo.code)}
-                        className="inline-flex w-full sm:w-fit justify-center items-center gap-2 bg-secondary text-on-secondary px-6 py-3 rounded-xl font-label font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-opacity"
-                        aria-label={`${promo.ctaLabel} — use offer code ${promo.code} at checkout`}
+                        to={campaign.href}
+                        className="group relative block overflow-hidden rounded-2xl border border-outline-variant/15 bg-primary-container min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] w-full max-w-full"
+                        aria-label={`${campaign.title}: ${campaign.subtitle}. ${campaign.ctaLabel}.`}
                       >
-                        {promo.ctaLabel}
-                        <Icon name="arrow_forward" className="text-base" />
+                        <img
+                          src={campaign.heroImageUrl}
+                          alt={`${campaign.title} campaign`}
+                          className="absolute inset-0 h-full w-full object-cover object-center opacity-55 transition-transform duration-[2.2s] group-hover:scale-[1.04]"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary-container/95 via-primary-container/55 to-transparent" />
+                        <div className="relative z-[1] h-full min-h-[240px] sm:min-h-[300px] md:min-h-[380px] md:h-[380px] flex flex-col justify-end md:justify-center p-5 sm:p-10 md:p-14 w-full max-w-full md:max-w-lg min-w-0">
+                          <span className="font-label text-tertiary-fixed tracking-[0.3em] uppercase text-[10px] font-bold mb-2">
+                            {campaign.label}
+                          </span>
+                          <h3 className="text-white font-headline text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tighter mb-3 break-words">
+                            {campaign.title}
+                          </h3>
+                          <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-5 break-words">
+                            {campaign.subtitle}
+                          </p>
+                          <span className="inline-flex items-center gap-2 bg-white text-on-background px-5 py-2.5 rounded-xl font-label font-bold text-xs uppercase tracking-widest group-hover:bg-secondary group-hover:text-on-secondary transition-colors w-fit">
+                            {campaign.ctaLabel}
+                            <Icon name="arrow_forward" className="text-base" />
+                          </span>
+                        </div>
                       </Link>
-                    </div>
+                    ) : (
+                      <Link
+                        to={campaign.href}
+                        className="group relative flex flex-col md:flex-row overflow-hidden rounded-2xl border border-outline-variant/15 bg-surface-container-lowest min-h-[200px] w-full max-w-full"
+                        aria-label={`${campaign.title}: ${campaign.subtitle}. ${campaign.ctaLabel}.`}
+                      >
+                        <div className="relative w-full md:w-1/2 min-h-[180px] sm:min-h-[220px] md:min-h-[280px] shrink-0">
+                          <img
+                            src={campaign.heroImageUrl}
+                            alt={`${campaign.title} campaign`}
+                            className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/50 to-transparent" />
+                        </div>
+                        <div className="flex flex-1 flex-col justify-center p-5 sm:p-8 md:p-10 min-w-0">
+                          <span className="font-label text-secondary tracking-[0.22em] uppercase text-[10px] font-bold mb-2">
+                            {campaign.label}
+                          </span>
+                          <h3 className="font-headline text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-2 break-words">
+                            {campaign.title}
+                          </h3>
+                          <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed mb-5 break-words">
+                            {campaign.subtitle}
+                          </p>
+                          <span className="inline-flex items-center gap-2 text-secondary font-label font-bold text-xs uppercase tracking-widest group-hover:underline underline-offset-4 w-fit">
+                            {campaign.ctaLabel}
+                            <Icon name="arrow_forward" className="text-base" />
+                          </span>
+                        </div>
+                      </Link>
+                    )}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </section>
         ) : null}
 
-        {homepage.testimonialSection.isVisible && productReviewItems.length > 0 ? (
+        {homepage.testimonialSection.isVisible && testimonialItems.length > 0 ? (
           <section className="bg-surface-container-low py-12 sm:py-16 md:py-24 border-t border-outline-variant/10 w-full min-w-0">
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
               <div className="text-center mb-10 md:mb-14 px-1">
@@ -545,60 +544,9 @@ export const HomePage = () => {
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                {productReviewItems.map((testimonial, index) => (
+                {testimonialItems.map((testimonial, index) => (
                   <div
-                    key={`review-${testimonial.customerName}-${index}`}
-                    className="bg-surface-container-lowest p-6 sm:p-8 rounded-2xl border border-outline-variant/12 shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-center gap-1 mb-4 text-tertiary">
-                      {Array.from({ length: 5 }).map((_, starIndex) => (
-                        <Icon key={starIndex} name="star" filled className="text-tertiary text-lg" />
-                      ))}
-                    </div>
-                    <p className="text-on-surface mb-6 italic leading-relaxed text-sm sm:text-base">
-                      {testimonial.quote}
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-full overflow-hidden bg-surface-container-high ring-2 ring-white shadow-sm">
-                        <img
-                          className="w-full h-full object-cover"
-                          src={testimonial.imageUrl}
-                          alt={`Portrait of ${testimonial.customerName}`} loading="lazy" decoding="async" />
-                      </div>
-                      <div>
-                        <p className="font-headline font-bold text-sm">{testimonial.customerName}</p>
-                        <p className="text-outline text-xs font-medium">
-                          {testimonial.statusLabel ?? "Verified purchase"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        ) : null}
-
-        {homepage.testimonialSection.isVisible && testimonyItems.length > 0 ? (
-          <section className="bg-surface py-12 sm:py-16 md:py-24 border-t border-outline-variant/10 w-full min-w-0">
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 w-full min-w-0">
-              <div className="text-center mb-10 md:mb-14 px-1">
-                {homepage.testimonialSection.eyebrow ? (
-                  <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-2">
-                    {homepage.testimonialSection.eyebrow}
-                  </p>
-                ) : null}
-                <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3">
-                  Testimonies
-                </h2>
-                <p className="text-on-surface-variant max-w-xl mx-auto text-sm sm:text-base">
-                  {homepage.testimonialSection.description || "Customer testimonies and purchase experiences."}
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                {testimonyItems.map((testimonial, index) => (
-                  <div
-                    key={`testimony-${testimonial.customerName}-${index}`}
+                    key={`testimonial-${testimonial.customerName}-${index}`}
                     className="bg-surface-container-lowest p-6 sm:p-8 rounded-2xl border border-outline-variant/12 shadow-sm hover:shadow-md transition-shadow"
                   >
                     <p className="text-on-surface mb-6 italic leading-relaxed text-sm sm:text-base">
@@ -1330,9 +1278,7 @@ export const CampaignPage = () => {
 
   const entity = campaignQuery.data?.entity;
   const heroBanner = entity?.heroBanner as { mediaUrl?: string | null; title?: string | null } | undefined;
-  const heroUrl =
-    heroBanner?.mediaUrl?.trim() ||
-    "https://placehold.co/1600x900/181b25/737685/png?text=Campaign";
+  const heroUrl = heroBanner?.mediaUrl?.trim() || "";
   const title = typeof entity?.name === "string" ? entity.name : "Campaign";
   const subtitle =
     (typeof heroBanner?.title === "string" && heroBanner.title) ||
@@ -1370,10 +1316,17 @@ export const CampaignPage = () => {
     <StorefrontShell>
       <main className={`${storefrontScrollRegionClasses} bg-surface text-on-background font-body min-w-0`}>
         <section className="relative w-full min-h-[42dvh] sm:min-h-[48dvh] md:min-h-[56dvh] lg:h-[min(72dvh,640px)] lg:min-h-0 overflow-hidden bg-primary-container">
-          <img
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-55 sm:opacity-60"
-            src={heroUrl}
-            alt="" loading="lazy" decoding="async" />
+          {heroUrl ? (
+            <img
+              className="absolute inset-0 w-full h-full object-cover object-center opacity-55 sm:opacity-60"
+              src={heroUrl}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-container via-surface-container-high to-primary-container/70" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/90 md:from-primary-container/82 via-primary-container/35 md:via-transparent to-transparent" />
           <div className="relative h-full min-h-[42dvh] sm:min-h-[48dvh] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-start py-10 sm:py-14 md:py-16 lg:py-0">
             <span className="font-label text-tertiary-fixed tracking-[0.35em] uppercase text-[10px] sm:text-xs mb-3 sm:mb-4 font-bold block">
@@ -1641,13 +1594,17 @@ export const BrandPage = () => {
       </nav>
 
       <section className="relative w-full overflow-hidden rounded-2xl border border-outline-variant/20 bg-primary-container min-h-[38dvh] sm:min-h-[44dvh] md:min-h-[360px] mb-8 sm:mb-12">
-        <img
-          src={
-            hero ??
-            "https://placehold.co/1200x600/181b25/737685/png?text=Brand"
-          }
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-50" loading="lazy" decoding="async" />
+        {hero ? (
+          <img
+            src={hero}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-50"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-container via-surface-container-high to-primary-container/70" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/92 md:from-primary-container/88 via-primary-container/45 to-transparent" />
         <div className="relative z-[1] flex flex-col justify-end md:justify-center min-h-[38dvh] sm:min-h-[44dvh] md:min-h-[360px] px-5 sm:px-8 md:px-12 py-8 sm:py-10 md:py-12 max-w-3xl">
           <span className="font-label text-tertiary-fixed text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold mb-2 sm:mb-3">
