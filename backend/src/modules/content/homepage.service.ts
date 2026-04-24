@@ -712,10 +712,26 @@ async function writeVersionContent(
     },
     create: {
       versionId,
-      ...input.hero
+      eyebrow: input.hero.eyebrow,
+      titlePrefix: input.hero.titlePrefix,
+      titleAccent: input.hero.titleAccent ?? null,
+      titleSuffix: input.hero.titleSuffix ?? null,
+      body: input.hero.body,
+      primaryCtaLabel: input.hero.primaryCtaLabel,
+      primaryCtaHref: input.hero.primaryCtaHref ?? "/shop",
+      backgroundImageUrl: input.hero.backgroundImageUrl,
+      backgroundImageAlt: input.hero.backgroundImageAlt ?? null
     },
     update: {
-      ...input.hero
+      eyebrow: input.hero.eyebrow,
+      titlePrefix: input.hero.titlePrefix,
+      titleAccent: input.hero.titleAccent ?? null,
+      titleSuffix: input.hero.titleSuffix ?? null,
+      body: input.hero.body,
+      primaryCtaLabel: input.hero.primaryCtaLabel,
+      primaryCtaHref: input.hero.primaryCtaHref ?? "/shop",
+      backgroundImageUrl: input.hero.backgroundImageUrl,
+      backgroundImageAlt: input.hero.backgroundImageAlt ?? null
     }
   });
 
@@ -877,7 +893,7 @@ async function writeVersionContent(
         terms: promo.terms,
         bannerImageUrl: promo.bannerImageUrl,
         ctaLabel: promo.ctaLabel,
-        ctaHref: promo.ctaHref
+        ctaHref: promo.ctaHref ?? "/shop"
       }
     });
 
@@ -1455,8 +1471,8 @@ const assertPublishableHomepageSnapshot = (snapshot: PublishedHomepageSnapshot) 
     !snapshot.hero.titlePrefix.trim() ||
     !snapshot.hero.body.trim() ||
     !snapshot.hero.primaryCtaLabel.trim() ||
-    !snapshot.hero.primaryCtaHref.trim() ||
-    !snapshot.hero.primaryCtaHref.startsWith("/") ||
+    !snapshot.hero.primaryCtaHref?.trim() ||
+    !snapshot.hero.primaryCtaHref?.startsWith("/") ||
     !snapshot.hero.backgroundImageUrl.trim()
   ) {
     throw badRequestError("Homepage hero is incomplete. Add a real hero or publish a usable HERO banner first.");
