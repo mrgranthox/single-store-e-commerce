@@ -44,7 +44,7 @@ type HomepageDraftInput = {
     titleSuffix?: string | null;
     body: string;
     primaryCtaLabel: string;
-    primaryCtaHref: string;
+    primaryCtaHref: string | null;
     backgroundImageUrl: string;
     backgroundImageAlt?: string | null;
   };
@@ -94,7 +94,7 @@ type HomepageDraftInput = {
     terms: string;
     bannerImageUrl: string;
     ctaLabel: string;
-    ctaHref: string;
+    ctaHref: string | null;
     productIds: string[];
   }>;
   testimonials: Array<{

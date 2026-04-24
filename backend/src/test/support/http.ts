@@ -66,7 +66,7 @@ export const stopHttpServer = stopServer;
 
 export const requestJson = async <T>(input: {
   baseUrl: string;
-  method: "GET" | "POST" | "PATCH" | "DELETE";
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   path: string;
   headers?: Record<string, string>;
   body?: unknown;

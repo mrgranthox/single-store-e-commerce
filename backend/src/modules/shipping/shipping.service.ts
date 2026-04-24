@@ -1134,8 +1134,7 @@ export const processScheduledShipmentAutomationJob = async (input?: {
         if (inventoryFinalizationShipmentStates.has(targetStatus)) {
           await finalizeOrderInventoryForFulfillment(transaction, {
             orderId: shipment.order.id,
-            reason: "shipment_auto_progressed_to_fulfillment",
-            actorAdminUserId: null
+            reason: "shipment_auto_progressed_to_fulfillment"
           });
         }
 
