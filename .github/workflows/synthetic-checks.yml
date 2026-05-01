@@ -9,7 +9,7 @@ jobs:
   synthetics:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run health and critical-path checks
         env:
           ADMIN_API_TOKEN: ${{ secrets.SYNTHETIC_ADMIN_API_TOKEN }}
