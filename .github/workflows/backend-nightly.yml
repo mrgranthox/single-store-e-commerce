@@ -67,7 +67,7 @@ jobs:
       PAYSTACK_ALLOWED_WEBHOOK_IPS: 127.0.0.1,::1
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.CI_NODE_VERSION }}
           cache: npm
