@@ -44,7 +44,7 @@
     "@clerk/express": "^2.1.6",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
-    "@sentry/node": "^10.46.0",
+    "@sentry/node": "^10.53.1",
     "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
