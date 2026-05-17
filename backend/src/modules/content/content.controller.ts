@@ -50,6 +50,18 @@ import {
   unpublishAdminHomepage
 } from "./homepage.service";
 
+const setNoStoreHomepageHeaders = (response: {
+  setHeader: (name: string, value: string) => unknown;
+}) => {
+  response.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0"
+  );
+  response.setHeader("Pragma", "no-cache");
+  response.setHeader("Expires", "0");
+  response.setHeader("Surrogate-Control", "no-store");
+};
+
 export const getPagePublic = asyncHandler(async (request, response) => {
   const params = readValidatedParams<z.infer<typeof pageSlugParamsSchema>>(request);
   const data = await getPublicContentPage(params.slug);
@@ -74,6 +86,7 @@ export const getContactPagePublic = asyncHandler(async (_request, response) => {
 
 export const getHomepagePublic = asyncHandler(async (_request, response) => {
   const data = await getPublicHomepage();
+  setNoStoreHomepageHeaders(response);
   return sendSuccess(response, { data });
 });
 

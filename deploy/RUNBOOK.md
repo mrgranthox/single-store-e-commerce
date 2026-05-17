@@ -35,10 +35,22 @@ Requires **Docker Compose v2** with support for `depends_on: condition: service_
    ./deploy/scripts/verify-stack-health.sh https://your-api-host
    ```
 
+   Confirm the public homepage API returns JSON and is not cached through an intermediary:
+
+   ```bash
+   curl -i https://your-api-host/api/content/homepage
+   ```
+
 6. Run synthetic checks when tokens are available:
 
    ```bash
    ADMIN_API_TOKEN=... CUSTOMER_API_TOKEN=... ./deploy/scripts/synthetic-checks.sh https://your-api-host
+   ```
+
+7. After any admin homepage publish, repeat the homepage API check and confirm the updated hero copy is returned immediately:
+
+   ```bash
+   curl -sS https://your-api-host/api/content/homepage
    ```
 
 ## Rollback

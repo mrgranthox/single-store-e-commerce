@@ -907,6 +907,14 @@ export const runAdminOpsIntegrationSuite = async () => {
       path: "/api/content/homepage"
     });
     assert.equal(publicHomepageResponse.statusCode, 200);
+    assert.equal(
+      publicHomepageResponse.headers["cache-control"],
+      "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0"
+    );
+    assert.equal(publicHomepageResponse.headers.pragma, "no-cache");
+    assert.equal(publicHomepageResponse.headers.expires, "0");
+    assert.equal(publicHomepageResponse.headers["surrogate-control"], "no-store");
+    assert.match(String(publicHomepageResponse.headers["content-type"] ?? ""), /application\/json/i);
     assert.equal(publicHomepageResponse.json?.data.entity.hero.titlePrefix, publishedHomepageTitle);
     assert.ok(publicHomepageResponse.json?.data.entity.featuredSection.items.some((item) => item.id === productId));
 

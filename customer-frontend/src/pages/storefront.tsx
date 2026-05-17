@@ -30,6 +30,53 @@ const ShellMain = ({ children, className = "" }: { children: ReactNode; classNam
   </StorefrontShell>
 );
 
+export type HomepageErrorState = "unpublished" | "unavailable" | "unknown";
+
+export const classifyHomepageError = (error: unknown): HomepageErrorState => {
+  if (!(error instanceof CommerceApiError)) {
+    return "unknown";
+  }
+
+  if (
+    error.status === 0 ||
+    error.status >= 500 ||
+    error.code === "NON_JSON_RESPONSE" ||
+    error.code === "INVALID_JSON_RESPONSE" ||
+    error.code === "MISSING_BACKEND_BASE_URL"
+  ) {
+    return "unavailable";
+  }
+
+  if (error.status === 404) {
+    return "unpublished";
+  }
+
+  return "unknown";
+};
+
+const getHomepageErrorContent = (state: HomepageErrorState) => {
+  switch (state) {
+    case "unpublished":
+      return {
+        eyebrow: "Homepage unpublished",
+        title: "No storefront homepage is currently published.",
+        body: "Publish the homepage from admin, then retry the storefront once the new snapshot is live."
+      };
+    case "unavailable":
+      return {
+        eyebrow: "Homepage unavailable",
+        title: "The storefront could not reach the published homepage.",
+        body: "The homepage API is unavailable or misconfigured. Check the deployed backend and retry when the public content endpoint is healthy."
+      };
+    default:
+      return {
+        eyebrow: "Homepage error",
+        title: "The published homepage could not be loaded.",
+        body: "Retry the storefront or inspect the public homepage API response for this environment."
+      };
+  }
+};
+
 /* ─────────────────────────────────────────────
    HOME PAGE — commerce hub (categories, brands, campaigns, offers)
 ───────────────────────────────────────────── */
@@ -81,6 +128,8 @@ export const HomePage = () => {
   }
 
   if (homepageQuery.isError) {
+    const errorContent = getHomepageErrorContent(classifyHomepageError(homepageQuery.error));
+
     return (
       <StorefrontShell>
         <main
@@ -89,13 +138,13 @@ export const HomePage = () => {
           <section className="max-w-screen-md mx-auto px-4 sm:px-6 md:px-8 py-24 sm:py-28 md:py-32">
             <div className="rounded-[2rem] border border-outline-variant/15 bg-surface-container-lowest p-8 sm:p-10 shadow-sm text-center">
               <p className="font-label text-[10px] sm:text-xs uppercase tracking-[0.22em] text-secondary font-bold mb-3">
-                Homepage unavailable
+                {errorContent.eyebrow}
               </p>
               <h1 className="font-headline text-2xl sm:text-4xl font-extrabold tracking-tight text-on-background mb-3">
-                The published homepage could not be loaded.
+                {errorContent.title}
               </h1>
               <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed max-w-lg mx-auto">
-                Check the homepage publish state in admin or retry once the backend content endpoint is available.
+                {errorContent.body}
               </p>
               <button
                 type="button"

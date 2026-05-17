@@ -72,17 +72,48 @@ type JsonEnvelope =
   | { success: true; data: unknown; meta?: Record<string, unknown> }
   | { success: false; error: { code?: string; message?: string; details?: unknown } };
 
-const parseJson = async (response: Response): Promise<unknown> => {
-  const text = await response.text();
-  if (!text) {
-    return null;
+const parseJsonResponse = async (response: Response): Promise<{
+  payload: unknown;
+  rawText: string;
+  contentType: string | null;
+  parseError: boolean;
+}> => {
+  const rawText = await response.text();
+  const contentType = response.headers.get("content-type");
+
+  if (!rawText) {
+    return {
+      payload: null,
+      rawText,
+      contentType,
+      parseError: false
+    };
   }
+
   try {
-    return JSON.parse(text) as unknown;
+    return {
+      payload: JSON.parse(rawText) as unknown,
+      rawText,
+      contentType,
+      parseError: false
+    };
   } catch {
-    return { parseError: true, text };
+    return {
+      payload: { parseError: true, text: rawText },
+      rawText,
+      contentType,
+      parseError: true
+    };
   }
 };
+
+const isJsonContentType = (value: string | null) => {
+  const normalized = value?.toLowerCase() ?? "";
+  return normalized.includes("application/json") || normalized.includes("+json");
+};
+
+const truncatePreview = (value: string, limit = 500) =>
+  value.length <= limit ? value : `${value.slice(0, limit)}...`;
 
 export type CommerceFetchOptions = RequestInit & {
   json?: unknown;
@@ -90,6 +121,8 @@ export type CommerceFetchOptions = RequestInit & {
   session?: boolean;
   /** When true, attach Bearer access token if present. */
   auth?: boolean;
+  /** When true, reject HTML/text responses even if the status code is otherwise informative. */
+  requireJsonContentType?: boolean;
 };
 
 export const commerceFetchJson = async <T>(
@@ -97,7 +130,14 @@ export const commerceFetchJson = async <T>(
   options: CommerceFetchOptions = {}
 ): Promise<CommerceSuccess<T>> => {
   const url = resolveCommerceUrl(path);
-  const { json, session = true, auth = true, headers: initHeaders, ...rest } = options;
+  const {
+    json,
+    session = true,
+    auth = true,
+    requireJsonContentType = false,
+    headers: initHeaders,
+    ...rest
+  } = options;
 
   const headers = new Headers(initHeaders);
   headers.set("accept", "application/json");
@@ -124,7 +164,32 @@ export const commerceFetchJson = async <T>(
     useCustomerStore.getState().signOut();
   }
 
-  const payload = (await parseJson(response)) as JsonEnvelope | Record<string, unknown> | null;
+  const parsed = await parseJsonResponse(response);
+  const payload = parsed.payload as JsonEnvelope | Record<string, unknown> | null;
+
+  if (requireJsonContentType && parsed.rawText && !isJsonContentType(parsed.contentType)) {
+    throw new CommerceApiError(
+      "API returned a non-JSON response.",
+      response.status,
+      "NON_JSON_RESPONSE",
+      {
+        contentType: parsed.contentType
+      },
+      truncatePreview(parsed.rawText)
+    );
+  }
+
+  if (requireJsonContentType && parsed.parseError) {
+    throw new CommerceApiError(
+      "API returned malformed JSON.",
+      response.status,
+      "INVALID_JSON_RESPONSE",
+      {
+        contentType: parsed.contentType
+      },
+      truncatePreview(parsed.rawText)
+    );
+  }
 
   if (!payload || typeof payload !== "object") {
     throw new CommerceApiError("Empty response from API.", response.status, null, null, payload);

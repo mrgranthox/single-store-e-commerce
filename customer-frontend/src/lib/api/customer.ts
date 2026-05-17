@@ -1,7 +1,7 @@
 import { getCustomerScreen } from "@/lib/contracts/customer-screen-catalog";
 import { fetchCustomerRuntimeConfig } from "@/integrations/backend-config";
 import { submitProductInquiry, submitSupportContact } from "@/integrations/support";
-import { commerceFetchJson, getBackendBaseUrl, resolveCommerceUrl } from "@/lib/api/commerce-fetch";
+import { commerceFetchJson, getBackendBaseUrl } from "@/lib/api/commerce-fetch";
 import { customerBackendApi } from "@/lib/api/customer-backend-api";
 
 export type HomepageProductCard = {
@@ -131,15 +131,21 @@ export type CustomerHomepagePayload = {
 };
 
 const readHomepageEntity = async () => {
-  const response = await fetch(resolveCommerceUrl("/api/content/homepage"), {
-    headers: { accept: "application/json" },
-    cache: "no-store"
+  const { data } = await commerceFetchJson<{
+    entity: CustomerHomepagePayload;
+    meta?: {
+      publishedAt: string;
+      updatedAt: string;
+    };
+  }>("/api/content/homepage", {
+    method: "GET",
+    auth: false,
+    session: false,
+    cache: "no-store",
+    requireJsonContentType: true
   });
-  const payload = (await response.json()) as { success?: boolean; data?: { entity: CustomerHomepagePayload } };
-  if (!response.ok || payload.success !== true || !payload.data?.entity) {
-    throw new Error(`Homepage request failed with status ${response.status}`);
-  }
-  return payload.data.entity;
+
+  return data.entity;
 };
 
 export const customerApi = {
