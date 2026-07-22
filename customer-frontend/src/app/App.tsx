@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
+import * as Sentry from "@sentry/react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ScrollToTop } from "@/app/ScrollToTop";
@@ -107,9 +108,27 @@ const NotFoundPage = () => (
   </div>
 );
 
+const RuntimeErrorPage = () => (
+  <div className="min-h-screen bg-surface flex flex-col items-center justify-center text-center px-6">
+    <span className="material-symbols-outlined text-6xl text-error mb-6">error</span>
+    <h1 className="font-headline text-3xl font-extrabold mb-4">Something went wrong</h1>
+    <p className="text-on-surface-variant mb-8 max-w-md">
+      Refresh the page and try again. If it keeps happening, contact support.
+    </p>
+    <button
+      type="button"
+      onClick={() => window.location.reload()}
+      className="bg-secondary text-on-secondary px-8 py-3 rounded-md font-bold hover:opacity-90 transition-opacity"
+    >
+      Refresh
+    </button>
+  </div>
+);
+
 export const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+  <Sentry.ErrorBoundary fallback={<RuntimeErrorPage />}>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
       <AuthHydration />
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
@@ -318,6 +337,7 @@ export const App = () => (
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
-    </BrowserRouter>
-  </QueryClientProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </Sentry.ErrorBoundary>
 );

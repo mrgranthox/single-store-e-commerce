@@ -94,6 +94,12 @@ const failures = [
     pattern: /\bimport\.meta\.env\b/,
     label: "Direct frontend import.meta.env access"
   }),
+  ...assertNoDirectEnvAccess({
+    rootDir: path.join(repoRoot, "customer-frontend", "src"),
+    allowedRelativePath: path.join("lib", "config", "env.ts"),
+    pattern: /\bimport\.meta\.env\b/,
+    label: "Direct customer frontend import.meta.env access"
+  }),
   ...disallowedScriptAssignments({
     filePath: path.join(backendDir, "package.json"),
     allowedKeys: ["NODE_ENV"]

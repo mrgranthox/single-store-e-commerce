@@ -1,4 +1,5 @@
 import { clearAuthTokens, getAccessToken, getOrCreateSessionId } from "@/lib/api/commerce-session";
+import { customerFrontendEnv } from "@/lib/config/env";
 import { useCustomerStore } from "@/lib/store/customer-store";
 
 /**
@@ -8,14 +9,14 @@ import { useCustomerStore } from "@/lib/store/customer-store";
  *   host (e.g. `*.netlify.app`) — there is no Express there, so `/api/*` returns 404 HTML.
  */
 export const getBackendBaseUrl = (): string => {
-  const fromEnv = import.meta.env.VITE_BACKEND_BASE_URL?.trim();
+  const fromEnv = customerFrontendEnv.backendBaseUrl;
   if (fromEnv) {
     return fromEnv.replace(/\/$/, "");
   }
-  if (import.meta.env.DEV && typeof window !== "undefined") {
+  if (customerFrontendEnv.isDev && typeof window !== "undefined") {
     return window.location.origin;
   }
-  if (import.meta.env.PROD) {
+  if (customerFrontendEnv.isProd) {
     if (typeof window !== "undefined") {
       console.error(
         "[customer-frontend] Missing VITE_BACKEND_BASE_URL. Set it in your host’s build env and redeploy " +
@@ -35,7 +36,7 @@ export const resolveCommerceUrl = (path: string): URL => {
   const base = getBackendBaseUrl();
   if (!base) {
     throw new CommerceApiError(
-      import.meta.env.PROD
+      customerFrontendEnv.isProd
         ? "VITE_BACKEND_BASE_URL is not set. Rebuild with your Express API origin (e.g. https://api.example.com). On Netlify: Site settings → Environment variables → add VITE_BACKEND_BASE_URL → redeploy."
         : "Could not resolve API base URL (missing window in this environment).",
       0,

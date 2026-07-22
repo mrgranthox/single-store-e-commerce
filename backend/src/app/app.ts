@@ -8,6 +8,7 @@ import { env, normalizeCorsOrigin } from "../config/env";
 import { setupSentryExpressErrorHandler } from "../config/sentry";
 import { registerRoutes } from "./routes";
 import { browserOriginGuardMiddleware } from "../common/middleware/browser-origin.middleware";
+import { defaultNoStoreCacheControlMiddleware } from "../common/middleware/cache-control.middleware";
 import { errorHandlerMiddleware } from "../common/middleware/error-handler.middleware";
 import { notFoundMiddleware } from "../common/middleware/not-found.middleware";
 import { optionalAuth } from "../modules/auth/auth.middleware";
@@ -57,6 +58,7 @@ export const createApp = () => {
   );
   application.use(express.urlencoded({ extended: true, limit: "1mb" }));
   application.use(requestContextMiddleware);
+  application.use(defaultNoStoreCacheControlMiddleware);
   application.use(browserOriginGuardMiddleware);
   application.use(clerkRequestMiddleware);
   application.use(optionalAuth);

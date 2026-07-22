@@ -9,6 +9,7 @@ const commands = [
   ["npm", ["run", "verify:release-safety"]],
   ["npm", ["run", "verify:observability"]],
   ["npm", ["run", "verify:env-hygiene"]],
+  ["node", ["scripts/verify-operational-readiness.mjs"]],
   ["npm", ["run", "typecheck"]]
 ];
 
