@@ -2333,6 +2333,7 @@ export const createAdminBrandMediaUploadIntent = async (input: {
   fileSizeBytes?: number;
   resourceType?: "image" | "video" | "raw";
 }) => ({
+  // audit-admin-action-exempt: signed upload intent generation is non-persistent.
   entity: createSignedUploadIntent({
     scope: "catalog_brand",
     actorId: input.actorAdminUserId,
@@ -2350,6 +2351,7 @@ export const createAdminCategoryMediaUploadIntent = async (input: {
   fileSizeBytes?: number;
   resourceType?: "image" | "video" | "raw";
 }) => ({
+  // audit-admin-action-exempt: signed upload intent generation is non-persistent.
   entity: createSignedUploadIntent({
     scope: "catalog_category",
     actorId: input.actorAdminUserId,
