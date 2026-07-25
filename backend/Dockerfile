@@ -6,9 +6,14 @@ COPY package*.json ./
 RUN npm ci
 
 COPY prisma ./prisma
+COPY prisma.config.ts ./
 COPY tsconfig.json ./
 COPY src ./src
 COPY scripts ./scripts
+
+# Prisma 7 config requires DATABASE_URL even for generate/build; runtime overrides via secrets.
+ARG PRISMA_BUILD_DATABASE_URL="postgresql://prisma:prisma@127.0.0.1:5432/prisma"
+ENV DATABASE_URL=$PRISMA_BUILD_DATABASE_URL
 
 RUN npx prisma generate
 RUN npm run build -- --pretty false
@@ -28,6 +33,7 @@ ENV HOME=/app
 COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nodejs:nodejs /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 
 USER nodejs

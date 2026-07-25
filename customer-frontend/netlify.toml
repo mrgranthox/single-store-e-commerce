@@ -1,14 +1,14 @@
 # Netlify: set this site’s “Base directory” to `customer-frontend` (repo root stays the Git root).
 #
-# Required for API calls: set VITE_BACKEND_BASE_URL in Netlify UI (Site → Environment variables),
-# to your **Express** origin, e.g. https://api.yourdomain.com — no trailing slash. Then **redeploy**
-# so Vite embeds it in the bundle. Without it, /api/* would hit Netlify and return 404.
+# VITE_BACKEND_BASE_URL is set below for GCP Cloud Run. If Site → Environment variables
+# still has an older Render URL, remove or update it so it does not override this, then redeploy.
 [build]
   command = "npm ci && npm run build"
   publish = "dist"
 
 [build.environment]
   # Vite inlines VITE_* at build time (public client config).
+  VITE_BACKEND_BASE_URL = "https://ecommerce-api-mul3xofi6a-ew.a.run.app"
   SECRETS_SCAN_OMIT_KEYS = "VITE_BACKEND_BASE_URL,VITE_DEV_PROXY_TARGET,VITE_SENTRY_DSN,VITE_SENTRY_ENABLE_IN_DEV,VITE_SENTRY_TRACES_SAMPLE_RATE,VITE_APP_RELEASE"
 
 [[headers]]

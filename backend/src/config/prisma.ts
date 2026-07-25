@@ -7,25 +7,46 @@ declare global {
   var __ecommercePrisma: PrismaClient | undefined;
 }
 
+const isPrivateOrLocalHostname = (hostname: string) => {
+  const host = hostname.toLowerCase();
+  if (
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host === "::1" ||
+    host.endsWith(".local")
+  ) {
+    return true;
+  }
+
+  // RFC1918 / link-local — typical Cloud SQL private IP + VPC paths (TLS often not verify-full).
+  if (/^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) {
+    return true;
+  }
+  if (/^192\.168\.\d{1,3}\.\d{1,3}$/.test(host)) {
+    return true;
+  }
+  if (/^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(host)) {
+    return true;
+  }
+
+  return false;
+};
+
 const buildAdapterConnectionString = (rawConnectionString: string) => {
   const trimmed = rawConnectionString.trim();
 
   try {
     const url = new URL(trimmed);
     const hostname = url.hostname.toLowerCase();
-    const isLocalHost =
-      hostname === "localhost" ||
-      hostname === "127.0.0.1" ||
-      hostname === "::1" ||
-      hostname.endsWith(".local");
+    const cloudSqlSocket = (url.searchParams.get("host") ?? "").startsWith("/cloudsql/");
     const hasExplicitSsl =
       url.searchParams.has("sslmode") ||
       url.searchParams.has("ssl") ||
       url.searchParams.has("sslcert") ||
       url.searchParams.has("sslrootcert");
 
-    if (!isLocalHost && !hasExplicitSsl) {
-      // Hosted Postgres providers such as Render require TLS, while local development often does not.
+    if (!isPrivateOrLocalHostname(hostname) && !cloudSqlSocket && !hasExplicitSsl) {
+      // Public hosted Postgres (e.g. Render) requires TLS; private VPC / Cloud SQL sockets do not.
       url.searchParams.set("sslmode", "verify-full");
       return url.toString();
     }

@@ -5,6 +5,9 @@
   publish = "dist"
 
 [build.environment]
+  VITE_BACKEND_BASE_URL = "https://ecommerce-api-mul3xofi6a-ew.a.run.app"
+  VITE_DEV_PROXY_TARGET = "https://ecommerce-api-mul3xofi6a-ew.a.run.app"
+  VITE_APP_ENV_LABEL = "production"
   SECRETS_SCAN_OMIT_KEYS = "VITE_APP_ENV_LABEL,VITE_APP_RELEASE,VITE_BACKEND_BASE_URL,VITE_DEV_PROXY_TARGET,VITE_SENTRY_DSN,VITE_SENTRY_TRACES_SAMPLE_RATE,VITE_STITCH_PROJECT_ID"
 
 [[headers]]
