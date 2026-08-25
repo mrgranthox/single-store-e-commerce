@@ -1,7 +1,7 @@
 import type { FormEvent, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { StorefrontMain, StorefrontShell, storefrontScrollRegionClasses } from "@/components/layout";
 import { ProductCard, TrustBadge } from "@/components/ui";
 import { Icon } from "@/components/Icon";
@@ -747,7 +747,7 @@ export const ShopAllPage = () => {
   return (
     <ShellMain>
         <header className="mb-10 md:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-background mb-4">Shop All</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-headline font-extrabold tracking-tighter text-on-background mb-4">Explore Our Collections</h1>
           <p className="text-on-surface-variant max-w-xl">
             A complete catalogue of curated pieces across all categories.
           </p>
@@ -1331,31 +1331,51 @@ export const SearchPage = () => {
 };
 
 /* ─────────────────────────────────────────────
-   CAMPAIGN PAGE
+   CAMPAIGN / SALE PAGE
+   Never hard-redirects away — missing campaigns still render a sale landing.
 ───────────────────────────────────────────── */
+const SALE_DEFAULT_SLUG = "sale";
+
+const humanizeCampaignSlug = (value: string) =>
+  value
+    .split(/[-_]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ") || "Sale";
+
 export const CampaignPage = () => {
   const { campaignSlug } = useParams();
-  const slug = campaignSlug ?? "";
+  const slug = (campaignSlug?.trim() || SALE_DEFAULT_SLUG).toLowerCase();
 
   const campaignQuery = useQuery({
     queryKey: ["customer-campaign", slug],
     queryFn: async () => {
       const { data } = await customerBackendApi.getCampaign(slug);
-      return data as { entity?: Record<string, unknown> };
+      const payload = data as { entity?: Record<string, unknown> } | Record<string, unknown> | null;
+      if (payload && typeof payload === "object" && "entity" in payload) {
+        return (payload.entity as Record<string, unknown> | undefined) ?? null;
+      }
+      if (payload && typeof payload === "object" && "name" in payload) {
+        return payload as Record<string, unknown>;
+      }
+      return null;
     },
     enabled: Boolean(slug),
-    retry: false
+    retry: 1,
+    staleTime: 60_000
   });
 
-  const entity = campaignQuery.data?.entity;
+  const entity = campaignQuery.data ?? null;
   const heroBanner = entity?.heroBanner as { mediaUrl?: string | null; title?: string | null } | undefined;
   const heroUrl = heroBanner?.mediaUrl?.trim() || "";
-  const title = typeof entity?.name === "string" ? entity.name : "Campaign";
+  const title =
+    (typeof entity?.name === "string" && entity.name.trim()) ||
+    humanizeCampaignSlug(slug);
   const subtitle =
-    (typeof heroBanner?.title === "string" && heroBanner.title) ||
+    (typeof heroBanner?.title === "string" && heroBanner.title.trim()) ||
     (entity?.promotion && typeof (entity.promotion as { name?: string }).name === "string"
       ? (entity.promotion as { name: string }).name
-      : "Limited-time offers from our catalogue.");
+      : "Limited-time offers and highlights from our catalogue.");
 
   const gridQuery = useQuery({
     queryKey: ["customer-campaign-grid", slug],
@@ -1363,25 +1383,13 @@ export const CampaignPage = () => {
       const { data } = await customerBackendApi.listProducts({ page: 1, page_size: 12, sort: "newest" });
       return mapStorefrontProductCards(data.items ?? []);
     },
-    enabled: Boolean(slug) && campaignQuery.isSuccess,
+    enabled: Boolean(slug),
     staleTime: 30_000
   });
 
-  if (campaignQuery.isPending) {
-    return (
-      <StorefrontShell>
-        <main className={`${storefrontScrollRegionClasses} bg-surface text-on-background font-body min-w-0 flex items-center justify-center`}>
-          <p className="text-on-surface-variant">Loading campaign…</p>
-        </main>
-      </StorefrontShell>
-    );
-  }
-
-  if (campaignQuery.isError || !entity) {
-    return <Navigate to="/shop" replace />;
-  }
-
   const showProducts = gridQuery.data ?? [];
+  const campaignLoading = campaignQuery.isPending;
+  const gridLoading = gridQuery.isPending;
 
   return (
     <StorefrontShell>
@@ -1401,12 +1409,16 @@ export const CampaignPage = () => {
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/90 md:from-primary-container/82 via-primary-container/35 md:via-transparent to-transparent" />
           <div className="relative h-full min-h-[42dvh] sm:min-h-[48dvh] md:min-h-0 md:h-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col justify-end md:justify-center items-start py-10 sm:py-14 md:py-16 lg:py-0">
             <span className="font-label text-tertiary-fixed tracking-[0.35em] uppercase text-[10px] sm:text-xs mb-3 sm:mb-4 font-bold block">
-              Seasonal campaign
+              {campaignLoading ? "Loading…" : "Sale"}
             </span>
             <h1 className="text-white font-headline text-[1.75rem] leading-tight sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter mb-3 sm:mb-4 md:mb-6 max-w-[18ch] sm:max-w-none">
-              {title}
+              {campaignLoading ? "Sale" : title}
             </h1>
-            <p className="text-white/75 mb-6 md:mb-8 font-light leading-relaxed max-w-lg text-sm sm:text-base">{subtitle}</p>
+            <p className="text-white/75 mb-6 md:mb-8 font-light leading-relaxed max-w-lg text-sm sm:text-base">
+              {campaignLoading
+                ? "Discover current offers and featured pieces from the catalogue."
+                : subtitle}
+            </p>
             <Link
               to="/shop"
               className="inline-flex items-center justify-center bg-secondary text-on-secondary px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-label font-bold text-xs sm:text-sm uppercase tracking-widest hover:opacity-95 transition-opacity mb-2 md:mb-0 w-full sm:w-auto text-center"
@@ -1418,7 +1430,9 @@ export const CampaignPage = () => {
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-10 sm:py-14 md:py-20 pb-mobile-nav w-full min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-12">
             <div>
-              <h2 className="font-headline text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-on-background">In this campaign</h2>
+              <h2 className="font-headline text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-on-background">
+                In this campaign
+              </h2>
               <p className="text-on-surface-variant text-sm sm:text-base mt-1">
                 Fresh arrivals and highlights — add to bag from the grid below.
               </p>
@@ -1430,17 +1444,29 @@ export const CampaignPage = () => {
               Search catalogue
             </Link>
           </div>
-          {gridQuery.isPending ? (
+          {gridLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16 animate-pulse">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="aspect-[3/4] rounded-sm bg-surface-container-high" />
               ))}
             </div>
-          ) : (
+          ) : showProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-x-8 sm:gap-y-16">
               {showProducts.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-10 text-center">
+              <p className="text-on-surface-variant text-sm sm:text-base mb-4">
+                No featured products are available for this sale yet.
+              </p>
+              <Link
+                to="/shop"
+                className="text-secondary font-bold text-sm uppercase tracking-widest hover:underline"
+              >
+                Browse the shop
+              </Link>
             </div>
           )}
         </div>

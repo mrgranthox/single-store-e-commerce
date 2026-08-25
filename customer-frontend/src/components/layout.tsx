@@ -143,7 +143,7 @@ export const TopNavBar = () => {
                 <NavLink to="/brands" className={desktopNavClass}>
                   Brands
                 </NavLink>
-                <NavLink to="/campaigns/the-winter-edit" className={desktopNavClass}>
+                <NavLink to="/sale" className={desktopNavClass}>
                   Sale
                 </NavLink>
               </div>
@@ -264,7 +264,7 @@ export const TopNavBar = () => {
                 All brands
               </Link>
               <NavLink
-                to="/campaigns/the-winter-edit"
+                to="/sale"
                 onClick={closeMenu}
                 className={({ isActive }) => (isActive ? drawerLinkActive : drawerLinkIdle)}
               >
@@ -359,7 +359,7 @@ export const Footer = () => (
         <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/shop">New Arrivals</Link>
         <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/shop">Best Sellers</Link>
         <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/brands">Brands</Link>
-        <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/campaigns/the-winter-edit">Sale</Link>
+        <Link className="text-xs tracking-wide uppercase text-on-surface-variant hover:text-secondary underline-offset-4 decoration-secondary/50 hover:underline transition-colors" to="/sale">Sale</Link>
       </div>
       <div className="flex flex-col gap-4">
         <h4 className="font-headline font-bold text-sm text-on-background mb-2">Support</h4>

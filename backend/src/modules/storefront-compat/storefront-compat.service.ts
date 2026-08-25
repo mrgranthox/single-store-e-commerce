@@ -96,31 +96,75 @@ const readAddressSnapshot = (value: unknown) =>
     ? (value as Record<string, unknown>)
     : null;
 
-export const getStorefrontCampaign = async (slug: string) => {
-  const campaign = await prisma.campaign.findUnique({
-    where: {
-      slug
-    },
-    include: {
-      promotion: {
-        select: {
-          id: true,
-          name: true,
-          status: true,
-          activeFrom: true,
-          activeTo: true
-        }
-      },
-      banners: {
-        where: {
-          status: "PUBLISHED"
-        },
-        orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }]
-      }
+/** Storefront nav / legacy Stitch slugs that should resolve to any live sale campaign. */
+const SALE_CAMPAIGN_ALIASES = new Set(["sale", "the-winter-edit", "winter-edit"]);
+
+const campaignPublicInclude = {
+  promotion: {
+    select: {
+      id: true,
+      name: true,
+      status: true,
+      activeFrom: true,
+      activeTo: true
     }
+  },
+  banners: {
+    where: {
+      status: "PUBLISHED"
+    },
+    orderBy: [{ sortOrder: "asc" as const }, { createdAt: "desc" as const }]
+  }
+};
+
+export const getStorefrontCampaign = async (slug: string) => {
+  const trimmedSlug = slug.trim();
+  const normalizedSlug = trimmedSlug.toLowerCase();
+
+  let campaign = await prisma.campaign.findUnique({
+    where: {
+      slug: trimmedSlug
+    },
+    include: campaignPublicInclude
   });
 
+  if (!campaign && normalizedSlug !== trimmedSlug) {
+    campaign = await prisma.campaign.findUnique({
+      where: {
+        slug: normalizedSlug
+      },
+      include: campaignPublicInclude
+    });
+  }
+
+  if ((!campaign || campaign.status !== "ACTIVE") && SALE_CAMPAIGN_ALIASES.has(normalizedSlug)) {
+    campaign = await prisma.campaign.findFirst({
+      where: {
+        status: "ACTIVE"
+      },
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      include: campaignPublicInclude
+    });
+  }
+
   if (!campaign || campaign.status !== "ACTIVE") {
+    if (SALE_CAMPAIGN_ALIASES.has(normalizedSlug)) {
+      return {
+        entity: {
+          id: null,
+          slug: normalizedSlug,
+          name: "Sale",
+          status: "ACTIVE" as const,
+          promotion: null,
+          banners: [],
+          heroBanner: null,
+          isFallback: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      };
+    }
+
     throw notFoundError("The requested campaign was not found.");
   }
 
@@ -133,6 +177,7 @@ export const getStorefrontCampaign = async (slug: string) => {
       promotion: campaign.promotion,
       banners: campaign.banners.map(serializeCampaignBanner),
       heroBanner: campaign.banners[0] ? serializeCampaignBanner(campaign.banners[0]) : null,
+      isFallback: false,
       createdAt: campaign.createdAt,
       updatedAt: campaign.updatedAt
     }

@@ -414,6 +414,11 @@ const main = async () => {
     }
 
     const campaign = await tx.campaign.upsert({
+      where: { slug: "the-winter-edit" },
+      update: { name: "The Winter Edit", status: "ACTIVE" },
+      create: { slug: "the-winter-edit", name: "The Winter Edit", status: "ACTIVE" }
+    });
+    await tx.campaign.upsert({
       where: { slug: "demo-new-season-essentials" },
       update: { name: "New Season Essentials", status: "ACTIVE" },
       create: { slug: "demo-new-season-essentials", name: "New Season Essentials", status: "ACTIVE" }

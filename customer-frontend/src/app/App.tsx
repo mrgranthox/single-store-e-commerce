@@ -147,6 +147,7 @@ export const App = () => (
           <Route path="/products/:productSlug/questions" element={<ProductQuestionsPage />} />
           <Route path="/saved-items" element={<SavedItemsPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/sale" element={<CampaignPage />} />
           <Route path="/campaigns/:campaignSlug" element={<CampaignPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/saved" element={<WishlistPage />} />
