@@ -68,6 +68,60 @@ Order: migrate → API → worker.
 
 Live API: `https://ecommerce-api-mul3xofi6a-ew.a.run.app`
 
+## Database password rotation
+
+`DATABASE_URL` embeds the Cloud SQL password. If the Cloud SQL user password is changed
+without updating Secret Manager, Cloud Run will fail readiness with PostgreSQL `28P01`.
+
+Use Secret Manager as the source of truth:
+
+```bash
+# Re-apply the existing ecommerce-db-password secret to Cloud SQL and refresh DATABASE_URL.
+./deploy/gcp/rotate-db-password.sh
+
+# Or rotate to a new password without printing it.
+read -rsp "New DB password: " DB_PASSWORD; echo
+DB_PASSWORD="$DB_PASSWORD" ./deploy/gcp/rotate-db-password.sh
+unset DB_PASSWORD
+
+./deploy/gcp/run-migrate.sh
+curl -fsS https://ecommerce-api-mul3xofi6a-ew.a.run.app/ready
+```
+
+Do not edit only the Cloud SQL password in the console. Update both
+`ecommerce-db-password` and `DATABASE_URL`, then refresh Cloud Run services so they
+mount the latest secret versions.
+
+## Seed admin login
+
+Set `SEED_DEFAULT_ADMIN_EMAIL` and `SEED_DEFAULT_ADMIN_PASSWORD` in local
+`backend/.env`, deploy a current backend image, then run:
+
+```bash
+./deploy/gcp/seed-admin.sh
+```
+
+The script creates a temporary Cloud Run job, runs `prisma db seed`, and deletes the
+job and local temp env file afterward. The seed password is intentionally not uploaded
+to Secret Manager because production app services reject `SEED_DEFAULT_ADMIN_PASSWORD`.
+
+## Seed demo storefront and homepage
+
+If the production database has no products yet, the public homepage intentionally
+returns 404 until real shoppable content is published. For test environments, seed a
+small demo catalog and publish a homepage with:
+
+```bash
+./deploy/gcp/seed-storefront-demo.sh
+```
+
+The script skips homepage publishing when a published homepage already exists. To
+replace the published homepage with demo content:
+
+```bash
+FORCE_STOREFRONT_DEMO=1 ./deploy/gcp/seed-storefront-demo.sh
+```
+
 Webhook endpoints (update in provider dashboards if not already):
 
 - Clerk: `https://ecommerce-api-mul3xofi6a-ew.a.run.app/api/v1/webhooks/clerk`
