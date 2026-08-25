@@ -27,10 +27,50 @@ type PublicCacheOptions = {
 
 const CACHE_PREFIX = "public-cache:v1";
 const JSON_CONTENT_TYPE = "application/json; charset=utf-8";
+const L1_MAX_ENTRIES = 500;
+
+const l1Cache = new Map<string, PublicCacheEntry>();
 
 const buildCacheKey = (namespace: CacheNamespace, normalizedKey: string) => {
   const digest = crypto.createHash("sha256").update(normalizedKey).digest("hex");
   return `${CACHE_PREFIX}:${namespace}:${digest}`;
+};
+
+const getL1Entry = (cacheKey: string, ttlSeconds: number) => {
+  const entry = l1Cache.get(cacheKey);
+  if (!entry) {
+    return null;
+  }
+
+  if (Date.now() - entry.createdAtMs > (ttlSeconds + env.PUBLIC_CACHE_STALE_SECONDS) * 1000) {
+    l1Cache.delete(cacheKey);
+    return null;
+  }
+
+  l1Cache.delete(cacheKey);
+  l1Cache.set(cacheKey, entry);
+  return entry;
+};
+
+const setL1Entry = (cacheKey: string, entry: PublicCacheEntry) => {
+  l1Cache.set(cacheKey, entry);
+  if (l1Cache.size <= L1_MAX_ENTRIES) {
+    return;
+  }
+
+  const oldestKey = l1Cache.keys().next().value;
+  if (oldestKey) {
+    l1Cache.delete(oldestKey);
+  }
+};
+
+const deleteL1Namespace = (namespace: CacheNamespace) => {
+  const prefix = `${CACHE_PREFIX}:${namespace}:`;
+  for (const key of l1Cache.keys()) {
+    if (key.startsWith(prefix)) {
+      l1Cache.delete(key);
+    }
+  }
 };
 
 const setPublicCacheHeaders = (response: Response, ttlSeconds: number) => {
@@ -56,6 +96,18 @@ export const publicCache = ({ namespace, ttlSeconds }: PublicCacheOptions): Requ
     const normalizedKey = normalizePublicCacheKey(request);
     const cacheKey = buildCacheKey(namespace, normalizedKey);
     const startedAt = performance.now();
+    const l1Entry = getL1Entry(cacheKey, ttlSeconds);
+
+    if (l1Entry) {
+      const isStale = Date.now() - l1Entry.createdAtMs > ttlSeconds * 1000;
+      appendServerTiming(response, "cache", performance.now() - startedAt);
+      response.status(l1Entry.statusCode);
+      setPublicCacheHeaders(response, ttlSeconds);
+      response.setHeader("Content-Type", l1Entry.contentType ?? JSON_CONTENT_TYPE);
+      response.setHeader("X-Cache", isStale ? "STALE" : "HIT");
+      response.send(l1Entry.body);
+      return;
+    }
 
     try {
       const cached = await redis.get(cacheKey);
@@ -63,6 +115,7 @@ export const publicCache = ({ namespace, ttlSeconds }: PublicCacheOptions): Requ
 
       if (cached) {
         const entry = JSON.parse(cached) as PublicCacheEntry;
+        setL1Entry(cacheKey, entry);
         const isStale = Date.now() - entry.createdAtMs > ttlSeconds * 1000;
         response.status(entry.statusCode);
         setPublicCacheHeaders(response, ttlSeconds);
@@ -93,6 +146,7 @@ export const publicCache = ({ namespace, ttlSeconds }: PublicCacheOptions): Requ
           createdAtMs: Date.now()
         };
 
+        setL1Entry(cacheKey, entry);
         void redis
           .set(cacheKey, JSON.stringify(entry), "EX", ttlSeconds + env.PUBLIC_CACHE_STALE_SECONDS)
           .catch((error) => logger.warn({ error, namespace }, "public cache write failed"));
@@ -110,6 +164,7 @@ export const invalidatePublicCacheNamespaces = async (namespaces: CacheNamespace
   }
 
   for (const namespace of [...new Set(namespaces)]) {
+    deleteL1Namespace(namespace);
     const pattern = `${CACHE_PREFIX}:${namespace}:*`;
     let cursor = "0";
 
