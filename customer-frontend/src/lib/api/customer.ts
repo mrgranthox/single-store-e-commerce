@@ -141,7 +141,6 @@ const readHomepageEntity = async () => {
     method: "GET",
     auth: false,
     session: false,
-    cache: "no-store",
     requireJsonContentType: true
   });
 

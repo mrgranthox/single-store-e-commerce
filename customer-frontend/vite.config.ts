@@ -25,6 +25,20 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: "jsdom",
       setupFiles: "./src/test/setup.ts"
+    },
+    build: {
+      sourcemap: "hidden",
+      chunkSizeWarningLimit: 450,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes("node_modules")) {
+              return;
+            }
+            return "vendor";
+          }
+        }
+      }
     }
   };
 });

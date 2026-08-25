@@ -89,7 +89,17 @@ const DEPLOY_EMPTY_MEANS_UNSET = new Set([
   "SENTRY_PROFILE_SAMPLE_RATE",
   "SENTRY_ATTACH_STACKTRACE",
   "SENTRY_SEND_DEFAULT_PII",
-  "SENTRY_DEBUG"
+  "SENTRY_DEBUG",
+  "PUBLIC_CACHE_ENABLED",
+  "PUBLIC_CACHE_HOMEPAGE_TTL_SECONDS",
+  "PUBLIC_CACHE_CATALOG_LIST_TTL_SECONDS",
+  "PUBLIC_CACHE_PRODUCT_DETAIL_TTL_SECONDS",
+  "PUBLIC_CACHE_CATEGORIES_TTL_SECONDS",
+  "PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS",
+  "PUBLIC_CACHE_STALE_SECONDS",
+  "DATABASE_POOL_MAX",
+  "DATABASE_IDLE_TIMEOUT_MS",
+  "PERF_BUDGET_P95_MS"
 ]);
 
 const normalizedProcessEnv = Object.fromEntries(
@@ -172,6 +182,16 @@ const envSchema = z.object({
   ),
   WORKER_HEARTBEAT_INTERVAL_SECONDS: z.coerce.number().int().min(5).max(300).default(15),
   WORKER_HEARTBEAT_TTL_SECONDS: z.coerce.number().int().min(10).max(600).default(45),
+  PUBLIC_CACHE_ENABLED: booleanFromString.default(true),
+  PUBLIC_CACHE_HOMEPAGE_TTL_SECONDS: z.coerce.number().int().min(1).max(3600).default(60),
+  PUBLIC_CACHE_CATALOG_LIST_TTL_SECONDS: z.coerce.number().int().min(1).max(3600).default(15),
+  PUBLIC_CACHE_PRODUCT_DETAIL_TTL_SECONDS: z.coerce.number().int().min(1).max(3600).default(60),
+  PUBLIC_CACHE_CATEGORIES_TTL_SECONDS: z.coerce.number().int().min(1).max(3600).default(120),
+  PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS: z.coerce.number().int().min(1).max(3600).default(300),
+  PUBLIC_CACHE_STALE_SECONDS: z.coerce.number().int().min(0).max(3600).default(30),
+  DATABASE_POOL_MAX: z.coerce.number().int().min(1).max(100).default(10),
+  DATABASE_IDLE_TIMEOUT_MS: z.coerce.number().int().min(1_000).max(300_000).default(30_000),
+  PERF_BUDGET_P95_MS: z.coerce.number().int().min(1).max(10_000).default(45),
   /**
    * When false, workers do not register BullMQ repeatables (catalog publish/pricing ticks, SLA scan,
    * pending payment reconcile). Existing automation repeatables are removed from Redis on worker startup.

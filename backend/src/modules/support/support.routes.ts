@@ -2,7 +2,9 @@ import { Router } from "express";
 
 import type { RouteModule } from "../../app/route.types";
 import { sendSuccess } from "../../common/http/response";
+import { publicCache } from "../../common/middleware/public-cache.middleware";
 import { validateRequest } from "../../common/validation/validate-request";
+import { env } from "../../config/env";
 import { requireCustomerActor } from "../auth/auth.middleware";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
 import { getPublicSupportCaptchaConfiguration } from "../security/captcha.service";
@@ -45,19 +47,23 @@ import {
 
 const router = Router();
 
-router.get("/support/public-config", (_request, response) => {
-  return sendSuccess(response, {
-    data: {
-      support: {
-        contactEndpoint: "/api/support/contact",
-        uploadIntentEndpoint: "/api/support/contact/upload-intents",
-        productInquiryPattern: "/api/products/:slug/inquiry",
-        productInquiryUploadPattern: "/api/products/:slug/inquiry/attachments/upload-intents",
-        abuseChallenge: getPublicSupportCaptchaConfiguration()
+router.get(
+  "/support/public-config",
+  publicCache({ namespace: "support", ttlSeconds: env.PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS }),
+  (_request, response) => {
+    return sendSuccess(response, {
+      data: {
+        support: {
+          contactEndpoint: "/api/support/contact",
+          uploadIntentEndpoint: "/api/support/contact/upload-intents",
+          productInquiryPattern: "/api/products/:slug/inquiry",
+          productInquiryUploadPattern: "/api/products/:slug/inquiry/attachments/upload-intents",
+          abuseChallenge: getPublicSupportCaptchaConfiguration()
+        }
       }
-    }
-  });
-});
+    });
+  }
+);
 
 router.get("/support", requireCustomerActor, validateRequest({ query: adminTicketsQuerySchema }), listTicketsCustomer);
 router.post("/support", requireCustomerActor, validateRequest({ body: createTicketBodySchema }), createTicketCustomer);

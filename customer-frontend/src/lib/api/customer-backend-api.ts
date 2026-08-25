@@ -10,6 +10,8 @@ const qs = (params: Record<string, string | number | undefined>) => {
   return s ? `?${s}` : "";
 };
 
+const publicGetOptions = { method: "GET" as const, auth: false, session: false };
+
 /** Cart + checkout evaluation payload from `GET /api/cart`. */
 export type CartEvaluation = unknown;
 
@@ -35,20 +37,21 @@ export const customerBackendApi = {
       sortBy: params?.sortBy,
       sortOrder: params?.sortOrder
     });
-    return commerceFetchJson<{ items: unknown[] }>(`/api/products${q}`, { method: "GET" });
+    return commerceFetchJson<{ items: unknown[] }>(`/api/products${q}`, publicGetOptions);
   },
 
-  getProduct: async (slug: string) => commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}`, { method: "GET" }),
+  getProduct: async (slug: string) =>
+    commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}`, publicGetOptions),
 
   /** Storefront GET /products/:slug/reviews: `data.items`; totals/pages are on the envelope `meta` (e.g. totalItems, page, limit). */
   listProductReviews: async (slug: string, page = 1, page_size = 20) =>
     commerceFetchJson<{ items: unknown[] }>(
       `/api/products/${encodeURIComponent(slug)}/reviews${qs({ page, page_size })}`,
-      { method: "GET" }
+      publicGetOptions
     ),
 
   getProductQuestions: async (slug: string) =>
-    commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}/questions`, { method: "GET" }),
+    commerceFetchJson<unknown>(`/api/products/${encodeURIComponent(slug)}/questions`, publicGetOptions),
 
   createProductInquiry: async (
     slug: string,
@@ -60,39 +63,44 @@ export const customerBackendApi = {
       auth: false
     }),
 
-  listCategories: async () => commerceFetchJson<{ items: unknown[] }>("/api/categories", { method: "GET" }),
+  listCategories: async () => commerceFetchJson<{ items: unknown[] }>("/api/categories", publicGetOptions),
 
   listCategoryProducts: async (slug: string, params?: { page?: number; page_size?: number }) =>
     commerceFetchJson<{ category: unknown; items: unknown[] }>(
       `/api/categories/${encodeURIComponent(slug)}/products${qs({ page: params?.page, page_size: params?.page_size })}`,
-      { method: "GET" }
+      publicGetOptions
     ),
 
   listBrandProducts: async (slug: string, params?: { page?: number; page_size?: number }) =>
     commerceFetchJson<{ brand: unknown; items: unknown[] }>(
       `/api/brands/${encodeURIComponent(slug)}/products${qs({ page: params?.page, page_size: params?.page_size })}`,
-      { method: "GET" }
+      publicGetOptions
     ),
 
-  searchProducts: async (params?: { q?: string; page?: number; page_size?: number }) =>
+  searchProducts: async (
+    params?: { q?: string; page?: number; page_size?: number },
+    options?: { signal?: AbortSignal }
+  ) =>
     commerceFetchJson<{ items: unknown[]; query: string | null }>(`/api/search${qs({ q: params?.q, page: params?.page, page_size: params?.page_size })}`, {
-      method: "GET"
+      ...publicGetOptions,
+      signal: options?.signal
     }),
 
   getCampaign: async (slug: string) =>
-    commerceFetchJson<unknown>(`/api/catalog/campaigns/${encodeURIComponent(slug)}`, { method: "GET" }),
+    commerceFetchJson<unknown>(`/api/catalog/campaigns/${encodeURIComponent(slug)}`, publicGetOptions),
 
   listBanners: async (placement?: string) =>
-    commerceFetchJson<unknown>(`/api/banners${qs({ placement })}`, { method: "GET" }),
+    commerceFetchJson<unknown>(`/api/banners${qs({ placement })}`, publicGetOptions),
 
-  getPage: async (slug: string) => commerceFetchJson<unknown>(`/api/pages/${encodeURIComponent(slug)}`, { method: "GET" }),
+  getPage: async (slug: string) =>
+    commerceFetchJson<unknown>(`/api/pages/${encodeURIComponent(slug)}`, publicGetOptions),
 
-  getHelpPage: async () => commerceFetchJson<unknown>("/api/help", { method: "GET" }),
+  getHelpPage: async () => commerceFetchJson<unknown>("/api/help", publicGetOptions),
 
-  getContactPage: async () => commerceFetchJson<unknown>("/api/contact", { method: "GET" }),
+  getContactPage: async () => commerceFetchJson<unknown>("/api/contact", publicGetOptions),
 
   getSupportPublicConfig: async () =>
-    commerceFetchJson<unknown>("/api/support/public-config", { method: "GET", auth: false }),
+    commerceFetchJson<unknown>("/api/support/public-config", publicGetOptions),
 
   postPublicSupportContact: async (body: unknown) =>
     commerceFetchJson<unknown>("/api/support/contact", { method: "POST", json: body, auth: false }),

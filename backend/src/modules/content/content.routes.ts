@@ -1,6 +1,8 @@
 import { Router } from "express";
 
 import type { RouteModule } from "../../app/route.types";
+import { env } from "../../config/env";
+import { publicCache } from "../../common/middleware/public-cache.middleware";
 import { validateRequest } from "../../common/validation/validate-request";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
 import {
@@ -47,11 +49,33 @@ import {
 
 const router = Router();
 
-router.get("/content/pages/:slug", validateRequest({ params: pageSlugParamsSchema }), getPagePublic);
-router.get("/content/banners", validateRequest({ query: publicBannersQuerySchema }), listBannersPublic);
-router.get("/content/help", getHelpPagePublic);
-router.get("/content/contact", getContactPagePublic);
-router.get("/content/homepage", getHomepagePublic);
+router.get(
+  "/content/pages/:slug",
+  validateRequest({ params: pageSlugParamsSchema }),
+  publicCache({ namespace: "content", ttlSeconds: env.PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS }),
+  getPagePublic
+);
+router.get(
+  "/content/banners",
+  validateRequest({ query: publicBannersQuerySchema }),
+  publicCache({ namespace: "content", ttlSeconds: env.PUBLIC_CACHE_HOMEPAGE_TTL_SECONDS }),
+  listBannersPublic
+);
+router.get(
+  "/content/help",
+  publicCache({ namespace: "support", ttlSeconds: env.PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS }),
+  getHelpPagePublic
+);
+router.get(
+  "/content/contact",
+  publicCache({ namespace: "support", ttlSeconds: env.PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS }),
+  getContactPagePublic
+);
+router.get(
+  "/content/homepage",
+  publicCache({ namespace: "homepage", ttlSeconds: env.PUBLIC_CACHE_HOMEPAGE_TTL_SECONDS }),
+  getHomepagePublic
+);
 
 router.get(
   "/admin/content/homepage",

@@ -11,6 +11,8 @@ import { browserOriginGuardMiddleware } from "../common/middleware/browser-origi
 import { defaultNoStoreCacheControlMiddleware } from "../common/middleware/cache-control.middleware";
 import { errorHandlerMiddleware } from "../common/middleware/error-handler.middleware";
 import { notFoundMiddleware } from "../common/middleware/not-found.middleware";
+import { performanceHeadersMiddleware } from "../common/middleware/performance.middleware";
+import { publicCacheInvalidationMiddleware } from "../common/middleware/public-cache.middleware";
 import { optionalAuth } from "../modules/auth/auth.middleware";
 import { requestContextMiddleware } from "../common/middleware/request-context.middleware";
 import { requestLoggingMiddleware } from "../common/middleware/request-logging.middleware";
@@ -58,11 +60,13 @@ export const createApp = () => {
   );
   application.use(express.urlencoded({ extended: true, limit: "1mb" }));
   application.use(requestContextMiddleware);
+  application.use(performanceHeadersMiddleware);
   application.use(defaultNoStoreCacheControlMiddleware);
   application.use(browserOriginGuardMiddleware);
   application.use(clerkRequestMiddleware);
   application.use(optionalAuth);
   application.use(requestLoggingMiddleware);
+  application.use(publicCacheInvalidationMiddleware);
 
   registerRoutes(application);
 

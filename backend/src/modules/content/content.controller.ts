@@ -3,7 +3,6 @@ import { z } from "zod";
 import { requireAdminUserId } from "../../common/http/controller-actor";
 import { sendSuccess } from "../../common/http/response";
 import { asyncHandler } from "../../common/middleware/async-handler";
-import { setNoStoreHeaders } from "../../common/middleware/cache-control.middleware";
 import {
   readValidatedBody,
   readValidatedParams,
@@ -75,7 +74,6 @@ export const getContactPagePublic = asyncHandler(async (_request, response) => {
 
 export const getHomepagePublic = asyncHandler(async (_request, response) => {
   const data = await getPublicHomepage();
-  setNoStoreHeaders(response);
   return sendSuccess(response, { data });
 });
 

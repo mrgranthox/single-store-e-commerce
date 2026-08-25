@@ -58,9 +58,12 @@ const buildAdapterConnectionString = (rawConnectionString: string) => {
 };
 
 const buildPrismaClient = () => {
-  const adapter = new PrismaPg({
-    connectionString: buildAdapterConnectionString(env.DATABASE_URL)
-  });
+  const adapterOptions = {
+    connectionString: buildAdapterConnectionString(env.DATABASE_URL),
+    max: env.DATABASE_POOL_MAX,
+    idleTimeoutMillis: env.DATABASE_IDLE_TIMEOUT_MS
+  };
+  const adapter = new PrismaPg(adapterOptions);
 
   return new PrismaClient({
     adapter,

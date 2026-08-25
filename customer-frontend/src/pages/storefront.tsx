@@ -84,9 +84,10 @@ export const HomePage = () => {
   const homepageQuery = useQuery({
     queryKey: ["customer-homepage"],
     queryFn: async () => (await customerApi.getHomepage()).entity,
-    staleTime: 0,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true
+    staleTime: 60_000,
+    gcTime: 10 * 60_000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   });
 
   const promoCtaHref = (href: string, code: string) =>
@@ -644,7 +645,7 @@ export const CategoriesIndexPage = () => {
         }>;
       };
     },
-    staleTime: 60_000
+    staleTime: 120_000
   });
 
   const items = query.data?.items ?? [];
@@ -740,7 +741,7 @@ export const ShopAllPage = () => {
       });
       return mapStorefrontProductCards(data.items ?? []);
     },
-    staleTime: 30_000
+    staleTime: 15_000
   });
 
   return (
@@ -827,7 +828,7 @@ export const CategoryPage = () => {
       return data as { category?: { name?: string | null }; items?: unknown[] };
     },
     enabled: Boolean(slug),
-    staleTime: 30_000
+    staleTime: 15_000
   });
 
   const displayName =
@@ -902,7 +903,7 @@ export const ProductDetailPage = () => {
       return data;
     },
     enabled: Boolean(productSlug),
-    staleTime: 30_000
+    staleTime: 60_000
   });
 
   const product = useMemo(
@@ -1160,6 +1161,23 @@ export const SearchPage = () => {
     setDraft(qParam);
   }, [qParam]);
 
+  useEffect(() => {
+    const next = draft.trim();
+    if (next === qParam) {
+      return undefined;
+    }
+
+    const timeout = window.setTimeout(() => {
+      if (next) {
+        setSearchParams({ query: next }, { replace: true });
+      } else {
+        setSearchParams({}, { replace: true });
+      }
+    }, 250);
+
+    return () => window.clearTimeout(timeout);
+  }, [draft, qParam, setSearchParams]);
+
   const browseQuery = useQuery({
     queryKey: ["customer-search-browse"],
     queryFn: async () => {
@@ -1167,17 +1185,21 @@ export const SearchPage = () => {
       return mapStorefrontProductCards(data.items ?? []);
     },
     enabled: !qParam,
-    staleTime: 60_000
+    staleTime: 15_000
   });
 
   const searchQuery = useQuery({
     queryKey: ["customer-search", qParam],
-    queryFn: async () => {
-      const { data } = await customerBackendApi.searchProducts({ q: qParam, page: 1, page_size: 48 });
+    queryFn: async ({ signal }) => {
+      const { data } = await customerBackendApi.searchProducts(
+        { q: qParam, page: 1, page_size: 48 },
+        { signal }
+      );
       return mapStorefrontProductCards(data.items ?? []);
     },
     enabled: Boolean(qParam),
-    staleTime: 30_000
+    placeholderData: (previous) => previous,
+    staleTime: 15_000
   });
 
   const browseProducts = browseQuery.data ?? [];

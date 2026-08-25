@@ -636,6 +636,109 @@ const matchesPublicAvailabilityFilter = (
   }
 };
 
+const buildPublicProductWhere = (
+  input: {
+    q?: string;
+    categorySlug?: string;
+    brandSlug?: string;
+    categoryId?: string;
+    brandId?: string;
+    minPrice?: number;
+    maxPrice?: number;
+  }
+): Prisma.ProductWhereInput => {
+  const filters: Prisma.ProductWhereInput[] = [
+    {
+      status: ProductStatus.PUBLISHED
+    }
+  ];
+
+  if (input.q) {
+    filters.push({
+      OR: [
+        {
+          title: {
+            contains: input.q,
+            mode: "insensitive"
+          }
+        },
+        {
+          description: {
+            contains: input.q,
+            mode: "insensitive"
+          }
+        }
+      ]
+    });
+  }
+
+  if (input.categorySlug) {
+    filters.push({
+      categories: {
+        some: {
+          category: {
+            slug: input.categorySlug,
+            status: "ACTIVE"
+          }
+        }
+      }
+    });
+  }
+
+  if (input.categoryId) {
+    filters.push({
+      categories: {
+        some: {
+          categoryId: input.categoryId
+        }
+      }
+    });
+  }
+
+  if (input.brandSlug) {
+    filters.push({
+      brand: {
+        slug: input.brandSlug,
+        status: "ACTIVE"
+      }
+    });
+  }
+
+  if (input.brandId) {
+    filters.push({
+      brandId: input.brandId
+    });
+  }
+
+  if (input.minPrice != null) {
+    filters.push({
+      variants: {
+        some: {
+          status: VariantStatus.ACTIVE,
+          priceAmountCents: {
+            gte: input.minPrice
+          }
+        }
+      }
+    });
+  }
+
+  if (input.maxPrice != null) {
+    filters.push({
+      variants: {
+        some: {
+          status: VariantStatus.ACTIVE,
+          priceAmountCents: {
+            lte: input.maxPrice
+          }
+        }
+      }
+    });
+  }
+
+  return filters.length === 1 ? filters[0]! : { AND: filters };
+};
+
 const assertCategoryIdsExist = async (
   categoryIds: string[],
   transaction: Prisma.TransactionClient | typeof prisma = prisma
@@ -886,91 +989,76 @@ export const listPublicProducts = async (
     sortOrder: "asc" | "desc";
   }
 ) => {
-  const where: Prisma.ProductWhereInput = {
-    status: ProductStatus.PUBLISHED,
-    ...(input.q
-      ? {
-          OR: [
-            {
-              title: {
-                contains: input.q,
-                mode: "insensitive"
-              }
-            },
-            {
-              description: {
-                contains: input.q,
-                mode: "insensitive"
-              }
-            }
-          ]
-        }
-      : {}),
-    ...(input.categorySlug
-      ? {
-          categories: {
-            some: {
-              category: {
-                slug: input.categorySlug,
-                status: "ACTIVE"
-              }
-            }
-          }
-        }
-      : {}),
-    ...(input.categoryId
-      ? {
-          categories: {
-            some: {
-              categoryId: input.categoryId
-            }
-          }
-        }
-      : {}),
-    ...(input.brandSlug
-      ? {
-          brand: {
-            slug: input.brandSlug,
-            status: "ACTIVE"
-          }
-        }
-      : {}),
-    ...(input.brandId
-      ? {
-          brandId: input.brandId
-        }
-      : {})
-  };
-
-  const products = (await prisma.product.findMany({
-    where,
-    include: productListInclude,
-    orderBy: {
+  const pagination = buildPagination(input);
+  const where = buildPublicProductWhere(input);
+  const orderBy: Prisma.ProductOrderByWithRelationInput[] = [
+    {
       [input.sortBy]: input.sortOrder
+    },
+    {
+      id: "asc"
     }
+  ];
+
+  if (input.rating != null || input.availability != null) {
+    const products = (await prisma.product.findMany({
+      where,
+      include: productListInclude,
+      orderBy
+    })) as ProductShape[];
+
+    const filteredProducts = products.filter((product) => {
+      const inventory = deriveInventorySummary(product.variants);
+      const pricing = deriveProductPricing(product.variants);
+      const reviewSummary = deriveReviewSummary(product.reviews);
+
+      return (
+        matchesPublicPricingFilter(pricing, input) &&
+        matchesPublicRatingFilter(reviewSummary, input.rating) &&
+        matchesPublicAvailabilityFilter(inventory, input.availability)
+      );
+    });
+
+    return {
+      items: filteredProducts
+        .slice(pagination.skip, pagination.skip + pagination.take)
+        .map((product) => serializePublicProductCard(product)),
+      pagination: buildPaginationPayload(input, filteredProducts.length)
+    };
+  }
+
+  const [totalItems, pageIds] = await Promise.all([
+    prisma.product.count({
+      where
+    }),
+    prisma.product.findMany({
+      where,
+      select: {
+        id: true
+      },
+      orderBy,
+      skip: pagination.skip,
+      take: pagination.take
+    })
+  ]);
+
+  const orderedIds = pageIds.map((product) => product.id);
+  const products = (await prisma.product.findMany({
+    where: {
+      id: {
+        in: orderedIds
+      },
+      status: ProductStatus.PUBLISHED
+    },
+    include: productListInclude
   })) as ProductShape[];
 
-  const filteredProducts = products.filter((product) => {
-    const inventory = deriveInventorySummary(product.variants);
-    const pricing = deriveProductPricing(product.variants);
-    const reviewSummary = deriveReviewSummary(product.reviews);
-
-    return (
-      matchesPublicPricingFilter(pricing, input) &&
-      matchesPublicRatingFilter(reviewSummary, input.rating) &&
-      matchesPublicAvailabilityFilter(inventory, input.availability)
-    );
-  });
-
-  const pagination = buildPagination(input);
-  const paginatedProducts = filteredProducts.slice(
-    pagination.skip,
-    pagination.skip + pagination.take
-  );
+  const positionById = new Map(orderedIds.map((productId, index) => [productId, index]));
+  products.sort((a, b) => (positionById.get(a.id) ?? 0) - (positionById.get(b.id) ?? 0));
 
   return {
-    items: paginatedProducts.map((product) => serializePublicProductCard(product)),
-    pagination: buildPaginationPayload(input, filteredProducts.length)
+    items: products.map((product) => serializePublicProductCard(product)),
+    pagination: buildPaginationPayload(input, totalItems)
   };
 };
 

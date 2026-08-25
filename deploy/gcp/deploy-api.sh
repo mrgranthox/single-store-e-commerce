@@ -26,6 +26,7 @@ gcloud run deploy ecommerce-api \
   --env-vars-file="$ENV_FILE" \
   --min-instances=1 \
   --max-instances=10 \
+  --concurrency=40 \
   --memory=1Gi \
   --cpu=1 \
   --timeout=300 \

@@ -5,9 +5,11 @@ import { z } from "zod";
 import type { RouteModule } from "../../app/route.types";
 import { sendSuccess } from "../../common/http/response";
 import { asyncHandler } from "../../common/middleware/async-handler";
+import { publicCache } from "../../common/middleware/public-cache.middleware";
 import { rateLimit } from "../../common/middleware/rate-limit.middleware";
 import type { CartActorContext } from "../cart/cart.shared";
 import { validateRequest } from "../../common/validation/validate-request";
+import { env } from "../../config/env";
 import { verifyPublicSupportCaptcha } from "../security/captcha.service";
 import {
   getPublicProductDetail,
@@ -54,6 +56,31 @@ import {
 } from "./storefront-compat.service";
 
 const router = Router();
+
+const catalogListCache = publicCache({
+  namespace: "catalog",
+  ttlSeconds: env.PUBLIC_CACHE_CATALOG_LIST_TTL_SECONDS
+});
+const productDetailCache = publicCache({
+  namespace: "catalog",
+  ttlSeconds: env.PUBLIC_CACHE_PRODUCT_DETAIL_TTL_SECONDS
+});
+const categoriesCache = publicCache({
+  namespace: "catalog",
+  ttlSeconds: env.PUBLIC_CACHE_CATEGORIES_TTL_SECONDS
+});
+const contentCache = publicCache({
+  namespace: "content",
+  ttlSeconds: env.PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS
+});
+const homepageCache = publicCache({
+  namespace: "homepage",
+  ttlSeconds: env.PUBLIC_CACHE_HOMEPAGE_TTL_SECONDS
+});
+const supportConfigCache = publicCache({
+  namespace: "support",
+  ttlSeconds: env.PUBLIC_CACHE_SUPPORT_CONFIG_TTL_SECONDS
+});
 
 const slugSchema = z
   .string()
@@ -257,6 +284,7 @@ const normalizeReviewsQuery = (query: unknown) => {
 
 router.get(
   "/products",
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const query = normalizeStorefrontQuery(request.query);
     const data = await listStorefrontProducts(query);
@@ -273,6 +301,7 @@ router.get(
 router.get(
   "/products/:slug",
   validateRequest({ params: productSlugParamsSchema }),
+  productDetailCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof productSlugParamsSchema>;
     const data = await getPublicProductDetail(params.slug);
@@ -373,6 +402,7 @@ router.post(
 
 router.get(
   "/support/public-config",
+  supportConfigCache,
   asyncHandler(async (_request, response) => {
     const data = await getStorefrontSupportConfiguration();
     return sendSuccess(response, { data });
@@ -381,6 +411,7 @@ router.get(
 
 router.get(
   "/categories",
+  categoriesCache,
   asyncHandler(async (_request, response) => {
     const items = await listCatalogCategories();
 
@@ -395,6 +426,7 @@ router.get(
 router.get(
   "/categories/:slug/products",
   validateRequest({ params: categorySlugParamsSchema }),
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof categorySlugParamsSchema>;
     const query = normalizeStorefrontQuery(request.query);
@@ -413,6 +445,7 @@ router.get(
 router.get(
   "/brands/:slug/products",
   validateRequest({ params: brandSlugParamsSchema }),
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof brandSlugParamsSchema>;
     const query = normalizeStorefrontQuery(request.query);
@@ -430,6 +463,7 @@ router.get(
 
 router.get(
   "/search",
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const query = normalizeStorefrontQuery(request.query);
     const data = await listStorefrontProducts(query);
@@ -447,6 +481,7 @@ router.get(
 router.get(
   "/banners",
   validateRequest({ query: publicBannersQuerySchema }),
+  homepageCache,
   asyncHandler(async (request, response) => {
     const query = request.query as z.infer<typeof publicBannersQuerySchema>;
     const data = await listPublicBanners(query.placement);
@@ -457,6 +492,7 @@ router.get(
 router.get(
   "/pages/:slug",
   validateRequest({ params: pageSlugParamsSchema }),
+  contentCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof pageSlugParamsSchema>;
     const data = await getPublicContentPage(params.slug);
@@ -466,6 +502,7 @@ router.get(
 
 router.get(
   "/help",
+  supportConfigCache,
   asyncHandler(async (_request, response) => {
     const data = await getPublicContentPage("help");
     return sendSuccess(response, { data });
@@ -474,6 +511,7 @@ router.get(
 
 router.get(
   "/contact",
+  supportConfigCache,
   asyncHandler(async (_request, response) => {
     const data = await getPublicContentPage("contact");
     return sendSuccess(response, { data });
@@ -547,6 +585,7 @@ router.post(
 router.get(
   "/catalog/campaigns/:slug",
   validateRequest({ params: campaignSlugParamsSchema }),
+  homepageCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof campaignSlugParamsSchema>;
     const data = await getStorefrontCampaign(params.slug);
@@ -556,6 +595,7 @@ router.get(
 
 router.get(
   "/mobile/home",
+  homepageCache,
   asyncHandler(async (_request, response) => {
     const data = await getStorefrontHome();
     return sendSuccess(response, { data });
@@ -564,6 +604,7 @@ router.get(
 
 router.get(
   "/mobile/support/config",
+  supportConfigCache,
   asyncHandler(async (_request, response) => {
     const data = await getStorefrontSupportConfiguration();
     return sendSuccess(response, { data });
@@ -573,6 +614,7 @@ router.get(
 router.get(
   "/mobile/pages/:slug",
   validateRequest({ params: pageSlugParamsSchema }),
+  contentCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof pageSlugParamsSchema>;
     const data = await getPublicContentPage(params.slug);
@@ -583,6 +625,7 @@ router.get(
 router.get(
   "/mobile/campaigns/:slug",
   validateRequest({ params: campaignSlugParamsSchema }),
+  homepageCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof campaignSlugParamsSchema>;
     const data = await getStorefrontCampaign(params.slug);
@@ -608,6 +651,7 @@ router.get(
 
 router.get(
   "/mobile/products",
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const query = normalizeStorefrontQuery(request.query);
     const data = await listStorefrontProducts(query);
@@ -624,6 +668,7 @@ router.get(
 router.get(
   "/mobile/products/:slug",
   validateRequest({ params: productSlugParamsSchema }),
+  productDetailCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof productSlugParamsSchema>;
     const data = await getPublicProductDetail(params.slug);
@@ -660,6 +705,7 @@ router.get(
 
 router.get(
   "/mobile/categories",
+  categoriesCache,
   asyncHandler(async (_request, response) => {
     const items = await listCatalogCategories();
 
@@ -674,6 +720,7 @@ router.get(
 router.get(
   "/mobile/categories/:slug",
   validateRequest({ params: categorySlugParamsSchema }),
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof categorySlugParamsSchema>;
     const query = normalizeStorefrontQuery(request.query);
@@ -692,6 +739,7 @@ router.get(
 router.get(
   "/mobile/brands/:slug",
   validateRequest({ params: brandSlugParamsSchema }),
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const params = request.params as z.infer<typeof brandSlugParamsSchema>;
     const query = normalizeStorefrontQuery(request.query);
@@ -709,6 +757,7 @@ router.get(
 
 router.get(
   "/mobile/search",
+  catalogListCache,
   asyncHandler(async (request, response) => {
     const query = normalizeStorefrontQuery(request.query);
     const data = await listStorefrontProducts(query);

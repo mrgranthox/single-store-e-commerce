@@ -1,6 +1,8 @@
 import { Router } from "express";
 
 import type { RouteModule } from "../../app/route.types";
+import { env } from "../../config/env";
+import { publicCache } from "../../common/middleware/public-cache.middleware";
 import { rateLimit } from "../../common/middleware/rate-limit.middleware";
 import { validateRequest } from "../../common/validation/validate-request";
 import { requireAdminActor, requirePermissions } from "../roles-permissions/rbac.middleware";
@@ -97,16 +99,41 @@ const publicCatalogSearchRateLimit = rateLimit({
   failClosed: true
 });
 
-router.get("/catalog/products", validateRequest({ query: publicCatalogListQuerySchema }), listPublicCatalogProducts);
-router.get("/catalog/products/:productSlug", validateRequest({ params: productSlugParamsSchema }), getPublicCatalogProduct);
+router.get(
+  "/catalog/products",
+  validateRequest({ query: publicCatalogListQuerySchema }),
+  publicCache({ namespace: "catalog", ttlSeconds: env.PUBLIC_CACHE_CATALOG_LIST_TTL_SECONDS }),
+  listPublicCatalogProducts
+);
+router.get(
+  "/catalog/products/:productSlug",
+  validateRequest({ params: productSlugParamsSchema }),
+  publicCache({ namespace: "catalog", ttlSeconds: env.PUBLIC_CACHE_PRODUCT_DETAIL_TTL_SECONDS }),
+  getPublicCatalogProduct
+);
 router.get("/catalog/products/:productSlug/reviews", validateRequest({ params: productSlugParamsSchema, query: publicReviewsQuerySchema }), listPublicCatalogProductReviews);
-router.get("/catalog/categories", listPublicCatalogCategories);
-router.get("/catalog/categories/:categorySlug", validateRequest({ params: categorySlugParamsSchema, query: publicCatalogListQuerySchema }), getPublicCatalogCategory);
-router.get("/catalog/brands/:brandSlug", validateRequest({ params: brandSlugParamsSchema, query: publicCatalogListQuerySchema }), getPublicCatalogBrand);
+router.get(
+  "/catalog/categories",
+  publicCache({ namespace: "catalog", ttlSeconds: env.PUBLIC_CACHE_CATEGORIES_TTL_SECONDS }),
+  listPublicCatalogCategories
+);
+router.get(
+  "/catalog/categories/:categorySlug",
+  validateRequest({ params: categorySlugParamsSchema, query: publicCatalogListQuerySchema }),
+  publicCache({ namespace: "catalog", ttlSeconds: env.PUBLIC_CACHE_CATALOG_LIST_TTL_SECONDS }),
+  getPublicCatalogCategory
+);
+router.get(
+  "/catalog/brands/:brandSlug",
+  validateRequest({ params: brandSlugParamsSchema, query: publicCatalogListQuerySchema }),
+  publicCache({ namespace: "catalog", ttlSeconds: env.PUBLIC_CACHE_CATALOG_LIST_TTL_SECONDS }),
+  getPublicCatalogBrand
+);
 router.get(
   "/catalog/search",
   publicCatalogSearchRateLimit,
   validateRequest({ query: publicSearchQuerySchema }),
+  publicCache({ namespace: "catalog", ttlSeconds: env.PUBLIC_CACHE_CATALOG_LIST_TTL_SECONDS }),
   searchPublicCatalog
 );
 
